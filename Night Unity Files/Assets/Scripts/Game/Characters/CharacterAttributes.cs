@@ -234,20 +234,16 @@ namespace Game.Characters
         {
             int thirstLoss = (int) ThirstModifier + thirstRecovery;
             int hungerGain = (int) WaterHungerModifier;
-            Debug.Log("thirst modifier " + thirstLoss + " hunger gain " + hungerGain);
             Get(AttributeType.Thirst).Decrement(thirstLoss);
             Get(AttributeType.Hunger).Increment(hungerGain);
-            WorldEventManager.GenerateEvent(new CharacterMessage("I needed that", _player));
         }
 
         public void Eat(int hungerRecovery)
         {
             int hungerLoss = (int) HungerModifier + hungerRecovery;
             int thirstGain = (int) FoodThirstModifier;
-            Debug.Log("hunger modifier " + hungerRecovery + " thirst gain " + thirstGain);
             Get(AttributeType.Hunger).Decrement(hungerLoss);
             Get(AttributeType.Thirst).Increment(thirstGain);
-            WorldEventManager.GenerateEvent(new CharacterMessage("That should stave off starvation, at least for a while", _player));
         }
 
         public void CalculateNewFettle(float health)

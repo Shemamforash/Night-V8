@@ -19,12 +19,12 @@ namespace SamsHelper.Libraries
             Position = position;
         }
 
-        public void AddNeighbor(Node neighbor, bool reciprocate = true)
+        public void AddNeighbor(Node neighbor)
         {
             if (_neighbors.Any(n => n.Item2 == neighbor)) return;
             float angle = 360 - AdvancedMaths.AngleFromUp(Position, neighbor.Position);
             _neighbors.Add(new Tuple<float, Node>(angle, neighbor));
-            neighbor.AddNeighbor(this, false);
+            neighbor.AddNeighbor(this);
             _neighbors.Sort((a, b) => a.Item1.CompareTo(b.Item1));
             _rawNeighbors.Clear();
             _neighbors.ForEach(n => _rawNeighbors.Add(n.Item2));

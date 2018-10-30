@@ -10,6 +10,7 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Facilitating.UIControllers
 {
@@ -60,27 +61,28 @@ namespace Facilitating.UIControllers
 
         private class Tab
         {
-            private readonly EnhancedText _tabText;
             private readonly UiInventoryMenuController _menu;
             private Tab _prevTab;
             private Tab _nextTab;
+            private readonly Image _highlightImage;
 
             public Tab(string name, GameObject parent, UiInventoryMenuController menu)
             {
-                _tabText = parent.FindChildWithName<EnhancedText>(name);
+                EnhancedText tabText = parent.FindChildWithName<EnhancedText>(name);
+                _highlightImage = tabText.gameObject.FindChildWithName<Image>("Image");
                 _menu = menu;
             }
 
             public void Select()
             {
                 _currentTab = this;
-                _tabText.SetUnderlineActive(true);
+                _highlightImage.DOFade(0.5f, 0.5f).SetUpdate(UpdateType.Normal, true);
                 OpenInventoryMenu(_menu);
             }
 
             public void Deselect()
             {
-                _tabText.SetUnderlineActive(false);
+                _highlightImage.DOFade(0f, 0.5f).SetUpdate(UpdateType.Normal, true);
             }
 
             public void SetNeighbors(Tab prevTab, Tab nextTab)

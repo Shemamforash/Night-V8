@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class WeaponDetailController : MonoBehaviour
 {
-    private EnhancedText _nameText, _inscriptionText, _typeText;
+    private EnhancedText _nameText, _inscriptionNameText, _inscriptionEffectText, _typeText;
     private EnhancedText _damageText, _fireRateText, _reloadSpeedText, _accuracyText, _handlingText, _dpsText, _capacityText;
 
     private Weapon _weapon;
@@ -24,7 +24,9 @@ public class WeaponDetailController : MonoBehaviour
         _reloadSpeedText = gameObject.FindChildWithName<EnhancedText>("Reload Speed");
         _accuracyText = gameObject.FindChildWithName<EnhancedText>("Critical Chance");
         _handlingText = gameObject.FindChildWithName<EnhancedText>("Handling");
-        _inscriptionText = gameObject.FindChildWithName<EnhancedText>("Inscription");
+        GameObject inscriptionObject = gameObject.FindChildWithName("Inscription");
+        _inscriptionNameText = inscriptionObject.FindChildWithName<EnhancedText>("Inscription Name");
+        _inscriptionEffectText = inscriptionObject.FindChildWithName<EnhancedText>("Effect");
         _durabilityBar = gameObject.FindChildWithName<DurabilityBarController>("Durability Bar");
     }
 
@@ -38,7 +40,7 @@ public class WeaponDetailController : MonoBehaviour
     {
         WeaponAttributes attr = weapon.WeaponAttributes;
         _nameText.SetText(weapon.GetDisplayName());
-        _dpsText.SetText(attr.DPS().Round(1) + " Damage/sec");
+        _dpsText.SetText(attr.DPS().Round(1).ToString());
         _damageText.SetText(attr.Val(AttributeType.Damage).Round(1) + " Damage");
         _fireRateText.SetText(attr.Val(AttributeType.FireRate).Round(1) + " Rounds/Sec");
         _reloadSpeedText.SetText(attr.Val(AttributeType.ReloadSpeed).Round(1) + "s Reload");
@@ -47,7 +49,8 @@ public class WeaponDetailController : MonoBehaviour
         _accuracyText.SetText((attr.Val(AttributeType.Accuracy) * 100).Round(1) + "% Accuracy");
         Inscription inscription = weapon.GetInscription();
         string inscriptionText = inscription == null ? "No Inscription" : inscription.GetSummary();
-        _inscriptionText.SetText(inscriptionText);
+        _inscriptionNameText.SetText(inscriptionText);
+        _inscriptionEffectText.SetText(inscription == null ? "" : inscription.Modifier().FinalBonusToString());
         _typeText.SetText(weapon.WeaponType().ToString());
     }
 
@@ -69,7 +72,8 @@ public class WeaponDetailController : MonoBehaviour
         _reloadSpeedText.SetText("");
         _accuracyText.SetText("");
         _handlingText.SetText("");
-        _inscriptionText.SetText("");
+        _inscriptionNameText.SetText("");
+        _inscriptionEffectText.SetText("");
         _typeText.SetText("");
     }
 

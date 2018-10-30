@@ -343,11 +343,11 @@ namespace Game.Exploration.Regions
             _characterHere = CharacterManager.GenerateRandomCharacter();
         }
 
-        public void SetRegionType(RegionType type)
+        public void SetRegionType(RegionType regionType)
         {
-            _regionType = type;
+            _regionType = regionType;
             Name = MapGenerator.GenerateName(_regionType);
-            _canHaveEnemies = type != RegionType.Gate && type != RegionType.Nightmare && type != RegionType.Rite && type != RegionType.Tomb && type != RegionType.Gate;
+            _canHaveEnemies = _regionType != RegionType.Gate && _regionType != RegionType.Nightmare && _regionType != RegionType.Rite && _regionType != RegionType.Tomb;
         }
 
         private void SetSeen()
@@ -359,6 +359,7 @@ namespace Game.Exploration.Regions
         public bool Discover()
         {
             if (_discovered) return false;
+            SetRegionType(MapGenerator.GetNewRegionType());
             _discovered = true;
             SetSeen();
             foreach (Node neighbor in Neighbors())

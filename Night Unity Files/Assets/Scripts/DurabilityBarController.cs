@@ -1,4 +1,5 @@
-﻿using Game.Gear;
+﻿using System.Collections.Generic;
+using Game.Gear;
 using Game.Gear.Weapons;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
@@ -16,23 +17,51 @@ public class DurabilityBarController : MonoBehaviour
     private const float AbsoluteMaxDurability = ((int) ItemQuality.Radiant + 1) * 10;
     private const float WorldWidthCoefficient = 0.00502f;
 
+    private readonly List<GameObject> _leftMarkers = new List<GameObject>();
+    private readonly List<GameObject> _rightMarkers = new List<GameObject>();
+
     public void Awake()
     {
         _durabilityTransform = gameObject.FindChildWithName<RectTransform>("Max");
         _durabilityParticles = gameObject.FindChildWithName<ParticleSystem>("Current");
         _durabilityText = transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
+
+        GameObject leftMarkerObject = gameObject.FindChildWithName("Left");
+        _leftMarkers.Add(leftMarkerObject.FindChildWithName("I"));
+        _leftMarkers.Add(leftMarkerObject.FindChildWithName("II"));
+        _leftMarkers.Add(leftMarkerObject.FindChildWithName("III"));
+        _leftMarkers.Add(leftMarkerObject.FindChildWithName("IV"));
+        _leftMarkers.Add(leftMarkerObject.FindChildWithName("V"));
+
+        GameObject rightMarkerObject = gameObject.FindChildWithName("Right");
+        _rightMarkers.Add(rightMarkerObject.FindChildWithName("I"));
+        _rightMarkers.Add(rightMarkerObject.FindChildWithName("II"));
+        _rightMarkers.Add(rightMarkerObject.FindChildWithName("III"));
+        _rightMarkers.Add(rightMarkerObject.FindChildWithName("IV"));
+        _rightMarkers.Add(rightMarkerObject.FindChildWithName("V"));
     }
 
     public void Reset()
     {
         _durabilityTransform.anchorMin = Vector2.zero;
         _durabilityTransform.anchorMax = Vector2.zero;
+        UpdateMarkers(0);
     }
 
     private void SetText(string str)
     {
         if (_durabilityText == null) return;
         _durabilityText.text = str;
+    }
+
+    private void UpdateMarkers(int max)
+    {
+        for (int i = 0; i < _leftMarkers.Count; ++i)
+        {
+            bool active = i < max;
+            _leftMarkers[i].SetActive(active);
+            _rightMarkers[i].SetActive(active);
+        }
     }
 
     public void Update()
@@ -76,5 +105,6 @@ public class DurabilityBarController : MonoBehaviour
         _weapon = weapon;
         _forceUpdate = true;
         _durabilityParticles.Clear();
+        UpdateMarkers((int) _weapon.Quality());
     }
 }

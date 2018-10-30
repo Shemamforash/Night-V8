@@ -388,7 +388,7 @@ namespace SamsHelper.Libraries
 
         public static Vector2 CalculatePointOnCircle(float angle, float radius, Vector3 origin, bool alreadyInRadians = false)
         {
-            if (!alreadyInRadians) angle *= Mathf.Rad2Deg;
+            if (!alreadyInRadians) angle *= Mathf.Deg2Rad;
             float x = Mathf.Cos(angle) * radius + origin.x;
             float y = Mathf.Sin(angle) * radius + origin.y;
             return new Vector2(x, y);

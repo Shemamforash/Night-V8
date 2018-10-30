@@ -50,6 +50,7 @@ public class UiJournalController : UiInventoryMenuController
 
     private List<object> GetAvailableJournalEntries()
     {
+        for (int i = 0; i < 5; ++i) JournalEntry.GetEntry()?.Unlock();
         return JournalEntry.GetUnlockedEntries().ToObjectList();
     }
 
@@ -59,7 +60,7 @@ public class UiJournalController : UiInventoryMenuController
 
         protected override void SetVisible(bool visible)
         {
-            _nameText.gameObject.SetActive(visible);
+            _nameText.SetColor(visible ? Color.white : UiAppearanceController.InvisibleColour);
         }
 
         protected override void CacheUiElements(Transform transform)

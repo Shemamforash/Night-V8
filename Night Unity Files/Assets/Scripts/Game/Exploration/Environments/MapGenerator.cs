@@ -8,6 +8,7 @@ using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
+using Edge = SamsHelper.Libraries.Edge;
 using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Environment
@@ -25,6 +26,14 @@ namespace Game.Exploration.Environment
         private static readonly Dictionary<RegionType, List<string>> _regionNames = new Dictionary<RegionType, List<string>>();
         private static readonly List<Region> _regions = new List<Region>();
         private static Region initialNode;
+
+        private static readonly List<RegionType> _regionTypeBag = new List<RegionType>();
+        private static int _regionsDiscovered;
+        private static int _templesAdded;
+
+        private const int ShrineQuantityModifier = 2;
+        private const int AnimalQuantityModifier = 2;
+        private const int DangerQuantityModifier = 5;
 
         private static bool _loaded;
 
@@ -83,7 +92,12 @@ namespace Game.Exploration.Environment
         {
             GenerateNames();
             _regions.Clear();
-            int numberOfRegions = EnvironmentManager.CurrentEnvironment.RegionCount + 1;
+            int templeCount = EnvironmentManager.CurrentEnvironment.Temples;
+            int baseRegionCount = 1 + 1 + ShrineQuantityModifier + AnimalQuantityModifier + DangerQuantityModifier; //monument  + fountain + shrine + animal + danger
+            int numberOfRegions = 1; //initial gate
+            numberOfRegions += baseRegionCount * (templeCount + 1);
+            numberOfRegions += templeCount;
+            if (EnvironmentManager.CurrentEnvironment.EnvironmentType != EnvironmentType.Desert) ++numberOfRegions; //shelters
             while (numberOfRegions > 0)
             {
                 _regions.Add(new Region());
@@ -91,67 +105,92 @@ namespace Game.Exploration.Environment
             }
 
             initialNode = _regions[0];
-            initialNode.SetRegionType(RegionType.Gate);
         }
 
         private static void ConnectRegions()
         {
-            bool succeeded = false;
+            _regions.ForEach(s => { s.Reset(); });
+            int regionCount = _regions.Count - 1;
+            int ringNo = 0;
+            int regionNo = 1;
+            _regions[0].SetPosition(Vector2.zero);
 
-            while (!succeeded)
+            while (regionCount > 0)
             {
-                _regions.ForEach(s => { s.Reset(); });
-                int regionCount = _regions.Count - 1;
-                int ringNo = 0;
-                int regionNo = 1;
-                _regions[0].SetPosition(Vector2.zero);
-                
-                while (regionCount > 0)
+                int maxRingSize = 3 * (ringNo + 1);
+                int regionsOnRing = Random.Range(ringNo, maxRingSize);
+                if (regionsOnRing > regionCount) regionsOnRing = regionCount;
+                regionCount -= regionsOnRing;
+
+                float radius = (ringNo + 1) * MinRadius;
+                int[] slots = new int[maxRingSize];
+                for (int i = 0; i < maxRingSize; ++i)
                 {
-                    int maxRingSize = 3 * (ringNo + 1);
-                    int regionsOnRing = Random.Range(ringNo, maxRingSize);
-                    if (regionsOnRing > regionCount) regionsOnRing = regionCount;
-                    regionCount -= regionsOnRing;
-
-                    float radius = (ringNo + 1) * MinRadius;
-                    float angleInterval = 360f / maxRingSize;
-                    int[] slots = new int[maxRingSize];
-                    for (int i = 0; i < maxRingSize; ++i)
-                    {
-                        if (i < regionsOnRing) slots[i] = 1;
-                        else slots[i] = 0;
-                    }
-
-                    slots.Shuffle();
-                    for (int i = 0; i < maxRingSize; ++i)
-                    {
-                        if (slots[i] == 0) continue;
-                        float angle = Random.Range(i * angleInterval, (i + 1) * angleInterval);
-                        Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, radius, Vector2.zero);
-                        _regions[regionNo].SetPosition(position);
-                        ++regionNo;
-                    }
-
-                    ++ringNo;
+                    if (i < regionsOnRing) slots[i] = 1;
+                    else slots[i] = 0;
                 }
 
-                succeeded = ConnectNodes();
+                slots.Shuffle();
+
+                float angleInterval = 360f / maxRingSize;
+
+                for (int i = 0; i < maxRingSize; ++i)
+                {
+                    if (slots[i] == 0) continue;
+                    float angleFrom = i * angleInterval;
+                    float angleTo = (i + 1) * angleInterval;
+                    angleFrom += angleInterval / 5f;
+                    angleTo -= angleInterval / 5f;
+                    float angle = Random.Range(angleFrom, angleTo);
+                    Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, radius, Vector2.zero);
+                    _regions[regionNo].SetPosition(position);
+                    ++regionNo;
+                }
+
+                ++ringNo;
+            }
+
+            Triangulate();
+        }
+
+
+        private class RegionNode : Node
+        {
+            public readonly Region RegionHere;
+
+            public RegionNode(Region region) : base(region.Position)
+            {
+                RegionHere = region;
             }
         }
 
-        private static void SetRegionTypes()
+
+        private static void Triangulate()
         {
-            Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
-            DistributeNodeTypes(RegionType.Temple, currentEnvironment.Temples, 4);
-            DistributeNodeTypes(RegionType.Monument, currentEnvironment.Monuments, 4);
-            DistributeNodeTypes(RegionType.Shelter, currentEnvironment.Shelters, 3);
-            DistributeNodeTypes(RegionType.Fountain, currentEnvironment.Fountains, 2);
-            DistributeNodeTypes(RegionType.Shrine, currentEnvironment.Shrines, 2);
-            DistributeNodeTypes(RegionType.Danger, currentEnvironment.Dangers, -1, false);
-            DistributeNodeTypes(RegionType.Animal, currentEnvironment.Animals, -1, false);
-            SetWaterQuantities();
-            SetFoodQuantities();
-            SetResourceQuantities();
+            List<Edge> edges = new List<Edge>();
+            for (int i = 0; i < _regions.Count; ++i)
+            {
+                RegionNode a = new RegionNode(_regions[i]);
+                for (int j = i; j < _regions.Count; ++j)
+                {
+                    RegionNode b = new RegionNode(_regions[j]);
+                    Edge edge = new Edge(a, b);
+                    edges.Add(edge);
+                }
+            }
+
+            edges.RemoveAll(e => e.Length > MinRadius * 1.5f);
+            edges.Sort((a, b) => a.Length.CompareTo(b.Length));
+            int targetEdges = (int) (_regions.Count / 2f) + 10;
+            if (targetEdges > edges.Count) targetEdges = edges.Count;
+            for (int i = 0; i < targetEdges; ++i)
+            {
+                RegionNode from = (RegionNode) edges[i].A;
+                RegionNode to = (RegionNode) edges[i].B;
+                from.RegionHere.AddNeighbor(to.RegionHere);
+            }
+
+            CreateMinimumSpanningTree();
         }
 
         public static string GenerateName(RegionType type)
@@ -236,34 +275,49 @@ namespace Game.Exploration.Environment
             _loaded = true;
         }
 
-        private static void DistributeNodeTypes(RegionType type, int quantity, int minDepth = -1, bool mustNotTouch = true)
+        private static void SetRegionTypes()
         {
-            if (quantity == 0) return;
-            _regions.Shuffle();
-            foreach (Region region in _regions)
-            {
-                if (region.GetRegionType() != RegionType.None) continue;
-                if (region.GetRegionType() == RegionType.Temple) Debug.Log(minDepth + " " + region.Depth);
-                if (minDepth != -1 && region.Depth < minDepth) continue;
-                bool valid = true;
-                if (mustNotTouch)
-                {
-                    foreach (Node neighbor in region.Neighbors())
-                    {
-                        if (((Region) neighbor).GetRegionType() != type) continue;
-                        valid = false;
-                        break;
-                    }
-                }
+            _regionsDiscovered = -1;
+            _templesAdded = 0;
+            _regionTypeBag.Clear();
+            AddBaseRegionTypes();
+            SetWaterQuantities();
+            SetFoodQuantities();
+            SetResourceQuantities();
+        }
 
-                if (!valid) continue;
-                region.SetRegionType(type);
-                --quantity;
-                if (quantity == 0) break;
+        private static void AddBaseRegionTypes()
+        {
+            Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
+            for (int i = 0; i < 1; ++i) _regionTypeBag.Add(RegionType.Monument);
+            for (int i = 0; i < ShrineQuantityModifier; ++i) _regionTypeBag.Add(RegionType.Shrine);
+            for (int i = 0; i < 1; ++i) _regionTypeBag.Add(RegionType.Fountain);
+            for (int i = 0; i < AnimalQuantityModifier; ++i) _regionTypeBag.Add(RegionType.Animal);
+            for (int i = 0; i < DangerQuantityModifier; ++i) _regionTypeBag.Add(RegionType.Danger);
+            if (currentEnvironment.EnvironmentType != EnvironmentType.Desert && !_regionTypeBag.Contains(RegionType.Shelter)) _regionTypeBag.Add(RegionType.Shelter);
+        }
+
+        private static void UpdateAvailableRegionTypes()
+        {
+            Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
+            if (_templesAdded == currentEnvironment.Temples) return;
+            if (_regionsDiscovered % 8 != 0 || _regionsDiscovered <= 0) return;
+            AddBaseRegionTypes();
+            _regionTypeBag.Add(RegionType.Temple);
+            ++_templesAdded;
+        }
+
+        public static RegionType GetNewRegionType()
+        {
+            if (_regionsDiscovered == -1)
+            {
+                ++_regionsDiscovered;
+                return RegionType.Gate;
             }
 
-            if (quantity <= 0) return;
-            DistributeNodeTypes(type, quantity, minDepth - 1, false);
+            UpdateAvailableRegionTypes();
+            ++_regionsDiscovered;
+            return _regionTypeBag.RemoveRandom();
         }
 
         private static void SetWaterQuantities()
@@ -327,82 +381,13 @@ namespace Game.Exploration.Environment
             }
         }
 
-        private static Graph CreateMinimumSpanningTree()
+        private static void CreateMinimumSpanningTree()
         {
             Graph map = new Graph();
             _regions.ForEach(n => map.AddNode(n));
             map.SetRootNode(initialNode);
             map.ComputeMinimumSpanningTree();
             map.Edges().ForEach(edge => { edge.A.AddNeighbor(edge.B); });
-            return map;
-        }
-
-        private static bool ConnectNodes()
-        {
-            Graph map = CreateMinimumSpanningTree();
-            try
-            {
-                SetMaxNodeDepth(4 + WorldState.CurrentLevel() * 2, map);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            AddRandomLinks();
-            return true;
-        }
-
-        private static void SetMaxNodeDepth(int maxDepth, Graph map)
-        {
-            List<Tuple<Region, Region>> edges = new List<Tuple<Region, Region>>();
-            for (int i = 0; i < _regions.Count; ++i)
-            {
-                for (int j = i + 1; j < _regions.Count; ++j)
-                {
-                    Region from = _regions[i];
-                    Region to = _regions[j];
-                    if (from.Neighbors().Contains(to)) continue;
-                    float distance = Vector2.Distance(from.Position, to.Position);
-                    if (distance > MaxRadius) continue;
-                    edges.Add(Tuple.Create(from, to));
-                }
-            }
-
-            map.CalculateNodeDepths();
-            float currentMaxNodeDepth = map.MaxDepth();
-            while (currentMaxNodeDepth > maxDepth && edges.Count > 0)
-            {
-                edges.Sort((a, b) =>
-                {
-                    float deltaDepthA = Mathf.Abs(a.Item1.Depth - a.Item2.Depth);
-                    float deltaDepthB = Mathf.Abs(b.Item1.Depth - b.Item2.Depth);
-                    return -deltaDepthA.CompareTo(deltaDepthB);
-                });
-                Tuple<Region, Region> edge = edges[0];
-                edges.RemoveAt(0);
-                edge.Item1.AddNeighbor(edge.Item2);
-                map.CalculateNodeDepths();
-                currentMaxNodeDepth = map.MaxDepth();
-            }
-
-            if (currentMaxNodeDepth > maxDepth) throw new Exception();
-        }
-
-        private static void AddRandomLinks()
-        {
-            List<Region> Regions = new List<Region>(_regions);
-            foreach (Region current in Regions)
-            {
-                _regions.Sort((a, b) => Vector2.Distance(current.Position, a.Position).CompareTo(Vector2.Distance(current.Position, b.Position)));
-                _regions.ForEach(n =>
-                {
-                    if (n == current) return;
-                    if (current.Neighbors().Count >= 2) return;
-                    if (Vector2.Distance(current.Position, n.Position) > MaxRadius) return;
-                    current.AddNeighbor(n);
-                });
-            }
         }
     }
 }

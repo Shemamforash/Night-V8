@@ -9,6 +9,7 @@
         {
             A = a;
             B = b;
+            Length = A.Distance(B);
         }
              
         public bool ConnectsTo(Node n)

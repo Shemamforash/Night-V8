@@ -1,31 +1,53 @@
 ﻿using System.Collections.Generic;
+using DG.Tweening;
 using Facilitating.UIControllers;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
-using Game.Combat.Player;
 using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
+using UnityEngine;
 
 public class UICraftingController : UiInventoryMenuController, IInputListener
 {
-    private ListController _buildingsList;
+    private ListController _craftingList;
+    private CanvasGroup _listCanvas, _currentCraftingCanvas;
+    private EnhancedText _currentCraftingName;
 
     protected override void CacheElements()
     {
-        _buildingsList = gameObject.FindChildWithName<ListController>("List");
+        _craftingList = gameObject.FindChildWithName<ListController>("List");
+        _listCanvas = _craftingList.GetComponent<CanvasGroup>();
+        _currentCraftingCanvas = gameObject.FindChildWithName<CanvasGroup>("Currently Crafting");
+        _currentCraftingName = _currentCraftingCanvas.gameObject.FindChildWithName<EnhancedText>("Name");
     }
 
     protected override void OnShow()
     {
         InputHandler.RegisterInputListener(this);
-        _buildingsList.Show(GetAvailableRecipes);
+        if (CharacterManager.SelectedCharacter.CraftAction.IsCurrentState()) ShowCurrentlyCrafting();
+        else ShowCraftingList();
+    }
+
+    private void ShowCurrentlyCrafting()
+    {
+        _listCanvas.alpha = 0;
+        _currentCraftingCanvas.alpha = 0;
+        _currentCraftingCanvas.DOFade(1, 0.5f).SetUpdate(UpdateType.Normal, true);
+        _currentCraftingName.SetText(CharacterManager.SelectedCharacter.CraftAction.GetRecipeName());
+    }
+
+    private void ShowCraftingList()
+    {
+        _listCanvas.alpha = 1;
+        _currentCraftingCanvas.alpha = 0;
+        _craftingList.Show(GetAvailableRecipes);
     }
 
     protected override void Initialise()
     {
-        _buildingsList.Initialise(typeof(RecipeElement), CreateRecipe, UiGearMenuController.Close);
+        _craftingList.Initialise(typeof(RecipeElement), CreateRecipe, UiGearMenuController.Close);
     }
 
     protected override void OnHide()
@@ -37,7 +59,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
     {
         Recipe recipe = (Recipe) obj;
         CharacterManager.SelectedCharacter.CraftAction.StartCrafting(recipe);
-        UiGearMenuController.Close();
+        ShowCurrentlyCrafting();
     }
 
     private class RecipeElement : BasicListElement

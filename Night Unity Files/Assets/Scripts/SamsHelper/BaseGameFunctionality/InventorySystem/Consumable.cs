@@ -21,11 +21,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             {
                 case "Meat":
                     _player.Attributes.Eat((int) Template.EffectBonus);
-                    break;
+                    return;
                 case "Water":
                     _player.Attributes.Drink((int) Template.EffectBonus);
-                    break;
+                    return;
             }
+
 
             if (!Template.HasEffect) return;
             if (Template.IsEffectPermanent) ApplyPermanentEffect();
@@ -81,9 +82,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             switch (Template.ResourceType)
             {
                 case "Meat":
-                    return !_player.Attributes.Get(AttributeType.Hunger).ReachedMax();
+                    return !_player.Attributes.Get(AttributeType.Hunger).ReachedMin();
                 case "Water":
-                    return !_player.Attributes.Get(AttributeType.Thirst).ReachedMax();
+                    return !_player.Attributes.Get(AttributeType.Thirst).ReachedMin();
             }
 
             return Template.IsEffectPermanent ? CheckCanConsumePermanent() : CheckCanConsumeImpermanent();

@@ -58,5 +58,10 @@ namespace Game.Characters.CharacterActions
             doc.CreateChild("Recipe", _recipe.Name);
             return doc;
         }
+
+        public string GetRecipeName()
+        {
+            return _recipe.ProductName;
+        }
     }
 }
