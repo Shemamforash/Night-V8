@@ -55,12 +55,9 @@ public class UiConsumableController : UiInventoryMenuController
         {
             Consumable consumable = (Consumable) o;
             bool canConsume = consumable.CanConsume();
-            LeftText.SetStrikeThroughActive(!canConsume);
-            CentreText.SetStrikeThroughActive(!canConsume);
-            RightText.SetStrikeThroughActive(!canConsume);
             string nameText = consumable.Quantity() > 1 ? consumable.Name + " x" + consumable.Quantity() : consumable.Name;
             LeftText.SetText(nameText);
-            CentreText.SetText("");
+            CentreText.SetText(canConsume ? "" : "Cannot Consume");
             RightText.SetText(consumable.Template.Description);
         }
     }

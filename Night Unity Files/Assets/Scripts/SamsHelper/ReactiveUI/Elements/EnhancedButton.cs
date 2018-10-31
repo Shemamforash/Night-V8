@@ -16,6 +16,7 @@ namespace SamsHelper.ReactiveUI.Elements
         private bool _justEntered;
         private Action _onDownAction, _onUpAction;
         private static GameObject _borderPrefab;
+        [SerializeField] private bool _hideBorder;
         private UIBorderController _border;
         private event Action OnSelectActions;
         private event Action OnDeselectActions;
@@ -90,6 +91,7 @@ namespace SamsHelper.ReactiveUI.Elements
             InputHandler.RegisterInputListener(this);
             _button = GetComponent<Button>();
             if (_borderPrefab == null) _borderPrefab = Resources.Load<GameObject>("Prefabs/Borders/Border");
+            if (_hideBorder) return;
             _border = Instantiate(_borderPrefab).GetComponent<UIBorderController>();
             _border.SetButton(this);
         }
@@ -98,16 +100,18 @@ namespace SamsHelper.ReactiveUI.Elements
         {
             OnSelectActions?.Invoke();
             _justEntered = true;
-            _border.SetSelected();
+            if (!_hideBorder) _border.SetSelected();
             _isSelected = true;
-            ButtonClickListener.Click();
+            if (_enabled) ButtonClickListener.Click();
         }
 
         private void Exit()
         {
             OnDeselectActions?.Invoke();
             _isSelected = false;
-            _border.SetActive();
+            if (_hideBorder) return;
+            if (_enabled) _border.SetActive();
+            else _border.SetDisabled();
         }
 
         public void AddOnClick(UnityAction a)
@@ -257,7 +261,12 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public void SetEnabled(bool b)
         {
+            if (_enabled == b) return;
             _enabled = b;
+            _button.interactable = b;
+            if (!_enabled) _border.SetDisabled();
+            else if (_isSelected) _border.SetSelected();
+            else _border.SetActive();
         }
 
         public bool IsEnabled()

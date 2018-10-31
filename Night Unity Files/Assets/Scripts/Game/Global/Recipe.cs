@@ -65,7 +65,6 @@ namespace Game.Global
             switch (ProductName)
             {
                 case "Fire":
-                    CharacterManager.SelectedCharacter.LightFireAction.Enter();
                     break;
                 case "Shelter":
                     Inventory.AddBuilding(new Shelter());

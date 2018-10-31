@@ -34,11 +34,7 @@ namespace Game.Characters.CharacterActions
 
         public void StartCrafting(Recipe recipe)
         {
-            if (recipe.ProductName == "Fire")
-            {
-                recipe.Craft();
-                return;
-            }
+            if (recipe.ProductName == "Fire") CharacterManager.SelectedCharacter.LightFireAction.Enter();
             _recipe = recipe;
             _recipe.ConsumeResources();
             SetDuration();
@@ -51,7 +47,7 @@ namespace Game.Characters.CharacterActions
             _recipe = Recipe.FindRecipe(doc.StringFromNode("Recipe"));
             return doc;
         }
-        
+
         public override XmlNode Save(XmlNode doc)
         {
             doc = base.Save(doc);

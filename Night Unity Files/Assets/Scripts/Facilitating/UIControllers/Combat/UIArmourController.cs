@@ -15,24 +15,19 @@ namespace Facilitating.UIControllers
         private const int SegmentSpacing = 5;
         private readonly List<ArmourChunk> _armourChunks = new List<ArmourChunk>();
 
-        private Transform _armourBar;
-        private TextMeshProUGUI _armourText;
         private HorizontalLayoutGroup _layoutGroup;
 
         // Use this for initialization
         public void Awake()
         {
-            _armourBar = gameObject.FindChildWithName<Transform>("Armour Bar");
-            _armourText = gameObject.FindChildWithName<TextMeshProUGUI>("Armour Text");
-
-            _layoutGroup = _armourBar.GetComponent<HorizontalLayoutGroup>();
+            _layoutGroup = GetComponent<HorizontalLayoutGroup>();
             _layoutGroup.spacing = SegmentSpacing;
 
             List<GameObject> segments = new List<GameObject>();
             for (int i = 0; i < ArmourDivisions; ++i)
             {
                 GameObject newSegment = new GameObject();
-                newSegment.transform.SetParent(_armourBar, false);
+                newSegment.transform.SetParent(transform, false);
                 newSegment.AddComponent<Image>();
                 newSegment.name = "Armour Piece " + (i + 1);
                 segments.Add(newSegment);
@@ -54,10 +49,6 @@ namespace Facilitating.UIControllers
                 else
                     chunk.SetInvisible();
             }
-
-            if (slotsUsed == 0) _armourText.text = "No Armour";
-            else _armourText.text = "-" + slotsAvailable * 10f + "% damage from Armour";
-            _armourText.text = "";
         }
 
         public void TakeDamage(ArmourController controller)

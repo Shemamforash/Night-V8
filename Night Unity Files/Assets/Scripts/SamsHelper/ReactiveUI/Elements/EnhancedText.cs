@@ -41,16 +41,6 @@ namespace SamsHelper.ReactiveUI.Elements
             _text.text = text;
         }
 
-        public void SetStrikeThroughActive(bool active)
-        {
-            _text.fontStyle = active ? FontStyles.Strikethrough : FontStyles.Normal;
-        }
-
-        public void SetUnderlineActive(bool active)
-        {
-            _text.fontStyle = active ? FontStyles.Underline : FontStyles.Normal;
-        }
-
         private void TryReplaceText()
         {
             if (GetComponent<TextMeshProUGUI>() == null)

@@ -10,6 +10,7 @@ namespace DefaultNamespace
 
         private int _elementIndex;
         private Transform _elementTransform;
+        private CanvasGroup _canvasGroup;
 
         public void Set(object o, bool isCentreItem)
         {
@@ -20,6 +21,7 @@ namespace DefaultNamespace
                 return;
             }
 
+            _canvasGroup.alpha = isCentreItem ? 1 : 0.4f;
             SetVisible(true);
             Update(o);
         }
@@ -33,6 +35,7 @@ namespace DefaultNamespace
         public void SetElementTransform(Transform elementTransform)
         {
             _elementTransform = elementTransform;
+            _canvasGroup = _elementTransform.GetComponent<CanvasGroup>();
             CacheUiElements(_elementTransform);
         }
 

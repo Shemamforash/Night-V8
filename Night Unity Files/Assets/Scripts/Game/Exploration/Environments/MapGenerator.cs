@@ -118,7 +118,7 @@ namespace Game.Exploration.Environment
             while (regionCount > 0)
             {
                 int maxRingSize = 3 * (ringNo + 1);
-                int regionsOnRing = Random.Range(ringNo, maxRingSize);
+                int regionsOnRing = Random.Range(ringNo + 1, maxRingSize);
                 if (regionsOnRing > regionCount) regionsOnRing = regionCount;
                 regionCount -= regionsOnRing;
 

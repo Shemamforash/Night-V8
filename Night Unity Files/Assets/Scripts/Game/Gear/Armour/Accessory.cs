@@ -16,7 +16,7 @@ namespace Game.Gear.Armour
     public class Accessory : GearItem
     {
         private static readonly List<AccessoryTemplate> _accessoryTemplates = new List<AccessoryTemplate>();
-        private static bool _readTemplates;
+        private static bool _loaded;
         private readonly AccessoryTemplate _template;
         private AttributeModifier modifier;
 
@@ -50,11 +50,11 @@ namespace Game.Gear.Armour
 
         private static void ReadTemplates()
         {
-            if (_readTemplates) return;
+            if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Gear", "GearList");
             foreach (XmlNode accessoryNode in Helper.GetNodesWithName(root, "Gear"))
                 new AccessoryTemplate(accessoryNode);
-            _readTemplates = true;
+            _loaded = true;
         }
 
         public static Accessory Generate()
@@ -106,6 +106,7 @@ namespace Game.Gear.Armour
 
         public static Accessory LoadAccessory(XmlNode accessoryNode)
         {
+            ReadTemplates();
             string templateString = accessoryNode.StringFromNode("AccessoryTemplate");
             AccessoryTemplate template = _accessoryTemplates.First(t => t.Name == templateString);
             Accessory accessory = new Accessory(template, ItemQuality.Dark);

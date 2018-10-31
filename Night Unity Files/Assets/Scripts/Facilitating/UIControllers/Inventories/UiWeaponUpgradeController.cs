@@ -146,18 +146,16 @@ namespace Facilitating.UIControllers
             {
                 _inscribeButton.Button().interactable = false;
                 _infuseButton.Button().interactable = false;
-                _inscribeButton.gameObject.GetComponentInChildren<EnhancedText>().SetStrikeThroughActive(true);
-                _infuseButton.gameObject.GetComponentInChildren<EnhancedText>().SetStrikeThroughActive(true);
+                _inscribeButton.SetEnabled(false);
+                _infuseButton.SetEnabled(false);
             }
             else
             {
                 WeaponAttributes attr = weapon.WeaponAttributes;
                 bool reachedMaxDurability = attr.GetDurability().ReachedMax();
                 bool inscriptionsAvailable = InscriptionsAreAvailable();
-                _infuseButton.Button().enabled = !reachedMaxDurability;
-                _infuseButton.gameObject.GetComponentInChildren<EnhancedText>().SetStrikeThroughActive(reachedMaxDurability);
-                _inscribeButton.Button().enabled = inscriptionsAvailable;
-                _inscribeButton.gameObject.GetComponentInChildren<EnhancedText>().SetStrikeThroughActive(!inscriptionsAvailable);
+                _infuseButton.SetEnabled(!reachedMaxDurability);
+                _inscribeButton.SetEnabled(inscriptionsAvailable);
             }
         }
 
@@ -185,11 +183,8 @@ namespace Facilitating.UIControllers
             {
                 Inscription inscription = (Inscription) o;
                 bool canAfford = inscription.CanAfford();
-                CentreText.SetStrikeThroughActive(!canAfford);
-                LeftText.SetStrikeThroughActive(!canAfford);
-                RightText.SetStrikeThroughActive(!canAfford);
-
-                CentreText.SetText(inscription.Name);
+                string inscriptionString = inscription.Name + (canAfford ? "" : " - Cannot Afford");
+                CentreText.SetText(inscriptionString);
                 LeftText.SetText(inscription.InscriptionCost() + " Essence");
                 RightText.SetText(inscription.GetSummary());
             }

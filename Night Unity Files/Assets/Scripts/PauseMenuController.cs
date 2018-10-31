@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 public class PauseMenuController : MonoBehaviour
 {
     private static bool _open;
+    private static bool _fading;
     private static string _lastMenu;
     private static PauseMenuController _instance;
     private CanvasGroup _background;
@@ -28,21 +29,15 @@ public class PauseMenuController : MonoBehaviour
         VolumeController.FadeInMuffle();
         _lastMenu = MenuStateMachine.CurrentMenu().gameObject.name;
         _instance.ShowPauseMenu();
-        _open = true;
-        StartCoroutine(FadeInBackground());
-        Pause();
-    }
-
-    private IEnumerator FadeInBackground()
-    {
-        float time = 0f;
-        while (time < 0.5f)
+        _fading = true;
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(_background.DOFade(1f, 0.25f));
+        sequence.AppendCallback(() =>
         {
-            time += Time.unscaledDeltaTime;
-            if (time > 0.5f) time = 0.5f;
-            _background.alpha = time / 0.5f;
-            yield return null;
-        }
+            _fading = false;
+            _open = true;
+        });
+        Pause();
     }
 
     public void ReturnToMainMenu()
@@ -61,9 +56,15 @@ public class PauseMenuController : MonoBehaviour
     {
         VolumeController.FadeOutMuffle();
         MenuStateMachine.ShowMenu(_lastMenu);
-        _open = false;
-        Unpause();
-        _background.DOFade(0, 0.5f);
+        _fading = true;
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(_background.DOFade(0f, 0.25f));
+        sequence.AppendCallback(() =>
+        {
+            _fading = false;
+            _open = false;
+            Unpause();
+        });
     }
 
     private void Pause()
@@ -127,6 +128,7 @@ public class PauseMenuController : MonoBehaviour
 
     public static void ToggleOpen()
     {
+        if (_fading) return;
         _open = !_open;
         if (!_open) _instance.Hide();
         else _instance.Show();

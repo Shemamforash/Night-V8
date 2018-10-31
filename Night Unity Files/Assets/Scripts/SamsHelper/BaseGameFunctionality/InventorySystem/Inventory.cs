@@ -42,7 +42,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             return _accessories.FirstOrDefault(i => i.ID() == id);
         }
-        
+
         public static void Reset()
         {
             LoadResources();
@@ -114,7 +114,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             XmlNode inventoryNode = root.GetNode("Inventory");
             XmlNode resourceNode = inventoryNode.SelectSingleNode("Resources");
-            InventoryResources().ForEach(r => LoadResource(r.Name, resourceNode));
+            foreach (XmlNode node in resourceNode.SelectNodes("Resource")) LoadResource(node);
             XmlNode itemNode = inventoryNode.SelectSingleNode("Items");
             foreach (XmlNode weaponNode in itemNode.SelectSingleNode("Weapons").ChildNodes)
                 Move(Weapon.LoadWeapon(weaponNode));
@@ -269,14 +269,18 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             Inscriptions.Add(inscription);
         }
 
-        private static void LoadResource(string type, XmlNode root)
+        private static void LoadResource(XmlNode root)
         {
-            IncrementResource(type, root.IntFromNode(type.Replace(" ", "_")));
+            string type = root.StringFromNode("Type");
+            int quantity = root.IntFromNode("Quantity");
+            IncrementResource(type, quantity);
         }
 
         private static void SaveResource(string type, XmlNode root)
         {
-            root.CreateChild(type.Replace(" ", "_"), GetResourceQuantity(type));
+            root = root.CreateChild("Resource");
+            root.CreateChild("Type", type);
+            root.CreateChild("Quantity", GetResourceQuantity(type));
         }
 
         public static void Destroy(Weapon weapon)
@@ -301,6 +305,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             _items.Remove(inscription);
             Inscriptions.Remove(inscription);
-        }        
+        }
     }
 }

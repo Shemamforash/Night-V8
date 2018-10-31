@@ -167,12 +167,10 @@ namespace Game.Combat.Misc
         protected virtual void TakeDamage(int damage, Vector2 direction)
         {
             _spriteFlash.FlashSprite();
-            float armourProtection = 0;
-            if (ArmourController != null) armourProtection = ArmourController.GetCurrentProtection() / 10f;
-            int armourDamage = Mathf.CeilToInt(damage * armourProtection);
-            int healthDamage = damage - armourDamage;
+            float armourModifier = 1;
+            if (ArmourController != null) armourModifier = ArmourController.CalculateDamageModifier();
+            int healthDamage = Mathf.CeilToInt(damage * armourModifier);
             HealthController.TakeDamage(healthDamage);
-            TakeArmourDamage(armourDamage);
             if (_bloodSpatter != null) _bloodSpatter.Spray(direction, healthDamage);
             if (HealthController.GetCurrentHealth() != 0) return;
             LeafBehaviour.CreateLeaves(direction, transform.position);

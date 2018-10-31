@@ -10,31 +10,21 @@ namespace Facilitating.UIControllers
         private EnhancedText _nameText;
         private GameObject _notEquippedObject, _equippedObject;
         public EnhancedButton EnhancedButton;
-        private DurabilityBarController _durabilityBar;
 
         public void Awake()
         {
             EnhancedButton = GetComponent<EnhancedButton>();
             _notEquippedObject = gameObject.FindChildWithName("Not Equipped");
             _equippedObject = gameObject.FindChildWithName("Equipped");
-            _nameText = gameObject.FindChildWithName<EnhancedText>("Name");
-            _durabilityBar = gameObject.FindChildWithName<DurabilityBarController>("Durability");
+            _nameText = _equippedObject.GetComponent<EnhancedText>();
         }
 
         public void SetWeapon(Weapon weapon)
         {
-            if (weapon == null)
-            {
-                _equippedObject.SetActive(false);
-                _notEquippedObject.SetActive(true);
-            }
-            else
-            {
-                _notEquippedObject.SetActive(false);
-                _equippedObject.SetActive(true);
-                _nameText.SetText(weapon.Name);
-            }
-            _durabilityBar.SetWeapon(weapon);
+            bool isWeaponEquipped = weapon != null;
+            _equippedObject.SetActive(isWeaponEquipped);
+            _notEquippedObject.SetActive(!isWeaponEquipped);
+            _nameText.SetText(isWeaponEquipped ? weapon.Name : "");
         }
     }
 }

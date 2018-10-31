@@ -15,7 +15,7 @@ public class UIBorderController : MonoBehaviour
 
     private enum BorderState
     {
-        Inactive,
+        Disabled,
         Active,
         Selected
     }
@@ -55,21 +55,21 @@ public class UIBorderController : MonoBehaviour
         DOTween.defaultTimeScaleIndependent = true;
         switch (_currentState)
         {
-            case BorderState.Inactive:
-                MakeInactive(instant);
+            case BorderState.Disabled:
+                Disable(instant);
                 break;
             case BorderState.Active:
-                MakeActive(instant);
+                Active(instant);
                 break;
             case BorderState.Selected:
-                MakeSelected(instant);
+                Select(instant);
                 break;
         }
 
         DOTween.defaultTimeScaleIndependent = currentTimeScale;
     }
 
-    private void MakeInactive(bool instant = false)
+    private void Disable(bool instant = false)
     {
         float time = instant ? 0 : FadeTime;
         _activeTop.DOColor(UiAppearanceController.InvisibleColour, time);
@@ -77,7 +77,7 @@ public class UIBorderController : MonoBehaviour
         _highlightCanvas.DOFade(0, time);
     }
 
-    private void MakeActive(bool instant = false)
+    private void Active(bool instant = false)
     {
         float time = instant ? 0 : FadeTime;
         _activeTop.DOColor(UiAppearanceController.InvisibleColour, time);
@@ -85,7 +85,7 @@ public class UIBorderController : MonoBehaviour
         _highlightCanvas.DOFade(0.15f, time);
     }
 
-    private void MakeSelected(bool instant = false)
+    private void Select(bool instant = false)
     {
         float time = instant ? 0 : FadeTime;
         if (_button.IsEnabled())
@@ -101,9 +101,9 @@ public class UIBorderController : MonoBehaviour
         _highlightCanvas.DOFade(0f, time);
     }
 
-    public void SetInactive()
+    public void SetDisabled()
     {
-        SetState(BorderState.Inactive);
+        SetState(BorderState.Disabled);
     }
 
     public void SetActive()

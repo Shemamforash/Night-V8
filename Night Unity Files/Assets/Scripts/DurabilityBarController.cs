@@ -105,6 +105,6 @@ public class DurabilityBarController : MonoBehaviour
         _weapon = weapon;
         _forceUpdate = true;
         _durabilityParticles.Clear();
-        UpdateMarkers((int) _weapon.Quality());
+        UpdateMarkers((int) _weapon.Quality() + 1);
     }
 }

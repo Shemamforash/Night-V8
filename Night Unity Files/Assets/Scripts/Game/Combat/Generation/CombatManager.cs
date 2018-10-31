@@ -67,11 +67,12 @@ namespace Game.Combat.Generation
             GameObject regionNameObject = GameObject.Find("Screen Fader");
             _regionUnderline = regionNameObject.FindChildWithName<Image>("Underline");
             _regionUnderline.color = UiAppearanceController.InvisibleColour;
+            _regionNameText = regionNameObject.FindChildWithName<TextMeshProUGUI>("Text");
+            _regionNameText.text = "";
             Sequence sequence = DOTween.Sequence();
             sequence.AppendInterval(0.5f);
             sequence.AppendCallback(() =>
             {
-                _regionNameText = regionNameObject.FindChildWithName<TextMeshProUGUI>("Text");
                 _regionUnderline.color = Color.white;
                 _regionNameText.text = GetCurrentRegionName();
             });

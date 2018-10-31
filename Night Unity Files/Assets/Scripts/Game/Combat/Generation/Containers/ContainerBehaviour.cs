@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using C5;
 using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Combat.Misc;
@@ -19,6 +20,8 @@ namespace Game.Combat.Generation
         private SpriteRenderer _iconSprite, _glowSprite, _selectSprite;
         private InsectBehaviour _insectBehaviour;
         private bool _fading;
+        private float _targetAlpha;
+        private float _currentAlpha;
 
         public void Awake()
         {
@@ -66,6 +69,11 @@ namespace Game.Combat.Generation
         public void Update()
         {
             transform.rotation = Quaternion.Euler(0, 0, PlayerCombat.Instance.transform.rotation.z);
+            if (!_revealed || _fading) return;
+            if (_currentAlpha > _targetAlpha) _currentAlpha -= Time.deltaTime;
+            else _currentAlpha += Time.deltaTime;
+            _currentAlpha = Mathf.Clamp(_currentAlpha, 0f, 1f);
+            _selectSprite.color = new Color(1, 1, 1, _currentAlpha);
         }
 
         public void Reveal()
@@ -73,14 +81,25 @@ namespace Game.Combat.Generation
             if (_revealed) return;
             _revealed = true;
             _iconSprite.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
-            _glowSprite.DOColor(new Color(1, 1, 1, 0.4f), MaxRevealTime);
+        }
+
+        public void Hide()
+        {
+            if (_selectSprite.color.a == 0) return;
+            _selectSprite.DOBlendableColor(new Color(1, 1, 1, 0f), 0.5f);
         }
 
         public float InRange()
         {
             if (_fading) return -1;
-            float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
-            if (distanceToPlayer > MinDistanceToReveal) return -1;
+            float distanceToPlayer = transform.position.Distance(PlayerCombat.Instance.transform.position);
+            if (distanceToPlayer > MinDistanceToReveal)
+            {
+                _targetAlpha = 0f;
+                return -1;
+            }
+
+            _targetAlpha = 1;
             Reveal();
             return distanceToPlayer;
         }

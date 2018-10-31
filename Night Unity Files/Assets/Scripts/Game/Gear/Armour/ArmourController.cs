@@ -64,6 +64,13 @@ namespace Game.Gear.Armour
             else
                 SetHeadArmour(armour);
         }
+
+        public float CalculateDamageModifier()
+        {
+            float currentProtection = GetCurrentProtection();
+            currentProtection /= 20f;
+            return 1 - currentProtection;
+        }
         
         private void SetChestArmour(Armour chest)
         {

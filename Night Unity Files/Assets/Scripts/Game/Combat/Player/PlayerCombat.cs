@@ -190,8 +190,8 @@ namespace Game.Combat.Player
             if (_compassPulses == 0) return;
             if (!UiCompassController.EmitPulse()) return;
             Player.Attributes.Get(AttributeType.Focus).Decrement();
-            UiCompassPulseController.UpdateCompassPulses();
             --_compassPulses;
+            UiCompassPulseController.UsePulse(_compassPulses);
         }
 
         public void OnInputUp(InputAxis axis)
@@ -369,7 +369,7 @@ namespace Game.Combat.Player
         {
             UIMagazineController.SetWeapon(_weaponBehaviour);
         }
-        
+
         public void RecalculateAttributes()
         {
             int currentHealth = (int) HealthController.GetCurrentHealth();
@@ -413,7 +413,7 @@ namespace Game.Combat.Player
         {
             HealthController.SetInitialHealth(Player.Attributes.CalculateInitialHealth(), this, Player.Attributes.CalculateMaxHealth());
         }
-        
+
         public void Initialise()
         {
             InputHandler.SetCurrentListener(this);

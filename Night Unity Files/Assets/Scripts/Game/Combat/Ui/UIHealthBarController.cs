@@ -10,24 +10,19 @@ namespace Game.Combat.Ui
     public class UIHealthBarController : MonoBehaviour
     {
         private ParticleSystem _burnEffect;
-        private TextMeshProUGUI _healthText;
         private SteppedProgressBar _healthBar;
-
         private Image _sicknessImage;
         private bool _cached;
 
         public void Awake()
         {
-            _healthBar = gameObject.FindChildWithName<SteppedProgressBar>("Health Bar");
+            _healthBar = gameObject.GetComponent<SteppedProgressBar>();
             _burnEffect = gameObject.FindChildWithName<ParticleSystem>("Burning");
-            _healthText = gameObject.FindChildWithName<TextMeshProUGUI>("Health Text");
             _sicknessImage = gameObject.FindChildWithName<Image>("Sickness");
         }
 
         public void SetValue(Number health)
         {
-            _healthText.text = (int) health.CurrentValue() + "/" + (int) health.Max;
-            _healthText.text = "";
             _healthBar.SetValue(health.Normalised());
         }
 
