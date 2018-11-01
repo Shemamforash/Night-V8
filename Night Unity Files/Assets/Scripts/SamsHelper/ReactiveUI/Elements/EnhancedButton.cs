@@ -261,7 +261,7 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public void SetEnabled(bool b)
         {
-            if (_enabled == b) return;
+            if (b == _enabled) return;
             _enabled = b;
             _button.interactable = b;
             if (!_enabled) _border.SetDisabled();

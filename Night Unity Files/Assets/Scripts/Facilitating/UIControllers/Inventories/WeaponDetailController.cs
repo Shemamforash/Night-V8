@@ -48,9 +48,9 @@ public class WeaponDetailController : MonoBehaviour
         _capacityText.SetText(Mathf.FloorToInt(attr.Val(AttributeType.Capacity)) + " Capacity");
         _accuracyText.SetText((attr.Val(AttributeType.Accuracy) * 100).Round(1) + "% Accuracy");
         Inscription inscription = weapon.GetInscription();
-        string inscriptionText = inscription == null ? "No Inscription" : inscription.GetSummary();
+        string inscriptionText = inscription == null ? "No Inscription" : inscription.Name;
         _inscriptionNameText.SetText(inscriptionText);
-        _inscriptionEffectText.SetText(inscription == null ? "" : inscription.Modifier().FinalBonusToString());
+        _inscriptionEffectText.SetText(inscription == null ? "-" : inscription.GetSummary());
         _typeText.SetText(weapon.WeaponType().ToString());
     }
 

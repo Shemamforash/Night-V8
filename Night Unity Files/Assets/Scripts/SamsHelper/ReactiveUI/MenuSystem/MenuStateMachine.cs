@@ -20,21 +20,26 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
         public void Awake()
         {
-            if(SceneManager.GetActiveScene().name != "Menu") InputHandler.RegisterInputListener(this);
+            if (SceneManager.GetActiveScene().name != "Menu") InputHandler.RegisterInputListener(this);
             States = new StateMachine();
             _instance = this;
             foreach (Menu t in Helper.FindAllComponentsInChildren<Menu>(transform))
             {
-                MenuState menu = new MenuState(States, t.name, t);
-                if (!t.gameObject.activeInHierarchy)
-                {
-                    t.gameObject.SetActive(true);
-                    t.gameObject.SetActive(false);
-                    t.GetComponent<CanvasGroup>().alpha = 0;
-                }
-
-                States.AddState(menu);
+                RegisterMenu(t);
             }
+        }
+
+        public static void RegisterMenu(Menu t)
+        {
+            MenuState menu = new MenuState(States, t.name, t);
+            if (!t.gameObject.activeInHierarchy)
+            {
+                t.gameObject.SetActive(true);
+                t.gameObject.SetActive(false);
+                t.GetComponent<CanvasGroup>().alpha = 0;
+            }
+
+            States.AddState(menu);
         }
 
         public void Start()

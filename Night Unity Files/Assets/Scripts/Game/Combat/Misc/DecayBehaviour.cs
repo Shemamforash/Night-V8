@@ -9,16 +9,16 @@ namespace Game.Combat.Misc
 {
     public class DecayBehaviour : MonoBehaviour
     {
-        private ParticleSystem _particles;
+        private ParticleSystem _shardParticles, _burstParticles;
         private static readonly ObjectPool<DecayBehaviour> _decayPool = new ObjectPool<DecayBehaviour>("Decay Areas", "Prefabs/Combat/Effects/Decay Area");
-        private List<CanTakeDamage> _ignoreTargets;
         private float _radius;
-        private CircleCollider2D _collider;
+        private DecayDamageDeal _decayDamage;
 
         private void Awake()
         {
-            _particles = gameObject.FindChildWithName<ParticleSystem>("Shards");
-            _collider = GetComponent<CircleCollider2D>();
+            _shardParticles = gameObject.FindChildWithName<ParticleSystem>("Shards");
+            _burstParticles = gameObject.FindChildWithName<ParticleSystem>("Burst");
+            _decayDamage = GetComponent<DecayDamageDeal>();
         }
 
         public static DecayBehaviour Create(Vector3 position, float radius = 1f)
@@ -31,36 +31,39 @@ namespace Game.Combat.Misc
         private void Initialise(Vector3 position, float radius)
         {
             _radius = radius;
-            _ignoreTargets = new List<CanTakeDamage>();
-            _collider.radius = _radius;
+            _decayDamage.SetRadius(_radius);
             StartCoroutine(EmitAndDie(position));
         }
 
         public void AddIgnoreTarget(CanTakeDamage _ignoreTarget)
         {
-            _ignoreTargets.Add(_ignoreTarget);
-        }
-
-        public void OnTriggerEnter2D(Collider2D other)
-        {
-            CharacterCombat character = other.GetComponent<CharacterCombat>();
-            if (character == null) return;
-            if (_ignoreTargets.Contains(other.GetComponent<CanTakeDamage>())) return;
-            character.Decay();
+            _decayDamage.AddIgnoreTarget(_ignoreTarget);
         }
 
         private IEnumerator EmitAndDie(Vector2 position)
         {
             transform.position = position;
-            ParticleSystem.ShapeModule shape = _particles.shape;
+            ParticleSystem.ShapeModule shape = _shardParticles.shape;
             shape.radius = _radius - 0.5f;
-            _particles.randomSeed = (uint) Random.Range(uint.MinValue, uint.MaxValue);
-            _particles.Emit((int) (150 * _radius));
+            shape = _burstParticles.shape;
+            shape.radius = _radius - 0.7f;
+            _shardParticles.randomSeed = (uint) Random.Range(uint.MinValue, uint.MaxValue);
+            int emitCount = (int) (150 * _radius);
+            _shardParticles.Emit(emitCount);
+            _burstParticles.Emit(emitCount);
             bool active = CombatManager.IsCombatActive();
-            while (_particles.particleCount > 0)
+            while (_shardParticles.particleCount > 0)
             {
-                if (!CombatManager.IsCombatActive() && active) _particles.PauseParticles();
-                else if (CombatManager.IsCombatActive() && !active) _particles.ResumeParticles();
+                if (!CombatManager.IsCombatActive() && active)
+                {
+                    _shardParticles.PauseParticles();
+                    _burstParticles.PauseParticles();
+                }
+                else if (CombatManager.IsCombatActive() && !active)
+                {
+                    _shardParticles.ResumeParticles();
+                    _burstParticles.ResumeParticles();
+                }
                 active = CombatManager.IsCombatActive();
                 yield return null;
             }
@@ -75,7 +78,7 @@ namespace Game.Combat.Misc
 
         public void AddIgnoreTargets(List<CanTakeDamage> targetsToIgnore)
         {
-            _ignoreTargets.AddRange(targetsToIgnore);
+            _decayDamage.AddIgnoreTargets(targetsToIgnore);
         }
     }
 }

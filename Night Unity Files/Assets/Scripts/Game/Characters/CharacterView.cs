@@ -119,20 +119,23 @@ namespace Game.Characters
             _exploreButton.Select();
         }
 
+        private void SetButtonEnabled(EnhancedButton button, bool enabled)
+        {
+            if (button.IsEnabled() == enabled) return;
+            button.SetEnabled(enabled);
+            TextMeshProUGUI textObject = button.GetComponent<TextMeshProUGUI>();
+            textObject.color = enabled ? Color.white : UiAppearanceController.FadedColour;
+        }
+
         public void RefreshNavigation()
         {
             bool atHome = _player.TravelAction.AtHome();
             bool resting = _player.States.GetCurrentState() is Rest;
-            _exploreButton.SetEnabled(atHome && resting);
-            _craftButton.SetEnabled(Recipe.RecipesAvailable() && atHome && resting);
-            _consumeButton.SetEnabled(Inventory.Consumables().Count > 0);
-            _meditateButton.SetEnabled(_player.CanMeditate() && atHome && resting);
-            _sleepButton.SetEnabled(_player.CanSleep() && atHome && resting);
-            _buttons.ForEach(b =>
-            {
-                TextMeshProUGUI textObject = b.GetComponent<TextMeshProUGUI>();
-                textObject.color = b.IsEnabled() ? Color.white : UiAppearanceController.FadedColour;
-            });
+            SetButtonEnabled(_exploreButton, atHome && resting);
+            SetButtonEnabled(_craftButton, Recipe.RecipesAvailable() && atHome && resting);
+            SetButtonEnabled(_consumeButton, Inventory.Consumables().Count > 0);
+            SetButtonEnabled(_meditateButton, _player.CanMeditate() && atHome && resting);
+            SetButtonEnabled(_sleepButton, _player.CanSleep() && atHome && resting);
         }
 
         private void UpdateCurrentAction()

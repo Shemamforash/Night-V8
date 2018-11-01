@@ -70,6 +70,7 @@ namespace Game.Combat.Generation
         {
             transform.rotation = Quaternion.Euler(0, 0, PlayerCombat.Instance.transform.rotation.z);
             if (!_revealed || _fading) return;
+            if (_currentAlpha == _targetAlpha) return;
             if (_currentAlpha > _targetAlpha) _currentAlpha -= Time.deltaTime;
             else _currentAlpha += Time.deltaTime;
             _currentAlpha = Mathf.Clamp(_currentAlpha, 0f, 1f);
@@ -81,12 +82,6 @@ namespace Game.Combat.Generation
             if (_revealed) return;
             _revealed = true;
             _iconSprite.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
-        }
-
-        public void Hide()
-        {
-            if (_selectSprite.color.a == 0) return;
-            _selectSprite.DOBlendableColor(new Color(1, 1, 1, 0f), 0.5f);
         }
 
         public float InRange()

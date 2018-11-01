@@ -86,7 +86,9 @@ namespace Game.Global
         public override void Exit()
         {
             base.Exit();
-            _lastSelectedButton = EventSystem.current.currentSelectedGameObject.GetComponent<Selectable>();
+            GameObject selectedObject = EventSystem.current.currentSelectedGameObject;
+            if (selectedObject == null) return;
+            _lastSelectedButton = selectedObject.GetComponent<Selectable>();
         }
 
         private static string TimeToName(int hours)

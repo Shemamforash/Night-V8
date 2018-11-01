@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 222522490280665482}
   - component: {fileID: 114803502067201786}
   m_Layer: 5
-  m_Name: Right
+  m_Name: Right Fade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 222642503000619768}
   - component: {fileID: 114998093950843292}
   m_Layer: 5
-  m_Name: Centre
+  m_Name: Centre Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,7 +72,7 @@ GameObject:
   - component: {fileID: 222106873815779994}
   - component: {fileID: 114434621600368872}
   m_Layer: 5
-  m_Name: Left
+  m_Name: Left Fade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -251,10 +251,10 @@ RectTransform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -10}
-  m_SizeDelta: {x: 1880, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224888899799518368
 RectTransform:

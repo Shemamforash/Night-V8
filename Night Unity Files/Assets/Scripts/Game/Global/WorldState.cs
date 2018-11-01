@@ -76,6 +76,7 @@ namespace Game.Global
             EnvironmentManager.Load(doc);
             WorldEventManager.Load(doc);
             JournalEntry.Load(doc);
+            TutorialManager.Load(doc);
         }
 
         public static void Save(XmlNode doc)
@@ -96,6 +97,7 @@ namespace Game.Global
             EnvironmentManager.Save(doc);
             WorldEventManager.Save(doc);
             JournalEntry.Save(doc);
+            TutorialManager.Save(doc);
         }
 
         public static void ResetWorld(int currentLevel = 1, int difficulty = 0)
