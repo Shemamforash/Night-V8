@@ -27,6 +27,7 @@ namespace Game.Combat.Ui
             });
 
             PlayerCombat.Instance.SetTarget(nearestCharacter);
+            if(nearestCharacter != null) TutorialManager.TryOpenTutorial(3);
         }
 
         protected override void LateUpdate()

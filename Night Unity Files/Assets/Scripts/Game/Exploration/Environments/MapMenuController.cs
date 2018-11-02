@@ -56,6 +56,7 @@ namespace Game.Exploration.Environment
             MapGenerator.Regions().ForEach(n => { n.ShowNode(); });
             MapMovementController.Enter(CharacterManager.SelectedCharacter);
             VolumeController.FadeInMuffle();
+            TutorialManager.TryOpenTutorial(2, 1f);
         }
 
         public override void Exit()

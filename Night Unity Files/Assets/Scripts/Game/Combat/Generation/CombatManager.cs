@@ -139,6 +139,8 @@ namespace Game.Combat.Generation
         {
             base.Enter();
             InputHandler.SetCurrentListener(PlayerCombat.Instance);
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendInterval(3f);
         }
 
         public static bool IsPlayerInCombat()

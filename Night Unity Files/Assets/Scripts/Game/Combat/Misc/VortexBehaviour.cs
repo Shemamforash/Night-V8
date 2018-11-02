@@ -10,12 +10,13 @@ using UnityEngine;
 public class VortexBehaviour : MonoBehaviour
 {
     private static readonly ObjectPool<VortexBehaviour> _vortexPool = new ObjectPool<VortexBehaviour>("Vortices", "Prefabs/Combat/Effects/Vortex");
-    private ParticleSystem[] _particleSystems;
+    private ParticleSystem _particles;
+
     private Vector2 _position;
 
     private void Awake()
     {
-        _particleSystems = transform.GetComponentsInChildren<ParticleSystem>();
+        _particles = GetComponent<ParticleSystem>();
     }
 
     public static void Create(Vector2 position)
@@ -28,17 +29,13 @@ public class VortexBehaviour : MonoBehaviour
     {
         _position = position;
         transform.position = _position;
-        foreach (ParticleSystem system in _particleSystems)
-        {
-            system.Play();
-        }
-
+        _particles.Emit(50);
         StartCoroutine(WaitAndDie());
     }
 
     private IEnumerator WaitAndDie()
     {
-        float time = 1f;
+        float time = 2f;
         while (time > 0f)
         {
             List<CanTakeDamage> charactersInRange = CombatManager.GetCharactersInRange(_position, 2f);

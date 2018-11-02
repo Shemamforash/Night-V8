@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Xml;
+using DG.Tweening;
 using Facilitating;
 using Facilitating.Persistence;
 using Game.Characters;
@@ -130,6 +131,7 @@ namespace Game.Global
             WeatherManager.Start();
             WorldView.Update(Hours);
             CharacterManager.Update();
+            TutorialManager.TryOpenTutorial(1);
         }
 
         public static void ActivateTemple()

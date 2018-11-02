@@ -29,7 +29,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             }
         }
 
-        public static void RegisterMenu(Menu t)
+        private static void RegisterMenu(Menu t)
         {
             MenuState menu = new MenuState(States, t.name, t);
             if (!t.gameObject.activeInHierarchy)

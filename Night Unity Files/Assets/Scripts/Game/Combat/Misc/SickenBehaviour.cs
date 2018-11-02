@@ -9,12 +9,13 @@ namespace Game.Combat.Misc
     public class SickenBehaviour : MonoBehaviour
     {
         private static readonly ObjectPool<SickenBehaviour> _sicknessPool = new ObjectPool<SickenBehaviour>("Fire Areas", "Prefabs/Combat/Visuals/Sicken Effect");
-        private ParticleSystem _particles;
+        private ParticleSystem[] _particleSystems;
+
         private List<CanTakeDamage> _ignoreTargets;
 
         public void Awake()
         {
-            _particles = GetComponent<ParticleSystem>();
+            _particleSystems = transform.GetComponentsInChildren<ParticleSystem>();
         }
 
         public static void Create(Vector2 position, List<CanTakeDamage> ignoreTargets, float radius = 1f)
@@ -23,10 +24,9 @@ namespace Game.Combat.Misc
             characters.ForEach(c =>
             {
                 if (ignoreTargets.Contains(c)) return;
-                MonoBehaviour character = (MonoBehaviour) c;
                 c.Sicken();
                 SickenBehaviour sickness = _sicknessPool.Create();
-                sickness.StartCoroutine(sickness.Sicken(character.transform.position));
+                sickness.StartCoroutine(sickness.Sicken(c.transform.position));
             });
         }
 
@@ -40,8 +40,8 @@ namespace Game.Combat.Misc
         private IEnumerator Sicken(Vector2 position)
         {
             transform.position = position;
-            _particles.Emit(50);
-            while (_particles.particleCount > 0) yield return null;
+            foreach (ParticleSystem system in _particleSystems) system.Play();
+            yield return new WaitForSeconds(2f);
             _sicknessPool.Return(this);
         }
 

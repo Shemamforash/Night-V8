@@ -131,10 +131,7 @@ namespace Facilitating.MenuNavigation
 
         public void StartNewGame()
         {
-            if (SaveController.SaveExists())
-                MenuStateMachine.ShowMenu("Overwrite Save Warning");
-            else
-                _gameController.ClearSaveAndLoad();
+            MenuStateMachine.ShowMenu(SaveController.SaveExists() ? "Overwrite Save Warning" : "Tutorial Choice");
         }
 
         public void ShowMenu(Menu menu)

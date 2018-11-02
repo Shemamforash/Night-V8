@@ -12,7 +12,7 @@ namespace SamsHelper.Input
         private static readonly List<IInputListener> InputListeners = new List<IInputListener>();
         private static readonly List<IInputListener> ListenersToAdd = new List<IInputListener>();
         private static readonly List<IInputListener> ListenersToRemove = new List<IInputListener>();
-        private static IInputListener _inputListener;
+        private static IInputListener _currentInputListener;
 
         public void Awake()
         {
@@ -50,39 +50,44 @@ namespace SamsHelper.Input
 
         private static void BroadcastInputDown(InputAxis axis, bool isHeld, float lastInputValue)
         {
-            _inputListener?.OnInputDown(axis, isHeld, lastInputValue);
+            _currentInputListener?.OnInputDown(axis, isHeld, lastInputValue);
             for (int i = InputListeners.Count - 1; i >= 0; --i)
             {
-                if (InputListeners[i] == _inputListener) continue;
+                if (InputListeners[i] == _currentInputListener) continue;
                 InputListeners[i].OnInputDown(axis, isHeld, lastInputValue);
             }
         }
 
         private static void BroadcastInputUp(InputAxis axis)
         {
-            _inputListener?.OnInputUp(axis);
+            _currentInputListener?.OnInputUp(axis);
 
             for (int i = InputListeners.Count - 1; i >= 0; --i)
             {
-                if (InputListeners[i] == _inputListener) continue;
+                if (InputListeners[i] == _currentInputListener) continue;
                 InputListeners[i].OnInputUp(axis);
             }
         }
 
         private static void BroadCastDoubleTap(InputAxis axis, float lastInputValue)
         {
-            _inputListener?.OnDoubleTap(axis, lastInputValue);
+            _currentInputListener?.OnDoubleTap(axis, lastInputValue);
 
             for (int i = InputListeners.Count - 1; i >= 0; --i)
             {
-                if (InputListeners[i] == _inputListener) continue;
+                if (InputListeners[i] == _currentInputListener) continue;
                 InputListeners[i].OnDoubleTap(axis, lastInputValue);
             }
         }
 
         public static void SetCurrentListener(IInputListener inputListener)
         {
-            _inputListener = inputListener;
+            _currentInputListener = inputListener;
+        }
+
+        public static IInputListener GetCurrentListener()
+        {
+            return _currentInputListener;
         }
 
         public static void RegisterInputListener(IInputListener inputListener)

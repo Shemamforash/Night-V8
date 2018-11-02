@@ -1,0 +1,122 @@
+<Tutorial>
+	<TutorialPart>
+		<SectionNumber>1</SectionNumber>
+		<PartNumber>1</PartNumber>
+		<Title>Exploration</Title>
+		<MinOffset>865,505</MinOffset>
+		<MaxOffset>865,480</MaxOffset>
+		<Text>Survival in the world of Beyond The Veil relies on constant exploration of your environment, both to survive, and to carry out the Necromancer�s commands. Select the Explore action to find a new destination to exploit.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>2</SectionNumber>
+		<PartNumber>1</PartNumber>
+		<Title>The Map</Title>
+		<MinOffset>810,375</MinOffset>
+		<MaxOffset>810,375</MaxOffset>
+		<Text>Characters can discover new regions and travel to existing ones by using the map. The map shows all visited and reachable regions, and is always centred on your camp- the gate.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>2</SectionNumber>
+		<PartNumber>2</PartNumber>
+		<Title>Travelling</Title>
+		<MinOffset>808,860</MinOffset>
+		<MaxOffset>808,30</MaxOffset>
+		<Text>Travelling to regions requires grit, shown below the region name. Remember that returning to the gate never requires grit, so you do not need to worry about using up your grit to return home.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>3</SectionNumber>
+		<PartNumber>1</PartNumber>
+		<Title>Health</Title>
+		<MinOffset>1020,950</MinOffset>
+		<MaxOffset>10,35</MaxOffset>
+		<Text>Your health bar shows your remaining health, as well as any conditions you are affected by. When it reaches zero, the current character dies. If that character is the Wanderer, then it�s game over.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>3</SectionNumber>
+		<PartNumber>2</PartNumber>
+		<Title>Armour</Title>
+		<MinOffset>10,950</MinOffset>
+		<MaxOffset>1020,35</MaxOffset>
+		<Text>Your armour bar shows your current armour protection level. Each piece of armour decreases incoming damage by 5%.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>3</SectionNumber>
+		<PartNumber>3</PartNumber>
+		<Title>Adrenaline</Title>
+		<MinOffset>895,885</MinOffset>
+		<MaxOffset>895,20</MaxOffset>
+		<Text>Combat requires focus and keen reflexes. Dealing damage to enemies builds up your adrenaline, which can be used to dash quickly or activate unlocked skills.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>3</SectionNumber>
+		<PartNumber>4</PartNumber>
+		<Title>Ammunition</Title>
+		<MinOffset>785,975</MinOffset>
+		<MaxOffset>1010,10</MaxOffset>
+		<Text>This bar shows the remaining ammunition in your weapon. When the magazine is empty, you must reload. Weapons in Beyond The Veil are magical and can recharge ammunition, so you do not need to worry about running out.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>3</SectionNumber>
+		<PartNumber>5</PartNumber>
+		<Title>Compass</Title>
+		<MinOffset>990,975</MinOffset>
+		<MaxOffset>750,10</MaxOffset>
+		<Text>You can consume compass charges to find hidden resources, enemies, and other locations of interest. The compass will show the direction of nearby points of interest.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>3</SectionNumber>
+		<PartNumber>6</PartNumber>
+		<Title>Enemy</Title>
+		<MinOffset>565,10</MinOffset>
+		<MaxOffset>565,915</MaxOffset>
+		<Text>When facing an enemy, their attributes will show at the top of the screen. This shows their health and armour, as well as a meter that measures your current accuracy. Continuous fire will decrease your accuracy, so fire in short bursts for high accuracy.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>3</SectionNumber>
+		<PartNumber>7</PartNumber>
+		<Title>Leaving</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>If you have fully explored a region, or you need to escape an overpowering encounter, you can leave by travelling to the ring around the region�s edge.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>4</SectionNumber>
+		<PartNumber>1</PartNumber>
+		<Title>Attributes</Title>
+		<MinOffset>645,320</MinOffset>
+		<MaxOffset>645,645</MaxOffset>
+		<Text>Characters have 4 attributes- 2 Physical, and 2 Mental:</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>4</SectionNumber>
+		<PartNumber>2</PartNumber>
+		<Title>Physical</Title>
+		<MinOffset>645,320</MinOffset>
+		<MaxOffset>960,645</MaxOffset>
+		<Text>Fettle- Increases your maximum health in combat. Grit- Determines how far you can travel on the map, as well as movement speed in combat.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>4</SectionNumber>
+		<PartNumber>3</PartNumber>
+		<Title>Mental</Title>
+		<MinOffset>960,320</MinOffset>
+		<MaxOffset>645,645</MaxOffset>
+		<Text>Focus- Increases your total compass charges, and your adrenaline recharge rate. Will- Can be used to restore other attributes, and reduces the cooldown of your skills.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>4</SectionNumber>
+		<PartNumber>4</PartNumber>
+		<Title>Restoring Attributes</Title>
+		<MinOffset>840,840</MinOffset>
+		<MaxOffset>840,115</MaxOffset>
+		<Text>Attributes can be restored in a number of ways. The simplest two methods are by Sleeping, and by Meditating. Sleeping restores your Fettle and Grit, whilst Meditating restores your Focus and Will. Keeping the fire lit at camp will also restore Fettle and Grit whilst your characters remain there.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>4</SectionNumber>
+		<PartNumber>5</PartNumber>
+		<Title>Hunger and Thirst</Title>
+		<MinOffset>635,375</MinOffset>
+		<MaxOffset>635,605</MaxOffset>
+		<Text>Your Hunger and Thirst will decrease over time, eventually killing you if allowed to fully deplete. Eat food and drink water to stave them off. Hot weather will cause you to dehydrate, whilst Cold weather increases your Hunger.</Text>
+	</TutorialPart>
+</Tutorial>

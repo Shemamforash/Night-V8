@@ -44,7 +44,7 @@ public class GameController : MonoBehaviour {
 		Application.Quit();
 	}
 
-	public void ClearSaveAndLoad()
+	private void ClearSaveAndLoad()
 	{
 		if (_starting) return;
 		_starting = true;
@@ -52,5 +52,17 @@ public class GameController : MonoBehaviour {
 		WorldState.ResetWorld();
 		SaveController.SaveGame();
 		StartGame(true);
+	}
+
+	public void EnableTutorial()
+	{
+		ClearSaveAndLoad();
+		TutorialManager.SetTutorialActive(true);
+	}
+
+	public void DisableTutorial()
+	{
+		ClearSaveAndLoad();
+		TutorialManager.SetTutorialActive(false);
 	}
 }

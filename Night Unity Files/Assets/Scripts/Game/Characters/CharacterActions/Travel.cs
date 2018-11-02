@@ -57,8 +57,8 @@ namespace Game.Characters.CharacterActions
             _inTransit = false;
             if (AtHome())
             {
+                TutorialManager.TryOpenTutorial(4, 1f);
                 PlayerCharacter.RestAction.Enter();
-                WorldEventManager.GenerateEvent(new CharacterMessage("I'm back, but the journey has taken it's toll", PlayerCharacter));
             }
             else
             {

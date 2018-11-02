@@ -182,9 +182,13 @@ namespace Game.Combat.Player
         {
         }
 
-        protected override void MagazineEffect(Shot s)
+        protected override void InstantEffect()
         {
-            s.LeaveFireTrail();
+            Transform playerTransform = PlayerCombat.Instance.transform;
+            Vector2 startPos = playerTransform.position + playerTransform.up * 0.5f;
+            Vector2 targetPos = playerTransform.position + playerTransform.up * 1f;
+            int damage = ((int) PlayerCombat.Instance.Weapon().Quality() + 1) * 10;
+            NeedleBehaviour.Create(startPos, targetPos, damage, true);
         }
     }
 

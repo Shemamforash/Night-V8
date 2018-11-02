@@ -233,6 +233,7 @@
             </e>
           </e>
         </e>
+        <e p="NeedleBehaviour.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="Quick" t="Include">
             <e p="Editor" t="Include">
@@ -324,6 +325,7 @@
             <e p="Skills.xml" t="Include" />
             <e p="Story.xml" t="Include" />
             <e p="Traits.xml" t="Include" />
+            <e p="Tutorial.xml" t="Include" />
             <e p="WeaponClasses.xml" t="Include" />
             <e p="Weather.xml" t="Include" />
             <e p="WeatherProbabilities.xml" t="Include" />
