@@ -38,6 +38,7 @@ namespace Facilitating.UIControllers
             UpdatePlates();
             InputHandler.RegisterInputListener(this);
             SetPlateListActive(_plateOneUi);
+            TutorialManager.TryOpenTutorial(7);
         }
 
         protected override void OnHide()

@@ -67,7 +67,7 @@ class TutorialImporter(XMLWriter):
         write_tag(self, "Tutorial", self.read_tutorials)
 
     def read_tutorials(self):
-        for row in range(2, 17):
+        for row in range(2, 37):
             write_tag(self, "TutorialPart", self.read_single_tutorial, [row])
 
     def read_single_tutorial(self, row):

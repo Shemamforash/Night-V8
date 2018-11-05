@@ -14,6 +14,17 @@
       <e p="Assets" t="Include">
         <e p="AmplifyShaderEditor" t="Include">
           <e p="CreatingTerrainsWithASE.txt" t="Include" />
+          <e p="Examples" t="Include">
+            <e p="Official" t="Include">
+              <e p="TemplateExamples" t="Include">
+                <e p="PostProcess" t="Include">
+                  <e p="FilmGrain" t="Include">
+                    <e p="FilmGrain.shader" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+          </e>
           <e p="Plugins" t="Include">
             <e p="EditorResources" t="Include">
               <e p="Previews" t="Include">
@@ -202,6 +213,7 @@
           </e>
           <e p="readme.txt" t="Include" />
         </e>
+        <e p="CameraOpacityController.cs" t="Include" />
         <e p="CloseButtonController.cs" t="Include" />
         <e p="DecayDamageDeal.cs" t="Include" />
         <e p="Demigiant" t="Include">
@@ -231,6 +243,14 @@
             <e p="Utilities" t="Include">
               <e p="CameraUtilities.cs" t="Include" />
             </e>
+          </e>
+        </e>
+        <e p="FireBurstBehaviour.cs" t="Include" />
+        <e p="FireDamageDeal.cs" t="Include" />
+        <e p="Images" t="Include">
+          <e p="Shaders" t="Include">
+            <e p="Camera Opacity Shader.shader" t="Include" />
+            <e p="Impact Shader.shader" t="Include" />
           </e>
         </e>
         <e p="NeedleBehaviour.cs" t="Include" />
@@ -603,7 +623,6 @@
                 <e p="EssenceCloudBehaviour.cs" t="Include" />
                 <e p="Explosion.cs" t="Include" />
                 <e p="FireBehaviour.cs" t="Include" />
-                <e p="FireGenerator.cs" t="Include" />
                 <e p="FootstepMaker.cs" t="Include" />
                 <e p="HealthController.cs" t="Include" />
                 <e p="ICombatEvent.cs" t="Include" />
@@ -779,6 +798,7 @@
             </e>
             <e p="Libraries" t="Include">
               <e p="AdvancedMaths.cs" t="Include" />
+              <e p="ColourExtensions.cs" t="Include" />
               <e p="Edge.cs" t="Include" />
               <e p="Graph.cs" t="Include" />
               <e p="Helper.cs" t="Include" />
@@ -964,6 +984,7 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
+        <e p="TrailFireBehaviour.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

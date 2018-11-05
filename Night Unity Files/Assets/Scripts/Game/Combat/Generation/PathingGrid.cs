@@ -71,7 +71,7 @@ namespace Game.Combat.Generation
             }
 
             Polygon polygon = new Polygon(_blockingVerts, origin);
-            AddBarrier(polygon); 
+            AddBarrier(polygon);
         }
 
         public static void FinaliseGrid()
@@ -138,6 +138,9 @@ namespace Game.Combat.Generation
             {
                 if (print) Debug.Log("Invalid cell position: (" + x + " ," + y + ")");
                 return null;
+                position.Normalize();
+                position *= CombatMovementDistance - 0.1f;
+                return WorldToCellPosition(position);
             }
         }
 

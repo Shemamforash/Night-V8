@@ -30,7 +30,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             {
                 float lerpVal = i / distance;
                 tempPos = Vector2.Lerp(_lastPosition, currentPosition, lerpVal);
-                FireBehaviour.Create(tempPos, 0.25f, _lifeTime, false, false).AddIgnoreTarget(GetComponent<CanTakeDamage>());
+                TrailFireBehaviour.Create(tempPos).AddIgnoreTarget(GetComponent<CanTakeDamage>());
             }
 
             _lastPosition = tempPos;

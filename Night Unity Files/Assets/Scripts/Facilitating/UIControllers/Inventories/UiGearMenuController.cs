@@ -25,7 +25,8 @@ namespace Facilitating.UIControllers
         private static UiInventoryMenuController _currentMenuController;
         private static UiWillController _willController;
         private static UiGearMenuController _instance;
-
+        private CloseButtonController _closeButton;
+        
         private static Tab _currentTab;
         private static bool _open;
         private static readonly List<Tab> _tabs = new List<Tab>();

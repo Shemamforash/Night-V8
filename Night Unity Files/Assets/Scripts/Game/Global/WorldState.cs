@@ -131,7 +131,7 @@ namespace Game.Global
             WeatherManager.Start();
             WorldView.Update(Hours);
             CharacterManager.Update();
-            TutorialManager.TryOpenTutorial(1);
+            TutorialManager.TryOpenTutorial(1, 1f);
         }
 
         public static void ActivateTemple()

@@ -3,9 +3,9 @@
 		<SectionNumber>1</SectionNumber>
 		<PartNumber>1</PartNumber>
 		<Title>Exploration</Title>
-		<MinOffset>865,505</MinOffset>
-		<MaxOffset>865,480</MaxOffset>
-		<Text>Survival in the world of Beyond The Veil relies on constant exploration of your environment, both to survive, and to carry out the Necromancer�s commands. Select the Explore action to find a new destination to exploit.</Text>
+		<MinOffset>865,495</MinOffset>
+		<MaxOffset>865,465</MaxOffset>
+		<Text>Beyond The Veil requires constant exploration of your environment, both to survive, and to carry out the Necromancer�s commands. The Explore action allows you to access the map, where you can discover and exploit new destinations.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>2</SectionNumber>
@@ -80,6 +80,14 @@
 		<Text>If you have fully explored a region, or you need to escape an overpowering encounter, you can leave by travelling to the ring around the region�s edge.</Text>
 	</TutorialPart>
 	<TutorialPart>
+		<SectionNumber>3</SectionNumber>
+		<PartNumber>8</PartNumber>
+		<Title>Damage</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>Finally, there are 4 types of damage in Beyond The Veil. Physical damage is the most basic, is dealt by all weapons, and can reduced by armour. Shatter damage causes damage to armour, increasing the amount of physical damage dealt. Fire damage causes small amounts of direct damage over time. Void damage builds up over time, and upon reaching a critical level, causes large amounts of damage directly to health.</Text>
+	</TutorialPart>
+	<TutorialPart>
 		<SectionNumber>4</SectionNumber>
 		<PartNumber>1</PartNumber>
 		<Title>Attributes</Title>
@@ -118,5 +126,157 @@
 		<MinOffset>635,375</MinOffset>
 		<MaxOffset>635,605</MaxOffset>
 		<Text>Your Hunger and Thirst will decrease over time, eventually killing you if allowed to fully deplete. Eat food and drink water to stave them off. Hot weather will cause you to dehydrate, whilst Cold weather increases your Hunger.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>4</SectionNumber>
+		<PartNumber>6</PartNumber>
+		<Title>Progress</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>Progress is saved automatically at the dawn of every day. If a character starves, dehydrates, or loses all their health in combat, they will die. If the Wanderer dies, it is game over, and you must either reload at the dawn of the last day, or start a new game. The day can be restarted at any time from the pause menu.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>4</SectionNumber>
+		<PartNumber>7</PartNumber>
+		<Title>Gear</Title>
+		<MinOffset>745,707</MinOffset>
+		<MaxOffset>745,160</MaxOffset>
+		<Text>The gear section shows your currently equipped Weapon, Armour, and Accessory. To learn more about each gear type, select the relevant element.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>5</SectionNumber>
+		<PartNumber>1</PartNumber>
+		<Title>Crafting</Title>
+		<MinOffset>20,10</MinOffset>
+		<MaxOffset>20,970</MaxOffset>
+		<Text>The resources you find in the world can be used to craft a variety of different items. As you find resources, recipes will be unlocked that can make your journey through the world easier.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>5</SectionNumber>
+		<PartNumber>2</PartNumber>
+		<Title>Resources</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>Some resources are always dropped by enemies, some can be found scattered throughout the world, and some can only be crafted.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>5</SectionNumber>
+		<PartNumber>3</PartNumber>
+		<Title>Radiance</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>Salt is dropped by enemies, and can be used to craft one of the most useful resources in the game- Radiance. Radiance can be used to claim a region. Over time, claimed regions will generate either food, water, or resources. These resources are automatically added to your inventory.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>6</SectionNumber>
+		<PartNumber>1</PartNumber>
+		<Title>Weapons</Title>
+		<MinOffset>620,300</MinOffset>
+		<MaxOffset>620,640</MaxOffset>
+		<Text>Weapons come in a number of different varieties, all of which with unique firing behaviours.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>6</SectionNumber>
+		<PartNumber>2</PartNumber>
+		<Title>Power</Title>
+		<MinOffset>745,370</MinOffset>
+		<MaxOffset>745,600</MaxOffset>
+		<Text>Weapon power affects the damage output of a weapon. Lower power reduces the effectiveness of your weapons, whilst higher power increases it. The current weapon power is shown on this bar.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>6</SectionNumber>
+		<PartNumber>3</PartNumber>
+		<Title>Quality</Title>
+		<MinOffset>745,370</MinOffset>
+		<MaxOffset>745,600</MaxOffset>
+		<Text>A weapon�s quality affects it�s maximum power, and is represented by the width of the power bar. Weapons of equal power will have similar damage outputs, regardless of their quality. For this reason it is important to maintain their power level.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>6</SectionNumber>
+		<PartNumber>4</PartNumber>
+		<Title>Chanelling</Title>
+		<MinOffset>1190,700</MinOffset>
+		<MaxOffset>565,275</MaxOffset>
+		<Text>Using your weapon slowly drains it of power, thereby decreasing the damage you deal in combat. You can offset this either by using a different weapon, or by channelling essence into it to increase it�s Power. Finding this essence, however, may be easier said than done.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>6</SectionNumber>
+		<PartNumber>5</PartNumber>
+		<Title>Infusions</Title>
+		<MinOffset>565,700</MinOffset>
+		<MaxOffset>1190,275</MaxOffset>
+		<Text>Weapons can also be infused with the last words of the dying. These infusions grant larger, passive bonuses to weapons, allowing you to customise them further to your playstyle. Infusing can only be performed using Essence, and new Infusions will replace any existing ones.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>7</SectionNumber>
+		<PartNumber>1</PartNumber>
+		<Title>Armour</Title>
+		<MinOffset>505,305</MinOffset>
+		<MaxOffset>505,660</MaxOffset>
+		<Text>Armour can be equipped to reduce incoming damage. All characters have two armour slots for Chest and Head armour respectively.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>7</SectionNumber>
+		<PartNumber>2</PartNumber>
+		<Title>Protection</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>Armour offers varying levels of protection, with higher quality armour offering more protection. Each point of protection offers a 5% reduction in damage, up to a maximum of 50%.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>7</SectionNumber>
+		<PartNumber>3</PartNumber>
+		<Title>Damage</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>The Shatter effect causes damage to armour. When enough Shatter damage is taken, armour will lose a point of protection. If a piece of armour loses all it�s protection, it will break, and be lost.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>7</SectionNumber>
+		<PartNumber>4</PartNumber>
+		<Title>Sources</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>Armour cannot be repaired, and so must be replaced, either through crafting, or found as loot. Instead of a health boost, consider armour an expendable source of protection, destined to be damaged and eventually destroyed.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>8</SectionNumber>
+		<PartNumber>1</PartNumber>
+		<Title>Accessories</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>Accessories are small trinkets that can further modify the power of your weapon, either by increasing the chance of inflicting conditions, or by increasing the stats of your weapons. Only one accessory can be equipped at a time.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>9</SectionNumber>
+		<PartNumber>1</PartNumber>
+		<Title>Skills</Title>
+		<MinOffset>525,900</MinOffset>
+		<MaxOffset>525,55</MaxOffset>
+		<Text>Skills can have a large impact on how a battle plays out. In total there are 4 skill slots available during combat.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>9</SectionNumber>
+		<PartNumber>2</PartNumber>
+		<Title>Character Skills</Title>
+		<MinOffset>570,900</MinOffset>
+		<MaxOffset>1020,55</MaxOffset>
+		<Text>2 skills are linked to the character�s class. These skills are unlocked over time, and are generally geared towards survival.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>9</SectionNumber>
+		<PartNumber>3</PartNumber>
+		<Title>Weapon Skills</Title>
+		<MinOffset>1020,900</MinOffset>
+		<MaxOffset>570,55</MaxOffset>
+		<Text>The remaining 2 skills are linked to the currently equipped weapon. Weapon skills unlocked by dealing damage with the relevant weapon. Weapon skills have an offensive focus, and are complement the play style of each weapon.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>9</SectionNumber>
+		<PartNumber>4</PartNumber>
+		<Title>Cost</Title>
+		<MinOffset>585,900</MinOffset>
+		<MaxOffset>1195,110</MaxOffset>
+		<Text>The cost of a skill is shown above its name. Activating any skill will reset the cooldown period of all your skills, regardless of their cost.</Text>
 	</TutorialPart>
 </Tutorial>

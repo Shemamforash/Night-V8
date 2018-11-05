@@ -316,27 +316,26 @@ namespace Game.Combat.Misc
         private void ApplyConditions()
         {
             float random = Random.Range(0f, 1f);
-            bool canDecay = random < _decayChance / _weapon.GetAttributeValue(AttributeType.Pellets);
-            bool canBurn = random < _burnChance / _weapon.GetAttributeValue(AttributeType.Pellets);
-            bool canSicken = random < _sicknessChance / _weapon.GetAttributeValue(AttributeType.Pellets);
+            float conditionModifier = _weapon.GetAttributeValue(AttributeType.Pellets) * _weapon.GetAttributeValue(AttributeType.Capacity);
+            bool canDecay = random < _decayChance / conditionModifier;
+            bool canBurn = random < _burnChance / conditionModifier;
+            bool canSicken = random < _sicknessChance / conditionModifier;
             List<int> conditions = new List<int>();
             if (canDecay) conditions.Add(0);
             if (canBurn) conditions.Add(1);
             if (canSicken) conditions.Add(2);
             if (conditions.Count == 0) return;
             int condition = conditions.GetRandomElement();
-            float radius = _damageDealt / 400f;
-            if (radius < 0.5f) radius = 0.5f;
             switch (condition)
             {
                 case 0:
-                    DecayBehaviour.Create(transform.position, radius);
+                    DecayBehaviour.Create(transform.position);
                     break;
                 case 1:
-                    FireBehaviour.Create(transform.position, radius, 4f, false, false);
+                    FireBurstBehaviour.Create(transform.position);
                     break;
                 case 2:
-                    SickenBehaviour.Create(transform.position, new List<CanTakeDamage> {_origin}, radius);
+                    SickenBehaviour.Create(transform.position, new List<CanTakeDamage> {_origin});
                     break;
             }
         }

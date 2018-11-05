@@ -51,6 +51,7 @@ namespace Facilitating.UIControllers
         protected override void OnShow()
         {
             _accessoryList.Show(GetAvailableAccessories);
+            TutorialManager.TryOpenTutorial(8);
         }
 
         private static List<object> GetAvailableAccessories()

@@ -1,9 +1,13 @@
 ﻿using System;
+using DG.Tweening;
 using Game.Characters;
 using Game.Combat.Enemies.Misc;
+using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Gear.Armour;
+using SamsHelper.Libraries;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Player
 {
@@ -205,16 +209,37 @@ namespace Game.Combat.Player
 
     public class Erupt : Skill
     {
-        public Erupt() : base(nameof(Impel))
+        public Erupt() : base(nameof(Erupt))
         {
+        }
+
+        private void CreateExplosion(Vector2 position, int damage, float radius)
+        {
+            Explosion e = Explosion.CreateExplosion(position, damage, radius);
+            e.AddIgnoreTarget(PlayerCombat.Instance);
+            e.InstantDetonate();
         }
 
         protected override void InstantEffect()
         {
             Vector2 position = PlayerCombat.Instance.transform.position;
-            Explosion.CreateExplosion(position, 50, 3f);
-            FireBehaviour.Create(position, 3f);
-            DecayBehaviour.Create(position);
+            CreateExplosion(position, 50, 2f);
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendInterval(0.5f);
+            sequence.AppendCallback(() =>
+            {
+                int explosionCount = 8;
+                float angleInterval = 360f / explosionCount;
+                for (int i = 0; i < explosionCount; ++i)
+                {
+                    Vector2 pos = AdvancedMaths.CalculatePointOnCircle(angleInterval * i, Random.Range(1.5f, 2f), position);
+                    Cell cell = PathingGrid.WorldToCellPosition(pos, false);
+                    if (cell == null || !cell.Reachable) continue;
+                    Sequence subSequence = DOTween.Sequence();
+                    subSequence.AppendInterval(Random.Range(0.1f, 0.2f));
+                    subSequence.AppendCallback(() => CreateExplosion(pos, 25, 0.5f));
+                }
+            });
         }
     }
 
@@ -230,7 +255,7 @@ namespace Game.Combat.Player
         {
             PlayerCombat.Instance.TakeArmourDamage(-Armour.ArmourHealthUnit);
             Vector2 position = PlayerCombat.Instance.transform.position;
-            FireBehaviour.Create(position, 2f);
+            FireBurstBehaviour.Create(position);
         }
     }
 

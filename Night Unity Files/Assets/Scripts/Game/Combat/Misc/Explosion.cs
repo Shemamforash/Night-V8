@@ -17,7 +17,7 @@ namespace Game.Combat.Misc
         private static readonly ObjectPool<Explosion> _explosionPool = new ObjectPool<Explosion>("Explosions", "Prefabs/Combat/Visuals/Explosion");
 
         private const float ExplodeTime = 0.2f;
-        private const float ExplosionWarmupTime = 1f;
+        private const float ExplosionWarmUpTime = 1f;
         private const float FadeTime = 0.5f;
 
         private float _age;
@@ -95,7 +95,7 @@ namespace Game.Combat.Misc
         public void Detonate()
         {
             gameObject.SetActive(true);
-            StartCoroutine(Warmup());
+            StartCoroutine(WarmUp());
         }
 
         public void InstantDetonate()
@@ -121,14 +121,14 @@ namespace Game.Combat.Misc
             OnExplode?.Invoke(enemiesHit);
         }
 
-        private IEnumerator Warmup()
+        private IEnumerator WarmUp()
         {
             _age = 0f;
-            while (_age < ExplosionWarmupTime)
+            while (_age < ExplosionWarmUpTime)
             {
                 if (!CombatManager.IsCombatActive()) yield return null;
                 _warningRing.transform.Rotate(0, 0, 5 * Time.deltaTime);
-                _warningRing.color = new Color(1, 0, 0, _age / ExplosionWarmupTime);
+                _warningRing.color = new Color(1, 0, 0, _age / ExplosionWarmUpTime);
                 _age += Time.deltaTime;
                 yield return null;
             }
@@ -203,7 +203,7 @@ namespace Game.Combat.Misc
 
         private void AddConditions()
         {
-            if (_incendiary) FireBehaviour.Create(transform.position, 1).AddIgnoreTargets(_targetsToIgnore);
+            if (_incendiary) FireBurstBehaviour.Create(transform.position).AddIgnoreTargets(_targetsToIgnore);
             if (_decay) DecayBehaviour.Create(transform.position).AddIgnoreTargets(_targetsToIgnore);
             if (_sicken) SickenBehaviour.Create(transform.position, _targetsToIgnore);
         }

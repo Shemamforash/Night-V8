@@ -34,7 +34,7 @@ namespace Game.Combat.Generation.Shrines
             for (int i = 0; i < fireCount; ++i)
             {
                 Vector2 firePosition = AdvancedMaths.CalculatePointOnCircle(360f / fireCount * i, 6.5f, transform.position);
-                _fires.Add(FireBehaviour.Create(firePosition, 1f, 1f, true, false));
+                _fires.Add(FireBehaviour.Create(firePosition));
             }
 
             float roundTime = numberOfEnemies * 25;
@@ -82,7 +82,7 @@ namespace Game.Combat.Generation.Shrines
             for (float pos = 0; pos <= 1; pos += 0.025f)
             {
                 Vector2 position = AdvancedMaths.PointAlongLine(from, to, pos);
-                FireBehaviour.Create(position, 0.25f, 1f, false, false);
+                TrailFireBehaviour.Create(position);
             }
         }
     }

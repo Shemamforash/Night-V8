@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using DG.Tweening;
 using Fastlights;
-using Game.Combat.Generation;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -10,134 +8,52 @@ namespace Game.Combat.Misc
 {
     public class FireBehaviour : MonoBehaviour
     {
-        private const int MaxEmissionRate = 100;
-        private const float LightMaxRadius = 5f;
-        private const float LifeTime = 8f;
         private static readonly ObjectPool<FireBehaviour> _firePool = new ObjectPool<FireBehaviour>("Fire Areas", "Prefabs/Combat/Effects/Fire Area");
-        private float _age;
+        private ParticleSystem _flames;
         private FastLight _light;
-        private ParticleSystem _flames, _embers;
-        private CircleCollider2D _collider;
-        private int EmissionRate;
-        private bool _keepAlive;
-        private List<CanTakeDamage> _ignoreTargets;
-        private float _lifeTime;
-        private SpriteRenderer _flash;
+        private float _randomSeed;
+        private bool _fading;
 
         public void Awake()
         {
             _flames = GetComponent<ParticleSystem>();
-            _embers = gameObject.FindChildWithName<ParticleSystem>("Embers");
-            _flash = gameObject.FindChildWithName<SpriteRenderer>("Flash");
             _light = gameObject.FindChildWithName<FastLight>("Light");
-            _collider = GetComponent<CircleCollider2D>();
+            _randomSeed = Random.Range(0f, 5f);
         }
 
-        public static FireBehaviour Create(Vector3 position, float size, float lifeTime = LifeTime, bool keepAlive = false, bool lightOn = true)
+        public static FireBehaviour Create(Vector3 position)
         {
             FireBehaviour fire = _firePool.Create();
-            fire.Initialise(position, size, lifeTime, keepAlive, lightOn);
+            fire.Initialise(position);
             return fire;
         }
 
-        private void Initialise(Vector3 position, float size, float lifeTime = LifeTime, bool keepAlive = false, bool lightOn = true)
+        public void Update()
         {
-            _lifeTime = lifeTime;
-            _keepAlive = keepAlive;
-            _ignoreTargets = new List<CanTakeDamage>();
-            StartCoroutine(Burn(position, size, lightOn));
+            if (_fading) return;
+            float brightness = Mathf.PerlinNoise(Time.time * 2, _randomSeed) * 0.25f + 0.05f;
+            _light.SetAlpha(brightness);
         }
-
-        public void AddIgnoreTarget(CanTakeDamage _ignoreTarget)
+        
+        private void Initialise(Vector3 position)
         {
-            _ignoreTargets.Add(_ignoreTarget);
-        }
-
-        public void OnTriggerStay2D(Collider2D other)
-        {
-            if (!CombatManager.IsCombatActive()) return;
-            CanTakeDamage character = other.GetComponent<CanTakeDamage>();
-            if (character == null) return;
-            if (_ignoreTargets.Contains(other.GetComponent<CanTakeDamage>())) return;
-            character.Burn();
+            transform.position = position;
+            _flames.Play();
+            _fading = false;
         }
 
         public void LetDie()
         {
-            _keepAlive = false;
-        }
-
-        private void SetFireSize(float emissionRate, float size)
-        {
-            ParticleSystem.EmissionModule emission = _flames.emission;
-            emission.rateOverTime = emissionRate;
-            ParticleSystem.ShapeModule shape = _flames.shape;
-            shape.radius = size;
-            emission = _embers.emission;
-            emission.rateOverTime = emissionRate * 0.1f;
-            shape = _embers.shape;
-            shape.radius = size;
-        }
-
-        private void ResetFire(Vector3 position, float size, bool lightOn)
-        {
-            transform.position = position;
-            EmissionRate = (int) (size * size * MaxEmissionRate);
-            SetFireSize(EmissionRate, size);
-            _collider.radius = size;
-            _light.Radius = size * LightMaxRadius;
-            _light.gameObject.SetActive(lightOn);
-            gameObject.SetActive(true);
-            StartCoroutine(Flash());
-            _flash.transform.localScale = Vector2.one * size;
-        }
-
-        private IEnumerator Flash()
-        {
-            float flashTime = 0.5f;
-            Color c = _flash.color;
-            c.a = 1;
-            _flash.color = c;
-            while (flashTime > 0f)
-            {
-                flashTime -= Time.deltaTime;
-                float normalisedTime = flashTime / 0.5f;
-                c.a = normalisedTime;
-                _flash.color = c;
-                yield return null;
-            }
-
-            c.a = 0;
-            _flash.color = c;
-        }
-
-        private IEnumerator Burn(Vector3 position, float size, bool lightOn)
-        {
-            ResetFire(position, size, lightOn);
-            _age = 0f;
-            while (_keepAlive) yield return null;
-            while (_age < _lifeTime)
-            {
-                if (!CombatManager.IsCombatActive()) yield return null;
-                float normalisedTime = 1 - _age / LifeTime;
-                float newEmissionRate = normalisedTime * EmissionRate;
-                SetFireSize(newEmissionRate, size);
-                _light.Colour = new Color(0.6f, 0.1f, 0.1f, 0.6f * normalisedTime * size);
-                _age += Time.deltaTime;
-                yield return null;
-            }
-
-            _firePool.Return(this);
+            _flames.Stop();
+            _fading = true;
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(DOTween.To(_light.GetAlpha, _light.SetAlpha, 0f, 1f));
+            sequence.AppendCallback(() => _firePool.Return(this));
         }
 
         private void OnDestroy()
         {
             _firePool.Dispose(this);
-        }
-
-        public void AddIgnoreTargets(List<CanTakeDamage> targetsToIgnore)
-        {
-            _ignoreTargets.AddRange(targetsToIgnore);
         }
     }
 }

@@ -220,8 +220,8 @@ public class TempleBehaviour : BasicShrineBehaviour
             float angleB = startAngle - 10 * (i + 1);
             Vector2 positionA = AdvancedMaths.CalculatePointOnCircle(angleA, 4f, transform.position);
             Vector2 positionB = AdvancedMaths.CalculatePointOnCircle(angleB, 4f, transform.position);
-            FireGenerator.Create(positionA);
-            FireGenerator.Create(positionB);
+            FireBehaviour.Create(positionA);
+            FireBehaviour.Create(positionB);
         }
     }
 }

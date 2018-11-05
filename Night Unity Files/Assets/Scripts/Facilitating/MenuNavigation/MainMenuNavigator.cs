@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System.Collections;
+using DG.Tweening;
 using Facilitating.Persistence;
 using Game.Characters;
 using Game.Gear.Weapons;
@@ -59,7 +60,7 @@ namespace Facilitating.MenuNavigation
                 _fadeInSequence.AppendInterval(6f); //17
                 _fadeInSequence.Append(_latin.DOFade(0f, 1f)); //18
                 _fadeInSequence.AppendInterval(2f);
-                
+
                 _fadeInSequence.Insert(6, latinText.DOFontSize(finalLatinTextSize, 13));
                 _fadeInSequence.Insert(10, englishText.DOFontSize(finalEnglishTextSize, 9));
                 _fadeInSequence.Insert(17, _english.DOFade(0f, 1f));
@@ -67,8 +68,15 @@ namespace Facilitating.MenuNavigation
                 _seenIntro = true;
             }
 
-            _fadeInSequence.Append(_menuCanvasGroup.DOFade(1, 2f));
-            _fadeInSequence.AppendCallback(() => MenuStateMachine.ShowMenu("Main Menu"));
+            _fadeInSequence.AppendCallback(() => StartCoroutine(FadeInMenu()));
+        }
+
+        private IEnumerator FadeInMenu()
+        {
+            while (!AudioClips.Loaded()) yield return null;
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(_menuCanvasGroup.DOFade(1, 2f));
+            sequence.AppendCallback(() => MenuStateMachine.ShowMenu("Main Menu"));
         }
 
         public void Awake()

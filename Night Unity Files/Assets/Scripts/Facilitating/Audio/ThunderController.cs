@@ -51,7 +51,7 @@ namespace Facilitating.Audio
             _instance.StartCoroutine(_instance.LightningFlash());
             if (!CombatManager.IsCombatActive()) return;
             Vector2 firePosition = PathingGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 12f).Position;
-            FireBehaviour.Create(firePosition, 1f);
+            FireBurstBehaviour.Create(firePosition);
         }
 
         public void Update()

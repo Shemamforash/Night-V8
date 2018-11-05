@@ -133,6 +133,7 @@ namespace Game.Combat.Misc
             if (TryLockSkill(skillNo)) return;
             bool freeSkill = IsSkillFree();
             if (!_skills[skillNo].Activate(freeSkill || _instance.SkillsAreFree)) return;
+            TutorialManager.TryOpenTutorial(9);
             StartCooldown();
         }
 

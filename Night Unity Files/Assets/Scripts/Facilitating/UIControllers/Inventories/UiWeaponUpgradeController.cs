@@ -113,6 +113,7 @@ namespace Facilitating.UIControllers
             _swapButton.Select();
             InputHandler.RegisterInputListener(this);
             SetWeapon();
+            TutorialManager.TryOpenTutorial(6);
         }
 
         protected override void OnHide()

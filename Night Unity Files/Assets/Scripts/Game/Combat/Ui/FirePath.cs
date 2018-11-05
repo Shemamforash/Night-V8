@@ -1,5 +1,4 @@
-﻿using Game.Combat.Misc;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game.Combat.Ui
 {
@@ -22,7 +21,7 @@ namespace Game.Combat.Ui
             {
                 Vector2 dropPosition = _lastDropPosition + _direction * FireDropDistance;
                 _lastDropPosition = dropPosition;
-                FireBehaviour.Create(dropPosition, FireDropDistance / 2f, 0.5f, false, false);
+                TrailFireBehaviour.Create(dropPosition);
             }
         }
     }

@@ -14,7 +14,7 @@ namespace Game.Combat.Misc
 
         public void CreateObject()
         {
-            FireGenerator.Create(FirePosition);
+            FireBehaviour.Create(FirePosition);
             PathingGrid.AddBlockingArea(FirePosition, 0.5f);
         }
     }

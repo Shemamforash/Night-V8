@@ -118,5 +118,10 @@ namespace Game.Global
             Helper.PrintTime("Done loading audio in: ", watch);
             _loaded = true;
         }
+
+        public static bool Loaded()
+        {
+            return _loaded;
+        }
     }
 }

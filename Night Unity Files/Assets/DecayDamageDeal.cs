@@ -4,18 +4,11 @@ using UnityEngine;
 
 public class DecayDamageDeal : MonoBehaviour
 {
-    private CircleCollider2D _collider;
     private readonly List<CanTakeDamage> _ignoreTargets = new List<CanTakeDamage>();
 
-    public void Awake()
-    {
-        _collider = GetComponent<CircleCollider2D>();
-    }
-
-    public void SetRadius(float radius)
+    public void Clear()
     {
         _ignoreTargets.Clear();
-        _collider.radius = radius;
     }
 
     public void OnTriggerEnter2D(Collider2D other)

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Facilitating;
-using Game.Characters;
 using Game.Exploration.Environment;
 using Game.Gear;
 using Game.Gear.Armour;
@@ -136,7 +134,9 @@ namespace Game.Global
         public static bool RecipesAvailable()
         {
             LoadRecipes();
-            return _recipes.Any(r => r.CanCraft());
+            bool recipesAvailable = _recipes.Any(r => r.CanCraft());
+            if(recipesAvailable) TutorialManager.TryOpenTutorial(5);
+            return recipesAvailable;
         }
 
         private static void LoadRecipes()
