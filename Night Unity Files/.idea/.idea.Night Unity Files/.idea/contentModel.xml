@@ -213,8 +213,8 @@
           </e>
           <e p="readme.txt" t="Include" />
         </e>
-        <e p="CameraOpacityController.cs" t="Include" />
         <e p="CloseButtonController.cs" t="Include" />
+        <e p="DecayBlastBehaviour.cs" t="Include" />
         <e p="DecayDamageDeal.cs" t="Include" />
         <e p="Demigiant" t="Include">
           <e p="DemiLib" t="Include">
@@ -249,7 +249,6 @@
         <e p="FireDamageDeal.cs" t="Include" />
         <e p="Images" t="Include">
           <e p="Shaders" t="Include">
-            <e p="Camera Opacity Shader.shader" t="Include" />
             <e p="Impact Shader.shader" t="Include" />
           </e>
         </e>
@@ -539,6 +538,7 @@
                     <e p="LeaveFireTrail.cs" t="Include" />
                     <e p="MaelstromImpactBehaviour.cs" t="Include" />
                     <e p="MaelstromShotBehaviour.cs" t="Include" />
+                    <e p="Needler.cs" t="Include" />
                     <e p="Orbit.cs" t="Include" />
                     <e p="Push.cs" t="Include" />
                     <e p="PushController.cs" t="Include" />
@@ -959,6 +959,7 @@
           <e p="RadialLight.shader" t="Include" />
           <e p="Shadow.shader" t="Include" />
         </e>
+        <e p="TabController.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
             <e p="LineBreaking Following Characters.txt" t="Include" />

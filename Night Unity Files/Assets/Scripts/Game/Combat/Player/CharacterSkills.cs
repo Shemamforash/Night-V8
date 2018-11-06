@@ -61,7 +61,8 @@ namespace Game.Combat.Player
                 case CharacterClass.Ghost:
                     return new Sacrifice();
                 case CharacterClass.Wanderer:
-                    return new Afflict();
+//                    return new Afflict();
+                return new Aegis();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -197,13 +198,14 @@ namespace Game.Combat.Player
 
     public class Aegis : Skill
     {
-        public Aegis() : base(nameof(Impel))
+        public Aegis() : base(nameof(Aegis))
         {
         }
 
         protected override void InstantEffect()
         {
-//            PlayerCombat.Instance.Shield.Activate(5f);
+            Transform transform = PlayerCombat.Instance.transform;
+            DecayBlastBehaviour.Create(PlayerCombat.Instance, transform.position + transform.up);
         }
     }
 

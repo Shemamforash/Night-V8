@@ -1,9 +1,11 @@
-﻿using System.Collections;
-using DG.Tweening;
+﻿using DG.Tweening;
 using Facilitating.Persistence;
 using Game.Combat.Generation;
 using Game.Global;
+using SamsHelper.Input;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,14 +16,27 @@ public class PauseMenuController : MonoBehaviour
     private static bool _fading;
     private static string _lastMenu;
     private static PauseMenuController _instance;
+    private static TextMeshProUGUI _title;
+    private static CloseButtonController _closeButton;
     private CanvasGroup _background;
+    private bool _pauseShown;
 
     public void Awake()
     {
+        _title = gameObject.FindChildWithName<TextMeshProUGUI>("Title");
+        _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
         _instance = this;
         _open = false;
         _background = GetComponent<CanvasGroup>();
         _background.alpha = 0f;
+        _closeButton.SetInputAxis(InputAxis.Cover);
+        _closeButton.SetCallback(CloseClicked);
+    }
+
+    private void CloseClicked()
+    {
+        if (_pauseShown) Hide();
+        else ShowPauseMenu();
     }
 
     private void Show()
@@ -38,6 +53,7 @@ public class PauseMenuController : MonoBehaviour
             _open = true;
         });
         Pause();
+        _closeButton.Enable();
     }
 
     public void ReturnToMainMenu()
@@ -54,6 +70,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void Hide()
     {
+        _closeButton.Disable();
         VolumeController.FadeOutMuffle();
         MenuStateMachine.ShowMenu(_lastMenu);
         _fading = true;
@@ -101,16 +118,22 @@ public class PauseMenuController : MonoBehaviour
 
     public void ShowOptions()
     {
+        _pauseShown = false;
+        _title.text = "Options";
         MenuStateMachine.ShowMenu("Options");
     }
 
     public void ShowControls()
     {
+        _pauseShown = false;
+        _title.text = "Controls";
         MenuStateMachine.ShowMenu("Controls");
     }
 
     public void ShowPauseMenu()
     {
+        _pauseShown = true;
+        _title.text = "Paused";
         MenuStateMachine.ShowMenu("Pause");
     }
 

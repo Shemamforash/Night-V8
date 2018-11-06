@@ -10,7 +10,6 @@ namespace Game.Combat.Misc
 {
     public class SkillBar : MonoBehaviour
     {
-        private const float BaseSkillCooldown = 5f;
         private const int NoSlots = 4;
         private static Skill[] _skills;
         private static List<int> _skillsLocked;
@@ -63,7 +62,7 @@ namespace Game.Combat.Misc
             float normalisedTime = 1 - _cooldownRemaining / _duration;
             UpdateCooldownControllers(normalisedTime);
         }
-        
+
         public static void BindSkills(Characters.Player player, float skillCooldownModifier)
         {
             _cooldownModifier = skillCooldownModifier;
@@ -134,13 +133,13 @@ namespace Game.Combat.Misc
             bool freeSkill = IsSkillFree();
             if (!_skills[skillNo].Activate(freeSkill || _instance.SkillsAreFree)) return;
             TutorialManager.TryOpenTutorial(9);
-            StartCooldown();
+            StartCooldown(_skills[skillNo].AdrenalineCost());
         }
 
-        private static void StartCooldown()
+        private static void StartCooldown(int duration)
         {
             _skillsReady = false;
-            _duration = BaseSkillCooldown * _cooldownModifier;
+            _duration = duration * _cooldownModifier;
             _cooldownRemaining = _duration;
         }
 

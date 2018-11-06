@@ -2,6 +2,7 @@
 using Facilitating.Persistence;
 using Facilitating.UIControllers;
 using Game.Global;
+using NUnit.Framework;
 using SamsHelper.Libraries;
 
 namespace Game.Characters.CharacterActions
@@ -29,11 +30,13 @@ namespace Game.Characters.CharacterActions
         private void CraftRecipe()
         {
             _recipe.Craft();
+            _recipe = null;
             PlayerCharacter.RestAction.Enter();
         }
 
         public void StartCrafting(Recipe recipe)
         {
+            Assert.IsTrue(_recipe == null);
             if (recipe.ProductName == "Fire") CharacterManager.SelectedCharacter.LightFireAction.Enter();
             _recipe = recipe;
             _recipe.ConsumeResources();

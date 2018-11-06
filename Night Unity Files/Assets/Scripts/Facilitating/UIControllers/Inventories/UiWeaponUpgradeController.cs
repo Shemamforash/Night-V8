@@ -24,6 +24,7 @@ namespace Facilitating.UIControllers
         private bool _upgradingAllowed;
         private WeaponDetailController _weaponDetail;
         private GameObject _infoGameObject;
+        private Weapon _equippedWeapon;
 
         protected override void CacheElements()
         {
@@ -77,10 +78,16 @@ namespace Facilitating.UIControllers
             weaponListElements.Add(new DetailedWeaponElement());
             weaponListElements.Add(new WeaponElement());
             weaponListElements.Add(new WeaponElement());
-            _weaponList.Initialise(weaponListElements, Equip, Show);
+            _weaponList.Initialise(weaponListElements, Equip, BackToWeaponInfo);
             _weaponList.Hide();
-            _inscriptionList.Initialise(typeof(InscriptionElement), Inscribe, Show);
+            _inscriptionList.Initialise(typeof(InscriptionElement), Inscribe, BackToWeaponInfo);
             _inscriptionList.Hide();
+        }
+
+        private void BackToWeaponInfo()
+        {
+            Show();
+            UiGearMenuController.FlashCloseButton();
         }
 
         private static List<object> GetAvailableWeapons()
@@ -103,6 +110,8 @@ namespace Facilitating.UIControllers
             int durabilityGain = 1 + (int) CharacterManager.SelectedCharacter.Attributes.EssenceRecoveryModifier;
             CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.IncreaseDurability(durabilityGain);
             _weaponDetail.UpdateWeaponInfo();
+            UpdateWeaponActions();
+            SelectButton(_infuseButton);
         }
 
         protected override void OnShow()
@@ -110,7 +119,9 @@ namespace Facilitating.UIControllers
             _infoGameObject.SetActive(true);
             _weaponList.Hide();
             _inscriptionList.Hide();
-            _swapButton.Select();
+            _swapButton.SetEnabled(WeaponsAreAvailable());
+            SelectButton(_swapButton);
+
             InputHandler.RegisterInputListener(this);
             SetWeapon();
             TutorialManager.TryOpenTutorial(6);
@@ -137,27 +148,44 @@ namespace Facilitating.UIControllers
             Show();
             if (PlayerCombat.Instance == null) return;
             PlayerCombat.Instance.EquipInscription();
+            UpdateWeaponActions();
+            SelectButton(_inscribeButton);
         }
 
         private void SetWeapon()
         {
-            Weapon weapon = CharacterManager.SelectedCharacter.EquippedWeapon;
-            _weaponDetail.SetWeapon(weapon);
-            if (weapon == null)
+            _equippedWeapon = CharacterManager.SelectedCharacter.EquippedWeapon;
+            _weaponDetail.SetWeapon(_equippedWeapon);
+            if (_equippedWeapon == null)
             {
                 _inscribeButton.Button().interactable = false;
                 _infuseButton.Button().interactable = false;
                 _inscribeButton.SetEnabled(false);
                 _infuseButton.SetEnabled(false);
             }
-            else
+            else UpdateWeaponActions();
+        }
+
+        private void SelectButton(EnhancedButton from)
+        {
+            if (from.IsEnabled())
             {
-                WeaponAttributes attr = weapon.WeaponAttributes;
-                bool reachedMaxDurability = attr.GetDurability().ReachedMax();
-                bool inscriptionsAvailable = InscriptionsAreAvailable();
-                _infuseButton.SetEnabled(!reachedMaxDurability);
-                _inscribeButton.SetEnabled(inscriptionsAvailable);
+                from.Select();
+                return;
             }
+
+            if (_swapButton.IsEnabled()) _swapButton.Select();
+            else if (_infuseButton.IsEnabled()) _infuseButton.Select();
+            else if (_inscribeButton.isActiveAndEnabled) _inscribeButton.Select();
+        }
+
+        private void UpdateWeaponActions()
+        {
+            WeaponAttributes attr = _equippedWeapon.WeaponAttributes;
+            bool reachedMaxDurability = attr.GetDurability().ReachedMax() || Inventory.GetResourceQuantity("Essence") == 0;
+            bool inscriptionsAvailable = InscriptionsAreAvailable();
+            _infuseButton.SetEnabled(!reachedMaxDurability);
+            _inscribeButton.SetEnabled(inscriptionsAvailable);
         }
 
         private static bool WeaponsAreAvailable() => GetAvailableWeapons().Count != 0;

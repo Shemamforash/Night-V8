@@ -189,7 +189,6 @@ namespace Game.Combat.Player
             Vector2 targetPos = playerTransform.position + playerTransform.up * 1f;
             int damage = ((int) PlayerCombat.Instance.Weapon().Quality() + 1) * 10;
             NeedleBehaviour.Create(startPos, targetPos, damage, true);
-            Debug.Log("Fart");
         }
     }
 

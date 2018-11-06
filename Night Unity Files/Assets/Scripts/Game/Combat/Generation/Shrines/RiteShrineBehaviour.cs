@@ -12,7 +12,6 @@ namespace Game.Combat.Generation.Shrines
 {
     public class RiteShrineBehaviour : BasicShrineBehaviour, ICombatEvent
     {
-        public const int Width = 5;
         private static GameObject _riteShrinePrefab;
         private RiteColliderBehaviour _collider1, _collider2, _collider3;
         private List<Brand> _brandChoice;

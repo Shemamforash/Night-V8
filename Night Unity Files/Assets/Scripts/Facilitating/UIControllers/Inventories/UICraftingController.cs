@@ -38,6 +38,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         InputHandler.RegisterInputListener(this);
         if (CharacterManager.SelectedCharacter.CraftAction.IsCurrentState()) ShowCurrentlyCrafting();
         else ShowCraftingList();
+        TutorialManager.TryOpenTutorial(5);
     }
 
     private void ShowCurrentlyCrafting()
@@ -70,6 +71,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
     private void CreateRecipe(object obj)
     {
         Recipe recipe = (Recipe) obj;
+        if (!recipe.CanCraft()) return;
         CharacterManager.SelectedCharacter.CraftAction.StartCrafting(recipe);
         ShowCurrentlyCrafting();
     }

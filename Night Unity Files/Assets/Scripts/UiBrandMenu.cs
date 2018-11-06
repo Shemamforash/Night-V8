@@ -1,6 +1,7 @@
 ﻿using Game.Characters;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -8,8 +9,8 @@ using SamsHelper.ReactiveUI.MenuSystem;
 public class UiBrandMenu : Menu
 {
     private EnhancedText _titleText, _benefitText, _effectText;
-    private EnhancedButton _acceptButton;
     private static UiBrandMenu _instance;
+    private CloseButtonController _closeButton;
 
     public override void Awake()
     {
@@ -17,13 +18,15 @@ public class UiBrandMenu : Menu
         _titleText = gameObject.FindChildWithName<EnhancedText>("Title");
         _benefitText = gameObject.FindChildWithName<EnhancedText>("Benefit");
         _effectText = gameObject.FindChildWithName<EnhancedText>("Effect");
-        _acceptButton = gameObject.FindChildWithName<EnhancedButton>("Button");
-        _acceptButton.AddOnClick(Hide);
         _instance = this;
+        _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
+        _closeButton.SetInputAxis(InputAxis.Fire);
+        _closeButton.SetCallback(Hide);
     }
 
     private void Hide()
     {
+        _closeButton.Disable();
         gameObject.SetActive(false);
     }
 
@@ -48,6 +51,7 @@ public class UiBrandMenu : Menu
         _benefitText.SetText(benefitString);
         _effectText.SetText(brand.GetEffectString());
         gameObject.SetActive(true);
+        _closeButton.Enable();
     }
 
     public static void ShowBrand(Brand brand)

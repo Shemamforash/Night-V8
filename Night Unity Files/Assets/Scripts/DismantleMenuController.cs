@@ -21,6 +21,7 @@ public class DismantleMenuController : Menu
     private GearItem _objectToDismantle;
     private EnhancedButton _dismantleButton;
     private readonly Dictionary<string, int> _dismantleRewards = new Dictionary<string, int>();
+    private CloseButtonController _closeButton;
 
     public override void Awake()
     {
@@ -30,6 +31,7 @@ public class DismantleMenuController : Menu
         _dismantleList = gameObject.FindChildWithName<ListController>("List");
         _dismantleButton = gameObject.FindChildWithName<EnhancedButton>("Sacrifice");
         _dismantleList.Initialise(typeof(DismantleElement), ShowDismantleMenu, Close);
+        _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
     }
 
     private void AddReward(string reward, int quantity)
@@ -231,6 +233,7 @@ public class DismantleMenuController : Menu
 
     public void Close()
     {
+        _closeButton.Flash();
         CombatManager.Unpause();
         MenuStateMachine.ReturnToDefault();
     }

@@ -142,7 +142,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         foreach (Region r in _availableRegions)
         {
             Vector2 potentialPosition = r.Position - _direction * 5;
-            if (!potentialPosition.InCameraView()) continue;
+            if (!potentialPosition.InCameraView(MapCamera)) continue;
             isRegionVisible = true;
             break;
         }
@@ -173,6 +173,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     private static void ReturnToGame(Region region)
     {
+        MapMenuController.FlashCloseButton();
         region.MapNode().Enter();
         MenuStateMachine.ShowMenu("Game Menu");
         InputHandler.SetCurrentListener(null);

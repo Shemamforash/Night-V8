@@ -245,28 +245,42 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             IncrementResource(item.Name, item.Quantity());
         }
 
+        private static void SortItem<T>(List<T> items) where T : GearItem
+        {
+            items.Sort((a, b) =>
+            {
+                int ret = b.Quality().CompareTo(a.Quality());
+                if (ret == 0) ret = b.Name.CompareTo(a.Name);
+                return ret;
+            });
+        }
+
         public static void Move(Weapon weapon)
         {
             _items.Add(weapon);
             _weapons.Add(weapon);
+            SortItem(_weapons);
         }
 
         public static void Move(Armour armour)
         {
             _items.Add(armour);
             _armour.Add(armour);
+            SortItem(_armour);
         }
 
         public static void Move(Accessory accessory)
         {
             _items.Add(accessory);
             _accessories.Add(accessory);
+            SortItem(_accessories);
         }
 
         public static void Move(Inscription inscription)
         {
             _items.Add(inscription);
             Inscriptions.Add(inscription);
+            SortItem(Inscriptions);
         }
 
         private static void LoadResource(XmlNode root)

@@ -65,8 +65,10 @@ namespace Game.Global
         public static JournalEntry GetEntry()
         {
             ReadJournals();
-            List<JournalEntry> randomGroup = LockedEntries[LockedEntries.Keys.ToArray().RandomElement()];
-            return LockedEntries.Count == 0 ? null : randomGroup[0];
+            int[] keys = LockedEntries.Keys.ToArray();
+            if (keys.Length == 0) return null;
+            List<JournalEntry> randomGroup = LockedEntries[keys.RandomElement()];
+            return randomGroup[0];
         }
 
         public static List<JournalEntry> GetUnlockedEntries()
@@ -81,7 +83,7 @@ namespace Game.Global
             XmlNode root = Helper.OpenRootNode("Story", "Story");
             foreach (XmlNode journalNode in Helper.GetNodesWithName(root, "JournalEntry"))
                 new JournalEntry(journalNode);
-            
+
             foreach (XmlNode storyNode in Helper.GetNodesWithName(root, "StoryPart"))
             {
                 int partNo = storyNode.IntFromNode("Number");

@@ -17,6 +17,7 @@ public class DecayDamageDeal : MonoBehaviour
         if (character == null) return;
         if (_ignoreTargets.Contains(other.GetComponent<CanTakeDamage>())) return;
         character.Decay();
+        _ignoreTargets.Add(character);
     }
 
     public void AddIgnoreTarget(CanTakeDamage ignoreTarget)

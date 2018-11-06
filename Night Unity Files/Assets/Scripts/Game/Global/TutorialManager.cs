@@ -25,6 +25,7 @@ public class TutorialManager : MonoBehaviour
     private static CanvasGroup _tutorialCanvas;
     private static IInputListener _lastListener;
     private static bool _showingTutorial;
+    private static bool _alreadyPaused;
 
     public void Awake()
     {
@@ -59,12 +60,11 @@ public class TutorialManager : MonoBehaviour
     private static void EnableButton()
     {
         _lastListener = InputHandler.GetCurrentListener();
-        InputHandler.SetCurrentListener(null);
-        _closeButton.Enable();
+        InputHandler.InterruptListeners(true);
+        InputHandler.SetCurrentListener(_closeButton);
         _closeButton.SetCallback(ShowTutorialPart);
         SetCurrentSelectableActive(false);
     }
-
 
     private static void SetCurrentSelectableActive(bool active)
     {
@@ -88,28 +88,38 @@ public class TutorialManager : MonoBehaviour
 
     private static void Enter()
     {
+        ResourcesUiController.Hide();
         _showingTutorial = true;
         DOTween.defaultTimeScaleIndependent = true;
-        WorldState.Pause();
-        CombatManager.Pause();
+        _alreadyPaused = CombatManager.IsCombatActive() ? CombatManager.IsCombatPaused() : WorldState.Paused();
+        if (!_alreadyPaused)
+        {
+            WorldState.Pause();
+            CombatManager.Pause();
+        }
         _tutorialCanvas.DOFade(1f, 0.5f);
     }
 
     private static void Close()
     {
+        ResourcesUiController.Show();
         _closeButton.SetCallback(null);
         Sequence sequence = DOTween.Sequence();
         sequence.Append(_tutorialCanvas.DOFade(0f, 0.5f));
         sequence.AppendCallback(() =>
         {
             DOTween.defaultTimeScaleIndependent = false;
-            WorldState.UnPause();
-            CombatManager.Unpause();
+            if (!_alreadyPaused)
+            {
+                WorldState.UnPause();
+                CombatManager.Unpause();
+            }
+
             _showingTutorial = false;
         });
-        _closeButton.Disable();
         SetCurrentSelectableActive(true);
         InputHandler.SetCurrentListener(_lastListener);
+        InputHandler.InterruptListeners(false);
     }
 
     public static void Load(XmlNode root)

@@ -135,7 +135,6 @@ namespace Game.Global
         {
             LoadRecipes();
             bool recipesAvailable = _recipes.Any(r => r.CanCraft());
-            if(recipesAvailable) TutorialManager.TryOpenTutorial(5);
             return recipesAvailable;
         }
 

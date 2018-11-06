@@ -32,10 +32,12 @@ namespace Game.Exploration.Environment
         private bool _isActive;
         private readonly List<RingDrawer> _rings = new List<RingDrawer>();
         public static bool IsReturningFromCombat;
+        private static CloseButtonController _closeButton;
 
         public override void Awake()
         {
             base.Awake();
+            _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
             _nextRouteTime = 2f / MapGenerator.Regions().Count;
             MapTransform = GameObject.Find("Nodes").transform;
             CreateMapRings();
@@ -193,6 +195,11 @@ namespace Game.Exploration.Environment
         public static void SetRoute(Region to)
         {
             route = RoutePlotter.RouteBetween(CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode(), to);
+        }
+
+        public static void FlashCloseButton()
+        {
+            _closeButton.Flash();
         }
     }
 }

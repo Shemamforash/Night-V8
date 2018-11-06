@@ -1,6 +1,7 @@
 ﻿using Game.Characters;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Player;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 
@@ -9,6 +10,7 @@ public class BrandReplaceMenuController : Menu
     private static RiteShrineBehaviour _riteShrine;
     private static Brand _brand;
 
+    private static CloseButtonController _closeButton;
     private CharacterBrandUIController _brandUi;
     private BrandManager _brandManager;
 
@@ -16,6 +18,7 @@ public class BrandReplaceMenuController : Menu
     {
         base.Awake();
         _brandUi = gameObject.FindChildWithName<CharacterBrandUIController>("Brands");
+        _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
     }
 
     public static void Show(RiteShrineBehaviour riteShrine, Brand brand)
@@ -23,6 +26,9 @@ public class BrandReplaceMenuController : Menu
         _riteShrine = riteShrine;
         _brand = brand;
         MenuStateMachine.ShowMenu("Brand Replace Menu");
+        _closeButton.SetInputAxis(InputAxis.Cover);
+        _closeButton.Enable();
+        _closeButton.SetCallback(Close);
     }
 
     public override void Enter()
@@ -53,6 +59,13 @@ public class BrandReplaceMenuController : Menu
     public void Hide()
     {
         _riteShrine.ActivateBrand();
+        Close();
+    }
+
+    private static void Close()
+    {
+        _riteShrine = null;
+        _closeButton.Disable();
         MenuStateMachine.ShowMenu("HUD");
     }
 }

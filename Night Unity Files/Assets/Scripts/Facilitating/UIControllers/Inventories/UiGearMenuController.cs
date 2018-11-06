@@ -10,6 +10,7 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Facilitating.UIControllers
@@ -25,11 +26,13 @@ namespace Facilitating.UIControllers
         private static UiInventoryMenuController _currentMenuController;
         private static UiWillController _willController;
         private static UiGearMenuController _instance;
-        private CloseButtonController _closeButton;
-        
+        private static CloseButtonController _closeButton;
+        private static TabController _leftTab, _rightTab;
+
         private static Tab _currentTab;
         private static bool _open;
         private static readonly List<Tab> _tabs = new List<Tab>();
+        private static GameObject _tabParent;
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
@@ -56,7 +59,7 @@ namespace Facilitating.UIControllers
 
         private void CreateTab(string tabName, UiInventoryMenuController menu)
         {
-            Tab tab = new Tab(tabName, gameObject.FindChildWithName("Tabs"), menu);
+            Tab tab = new Tab(tabName, menu);
             _tabs.Add(tab);
         }
 
@@ -67,9 +70,9 @@ namespace Facilitating.UIControllers
             private Tab _nextTab;
             private readonly Image _highlightImage;
 
-            public Tab(string name, GameObject parent, UiInventoryMenuController menu)
+            public Tab(string name, UiInventoryMenuController menu)
             {
-                EnhancedText tabText = parent.FindChildWithName<EnhancedText>(name);
+                EnhancedText tabText = _tabParent.FindChildWithName<EnhancedText>(name);
                 _highlightImage = tabText.gameObject.FindChildWithName<Image>("Image");
                 _menu = menu;
             }
@@ -94,14 +97,21 @@ namespace Facilitating.UIControllers
 
             public void SelectNextTab()
             {
+                _leftTab.FadeIn();
                 if (_nextTab == null) return;
+                if (_nextTab._nextTab == null) _rightTab.FlashAndFade();
+                else _rightTab.Flash();
                 Deselect();
                 _nextTab.Select();
             }
 
             public void SelectPreviousTab()
             {
+                _rightTab.FadeIn();
                 if (_prevTab == null) return;
+                if (_prevTab._prevTab == null) _leftTab.FlashAndFade();
+                else _leftTab.Flash();
+                _leftTab.Flash();
                 Deselect();
                 _prevTab.Select();
             }
@@ -110,7 +120,15 @@ namespace Facilitating.UIControllers
         public override void Awake()
         {
             base.Awake();
+            bool isCombat = SceneManager.GetActiveScene().name == "Combat";
+            
             _instance = this;
+
+            _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
+
+            _tabParent = gameObject.FindChildWithName("Tabs");
+            _leftTab = _tabParent.FindChildWithName<TabController>("Left Indicator");
+            _rightTab = _tabParent.FindChildWithName<TabController>("Right Indicator");
 
             GameObject gearObject = gameObject.FindChildWithName("Gear");
             _accessoryController = gearObject.FindChildWithName<UiAccessoryController>("Accessory");
@@ -125,11 +143,11 @@ namespace Facilitating.UIControllers
             CreateTab("Armour", _armourUpgradeController);
             CreateTab("Accessories", _accessoryController);
             CreateTab("Weapons", _weaponUpgradeController);
-            CreateTab("Crafting", _craftingController);
+            if(!isCombat) CreateTab("Crafting", _craftingController);
             CreateTab("Consumables", _consumableController);
             CreateTab("Journals", _journalController);
             CreateTab("Will Recovery", _willController);
-            
+
             for (int i = 0; i < _tabs.Count; ++i)
             {
                 int prevIndex = i - 1;
@@ -142,8 +160,14 @@ namespace Facilitating.UIControllers
             }
         }
 
+        public static void FlashCloseButton()
+        {
+            _closeButton.Flash();
+        }
+
         public static void Close()
         {
+            FlashCloseButton();
             _currentTab.Deselect();
             _currentMenuController.Hide();
             InputHandler.UnregisterInputListener(_instance);
@@ -159,7 +183,6 @@ namespace Facilitating.UIControllers
             InputHandler.RegisterInputListener(this);
             DOTween.defaultTimeScaleIndependent = true;
             CombatManager.Pause();
-            
         }
 
         private static void OpenInventoryMenu(UiInventoryMenuController menu)

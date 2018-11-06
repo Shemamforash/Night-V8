@@ -13,6 +13,7 @@ namespace SamsHelper.Input
         private static readonly List<IInputListener> ListenersToAdd = new List<IInputListener>();
         private static readonly List<IInputListener> ListenersToRemove = new List<IInputListener>();
         private static IInputListener _currentInputListener;
+        private static bool _listenersInterrupted;
 
         public void Awake()
         {
@@ -51,6 +52,7 @@ namespace SamsHelper.Input
         private static void BroadcastInputDown(InputAxis axis, bool isHeld, float lastInputValue)
         {
             _currentInputListener?.OnInputDown(axis, isHeld, lastInputValue);
+            if (_listenersInterrupted) return;
             for (int i = InputListeners.Count - 1; i >= 0; --i)
             {
                 if (InputListeners[i] == _currentInputListener) continue;
@@ -61,7 +63,7 @@ namespace SamsHelper.Input
         private static void BroadcastInputUp(InputAxis axis)
         {
             _currentInputListener?.OnInputUp(axis);
-
+            if (_listenersInterrupted) return;
             for (int i = InputListeners.Count - 1; i >= 0; --i)
             {
                 if (InputListeners[i] == _currentInputListener) continue;
@@ -72,7 +74,7 @@ namespace SamsHelper.Input
         private static void BroadCastDoubleTap(InputAxis axis, float lastInputValue)
         {
             _currentInputListener?.OnDoubleTap(axis, lastInputValue);
-
+            if (_listenersInterrupted) return;
             for (int i = InputListeners.Count - 1; i >= 0; --i)
             {
                 if (InputListeners[i] == _currentInputListener) continue;
@@ -150,6 +152,11 @@ namespace SamsHelper.Input
 
                 _lastInputValue = _currentInputValue;
             }
+        }
+
+        public static void InterruptListeners(bool interrupted)
+        {
+            _listenersInterrupted = interrupted;
         }
     }
 }

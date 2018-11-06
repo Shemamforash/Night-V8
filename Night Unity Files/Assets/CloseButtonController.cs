@@ -2,21 +2,21 @@
 using DG.Tweening;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
-using SamsHelper.ReactiveUI.Elements;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CloseButtonController : MonoBehaviour, IInputListener
 {
     private Image _glowImage;
-    private EnhancedText _text;
+    private TextMeshProUGUI _text;
     private InputAxis _listeningAxis = InputAxis.Cover;
     private Action _callback;
 
     public void Awake()
     {
         _glowImage = gameObject.FindChildWithName<Image>("Glow");
-        _text = gameObject.FindChildWithName<EnhancedText>("Close Text");
+        _text = gameObject.FindChildWithName<TextMeshProUGUI>("Close Text");
     }
 
     public void SetInputAxis(InputAxis axis)
@@ -46,8 +46,13 @@ public class CloseButtonController : MonoBehaviour, IInputListener
 
     public void Activate()
     {
-        _glowImage.color = Color.white;
+        Flash();
         _callback?.Invoke();
+    }
+
+    public void Flash()
+    {
+        _glowImage.color = Color.white;
         _glowImage.DOFade(0f, 0.5f);
     }
 
