@@ -21,11 +21,6 @@ namespace Game.Combat.Misc
             return (ShotgunTrail) _pool.Create();
         }
 
-        protected override void StopEmitting()
-        {
-            _points.Stop();
-        }
-
         protected override bool Done()
         {
             return _points.particleCount == 0 && _trail.positionCount == 0;

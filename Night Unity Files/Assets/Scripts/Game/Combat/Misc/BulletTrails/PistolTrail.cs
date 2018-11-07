@@ -32,10 +32,5 @@ namespace Game.Combat.Misc
         {
             _path.Clear();
         }
-
-        protected override void StopEmitting()
-        {
-            _path.Stop();
-        }
     }
 }

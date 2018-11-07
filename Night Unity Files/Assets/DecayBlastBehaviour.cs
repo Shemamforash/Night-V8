@@ -21,7 +21,7 @@ public class DecayBlastBehaviour : MonoBehaviour
     {
         DecayBlastBehaviour blastBehaviour = _decayBlasts.Create();
         blastBehaviour.gameObject.layer = origin is PlayerCombat ? 16 : 15;
-        Vector3 direction = origin.transform.Direction(target);
+        Vector3 direction = target.Direction(origin.transform);
         blastBehaviour.Initialise(origin.transform.position, direction);
     }
 
@@ -36,8 +36,9 @@ public class DecayBlastBehaviour : MonoBehaviour
         sequence.AppendCallback(() => _decayBlasts.Return(this));
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log(other.name);
         _rigidBody2D.velocity = Vector2.zero;
     }
 

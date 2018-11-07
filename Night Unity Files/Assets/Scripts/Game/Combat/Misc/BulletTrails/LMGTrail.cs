@@ -18,11 +18,6 @@ namespace Game.Combat.Misc
             return (LMGTrail) _pool.Create();
         }
 
-        protected override void StopEmitting()
-        {
-            _path.Stop();
-        }
-
         protected override bool Done()
         {
             return _path.particleCount == 0;

@@ -131,7 +131,7 @@ namespace Game.Global
             WeatherManager.Start();
             WorldView.Update(Hours);
             CharacterManager.Update();
-            TutorialManager.TryOpenTutorial(1, 1f);
+            TutorialManager.TryOpenTutorial(1);
         }
 
         public static void ActivateTemple()
@@ -262,9 +262,9 @@ namespace Game.Global
         public void Update()
         {
 //            Debug.Log(EventSystem.current.currentSelectedGameObject.name);
+            UpdateScenery();
             if (_isPaused) return;
             IncrementWorldTime();
-            UpdateScenery();
             CheckNeedsTransit();
         }
 

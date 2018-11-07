@@ -55,7 +55,7 @@ namespace Game.Combat.Misc
         public override void TakeShotDamage(Shot shot)
         {
             base.TakeShotDamage(shot);
-            MovementController.KnockBack(shot.Direction(), shot.GetKnockBackForce());
+            MovementController.KnockBack(shot.Direction(), shot.Attributes().GetKnockBackForce());
         }
 
         public override void TakeExplosionDamage(int damage, Vector2 origin, float radius)

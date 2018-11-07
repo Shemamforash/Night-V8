@@ -24,6 +24,7 @@ public class NeedleBehaviour : MonoBehaviour
     {
         _time = 0f;
         _isPlayerNeedle = isPlayerNeedle;
+        gameObject.layer = isPlayerNeedle ? 16 : 15;
         _damage = damage;
         transform.position = origin;
         _trailParticles.Clear();
@@ -37,9 +38,9 @@ public class NeedleBehaviour : MonoBehaviour
         _needlePool.Return(this);
     }
 
-    public void OnTriggerEnter2D(Collider2D other)
+    public void OnCollisionEnter2D(Collision2D other)
     {
-        CanTakeDamage hitThing = other.GetComponent<CanTakeDamage>();
+        CanTakeDamage hitThing = other.gameObject.GetComponent<CanTakeDamage>();
         if (hitThing != null)
         {
             bool validHit = hitThing == PlayerCombat.Instance && !_isPlayerNeedle
@@ -76,7 +77,7 @@ public class NeedleBehaviour : MonoBehaviour
     private void FixedUpdate()
     {
         if (!_firing) return;
-        float speed = Mathf.Lerp(0f, 20f, _time * _time * _time);
+        float speed = Mathf.Lerp(1f, 20f, _time * _time * _time);
         _time += Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().AddForce(transform.up * speed);
         if (_time > 3f) Return();

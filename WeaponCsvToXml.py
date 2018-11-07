@@ -325,9 +325,7 @@ class SkillImporter(XMLWriter):
         write_tag(self, "Skills", self.read_skills)
 
     def read_skills(self):
-        for row in range(2, 43):
-            if (row - 1 % 3) == 0:
-                continue
+        for row in range(2, 30):
             write_tag(self, "Skill", self.read_skill, [row])
 
     def read_skill(self, row):
@@ -404,8 +402,8 @@ def write_single_value(xml_writer, stat_name, value):
 # RecipeImporter()
 # ResourceImporter()
 # InscriptionImporter()
-# SkillImporter()
+SkillImporter()
 # EnvironmentImporter()
 # BrandImporter()
 # StoryImporter()
-TutorialImporter()
+# TutorialImporter()

@@ -25,13 +25,10 @@ namespace Game.Combat.Misc
         private IEnumerator Fade()
         {
             _followTransform = null;
-//            StopEmitting();
             while (!Done()) yield return null;
             ClearTrails();
             GetObjectPool().Return(this);
         }
-
-        protected abstract void StopEmitting();
 
         protected abstract bool Done();
 
@@ -48,5 +45,11 @@ namespace Game.Combat.Misc
 
         protected abstract ObjectPool<BulletTrail> GetObjectPool();
         protected abstract void ClearTrails();
+
+        public void SetFinalPosition(Vector2 finalPosition)
+        {
+            transform.position = finalPosition;
+            _followTransform = null;
+        }
     }
 }

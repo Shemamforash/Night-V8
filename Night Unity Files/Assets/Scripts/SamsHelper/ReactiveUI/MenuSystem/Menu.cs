@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using SamsHelper.Input;
 using UnityEngine;
+using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.UI;
 
 namespace SamsHelper.ReactiveUI.MenuSystem
@@ -30,6 +31,11 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             DOTween.defaultTimeScaleIndependent = false;
             _canvasGroup.alpha = 0;
             InputHandler.SetCurrentListener(null);
+        }
+
+        public float GetAlpha()
+        {
+            return _canvasGroup.alpha;
         }
 
         public void SetAlpha(float alpha)

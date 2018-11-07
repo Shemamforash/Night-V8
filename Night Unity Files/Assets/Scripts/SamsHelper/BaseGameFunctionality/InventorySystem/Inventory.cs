@@ -259,7 +259,13 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             _items.Add(weapon);
             _weapons.Add(weapon);
-            SortItem(_weapons);
+            _weapons.Sort((a, b) =>
+            {
+                int ret = b.Quality().CompareTo(a.Quality());
+                if (ret == 0) ret = a.WeaponType().CompareTo(b.WeaponType());
+                if (ret == 0) ret = b.Name.CompareTo(a.Name);
+                return ret;
+            });
         }
 
         public static void Move(Armour armour)

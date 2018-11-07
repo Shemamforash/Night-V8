@@ -71,7 +71,7 @@ public class WormSacBehaviour : BossSectionHealthController
 
     public override void TakeShotDamage(Shot s)
     {
-        TakeDamage(s.DamageDealt());
+        TakeDamage(s.Attributes().DamageDealt());
         base.TakeShotDamage(s);
     }
 

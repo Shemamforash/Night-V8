@@ -74,6 +74,12 @@ namespace Game.Global
         public static List<JournalEntry> GetUnlockedEntries()
         {
             ReadJournals();
+            UnlockedEntries.Sort((a, b) =>
+            {
+                int ret = a._journalGroup.CompareTo(b._journalGroup);
+                if (ret == 0) ret = a._numberInGroup.CompareTo(b._numberInGroup);
+                return ret;
+            });
             return UnlockedEntries;
         }
 

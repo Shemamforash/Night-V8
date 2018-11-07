@@ -8,7 +8,7 @@ namespace Game.Combat.Misc
 {
     public class SickenBehaviour : MonoBehaviour
     {
-        private static readonly ObjectPool<SickenBehaviour> _sicknessPool = new ObjectPool<SickenBehaviour>("Fire Areas", "Prefabs/Combat/Visuals/Sicken Effect");
+        private static readonly ObjectPool<SickenBehaviour> _sicknessPool = new ObjectPool<SickenBehaviour>("Sicken Effects", "Prefabs/Combat/Visuals/Sicken Effect");
         private ParticleSystem[] _particleSystems;
 
         private List<CanTakeDamage> _ignoreTargets;
@@ -18,9 +18,9 @@ namespace Game.Combat.Misc
             _particleSystems = transform.GetComponentsInChildren<ParticleSystem>();
         }
 
-        public static void Create(Vector2 position, List<CanTakeDamage> ignoreTargets, float radius = 1f)
+        public static void Create(Vector2 position, List<CanTakeDamage> ignoreTargets)
         {
-            List<CanTakeDamage> characters = CombatManager.GetCharactersInRange(position, radius);
+            List<CanTakeDamage> characters = CombatManager.GetCharactersInRange(position, 1);
             characters.ForEach(c =>
             {
                 if (ignoreTargets.Contains(c)) return;

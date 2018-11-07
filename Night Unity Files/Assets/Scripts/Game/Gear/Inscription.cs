@@ -23,7 +23,7 @@ namespace Game.Gear
         private readonly InscriptionTemplate _template;
         private readonly int _inscriptionCost;
 
-        private Inscription(InscriptionTemplate template, ItemQuality quality) : base("A " + QualityToInscription(quality) + " of " + template.Name, GearSubtype.Inscription, quality)
+        private Inscription(InscriptionTemplate template, ItemQuality quality) : base("A " + QualityToInscription(quality) + " of " + template.Name, quality)
         {
             _template = template;
             _modifier = _template.GetModifier();

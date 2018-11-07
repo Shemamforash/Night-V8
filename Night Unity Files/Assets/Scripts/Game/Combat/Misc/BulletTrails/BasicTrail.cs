@@ -18,10 +18,6 @@ namespace Game.Combat.Misc
             return (BasicTrail) _pool.Create();
         }
 
-        protected override void StopEmitting()
-        {
-        }
-
         protected override bool Done()
         {
             return _trail.positionCount == 0;

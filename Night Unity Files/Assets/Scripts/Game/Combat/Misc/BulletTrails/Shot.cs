@@ -1,86 +1,37 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Game.Combat.Enemies;
-using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+﻿using System.Collections;
 using Game.Combat.Generation;
 using Game.Combat.Player;
-using Game.Exploration.Weather;
-using Game.Gear.Weapons;
-using QuickEngine.Extensions;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
-using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Misc
 {
     public class Shot : MonoBehaviour
     {
-        private float Speed = 25f;
-        private static GameObject _bulletPrefab;
-        private BulletTrail _bulletTrail;
-        private const float EnemyDamageModifier = 0.2f;
+        private const float DistanceFromOrigin = 0.2f;
 
         private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Shots", "Prefabs/Combat/Shots/Bullet");
-        private float _accuracy;
-        private float _age;
+        private static GameObject _bulletPrefab;
 
-        private int _damage;
-        private int _damageDealt;
-        private Vector3 _direction;
-        private float _finalDamageModifier = 1f;
-        private bool _guaranteeHit;
-
-        private bool _fired;
-        public CharacterCombat _origin;
-        private Vector3 _originPosition;
-        private float _pierceChance, _burnChance, _decayChance, _sicknessChance;
-        private Rigidbody2D _rigidBody;
-
-        private Weapon _weapon;
-        private bool _seekTarget, _leaveFireTrail;
-        private const float SeekDecay = 0.95f;
-        private float _seekModifier;
-        private float _knockBackForce;
-        private float _knockBackModifier;
-        private const float MaxAge = 3f;
-        private event Action OnHitAction;
         private readonly RaycastHit2D[] _collisions = new RaycastHit2D[50];
-        private Vector2 _lastPosition;
-        private bool _hasHit;
-        public const float DistanceFromOrigin = 0.2f;
+
+        private Rigidbody2D _rigidBody;
+        private BulletTrail _bulletTrail;
+        public CharacterCombat _origin;
+        private Vector2 _direction, _originPosition, _lastPosition;
+        private ShotAttributes _shotAttributes;
+
 
         public void Awake()
         {
             _rigidBody = GetComponent<Rigidbody2D>();
         }
 
-        public float GetKnockBackForce()
+        public ShotAttributes Attributes()
         {
-            return _knockBackForce;
-        }
-
-        private void OnDestroy()
-        {
-            _shotPool.Dispose(this);
-        }
-
-        private void ResetValues()
-        {
-            _finalDamageModifier = 1f;
-            _guaranteeHit = false;
-            _knockBackModifier = 1f;
-            _knockBackForce = 10;
-            _damageDealt = 0;
-            _fired = false;
-            _seekTarget = false;
-            _leaveFireTrail = false;
-            _pierce = false;
-            _hasHit = false;
-            _seekModifier = 1f;
-            OnHitAction = null;
+            return _shotAttributes;
         }
 
         public static Shot Create(CharacterCombat origin)
@@ -99,93 +50,38 @@ namespace Game.Combat.Misc
 
         private void Initialise(CharacterCombat origin, Vector3 direction)
         {
+            _shotAttributes = new ShotAttributes(origin);
             _origin = origin;
             _direction = direction;
-            _weapon = origin.Weapon();
-            switch (_weapon.WeaponType())
-            {
-                case WeaponType.Pistol:
-                    Speed = 25f;
-                    break;
-                case WeaponType.Rifle:
-                    Speed = 35;
-                    break;
-                case WeaponType.Shotgun:
-                    Speed = 15f;
-                    break;
-                case WeaponType.SMG:
-                    Speed = 15f;
-                    break;
-                case WeaponType.LMG:
-                    Speed = 20f;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
             _originPosition = origin.transform.position;
-            SetUpComponents();
-        }
-
-        private void SetUpComponents()
-        {
-            ResetValues();
-            CacheWeaponAttributes();
-            CalculateAccuracy();
-        }
-
-        private void CalculateAccuracy()
-        {
-            if (_guaranteeHit) _accuracy = 0;
-            else if (_origin == null) return;
-            float accuracyDifference = Weapon.MaxAccuracyOffsetInDegrees - _accuracy;
-            _accuracy += accuracyDifference * _origin.GetAccuracyModifier();
-        }
-
-        private void CacheWeaponAttributes()
-        {
-            WeaponAttributes attributes = _weapon.WeaponAttributes;
-            _damage = (int) attributes.Val(AttributeType.Damage);
-            _accuracy = _weapon.CalculateBaseAccuracy();
-            _decayChance = attributes.Val(AttributeType.DecayChance);
-            _burnChance = attributes.Val(AttributeType.BurnChance);
-            _sicknessChance = attributes.Val(AttributeType.SicknessChance);
-            if (!(_origin is PlayerCombat)) return;
-            _decayChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.DecayChance);
-            _burnChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.BurnChance);
-            _sicknessChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.SicknessChance);
-        }
-
-        public void SetDamageModifier(float modifier)
-        {
-            _finalDamageModifier = modifier;
         }
 
         private void SeekTarget()
         {
+            float seekForce = _shotAttributes.GetSeekForce();
+            if (seekForce < 0) return;
+
             CanTakeDamage nearestEnemy = CombatManager.NearestEnemy(transform.position);
             if (nearestEnemy == null) return;
             Vector2 dir = new Vector2(-_rigidBody.velocity.y, _rigidBody.velocity.x).normalized;
             float angle = Vector2.Angle(dir, nearestEnemy.transform.position - transform.position);
-            float force = 50;
-            force *= _seekModifier;
-            _seekModifier *= SeekDecay;
-            if (angle > 90) force = -force;
-            _rigidBody.velocity += force * dir * Time.fixedDeltaTime;
-            _rigidBody.velocity = _rigidBody.velocity.normalized * Speed;
+
+            if (angle > 90) seekForce = -seekForce;
+            _rigidBody.velocity += seekForce * dir * Time.fixedDeltaTime;
+            _rigidBody.velocity = _rigidBody.velocity.normalized * _shotAttributes.GetSpeed();
         }
 
         private void CheckForPierce()
         {
+            if (!_shotAttributes.Piercing) return;
             Vector2 newPosition = transform.position;
             ContactFilter2D cf = new ContactFilter2D();
             cf.layerMask = 1 << 10;
-            Debug.DrawLine(_lastPosition, newPosition, Color.red, 0.02f);
             int hits = Physics2D.Linecast(_lastPosition, newPosition, cf, _collisions);
             for (int i = 0; i < hits; ++i)
             {
                 RaycastHit2D hit = _collisions[i];
-                DealDamage(hit.collider.gameObject);
+                _shotAttributes.DealDamage(hit.collider.gameObject, this);
             }
 
             _lastPosition = newPosition;
@@ -193,19 +89,17 @@ namespace Game.Combat.Misc
 
         private void FixedUpdate()
         {
-            if (!_fired) return;
-            if (_seekTarget) SeekTarget();
-            if (_pierce) CheckForPierce();
+            if (!_shotAttributes.Fired) return;
+            SeekTarget();
+            CheckForPierce();
         }
 
         private IEnumerator WaitToDie()
         {
-            _age = 0;
-            while (_age < MaxAge)
+            while (_shotAttributes.UpdateAge())
             {
                 float distanceTravelled = _originPosition.Distance(transform.position);
-                if (distanceTravelled > 15f) _age = MaxAge;
-                _age += Time.deltaTime;
+                if (distanceTravelled > 15f) break;
                 yield return null;
             }
 
@@ -213,46 +107,19 @@ namespace Game.Combat.Misc
             DeactivateShot();
         }
 
-        private bool _pierce;
-
-        public void Pierce()
-        {
-            _pierce = true;
-        }
-
         public void Fire()
         {
             if (_origin is PlayerCombat) RadianceController.SetHasFiredShot();
-            if (_pierce) gameObject.layer = 20;
+            if (_shotAttributes.Piercing) gameObject.layer = 20;
             float angleModifier = 1 - Mathf.Sqrt(Random.Range(0f, 1f));
             if (Random.Range(0, 2) == 0) angleModifier = -angleModifier;
-            float angleOffset = angleModifier * _accuracy;
+            float angleOffset = angleModifier * _shotAttributes.CalculateAccuracy();
             transform.position = _originPosition + _direction * DistanceFromOrigin;
             _direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * _direction;
-            if (_leaveFireTrail) gameObject.AddComponent<LeaveFireTrail>().Initialise();
-            _fired = true;
+            _shotAttributes.Fired = true;
             if (_origin != null) _origin.IncreaseRecoil();
-
-            switch (_weapon.WeaponType())
-            {
-                case WeaponType.Pistol:
-                    _bulletTrail = PistolTrail.Create();
-                    break;
-                case WeaponType.Rifle:
-                    _bulletTrail = RifleTrail.Create();
-                    break;
-                case WeaponType.LMG:
-                    _bulletTrail = LMGTrail.Create();
-                    break;
-                case WeaponType.Shotgun:
-                    _bulletTrail = ShotgunTrail.Create();
-                    break;
-                default:
-                    _bulletTrail = BasicTrail.Create();
-                    break;
-            }
-
-            _rigidBody.velocity = _direction * Speed * Random.Range(0.9f, 1.1f);
+            _bulletTrail = _shotAttributes.GetBulletTrail();
+            _rigidBody.velocity = _direction * _shotAttributes.GetSpeed() * Random.Range(0.9f, 1.1f);
             _lastPosition = transform.position;
             _bulletTrail.SetTarget(transform);
             StartCoroutine(WaitToDie());
@@ -260,7 +127,6 @@ namespace Game.Combat.Misc
 
         private void DeactivateShot()
         {
-            Destroy(gameObject.GetComponent<LeaveFireTrail>());
             _bulletTrail.StartFade(0.2f);
             _shotPool.Return(this);
         }
@@ -271,134 +137,32 @@ namespace Game.Combat.Misc
             Hit(collision);
         }
 
-        private void DealDamage(GameObject other)
-        {
-            _damageDealt = _damage;
-            _damageDealt = (int) (_damageDealt * _finalDamageModifier);
-            OnHitAction?.Invoke();
-            CanTakeDamage hit = other.GetComponent<CanTakeDamage>();
-            if (hit == null) return;
-            PlayerCombat player = _origin as PlayerCombat;
-            if (player != null) player.OnShotConnects(hit);
-            ApplyDamage(hit);
-            _damage = Mathf.CeilToInt(_damage * 0.5f);
-        }
-
         private void Hit(Collision2D collision)
         {
-            if (_hasHit) return;
-            _hasHit = true;
+            if (_shotAttributes.HasHit) return;
+            _shotAttributes.HasHit = true;
             GameObject other = collision.gameObject;
             if (collision.contacts.Length > 0)
             {
+                Vector2 collisionPosition = collision.contacts[0].point;
                 float angle = AdvancedMaths.AngleFromUp(Vector2.zero, _direction) + 180 + Random.Range(-10f, 10f);
-                BulletImpactBehaviour.Create(collision.contacts[0].point, angle);
+                BulletImpactBehaviour.Create(collisionPosition, angle);
+                _bulletTrail.SetFinalPosition(collisionPosition);
             }
 
-            DealDamage(other);
-            ApplyConditions();
+            _shotAttributes.DealDamage(other, this);
+            _shotAttributes.ApplyConditions(transform.position);
             DeactivateShot();
-        }
-
-        private void ApplyDamage(CanTakeDamage hit)
-        {
-            CalculateKnockBackForce();
-            hit.TakeShotDamage(this);
-        }
-
-        private void CalculateKnockBackForce()
-        {
-            float rainModifier = WeatherManager.CurrentWeather().Attributes.RainAmount;
-            _knockBackModifier += rainModifier;
-            _knockBackForce = _damageDealt / 4f * _knockBackModifier;
-        }
-
-        private void ApplyConditions()
-        {
-            float random = Random.Range(0f, 1f);
-            float conditionModifier = _weapon.GetAttributeValue(AttributeType.Pellets) * _weapon.GetAttributeValue(AttributeType.Capacity);
-            bool canDecay = random < _decayChance / conditionModifier;
-            bool canBurn = random < _burnChance / conditionModifier;
-            bool canSicken = random < _sicknessChance / conditionModifier;
-            List<int> conditions = new List<int>();
-            if (canDecay) conditions.Add(0);
-            if (canBurn) conditions.Add(1);
-            if (canSicken) conditions.Add(2);
-            if (conditions.Count == 0) return;
-            int condition = conditions.GetRandomElement();
-            switch (condition)
-            {
-                case 0:
-                    DecayBehaviour.Create(transform.position);
-                    break;
-                case 1:
-                    FireBurstBehaviour.Create(transform.position);
-                    break;
-                case 2:
-                    SickenBehaviour.Create(transform.position, new List<CanTakeDamage> {_origin});
-                    break;
-            }
-        }
-
-        public void GuaranteeHit()
-        {
-            _guaranteeHit = true;
-        }
-
-        public void AddOnHit(Action a)
-        {
-            OnHitAction += a;
-        }
-
-        public void AddKnockBackModifier(float forceModifier)
-        {
-            _knockBackModifier += forceModifier;
-        }
-
-        public void SetBurnChance(float chance)
-        {
-            Assert.IsTrue(chance >= 0 && chance <= 1);
-            _burnChance = chance;
-        }
-
-        public void SetDecayChance(float chance)
-        {
-            Assert.IsTrue(chance >= 0 && chance <= 1);
-            _decayChance = chance;
-        }
-
-        public void SetSicknessChance(float chance)
-        {
-            Assert.IsTrue(chance >= 0 && chance <= 1);
-            _sicknessChance = chance;
-        }
-
-        public int DamageDealt()
-        {
-            int damageDealt = _damageDealt;
-            if (_origin is EnemyBehaviour) damageDealt = Mathf.FloorToInt(EnemyDamageModifier * _damageDealt);
-            return damageDealt;
-        }
-
-        public void SetAccuracy(float accuracy)
-        {
-            Assert.IsTrue(accuracy >= 0 && accuracy <= 180);
-            _accuracy = accuracy;
-        }
-
-        public void Seek()
-        {
-            _seekTarget = true;
-        }
-
-        public void LeaveFireTrail()
-        {
-            _leaveFireTrail = true;
         }
 
         public Vector2 Direction()
         {
             return _direction;
+        }
+
+        private void OnDestroy()
+        {
+            _shotPool.Dispose(this);
         }
     }
 }

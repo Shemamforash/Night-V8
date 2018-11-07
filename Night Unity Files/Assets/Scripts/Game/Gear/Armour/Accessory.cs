@@ -20,7 +20,7 @@ namespace Game.Gear.Armour
         private readonly AccessoryTemplate _template;
         private AttributeModifier modifier;
 
-        private Accessory(AccessoryTemplate template, ItemQuality itemQuality) : base(template.Name, GearSubtype.Accessory, itemQuality)
+        private Accessory(AccessoryTemplate template, ItemQuality itemQuality) : base(template.Name, itemQuality)
         {
             _template = template;
         }
@@ -39,11 +39,11 @@ namespace Game.Gear.Armour
             PlayerCombat.Instance.RecalculateAttributes();
         }
 
-        public override void Unequip()
+        public override void UnEquip()
         {
-            base.Unequip();
             (EquippedCharacter as Player)?.RemoveModifier(_template.TargetAttribute, modifier);
             RemoveFromWeapon(EquippedCharacter.EquippedWeapon);
+            base.UnEquip();
             if (PlayerCombat.Instance == null) return;
             PlayerCombat.Instance.RecalculateAttributes();
         }

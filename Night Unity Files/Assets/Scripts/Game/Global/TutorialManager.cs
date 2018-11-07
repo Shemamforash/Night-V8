@@ -26,6 +26,7 @@ public class TutorialManager : MonoBehaviour
     private static IInputListener _lastListener;
     private static bool _showingTutorial;
     private static bool _alreadyPaused;
+    private static bool _alreadyHidden;
 
     public void Awake()
     {
@@ -47,7 +48,7 @@ public class TutorialManager : MonoBehaviour
         ReadTutorialParts();
         _currentTutorialPart = _tutorialParts[tutorialPart].FirstOrDefault(p => !p.IsComplete());
         if (_currentTutorialPart == null) return;
-        Sequence sequence = DOTween.Sequence();
+        Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
         sequence.AppendInterval(waitTime);
         sequence.AppendCallback(() =>
         {
@@ -88,7 +89,8 @@ public class TutorialManager : MonoBehaviour
 
     private static void Enter()
     {
-        ResourcesUiController.Hide();
+        _alreadyHidden = ResourcesUiController.Hidden();
+        if (!_alreadyHidden) ResourcesUiController.Hide();
         _showingTutorial = true;
         DOTween.defaultTimeScaleIndependent = true;
         _alreadyPaused = CombatManager.IsCombatActive() ? CombatManager.IsCombatPaused() : WorldState.Paused();
@@ -97,12 +99,13 @@ public class TutorialManager : MonoBehaviour
             WorldState.Pause();
             CombatManager.Pause();
         }
+
         _tutorialCanvas.DOFade(1f, 0.5f);
     }
 
     private static void Close()
     {
-        ResourcesUiController.Show();
+        if (!_alreadyHidden) ResourcesUiController.Show();
         _closeButton.SetCallback(null);
         Sequence sequence = DOTween.Sequence();
         sequence.Append(_tutorialCanvas.DOFade(0f, 0.5f));
@@ -112,7 +115,7 @@ public class TutorialManager : MonoBehaviour
             if (!_alreadyPaused)
             {
                 WorldState.UnPause();
-                CombatManager.Unpause();
+                CombatManager.Resume();
             }
 
             _showingTutorial = false;

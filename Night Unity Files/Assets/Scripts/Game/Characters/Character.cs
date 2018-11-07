@@ -51,14 +51,14 @@ namespace Game.Characters
 
         public virtual void EquipWeapon(Weapon weapon)
         {
-            EquippedWeapon?.Unequip();
+            EquippedWeapon?.UnEquip();
             EquippedWeapon = weapon;
             weapon?.Equip(this);
         }
 
         public virtual void EquipAccessory(Accessory accessory)
         {
-            EquippedAccessory?.Unequip();
+            EquippedAccessory?.UnEquip();
             EquippedAccessory = accessory;
             accessory?.Equip(this);
         }

@@ -60,7 +60,7 @@ namespace Game.Combat.Player
         protected override void InstantEffect()
         {
             Shot s = Shot.Create(PlayerCombat.Instance);
-            s.SetBurnChance(1);
+            s.Attributes().GuaranteeBurn();
             s.Fire();
         }
     }
@@ -74,7 +74,7 @@ namespace Game.Combat.Player
         protected override void InstantEffect()
         {
             Shot s = Shot.Create(PlayerCombat.Instance);
-            s.AddOnHit(() => { VortexBehaviour.Create(s.transform.position); });
+            s.Attributes().AddOnHit(() => { VortexBehaviour.Create(s.transform.position); });
             s.Fire();
         }
     }
@@ -110,7 +110,7 @@ namespace Game.Combat.Player
                 float y = Mathf.Sin(angle);
                 Vector2 dir = new Vector2(x, y);
                 Shot s = Shot.Create(PlayerCombat.Instance);
-                s.SetDamageModifier(2);
+                s.Attributes().SetDamageModifier(2);
                 s.OverrideDirection(dir);
                 s.Fire();
             }
@@ -154,7 +154,7 @@ namespace Game.Combat.Player
 
         protected override void MagazineEffect(Shot s)
         {
-            s.Seek();
+            s.Attributes().Seek();
         }
     }
 
@@ -166,9 +166,9 @@ namespace Game.Combat.Player
 
         protected override void MagazineEffect(Shot s)
         {
-            s.AddOnHit(() =>
+            s.Attributes().AddOnHit(() =>
             {
-                Explosion e = Explosion.CreateExplosion(s.transform.position, s.DamageDealt(), 0.25f);
+                Explosion e = Explosion.CreateExplosion(s.transform.position, s.Attributes().DamageDealt(), 0.25f);
                 e.InstantDetonate();
             });
         }
@@ -202,7 +202,7 @@ namespace Game.Combat.Player
         {
             if (PlayerCombat.Instance.DamageTakenSinceLastShot)
             {
-                s.SetDamageModifier(5);
+                s.Attributes().SetDamageModifier(5);
             }
 
             PlayerCombat.Instance.DamageTakenSinceLastShot = false;

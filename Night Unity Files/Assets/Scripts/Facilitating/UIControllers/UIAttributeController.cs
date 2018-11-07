@@ -1,5 +1,4 @@
-﻿using DG.Tweening;
-using Game.Characters;
+﻿using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;

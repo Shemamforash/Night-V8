@@ -159,9 +159,10 @@ namespace Game.Combat.Misc
 
         public virtual void TakeShotDamage(Shot shot)
         {
-            TakeDamage(shot.DamageDealt(), shot.Direction());
+            int damageDealt = shot.Attributes().DamageDealt();
+            TakeDamage(damageDealt, shot.Direction());
             if (this is PlayerCombat) return;
-            PlayerCombat.Instance.UpdateAdrenaline(shot.DamageDealt());
+            PlayerCombat.Instance.UpdateAdrenaline(damageDealt);
         }
 
         protected virtual void TakeDamage(int damage, Vector2 direction)

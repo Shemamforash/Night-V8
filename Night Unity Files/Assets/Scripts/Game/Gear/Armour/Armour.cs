@@ -31,7 +31,7 @@ namespace Game.Gear.Armour
             return doc;
         }
 
-        private Armour(ItemQuality quality, ArmourType armourType) : base(QualityToName(quality, armourType), GearSubtype.Armour, quality)
+        private Armour(ItemQuality quality, ArmourType armourType) : base(QualityToName(quality, armourType), quality)
         {
             _maxProtection = (int) quality + 1;
             _armourHealth.Max = _maxProtection * ArmourHealthUnit;
@@ -120,7 +120,7 @@ namespace Game.Gear.Armour
             _armourHealth.Decrement(amount);
             if (!_armourHealth.ReachedMin()) return false;
             PlayerCombat.Instance.WeaponAudio.BreakArmour();
-            Unequip();
+            UnEquip();
             Inventory.Destroy(this);
             return true;
         }

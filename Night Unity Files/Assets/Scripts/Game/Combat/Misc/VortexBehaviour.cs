@@ -29,13 +29,13 @@ public class VortexBehaviour : MonoBehaviour
     {
         _position = position;
         transform.position = _position;
-        _particles.Emit(50);
+        _particles.Play();
         StartCoroutine(WaitAndDie());
     }
 
     private IEnumerator WaitAndDie()
     {
-        float time = 2f;
+        float time = 0.75f;
         while (time > 0f)
         {
             List<CanTakeDamage> charactersInRange = CombatManager.GetCharactersInRange(_position, 2f);
@@ -46,7 +46,7 @@ public class VortexBehaviour : MonoBehaviour
                 if (character == null) return;
                 Vector2 direction = (_position - (Vector2) character.transform.position).normalized;
                 float distance = direction.magnitude;
-                character.MovementController.KnockBack(direction * distance * 3);
+                character.MovementController.KnockBack(direction * distance * 5);
             });
             time -= Time.deltaTime;
             yield return null;

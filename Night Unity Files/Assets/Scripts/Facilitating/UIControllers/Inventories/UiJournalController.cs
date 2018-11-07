@@ -50,7 +50,6 @@ public class UiJournalController : UiInventoryMenuController
 
     private List<object> GetAvailableJournalEntries()
     {
-        for (int i = 0; i < 5; ++i) JournalEntry.GetEntry()?.Unlock();
         return JournalEntry.GetUnlockedEntries().ToObjectList();
     }
 

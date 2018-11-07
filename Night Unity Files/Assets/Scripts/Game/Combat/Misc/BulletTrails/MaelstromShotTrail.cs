@@ -22,12 +22,6 @@ public class MaelstromShotTrail : BulletTrail
         return (MaelstromShotTrail) _pool.Create();
     }
 
-    protected override void StopEmitting()
-    {
-        _paths.Stop();
-        _points.Stop();
-    }
-
     protected override bool Done()
     {
         return _paths.particleCount == 0 && _points.particleCount == 0 && _trail.positionCount == 0;

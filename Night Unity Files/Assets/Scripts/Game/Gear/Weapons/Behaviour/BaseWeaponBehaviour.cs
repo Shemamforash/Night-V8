@@ -73,7 +73,7 @@ namespace Game.Gear.Weapons
             {
                 Shot shot = Shot.Create(Origin);
                 Origin.ApplyShotEffects(shot);
-                if (this is HoldAndFire) shot.Pierce();
+                if (this is HoldAndFire) shot.Attributes().Piercing = true;
                 shot.Fire();
             }
 

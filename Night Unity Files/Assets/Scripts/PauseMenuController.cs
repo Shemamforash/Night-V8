@@ -111,7 +111,7 @@ public class PauseMenuController : MonoBehaviour
                 CreditsController.Unpause();
                 break;
             case "Combat":
-                CombatManager.Unpause();
+                CombatManager.Resume();
                 break;
         }
     }

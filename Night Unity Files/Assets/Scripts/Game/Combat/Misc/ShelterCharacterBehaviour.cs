@@ -122,7 +122,7 @@ namespace Game.Combat.Misc
 
         public override void TakeShotDamage(Shot shot)
         {
-            HealthController.TakeDamage(shot.DamageDealt());
+            HealthController.TakeDamage(shot.Attributes().DamageDealt());
         }
     }
 }

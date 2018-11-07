@@ -64,6 +64,7 @@ namespace Game.Combat.Generation
             Cursor.visible = false;
             base.Awake();
             _instance = this;
+            Resume();
             GameObject regionNameObject = GameObject.Find("Screen Fader");
             _regionUnderline = regionNameObject.FindChildWithName<Image>("Underline");
             _regionUnderline.color = UiAppearanceController.InvisibleColour;
@@ -292,6 +293,7 @@ namespace Game.Combat.Generation
             Instance()._regionUnderline.color = UiAppearanceController.InvisibleColour;
             PlayerCombat.Instance.ExitCombat();
             ChangeScene(returnToMap);
+            _instance = null;
         }
 
         private static void ChangeScene(bool returnToMap)
@@ -382,12 +384,14 @@ namespace Game.Combat.Generation
 
         public static void Pause()
         {
+            if (_instance == null) return;
             _paused = true;
             Time.timeScale = 0;
         }
 
-        public static void Unpause()
+        public static void Resume()
         {
+            if (_instance == null) return;
             _paused = false;
             Time.timeScale = 1;
         }

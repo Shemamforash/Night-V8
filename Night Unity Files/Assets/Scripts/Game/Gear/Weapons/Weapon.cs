@@ -19,7 +19,7 @@ namespace Game.Gear.Weapons
         private Inscription _inscription;
         private bool _inscriptionApplied;
 
-        private Weapon(WeaponClass weaponClass, ItemQuality _itemQuality) : base(weaponClass.Type.ToString(), GearSubtype.Weapon, _itemQuality)
+        private Weapon(WeaponClass weaponClass, ItemQuality _itemQuality) : base(weaponClass.Type.ToString(), _itemQuality)
         {
             WeaponAttributes = new WeaponAttributes(this, weaponClass);
             WeaponSkillOne = WeaponSkills.GetWeaponSkillOne(this);
@@ -171,9 +171,9 @@ namespace Game.Gear.Weapons
             _character.EquippedAccessory?.ApplyToWeapon(this);
         }
 
-        public override void Unequip()
+        public override void UnEquip()
         {
-            base.Unequip();
+            base.UnEquip();
             RemoveInscription();
             _character.EquippedAccessory?.RemoveFromWeapon(this);
         }

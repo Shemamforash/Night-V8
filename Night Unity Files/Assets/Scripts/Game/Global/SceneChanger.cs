@@ -24,13 +24,13 @@ namespace Game.Global
             VolumeController.SetModifiedVolume(0f);
             float fadeInTime = SceneManager.GetActiveScene().name == "Combat" ? 3f : DefaultFadeTime;
             DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 1f, fadeInTime);
-            Sequence sequence = DOTween.Sequence();
+            Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
             _fader.alpha = 1;
             _faderImage.color = Color.black;
             sequence.Append(_fader.DOFade(0, fadeInTime));
             sequence.AppendCallback(() => StartCoroutine(LoadNextScene()));
             if (SceneManager.GetActiveScene().name != "Game") return;
-            sequence.InsertCallback(0.1f, WorldState.UnPause);
+            sequence.InsertCallback(0f, WorldState.UnPause);
         }
 
         public static Tweener FlashWhite(Color to, float duration)

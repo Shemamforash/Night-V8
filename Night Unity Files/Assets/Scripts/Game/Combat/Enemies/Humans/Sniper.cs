@@ -18,8 +18,7 @@ namespace Game.Combat.Enemies.Humans
         private void FirePowerShot()
         {
             Shot powerShot = Shot.Create(this);
-            powerShot.LeaveFireTrail();
-            powerShot.SetBurnChance(1);
+            powerShot.Attributes().GuaranteeBurn();
             powerShot.Fire();
             ResetCooldown();
             TryFire();

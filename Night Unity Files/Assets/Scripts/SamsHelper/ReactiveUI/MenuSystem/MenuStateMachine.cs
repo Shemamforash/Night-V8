@@ -17,6 +17,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         private static StateMachine States;
         public Menu InitialMenu;
         private static Action OnTransition;
+        private const float MenuFadeTime = 0.1f;
 
         public void Awake()
         {
@@ -51,45 +52,30 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         {
             if (States.GetCurrentState()?.Name == menuName) return;
             OnTransition = onTransition;
-            _instance.StartCoroutine(_instance.FadeMenu(menuName));
+            FadeMenu(menuName);
         }
 
-        private IEnumerator FadeMenu(string menuName)
+        private static void FadeMenu(string menuName)
         {
-            float fadeTime = 0.1f;
-            float currentTime = fadeTime;
-            EventSystem.current.sendNavigationEvents = false;
             MenuState currentState = (MenuState) States.GetCurrentState();
-            if (currentState != null)
+            MenuState nextState = (MenuState) States.GetState(menuName);
+
+            Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
+
+            EventSystem.current.sendNavigationEvents = false;
+            if (currentState != null) sequence.Append(DOTween.To(currentState.Menu.GetAlpha, currentState.Menu.SetAlpha, 0f, MenuFadeTime));
+            sequence.AppendCallback(() =>
             {
-                while (currentTime > 0)
-                {
-                    currentTime -= Time.unscaledDeltaTime;
-                    float alpha = currentTime / fadeTime;
-                    currentState.Menu.SetAlpha(alpha);
-                    yield return null;
-                }
-
-                currentState.Menu.SetAlpha(0);
-                currentState.SetActive(false);
-            }
-
-            currentState = (MenuState) States.GetState(menuName);
-            currentState.SetActive(true);
-            currentTime = fadeTime;
-            while (currentTime > 0)
+                currentState?.SetActive(false);
+                nextState.SetActive(true);
+            });
+            sequence.Append(DOTween.To(nextState.Menu.GetAlpha, nextState.Menu.SetAlpha, 1f, MenuFadeTime));
+            sequence.AppendCallback(() =>
             {
-                currentTime -= Time.unscaledDeltaTime;
-                float alpha = 1 - currentTime / fadeTime;
-                currentState.Menu.SetAlpha(alpha);
-                yield return null;
-            }
-
-            currentState.Menu.SetAlpha(1);
-
-            EventSystem.current.sendNavigationEvents = true;
-            States.GetState(menuName).Enter();
-            OnTransition?.Invoke();
+                EventSystem.current.sendNavigationEvents = true;
+                nextState.Enter();
+                OnTransition?.Invoke();
+            });
         }
 
         public static void SelectInactiveButton(Button button)

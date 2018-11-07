@@ -312,7 +312,7 @@ namespace Game.Combat.Player
             UpdateSkillActions.Clear();
             _damageTakenSinceMarkStarted = true;
             DamageTakenSinceLastShot = true;
-            Player.BrandManager.IncreaseDamageTaken(shot.DamageDealt());
+            Player.BrandManager.IncreaseDamageTaken(shot.Attributes().DamageDealt());
             TryExplode();
         }
 

@@ -60,7 +60,7 @@ namespace Facilitating.UIControllers
             {
                 if (!_stateChanged) return;
                 Color c = _state == MarkerState.Faded ? UiAppearanceController.InvisibleColour : Color.white;
-                _image.DOColor(c, 1f);
+                _image.DOColor(c, 1f).SetUpdate(UpdateType.Normal, true);
             }
         }
 

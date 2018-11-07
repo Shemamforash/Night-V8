@@ -5,7 +5,6 @@ using Game.Characters;
 using Game.Characters.CharacterActions;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
-using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;

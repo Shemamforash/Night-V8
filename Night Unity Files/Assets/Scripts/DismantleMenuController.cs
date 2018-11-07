@@ -190,7 +190,7 @@ public class DismantleMenuController : Menu
             Inventory.IncrementResource(reward, quantity);
         }
 
-        _objectToDismantle.Unequip();
+        _objectToDismantle.UnEquip();
         if (_objectToDismantle is Weapon) Inventory.Destroy((Weapon) _objectToDismantle);
         else if (_objectToDismantle is Accessory) Inventory.Destroy((Accessory) _objectToDismantle);
         else if (_objectToDismantle is Armour) Inventory.Destroy((Armour) _objectToDismantle);
@@ -234,7 +234,7 @@ public class DismantleMenuController : Menu
     public void Close()
     {
         _closeButton.Flash();
-        CombatManager.Unpause();
+        CombatManager.Resume();
         MenuStateMachine.ReturnToDefault();
     }
 }

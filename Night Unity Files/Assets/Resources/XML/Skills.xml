@@ -3,28 +3,21 @@
 		<Name>Splinter</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>5</Cooldown>
+		<Cooldown>6</Cooldown>
 		<Description>Create a vortex that draws enemies together</Description>
 	</Skill>
 	<Skill>
 		<Name>Gouge</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>3</Cooldown>
-		<Description>Ignite area on hit.</Description>
-	</Skill>
-	<Skill>
-		<Name>1</Name>
-		<RequiresTarget>1</RequiresTarget>
-		<AppliesToMagazine>1</AppliesToMagazine>
-		<Cooldown>1</Cooldown>
-		<Description>1</Description>
+		<Cooldown>4</Cooldown>
+		<Description>Launch fire shot</Description>
 	</Skill>
 	<Skill>
 		<Name>Sweep</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>4</Cooldown>
+		<Cooldown>3</Cooldown>
 		<Description>Release a shockwave, pushing enemies back</Description>
 	</Skill>
 	<Skill>
@@ -38,7 +31,7 @@
 		<Name>Refill</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>3</Cooldown>
+		<Cooldown>6</Cooldown>
 		<Description>Refill magazine without reloading.</Description>
 	</Skill>
 	<Skill>
@@ -52,49 +45,49 @@
 		<Name>Hairpin</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>True</AppliesToMagazine>
-		<Cooldown>4</Cooldown>
+		<Cooldown>8</Cooldown>
 		<Description>Shots seek nearby enemies for the rest of the magazine</Description>
 	</Skill>
 	<Skill>
 		<Name>Impact</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>True</AppliesToMagazine>
-		<Cooldown>5</Cooldown>
+		<Cooldown>6</Cooldown>
 		<Description>Remaining shots in magazine explode.</Description>
 	</Skill>
 	<Skill>
 		<Name>Passion</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>4</Cooldown>
-		<Description>Shots leave a fire trail.</Description>
+		<Cooldown>1</Cooldown>
+		<Description>Launch a needle</Description>
 	</Skill>
 	<Skill>
 		<Name>Revenge</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>True</AppliesToMagazine>
-		<Cooldown>5</Cooldown>
+		<Cooldown>4</Cooldown>
 		<Description>Deal double damage if you received damage before next shot.</Description>
 	</Skill>
 	<Skill>
 		<Name>Absolve</Name>
 		<RequiresTarget>True</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>3</Cooldown>
+		<Cooldown>2</Cooldown>
 		<Description>Remove conditions from enemy, heal 10% per condition removed</Description>
 	</Skill>
 	<Skill>
 		<Name>Defile</Name>
 		<RequiresTarget>True</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>5</Cooldown>
+		<Cooldown>6</Cooldown>
 		<Description>Raise sickness to maximum level, if target dies, explode</Description>
 	</Skill>
 	<Skill>
 		<Name>Lacerate</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>4</Cooldown>
+		<Cooldown>6</Cooldown>
 		<Description>Launch explosive grenade, heal 5% per enemy hit</Description>
 	</Skill>
 	<Skill>
@@ -108,14 +101,14 @@
 		<Name>Terrify</Name>
 		<RequiresTarget>True</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>1</Cooldown>
+		<Cooldown>3</Cooldown>
 		<Description>Knockback enemy if within 0.5m, heal 10%</Description>
 	</Skill>
 	<Skill>
 		<Name>Unleash</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>5</Cooldown>
+		<Cooldown>6</Cooldown>
 		<Description>Lose 1 armour piece, knockback (soft) all enemies within 5m, enemies lose 1 armour piece</Description>
 	</Skill>
 	<Skill>
@@ -130,14 +123,14 @@
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>2</Cooldown>
-		<Description>Knockback (hard) all enemies within 5m</Description>
+		<Description>Release cluster bombs.</Description>
 	</Skill>
 	<Skill>
 		<Name>Aegis</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>3</Cooldown>
-		<Description>Gain shield for 5 seconds</Description>
+		<Description>Release decay blast</Description>
 	</Skill>
 	<Skill>
 		<Name>Erupt</Name>
@@ -199,7 +192,7 @@
 		<Name>Afflict</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>3</Cooldown>
+		<Cooldown>4</Cooldown>
 		<Description>Launch decay grenade</Description>
 	</Skill>
 </Skills>

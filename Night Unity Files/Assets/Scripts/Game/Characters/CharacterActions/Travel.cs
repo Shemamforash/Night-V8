@@ -57,7 +57,7 @@ namespace Game.Characters.CharacterActions
             _inTransit = false;
             if (AtHome())
             {
-                TutorialManager.TryOpenTutorial(4, 1f);
+                TutorialManager.TryOpenTutorial(4);
                 PlayerCharacter.RestAction.Enter();
             }
             else

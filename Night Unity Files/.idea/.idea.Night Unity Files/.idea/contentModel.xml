@@ -614,6 +614,7 @@
                   <e p="PistolTrail.cs" t="Include" />
                   <e p="RifleTrail.cs" t="Include" />
                   <e p="Shot.cs" t="Include" />
+                  <e p="ShotAttributes.cs" t="Include" />
                   <e p="ShotgunTrail.cs" t="Include" />
                 </e>
                 <e p="CanTakeDamage.cs" t="Include" />
@@ -774,7 +775,6 @@
                 <e p="Consumable.cs" t="Include" />
                 <e p="GameObjectType.cs" t="Include" />
                 <e p="GearItem.cs" t="Include" />
-                <e p="GearSubtype.cs" t="Include" />
                 <e p="Inventory.cs" t="Include" />
                 <e p="InventoryItem.cs" t="Include" />
                 <e p="InventoryResource.cs" t="Include" />

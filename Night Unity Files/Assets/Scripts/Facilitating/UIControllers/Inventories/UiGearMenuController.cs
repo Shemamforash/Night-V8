@@ -173,7 +173,7 @@ namespace Facilitating.UIControllers
             InputHandler.UnregisterInputListener(_instance);
             MenuStateMachine.ReturnToDefault();
             _open = false;
-            CombatManager.Unpause();
+            CombatManager.Resume();
             DOTween.defaultTimeScaleIndependent = false;
         }
 

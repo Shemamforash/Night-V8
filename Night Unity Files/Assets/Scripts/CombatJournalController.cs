@@ -39,7 +39,7 @@ public class CombatJournalController : Menu, IInputListener
         if (_closing) return;
         _closing = true;
         _closeButton.Flash();
-        CombatManager.Unpause();
+        CombatManager.Resume();
         MenuStateMachine.ReturnToDefault();
     }
 

@@ -74,7 +74,7 @@ namespace Game.Gear.Armour
         
         private void SetChestArmour(Armour chest)
         {
-            _chest?.Unequip();
+            _chest?.UnEquip();
             if (_character != null) _chest?.Equip(_character);
             _chest = chest;
             _onArmourChange?.Invoke();
@@ -82,7 +82,7 @@ namespace Game.Gear.Armour
 
         private void SetHeadArmour(Armour head)
         {
-            _head?.Unequip();
+            _head?.UnEquip();
             if (_character != null) head?.Equip(_character);
             _head = head;
             _onArmourChange?.Invoke();
