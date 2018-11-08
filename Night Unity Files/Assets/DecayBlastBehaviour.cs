@@ -20,14 +20,16 @@ public class DecayBlastBehaviour : MonoBehaviour
     public static void Create(CanTakeDamage origin, Vector2 target)
     {
         DecayBlastBehaviour blastBehaviour = _decayBlasts.Create();
-        blastBehaviour.gameObject.layer = origin is PlayerCombat ? 16 : 15;
         Vector3 direction = target.Direction(origin.transform);
-        blastBehaviour.Initialise(origin.transform.position, direction);
+        blastBehaviour.Initialise(origin, direction);
     }
 
-    private void Initialise(Vector3 originPosition, Vector3 direction)
+    private void Initialise(CanTakeDamage origin, Vector3 direction)
     {
-        transform.position = originPosition + direction * 0.5f;
+        int layer = origin is PlayerCombat ? 16 : 15;
+        gameObject.layer = layer;
+        gameObject.FindChildWithName("Damage").layer = layer;
+        transform.position = origin.transform.position + direction * 0.5f;
         _rigidBody2D.velocity = direction * 5;
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(MaxLifeTime);
@@ -38,8 +40,7 @@ public class DecayBlastBehaviour : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log(other.name);
-        _rigidBody2D.velocity = Vector2.zero;
+        if (other.gameObject.layer == 8) _rigidBody2D.velocity = Vector2.zero;
     }
 
     public void OnDestroy()

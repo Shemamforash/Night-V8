@@ -33,11 +33,10 @@ namespace Game.Exploration.Ui
         private Region _region;
         private ParticleSystem _claimedParticles;
 
-
-        private readonly Color _ring1Colour = new Color(1, 1, 1, 0.1f);
-        private readonly Color _ring2Colour = new Color(1, 1, 1, 0.1f);
-        private readonly Color _ring3Colour = new Color(1, 1, 1, 0.25f);
-        private readonly Color _iconColor = new Color(1, 1, 1, 0.8f);
+        private const float Ring1Alpha = 0.1f;
+        private const float Ring2Alpha = 0.1f;
+        private const float Ring3Alpha = 0.25f;
+        private const float IconAlpha = 0.8f;
         private const float FadeTime = 0.5f;
 
         private AudioSource _audioSource;
@@ -79,63 +78,27 @@ namespace Game.Exploration.Ui
             return _claimedParticles.trails.colorOverTrail.color.a;
         }
 
-        private void ShowInstant()
-        {
-            _ring1.color = _ring1Colour;
-            _ring2.color = _ring2Colour;
-            _ring3.color = _ring3Colour;
-            _icon.color = _iconColor;
-            _shadow.color = Color.black;
-            SetTrailAlpha(1);
-            _canvas.alpha = 1;
-        }
-
-        private void ShowSlow()
-        {
-            HideInstant();
-            _ring1.DOColor(_ring1Colour, FadeTime);
-            _ring2.DOColor(_ring2Colour, FadeTime);
-            _ring3.DOColor(_ring3Colour, FadeTime);
-            _icon.DOColor(_iconColor, FadeTime);
-            _shadow.DOColor(Color.black, FadeTime);
-            DOTween.To(GetTrailAlpha, SetTrailAlpha, 1f, FadeTime);
-            _canvas.DOFade(1f, FadeTime);
-        }
 
         public void Show()
         {
-            float distanceFromCamera = Vector2.Distance(MapMovementController.MapCamera.transform.position, transform.position);
-            if (distanceFromCamera > 15) ShowInstant();
-            else ShowSlow();
+            _ring1.DOFade(Ring1Alpha, FadeTime).SetUpdate(UpdateType.Normal, true);
+            _ring2.DOFade(Ring2Alpha, FadeTime).SetUpdate(UpdateType.Normal, true);
+            _ring3.DOFade(Ring3Alpha, FadeTime).SetUpdate(UpdateType.Normal, true);
+            _icon.DOFade(IconAlpha, FadeTime).SetUpdate(UpdateType.Normal, true);
+            _shadow.DOFade(1f, FadeTime).SetUpdate(UpdateType.Normal, true);
+            DOTween.To(GetTrailAlpha, SetTrailAlpha, 1f, FadeTime).SetUpdate(UpdateType.Normal, true);
+            _canvas.DOFade(1f, FadeTime).SetUpdate(UpdateType.Normal, true);
         }
 
         public void Hide()
         {
-            float distanceFromCamera = Vector2.Distance(MapMovementController.MapCamera.transform.position, transform.position);
-            if (distanceFromCamera > 15) HideInstant();
-            else HideSlow();
-        }
-
-        private void HideSlow()
-        {
-            _ring1.DOColor(UiAppearanceController.InvisibleColour, FadeTime);
-            _ring2.DOColor(UiAppearanceController.InvisibleColour, FadeTime);
-            _ring3.DOColor(UiAppearanceController.InvisibleColour, FadeTime);
-            _icon.DOColor(UiAppearanceController.InvisibleColour, FadeTime);
-            _shadow.DOColor(new Color(0, 0, 0, 0), FadeTime);
-            DOTween.To(GetTrailAlpha, SetTrailAlpha, 0f, FadeTime);
-            _canvas.DOFade(0f, FadeTime);
-        }
-
-        private void HideInstant()
-        {
-            _ring1.color = UiAppearanceController.InvisibleColour;
-            _ring2.color = UiAppearanceController.InvisibleColour;
-            _ring3.color = UiAppearanceController.InvisibleColour;
-            _icon.color = UiAppearanceController.InvisibleColour;
-            _shadow.color = new Color(0, 0, 0, 0);
-            SetTrailAlpha(0f);
-            _canvas.alpha = 0f;
+            _ring1.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
+            _ring2.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
+            _ring3.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
+            _icon.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
+            _shadow.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
+            DOTween.To(GetTrailAlpha, SetTrailAlpha, 0f, FadeTime).SetUpdate(UpdateType.Normal, true);
+            _canvas.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
         }
 
         public void SetRegion(Region region)
@@ -143,7 +106,6 @@ namespace Game.Exploration.Ui
             _region = region;
             SetClaimParticlesActive(region.ClaimRemaining > 0);
             _gritCost = RoutePlotter.RouteBetween(region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode()).Count - 1;
-            if (region.GetRegionType() == RegionType.Gate) _gritCost = 0;
             for (int i = 0; i < region.Name.Length; ++i)
             {
                 _letters.Add(new Letter(region.Name[i].ToString()));
@@ -244,15 +206,18 @@ namespace Game.Exploration.Ui
         {
             _audioSource.pitch = Random.Range(0.75f, 1.25f);
             _audioSource.DOFade(0.5f, 1);
-            _icon.DOColor(_iconColor, 1f);
-            _ring1.DOColor(_ring1Colour, 1f);
-            _ring2.DOColor(_ring2Colour, 1f);
-            _ring3.DOColor(_ring3Colour, 1f);
-            _fadeText.DOColor(Color.white, 1f);
-            _costText.DOColor(Color.white, 1f);
-            _claimText.DOColor(Color.white, 1f);
-            _active.DOColor(Color.white, 1f);
-            _inactive.DOColor(Color.white, 1f);
+            
+            _icon.DOFade(IconAlpha * 2f, 1f);
+            _ring1.DOFade(Ring1Alpha * 2f, 1f);
+            _ring2.DOFade(Ring2Alpha * 2f, 1f);
+            _ring3.DOFade(Ring3Alpha * 2f, 1f);
+            
+            _fadeText.DOFade(1f, 1f);
+            _costText.DOFade(1f, 1f);
+            _claimText.DOFade(1f, 1f);
+            _active.DOFade(1f, 1f);
+            _inactive.DOFade(1f, 1f);
+            
             transform.DOScale(Vector2.one * 1.25f, 1f);
             MapMenuController.SetRoute(_region);
             MapMovementController.UpdateGrit(_gritCost);
@@ -260,16 +225,19 @@ namespace Game.Exploration.Ui
 
         public void LoseFocus(float time = 1f)
         {
-            _audioSource.DOFade(0, 1);
-            _icon.DOColor(UiAppearanceController.FadedColour, time);
-            _ring1.DOColor(UiAppearanceController.InvisibleColour, time);
-            _ring2.DOColor(UiAppearanceController.InvisibleColour, time);
-            _ring3.DOColor(UiAppearanceController.FadedColour, time);
-            _fadeText.DOColor(UiAppearanceController.FadedColour, time);
-            _costText.DOColor(UiAppearanceController.FadedColour, time);
-            _claimText.DOColor(UiAppearanceController.FadedColour, time);
-            _inactive.DOColor(UiAppearanceController.FadedColour, time);
-            _active.DOColor(UiAppearanceController.InvisibleColour, time);
+            _audioSource.DOFade(0, time);
+            
+            _icon.DOFade(IconAlpha, time);
+            _ring1.DOFade(Ring1Alpha, time);
+            _ring2.DOFade(Ring2Alpha, time);
+            _ring3.DOFade(Ring3Alpha, time);
+            
+            _fadeText.DOFade(0.4f, time);
+            _costText.DOFade(0.4f, time);
+            _claimText.DOFade(0.4f, time);
+            _inactive.DOFade(0.4f, time);
+            _active.DOFade(0f, time);
+            
             transform.DOScale(Vector2.one, time);
             MapMovementController.UpdateGrit(0);
         }

@@ -9,6 +9,7 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Game.Characters
@@ -25,7 +26,6 @@ namespace Game.Characters
         private UIConditionController _thirstController, _hungerController;
         private EnhancedButton _exploreButton, _craftButton, _consumeButton, _meditateButton, _sleepButton;
         private CanvasGroup _viewCanvas;
-        private EnhancedText _exploreText, _craftText;
         private List<EnhancedButton> _buttons;
 
         public void SetPlayer(Player player)
@@ -70,9 +70,7 @@ namespace Game.Characters
 
             _actionProgress = gameObject.FindChildWithName<ActionProgressController>("Current Action");
             _exploreButton = gameObject.FindChildWithName<EnhancedButton>("Explore");
-            _exploreText = _exploreButton.GetComponent<EnhancedText>();
             _craftButton = gameObject.FindChildWithName<EnhancedButton>("Craft");
-            _craftText = _craftButton.GetComponent<EnhancedText>();
             _consumeButton = gameObject.FindChildWithName<EnhancedButton>("Consume");
             _meditateButton = gameObject.FindChildWithName<EnhancedButton>("Meditate");
             _sleepButton = gameObject.FindChildWithName<EnhancedButton>("Sleep");
@@ -82,19 +80,15 @@ namespace Game.Characters
             gameObject.FindChildWithName<TextMeshProUGUI>("Character Name").text = _player.Name;
 
             WeaponController = gameObject.FindChildWithName<UIPlayerWeaponController>("Weapon");
-            WeaponController.EnhancedButton.AddOnClick(UiGearMenuController.ShowWeaponMenu);
             WeaponController.EnhancedButton.AddOnSelectEvent(SelectCharacter);
             WeaponController.SetWeapon(_player.EquippedWeapon);
 
             AccessoryController = gameObject.FindChildWithName<UIPlayerAccessoryController>("Accessory");
             AccessoryController.EnhancedButton.AddOnSelectEvent(SelectCharacter);
             AccessoryController.SetAccessory(_player.EquippedAccessory);
-            AccessoryController.EnhancedButton.AddOnClick(UiGearMenuController.ShowAccessoryMenu);
 
             ArmourController = gameObject.FindChildWithName<UIPlayerArmourController>("Armour");
             ArmourController.EnhancedButton.AddOnSelectEvent(SelectCharacter);
-            ArmourController.EnhancedButton.AddOnClick(UiGearMenuController.ShowArmourMenu);
-            _player.ArmourController.SetOnArmourChange(() => ArmourController.SetArmour(_player.ArmourController));
 
             _brandUi = gameObject.FindChildWithName<CharacterBrandUIController>("Brands");
         }
@@ -119,12 +113,12 @@ namespace Game.Characters
             _exploreButton.Select();
         }
 
-        private void SetButtonEnabled(EnhancedButton button, bool enabled)
+        private void SetButtonEnabled(EnhancedButton button, bool enableButton)
         {
-            if (button.IsEnabled() == enabled) return;
-            button.SetEnabled(enabled);
+            if (button.IsEnabled() == enableButton) return;
+            button.SetEnabled(enableButton);
             TextMeshProUGUI textObject = button.GetComponent<TextMeshProUGUI>();
-            textObject.color = enabled ? Color.white : UiAppearanceController.FadedColour;
+            textObject.color = enableButton ? Color.white : UiAppearanceController.FadedColour;
         }
 
         public void RefreshNavigation()

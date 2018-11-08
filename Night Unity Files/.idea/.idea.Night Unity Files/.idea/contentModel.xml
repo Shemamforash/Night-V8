@@ -402,6 +402,7 @@
                 <e p="UISkillCostController.cs" t="Include" />
               </e>
               <e p="DetailedViewGear" t="Include">
+                <e p="GlowButtonBehaviour.cs" t="Include" />
                 <e p="UIPlayerAccessoryController.cs" t="Include" />
                 <e p="UIPlayerArmourController.cs" t="Include" />
                 <e p="UIPlayerWeaponController.cs" t="Include" />

@@ -16,6 +16,8 @@ namespace Game.Characters.CharacterActions
         private int InitialDuration;
         protected Action HourCallback;
         protected Action MinuteCallback;
+        protected string DisplayName;
+        private EnhancedButton _button;
 
         protected BaseCharacterAction(string name, Player playerCharacter) : base(playerCharacter.States, name)
         {
@@ -24,7 +26,13 @@ namespace Game.Characters.CharacterActions
 
         public void SetButton(EnhancedButton button)
         {
-            button.AddOnClick(OnClick);
+            _button = button;
+            _button.AddOnClick(TryClick);
+        }
+
+        private void TryClick()
+        {
+            if (_button.IsEnabled()) OnClick();
         }
 
         protected virtual void OnClick()
@@ -51,7 +59,6 @@ namespace Game.Characters.CharacterActions
             ResetTimeRemaining();
         }
 
-        protected string DisplayName;
 
         protected void SetDuration(int duration = -1)
         {
@@ -78,7 +85,7 @@ namespace Game.Characters.CharacterActions
             _timeRemaining = doc.IntFromNode("TimeRemaining");
             return doc;
         }
-        
+
         public string GetDisplayName()
         {
             return DisplayName;
@@ -86,7 +93,7 @@ namespace Game.Characters.CharacterActions
 
         public float GetRemainingTime(int offset = 0)
         {
-            return (float)(Duration + offset) / InitialDuration;
+            return (float) (Duration + offset) / InitialDuration;
         }
     }
 }

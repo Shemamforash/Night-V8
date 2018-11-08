@@ -31,7 +31,6 @@ namespace Game.Exploration.Regions
         private static GameObject _nodePrefab;
         public int RegionID;
         private int _lastVisitDay = -1;
-        public Vector2 ShrinePosition;
         public int WaterSourceCount, FoodSourceCount, ResourceSourceCount;
         public Player _characterHere;
         public Vector2 CharacterPosition;

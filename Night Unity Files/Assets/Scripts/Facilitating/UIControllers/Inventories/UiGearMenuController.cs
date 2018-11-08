@@ -77,8 +77,14 @@ namespace Facilitating.UIControllers
                 _menu = menu;
             }
 
-            public void Select()
+            public void Select(Tab from)
             {
+                if (from == null)
+                {
+                    if (_prevTab == null) _leftTab.InstantFade();
+                    if (_nextTab == null) _rightTab.InstantFade();
+                }
+
                 _currentTab = this;
                 _highlightImage.DOFade(0.5f, 0.5f).SetUpdate(UpdateType.Normal, true);
                 OpenInventoryMenu(_menu);
@@ -102,7 +108,7 @@ namespace Facilitating.UIControllers
                 if (_nextTab._nextTab == null) _rightTab.FlashAndFade();
                 else _rightTab.Flash();
                 Deselect();
-                _nextTab.Select();
+                _nextTab.Select(this);
             }
 
             public void SelectPreviousTab()
@@ -111,9 +117,8 @@ namespace Facilitating.UIControllers
                 if (_prevTab == null) return;
                 if (_prevTab._prevTab == null) _leftTab.FlashAndFade();
                 else _leftTab.Flash();
-                _leftTab.Flash();
                 Deselect();
-                _prevTab.Select();
+                _prevTab.Select(this);
             }
         }
 
@@ -121,7 +126,7 @@ namespace Facilitating.UIControllers
         {
             base.Awake();
             bool isCombat = SceneManager.GetActiveScene().name == "Combat";
-            
+
             _instance = this;
 
             _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
@@ -143,7 +148,8 @@ namespace Facilitating.UIControllers
             CreateTab("Armour", _armourUpgradeController);
             CreateTab("Accessories", _accessoryController);
             CreateTab("Weapons", _weaponUpgradeController);
-            if(!isCombat) CreateTab("Crafting", _craftingController);
+            if (!isCombat) CreateTab("Crafting", _craftingController);
+            else _tabParent.FindChildWithName("Crafting").SetActive(false);
             CreateTab("Consumables", _consumableController);
             CreateTab("Journals", _journalController);
             CreateTab("Will Recovery", _willController);
@@ -203,7 +209,7 @@ namespace Facilitating.UIControllers
 
         private static void SelectTab(int tabNumber)
         {
-            _tabs[tabNumber].Select();
+            _tabs[tabNumber].Select(null);
         }
 
         public static void ShowArmourMenu() => SelectTab(0);

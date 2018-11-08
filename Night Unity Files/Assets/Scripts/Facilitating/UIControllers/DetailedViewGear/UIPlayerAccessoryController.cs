@@ -7,31 +7,28 @@ namespace Facilitating.UIControllers
 {
     public class UIPlayerAccessoryController : MonoBehaviour
     {
-        private EnhancedText _accessoryText;
-        private GameObject _notEquippedObject;
+        private EnhancedText _accessoryText, _bonusText;
+
         public EnhancedButton EnhancedButton;
 
         public void Awake()
         {
             EnhancedButton = GetComponent<EnhancedButton>();
-            _accessoryText = gameObject.FindChildWithName<EnhancedText>("Equipped");
-            _notEquippedObject = gameObject.FindChildWithName("Not Equipped");
+            _accessoryText = gameObject.FindChildWithName<EnhancedText>("Accessory Name");
+            _bonusText = gameObject.FindChildWithName<EnhancedText>("Bonus");
             SetAccessory(null);
+
+            EnhancedButton.AddOnClick(UiGearMenuController.ShowAccessoryMenu);
+            GlowButtonBehaviour glow = GetComponent<GlowButtonBehaviour>();
+            EnhancedButton.AddOnClick(glow.Select);
+            EnhancedButton.AddOnDeselectEvent(glow.Deselect);
+            EnhancedButton.AddOnSelectEvent(glow.Highlight);
         }
 
         public void SetAccessory(Accessory accessory)
         {
-            if (accessory == null)
-            {
-                _notEquippedObject.SetActive(true);
-                _accessoryText.gameObject.SetActive(false);
-            }
-            else
-            {
-                _notEquippedObject.SetActive(false);
-                _accessoryText.gameObject.SetActive(true);
-                _accessoryText.SetText(accessory.Name);
-            }
+            _accessoryText.SetText(accessory == null ? "" : accessory.Name);
+            _bonusText.SetText(accessory == null ? "" : accessory.GetSummary());
         }
     }
 }

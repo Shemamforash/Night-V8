@@ -3,7 +3,6 @@ using DG.Tweening;
 using Game.Gear.Armour;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,29 +10,25 @@ namespace Facilitating.UIControllers
 {
     public class UIArmourController : MonoBehaviour
     {
-        private const int ArmourDivisions = 10;
         private const int SegmentSpacing = 5;
         private readonly List<ArmourChunk> _armourChunks = new List<ArmourChunk>();
 
         private HorizontalLayoutGroup _layoutGroup;
 
-        // Use this for initialization
         public void Awake()
         {
             _layoutGroup = GetComponent<HorizontalLayoutGroup>();
             _layoutGroup.spacing = SegmentSpacing;
 
-            List<GameObject> segments = new List<GameObject>();
-            for (int i = 0; i < ArmourDivisions; ++i)
+            int childCount = _layoutGroup.transform.childCount;
+            for (int i = 0; i < childCount; ++i)
             {
-                GameObject newSegment = new GameObject();
-                newSegment.transform.SetParent(transform, false);
-                newSegment.AddComponent<Image>();
-                newSegment.name = "Armour Piece " + (i + 1);
-                segments.Add(newSegment);
+                GameObject segment = _layoutGroup.transform.GetChild(i).gameObject;
+                if (segment.name == "Gap") continue;
+                _armourChunks.Add(new ArmourChunk(segment));
             }
 
-            for (int i = ArmourDivisions - 1; i >= 0; --i) _armourChunks.Add(new ArmourChunk(segments[i]));
+            _armourChunks.Reverse();
         }
 
         private void SetSlotsFilled(int slotsAvailable, int slotsUsed, bool damageWasTaken = false)
@@ -47,7 +42,7 @@ namespace Facilitating.UIControllers
                     else
                         chunk.Deactivate();
                 else
-                    chunk.SetInvisible();
+                    chunk.SetUnused();
             }
         }
 
@@ -65,33 +60,62 @@ namespace Facilitating.UIControllers
 
         private class ArmourChunk
         {
-            private readonly GameObject _armourObject;
-            private readonly Image _image;
+            private readonly CanvasGroup _armourCanvasGroup, _activeCanvasGroup;
+            private readonly Image _brokenImage, _completeImage, _leftBar, _rightBar, _inactive;
 
             public ArmourChunk(GameObject armourObject)
             {
-                _armourObject = armourObject;
-                _image = _armourObject.GetComponent<Image>();
+                _armourCanvasGroup = armourObject.GetComponent<CanvasGroup>();
+                _activeCanvasGroup = armourObject.FindChildWithName<CanvasGroup>("Active");
+                _inactive = armourObject.FindChildWithName<Image>("Inactive");
+                _brokenImage = armourObject.FindChildWithName<Image>("Broken");
+                _completeImage = armourObject.FindChildWithName<Image>("Complete");
+                _leftBar = armourObject.FindChildWithName<Image>("Left Bar");
+                _rightBar = armourObject.FindChildWithName<Image>("Right Bar");
+            }
+
+            private void FlashImage(Image image)
+            {
+                image.color = Color.red;
+                image.DOColor(Color.white, 0.25f).SetUpdate(UpdateType.Normal, true);
             }
 
             public void Activate(bool damageWasTaken)
             {
+                _armourCanvasGroup.alpha = 1f;
+                _activeCanvasGroup.alpha = 1f;
+                _inactive.SetAlpha(0f);
+                _completeImage.SetAlpha(1f);
+                _brokenImage.SetAlpha(0f);
+
                 if (damageWasTaken)
                 {
-                    _image.color = Color.red;
-                    _image.DOBlendableColor(Color.white, 0.25f);
+                    FlashImage(_completeImage);
+                    FlashImage(_leftBar);
+                    FlashImage(_rightBar);
                 }
-                else _armourObject.GetComponent<Image>().color = Color.white;
+                else
+                {
+                    _completeImage.color = Color.white;
+                    _leftBar.color = Color.white;
+                    _rightBar.color = Color.white;
+                }
             }
 
             public void Deactivate()
             {
-                _armourObject.GetComponent<Image>().color = UiAppearanceController.FadedColour;
+                _armourCanvasGroup.alpha = 1f;
+                _activeCanvasGroup.alpha = 1f;
+                _inactive.SetAlpha(0f);
+                _completeImage.SetAlpha(0f);
+                _brokenImage.SetAlpha(1f);
             }
 
-            public void SetInvisible()
+            public void SetUnused()
             {
-                _armourObject.GetComponent<Image>().color = UiAppearanceController.InvisibleColour;
+                _armourCanvasGroup.alpha = 0.2f;
+                _activeCanvasGroup.alpha = 0f;
+                _inactive.SetAlpha(1f);
             }
         }
     }

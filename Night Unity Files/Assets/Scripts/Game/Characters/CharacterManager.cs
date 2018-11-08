@@ -5,6 +5,7 @@ using Game.Gear;
 using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -109,6 +110,7 @@ namespace Game.Characters
         {
             Wanderer = GenerateCharacter(CharacterClass.Wanderer);
             Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Dark, WeaponType.Pistol);
+            Inventory.Move(weapon);
             Wanderer.EquipWeapon(weapon);
             AddCharacter(Wanderer);
         }

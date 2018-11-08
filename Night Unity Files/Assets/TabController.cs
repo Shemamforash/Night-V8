@@ -15,22 +15,27 @@ public class TabController : MonoBehaviour
         _glowImage.SetAlpha(0);
     }
 
+    public void InstantFade()
+    {
+        _tabCanvas.alpha = 0f;
+    }
+
     public void Flash()
     {
         _glowImage.SetAlpha(1f);
-        _glowImage.DOFade(0f, 1.5f);
+        _glowImage.DOFade(0f, 1.5f).SetUpdate(UpdateType.Normal, true);
     }
 
     public void FlashAndFade()
     {
         Flash();
         if (_tabCanvas.alpha == 0f) return;
-        _tabCanvas.DOFade(0f, 0.5f);
+        _tabCanvas.DOFade(0f, 0.5f).SetUpdate(UpdateType.Normal, true);
     }
 
     public void FadeIn()
     {
         if (_tabCanvas.alpha == 1f) return;
-        _tabCanvas.DOFade(1f, 1.5f);
+        _tabCanvas.DOFade(1f, 1.5f).SetUpdate(UpdateType.Normal, true);
     }
 }

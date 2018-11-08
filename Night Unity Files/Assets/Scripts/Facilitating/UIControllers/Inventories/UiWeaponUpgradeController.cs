@@ -12,6 +12,7 @@ using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
+using TMPro;
 using UnityEngine;
 
 namespace Facilitating.UIControllers
@@ -19,6 +20,7 @@ namespace Facilitating.UIControllers
     public class UiWeaponUpgradeController : UiInventoryMenuController, IInputListener
     {
         private EnhancedButton _inscribeButton, _infuseButton, _swapButton;
+        private TextMeshProUGUI _infuseText, _inscribeText, _swapText;
         private ListController _weaponList;
         private ListController _inscriptionList;
         private bool _upgradingAllowed;
@@ -32,8 +34,11 @@ namespace Facilitating.UIControllers
             _inscriptionList = gameObject.FindChildWithName<ListController>("Inscription List");
             _weaponDetail = gameObject.FindChildWithName<WeaponDetailController>("Stats");
             _inscribeButton = gameObject.FindChildWithName<EnhancedButton>("Inscribe");
+            _inscribeText = _inscribeButton.gameObject.FindChildWithName<TextMeshProUGUI>("Text");
             _swapButton = gameObject.FindChildWithName<EnhancedButton>("Swap");
+            _swapText = _swapButton.gameObject.FindChildWithName<TextMeshProUGUI>("Text");
             _infuseButton = gameObject.FindChildWithName<EnhancedButton>("Infuse");
+            _infuseText = _infuseButton.gameObject.FindChildWithName<TextMeshProUGUI>("Text");
             _infoGameObject = gameObject.FindChildWithName("Info");
 
             List<ItemQuality> qualities = new List<ItemQuality>();
@@ -120,6 +125,7 @@ namespace Facilitating.UIControllers
             _weaponList.Hide();
             _inscriptionList.Hide();
             _swapButton.SetEnabled(WeaponsAreAvailable());
+            _swapText.color = _swapButton.enabled ? Color.white : UiAppearanceController.FadedColour;
             SelectButton(_swapButton);
 
             InputHandler.RegisterInputListener(this);
@@ -158,10 +164,10 @@ namespace Facilitating.UIControllers
             _weaponDetail.SetWeapon(_equippedWeapon);
             if (_equippedWeapon == null)
             {
-                _inscribeButton.Button().interactable = false;
-                _infuseButton.Button().interactable = false;
                 _inscribeButton.SetEnabled(false);
+                _inscribeText.color = UiAppearanceController.FadedColour;
                 _infuseButton.SetEnabled(false);
+                _infuseText.color = UiAppearanceController.FadedColour;
             }
             else UpdateWeaponActions();
         }
@@ -185,7 +191,9 @@ namespace Facilitating.UIControllers
             bool reachedMaxDurability = attr.GetDurability().ReachedMax() || Inventory.GetResourceQuantity("Essence") == 0;
             bool inscriptionsAvailable = InscriptionsAreAvailable();
             _infuseButton.SetEnabled(!reachedMaxDurability);
+            _infuseText.color = !reachedMaxDurability ? Color.white : UiAppearanceController.FadedColour;
             _inscribeButton.SetEnabled(inscriptionsAvailable);
+            _inscribeText.color = inscriptionsAvailable ? Color.white : UiAppearanceController.FadedColour;
         }
 
         private static bool WeaponsAreAvailable() => GetAvailableWeapons().Count != 0;

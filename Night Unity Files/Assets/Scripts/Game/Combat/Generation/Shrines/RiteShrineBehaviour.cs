@@ -34,8 +34,8 @@ namespace Game.Combat.Generation.Shrines
             if (_riteShrinePrefab == null) _riteShrinePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Rite Shrine");
             GameObject riteShrineObject = Instantiate(_riteShrinePrefab);
             riteShrineObject.GetComponent<RiteShrineBehaviour>().SetRites(region.RitesRemaining);
-            riteShrineObject.transform.position = region.ShrinePosition;
-            PathingGrid.AddBlockingArea(region.ShrinePosition, 1.5f);
+            riteShrineObject.transform.position = Vector2.zero;
+            PathingGrid.AddBlockingArea(Vector2.zero, 1.5f);
         }
 
         private void SetRites(int ritesRemaining)
@@ -92,13 +92,14 @@ namespace Game.Combat.Generation.Shrines
         {
             foreach (ParticleSystem candle in riteTransform.Find("Candles").GetComponentsInChildren<ParticleSystem>())
                 StartCoroutine(FadeCandle(candle));
+            GetComponent<CompassItem>().Die();
         }
 
         private IEnumerator FadeCandle(ParticleSystem candle)
         {
             ParticleSystem.EmissionModule emission = candle.emission;
             float startEmission = emission.rateOverTime.constant;
-            float currentTime = 2f;
+            float currentTime = 1f;
             while (currentTime > 0f)
             {
                 if (!CombatManager.IsCombatActive()) yield return null;
@@ -137,6 +138,7 @@ namespace Game.Combat.Generation.Shrines
             Triggered = true;
             FadeCandles(_targetRiteCollider.transform);
             Destroy(_targetRiteCollider);
+            _brandChoice.Remove(_targetBrand);
             _targetBrand = null;
             if (_brandChoice.Count == 0) GetComponent<CompassItem>().Die();
         }

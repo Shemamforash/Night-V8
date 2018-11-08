@@ -27,7 +27,7 @@ namespace Game.Gear.Armour
 
         public override string GetSummary()
         {
-            return Name;
+            return "+" + modifier.FinalBonus() + " " + _template.TargetAttribute;
         }
 
         public override void Equip(Character character)

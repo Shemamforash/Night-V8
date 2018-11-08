@@ -131,11 +131,7 @@ namespace Game.Combat.Generation
         protected void PlaceShrine()
         {
             if (!ShouldPlaceShrine()) return;
-            Vector2? potentialPosition = FindAndRemoveValidPosition(0.4f);
-            if (potentialPosition == null) return;
-            Vector2 position = potentialPosition.Value;
-            CreateImpassablePoint(position, 1);
-            _region.ShrinePosition = position;
+            CreateImpassablePoint(Vector2.zero, 1.5f);
         }
 
         private void GenerateGenericRock(float radius, float radiusVariation, float smoothness, Vector2 position)

@@ -86,8 +86,13 @@ namespace Game.Characters.CharacterActions
 
         public void TravelTo(Region target, int gritCost)
         {
+            if (target == CurrentRegion && CurrentRegion.GetRegionType() != RegionType.Gate)
+            {
+                EnterRegion();
+                return;
+            }
+
             Enter();
-            if (target == CurrentRegion && CurrentRegion.GetRegionType() != RegionType.Gate) EnterRegion();
             _travelTime = 0;
             _inTransit = true;
             _target = target;
@@ -98,11 +103,6 @@ namespace Game.Characters.CharacterActions
         {
             _target = target;
             ReachTarget();
-        }
-
-        public bool InClaimedRegion()
-        {
-            return CurrentRegion.ClaimRemaining > 0;
         }
 
         public override XmlNode Load(XmlNode doc)

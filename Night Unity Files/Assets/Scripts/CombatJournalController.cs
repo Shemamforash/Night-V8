@@ -45,7 +45,7 @@ public class CombatJournalController : Menu, IInputListener
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
-        if (axis != InputAxis.Cover || isHeld) return;
+        if (axis != InputAxis.Fire || isHeld) return;
         Close();
     }
 

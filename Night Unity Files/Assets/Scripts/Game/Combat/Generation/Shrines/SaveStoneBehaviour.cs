@@ -27,13 +27,13 @@ public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
     {
         if (_saveStonePrefab == null) _saveStonePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Save Stone");
         GameObject saveStoneObject = Instantiate(_saveStonePrefab);
-        saveStoneObject.GetComponent<SaveStoneBehaviour>().Initialise(region);
+        saveStoneObject.GetComponent<SaveStoneBehaviour>().Initialise();
     }
 
-    private void Initialise(Region region)
+    private void Initialise()
     {
-        transform.position = region.ShrinePosition;
-        PathingGrid.AddBlockingArea(region.ShrinePosition, 0.5f);
+        transform.position = Vector2.zero;
+        PathingGrid.AddBlockingArea(Vector2.zero, 0.5f);
     }
 
     public float InRange()

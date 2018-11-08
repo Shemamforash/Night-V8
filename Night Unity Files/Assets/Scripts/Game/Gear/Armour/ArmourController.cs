@@ -1,9 +1,6 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 using Facilitating.Persistence;
-using Facilitating.UIControllers;
 using Game.Characters;
-using Game.Combat.Ui;
 
 namespace Game.Gear.Armour
 {
@@ -11,7 +8,6 @@ namespace Game.Gear.Armour
     {
         private readonly Character _character;
         private Armour _chest, _head;
-        private Action _onArmourChange;
 
         public ArmourController(Character character)
         {
@@ -37,7 +33,7 @@ namespace Game.Gear.Armour
         public void Repair(float amount)
         {
             float remaining = amount;
-            if(_chest != null) remaining = _chest.Repair(amount);
+            if (_chest != null) remaining = _chest.Repair(amount);
             if (_head != null) _head.Repair(remaining);
         }
 
@@ -71,13 +67,13 @@ namespace Game.Gear.Armour
             currentProtection /= 20f;
             return 1 - currentProtection;
         }
-        
+
         private void SetChestArmour(Armour chest)
         {
             _chest?.UnEquip();
             if (_character != null) _chest?.Equip(_character);
             _chest = chest;
-            _onArmourChange?.Invoke();
+            UpdateArmourView();
         }
 
         private void SetHeadArmour(Armour head)
@@ -85,8 +81,15 @@ namespace Game.Gear.Armour
             _head?.UnEquip();
             if (_character != null) head?.Equip(_character);
             _head = head;
-            _onArmourChange?.Invoke();
+            UpdateArmourView();
         }
+
+        private void UpdateArmourView()
+        {
+            Player player = _character as Player;
+            player?.CharacterView()?.ArmourController.SetArmour(this);
+        }
+
 
         public int GetCurrentProtection()
         {
@@ -108,12 +111,6 @@ namespace Game.Gear.Armour
             int chestProtection = _chest?.GetMaxProtection() ?? 0;
             int headProtection = _head?.GetMaxProtection() ?? 0;
             return chestProtection + headProtection;
-        }
-
-        public void SetOnArmourChange(Action a)
-        {
-            _onArmourChange = a;
-            _onArmourChange.Invoke();
         }
 
         public Armour GetChestArmour() => _chest;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters;
@@ -21,6 +22,9 @@ namespace Game.Combat.Misc
         private static GameObject _shelterCharacterPrefab;
         private TextMeshProUGUI _text;
         private MoveBehaviour _moveBehaviour;
+        private Cell _targetLastCell;
+        private bool _leaving;
+        private int _maxEncounterSize;
 
         protected override void Awake()
         {
@@ -33,6 +37,7 @@ namespace Game.Combat.Misc
             MovementController.SetSpeed(1);
             ArmourController = new ArmourController(null);
             ArmourController.AutoFillSlots(10);
+            _maxEncounterSize = (WorldState._currentLevel + 1) * 5;
         }
 
         public override Weapon Weapon()
@@ -61,7 +66,6 @@ namespace Game.Combat.Misc
             sequence.Append(_text.DOFade(1, 1));
             sequence.AppendInterval(3);
             sequence.Append(_text.DOFade(0, 1));
-            GenerateEncounter();
             _moveBehaviour.GoToCell(PathingGrid.GetCellOutOfRange(transform.position));
         }
 
@@ -73,20 +77,47 @@ namespace Game.Combat.Misc
 
         public override void MyUpdate()
         {
+            if (_leaving) return;
+            UpdateEnemyTarget();
+            UpdateEnemySpawns();
             if (!CurrentCell().IsEdgeCell) return;
+            _leaving = true;
             Sequence sequence = DOTween.Sequence();
             sequence.Append(GetComponent<SpriteRenderer>().DOColor(UiAppearanceController.InvisibleColour, 2f));
             sequence.AppendCallback(() =>
             {
-                CombatManager.Enemies().ForEach(e =>
-                {
-                    EnemyBehaviour enemy = e as EnemyBehaviour;
-                    if (enemy == null) return;
-                    enemy.SetTarget(PlayerCombat.Instance);
-                });
+                ResetEnemyTargets();
                 Destroy(gameObject);
                 Characters.Player character = CombatManager.Region()._characterHere;
                 CharacterManager.AddCharacter(character);
+            });
+        }
+
+        private void UpdateEnemySpawns()
+        {
+            int currentSize = CombatManager.Enemies().Sum(e => ((EnemyBehaviour) e).Enemy.Template.Value);
+            int size = _maxEncounterSize - currentSize;
+            List<EnemyTemplate> allowedTypes = WorldState.GetAllowedHumanEnemyTypes();
+            while (size > 0)
+            {
+                EnemyTemplate template = allowedTypes.RandomElement();
+                CombatManager.QueueEnemyToAdd(template, this);
+                size -= template.Value;
+            }
+        }
+
+        private void ResetEnemyTargets()
+        {
+            CombatManager.Enemies().ForEach(e => ((EnemyBehaviour)e).SetTarget(PlayerCombat.Instance));
+        }
+
+        private void UpdateEnemyTarget()
+        {
+            CombatManager.Enemies().ForEach(e =>
+            {
+                float distanceToPlayer = e.transform.Distance(PlayerCombat.Instance.transform);
+                CanTakeDamage target = distanceToPlayer < 3f ? PlayerCombat.Instance : (CanTakeDamage)this;
+                ((EnemyBehaviour) e).SetTarget(target);
             });
         }
 
@@ -95,29 +126,10 @@ namespace Game.Combat.Misc
             return new[] {"Lonely Wanderer", "Stranger", "Haggard Figure"}.RandomElement();
         }
 
-        private Cell _targetLastCell;
-
         public override void Kill()
         {
             base.Kill();
-            CombatManager.Enemies().ForEach(e =>
-            {
-                EnemyBehaviour enemy = e as EnemyBehaviour;
-                if (enemy == null) return;
-                enemy.SetTarget(PlayerCombat.Instance);
-            });
-        }
-
-        private void GenerateEncounter()
-        {
-            int size = WorldState.Difficulty() + 10;
-            List<EnemyTemplate> allowedTypes = WorldState.GetAllowedHumanEnemyTypes();
-            while (size > 0)
-            {
-                EnemyTemplate template = Helper.RandomElement(allowedTypes);
-                CombatManager.QueueEnemyToAdd(template, this);
-                size -= template.Value;
-            }
+            ResetEnemyTargets();
         }
 
         public override void TakeShotDamage(Shot shot)

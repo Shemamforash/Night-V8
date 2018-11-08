@@ -61,8 +61,7 @@ namespace Game.Combat.Player
                 case CharacterClass.Ghost:
                     return new Sacrifice();
                 case CharacterClass.Wanderer:
-//                    return new Afflict();
-                return new Aegis();
+                    return new Afflict();
                 default:
                     throw new ArgumentOutOfRangeException();
             }

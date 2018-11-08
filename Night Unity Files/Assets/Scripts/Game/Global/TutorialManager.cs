@@ -41,21 +41,16 @@ public class TutorialManager : MonoBehaviour
         _closeButton.SetText("K");
     }
 
-    public static void TryOpenTutorial(int tutorialPart, float waitTime = 0f)
+    public static void TryOpenTutorial(int tutorialPart)
     {
         if (!_tutorialActive) return;
         if (_showingTutorial) return;
         ReadTutorialParts();
         _currentTutorialPart = _tutorialParts[tutorialPart].FirstOrDefault(p => !p.IsComplete());
         if (_currentTutorialPart == null) return;
-        Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
-        sequence.AppendInterval(waitTime);
-        sequence.AppendCallback(() =>
-        {
-            EnableButton();
-            ShowTutorialPart();
-            Enter();
-        });
+        EnableButton();
+        ShowTutorialPart();
+        Enter();
     }
 
     private static void EnableButton()

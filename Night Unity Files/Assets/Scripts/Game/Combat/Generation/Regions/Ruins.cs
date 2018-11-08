@@ -192,7 +192,7 @@ namespace Game.Combat.Generation
 
             CarvePassages(0, 0);
             List<Vector2> islandPositions = new List<Vector2>();
-            if(ShouldPlaceShrine()) islandPositions.Add(_region.ShrinePosition);
+            if(ShouldPlaceShrine()) islandPositions.Add(Vector2.zero);
             for (int i = 0; i < Random.Range(4, 8); ++i)
             {
                 Vector2? potentialPosition = FindAndRemoveValidPosition(0.4f, true);

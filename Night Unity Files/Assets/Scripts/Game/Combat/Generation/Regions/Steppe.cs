@@ -46,33 +46,12 @@ namespace Game.Combat.Generation
             _includeOnlyInRangeCells = true;
             List<Area> inRange = GenerateRegions(true);
             ConnectRegions(inRange);
-//            inRange.ForEach(r =>
-//            {
-//                foreach (CavePoint cavePoint in r.Edges())
-//                {
-//                    if (cavePoint.OutOfRange()) continue;
-//                    drawPoints.Add(cavePoint);
-//                }
-//
-//                foreach (CavePoint cavePoint in r.Points())
-//                {
-//                    if (cavePoint.OutOfRange()) continue;
-//                    drawPoints.Add(cavePoint);
-//                }
-//            });
             _includeOnlyInRangeCells = false;
             _regions = GenerateRegions(false);
             DrawEdges();
             _includeOnlyInRangeCells = true;
             Assert.IsTrue(GenerateRegions(true).Count == 1);
         }
-
-//        private void OnDrawGizmos()
-//        {
-//            Vector3 cubeSize = Scale * Vector3.one;
-//            Gizmos.color = Color.red;
-//            drawPoints.ForEach(c => { Gizmos.DrawCube(c.worldPosition, cubeSize); });
-//        }
 
         private static List<CavePoint> SmoothEdges(Area area)
         {
@@ -313,7 +292,7 @@ namespace Game.Combat.Generation
                     {
                         _map[x, y].accessible = false;
                     }
-                    else if (ShouldPlaceShrine() && Vector2.Distance(new Vector2((x - Width / 2) * Scale, (y-Width/2) * Scale), _region.ShrinePosition) < 5f)
+                    else if (ShouldPlaceShrine() && Vector2.Distance(new Vector2((x - Width / 2) * Scale, (y-Width/2) * Scale), Vector2.zero) < 5f)
                     {
                         _map[x, y].accessible = true;
                     }

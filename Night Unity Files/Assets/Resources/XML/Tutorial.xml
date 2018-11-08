@@ -5,7 +5,7 @@
 		<Title>Exploration</Title>
 		<MinOffset>865,495</MinOffset>
 		<MaxOffset>865,465</MaxOffset>
-		<Text>Beyond The Veil requires constant exploration of your environment, both to survive, and to carry out the Necromancer�s commands. The Explore action allows you to access the map, where you can discover and exploit new destinations.</Text>
+		<Text>To survive the harsh world of Beyond the Veil you will need to explore your surroundings. Use the explore action to open the map.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>2</SectionNumber>
@@ -13,7 +13,7 @@
 		<Title>The Map</Title>
 		<MinOffset>810,375</MinOffset>
 		<MaxOffset>810,375</MaxOffset>
-		<Text>Characters can discover new regions and travel to existing ones by using the map. The map shows all visited and reachable regions, and is always centred on your camp- the gate.</Text>
+		<Text>Characters can discover new regions and travel to existing ones via the map. The map shows all visited and reachable regions. At the centre of the map is your camp- the gate.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>2</SectionNumber>
@@ -21,7 +21,7 @@
 		<Title>Travelling</Title>
 		<MinOffset>808,860</MinOffset>
 		<MaxOffset>808,30</MaxOffset>
-		<Text>Travelling to regions requires grit, shown below the region name. Remember that returning to the gate never requires grit, so you do not need to worry about using up your grit to return home.</Text>
+		<Text>Travelling to regions requires an amount of grit, shown below the region name. Returning to camp never consumes grit. More distant regions consume more grit.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>3</SectionNumber>
@@ -29,7 +29,7 @@
 		<Title>Health</Title>
 		<MinOffset>1020,950</MinOffset>
 		<MaxOffset>10,35</MaxOffset>
-		<Text>Your health bar shows your remaining health, as well as any conditions you are affected by. When it reaches zero, the current character dies. If that character is the Wanderer, then it�s game over.</Text>
+		<Text>This is your health bar. When it reaches zero, your current character dies. Other characters are expendable, but the Wanderer is not.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>3</SectionNumber>
@@ -45,7 +45,7 @@
 		<Title>Adrenaline</Title>
 		<MinOffset>895,885</MinOffset>
 		<MaxOffset>895,20</MaxOffset>
-		<Text>Combat requires focus and keen reflexes. Dealing damage to enemies builds up your adrenaline, which can be used to dash quickly or activate unlocked skills.</Text>
+		<Text>Combat requires focus and keen reflexes. Dealing damage to enemies builds up your adrenaline. Adrenaline can be used to dash, or to activate skills.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>3</SectionNumber>
@@ -53,7 +53,7 @@
 		<Title>Ammunition</Title>
 		<MinOffset>785,975</MinOffset>
 		<MaxOffset>1010,10</MaxOffset>
-		<Text>This bar shows the remaining ammunition in your weapon. When the magazine is empty, you must reload. Weapons in Beyond The Veil are magical and can recharge ammunition, so you do not need to worry about running out.</Text>
+		<Text>This bar shows the remaining ammunition in your weapon. Although weapons have infinite ammunition, you still need to reload at the end of a clip.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>3</SectionNumber>
@@ -69,7 +69,7 @@
 		<Title>Enemy</Title>
 		<MinOffset>565,10</MinOffset>
 		<MaxOffset>565,915</MaxOffset>
-		<Text>When facing an enemy, their attributes will show at the top of the screen. This shows their health and armour, as well as a meter that measures your current accuracy. Continuous fire will decrease your accuracy, so fire in short bursts for high accuracy.</Text>
+		<Text>Like you, enemies have health and armour, shown at the top of screen. Also shown is a meter that measures your current accuracy. Continuous fire decreases your accuracy, so fire in short bursts for maximum effectiveness.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>3</SectionNumber>
@@ -77,7 +77,7 @@
 		<Title>Leaving</Title>
 		<MinOffset>0,0</MinOffset>
 		<MaxOffset>0,0</MaxOffset>
-		<Text>If you have fully explored a region, or you need to escape an overpowering encounter, you can leave by travelling to the ring around the region�s edge.</Text>
+		<Text>You can return to the map screen by moving into the ring surrounding a region. This can be useful to get out of difficult fights.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>3</SectionNumber>
@@ -85,7 +85,7 @@
 		<Title>Damage</Title>
 		<MinOffset>0,0</MinOffset>
 		<MaxOffset>0,0</MaxOffset>
-		<Text>Finally, there are 4 types of damage in Beyond The Veil. Physical damage is the most basic, is dealt by all weapons, and can reduced by armour. Shatter damage causes damage to armour, increasing the amount of physical damage dealt. Fire damage causes small amounts of direct damage over time. Void damage builds up over time, and upon reaching a critical level, causes large amounts of damage directly to health.</Text>
+		<Text>Other than the basic damage dealt by weapons, there are 3 types of alternate damage. Shatter causes high damage to armour. Fire causes small amounts of direct damage over time. Void builds up over time, causing massive damage when reaching a critical level.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>4</SectionNumber>
@@ -101,7 +101,7 @@
 		<Title>Physical</Title>
 		<MinOffset>645,320</MinOffset>
 		<MaxOffset>960,645</MaxOffset>
-		<Text>Fettle- Increases your maximum health in combat. Grit- Determines how far you can travel on the map, as well as movement speed in combat.</Text>
+		<Text>Fettle- Increases your maximum health in combat. Grit- Increases movement speed and map travel distance.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>4</SectionNumber>
@@ -109,7 +109,7 @@
 		<Title>Mental</Title>
 		<MinOffset>960,320</MinOffset>
 		<MaxOffset>645,645</MaxOffset>
-		<Text>Focus- Increases your total compass charges, and your adrenaline recharge rate. Will- Can be used to restore other attributes, and reduces the cooldown of your skills.</Text>
+		<Text>Focus- Increases adrenaline recharge rate, and the number of compass charges available. Will- Decreases the recharge time of your skills, and can be used to restore other attributes.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>4</SectionNumber>
@@ -133,7 +133,7 @@
 		<Title>Progress</Title>
 		<MinOffset>0,0</MinOffset>
 		<MaxOffset>0,0</MaxOffset>
-		<Text>Progress is saved automatically at the dawn of every day. If a character starves, dehydrates, or loses all their health in combat, they will die. If the Wanderer dies, it is game over, and you must either reload at the dawn of the last day, or start a new game. The day can be restarted at any time from the pause menu.</Text>
+		<Text>Your progress must be saved manually. Be warned, as only the most recent save is kept active.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>4</SectionNumber>
@@ -149,7 +149,7 @@
 		<Title>Crafting</Title>
 		<MinOffset>20,10</MinOffset>
 		<MaxOffset>20,970</MaxOffset>
-		<Text>The resources you find in the world can be used to craft a variety of different items. As you find resources, recipes will be unlocked that can make your journey through the world easier.</Text>
+		<Text>Resources found in the world can be used to craft a variety of different items. Recipes are unlocked as you pass through the world. Crafting is performed via the crafting action, and only when at camp.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>5</SectionNumber>
@@ -165,7 +165,7 @@
 		<Title>Radiance</Title>
 		<MinOffset>0,0</MinOffset>
 		<MaxOffset>0,0</MaxOffset>
-		<Text>Salt is dropped by enemies, and can be used to craft one of the most useful resources in the game- Radiance. Radiance can be used to claim a region. Over time, claimed regions will generate either food, water, or resources. These resources are automatically added to your inventory.</Text>
+		<Text>Salt is dropped by enemies, and can be used to craft one of the most useful resources in the game- Radiance. Radiance can be used to claim regions. Over time, these regions add either food, water, or resources to your supply.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>6</SectionNumber>
@@ -181,7 +181,7 @@
 		<Title>Power</Title>
 		<MinOffset>745,370</MinOffset>
 		<MaxOffset>745,600</MaxOffset>
-		<Text>Weapon power affects the damage output of a weapon. Lower power reduces the effectiveness of your weapons, whilst higher power increases it. The current weapon power is shown on this bar.</Text>
+		<Text>Weapon Power affects the damage output of a weapon. Lower power reduces the effectiveness of your weapons, whilst higher power increases it. The current weapon Power is shown on this bar.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>6</SectionNumber>
@@ -189,7 +189,7 @@
 		<Title>Quality</Title>
 		<MinOffset>745,370</MinOffset>
 		<MaxOffset>745,600</MaxOffset>
-		<Text>A weapon�s quality affects it�s maximum power, and is represented by the width of the power bar. Weapons of equal power will have similar damage outputs, regardless of their quality. For this reason it is important to maintain their power level.</Text>
+		<Text>Higher quality weapons have higher maximum Power- represented by the width of the power bar. Weapons of equal Power will have similar damage outputs, regardless of their quality.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>6</SectionNumber>
@@ -197,7 +197,7 @@
 		<Title>Chanelling</Title>
 		<MinOffset>1190,700</MinOffset>
 		<MaxOffset>565,275</MaxOffset>
-		<Text>Using your weapon slowly drains it of power, thereby decreasing the damage you deal in combat. You can offset this either by using a different weapon, or by channelling essence into it to increase it�s Power. Finding this essence, however, may be easier said than done.</Text>
+		<Text>Weapon power is drained through use, decreasing the damage you deal in combat. If you have essence available, it can be channelled into the weapon to restore its power.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>6</SectionNumber>
@@ -205,7 +205,7 @@
 		<Title>Infusions</Title>
 		<MinOffset>565,700</MinOffset>
 		<MaxOffset>1190,275</MaxOffset>
-		<Text>Weapons can also be infused with the last words of the dying. These infusions grant larger, passive bonuses to weapons, allowing you to customise them further to your playstyle. Infusing can only be performed using Essence, and new Infusions will replace any existing ones.</Text>
+		<Text>Infusions can be used to grant large, passive bonuses to weapons. Applying Infusions requires Essence, and replaces any Infusions already applied.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>7</SectionNumber>
@@ -229,7 +229,7 @@
 		<Title>Damage</Title>
 		<MinOffset>0,0</MinOffset>
 		<MaxOffset>0,0</MaxOffset>
-		<Text>The Shatter effect causes damage to armour. When enough Shatter damage is taken, armour will lose a point of protection. If a piece of armour loses all it�s protection, it will break, and be lost.</Text>
+		<Text>Shatter causes damage to armour. When enough Shatter damage is taken, armour will lose a point of protection. If a piece of armour loses all it�s protection, it will break, and be lost.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>7</SectionNumber>
@@ -237,7 +237,7 @@
 		<Title>Sources</Title>
 		<MinOffset>0,0</MinOffset>
 		<MaxOffset>0,0</MaxOffset>
-		<Text>Armour cannot be repaired, and so must be replaced, either through crafting, or found as loot. Instead of a health boost, consider armour an expendable source of protection, destined to be damaged and eventually destroyed.</Text>
+		<Text>Armour cannot be repaired, and so must be replaced, either through crafting, or found as loot. Instead of a permanent health boost, it is best to think of armour as an expendable source of extra protection.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>8</SectionNumber>
@@ -245,7 +245,7 @@
 		<Title>Accessories</Title>
 		<MinOffset>0,0</MinOffset>
 		<MaxOffset>0,0</MaxOffset>
-		<Text>Accessories are small trinkets that can further modify the power of your weapon, either by increasing the chance of inflicting conditions, or by increasing the stats of your weapons. Only one accessory can be equipped at a time.</Text>
+		<Text>Accessories are small trinkets that can further modify the power of your weapon. Only one accessory can be equipped at a time.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>9</SectionNumber>
@@ -269,7 +269,7 @@
 		<Title>Weapon Skills</Title>
 		<MinOffset>1020,900</MinOffset>
 		<MaxOffset>570,55</MaxOffset>
-		<Text>The remaining 2 skills are linked to the currently equipped weapon. Weapon skills unlocked by dealing damage with the relevant weapon. Weapon skills have an offensive focus, and are complement the play style of each weapon.</Text>
+		<Text>The remaining 2 skills are linked to the type of your currently equipped weapon. As you use weapons of this type, you will slowly unlock it�s skills. Weapon skills generally have an offensive focus.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>9</SectionNumber>

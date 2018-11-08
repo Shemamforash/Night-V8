@@ -16,7 +16,8 @@ public class BeamController : MonoBehaviour
     private Transform _origin;
     private Vector3 _targetPosition;
     private bool _firing;
-    private const int BeamDamage = 100;
+    private const int BeamDamage = 5;
+    private float _lastBeamDamage;
 
     public static BeamController Create(Transform origin)
     {
@@ -39,8 +40,9 @@ public class BeamController : MonoBehaviour
     private void LateUpdate()
     {
         if (_origin == null) return;
+        if (_firing) DoBeamDamage();
         transform.position = _origin.position;
-        if (!_firing) _targetPosition = transform.position + _origin.up * 50f;
+        _targetPosition = transform.position + _origin.up * 50f;
         Vector3[] positions = {transform.position, _targetPosition};
         _glowLine.SetPositions(positions);
         _beamLine.SetPositions(positions);
@@ -95,7 +97,6 @@ public class BeamController : MonoBehaviour
             _spray.Clear();
             _burst.Play();
             _spray.Play();
-            DoBeamDamage();
         });
 
         sequence.AppendInterval(0.1f);
@@ -115,6 +116,13 @@ public class BeamController : MonoBehaviour
 
     private void DoBeamDamage()
     {
+        if (_lastBeamDamage > 0f)
+        {
+            _lastBeamDamage -= Time.deltaTime;
+            return;
+        }
+
+        _lastBeamDamage = 0.2f;
         ContactFilter2D cf = new ContactFilter2D();
         cf.layerMask = (1 << 17) | (1 << 8) | (1 << 14);
         Collider2D[] hits = new Collider2D[100];
@@ -125,7 +133,7 @@ public class BeamController : MonoBehaviour
             if (!hit.gameObject.CompareTag("Player")) continue;
             Vector2 dir = transform.up;
             PlayerCombat.Instance.TakeRawDamage(BeamDamage, dir);
-            PlayerCombat.Instance.MovementController.KnockBack(dir, 150f);
+            PlayerCombat.Instance.MovementController.KnockBack(dir, 15f);
             break;
         }
     }

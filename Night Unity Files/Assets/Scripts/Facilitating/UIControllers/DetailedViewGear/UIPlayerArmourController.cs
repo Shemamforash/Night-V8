@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Game.Gear.Armour;
+﻿using Game.Gear.Armour;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -9,29 +8,23 @@ namespace Facilitating.UIControllers
 {
     public class UIPlayerArmourController : MonoBehaviour
     {
-        private readonly List<Image> _plates = new List<Image>();
-        private GameObject _equippedObject, _notEquippedObject;
         public EnhancedButton EnhancedButton;
+        private UIArmourController _armourController;
 
         public void Awake()
         {
+            _armourController = gameObject.FindChildWithName<UIArmourController>("Armour Bar"); 
             EnhancedButton = GetComponent<EnhancedButton>();
-            _equippedObject = gameObject.FindChildWithName("Armour Bar");
-            _notEquippedObject = gameObject.FindChildWithName("Not Equipped");
-            for (int i = 9; i >= 0; --i)
-            {
-                _plates.Add(gameObject.FindChildWithName<Image>("Plate " + i));
-            }
+            EnhancedButton.AddOnClick(UiGearMenuController.ShowArmourMenu);
+            GlowButtonBehaviour glow = GetComponent<GlowButtonBehaviour>();
+            EnhancedButton.AddOnClick(glow.Select);
+            EnhancedButton.AddOnDeselectEvent(glow.Deselect);
+            EnhancedButton.AddOnSelectEvent(glow.Highlight);
         }
 
         public void SetArmour(ArmourController armour)
         {
-            if (_notEquippedObject == null) return;
-            bool hasProtection = armour.GetTotalProtection() != 0;
-            _notEquippedObject.SetActive(!hasProtection);
-            _equippedObject.SetActive(hasProtection);
-            if (!hasProtection) return;
-            for (int i = 0; i < _plates.Count; ++i) _plates[i].color = i >= armour.GetTotalProtection() ? UiAppearanceController.InvisibleColour : Color.white;
+            _armourController.TakeDamage(armour);
         }
     }
 }
