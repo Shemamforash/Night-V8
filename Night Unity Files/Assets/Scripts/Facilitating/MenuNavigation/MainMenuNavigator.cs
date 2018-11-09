@@ -47,22 +47,27 @@ namespace Facilitating.MenuNavigation
             englishText.fontSize = finalEnglishTextSize - 5f;
 
             Sequence fadeInSequence = DOTween.Sequence();
+            
+#if UNITY_EDITOR
+            _seenIntro = true;
+#endif
+            
             if (!_seenIntro)
             {
-                fadeInSequence.AppendInterval(1f); //1
-                fadeInSequence.Append(_logo.DOFade(1f, 1f)); //2
-                fadeInSequence.AppendInterval(3f); //5
-                fadeInSequence.Append(_logo.DOFade(0f, 1f)); //6
+                fadeInSequence.Append(_logo.DOFade(1f, 2f)); //2
+                fadeInSequence.AppendInterval(2f); //5
+                fadeInSequence.Append(_logo.DOFade(0f, 2f)); //6
+
                 fadeInSequence.Append(_latin.DOFade(1f, 1f)); //7
                 fadeInSequence.AppendInterval(3f); //10
                 fadeInSequence.Append(_english.DOFade(1f, 1f)); //11
-                fadeInSequence.AppendInterval(6f); //17
-                fadeInSequence.Append(_latin.DOFade(0f, 1f)); //18
-                fadeInSequence.AppendInterval(2f);
+                fadeInSequence.AppendInterval(5f); //15
+                fadeInSequence.Append(_latin.DOFade(0f, 1f)); //16
+                fadeInSequence.AppendInterval(1f);
 
-                fadeInSequence.Insert(6, latinText.DOFontSize(finalLatinTextSize, 13));
-                fadeInSequence.Insert(10, englishText.DOFontSize(finalEnglishTextSize, 9));
-                fadeInSequence.Insert(17, _english.DOFade(0f, 1f));
+                fadeInSequence.Insert(6, latinText.DOFontSize(finalLatinTextSize, 10));
+                fadeInSequence.Insert(10, englishText.DOFontSize(finalEnglishTextSize, 6));
+                fadeInSequence.Insert(16, _english.DOFade(0f, 1f));
 
                 _seenIntro = true;
             }

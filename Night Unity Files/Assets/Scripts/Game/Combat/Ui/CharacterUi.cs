@@ -45,7 +45,7 @@ namespace Game.Combat.Ui
 
             SetAlpha(1);
             GetHealthController().SetValue(Character.HealthController.GetHealth());
-            GetArmourController().TakeDamage(Character.ArmourController);
+            GetArmourController().UpdateArmour(Character.ArmourController);
             if (Character.IsBurning()) GetHealthController().StartBurning();
             else GetHealthController().StopBurning();
             GetHealthController().SetSicknessLevel(Character.GetSicknessLevel());

@@ -5,6 +5,7 @@ using Game.Characters;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Exploration.Regions;
+using NUnit.Framework;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace Game.Combat.Generation.Shrines
         private static GameObject _riteShrinePrefab;
         private RiteColliderBehaviour _collider1, _collider2, _collider3;
         private List<Brand> _brandChoice;
-        private Brand _targetBrand;
+        private int _targetBrand;
         private RiteColliderBehaviour _targetRiteCollider;
         private static RiteShrineBehaviour _instance;
 
@@ -76,16 +77,16 @@ namespace Game.Combat.Generation.Shrines
         {
             _targetRiteCollider = riteColliderBehaviour;
             if (riteColliderBehaviour == _collider1)
-                _targetBrand = _brandChoice[0];
+                _targetBrand = 0;
             else if (riteColliderBehaviour == _collider2)
-                _targetBrand = _brandChoice[1];
+                _targetBrand = 1;
             else if (riteColliderBehaviour == _collider3)
-                _targetBrand = _brandChoice[2];
+                _targetBrand = 2;
         }
 
         public void ExitShrineCollider()
         {
-            _targetBrand = null;
+            _targetBrand = -1;
         }
 
         private void FadeCandles(Transform riteTransform)
@@ -114,23 +115,27 @@ namespace Game.Combat.Generation.Shrines
 
         public float InRange()
         {
-            return _targetBrand == null ? -1 : 1;
+            return _targetBrand;
         }
 
         public string GetEventText()
         {
-            return "Accept the " + _targetBrand.GetName() + " [T]\n<size=30>" + _targetBrand.GetRequirementText() + "</size>";
+            Brand brand = _brandChoice[_targetBrand];
+            return "Accept the " + brand.GetName() + " [T]\n<size=30>" + brand.GetRequirementText() + "</size>";
         }
 
         public void Activate()
         {
             BrandManager brandManager = PlayerCombat.Instance.Player.BrandManager;
-            if (brandManager.TryActivateBrand(_targetBrand))
+            Brand brand = _brandChoice[_targetBrand];
+            Assert.IsNotNull(brand);
+            if (brandManager.TryActivateBrand(brand))
             {
                 ActivateBrand();
                 return;
             }
-            BrandReplaceMenuController.Show(this, _targetBrand);
+
+            BrandReplaceMenuController.Show(this, brand);
         }
 
         public void ActivateBrand()
@@ -138,9 +143,9 @@ namespace Game.Combat.Generation.Shrines
             Triggered = true;
             FadeCandles(_targetRiteCollider.transform);
             Destroy(_targetRiteCollider);
-            _brandChoice.Remove(_targetBrand);
-            _targetBrand = null;
-            if (_brandChoice.Count == 0) GetComponent<CompassItem>().Die();
+            _brandChoice[_targetBrand] = null;
+            _targetBrand = -1;
+            if (_brandChoice.TrueForAll(b => b == null)) GetComponent<CompassItem>().Die();
         }
 
         protected override void StartShrine()

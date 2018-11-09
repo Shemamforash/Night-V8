@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
+using Game.Combat.Player;
 
 namespace Game.Gear.Armour
 {
@@ -8,6 +9,7 @@ namespace Game.Gear.Armour
     {
         private readonly Character _character;
         private Armour _chest, _head;
+        private bool _justTookDamage;
 
         public ArmourController(Character character)
         {
@@ -37,6 +39,13 @@ namespace Game.Gear.Armour
             if (_head != null) _head.Repair(remaining);
         }
 
+        public bool DidJustTakeDamage()
+        {
+            bool didTakeDamage = _justTookDamage;
+            _justTookDamage = false;
+            return didTakeDamage;
+        }
+
         private void TakePlateDamage(ref Armour plate, float damage)
         {
             if (plate == null) return;
@@ -44,6 +53,7 @@ namespace Game.Gear.Armour
             float totalProtection = GetCurrentProtection();
             float proportion = plateProtection / totalProtection;
             if (!plate.TakeDamage(proportion * damage)) return;
+            _justTookDamage = true;
             plate = null;
         }
 
@@ -86,10 +96,12 @@ namespace Game.Gear.Armour
 
         private void UpdateArmourView()
         {
+            if (PlayerCombat.Instance != null) return;
             Player player = _character as Player;
-            player?.CharacterView()?.ArmourController.SetArmour(this);
+            CharacterView characterView = player?.CharacterView();
+            if (characterView == null || characterView.gameObject == null) return;
+            characterView.ArmourController.UpdateArmour();
         }
-
 
         public int GetCurrentProtection()
         {

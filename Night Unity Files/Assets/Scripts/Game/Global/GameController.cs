@@ -33,14 +33,8 @@ public class GameController : MonoBehaviour {
 		StartGame(false, travel);
 	}
 
-	public void QuitToMenu()
-	{
-		SaveController.QuickSave();
-	}
-
 	public void QuitToDesktop()
 	{
-		SaveController.QuickSave();
 		Application.Quit();
 	}
 

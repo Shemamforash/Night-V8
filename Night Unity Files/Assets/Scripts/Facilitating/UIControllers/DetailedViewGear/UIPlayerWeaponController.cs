@@ -1,4 +1,7 @@
-﻿using Game.Gear;
+﻿using System;
+using Game.Characters;
+using Game.Combat.Player;
+using Game.Gear;
 using Game.Gear.Weapons;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -11,6 +14,7 @@ namespace Facilitating.UIControllers
         private EnhancedText _nameText, _infusionText;
         private GameObject _equippedObject;
         public EnhancedButton EnhancedButton;
+        private Player _player;
 
         public void Awake()
         {
@@ -18,8 +22,6 @@ namespace Facilitating.UIControllers
             _equippedObject = gameObject.FindChildWithName("Equipped");
             _nameText = _equippedObject.FindChildWithName<EnhancedText>("Weapon Name");
             _infusionText = _equippedObject.FindChildWithName<EnhancedText>("Bonus");
-            SetWeapon(null);
-
             EnhancedButton.AddOnClick(UiGearMenuController.ShowWeaponMenu);
             GlowButtonBehaviour glow = GetComponent<GlowButtonBehaviour>();
             EnhancedButton.AddOnClick(glow.Select);
@@ -27,8 +29,16 @@ namespace Facilitating.UIControllers
             EnhancedButton.AddOnSelectEvent(glow.Highlight);
         }
 
-        public void SetWeapon(Weapon weapon)
+        public void SetWeapon(Action selectAction, Player player)
         {
+            EnhancedButton.AddOnSelectEvent(selectAction);
+            _player = player;
+            UpdateWeapon();
+        }
+
+        public void UpdateWeapon()
+        {
+            Weapon weapon = _player.EquippedWeapon;
             string weaponName = "";
             if (weapon != null) weaponName = weapon.Quality() + " " + weapon.WeaponAttributes.GetWeaponClass();
             _nameText.SetText(weaponName);

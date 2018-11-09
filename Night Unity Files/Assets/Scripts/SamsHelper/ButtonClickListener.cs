@@ -36,10 +36,4 @@ public class ButtonClickListener : MonoBehaviour
     {
         _suppressClick = true;
     }
-
-    public void OnApplicationQuit()
-    {
-        if (SceneManager.GetActiveScene().name == "Menu") return;
-        SaveController.QuickSave();
-    }
 }

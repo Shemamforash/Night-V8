@@ -10,7 +10,6 @@ namespace Facilitating.Persistence
     public static class SaveController
     {
         private static readonly string GameSaveLocation = Application.persistentDataPath + "/Saves/FullSave.xml";
-        private static readonly string QuickSaveLocation = Application.persistentDataPath + "/Saves/QuickSave.xml";
         private static readonly string SettingsSaveLocation = Application.persistentDataPath + "/Saves/GameSettings.xml";
         private static XmlDocument _saveDoc;
         public static Travel ResumeInCombat;
@@ -37,23 +36,7 @@ namespace Facilitating.Persistence
         private static string GetMostRecentSaveLocation()
         {
             bool isPermanentSave = File.Exists(GameSaveLocation);
-            bool isQuickSave = File.Exists(QuickSaveLocation);
-            if (!isPermanentSave && !isQuickSave) return null;
-            if (!isPermanentSave) return QuickSaveLocation;
-            if (!isQuickSave) return GameSaveLocation;
-            int permanentMinutesPassed = GetMinutesPassed(GameSaveLocation);
-            int quickMinutesPassed = GetMinutesPassed(QuickSaveLocation);
-            return permanentMinutesPassed > quickMinutesPassed ? GameSaveLocation : QuickSaveLocation;
-        }
-
-        private static int GetMinutesPassed(string fileLocation)
-        {
-            _saveDoc = new XmlDocument();
-            _saveDoc.Load(fileLocation);
-            XmlNode root = _saveDoc.GetNode("BTVSave");
-            XmlNode worldStateValues = root.GetNode("WorldState");
-            int minutesPassed = worldStateValues.IntFromNode("MinutesPassed");
-            return minutesPassed;
+            return !isPermanentSave ? null : GameSaveLocation;
         }
 
         public static Travel LoadGame()
@@ -73,7 +56,7 @@ namespace Facilitating.Persistence
 
         public static bool SaveExists()
         {
-            return File.Exists(GameSaveLocation) || File.Exists(QuickSaveLocation);
+            return File.Exists(GameSaveLocation);
         }
 
         //Node creation
@@ -113,12 +96,6 @@ namespace Facilitating.Persistence
             XmlNode root = _saveDoc.CreateChild("BTVSave");
             WorldState.Save(root);
             _saveDoc.Save(fileLocation);
-        }
-
-        public static void QuickSave()
-        {
-            Debug.Log("Quicksaved");
-            Save(QuickSaveLocation);
         }
 
         public static void LoadSettings()

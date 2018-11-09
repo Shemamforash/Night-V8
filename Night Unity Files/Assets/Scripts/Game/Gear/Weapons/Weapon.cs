@@ -5,6 +5,7 @@ using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
+using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
@@ -66,6 +67,7 @@ namespace Game.Gear.Weapons
 
         public void SetInscription(Inscription inscription)
         {
+            Debug.Log(inscription);
             RemoveInscription();
             RemoveInscriptionModifier();
             _inscription = inscription;

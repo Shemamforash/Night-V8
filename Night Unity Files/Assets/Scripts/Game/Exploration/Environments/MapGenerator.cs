@@ -83,9 +83,9 @@ namespace Game.Exploration.Environment
             ConnectRegions();
             SetRegionTypes();
             initialNode.Discover();
-#if UNITY_EDITOR
-            _regions.ForEach(r => r.Discover());
-#endif
+//#if UNITY_EDITOR
+//            _regions.ForEach(r => r.Discover());
+//#endif
         }
 
         private static void GenerateRegions()

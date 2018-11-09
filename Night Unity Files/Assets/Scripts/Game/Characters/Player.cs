@@ -209,8 +209,7 @@ namespace Game.Characters
         public override void EquipWeapon(Weapon weapon)
         {
             base.EquipWeapon(weapon);
-            if (_characterView != null) _characterView.WeaponController.SetWeapon(weapon);
-            WorldEventManager.GenerateEvent(new CharacterMessage("Yes, this'll do", this));
+            if (_characterView != null) _characterView.WeaponController.UpdateWeapon();
             if (PlayerCombat.Instance == null) return;
             PlayerCombat.Instance.EquipWeapon(weapon);
         }
@@ -218,7 +217,6 @@ namespace Game.Characters
         public void EquipChestArmour(Armour plate)
         {
             ArmourController.SetArmour(plate);
-            _characterView.ArmourController.SetArmour(ArmourController);
             WorldEventManager.GenerateEvent(new CharacterMessage("That might help", this));
             if (PlayerCombat.Instance == null) return;
             PlayerCombat.Instance.EquipArmour();
@@ -227,8 +225,6 @@ namespace Game.Characters
         public void EquipHeadArmour(Armour plate)
         {
             ArmourController.SetArmour(plate);
-            _characterView.ArmourController.SetArmour(ArmourController);
-            WorldEventManager.GenerateEvent(new CharacterMessage("That might help", this));
             if (PlayerCombat.Instance == null) return;
             PlayerCombat.Instance.EquipArmour();
         }
@@ -236,7 +232,7 @@ namespace Game.Characters
         public override void EquipAccessory(Accessory accessory)
         {
             base.EquipAccessory(accessory);
-            if (_characterView != null) _characterView.AccessoryController.SetAccessory(accessory);
+            if (_characterView != null) _characterView.AccessoryController.UpdateAccessory();
         }
 
         private readonly Dictionary<WeaponType, int> _weaponKills = new Dictionary<WeaponType, int>();

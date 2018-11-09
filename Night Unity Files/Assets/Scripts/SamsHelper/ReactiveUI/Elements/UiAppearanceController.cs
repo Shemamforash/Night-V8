@@ -18,9 +18,9 @@ namespace SamsHelper.ReactiveUI.Elements
             return LowercaseFont;
         }
 
-        public static int GetFontSize(EnhancedText.FontSizes fontSizes)
+        public static int ToSize(this EnhancedText.FontSizes fontSize)
         {
-            switch (fontSizes)
+            switch (fontSize)
             {
                 case EnhancedText.FontSizes.Small:
                     return SmallFontSize;

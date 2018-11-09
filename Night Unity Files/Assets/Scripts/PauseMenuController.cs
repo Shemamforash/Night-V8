@@ -58,13 +58,11 @@ public class PauseMenuController : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
-        SaveController.QuickSave();
         SceneChanger.GoToMainMenuScene();
     }
 
     public void QuitToDesktop()
     {
-        SaveController.QuickSave();
         Application.Quit();
     }
 
@@ -137,15 +135,18 @@ public class PauseMenuController : MonoBehaviour
         MenuStateMachine.ShowMenu("Pause");
     }
 
+    public void SaveGame()
+    {
+        SaveIconController.Save();
+    }
+
     public void ExitToDesktop()
     {
-        SaveController.QuickSave();
         Application.Quit();
     }
 
     public void ExitToMenu()
     {
-        SaveController.QuickSave();
         SceneChanger.GoToMainMenuScene();
     }
 

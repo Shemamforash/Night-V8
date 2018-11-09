@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Game.Characters;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
-using SamsHelper;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using TMPro;
@@ -23,12 +21,12 @@ namespace Game.Exploration.Ui
         private int _currentLetter;
         private float _currentTime;
         private bool _doneFading;
-        private TextMeshProUGUI _fadeText, _costText, _claimText;
+        private TextMeshProUGUI _nameText, _costText, _claimText;
 
         private CanvasGroup _canvas;
         private SpriteRenderer _ring1, _ring2, _ring3, _icon, _shadow;
-        private Image _inactive, _active;
-        private static Sprite _animalSprite, _dangerSprite, _gateSprite, _fountainSprite, _monumentSprite, _shelterSprite, _shrineSprite, _templeSprite;
+        private UIBorderController _border;
+        private static Sprite _animalSprite, _dangerSprite, _gateSprite, _fountainSprite, _monumentSprite, _shelterSprite, _shrineSprite, _templeSprite, _noneSprite;
         private int _gritCost;
         private Region _region;
         private ParticleSystem _claimedParticles;
@@ -45,7 +43,7 @@ namespace Game.Exploration.Ui
         public void Awake()
         {
             _canvas = gameObject.FindChildWithName<CanvasGroup>("Canvas");
-            _fadeText = gameObject.FindChildWithName<TextMeshProUGUI>("Fade");
+            _nameText = gameObject.FindChildWithName<TextMeshProUGUI>("Name");
             _costText = gameObject.FindChildWithName<TextMeshProUGUI>("Cost");
             _claimText = gameObject.FindChildWithName<TextMeshProUGUI>("Claim Bonus");
             _audioSource = GetComponent<AudioSource>();
@@ -54,8 +52,8 @@ namespace Game.Exploration.Ui
             _ring3 = gameObject.FindChildWithName<SpriteRenderer>("Ring 3");
             _icon = gameObject.FindChildWithName<SpriteRenderer>("Icon");
             _shadow = gameObject.FindChildWithName<SpriteRenderer>("Shadow");
-            _inactive = gameObject.FindChildWithName<Image>("Inactive");
-            _active = gameObject.FindChildWithName<Image>("Active");
+            _border = gameObject.FindChildWithName<UIBorderController>("Border");
+            _border.SetActive();
             _claimedParticles = gameObject.FindChildWithName<ParticleSystem>("Claimed");
         }
 
@@ -78,9 +76,11 @@ namespace Game.Exploration.Ui
             return _claimedParticles.trails.colorOverTrail.color.a;
         }
 
-
         public void Show()
         {
+            _gritCost = RoutePlotter.RouteBetween(_region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode()).Count - 1;
+            if (_region.GetRegionType() == RegionType.Gate) _costText.text = "Return home";
+            else _costText.text = _gritCost + " Grit";
             _ring1.DOFade(Ring1Alpha, FadeTime).SetUpdate(UpdateType.Normal, true);
             _ring2.DOFade(Ring2Alpha, FadeTime).SetUpdate(UpdateType.Normal, true);
             _ring3.DOFade(Ring3Alpha, FadeTime).SetUpdate(UpdateType.Normal, true);
@@ -105,10 +105,10 @@ namespace Game.Exploration.Ui
         {
             _region = region;
             SetClaimParticlesActive(region.ClaimRemaining > 0);
-            _gritCost = RoutePlotter.RouteBetween(region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode()).Count - 1;
-            for (int i = 0; i < region.Name.Length; ++i)
+            string nameText = region.GetRegionType() == RegionType.None ? "Unknown Region" : region.Name;
+            for (int i = 0; i < nameText.Length; ++i)
             {
-                _letters.Add(new Letter(region.Name[i].ToString()));
+                _letters.Add(new Letter(nameText[i].ToString()));
                 if (i > 0) _letters[i - 1].SetNextLetter(_letters[i]);
             }
 
@@ -128,6 +128,7 @@ namespace Game.Exploration.Ui
             if (_shelterSprite == null) _shelterSprite = Resources.Load<Sprite>("Images/Regions/Shelter");
             if (_shrineSprite == null) _shrineSprite = Resources.Load<Sprite>("Images/Regions/Shrine");
             if (_templeSprite == null) _templeSprite = Resources.Load<Sprite>("Images/Regions/Temple");
+            if (_noneSprite == null) _noneSprite = Resources.Load<Sprite>("Images/Regions/None");
             switch (regionType)
             {
                 case RegionType.Shelter:
@@ -157,8 +158,8 @@ namespace Game.Exploration.Ui
                     _icon.sprite = _shrineSprite;
                     break;
                 default:
-                    Debug.Log(regionType);
-                    throw new ArgumentOutOfRangeException();
+                    _icon.sprite = _noneSprite;
+                    break;
             }
         }
 
@@ -182,9 +183,6 @@ namespace Game.Exploration.Ui
 
         private IEnumerator FadeInLetters()
         {
-            if (_region.GetRegionType() == RegionType.Gate) _costText.text = "Return home";
-            else _costText.text = _gritCost + " Grit";
-
             _claimText.text = _region.ClaimBenefitString();
 
             _claimText.color = UiAppearanceController.InvisibleColour;
@@ -197,7 +195,7 @@ namespace Game.Exploration.Ui
                 _doneFading = true;
                 _completeWord = "";
                 _letters.ForEach(l => l.Update(this));
-                _fadeText.text = _completeWord;
+                _nameText.text = _completeWord;
                 yield return null;
             }
         }
@@ -206,18 +204,17 @@ namespace Game.Exploration.Ui
         {
             _audioSource.pitch = Random.Range(0.75f, 1.25f);
             _audioSource.DOFade(0.5f, 1);
-            
+
             _icon.DOFade(IconAlpha * 2f, 1f);
             _ring1.DOFade(Ring1Alpha * 2f, 1f);
             _ring2.DOFade(Ring2Alpha * 2f, 1f);
             _ring3.DOFade(Ring3Alpha * 2f, 1f);
-            
-            _fadeText.DOFade(1f, 1f);
+
+            _nameText.DOFade(1f, 1f);
             _costText.DOFade(1f, 1f);
             _claimText.DOFade(1f, 1f);
-            _active.DOFade(1f, 1f);
-            _inactive.DOFade(1f, 1f);
-            
+            _border.SetSelected();
+
             transform.DOScale(Vector2.one * 1.25f, 1f);
             MapMenuController.SetRoute(_region);
             MapMovementController.UpdateGrit(_gritCost);
@@ -226,18 +223,17 @@ namespace Game.Exploration.Ui
         public void LoseFocus(float time = 1f)
         {
             _audioSource.DOFade(0, time);
-            
+
             _icon.DOFade(IconAlpha, time);
             _ring1.DOFade(Ring1Alpha, time);
             _ring2.DOFade(Ring2Alpha, time);
             _ring3.DOFade(Ring3Alpha, time);
-            
-            _fadeText.DOFade(0.4f, time);
+
+            _nameText.DOFade(0.4f, time);
             _costText.DOFade(0.4f, time);
             _claimText.DOFade(0.4f, time);
-            _inactive.DOFade(0.4f, time);
-            _active.DOFade(0f, time);
-            
+            _border.SetActive();
+
             transform.DOScale(Vector2.one, time);
             MapMovementController.UpdateGrit(0);
         }

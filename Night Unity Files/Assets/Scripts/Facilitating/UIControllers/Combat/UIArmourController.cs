@@ -14,6 +14,8 @@ namespace Facilitating.UIControllers
         private readonly List<ArmourChunk> _armourChunks = new List<ArmourChunk>();
 
         private HorizontalLayoutGroup _layoutGroup;
+        private int _lastSlotsUsed = -1;
+        private int _lastSlotsAvailable = -1;
 
         public void Awake()
         {
@@ -31,8 +33,14 @@ namespace Facilitating.UIControllers
             _armourChunks.Reverse();
         }
 
-        private void SetSlotsFilled(int slotsAvailable, int slotsUsed, bool damageWasTaken = false)
+        public void UpdateArmour(ArmourController controller)
         {
+            bool damageWasTaken = controller.DidJustTakeDamage();
+            int slotsAvailable = controller.GetTotalProtection();
+            int slotsUsed = controller.GetCurrentProtection();
+
+            if (slotsAvailable == _lastSlotsAvailable && slotsUsed == _lastSlotsUsed) return;
+
             for (int i = 0; i < _armourChunks.Count; i++)
             {
                 ArmourChunk chunk = _armourChunks[i];
@@ -44,18 +52,9 @@ namespace Facilitating.UIControllers
                 else
                     chunk.SetUnused();
             }
-        }
 
-        public void TakeDamage(ArmourController controller)
-        {
-            int slotsAvailable = controller.GetTotalProtection();
-            int slotsUsed = controller.GetCurrentProtection();
-            TakeDamage(slotsAvailable, slotsUsed);
-        }
-
-        public void TakeDamage(int slotsAvailable, int slotsUsed)
-        {
-            SetSlotsFilled(slotsAvailable, slotsUsed, true);
+            _lastSlotsAvailable = slotsAvailable;
+            _lastSlotsUsed = slotsUsed;
         }
 
         private class ArmourChunk

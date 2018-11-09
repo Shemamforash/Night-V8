@@ -59,7 +59,6 @@ namespace Game.Characters.CharacterActions
             ResetTimeRemaining();
         }
 
-
         protected void SetDuration(int duration = -1)
         {
             if (duration == -1) Duration = WorldState.MinutesPerHour / 2;
@@ -91,9 +90,9 @@ namespace Game.Characters.CharacterActions
             return DisplayName;
         }
 
-        public float GetRemainingTime(int offset = 0)
+        public float GetRemainingTime()
         {
-            return (float) (Duration + offset) / InitialDuration;
+            return (float) Duration / InitialDuration;
         }
     }
 }

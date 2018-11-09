@@ -1,8 +1,8 @@
-﻿using Game.Gear.Armour;
+﻿using System;
+using Game.Characters;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Facilitating.UIControllers
 {
@@ -10,10 +10,11 @@ namespace Facilitating.UIControllers
     {
         public EnhancedButton EnhancedButton;
         private UIArmourController _armourController;
+        private Player _player;
 
         public void Awake()
         {
-            _armourController = gameObject.FindChildWithName<UIArmourController>("Armour Bar"); 
+            _armourController = gameObject.FindChildWithName<UIArmourController>("Armour Bar");
             EnhancedButton = GetComponent<EnhancedButton>();
             EnhancedButton.AddOnClick(UiGearMenuController.ShowArmourMenu);
             GlowButtonBehaviour glow = GetComponent<GlowButtonBehaviour>();
@@ -22,9 +23,16 @@ namespace Facilitating.UIControllers
             EnhancedButton.AddOnSelectEvent(glow.Highlight);
         }
 
-        public void SetArmour(ArmourController armour)
+        public void UpdateArmour()
         {
-            _armourController.TakeDamage(armour);
+            _armourController.UpdateArmour(_player.ArmourController);
+        }
+
+        public void SetArmour(Action selectCharacter, Player player)
+        {
+            _player = player;
+            EnhancedButton.AddOnSelectEvent(selectCharacter);
+            UpdateArmour();
         }
     }
 }

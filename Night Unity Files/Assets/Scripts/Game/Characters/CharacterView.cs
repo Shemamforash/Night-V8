@@ -80,15 +80,13 @@ namespace Game.Characters
             gameObject.FindChildWithName<TextMeshProUGUI>("Character Name").text = _player.Name;
 
             WeaponController = gameObject.FindChildWithName<UIPlayerWeaponController>("Weapon");
-            WeaponController.EnhancedButton.AddOnSelectEvent(SelectCharacter);
-            WeaponController.SetWeapon(_player.EquippedWeapon);
+            WeaponController.SetWeapon(SelectCharacter, _player);
 
             AccessoryController = gameObject.FindChildWithName<UIPlayerAccessoryController>("Accessory");
-            AccessoryController.EnhancedButton.AddOnSelectEvent(SelectCharacter);
-            AccessoryController.SetAccessory(_player.EquippedAccessory);
+            AccessoryController.SetAccessory(SelectCharacter, _player);
 
             ArmourController = gameObject.FindChildWithName<UIPlayerArmourController>("Armour");
-            ArmourController.EnhancedButton.AddOnSelectEvent(SelectCharacter);
+            ArmourController.SetArmour(SelectCharacter, _player);
 
             _brandUi = gameObject.FindChildWithName<CharacterBrandUIController>("Brands");
         }

@@ -88,7 +88,7 @@ public class UIBorderController : MonoBehaviour
     private void Select(bool instant = false)
     {
         float time = instant ? 0 : FadeTime;
-        if (_button.IsEnabled())
+        if (_button == null || _button.IsEnabled())
         {
             _activeTop.DOColor(Color.white, time);
             _inactiveTop.DOFade(1, time);
