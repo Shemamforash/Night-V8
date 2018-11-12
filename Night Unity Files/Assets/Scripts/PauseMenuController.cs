@@ -45,7 +45,7 @@ public class PauseMenuController : MonoBehaviour
         _lastMenu = MenuStateMachine.CurrentMenu().gameObject.name;
         _instance.ShowPauseMenu();
         _fading = true;
-        Sequence sequence = DOTween.Sequence();
+        Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
         sequence.Append(_background.DOFade(1f, 0.25f));
         sequence.AppendCallback(() =>
         {
@@ -68,17 +68,18 @@ public class PauseMenuController : MonoBehaviour
 
     public void Hide()
     {
+        Debug.Log("hidden");
         _closeButton.Disable();
         VolumeController.FadeOutMuffle();
         MenuStateMachine.ShowMenu(_lastMenu);
         _fading = true;
-        Sequence sequence = DOTween.Sequence();
+        Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
         sequence.Append(_background.DOFade(0f, 0.25f));
         sequence.AppendCallback(() =>
         {
             _fading = false;
             _open = false;
-            Unpause();
+            Resume();
         });
     }
 
@@ -98,7 +99,7 @@ public class PauseMenuController : MonoBehaviour
         }
     }
 
-    private void Unpause()
+    private void Resume()
     {
         switch (SceneManager.GetActiveScene().name)
         {

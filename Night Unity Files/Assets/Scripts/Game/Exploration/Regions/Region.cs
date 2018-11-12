@@ -32,7 +32,7 @@ namespace Game.Exploration.Regions
         public int RegionID;
         private int _lastVisitDay = -1;
         public int WaterSourceCount, FoodSourceCount, ResourceSourceCount;
-        public Player _characterHere;
+        public Player CharacterHere;
         public Vector2 CharacterPosition;
         private readonly List<int> _neighborIds = new List<int>();
         public int ClaimRemaining;
@@ -339,7 +339,7 @@ namespace Game.Exploration.Regions
         private void GenerateShelter()
         {
             if (CharacterManager.Characters.Count == 3) return;
-            _characterHere = CharacterManager.GenerateRandomCharacter();
+            CharacterHere = CharacterManager.GenerateRandomCharacter();
         }
 
         public void SetRegionType(RegionType regionType)

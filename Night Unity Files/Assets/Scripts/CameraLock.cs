@@ -14,6 +14,7 @@ public class CameraLock : MonoBehaviour
     {
         _cameraLockText = gameObject.FindChildWithName<EnhancedText>("Text");
         GetComponent<Button>().onClick.AddListener(ToggleLockedCamera);
+        SetLock(_lockedCamera);
     }
 
     public void Update()
@@ -28,8 +29,14 @@ public class CameraLock : MonoBehaviour
 
     private static void ToggleLockedCamera()
     {
-        _lockedCamera = !_lockedCamera;
+        SetLock(!_lockedCamera);
+    }
+
+    private static void SetLock(bool locked)
+    {
+        _lockedCamera = locked;
         SaveController.SaveSettings();
+        Cursor.visible = !_lockedCamera;
     }
 
     public static void Save(XmlNode root)

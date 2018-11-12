@@ -25,7 +25,7 @@ namespace Game.Global
         public static AudioClip[] DayAudio, NightAudio;
         public static AudioClip[] Ambient;
         public static AudioClip ButtonSelectClip;
-        public static AudioClip SimmavA, SimmavB, SimmavC;
+        public static AudioClip SimmavA, SimmavB, SimmavC, SimmavD;
         private static readonly List<AssetBundle> _loadedBundles = new List<AssetBundle>();
         private static bool _loaded;
 
@@ -113,6 +113,7 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => SimmavA = a, "music/combat/simmav", "simmav a"));
             yield return StartCoroutine(LoadClip(a => SimmavB = a, "music/combat/simmav", "simmav b"));
             yield return StartCoroutine(LoadClip(a => SimmavC = a, "music/combat/simmav", "simmav c"));
+            yield return StartCoroutine(LoadClip(a => SimmavD = a, "music/combat/simmav", "simmav d"));
 
             watch.Stop();
             Helper.PrintTime("Done loading audio in: ", watch);

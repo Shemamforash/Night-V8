@@ -42,7 +42,6 @@ namespace Game.Combat.Player
 
         private bool _dashPressed;
 
-//        private CanTakeDamage _lockedOn;
         private const float RotateSpeedMax = 100f;
         private float _rotateSpeedCurrent;
         private const float RotateAcceleration = 400f;
@@ -84,6 +83,7 @@ namespace Game.Combat.Player
 
         protected override void Awake()
         {
+            IsPlayer = true;
             base.Awake();
             Instance = this;
         }
@@ -146,9 +146,6 @@ namespace Game.Combat.Player
             {
                 switch (axis)
                 {
-                    case InputAxis.Lock:
-                        LockTarget();
-                        break;
                     case InputAxis.Reload:
                         Reload();
                         break;
@@ -209,21 +206,9 @@ namespace Game.Combat.Player
         {
         }
 
-//        private void FollowTarget()
-//        {
-//            if (_lockedOn == null) return;
-//            float rotation = AdvancedMaths.AngleFromUp(transform.position, _lockedOn.transform.position);
-//            transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
-//        }
-
-        private void LockTarget()
-        {
-//            _lockedOn = _lockedOn == null ? GetTarget() : null;
-        }
-
         private void Rotate(float direction)
         {
-//            if (_lockedOn != null) return;
+            if (!CameraLock.IsCameraLocked()) return;
             _rotateSpeedCurrent += RotateAcceleration * Time.deltaTime;
             if (_rotateSpeedCurrent > RotateSpeedMax) _rotateSpeedCurrent = RotateSpeedMax;
             transform.Rotate(Vector3.forward, _rotateSpeedCurrent * Time.deltaTime * (-direction).Polarity());
@@ -274,8 +259,16 @@ namespace Game.Combat.Player
         {
             base.MyUpdate();
             UpdateSkillActions.ForEach(a => a());
-//            FollowTarget();
             UpdateMuzzleFlash();
+            UpdateRotation();
+        }
+
+        private void UpdateRotation()
+        {
+            if (CameraLock.IsCameraLocked()) return;
+            Vector2 mousePosition = Helper.MouseToWorldCoordinates();
+            float rotation = AdvancedMaths.AngleFromUp(transform.position, mousePosition);
+            transform.rotation = Quaternion.Euler(0, 0, rotation);
         }
 
         public override string GetDisplayName()
@@ -449,7 +442,6 @@ namespace Game.Combat.Player
 
         public override void SetTarget(CanTakeDamage target)
         {
-//            if (_lockedOn != null) return;
             if (target != null)
             {
                 Flit flit = target as Flit;
@@ -493,7 +485,7 @@ namespace Game.Combat.Player
 
         //COOLDOWNS
 
-        private void InstantReload()
+        public void InstantReload()
         {
             _weaponBehaviour.Reload();
             StopReloading();
@@ -602,11 +594,6 @@ namespace Game.Combat.Player
             if (Random.Range(0f, 1f) >= Player.Attributes.InstantCooldownChance) return;
             SkillBar.ResetCooldowns();
         }
-
-//        public bool IsTargetLocked()
-//        {
-//            return _lockedOn != null;
-//        }
 
         public void ReduceAdrenaline(float amount)
         {

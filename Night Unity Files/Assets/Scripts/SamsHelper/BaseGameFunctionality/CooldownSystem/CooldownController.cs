@@ -36,7 +36,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 
         public void Update()
         {
-            bool shouldPlay = _ready && _skill.CanAfford();
+            bool shouldPlay = _ready && _skill != null && _skill.CanAfford();
             bool shouldStop = !shouldPlay && _readyParticles.isPlaying;
             shouldPlay = shouldPlay && !_readyParticles.isPlaying;
             if (shouldPlay) _readyParticles.Play();

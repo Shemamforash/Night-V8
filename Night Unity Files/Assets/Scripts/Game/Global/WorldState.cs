@@ -54,7 +54,6 @@ namespace Game.Global
 
         public void Awake()
         {
-            Cursor.visible = false;
             UnPause();
         }
 

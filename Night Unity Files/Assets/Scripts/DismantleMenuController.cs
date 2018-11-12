@@ -88,6 +88,7 @@ public class DismantleMenuController : Menu
             if (i > 3) possibleRewards.Add("Alloy");
         }
 
+        if (possibleRewards.Count == 0) return;
         AddReward(possibleRewards.RandomElement(), 1);
         AddReward(possibleRewards.RandomElement(), 1);
     }

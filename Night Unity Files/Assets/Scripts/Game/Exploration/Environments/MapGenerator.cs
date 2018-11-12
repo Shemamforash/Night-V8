@@ -16,7 +16,6 @@ namespace Game.Exploration.Environment
     public static class MapGenerator
     {
         public const int MinRadius = 4;
-        private const int MaxRadius = 8;
         private const int WaterSourcesPerEnvironment = 30;
         private const int FoodSourcesPerEnvironment = 20;
         private const int ResourcesPerEnvironment = 30;
@@ -153,7 +152,6 @@ namespace Game.Exploration.Environment
             Triangulate();
         }
 
-
         private class RegionNode : Node
         {
             public readonly Region RegionHere;
@@ -163,7 +161,6 @@ namespace Game.Exploration.Environment
                 RegionHere = region;
             }
         }
-
 
         private static void Triangulate()
         {

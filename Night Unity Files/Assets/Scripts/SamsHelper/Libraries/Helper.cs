@@ -79,9 +79,10 @@ namespace SamsHelper.Libraries
 
         public static Vector3 MouseToWorldCoordinates(float z = 0f)
         {
+            if (mainCamera == null || mainCamera.gameObject == null) mainCamera = Camera.main;
             Vector3 mousePos = UnityEngine.Input.mousePosition;
-            mousePos.z = -Camera.main.transform.position.z - z;
-            mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+            mousePos.z = -mainCamera.transform.position.z - z;
+            mousePos = mainCamera.ScreenToWorldPoint(mousePos);
             return mousePos;
         }
 

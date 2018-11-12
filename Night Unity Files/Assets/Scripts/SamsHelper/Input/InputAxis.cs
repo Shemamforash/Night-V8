@@ -14,7 +14,6 @@
         SkillTwo,
         SkillThree,
         SkillFour,
-        Lock,
         Inventory,
         Compass,
         TakeItem

@@ -9,7 +9,8 @@ namespace Game.Gear.Weapons
         private float _spoolUpLevel;
         private bool _spooling;
         private static AudioMixerGroup _modifiedMixerGroup;
-
+        public bool AutoSpool;
+        
         public void Awake()
         {
             _spinSource = gameObject.AddComponent<AudioSource>();
@@ -33,15 +34,26 @@ namespace Game.Gear.Weapons
             Fire();
         }
 
+        public override void Reload()
+        {
+            base.Reload();
+            AutoSpool = false;
+        }
+        
+        private bool ShouldSpool()
+        {
+            return AutoSpool || _spooling;
+        }
+        
         public void Update()
         {
-            if (!_spooling && _spoolUpLevel > 0)
+            if (!ShouldSpool() && _spoolUpLevel > 0)
             {
                 _spoolUpLevel -= Time.deltaTime;
                 if (_spoolUpLevel < 0) _spoolUpLevel = 0;
             }
 
-            else if (_spooling && _spoolUpLevel < 1)
+            else if (ShouldSpool() && _spoolUpLevel < 1)
             {
                 _spoolUpLevel += Time.deltaTime;
                 if (_spoolUpLevel > 1) _spoolUpLevel = 1;

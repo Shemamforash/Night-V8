@@ -12,7 +12,6 @@ namespace Game.Characters.CharacterActions
             DisplayName = "Sleeping";
             MinuteCallback = () =>
             {
-                Debug.Log(_timePassed + " " + Duration);
                 --_timePassed;
                 if (_timePassed == 0)
                 {

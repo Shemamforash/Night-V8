@@ -3,6 +3,7 @@ using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Gear.Armour;
+using Game.Global;
 using UnityEngine;
 
 namespace Game.Combat.Misc
@@ -22,6 +23,7 @@ namespace Game.Combat.Misc
         private float _sicknessDuration;
         private float _markTime;
         private bool _marked;
+        public bool IsPlayer;
 
         public void TakeArmourDamage(float damage)
         {
@@ -32,14 +34,14 @@ namespace Game.Combat.Misc
         {
             _spriteFlash = GetComponent<DamageSpriteFlash>();
             _bloodSpatter = GetComponent<BloodSpatter>();
-            if (this is PlayerCombat) return;
+            if (IsPlayer) return;
             CombatManager.Instance().AddEnemy(this);
         }
 
         public virtual void Kill()
         {
             Destroy(gameObject);
-            if (this is PlayerCombat) return;
+            if (IsPlayer) return;
             CombatManager.Remove(this);
         }
 
@@ -161,7 +163,7 @@ namespace Game.Combat.Misc
         {
             int damageDealt = shot.Attributes().DamageDealt();
             TakeDamage(damageDealt, shot.Direction());
-            if (this is PlayerCombat) return;
+            if (IsPlayer) return;
             PlayerCombat.Instance.UpdateAdrenaline(damageDealt);
         }
 

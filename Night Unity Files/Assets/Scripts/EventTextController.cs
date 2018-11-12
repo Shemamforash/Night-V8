@@ -29,6 +29,7 @@ public class EventTextController : MonoBehaviour
         _player = PlayerCombat.Instance;
     }
 
+    //shelter
     //container
     //shrine
     //outer ring
@@ -64,9 +65,10 @@ public class EventTextController : MonoBehaviour
         _canvasGroup.DOFade(1, 0.5f);
         _text.text = currentEvent.GetEventText();
     }
-    
+
     public void Update()
     {
+        if (CheckForNearbyShelterCharacter()) return;
         if (CheckForNearbyContainer()) return;
         if (CheckForNearbyShrines()) return;
         if (CheckForOuterRing()) return;
@@ -74,6 +76,16 @@ public class EventTextController : MonoBehaviour
         _currentCombatEvent = null;
         if (_canvasGroup.alpha == 0) return;
         _canvasGroup.DOFade(0, 0.5f);
+    }
+
+    private bool CheckForNearbyShelterCharacter()
+    {
+        ShelterCharacterBehaviour shelterCharacter = ShelterCharacterBehaviour.Instance();
+        if (shelterCharacter == null) return false;
+        if (shelterCharacter.InRange() > 1.5f) return false;
+        if (!shelterCharacter.ShowText()) return false;
+        SetCurrentCombatEvent(shelterCharacter);
+        return true;
     }
 
     private bool CheckForRadiance()

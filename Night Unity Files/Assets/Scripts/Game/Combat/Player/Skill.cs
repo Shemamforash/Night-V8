@@ -77,12 +77,12 @@ namespace Game.Combat.Player
         {
             if (Target() == null && _skillValue.NeedsTarget) return false;
             if (!freeSkill && !PlayerCombat.Instance.ConsumeAdrenaline(AdrenalineCost())) return false;
+            InstantEffect();
             if (_skillValue.AppliesToMagazine)
             {
                 PlayerCombat.Instance.OnFireActions.Add(MagazineEffect);
                 ActiveSkillController.Play();
             }
-            else InstantEffect();
 
             UIMagazineController.UpdateMagazineUi();
             PlayerCombat.Instance.Player.BrandManager.IncreaseSkillsUsed();
@@ -107,11 +107,6 @@ namespace Game.Combat.Player
 
         protected virtual void InstantEffect()
         {
-        }
-
-        protected static Shot CreateShot()
-        {
-            return Shot.Create(PlayerCombat.Instance);
         }
 
         private class SkillValue

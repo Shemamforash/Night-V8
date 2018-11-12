@@ -84,7 +84,7 @@ namespace Game.Combat.Generation
 
         private void GenerateCharacter()
         {
-            if (_region._characterHere == null) return;
+            if (_region.CharacterHere == null) return;
             ShelterCharacterBehaviour.Generate(_region.CharacterPosition);
         }
 
@@ -251,7 +251,7 @@ namespace Game.Combat.Generation
         protected virtual void PlaceItems()
         {
             _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(400, PathingGrid.CombatAreaWidth, false, 0.8f));
-            if (_region._characterHere != null)
+            if (_region.CharacterHere != null)
             {
                 _availablePositions.Sort((a, b) => -a.magnitude.CompareTo(b.magnitude));
                 for (int i = _availablePositions.Count - 1; i >= 0; --i)

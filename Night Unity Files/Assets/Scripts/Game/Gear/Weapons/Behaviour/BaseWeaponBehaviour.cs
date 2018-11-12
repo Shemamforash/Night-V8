@@ -25,7 +25,7 @@ namespace Game.Gear.Weapons
             Reload();
         }
 
-        public void Reload()
+        public virtual void Reload()
         {
             AmmoInMagazine = (int) WeaponAttributes.Val(AttributeType.Capacity);
             _fired = false;

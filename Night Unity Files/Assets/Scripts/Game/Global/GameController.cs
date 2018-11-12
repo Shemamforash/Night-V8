@@ -11,7 +11,6 @@ public class GameController : MonoBehaviour {
 	public void Awake()
 	{
 		_starting = false;
-		Cursor.visible = false;
 	}
 
 	public void StartGame(bool newGame, Travel travel = null)

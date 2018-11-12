@@ -49,7 +49,7 @@ namespace Game.Combat.Ui
 
         public static void SetWeapon(BaseWeaponBehaviour weapon)
         {
-            _weapon = PlayerCombat.Instance._weaponBehaviour;
+            _weapon = weapon;
             if (weapon == null) return;
             _capacity = weapon.Capacity();
             MagazineAmmo.ForEach(a => a.Destroy());

@@ -118,7 +118,11 @@ namespace Game.Characters
         private static Player GenerateCharacter(CharacterClass characterClass)
         {
             CharacterTemplate t = FindClass(characterClass);
-            return GenerateCharacterObject(t);
+            Weapon weapon = WeaponGenerator.GenerateWeapon();
+            Inventory.Move(weapon);
+            Player p = GenerateCharacterObject(t);
+            p.EquipWeapon(weapon);
+            return p;
         }
 
         public static Player GenerateRandomCharacter()

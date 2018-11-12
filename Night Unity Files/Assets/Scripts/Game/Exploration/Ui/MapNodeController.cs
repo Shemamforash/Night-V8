@@ -92,6 +92,7 @@ namespace Game.Exploration.Ui
 
         public void Hide()
         {
+            _audioSource.DOFade(0, 1f);
             _ring1.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
             _ring2.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
             _ring3.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);

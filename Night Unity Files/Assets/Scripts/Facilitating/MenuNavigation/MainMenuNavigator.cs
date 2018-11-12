@@ -86,7 +86,6 @@ namespace Facilitating.MenuNavigation
         public void Awake()
         {
             _skipping = false;
-            Cursor.visible = false;
             SaveController.LoadSettings();
             CacheGameObjects();
             CreateFadeInSequence();

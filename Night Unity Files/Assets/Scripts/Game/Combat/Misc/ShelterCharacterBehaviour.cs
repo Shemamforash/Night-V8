@@ -17,27 +17,37 @@ using UnityEngine;
 
 namespace Game.Combat.Misc
 {
-    public class ShelterCharacterBehaviour : CharacterCombat
+    public class ShelterCharacterBehaviour : CharacterCombat, ICombatEvent
     {
         private static GameObject _shelterCharacterPrefab;
-        private TextMeshProUGUI _text;
         private MoveBehaviour _moveBehaviour;
         private Cell _targetLastCell;
         private bool _leaving;
         private int _maxEncounterSize;
+        private bool _spawnEnemies;
+        private static ShelterCharacterBehaviour _instance;
+        private bool _shouldShowText = true;
+        private readonly string[] _textStrings = {"Please help me", "Protect me", "I thought this was the end", "Please let me come with you"};
+        private string _textToShow;
+
+        public static ShelterCharacterBehaviour Instance()
+        {
+            return _instance;
+        }
 
         protected override void Awake()
         {
+            _textToShow = _textStrings.RandomElement();
+            IsPlayer = true;
             base.Awake();
-            _text = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
-            _text.color = UiAppearanceController.InvisibleColour;
+            _instance = this;
             HealthController.SetInitialHealth(1000, this);
             transform.SetParent(GameObject.Find("World").transform);
             _moveBehaviour = GetComponent<MoveBehaviour>();
             MovementController.SetSpeed(1);
             ArmourController = new ArmourController(null);
             ArmourController.AutoFillSlots(10);
-            _maxEncounterSize = (WorldState._currentLevel + 1) * 5;
+            _maxEncounterSize = WorldState._currentLevel * 5;
         }
 
         public override Weapon Weapon()
@@ -59,14 +69,9 @@ namespace Game.Combat.Misc
             Debug.Log(position);
         }
 
-        public void Enter()
+        public bool ShowText()
         {
-            Sequence sequence = DOTween.Sequence();
-            _text.text = "Protect me";
-            sequence.Append(_text.DOFade(1, 1));
-            sequence.AppendInterval(3);
-            sequence.Append(_text.DOFade(0, 1));
-            _moveBehaviour.GoToCell(PathingGrid.GetCellOutOfRange(transform.position));
+            return _shouldShowText;
         }
 
         public void Update()
@@ -78,6 +83,7 @@ namespace Game.Combat.Misc
         public override void MyUpdate()
         {
             if (_leaving) return;
+            if (!_spawnEnemies) return;
             UpdateEnemyTarget();
             UpdateEnemySpawns();
             if (!CurrentCell().IsEdgeCell) return;
@@ -88,8 +94,9 @@ namespace Game.Combat.Misc
             {
                 ResetEnemyTargets();
                 Destroy(gameObject);
-                Characters.Player character = CombatManager.Region()._characterHere;
+                Characters.Player character = CombatManager.Region().CharacterHere;
                 CharacterManager.AddCharacter(character);
+                CombatManager.Region().CharacterHere = null;
             });
         }
 
@@ -97,6 +104,7 @@ namespace Game.Combat.Misc
         {
             int currentSize = CombatManager.Enemies().Sum(e => ((EnemyBehaviour) e).Enemy.Template.Value);
             int size = _maxEncounterSize - currentSize;
+            if (size == 0 || !Helper.RollDie(0, 30)) return;
             List<EnemyTemplate> allowedTypes = WorldState.GetAllowedHumanEnemyTypes();
             while (size > 0)
             {
@@ -108,7 +116,7 @@ namespace Game.Combat.Misc
 
         private void ResetEnemyTargets()
         {
-            CombatManager.Enemies().ForEach(e => ((EnemyBehaviour)e).SetTarget(PlayerCombat.Instance));
+            CombatManager.Enemies().ForEach(e => ((EnemyBehaviour) e).SetTarget(PlayerCombat.Instance));
         }
 
         private void UpdateEnemyTarget()
@@ -116,7 +124,7 @@ namespace Game.Combat.Misc
             CombatManager.Enemies().ForEach(e =>
             {
                 float distanceToPlayer = e.transform.Distance(PlayerCombat.Instance.transform);
-                CanTakeDamage target = distanceToPlayer < 3f ? PlayerCombat.Instance : (CanTakeDamage)this;
+                CanTakeDamage target = distanceToPlayer < 3f ? PlayerCombat.Instance : (CanTakeDamage) this;
                 ((EnemyBehaviour) e).SetTarget(target);
             });
         }
@@ -135,6 +143,23 @@ namespace Game.Combat.Misc
         public override void TakeShotDamage(Shot shot)
         {
             HealthController.TakeDamage(shot.Attributes().DamageDealt());
+        }
+
+        public float InRange()
+        {
+            return transform.Distance(PlayerCombat.Instance.transform);
+        }
+
+        public string GetEventText()
+        {
+            return _textToShow;
+        }
+
+        public void Activate()
+        {
+            _spawnEnemies = true;
+            _shouldShowText = false;
+            _moveBehaviour.GoToCell(PathingGrid.GetCellOutOfRange(transform.position));
         }
     }
 }

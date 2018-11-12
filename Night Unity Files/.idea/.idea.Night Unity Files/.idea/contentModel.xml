@@ -631,7 +631,6 @@
                 <e p="Mine.cs" t="Include" />
                 <e p="SaltBehaviour.cs" t="Include" />
                 <e p="ShelterCharacterBehaviour.cs" t="Include" />
-                <e p="ShelterCharacterColliderBehaviour.cs" t="Include" />
                 <e p="SickenBehaviour.cs" t="Include" />
                 <e p="SkillBar.cs" t="Include" />
                 <e p="TargetBehaviour.cs" t="Include" />

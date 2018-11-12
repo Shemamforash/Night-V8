@@ -61,7 +61,6 @@ namespace Game.Combat.Generation
 
         public override void Awake()
         {
-            Cursor.visible = false;
             base.Awake();
             _instance = this;
             Resume();
@@ -71,7 +70,6 @@ namespace Game.Combat.Generation
             _regionNameText = regionNameObject.FindChildWithName<TextMeshProUGUI>("Text");
             _regionNameText.text = "";
             Sequence sequence = DOTween.Sequence();
-            sequence.AppendInterval(0.5f);
             sequence.AppendCallback(() =>
             {
                 _regionUnderline.color = Color.white;
@@ -112,7 +110,7 @@ namespace Game.Combat.Generation
         {
             if (!IsCombatActive()) return;
             AIMoveManager.UpdateMoveBehaviours();
-            if (Time.timeSinceLevelLoad < 3f) return;
+            if (Time.timeSinceLevelLoad < 1f) return;
             PlayerCombat.Instance.MyUpdate();
             for (int i = _enemies.Count - 1; i >= 0; --i)
             {
