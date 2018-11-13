@@ -9,10 +9,15 @@ namespace Game.Combat.Generation
         {
         }
 
-        public void SetItem(InventoryItem item)
+        public void SetResource(ResourceItem item)
         {
             Item = item;
             if (item.Template?.ResourceType == "Meat") ImageLocation = "Meat";   
+        }
+        
+        public void SetItem(GearItem item)
+        {
+            Item = item;
         }
     }
 }

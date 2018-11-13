@@ -31,6 +31,7 @@ public class SaveIconController : MonoBehaviour
     private IEnumerator Spin()
     {
         Thread thread = new Thread(SaveController.SaveGame);
+        thread.Start();
         ParticleSystem.MainModule main = _spinParticles.main;
         main.startColor = Color.white;
         _spinParticles.Play();

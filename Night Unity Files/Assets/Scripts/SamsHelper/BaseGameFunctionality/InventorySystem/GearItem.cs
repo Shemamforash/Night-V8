@@ -2,31 +2,37 @@
 using Facilitating.Persistence;
 using Game.Characters;
 using Game.Gear;
-using Game.Global;
 using SamsHelper.Libraries;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
-    public abstract class GearItem : InventoryItem
+    public abstract class GearItem : NamedItem
     {
         private ItemQuality _itemQuality;
         public Character EquippedCharacter;
+        private static int _idCounter;
+        private int _id;
 
-        protected GearItem(string name, ItemQuality itemQuality) : base(name, GameObjectType.Gear)
+        protected GearItem(string name, ItemQuality itemQuality) : base(name)
         {
+            _id = _idCounter;
+            ++_idCounter;
             SetQuality(itemQuality);
         }
 
-        public override XmlNode Save(XmlNode root)
+        public virtual XmlNode Save(XmlNode root)
         {
-            root = base.Save(root);
+            root.CreateChild("Name", Name);
+            root.CreateChild("Id", _id);
             root.CreateChild("Quality", (int) _itemQuality);
             return root;
         }
 
-        public override void Load(XmlNode root)
+        protected virtual void Load(XmlNode root)
         {
-            base.Load(root);
+            Name = root.StringFromNode("Name");
+            _id = root.IntFromNode("Id");
+            if (_id > _idCounter) _idCounter = _id + 1;
             _itemQuality = (ItemQuality) root.IntFromNode("Quality");
         }
 
@@ -48,5 +54,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         }
 
         public abstract string GetSummary();
+
+        public int ID()
+        {
+            return _id;
+        }
     }
 }

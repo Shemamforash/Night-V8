@@ -201,32 +201,6 @@ namespace SamsHelper
             public override string Message => "Tried to add existing attribute to container " + _type;
         }
 
-        public class CannotAddItemTypeToInventoryException : Exception
-        {
-            private readonly GameObjectType _gameObjectType;
-
-            public CannotAddItemTypeToInventoryException(GameObjectType gameObjectType)
-            {
-                _gameObjectType = gameObjectType;
-            }
-
-            public override string Message => "Tried to add " + _gameObjectType + " to inventory, but no UI has been created to hold it";
-        }
-
-        public class InvalidInventoryItemException : Exception
-        {
-            private readonly string _desiredType;
-            private readonly MyGameObject _item;
-
-            public InvalidInventoryItemException(MyGameObject item, string desiredType)
-            {
-                _item = item;
-                _desiredType = desiredType;
-            }
-
-            public override string Message => "Tried to add " + _item.Name + " with type " + _item.GetType() + " to inventory but only " + _desiredType + " can be added to this inventory.";
-        }
-
         public class ThresholdValueNotReachableException : Exception
         {
             private readonly string _name;
@@ -296,32 +270,6 @@ namespace SamsHelper
             }
 
             public override string Message => "Tried to assign skill to slot " + _slot + " in skill bar of size " + _noSlots + ".";
-        }
-
-        public class TryRemoveItemDoesNotExistException : Exception
-        {
-            private readonly string _itemName, _menuListName;
-
-            public TryRemoveItemDoesNotExistException(MyGameObject item, GameObject menuList)
-            {
-                _itemName = item.Name;
-                _menuListName = menuList.name;
-            }
-
-            public override string Message => "Tried to remove item '" + _itemName + "' from MenuList '" + _menuListName + "' but it does not exist.";
-        }
-
-        public class ItemAlreadyExistsInMenuListException : Exception
-        {
-            private readonly string _itemName, _menuListName;
-
-            public ItemAlreadyExistsInMenuListException(MyGameObject item, GameObject menuList)
-            {
-                _itemName = item.Name;
-                _menuListName = menuList.name;
-            }
-
-            public override string Message => "Tried to add item '" + _itemName + "' to MenuList '" + _menuListName + "' but it has already been added.";
         }
 
         public class MoreAmmoConsumedThanAvailableException : Exception

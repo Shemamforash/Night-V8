@@ -23,7 +23,6 @@ namespace Game.Combat.Enemies
     public class Enemy : Character
     {
         public readonly EnemyTemplate Template;
-        private bool IsDead;
         private static GameObject _enemyPrefab;
         private static GameObject _footStepPrefab, _trailPrefab, _hoofprintPrefab;
         private static readonly Dictionary<EnemyType, Sprite> _enemySprites = new Dictionary<EnemyType, Sprite>();
@@ -109,7 +108,7 @@ namespace Game.Combat.Enemies
         {
             if (_enemyPrefab == null) _enemyPrefab = Resources.Load<GameObject>("Prefabs/Combat/Enemies/Default Enemy");
             GameObject enemyObject = GameObject.Instantiate(_enemyPrefab);
-            enemyObject.name = Template.EnemyType.ToString() + ID();
+            enemyObject.name = Template.EnemyType.ToString();
             AssignSprite(enemyObject);
             AssignTrail(enemyObject);
             EnemyBehaviour enemyBehaviour;
@@ -186,11 +185,6 @@ namespace Game.Combat.Enemies
             return enemyBehaviour;
         }
 
-        public void Kill()
-        {
-            IsDead = true;
-        }
-
         private Loot DropHumanLoot(Vector2 position)
         {
             SaltBehaviour.Create(position, Template.DropCount);
@@ -221,13 +215,13 @@ namespace Game.Combat.Enemies
 
         private Loot DropAnimalLoot(Vector2 position)
         {
-            InventoryItem item;
+            ResourceItem item;
             if (Template.EnemyType == EnemyType.Grazer || Template.EnemyType == EnemyType.Watcher && Random.Range(0, 3) == 1)
                 item = ResourceTemplate.Create("Skin");
             else
                 item = ResourceTemplate.GetMeat();
             Loot loot = new Loot(position);
-            loot.SetItem(item);
+            loot.SetResource(item);
             return loot;
         }
 

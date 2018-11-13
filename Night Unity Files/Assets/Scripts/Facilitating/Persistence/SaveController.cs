@@ -9,15 +9,20 @@ namespace Facilitating.Persistence
 {
     public static class SaveController
     {
-        private static readonly string GameSaveLocation = Application.persistentDataPath + "/Saves/FullSave.xml";
-        private static readonly string SettingsSaveLocation = Application.persistentDataPath + "/Saves/GameSettings.xml";
+        private static readonly string SaveDirectory = Application.persistentDataPath + "/Saves";
+        private static readonly string GameSaveLocation = SaveDirectory + "/FullSave.xml";
+        private static readonly string SettingsSaveLocation = SaveDirectory + "/GameSettings.xml";
         private static XmlDocument _saveDoc;
         public static Travel ResumeInCombat;
 
 
         public static void SaveGame()
         {
-            Save(GameSaveLocation);
+            TryCreateDirectory();
+            _saveDoc = new XmlDocument();
+            XmlNode root = _saveDoc.CreateChild("BTVSave");
+            WorldState.Save(root);
+            _saveDoc.Save(GameSaveLocation);
         }
 
         public static void ClearSave()
@@ -84,18 +89,8 @@ namespace Facilitating.Persistence
 
         private static void TryCreateDirectory()
         {
-            string saveDirectory = Application.persistentDataPath + "/Saves";
-            if (Directory.Exists(saveDirectory)) return;
-            Directory.CreateDirectory(saveDirectory);
-        }
-
-        private static void Save(string fileLocation)
-        {
-            TryCreateDirectory();
-            _saveDoc = new XmlDocument();
-            XmlNode root = _saveDoc.CreateChild("BTVSave");
-            WorldState.Save(root);
-            _saveDoc.Save(fileLocation);
+            if (Directory.Exists(SaveDirectory)) return;
+            Directory.CreateDirectory(SaveDirectory);
         }
 
         public static void LoadSettings()

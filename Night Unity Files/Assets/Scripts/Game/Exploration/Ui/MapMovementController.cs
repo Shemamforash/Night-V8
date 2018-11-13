@@ -26,6 +26,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
     private static MapMovementController _instance;
     private bool _pressed;
     private Vector3 velocity;
+    private static bool _visible;
 
     public void Awake()
     {
@@ -38,10 +39,11 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     public static void Enter(Player player)
     {
+        _visible = true;
         ResourcesUiController.Hide();
         _player = player;
         _gritMarker.SetValue(_player.Attributes.Get(AttributeType.Grit));
-        _currentRegion = _player.TravelAction.GetCurrentNode();
+        _currentRegion = _player.TravelAction.GetCurrentRegion();
         MapCamera.DOOrthoSize(7, 1f);
         InputHandler.SetCurrentListener(_instance);
         Recenter();
@@ -70,6 +72,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     public void FixedUpdate()
     {
+        if (!_visible) return;
         if (_player == null) return;
         if (!_pressed && _nearestRegion != null) LocateToNearestRegion();
         _direction.Normalize();
@@ -95,6 +98,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     public void Update()
     {
+        if (!_visible) return;
         if (_player == null) return;
         float nearestDistance = 1000;
         Region newNearestRegion = null;
@@ -130,7 +134,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
                 _direction.y += direction;
                 break;
             case InputAxis.Cover:
-                if (!MapMenuController.IsReturningFromCombat) ReturnToGame(_currentRegion);
+                if (!MapMenuController.IsReturningFromCombat) ReturnToGame(null);
                 break;
             case InputAxis.Fire:
                 TravelToRegion();
@@ -173,9 +177,10 @@ public class MapMovementController : MonoBehaviour, IInputListener
     private static void ReturnToGame(Region region)
     {
         MapMenuController.FlashCloseButton();
-        region.MapNode().Enter();
+        region?.MapNode().Enter();
         MenuStateMachine.ShowMenu("Game Menu");
         InputHandler.SetCurrentListener(null);
+        _visible = false;
     }
 
     public void OnInputUp(InputAxis axis)

@@ -15,7 +15,7 @@ public abstract class ContainerController
 {
     public static readonly List<ContainerBehaviour> Containers = new List<ContainerBehaviour>();
     private readonly Vector2 _position;
-    protected InventoryItem Item;
+    protected NamedItem Item;
     protected string PrefabLocation = "Container";
     protected string ImageLocation;
 
@@ -39,50 +39,50 @@ public abstract class ContainerController
 
     public virtual void Take()
     {
+        Player player = CharacterManager.SelectedCharacter;
+
         int resourceBonus = (int) PlayerCombat.Instance.Player.Attributes.ResourceFindModifier;
         if (resourceBonus != 0)
         {
-            ResourceTemplate resourceTemplate = Item.Template;
-            if (resourceTemplate == null) return;
-            if (resourceTemplate.ResourceType != "Resource") return;
-            if (resourceBonus > 0) Item.Increment(resourceBonus);
-            else
+            ResourceItem resourceItem = Item as ResourceItem;
+            if (resourceItem != null)
             {
-                int quantity = Item.Quantity();
-                if (quantity - resourceBonus <= 0) resourceBonus = quantity - 1;
-                Item.Decrement(resourceBonus);
+                ResourceTemplate resourceTemplate = resourceItem.Template;
+                if (resourceTemplate == null) return;
+                if (resourceTemplate.ResourceType != "Resource") return;
+                if (resourceBonus > 0) resourceItem.Increment(resourceBonus);
+                else
+                {
+                    int quantity = resourceItem.Quantity();
+                    if (quantity - resourceBonus <= 0) resourceBonus = quantity - 1;
+                    resourceItem.Decrement(resourceBonus);
+                }
+
+                switch (resourceTemplate.ResourceType)
+                {
+                    case "Water":
+                        player.BrandManager.IncreaseWaterFound();
+                        break;
+                    case "Plant":
+                        player.BrandManager.IncreaseFoodFound();
+                        break;
+                    case "Meat":
+                        player.BrandManager.IncreaseFoodFound();
+                        break;
+                    case "Resource":
+                        player.BrandManager.IncreaseResourceFound();
+                        break;
+                }
             }
         }
 
-        Player player = CharacterManager.SelectedCharacter;
-        if (Item.Template != null)
-        {
-            switch (Item.Template.ResourceType)
-            {
-                case "Water":
-                    player.BrandManager.IncreaseWaterFound();
-                    break;
-                case "Plant":
-                    player.BrandManager.IncreaseFoodFound();
-                    break;
-                case "Meat":
-                    player.BrandManager.IncreaseFoodFound();
-                    break;
-                case "Resource":
-                    player.BrandManager.IncreaseResourceFound();
-                    break;
-            }
-        }
-        else
-        {
-            player.BrandManager.IncreaseItemsFound();
-        }
+        if (Item is GearItem) player.BrandManager.IncreaseItemsFound();
 
-        if(Item is Weapon) Inventory.Move((Weapon)Item);
+        if (Item is Weapon) Inventory.Move((Weapon) Item);
         else if (Item is Armour) Inventory.Move((Armour) Item);
         else if (Item is Accessory) Inventory.Move((Accessory) Item);
         else if (Item is Inscription) Inventory.Move((Inscription) Item);
-        else Inventory.Move(Item);
+        else Inventory.Move((ResourceItem) Item);
     }
 
     public string GetContents()

@@ -13,7 +13,7 @@ namespace Game.Combat.Generation
         //place items
         //place echo
         //place obstacles
-        
+
         protected override void Generate()
         {
             PlaceShrine();
@@ -221,7 +221,7 @@ namespace Game.Combat.Generation
 
                 polygon.Sort((a, b) => AdvancedMaths.AngleFromUp(Vector2.zero, a).CompareTo(AdvancedMaths.AngleFromUp(Vector2.zero, b)));
 
-                Barrier barrier = new Barrier(polygon, "Polygon " + GetObjectNumber(), centre, barriers);
+                new Barrier(polygon, "Polygon " + GetObjectNumber(), centre, barriers);
             }
         }
     }

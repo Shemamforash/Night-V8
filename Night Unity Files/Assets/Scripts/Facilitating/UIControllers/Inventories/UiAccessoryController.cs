@@ -2,19 +2,39 @@
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Gear.Armour;
-using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
+using UnityEngine;
 
 namespace Facilitating.UIControllers
 {
     public class UiAccessoryController : UiInventoryMenuController
     {
         private ListController _accessoryList;
+        private EnhancedText _equippedName, _equippedDescription;
 
         protected override void CacheElements()
         {
             _accessoryList = gameObject.FindChildWithName<ListController>("List");
+            GameObject equipped = gameObject.FindChildWithName("Equipped");
+            _equippedName = equipped.FindChildWithName<EnhancedText>("Name");
+            _equippedDescription = equipped.FindChildWithName<EnhancedText>("Description");
+        }
+
+        private void UpdateEquipped()
+        {
+            Accessory equippedAccessory = CharacterManager.SelectedCharacter.EquippedAccessory;
+            if (equippedAccessory == null)
+            {
+                _equippedName.SetText("No Accessory Equipped");
+                _equippedDescription.SetText("-");
+            }
+            else
+            {
+                _equippedName.SetText(equippedAccessory.Name);
+                _equippedDescription.SetText(equippedAccessory.GetSummary());
+            }
         }
 
         protected override void Initialise()
@@ -41,9 +61,8 @@ namespace Facilitating.UIControllers
             protected override void Update(object o)
             {
                 Accessory accessory = (Accessory) o;
-                CentreText.SetText(accessory.Name);
-                bool equipped = CharacterManager.SelectedCharacter.EquippedAccessory == accessory;
-                LeftText.SetText(equipped ? "Equipped" : "Not Equipped");
+                CentreText.SetText("");
+                LeftText.SetText(accessory.Name);
                 RightText.SetText(accessory.GetSummary());
             }
         }
@@ -52,6 +71,7 @@ namespace Facilitating.UIControllers
         {
             _accessoryList.Show(GetAvailableAccessories);
             TutorialManager.TryOpenTutorial(8);
+            UpdateEquipped();
         }
 
         private static List<object> GetAvailableAccessories()

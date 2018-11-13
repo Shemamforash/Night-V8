@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -20,13 +21,11 @@ namespace Game.Gear.Weapons
         private Inscription _inscription;
         private bool _inscriptionApplied;
 
-        private Weapon(WeaponClass weaponClass, ItemQuality _itemQuality) : base(weaponClass.Type.ToString(), _itemQuality)
+        private Weapon(WeaponClass weaponClass, ItemQuality _itemQuality) : base(_itemQuality + " " + weaponClass.Name, _itemQuality)
         {
             WeaponAttributes = new WeaponAttributes(this, weaponClass);
             WeaponSkillOne = WeaponSkills.GetWeaponSkillOne(this);
             WeaponSkillTwo = WeaponSkills.GetWeaponSkillTwo(this);
-            string quality = Quality().ToString();
-            Name = quality + " " + WeaponAttributes.GetWeaponClass();
         }
 
         public static Weapon LoadWeapon(XmlNode root)
@@ -39,15 +38,20 @@ namespace Game.Gear.Weapons
             return weapon;
         }
 
-        public override void Load(XmlNode root)
+        protected override void Load(XmlNode root)
         {
             base.Load(root);
             WeaponAttributes.Load(root);
+            XmlNode inscriptionNode = root.SelectSingleNode("Inscription");
+            if (inscriptionNode == null) return;
+            Inscription inscription = Inscription.LoadInscription(inscriptionNode);
+            SetInscription(inscription);
         }
 
         public override XmlNode Save(XmlNode root)
         {
-            root = base.Save(root);
+            root = root.CreateChild("Weapon");
+            base.Save(root);
             WeaponAttributes.Save(root);
             _inscription?.Save(root);
             return root;
@@ -116,8 +120,6 @@ namespace Game.Gear.Weapons
             accuracy *= MaxAccuracyOffsetInDegrees;
             return accuracy;
         }
-
-        public override bool IsStackable() => false;
 
         public WeaponType WeaponType() => WeaponAttributes.WeaponType;
 

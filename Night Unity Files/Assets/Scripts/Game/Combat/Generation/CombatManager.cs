@@ -66,16 +66,8 @@ namespace Game.Combat.Generation
             Resume();
             GameObject regionNameObject = GameObject.Find("Screen Fader");
             _regionUnderline = regionNameObject.FindChildWithName<Image>("Underline");
-            _regionUnderline.color = UiAppearanceController.InvisibleColour;
             _regionNameText = regionNameObject.FindChildWithName<TextMeshProUGUI>("Text");
-            _regionNameText.text = "";
-            Sequence sequence = DOTween.Sequence();
-            sequence.AppendCallback(() =>
-            {
-                _regionUnderline.color = Color.white;
-                _regionNameText.text = GetCurrentRegionName();
-            });
-            _paused = false;
+            _regionNameText.text = GetCurrentRegionName();
         }
 
         private string GetCurrentRegionName()
@@ -101,6 +93,10 @@ namespace Game.Combat.Generation
                         regionName = "The Throne of Corypthos";
                         break;
                 }
+            }
+            else if (_currentRegion.GetRegionType() == RegionType.Rite)
+            {
+                regionName = "Chamber of Rites";
             }
 
             return regionName;
@@ -215,7 +211,8 @@ namespace Game.Combat.Generation
             List<EnemyBehaviour> currentFlitHerd = new List<EnemyBehaviour>();
             Queue<EnemyBehaviour> watchers = new Queue<EnemyBehaviour>();
 
-            _currentRegion.Enemies().ForEach(e =>
+            List<Enemy> enemies = _currentRegion.GetEnemies();
+            enemies.ForEach(e =>
             {
                 EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
                 switch (e.Template.EnemyType)
@@ -305,6 +302,7 @@ namespace Game.Combat.Generation
             }
 
             Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
+            if (_currentRegion.GetRegionType() == RegionType.Rite) _currentRegion = Rite.GetLastRegion();
             int gritCost = RoutePlotter.RouteBetween(_currentRegion, MapGenerator.GetInitialNode()).Count - 1;
             travelAction.TravelTo(MapGenerator.GetInitialNode(), gritCost);
             SceneChanger.GoToGameScene();
@@ -325,7 +323,7 @@ namespace Game.Combat.Generation
 
         public static EnemyBehaviour QueueEnemyToAdd(EnemyTemplate type, CharacterCombat target = null)
         {
-            Enemy e = _currentRegion.AddEnemy(type);
+            Enemy e = type.Create();
             EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
             if (target != null) enemyBehaviour.SetTarget(target);
             (enemyBehaviour as UnarmedBehaviour)?.Alert(true);

@@ -91,7 +91,8 @@ namespace Game.Gear
 
         public override XmlNode Save(XmlNode root)
         {
-            root = base.Save(root);
+            root = root.CreateChild("Inscription");
+            base.Save(root);
             root.CreateChild("InscriptionTemplate", _template.Name);
             return root;
         }
@@ -100,7 +101,6 @@ namespace Game.Gear
         {
             ReadTemplates();
             string templateString = root.StringFromNode("InscriptionTemplate");
-            Debug.Log(templateString);
             InscriptionTemplate template = _inscriptionTemplates.First(t => t.Name == templateString);
             ItemQuality quality = (ItemQuality) root.IntFromNode("Quality");
             Inscription inscription = new Inscription(template, quality);

@@ -125,9 +125,19 @@ public class TutorialManager : MonoBehaviour
         ReadTutorialParts();
         root = root.SelectSingleNode("Tutorial");
         _tutorialActive = root.BoolFromNode("TutorialActive");
-        root = root.SelectSingleNode("TutorialParts");
-        foreach (int section in _tutorialParts.Keys)
-            _tutorialParts[section].ForEach(p => p.LoadTutorialPart(root));
+        if (!_tutorialActive) return;
+        foreach (XmlNode sectionNode in root.SelectSingleNode("TutorialParts").ChildNodes)
+        {
+            int sectionNumber = sectionNode.IntFromNode("SectionNumber");
+            foreach (XmlNode partNode in sectionNode.SelectNodes("Part"))
+            {
+                int partNumber = partNode.IntFromNode("PartNumber");
+                bool completed = partNode.BoolFromNode("Completed");
+                if (!completed) continue;
+                Debug.Log(sectionNumber + " " + partNumber);
+                _tutorialParts[sectionNumber][partNumber].MarkComplete();
+            }
+        }
     }
 
     public static void Save(XmlNode root)
@@ -136,7 +146,11 @@ public class TutorialManager : MonoBehaviour
         root.CreateChild("TutorialActive", _tutorialActive);
         root = root.CreateChild("TutorialParts");
         foreach (int section in _tutorialParts.Keys)
-            _tutorialParts[section].ForEach(p => p.SaveTutorialPart(root));
+        {
+            XmlNode tutorialSection = root.CreateChild("Section");
+            tutorialSection.CreateChild("SectionNumber", section);
+            _tutorialParts[section].ForEach(p => p.SaveTutorialPart(tutorialSection));
+        }
     }
 
     private static void ReadTutorialParts()
@@ -184,15 +198,10 @@ public class TutorialManager : MonoBehaviour
             SectionNumber = node.IntFromNode("SectionNumber");
         }
 
-        public void LoadTutorialPart(XmlNode root)
-        {
-            root = root.SelectSingleNode(PartNumber.ToString());
-            _completed = root.BoolFromNode("Completed");
-        }
-
         public void SaveTutorialPart(XmlNode root)
         {
-            root = root.CreateChild(PartNumber.ToString());
+            root = root.CreateChild("Part");
+            root.CreateChild("PartNumber", PartNumber);
             root.CreateChild("Completed", _completed);
         }
 

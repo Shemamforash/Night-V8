@@ -21,7 +21,6 @@ public class GameController : MonoBehaviour {
 		else {
 			if (travel != null) travel.Enter();
 			else SceneChanger.GoToGameScene();
-			MenuStateMachine.ShowMenu("Loading Screen");
 		}
 	}
 

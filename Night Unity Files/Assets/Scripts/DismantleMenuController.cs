@@ -169,7 +169,6 @@ public class DismantleMenuController : Menu
         {
             GearItem item = (GearItem) o;
             string name = item.Name;
-            if (item.EquippedCharacter != null) name += " (E)";
             _text.SetText(name);
         }
     }

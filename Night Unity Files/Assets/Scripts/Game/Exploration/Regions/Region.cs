@@ -22,7 +22,6 @@ namespace Game.Exploration.Regions
     public class Region : Node
     {
         public string Name;
-        private readonly List<Enemy> _enemies = new List<Enemy>();
         private RegionType _regionType;
         private bool _discovered, _seen, _generated;
         public List<Barrier> Barriers = new List<Barrier>();
@@ -40,6 +39,9 @@ namespace Game.Exploration.Regions
         private string _claimBenefit = "";
         public int RitesRemaining = 3;
         public bool FountainVisited;
+        private static int _currentId;
+        private bool _canHaveEnemies;
+        private GameObject _nodeObject;
 
         public Region() : base(Vector2.zero)
         {
@@ -114,8 +116,6 @@ namespace Game.Exploration.Regions
             {
                 _claimBenefit = "";
                 WorldEventManager.GenerateEvent(new WorldEvent(Name + " has been lost to the darkness"));
-                if (_regionType == RegionType.Animal) GenerateAnimalEncounter();
-                else GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
             }
 
             if (ClaimRemaining % (24 * WorldState.MinutesPerHour) != 0) return;
@@ -195,15 +195,6 @@ namespace Game.Exploration.Regions
             region._claimBenefit = doc.StringFromNode("ClaimBenefit");
             region.RitesRemaining = doc.IntFromNode("RitesRemaining");
             region.FountainVisited = doc.BoolFromNode("FountainVisited");
-
-            foreach (XmlNode enemyNode in doc.SelectSingleNode("Enemies").SelectNodes("Enemy"))
-            {
-                string enemyTypeString = enemyNode.StringFromNode("EnemyType");
-                EnemyType enemyType = EnemyTemplate.StringToType(enemyTypeString);
-                Enemy enemy = new Enemy(EnemyTemplate.GetEnemyTemplate(enemyType));
-                region._enemies.Add(enemy);
-            }
-
             return region;
         }
 
@@ -233,7 +224,6 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("FountainVisited", FountainVisited);
 
             XmlNode enemyNode = regionNode.CreateChild("Enemies");
-            _enemies.ForEach(e => e.Save(enemyNode));
         }
 
         private MapNodeController _mapNode;
@@ -284,56 +274,35 @@ namespace Game.Exploration.Regions
 
         private float DistanceToPoint(Vector3 point) => Vector3.Distance(point, Position);
 
-        public Enemy AddEnemy(EnemyTemplate template)
+        private List<EnemyTemplate> GenerateEncounter(List<EnemyTemplate> allowedTypes)
         {
-            Enemy newEnemy = new Enemy(template);
-            _enemies.Add(newEnemy);
-            return newEnemy;
-        }
-
-        private void GenerateEncounter(List<EnemyTemplate> allowedTypes)
-        {
-            if (!_canHaveEnemies) return;
+            List<EnemyTemplate> templates = new List<EnemyTemplate>();
+            if (!_canHaveEnemies) return templates;
             int size = (int) (0.5 * WorldState.Difficulty() + 4);
-            List<EnemyTemplate> templates = CombatManager.GenerateEnemies(size, allowedTypes);
-            templates.ForEach(template => AddEnemy(template));
+            templates.AddRange(CombatManager.GenerateEnemies(size, allowedTypes));
+            return templates;
         }
-
-        public List<Enemy> Enemies() => _enemies;
 
         public RegionType GetRegionType() => _regionType;
 
-        private void GenerateAnimalEncounter()
+        private List<EnemyTemplate> GenerateAnimalEncounter()
         {
+            List<EnemyTemplate> templates = new List<EnemyTemplate>();
             switch (Random.Range(0, 3))
             {
                 case 0:
-                    for (int i = 0; i < 10; ++i)
-                    {
-                        AddEnemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Grazer));
-                    }
-
-                    for (int i = 0; i < 3; ++i)
-                    {
-                        AddEnemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Watcher));
-                    }
-
+                    for (int i = 0; i < 10; ++i) templates.Add(EnemyTemplate.GetEnemyTemplate(EnemyType.Grazer));
+                    for (int i = 0; i < 3; ++i) templates.Add(EnemyTemplate.GetEnemyTemplate(EnemyType.Watcher));
                     break;
                 case 1:
-                    for (int i = 0; i < Random.Range(1, 4); ++i)
-                    {
-                        AddEnemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Curio));
-                    }
-
+                    for (int i = 0; i < Random.Range(1, 4); ++i) templates.Add(EnemyTemplate.GetEnemyTemplate(EnemyType.Curio));
                     break;
                 case 2:
-                    for (int i = 0; i < 20; ++i)
-                    {
-                        AddEnemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Flit));
-                    }
-
+                    for (int i = 0; i < 20; ++i) templates.Add(EnemyTemplate.GetEnemyTemplate(EnemyType.Flit));
                     break;
             }
+
+            return templates;
         }
 
         private void GenerateShelter()
@@ -371,12 +340,6 @@ namespace Game.Exploration.Regions
             return true;
         }
 
-        public bool Discovered() => _discovered;
-
-        private static int _currentId;
-        private bool _canHaveEnemies;
-        private GameObject _nodeObject;
-
         public bool Seen()
         {
             return _seen;
@@ -385,6 +348,15 @@ namespace Game.Exploration.Regions
         public void ConnectNeighbors()
         {
             _neighborIds.ForEach(i => AddNeighbor(MapGenerator.GetRegionById(i)));
+        }
+
+        public List<Enemy> GetEnemies()
+        {
+            List<Enemy> enemies = new List<Enemy>();
+            if (ClaimRemaining != 0) return enemies;
+            List<EnemyTemplate> templates = _regionType == RegionType.Animal ? GenerateAnimalEncounter() : GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
+            templates.ForEach(t => enemies.Add(t.Create()));
+            return enemies;
         }
     }
 }

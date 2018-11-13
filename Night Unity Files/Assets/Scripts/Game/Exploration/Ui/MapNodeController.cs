@@ -39,6 +39,7 @@ namespace Game.Exploration.Ui
 
         private AudioSource _audioSource;
         public AudioClip _enterClip;
+        private bool _hidden;
 
         public void Awake()
         {
@@ -78,7 +79,9 @@ namespace Game.Exploration.Ui
 
         public void Show()
         {
-            _gritCost = RoutePlotter.RouteBetween(_region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode()).Count - 1;
+            Debug.Log("Show");
+            _hidden = false;
+            _gritCost = RoutePlotter.RouteBetween(_region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion()).Count - 1;
             if (_region.GetRegionType() == RegionType.Gate) _costText.text = "Return home";
             else _costText.text = _gritCost + " Grit";
             _ring1.DOFade(Ring1Alpha, FadeTime).SetUpdate(UpdateType.Normal, true);
@@ -92,7 +95,8 @@ namespace Game.Exploration.Ui
 
         public void Hide()
         {
-            _audioSource.DOFade(0, 1f);
+            _hidden = true;
+            _audioSource.DOFade(0, FadeTime).SetUpdate(UpdateType.Normal, true);
             _ring1.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
             _ring2.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
             _ring3.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
@@ -203,39 +207,42 @@ namespace Game.Exploration.Ui
 
         public void GainFocus()
         {
-            _audioSource.pitch = Random.Range(0.75f, 1.25f);
-            _audioSource.DOFade(0.5f, 1);
+            if (_hidden) return;
+            Debug.Log("focus");
+            _audioSource.pitch = Random.Range(0.9f, 1.1f);
+            _audioSource.volume = 0.8f;
+            _audioSource.DOFade(0.5f, FadeTime).SetUpdate(UpdateType.Normal, true);
 
-            _icon.DOFade(IconAlpha * 2f, 1f);
-            _ring1.DOFade(Ring1Alpha * 2f, 1f);
-            _ring2.DOFade(Ring2Alpha * 2f, 1f);
-            _ring3.DOFade(Ring3Alpha * 2f, 1f);
+            _icon.DOFade(IconAlpha * 2f, 1f).SetUpdate(UpdateType.Normal, true);
+            _ring1.DOFade(Ring1Alpha * 2f, 1f).SetUpdate(UpdateType.Normal, true);
+            _ring2.DOFade(Ring2Alpha * 2f, 1f).SetUpdate(UpdateType.Normal, true);
+            _ring3.DOFade(Ring3Alpha * 2f, 1f).SetUpdate(UpdateType.Normal, true);
 
-            _nameText.DOFade(1f, 1f);
-            _costText.DOFade(1f, 1f);
-            _claimText.DOFade(1f, 1f);
+            _nameText.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
+            _costText.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
+            _claimText.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
             _border.SetSelected();
 
-            transform.DOScale(Vector2.one * 1.25f, 1f);
+            transform.DOScale(Vector2.one * 1.25f, 1f).SetUpdate(UpdateType.Normal, true);
             MapMenuController.SetRoute(_region);
             MapMovementController.UpdateGrit(_gritCost);
         }
 
         public void LoseFocus(float time = 1f)
         {
-            _audioSource.DOFade(0, time);
+            _audioSource.DOFade(0, time).SetUpdate(UpdateType.Normal, true);
 
-            _icon.DOFade(IconAlpha, time);
-            _ring1.DOFade(Ring1Alpha, time);
-            _ring2.DOFade(Ring2Alpha, time);
-            _ring3.DOFade(Ring3Alpha, time);
+            _icon.DOFade(IconAlpha, time).SetUpdate(UpdateType.Normal, true);
+            _ring1.DOFade(Ring1Alpha, time).SetUpdate(UpdateType.Normal, true);
+            _ring2.DOFade(Ring2Alpha, time).SetUpdate(UpdateType.Normal, true);
+            _ring3.DOFade(Ring3Alpha, time).SetUpdate(UpdateType.Normal, true);
 
-            _nameText.DOFade(0.4f, time);
-            _costText.DOFade(0.4f, time);
-            _claimText.DOFade(0.4f, time);
+            _nameText.DOFade(0.4f, time).SetUpdate(UpdateType.Normal, true);
+            _costText.DOFade(0.4f, time).SetUpdate(UpdateType.Normal, true);
+            _claimText.DOFade(0.4f, time).SetUpdate(UpdateType.Normal, true);
             _border.SetActive();
 
-            transform.DOScale(Vector2.one, time);
+            transform.DOScale(Vector2.one, time).SetUpdate(UpdateType.Normal, true);
             MapMovementController.UpdateGrit(0);
         }
 

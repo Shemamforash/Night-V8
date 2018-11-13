@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
-    public class Consumable : InventoryItem
+    public class Consumable : ResourceItem
     {
         private Player _player;
 
-        public Consumable(ResourceTemplate template) : base(template, GameObjectType.Resource)
+        public Consumable(ResourceTemplate template) : base(template)
         {
             Template = template;
         }

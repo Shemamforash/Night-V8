@@ -2,6 +2,8 @@
 using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Player;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 
 namespace Game.Gear.Armour
 {
@@ -18,13 +20,27 @@ namespace Game.Gear.Armour
 
         public void Load(XmlNode doc)
         {
+            XmlNode chestNode = doc.SelectSingleNode("Chest");
+            if (chestNode != null)
+            {
+                int chestId = doc.IntFromNode("Chest");
+                Armour armour = Inventory.FindArmour(chestId);
+                SetChestArmour(armour);
+            }
+
+            XmlNode headNode = doc.SelectSingleNode("Head");
+            if (headNode != null)
+            {
+                int headId = doc.IntFromNode("Head");
+                Armour armour = Inventory.FindArmour(headId);
+                SetHeadArmour(armour);
+            }
         }
 
-        public XmlNode Save(XmlNode doc)
+        public void Save(XmlNode doc)
         {
-            _chest?.Save(doc.CreateChild("Chest"));
-            _head?.Save(doc.CreateChild("Head"));
-            return doc;
+            if (_chest != null) doc.CreateChild("Chest", _chest.ID());
+            if (_head != null) doc.CreateChild("Head", _head.ID());
         }
 
         public void TakeDamage(float amount)
@@ -36,7 +52,7 @@ namespace Game.Gear.Armour
         {
             float remaining = amount;
             if (_chest != null) remaining = _chest.Repair(amount);
-            if (_head != null) _head.Repair(remaining);
+            _head?.Repair(remaining);
         }
 
         public bool DidJustTakeDamage()
@@ -65,6 +81,7 @@ namespace Game.Gear.Armour
 
         public void SetArmour(Armour armour)
         {
+            if (armour == null) return;
             if (armour.GetArmourType() == Armour.ArmourType.Chest)
                 SetChestArmour(armour);
             else

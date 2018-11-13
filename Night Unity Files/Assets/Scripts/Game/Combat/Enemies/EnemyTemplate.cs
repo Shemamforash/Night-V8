@@ -12,7 +12,6 @@ namespace Game.Combat.Enemies
         private static bool _loaded;
         private static readonly Dictionary<EnemyType, EnemyTemplate> EnemyTemplates = new Dictionary<EnemyType, EnemyTemplate>();
         private static readonly List<EnemyType> _enemyTypes = new List<EnemyType>();
-        
         public readonly EnemyType EnemyType;
         public readonly int Health, Speed, Value, DropCount;
         public readonly string DropResource, Species;
@@ -69,6 +68,11 @@ namespace Game.Combat.Enemies
             if (!EnemyTemplates.ContainsKey(enemyType)) throw new Exceptions.EnemyTypeDoesNotExistException(enemyType.ToString());
 
             return EnemyTemplates[enemyType];
+        }
+
+        public Enemy Create()
+        {
+            return new Enemy(this);
         }
     }
 }

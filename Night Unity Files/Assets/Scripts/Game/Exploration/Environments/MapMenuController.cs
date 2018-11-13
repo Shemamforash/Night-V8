@@ -194,7 +194,7 @@ namespace Game.Exploration.Environment
 
         public static void SetRoute(Region to)
         {
-            route = RoutePlotter.RouteBetween(CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode(), to);
+            route = RoutePlotter.RouteBetween(CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion(), to);
         }
 
         public static void FlashCloseButton()

@@ -9,8 +9,6 @@ using UnityEngine.Assertions;
 
 public class WeaponAudioController : MonoBehaviour
 {
-    
-    [SerializeField] private AudioClip _pistolClipIn, _pistolClipOut, _lmgClipIn, _lmgClipOut, _smgClipIn, _smgClipOut, _rifleClipIn, _rifleClipOut, _shotgunClipIn, _shotgunClipOut;
     [SerializeField] public AudioClip SpoolClip;
 
     private AudioPoolController _audioPool;
@@ -38,30 +36,9 @@ public class WeaponAudioController : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void StartReload(WeaponType weaponType)
+    public void StartReload()
     {
-        AudioClip clip = null;
-        switch (weaponType)
-        {
-            case WeaponType.Pistol:
-                clip = _pistolClipOut;
-                break;
-            case WeaponType.Rifle:
-                clip = _rifleClipOut;
-                break;
-            case WeaponType.Shotgun:
-                clip = _shotgunClipOut;
-                break;
-            case WeaponType.SMG:
-                clip = _smgClipOut;
-                break;
-            case WeaponType.LMG:
-                clip = _lmgClipOut;
-                break;
-        }
-
-        if (clip == null) return;
-        _audioPool.PlayClip(clip);
+        _audioPool.PlayClip(AudioClips.ClipOut);
     }
 
     public void DryFire()
@@ -69,30 +46,9 @@ public class WeaponAudioController : MonoBehaviour
         _audioPool.PlayClip(AudioClips.DryFireClips.RandomElement());
     }
 
-    public void StopReload(WeaponType weaponType)
+    public void StopReload()
     {
-        AudioClip clip = null;
-        switch (weaponType)
-        {
-            case WeaponType.Pistol:
-                clip = _pistolClipIn;
-                break;
-            case WeaponType.Rifle:
-                clip = _rifleClipIn;
-                break;
-            case WeaponType.Shotgun:
-                clip = _shotgunClipIn;
-                break;
-            case WeaponType.SMG:
-                clip = _smgClipIn;
-                break;
-            case WeaponType.LMG:
-                clip = _lmgClipIn;
-                break;
-        }
-
-        if (clip == null) return;
-        _audioPool.PlayClip(clip);
+        _audioPool.PlayClip(AudioClips.ClipIn);
     }
 
     public void Fire(Weapon weapon)
@@ -107,7 +63,7 @@ public class WeaponAudioController : MonoBehaviour
                 casings = AudioClips.PistolCasings;
                 break;
             case WeaponType.Rifle:
-                shots = AudioClips.RifleShots;
+                shots = new[]{AudioClips.RifleShots[0]};
                 casings = AudioClips.RifleCasings;
                 break;
             case WeaponType.Shotgun:
@@ -138,5 +94,10 @@ public class WeaponAudioController : MonoBehaviour
     public void BreakArmour()
     {
         _audioPool.PlayClip(AudioClips.ArmourBreakClips.RandomElement());
+    }
+
+    public void AddRound()
+    {
+        _audioPool.PlayClip(AudioClips.BulletLoad.RandomElement());
     }
 }

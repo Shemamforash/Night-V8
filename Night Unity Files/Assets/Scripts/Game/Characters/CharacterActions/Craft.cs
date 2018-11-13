@@ -37,7 +37,7 @@ namespace Game.Characters.CharacterActions
         public void StartCrafting(Recipe recipe)
         {
             Assert.IsTrue(_recipe == null);
-            if (recipe.ProductName == "Fire") CharacterManager.SelectedCharacter.LightFireAction.Enter();
+            if (recipe.Name == "Fire") CharacterManager.SelectedCharacter.LightFireAction.Enter();
             _recipe = recipe;
             _recipe.ConsumeResources();
             SetDuration();
@@ -60,7 +60,7 @@ namespace Game.Characters.CharacterActions
 
         public string GetRecipeName()
         {
-            return _recipe.ProductName;
+            return _recipe.Name;
         }
     }
 }

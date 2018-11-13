@@ -24,7 +24,8 @@ namespace Game.Global
         public static AudioClip[] LightWindClips, MediumWindClips, HeavyWindClips;
         public static AudioClip[] DayAudio, NightAudio;
         public static AudioClip[] Ambient;
-        public static AudioClip ButtonSelectClip;
+        public static AudioClip[] BulletLoad;
+        public static AudioClip ClipIn, ClipOut;
         public static AudioClip SimmavA, SimmavB, SimmavC, SimmavD;
         private static readonly List<AssetBundle> _loadedBundles = new List<AssetBundle>();
         private static bool _loaded;
@@ -93,6 +94,9 @@ namespace Game.Global
             yield return StartCoroutine(LoadAllClipsFromBundle(a => ArmourBreakClips = a, "combat/armourbreak"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => FootstepClips = a, "combat/footsteps"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => ExplosionClips = a, "combat/explosions"));
+            yield return StartCoroutine(LoadAllClipsFromBundle(a => BulletLoad = a, "combat/reload/bullets"));
+            yield return StartCoroutine(LoadClip(a => ClipIn = a, "combat/reload/clip", "clipin"));
+            yield return StartCoroutine(LoadClip(a => ClipOut = a, "combat/reload/clip", "clipout"));
 
             Debug.Log("loading weather audio");
             yield return StartCoroutine(LoadAllClipsFromBundle(a => ThunderSounds = a, "thunder"));
@@ -106,9 +110,6 @@ namespace Game.Global
             yield return StartCoroutine(LoadAllClipsFromBundle(a => DayAudio = a, "daytime"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => Ambient = a, "drones"));
 
-            Debug.Log("loading misc audio");
-            yield return StartCoroutine(LoadClip(a => ButtonSelectClip = a, "misc/buttonclick", "Button Click"));
-
             Debug.Log("loading music");
             yield return StartCoroutine(LoadClip(a => SimmavA = a, "music/combat/simmav", "simmav a"));
             yield return StartCoroutine(LoadClip(a => SimmavB = a, "music/combat/simmav", "simmav b"));
@@ -116,7 +117,7 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => SimmavD = a, "music/combat/simmav", "simmav d"));
 
             watch.Stop();
-            Helper.PrintTime("Done loading audio in: ", watch);
+            watch.PrintTime("Done loading audio in: ");
             _loaded = true;
         }
 

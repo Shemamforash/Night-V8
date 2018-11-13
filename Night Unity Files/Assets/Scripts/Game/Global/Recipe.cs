@@ -12,7 +12,7 @@ using UnityEngine.Assertions;
 
 namespace Game.Global
 {
-    public class Recipe : MyGameObject
+    public class Recipe
     {
         public readonly string Ingredient1;
         public readonly string Ingredient2;
@@ -21,20 +21,19 @@ namespace Game.Global
         public const float DurationInHours = 1f;
         private static readonly List<Recipe> _recipes = new List<Recipe>();
         private static bool _loaded;
-        public readonly string ProductName;
+        public readonly string Name;
         public readonly int ProductQuantity;
         private readonly bool _requiresFire;
         public readonly bool IsBuilding;
 
-        private Recipe(string ingredient1, string ingredient2, int ingredient1Quantity, int ingredient2Quantity, string productName, int productQuantity, bool isBuilding, int levelNo) : base(productName,
-            GameObjectType.Resource)
+        private Recipe(string ingredient1, string ingredient2, int ingredient1Quantity, int ingredient2Quantity, string name, int productQuantity, bool isBuilding, int levelNo)
         {
             Ingredient1 = ingredient1;
             Ingredient2 = ingredient2;
             Ingredient1Quantity = ingredient1Quantity;
             Ingredient2Quantity = ingredient2Quantity;
             ProductQuantity = productQuantity;
-            ProductName = productName;
+            Name = name;
             _requiresFire = ingredient1 == "Fire" || ingredient2 == "Fire";
             IsBuilding = isBuilding;
             _levelNo = levelNo;
@@ -60,7 +59,7 @@ namespace Game.Global
 
         public void Craft()
         {
-            switch (ProductName)
+            switch (Name)
             {
                 case "Fire":
                     break;
@@ -101,10 +100,10 @@ namespace Game.Global
                     Inventory.Move(Armour.Create(ItemQuality.Shining));
                     break;
                 case "Ice":
-                    Inventory.IncrementResource(ProductName, ProductQuantity);
+                    Inventory.IncrementResource(Name, ProductQuantity);
                     break;
                 case "Radiance":
-                    Inventory.IncrementResource(ProductName, 1);
+                    Inventory.IncrementResource(Name, 1);
                     break;
             }
         }
@@ -167,7 +166,7 @@ namespace Game.Global
 
         public int Built()
         {
-            return Inventory.GetBuildingCount(ProductName);
+            return Inventory.GetBuildingCount(Name);
         }
     }
 }

@@ -31,6 +31,7 @@ namespace Facilitating.UIControllers
         {
             _plateOneUi.SetPlate();
             _plateTwoUi.SetPlate();
+            UpdateArmourDescriptions();
         }
 
         protected override void OnShow()
@@ -41,6 +42,13 @@ namespace Facilitating.UIControllers
             TutorialManager.TryOpenTutorial(7);
         }
 
+        private void UpdateArmourDescriptions()
+        {
+            ArmourController armourController = CharacterManager.SelectedCharacter.ArmourController;
+            _plateOneUi.UpdateDescription(armourController.GetChestArmour());
+            _plateTwoUi.UpdateDescription(armourController.GetHeadArmour());
+        }
+        
         protected override void OnHide()
         {
             InputHandler.UnregisterInputListener(this);
@@ -106,27 +114,38 @@ namespace Facilitating.UIControllers
             protected override void Update(object o)
             {
                 Armour armour = (Armour) o;
-                int max = armour.GetMaxProtection();
-                int current = armour.GetCurrentProtection();
-                ArmourController armourController = CharacterManager.SelectedCharacter.ArmourController;
-                bool equipped = armourController.GetChestArmour() == armour || armourController.GetHeadArmour() == armour;
-                string armourString = armour.Name + " - " + current + "/" + max + " Armour";
-                if (equipped) armourString = "(E) " + armourString;
-                _armourText.SetText(armourString);
+                _armourText.SetText(GetArmourProtection(armour));
             }
         }
 
+        private static string GetArmourProtection(Armour armour)
+        {
+            int max = armour.GetMaxProtection();
+            int current = armour.GetCurrentProtection();
+            string armourString = armour.Name + " - " + current + "/" + max + " Armour";
+            return armourString;
+        }
+        
         private class ArmourPlateUi
         {
+            private readonly EnhancedText _description;
             private readonly ListController PlateList;
             private readonly Armour.ArmourType _armourType;
 
             public ArmourPlateUi(GameObject gameObject, Armour.ArmourType armourType)
             {
                 PlateList = gameObject.FindChildWithName<ListController>("List");
+                _description = gameObject.FindChildWithName<EnhancedText>("Description");
                 _armourType = armourType;
             }
 
+            public void UpdateDescription(Armour armour)
+            {
+                string descriptionString = "No Armour Equipped";
+                if (armour != null) descriptionString = GetArmourProtection(armour);
+                _description.SetText(descriptionString);
+            }
+            
             public void SetPlate()
             {
                 PlateList.Show(() => GetAvailableArmour(_armourType));

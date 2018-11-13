@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using DefaultNamespace;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
@@ -219,10 +220,11 @@ namespace Facilitating.UIControllers
             protected override void Update(object o)
             {
                 Inscription inscription = (Inscription) o;
-                bool canAfford = inscription.CanAfford();
-                string inscriptionString = inscription.Name + (canAfford ? "" : " - Cannot Afford");
+                string inscriptionString = inscription.Name;
                 CentreText.SetText(inscriptionString);
-                LeftText.SetText(inscription.InscriptionCost() + " Essence");
+                string costText = inscription.InscriptionCost() + " Essence";
+                if (!inscription.CanAfford()) costText = "Requires " + costText;
+                LeftText.SetText(costText);
                 RightText.SetText(inscription.GetSummary());
             }
         }

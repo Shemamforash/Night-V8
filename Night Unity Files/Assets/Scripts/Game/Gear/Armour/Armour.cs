@@ -23,12 +23,13 @@ namespace Game.Gear.Armour
             Chest
         }
 
-        public override XmlNode Save(XmlNode doc)
+        public override XmlNode Save(XmlNode root)
         {
-            doc = base.Save(doc);
-            doc.CreateChild("Health", _armourHealth.CurrentValue());
-            doc.CreateChild("Type", (int)_armourType);
-            return doc;
+            root = root.CreateChild("Armour");
+            base.Save(root);
+            root.CreateChild("Health", _armourHealth.CurrentValue());
+            root.CreateChild("Type", (int)_armourType);
+            return root;
         }
 
         private Armour(ItemQuality quality, ArmourType armourType) : base(QualityToName(quality, armourType), quality)
@@ -133,7 +134,7 @@ namespace Game.Gear.Armour
             if (amount < 0) amount = 0;
             return amount;
         }
-
+        
         public ArmourType GetArmourType() => _armourType;
         public int GetMaxProtection() => (int) Quality() + 1;
         public int GetCurrentProtection() => Mathf.CeilToInt(_armourHealth.CurrentValue() / ArmourHealthUnit);

@@ -496,7 +496,7 @@ namespace Game.Combat.Player
             float duration = Player.EquippedWeapon.GetAttributeValue(AttributeType.ReloadSpeed);
             UIMagazineController.EmptyMagazine();
             _reloading = true;
-            WeaponAudio.StartReload(Weapon().WeaponType());
+            WeaponAudio.StartReload();
 
             float age = 0;
             while (age < duration)
@@ -510,7 +510,8 @@ namespace Game.Combat.Player
                 else
                 {
                     t = (t - 0.2f) / 0.8f;
-                    UIMagazineController.UpdateReloadTime(t);
+                    bool addedRound = UIMagazineController.UpdateReloadTime(t);
+                    if (addedRound) WeaponAudio.AddRound();
                 }
 
                 yield return null;
@@ -522,7 +523,7 @@ namespace Game.Combat.Player
                 _weaponBehaviour.Reload();
                 OnFireActions.Clear();
                 ActiveSkillController.Stop();
-                WeaponAudio.StopReload(Weapon().WeaponType());
+                WeaponAudio.StopReload();
             }
 
             StopReloading();

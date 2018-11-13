@@ -27,7 +27,7 @@ public class VolumeController : MonoBehaviour
 
     public static void FadeInMuffle()
     {
-        DOTween.To(SetLpfValue, GetLpfValue(), 500, 0.5f).SetUpdate(UpdateType.Normal, true);
+        DOTween.To(SetLpfValue, GetLpfValue(), 750, 0.5f).SetUpdate(UpdateType.Normal, true);
     }
 
     public static void FadeOutMuffle()

@@ -16,7 +16,7 @@ namespace Game.Combat.Generation.Shrines
         private static GameObject _riteShrinePrefab;
         private RiteColliderBehaviour _collider1, _collider2, _collider3;
         private List<Brand> _brandChoice;
-        private int _targetBrand;
+        private int _targetBrand = -1;
         private RiteColliderBehaviour _targetRiteCollider;
         private static RiteShrineBehaviour _instance;
 
@@ -93,7 +93,6 @@ namespace Game.Combat.Generation.Shrines
         {
             foreach (ParticleSystem candle in riteTransform.Find("Candles").GetComponentsInChildren<ParticleSystem>())
                 StartCoroutine(FadeCandle(candle));
-            GetComponent<CompassItem>().Die();
         }
 
         private IEnumerator FadeCandle(ParticleSystem candle)

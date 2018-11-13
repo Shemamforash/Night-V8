@@ -43,7 +43,7 @@ namespace Game.Combat.Generation
             GenerateBaseGrid();
             UiCombatRingBoundDrawer.Draw();
             _stopwatch.Stop();
-            Helper.PrintTime("Grid: ", _stopwatch);
+            _stopwatch.PrintTime("Grid: ");
             _stopwatch = Stopwatch.StartNew();
         }
 
@@ -77,10 +77,10 @@ namespace Game.Combat.Generation
         public static void FinaliseGrid()
         {
             _stopwatch.Stop();
-            Helper.PrintTime("Barriers: ", _stopwatch);
+            _stopwatch.PrintTime("Barriers: ");
             _stopwatch = Stopwatch.StartNew();
             _stopwatch.Stop();
-            Helper.PrintTime("Neighbors: ", _stopwatch);
+            _stopwatch.PrintTime("Neighbors: ");
             _outOfRangeList.ForEach(c => c.OutOfRange = true);
             _edgePositionList.ForEach(c => c.IsEdgeCell = true);
 
@@ -138,9 +138,6 @@ namespace Game.Combat.Generation
             {
                 if (print) Debug.Log("Invalid cell position: (" + x + " ," + y + ")");
                 return null;
-                position.Normalize();
-                position *= CombatMovementDistance - 0.1f;
-                return WorldToCellPosition(position);
             }
         }
 
@@ -447,7 +444,6 @@ namespace Game.Combat.Generation
             int outOfRangeDistanceSqrd = (int) Mathf.Pow(CombatMovementDistance * CellResolution * 0.5f, 2f);
             int edgeDistanceSquared = (int) Mathf.Pow((CombatMovementDistance - 1) * CellResolution * 0.5f, 2f);
 
-            int i = 0;
             for (int x = 0; x < GridWidth; ++x)
             {
                 if (Grid[x] == null) Grid[x] = new Cell[GridWidth];

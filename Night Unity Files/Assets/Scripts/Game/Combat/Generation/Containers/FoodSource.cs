@@ -10,8 +10,9 @@ namespace Game.Combat.Generation
         public FoodSource(Vector2 position) : base(position)
         {
             string foodType = ResourceTemplate.GetPlant().Name;
-            Item = ResourceTemplate.Create(foodType);
-            Item.Increment(1);
+            ResourceItem resource = ResourceTemplate.Create(foodType);
+            resource.Increment(1);
+            Item = resource;
             ImageLocation = "Plants/" + foodType;
         }
 

@@ -1,19 +1,71 @@
-﻿using Game.Exploration.Weather;
+﻿using System.Xml;
+using Facilitating.Persistence;
+using Game.Exploration.Weather;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using TriangleNet.Meshing;
 using UnityEngine;
 
 namespace Game.Global
 {
-    public abstract class Building : MyGameObject
+    public abstract class Building : NamedItem
     {
-        protected Building(string name) : base(name, GameObjectType.Building)
+        protected Building(string name) : base(name)
         {
             Inventory.AddBuilding(this);
         }
 
         public abstract void Update();
+
+        protected virtual XmlNode Save(XmlNode root)
+        {
+            root = root.CreateChild("Building");
+            root.CreateChild("Name", Name);
+            return root;
+        }
+
+        public static void LoadBuildings(XmlNode root)
+        {
+            foreach (XmlNode buildingNode in root.SelectSingleNode("Buildings").ChildNodes)
+            {
+                string name = buildingNode.StringFromNode("Name");
+                switch (name)
+                {
+                    case "Shelter":
+                        Inventory.AddBuilding(new Shelter());
+                        break;
+                    case "Trap":
+                        Inventory.AddBuilding(new Trap());
+                        break;
+                    case "Water Collector":
+                        Inventory.AddBuilding(new WaterCollector());
+                        break;
+                    case "Condenser":
+                        Inventory.AddBuilding(new Condenser());
+                        break;
+                    case "Essence Filter":
+                        Inventory.AddBuilding(new EssenceFilter());
+                        break;
+                    case "Smoker":
+                        Smoker smoker = new Smoker();
+                        smoker.Load(root);
+                        Inventory.AddBuilding(smoker);
+                        break;
+                    case "Purifier":
+                        Purifier purifier = new Purifier();
+                        purifier.Load(root);
+                        Inventory.AddBuilding(purifier);
+                        break;
+                }
+            }
+        }
+
+        public static void SaveBuildings(XmlNode root)
+        {
+            XmlNode buildingNode = root.CreateChild("Buildings");
+            Inventory.Buildings().ForEach(b => b.Save(buildingNode));
+        }
     }
 
     public class WaterCollector : Building
@@ -124,6 +176,18 @@ namespace Game.Global
             Inventory.DecrementResource(_resourceFrom, 1);
             Inventory.IncrementResource(_resourceTo, 1);
             _time = 0;
+        }
+
+        protected override XmlNode Save(XmlNode root)
+        {
+            root = base.Save(root);
+            root.CreateChild("Time", _time);
+            return root;
+        }
+
+        public void Load(XmlNode root)
+        {
+            _time = root.IntFromNode("Time");
         }
     }
 

@@ -1,24 +1,22 @@
-﻿using Facilitating.Persistence;
-using Game.Global;
-using SamsHelper.Libraries;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Audio;
-using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(AudioSource))]
 public class ButtonClickListener : MonoBehaviour
 {
+    private static AudioLowPassFilter _lpf;
     private static AudioSource _audioSource;
     private static bool _suppressClick;
 
     private void Awake()
     {
+        _lpf = GetComponent<AudioLowPassFilter>();
         _audioSource = GetComponent<AudioSource>();
         _audioSource.outputAudioMixerGroup = Resources.Load<AudioMixer>("AudioMixer/Master").FindMatchingGroups("Modified")[0];
-        _audioSource.clip = AudioClips.ButtonSelectClip;
     }
 
-    public static void Click()
+    public static void Click(bool muffle = false)
     {
         if (_suppressClick)
         {
@@ -26,9 +24,10 @@ public class ButtonClickListener : MonoBehaviour
             return;
         }
 
-        if (_audioSource == null) return;
+        Assert.IsNotNull(_audioSource);
         _audioSource.pitch = Random.Range(0.9f, 1f);
         _audioSource.volume = 0.2f;
+        _lpf.cutoffFrequency = muffle ? 3000 : 20000;
         _audioSource.Play();
     }
 

@@ -35,13 +35,14 @@ namespace Game.Characters
                 LoadBrand(brandNode);
             }
 
-            _activeBrandOne = LoadBrand(brandsNode.SelectSingleNode("Brand_0"));
-            _activeBrandTwo = LoadBrand(brandsNode.SelectSingleNode("Brand_1"));
-            _activeBrandThree = LoadBrand(brandsNode.SelectSingleNode("Brand_2"));
+            _activeBrandOne = LoadBrand(brandsNode.SelectSingleNode("Brand0"));
+            _activeBrandTwo = LoadBrand(brandsNode.SelectSingleNode("Brand1"));
+            _activeBrandThree = LoadBrand(brandsNode.SelectSingleNode("Brand2"));
         }
 
         private Brand LoadBrand(XmlNode brandNode)
         {
+            if (brandNode == null) return null;
             string name = brandNode.StringFromNode("Name");
             foreach (Brand brand in _lockedBrands)
             {
@@ -60,12 +61,10 @@ namespace Game.Characters
             List<Brand> activeBrands = GetActiveBrands();
             for (int i = 0; i < activeBrands.Count; ++i)
             {
-                XmlNode brandNode = doc.CreateChild("Brand_" + i);
                 if (activeBrands[i] == null) continue;
+                XmlNode brandNode = doc.CreateChild("Brand" + i);
                 activeBrands[i].Save(brandNode);
             }
-
-            return;
         }
 
         private void ResetAllowedBrands()

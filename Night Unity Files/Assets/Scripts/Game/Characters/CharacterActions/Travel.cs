@@ -3,10 +3,10 @@ using Facilitating.Persistence;
 using Game.Combat.Generation;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
-using Game.Exploration.WorldEvents;
 using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
+using UnityEngine.Assertions;
 
 namespace Game.Characters.CharacterActions
 {
@@ -53,8 +53,9 @@ namespace Game.Characters.CharacterActions
 
         private void ReachTarget()
         {
-            CurrentRegion = _target;
+            Assert.IsTrue(CurrentRegion != _target);
             _inTransit = false;
+            CurrentRegion = _target;
             if (AtHome())
             {
                 TutorialManager.TryOpenTutorial(4);
@@ -79,7 +80,7 @@ namespace Game.Characters.CharacterActions
             MenuStateMachine.ShowMenu("Map Menu");
         }
 
-        public Region GetCurrentNode()
+        public Region GetCurrentRegion()
         {
             return CurrentRegion ?? (CurrentRegion = MapGenerator.GetInitialNode());
         }
@@ -107,7 +108,7 @@ namespace Game.Characters.CharacterActions
 
         public override XmlNode Load(XmlNode doc)
         {
-            doc = base.Save(doc);
+            doc = base.Load(doc);
             _target = MapGenerator.GetRegionById(doc.IntFromNode("Target"));
             CurrentRegion = MapGenerator.GetRegionById(doc.IntFromNode("CurrentRegion"));
             _inTransit = doc.BoolFromNode("InTransit");

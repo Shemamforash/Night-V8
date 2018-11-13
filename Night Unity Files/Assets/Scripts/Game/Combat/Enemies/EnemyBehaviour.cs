@@ -143,7 +143,6 @@ namespace Game.Combat.Enemies
 
             PlayerCombat.Instance.TriggerEnemyDeathEffect();
             CombatManager.Remove(this);
-            Enemy.Kill();
             Destroy(gameObject);
         }
     }

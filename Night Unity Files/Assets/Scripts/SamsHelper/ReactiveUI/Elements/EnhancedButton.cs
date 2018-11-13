@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using SamsHelper.Input;
+using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -102,7 +104,7 @@ namespace SamsHelper.ReactiveUI.Elements
             _justEntered = true;
             if (!_hideBorder) _border.SetSelected();
             _isSelected = true;
-            if (_enabled) ButtonClickListener.Click();
+            ButtonClickListener.Click(!_enabled);
         }
 
         private void Exit()

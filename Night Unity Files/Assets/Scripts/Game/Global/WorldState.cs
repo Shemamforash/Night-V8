@@ -102,8 +102,8 @@ namespace Game.Global
 
         public static void ResetWorld(int currentLevel = 1, int difficulty = 0)
         {
-            CharacterManager.Reset();
             Inventory.Reset();
+            CharacterManager.Reset();
             DaysSpentHere = 0;
             _currentLevel = currentLevel;
             Days = 0;

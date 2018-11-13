@@ -287,9 +287,8 @@ namespace Game.Combat.Generation
 
             for (int i = 0; i < _region.ResourceSourceCount; ++i)
             {
-                InventoryItem item = ResourceTemplate.GetResource().Create();
-                item.Increment(1);
-                CreateContainer<Loot>()?.SetItem(item);
+                ResourceItem resource = ResourceTemplate.GetResource().Create();
+                CreateContainer<Loot>()?.SetResource(resource);
             }
         }
 

@@ -75,11 +75,11 @@ namespace Game.Gear.Armour
             return accessory;
         }
 
-        public override XmlNode Save(XmlNode doc)
+        public override XmlNode Save(XmlNode root)
         {
-            doc = base.Save(doc);
-            doc.CreateChild("AccessoryTemplate", _template.Name);
-            return doc;
+            root = root.CreateChild("Armour");
+            base.Save(root);
+            return root;
         }
 
         private class AccessoryTemplate
@@ -107,8 +107,8 @@ namespace Game.Gear.Armour
         public static Accessory LoadAccessory(XmlNode accessoryNode)
         {
             ReadTemplates();
-            string templateString = accessoryNode.StringFromNode("AccessoryTemplate");
-            AccessoryTemplate template = _accessoryTemplates.First(t => t.Name == templateString);
+            string templateName = accessoryNode.StringFromNode("Name");
+            AccessoryTemplate template = _accessoryTemplates.First(t => t.Name == templateName);
             Accessory accessory = new Accessory(template, ItemQuality.Dark);
             accessory.Load(accessoryNode);
             return accessory;

@@ -46,7 +46,7 @@ namespace Game.Combat.Generation.Shrines
             if (!other.CompareTag("Player")) return;
             Region r = new Region();
             r.SetRegionType(RegionType.Rite);
-            Rite.SetBrand(_brand);
+            Rite.SetBrand(_brand, CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion());
             CombatManager.SetCurrentRegion(r);
             SceneChanger.GoToCombatScene();
         }

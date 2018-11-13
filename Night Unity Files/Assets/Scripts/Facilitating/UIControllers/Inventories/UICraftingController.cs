@@ -88,7 +88,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         protected override void Update(object o)
         {
             Recipe recipe = (Recipe) o;
-            string productString = recipe.ProductQuantity > 1 ? recipe.ProductName + " x" + recipe.ProductQuantity : recipe.ProductName;
+            string productString = recipe.ProductQuantity > 1 ? recipe.Name + " x" + recipe.ProductQuantity : recipe.Name;
             string durationString = WorldState.TimeToHours((int) (Recipe.DurationInHours * WorldState.MinutesPerHour));
             productString += " (" + durationString + ")";
             LeftText.SetText("");

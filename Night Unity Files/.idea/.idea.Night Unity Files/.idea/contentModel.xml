@@ -762,7 +762,6 @@
                 <e p="FaceTarget.cs" t="Include" />
                 <e p="FaceVelocity.cs" t="Include" />
                 <e p="FollowMouse.cs" t="Include" />
-                <e p="MyGameObject.cs" t="Include" />
                 <e p="ObjectPool.cs" t="Include" />
                 <e p="ScaleableValue.cs" t="Include" />
               </e>
@@ -773,11 +772,11 @@
               </e>
               <e p="InventorySystem" t="Include">
                 <e p="Consumable.cs" t="Include" />
-                <e p="GameObjectType.cs" t="Include" />
                 <e p="GearItem.cs" t="Include" />
                 <e p="Inventory.cs" t="Include" />
-                <e p="InventoryItem.cs" t="Include" />
                 <e p="InventoryResource.cs" t="Include" />
+                <e p="NamedItem.cs" t="Include" />
+                <e p="ResourceItem.cs" t="Include" />
                 <e p="ResourceTemplate.cs" t="Include" />
               </e>
               <e p="StateMachines" t="Include">

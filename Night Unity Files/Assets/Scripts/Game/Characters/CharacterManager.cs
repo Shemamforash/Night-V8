@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Facilitating.Persistence;
 using Game.Gear;
 using Game.Gear.Weapons;
 using SamsHelper;
@@ -19,21 +20,22 @@ namespace Game.Characters
         private static readonly List<CharacterTemplate> Templates = new List<CharacterTemplate>();
         private static bool _loaded;
 
-        public static void Reset()
+        public static void Reset(bool includeDriver = true)
         {
             SelectedCharacter = null;
             for (int i = Characters.Count - 1; i >= 0; --i)
                 RemoveCharacter(Characters[i]);
-            GenerateDriver();
+            if(includeDriver) GenerateDriver();
         }
 
         public static void Load(XmlNode doc)
         {
-            Reset();
-            XmlNode characterManagerNode = doc.GetNode("Inventory");
+            Reset(false);
+            XmlNode characterManagerNode = doc.GetNode("Characters");
             foreach (XmlNode characterNode in Helper.GetNodesWithName(characterManagerNode, "Character"))
             {
                 string className = characterNode.StringFromNode("CharacterClass");
+                Debug.Log(className);
                 CharacterTemplate template = FindClass(className);
                 Player player = new Player(template);
                 player.Load(characterNode);
@@ -43,6 +45,7 @@ namespace Game.Characters
 
         public static void Save(XmlNode doc)
         {
+            doc = doc.CreateChild("Characters");
             foreach (Player c in Characters) c.Save(doc);
         }
 
@@ -118,11 +121,7 @@ namespace Game.Characters
         private static Player GenerateCharacter(CharacterClass characterClass)
         {
             CharacterTemplate t = FindClass(characterClass);
-            Weapon weapon = WeaponGenerator.GenerateWeapon();
-            Inventory.Move(weapon);
-            Player p = GenerateCharacterObject(t);
-            p.EquipWeapon(weapon);
-            return p;
+            return GenerateCharacterObject(t);
         }
 
         public static Player GenerateRandomCharacter()
@@ -130,6 +129,9 @@ namespace Game.Characters
             LoadTemplates();
             CharacterTemplate newTemplate = Templates.RemoveRandom();
             Player playerCharacter = GenerateCharacterObject(newTemplate);
+            Weapon weapon = WeaponGenerator.GenerateWeapon();
+            Inventory.Move(weapon);
+            playerCharacter.EquipWeapon(weapon);
             return playerCharacter;
         }
 

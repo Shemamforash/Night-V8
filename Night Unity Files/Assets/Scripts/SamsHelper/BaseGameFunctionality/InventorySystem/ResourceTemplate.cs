@@ -100,7 +100,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             SetEffect(resourceNode);
         }
 
-        public static InventoryItem GetMeat()
+        public static ResourceItem GetMeat()
         {
             float rand = Random.Range(0f, 1f);
             EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironment.EnvironmentType;
@@ -152,14 +152,13 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             throw new Exception("Can't have invalid Plant!");
         }
 
-        public InventoryItem Create()
+        public ResourceItem Create()
         {
-            InventoryItem item = Consumable ? new Consumable(this) : new InventoryItem(this, GameObjectType.Resource);
-            item.SetStackable(true);
+            ResourceItem item = Consumable ? new Consumable(this) : new ResourceItem(this);
             return item;
         }
 
-        public static InventoryItem Create(string name)
+        public static ResourceItem Create(string name)
         {
             ResourceTemplate template = StringToTemplate(name);
             if (template == null) throw new Exceptions.ResourceDoesNotExistException(name);
