@@ -69,6 +69,7 @@ namespace Facilitating.UIControllers
 
         protected override void OnShow()
         {
+            UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
             _accessoryList.Show(GetAvailableAccessories);
             TutorialManager.TryOpenTutorial(8);
             UpdateEquipped();

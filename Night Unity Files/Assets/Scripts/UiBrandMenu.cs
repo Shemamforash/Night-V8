@@ -22,6 +22,7 @@ public class UiBrandMenu : Menu
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
         _closeButton.SetInputAxis(InputAxis.Fire);
         _closeButton.SetCallback(Hide);
+        _closeButton.SetOnClick(Hide);
     }
 
     private void Hide()

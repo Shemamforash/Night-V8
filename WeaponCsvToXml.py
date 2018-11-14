@@ -188,6 +188,9 @@ class EnvironmentImporter(XMLWriter):
         write_single_value(self, "Shelters", get_value(self, "H", row))
         write_single_value(self, "Animals", get_value(self, "I", row))
         write_single_value(self, "Danger", get_value(self, "J", row))
+        write_single_value(self, "WaterSources", get_value(self, "L", row))
+        write_single_value(self, "FoodSources", get_value(self, "M", row))
+        write_single_value(self, "ResourceSources", get_value(self, "N", row))
 
 
 class RegionImporter(XMLWriter):
@@ -403,7 +406,7 @@ def write_single_value(xml_writer, stat_name, value):
 # ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()
-# EnvironmentImporter()
+EnvironmentImporter()
 # BrandImporter()
 # StoryImporter()
-TutorialImporter()
+# TutorialImporter()

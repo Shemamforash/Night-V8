@@ -19,6 +19,8 @@ public class BrandReplaceMenuController : Menu
         base.Awake();
         _brandUi = gameObject.FindChildWithName<CharacterBrandUIController>("Brands");
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
+        _closeButton.SetOnClick(Close);
+        _closeButton.SetCallback(Close);
     }
 
     public static void Show(RiteShrineBehaviour riteShrine, Brand brand)
@@ -28,7 +30,6 @@ public class BrandReplaceMenuController : Menu
         MenuStateMachine.ShowMenu("Brand Replace Menu");
         _closeButton.SetInputAxis(InputAxis.Cover);
         _closeButton.Enable();
-        _closeButton.SetCallback(Close);
     }
 
     public override void Enter()

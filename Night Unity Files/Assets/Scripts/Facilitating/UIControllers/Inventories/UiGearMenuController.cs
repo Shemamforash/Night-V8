@@ -10,6 +10,7 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -74,12 +75,13 @@ namespace Facilitating.UIControllers
             {
                 EnhancedText tabText = _tabParent.FindChildWithName<EnhancedText>(name);
                 _highlightImage = tabText.gameObject.FindChildWithName<Image>("Image");
+                _highlightImage.GetComponent<EnhancedButton>().AddOnClick(Select);
                 _menu = menu;
             }
 
-            public void Select(Tab from)
+            public void Select()
             {
-                if (from == null)
+                if (_currentTab == null)
                 {
                     if (_prevTab == null) _leftTab.InstantFade();
                     if (_nextTab == null) _rightTab.InstantFade();
@@ -108,7 +110,7 @@ namespace Facilitating.UIControllers
                 if (_nextTab._nextTab == null) _rightTab.FlashAndFade();
                 else _rightTab.Flash();
                 Deselect();
-                _nextTab.Select(this);
+                _nextTab.Select();
             }
 
             public void SelectPreviousTab()
@@ -118,7 +120,7 @@ namespace Facilitating.UIControllers
                 if (_prevTab._prevTab == null) _leftTab.FlashAndFade();
                 else _leftTab.Flash();
                 Deselect();
-                _prevTab.Select(this);
+                _prevTab.Select();
             }
         }
 
@@ -166,6 +168,11 @@ namespace Facilitating.UIControllers
             }
         }
 
+        public static void SetCloseButtonAction(UnityAction a)
+        {
+            _closeButton.SetOnClick(a);
+        }
+        
         public static void FlashCloseButton()
         {
             _closeButton.Flash();
@@ -209,7 +216,7 @@ namespace Facilitating.UIControllers
 
         private static void SelectTab(int tabNumber)
         {
-            _tabs[tabNumber].Select(null);
+            _tabs[tabNumber].Select();
         }
 
         public static void ShowArmourMenu() => SelectTab(0);

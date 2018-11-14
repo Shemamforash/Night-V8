@@ -252,6 +252,7 @@
             <e p="Impact Shader.shader" t="Include" />
           </e>
         </e>
+        <e p="KeyboardInputModule.cs" t="Include" />
         <e p="NeedleBehaviour.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="Quick" t="Include">
@@ -718,6 +719,7 @@
             </e>
             <e p="Global" t="Include">
               <e p="AudioClips.cs" t="Include" />
+              <e p="AudioController.cs" t="Include" />
               <e p="Building.cs" t="Include" />
               <e p="DesolationAttributes.cs" t="Include" />
               <e p="GameController.cs" t="Include" />
@@ -748,7 +750,6 @@
             <e p="ParamBase.cs" t="Include" />
             <e p="Util.cs" t="Include" />
           </e>
-          <e p="MusicController.cs" t="Include" />
           <e p="PauseMenuController.cs" t="Include" />
           <e p="RadianceController.cs" t="Include" />
           <e p="ResourcesUiController.cs" t="Include" />

@@ -21,8 +21,6 @@ AudioMixerController:
     name: Modified
   - guid: dd4f6c1632ba20742a0382c025eec66e
     name: MusicLowpassCutoff
-  - guid: 4626791b3c69e2546af4599caa7a67e0
-    name: WeatherEcho
   - guid: 3113d0a59dc155c499eeb08d4d5958ea
     name: WeatherWetMix
   - guid: 8857047037302124ea7c6bc11241961e
@@ -80,10 +78,10 @@ AudioMixerSnapshotController:
   m_FloatValues:
     8857047037302124ea7c6bc11241961e: 22000
     246fb201aeaebad46a28ed9f4f28476c: 10
-    b563ed5280c850a4a9e8c9252e1a302e: 463
+    b563ed5280c850a4a9e8c9252e1a302e: 250
     4de9d3433194bd94098c3d8fb776e236: 678
     f92e537387bd7834e8a8f5bb19ba4573: -6175
-    3113d0a59dc155c499eeb08d4d5958ea: 0
+    3113d0a59dc155c499eeb08d4d5958ea: 0.998
     78481eb5dfb4eca4fbca6653dee3a792: 0.8
     87d9e4e5c03cf5b49a0320e83c8bad78: 1.2
     dd4f6c1632ba20742a0382c025eec66e: 22000
@@ -96,7 +94,7 @@ AudioMixerSnapshotController:
     f749912ac458ad545a80f63859164d78: 0.85
     c3f7b63abcbf93d4e8c52a73f858ff72: 0
     2f5e17da65c2ff241ae9beae7e3d3f6f: 22000
-    4626791b3c69e2546af4599caa7a67e0: 0
+    4626791b3c69e2546af4599caa7a67e0: 0.25
     936c534bf05083f4ebda68d9784e6816: 0.089
     f623696cb94c65a4d8547ffd637d9429: 9.4
     4938d99c81bae3240a807751e14d4a43: 1.94

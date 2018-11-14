@@ -128,6 +128,9 @@ namespace Game.Combat.Player
             {
                 switch (axis)
                 {
+                    case InputAxis.Mouse:
+                        FireWeapon();
+                        break;
                     case InputAxis.Fire:
                         FireWeapon();
                         break;

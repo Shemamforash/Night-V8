@@ -1,5 +1,4 @@
-﻿using System;
-using Game.Exploration.Weather;
+﻿using Game.Exploration.Weather;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -19,24 +18,19 @@ public class CombatWeatherController : MonoBehaviour
         _dust = gameObject.FindChildWithName<ParticleSystem>("Dust");
         _fog = gameObject.FindChildWithName<ParticleSystem>("Fog");
 
-        SetParticleSystemEmissionRate(_hail, weatherAttributes.HailAmount, HailMax, null);
-        SetParticleSystemEmissionRate(_rain, weatherAttributes.RainAmount, RainMax, WeatherSystemController.GetRainClip);
-        SetParticleSystemEmissionRate(_wind, weatherAttributes.WindAmount, WindMax, WeatherSystemController.GetWindClip);
-        SetParticleSystemEmissionRate(_sun, weatherAttributes.SunAmount, SunMax, null);
-        SetParticleSystemEmissionRate(_dust, weatherAttributes.DustAmount, DustMax, null);
-        SetParticleSystemEmissionRate(_fog, weatherAttributes.FogAmount, FogMax, null);
+        SetParticleSystemEmissionRate(_hail, weatherAttributes.HailAmount, HailMax);
+        SetParticleSystemEmissionRate(_rain, weatherAttributes.RainAmount, RainMax);
+        SetParticleSystemEmissionRate(_wind, weatherAttributes.WindAmount, WindMax);
+        SetParticleSystemEmissionRate(_sun, weatherAttributes.SunAmount, SunMax);
+        SetParticleSystemEmissionRate(_dust, weatherAttributes.DustAmount, DustMax);
+        SetParticleSystemEmissionRate(_fog, weatherAttributes.FogAmount, FogMax);
     }
 
-
-    private static void SetParticleSystemEmissionRate(ParticleSystem ps, float fettle, float max, Func<float, AudioClip> getAudioClip)
+    private static void SetParticleSystemEmissionRate(ParticleSystem ps, float amount, float max)
     {
-        float amount = fettle * max;
+        float emissionRate = amount * max;
         ParticleSystem.EmissionModule emission = ps.emission;
-        emission.rateOverTime = amount;
-        if (amount == 0) return;
+        emission.rateOverTime = emissionRate;
         ps.Play();
-        AudioSource audioSource = ps.GetComponent<AudioSource>();
-        audioSource.clip = getAudioClip?.Invoke(fettle);
-        audioSource.Play();
     }
 }

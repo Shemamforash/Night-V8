@@ -35,6 +35,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
 
     protected override void OnShow()
     {
+        UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
         InputHandler.RegisterInputListener(this);
         if (CharacterManager.SelectedCharacter.CraftAction.IsCurrentState()) ShowCurrentlyCrafting();
         else ShowCraftingList();

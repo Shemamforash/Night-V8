@@ -29,6 +29,7 @@ public class UiConsumableController : UiInventoryMenuController
 
     protected override void OnShow()
     {
+        UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
         UpdateCondition();
 #if UNITY_EDITOR
         ResourceTemplate.AllResources.ForEach(r => { Inventory.IncrementResource(r.Name, Random.Range(5, 20)); });

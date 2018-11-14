@@ -8,6 +8,7 @@ using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Edge = SamsHelper.Libraries.Edge;
 using Random = UnityEngine.Random;
 
@@ -16,9 +17,6 @@ namespace Game.Exploration.Environment
     public static class MapGenerator
     {
         public const int MinRadius = 4;
-        private const int WaterSourcesPerEnvironment = 30;
-        private const int FoodSourcesPerEnvironment = 20;
-        private const int ResourcesPerEnvironment = 30;
 
         private static readonly Dictionary<RegionType, string[]> prefixes = new Dictionary<RegionType, string[]>();
         private static readonly Dictionary<RegionType, string[]> suffixes = new Dictionary<RegionType, string[]>();
@@ -319,63 +317,39 @@ namespace Game.Exploration.Environment
 
         private static void SetWaterQuantities()
         {
-            int waterSources = WaterSourcesPerEnvironment;
-            while (waterSources > 0)
+            int waterSources = EnvironmentManager.CurrentEnvironment.WaterSources;
+            SetItemQuantities(waterSources, r => r.WaterSourceCount, r => ++r.WaterSourceCount);
+        }
+
+        private static void SetItemQuantities(int total, Func<Region, float> getCount, Action<Region> increment)
+        {
+            while (total > 0)
             {
                 _regions.Shuffle();
                 bool added = false;
-                for (int index = 0; index < _regions.Count * 0.6f; index++)
+                foreach (Region r in _regions)
                 {
-                    Region r = _regions[index];
-                    if (waterSources == 0) break;
-                    if (r.WaterSourceCount > 2) continue;
+                    if (total == 0) break;
+                    if (getCount(r) > 2) continue;
                     added = true;
-                    ++r.WaterSourceCount;
-                    --waterSources;
+                    increment(r);
+                    --total;
                 }
 
-                if (!added) Debug.Log("Decrease water sources per environment");
+                Assert.IsTrue(added);
             }
         }
 
         private static void SetFoodQuantities()
         {
-            int foodSource = FoodSourcesPerEnvironment;
-            while (foodSource > 0)
-            {
-                _regions.Shuffle();
-                bool added = false;
-                foreach (Region r in _regions)
-                {
-                    if (foodSource == 0) break;
-                    if (r.FoodSourceCount > 2) continue;
-                    added = true;
-                    ++r.FoodSourceCount;
-                    --foodSource;
-                }
-
-                if (!added) Debug.Log("Decrease food sources per environment");
-            }
+            int foodSources = EnvironmentManager.CurrentEnvironment.FoodSources;
+            SetItemQuantities(foodSources, r => r.FoodSourceCount, r => ++r.FoodSourceCount);
         }
 
         private static void SetResourceQuantities()
         {
-            int resourceCount = ResourcesPerEnvironment;
-            while (resourceCount > 0)
-            {
-                _regions.Shuffle();
-                bool added = false;
-                foreach (Region r in _regions)
-                {
-                    if (resourceCount == 0) break;
-                    if (r.ResourceSourceCount > 2) continue;
-                    added = true;
-                    ++r.ResourceSourceCount;
-                    --resourceCount;
-                }
-
-                if (!added) Debug.Log("Decrease resource sources per environment");
-            }
+            int resourcesCount = EnvironmentManager.CurrentEnvironment.ResourceSources;
+            SetItemQuantities(resourcesCount, r => r.ResourceSourceCount, r => ++r.ResourceSourceCount);
         }
 
         private static void CreateMinimumSpanningTree()

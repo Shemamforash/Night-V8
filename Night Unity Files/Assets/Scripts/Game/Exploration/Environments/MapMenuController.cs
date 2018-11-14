@@ -38,6 +38,7 @@ namespace Game.Exploration.Environment
         {
             base.Awake();
             _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
+            _closeButton.SetOnClick(Exit);
             _nextRouteTime = 2f / MapGenerator.Regions().Count;
             MapTransform = GameObject.Find("Nodes").transform;
             CreateMapRings();
@@ -57,7 +58,7 @@ namespace Game.Exploration.Environment
             _rings.ForEach(r => r.TweenColour(UiAppearanceController.InvisibleColour, Color.white, 0.5f));
             MapGenerator.Regions().ForEach(n => { n.ShowNode(); });
             MapMovementController.Enter(CharacterManager.SelectedCharacter);
-            VolumeController.FadeInMuffle();
+            AudioController.FadeInMuffle();
             TutorialManager.TryOpenTutorial(2);
         }
 
@@ -69,7 +70,7 @@ namespace Game.Exploration.Environment
             MapGenerator.Regions().ForEach(n => n.HideNode());
             MapMovementController.Exit();
             FadeAndDieTrailRenderer.ForceFadeAll();
-            VolumeController.FadeOutMuffle();
+            AudioController.FadeOutMuffle();
         }
 
         private void CreateRouteLinks()

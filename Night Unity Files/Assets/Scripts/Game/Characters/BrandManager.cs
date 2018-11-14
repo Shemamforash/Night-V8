@@ -180,7 +180,6 @@ namespace Game.Characters
             new AutomaticReloadBrand(_player);
             new InstantReloadBrand(_player);
             new AdrenalineUsedBrand(_player);
-            new SkillKillBrand(_player);
         }
 
         private void CreateResourceFindBrands()
@@ -221,6 +220,7 @@ namespace Game.Characters
         public void IncreaseBurnCount() => UpdateBrandValue(typeof(IgniteBrand), 1);
         public void IncreaseDecayCount() => UpdateBrandValue(typeof(DecayBrand), 1);
         public void IncreaseSickenCount() => UpdateBrandValue(typeof(SicknessBrand), 1);
+//todo        public void IncreaseIndirectKills() => UpdateBrandValue(typeof(IndirectKillBrand), 1);
 
         public void UpdateBrandStatus(Brand brand)
         {
@@ -242,7 +242,6 @@ namespace Game.Characters
                     break;
             }
         }
-
 
         public bool TryActivateBrand(Brand targetBrand)
         {

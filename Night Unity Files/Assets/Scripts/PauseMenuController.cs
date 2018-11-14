@@ -31,6 +31,7 @@ public class PauseMenuController : MonoBehaviour
         _background.alpha = 0f;
         _closeButton.SetInputAxis(InputAxis.Cover);
         _closeButton.SetCallback(CloseClicked);
+        _closeButton.SetOnClick(CloseClicked);
     }
 
     private void CloseClicked()
@@ -41,7 +42,7 @@ public class PauseMenuController : MonoBehaviour
 
     private void Show()
     {
-        VolumeController.FadeInMuffle();
+        AudioController.FadeInMuffle();
         _lastMenu = MenuStateMachine.CurrentMenu().gameObject.name;
         _instance.ShowPauseMenu();
         _fading = true;
@@ -70,7 +71,7 @@ public class PauseMenuController : MonoBehaviour
     {
         Debug.Log("hidden");
         _closeButton.Disable();
-        VolumeController.FadeOutMuffle();
+        AudioController.FadeOutMuffle();
         MenuStateMachine.ShowMenu(_lastMenu);
         _fading = true;
         Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);

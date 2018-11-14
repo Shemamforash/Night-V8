@@ -18,6 +18,7 @@ public class CombatJournalController : Menu, IInputListener
         _title = gameObject.FindChildWithName<TextMeshProUGUI>("Title");
         _body = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
+        _closeButton.SetOnClick(Close);
     }
 
     public static void ShowJournal(JournalEntry journal)

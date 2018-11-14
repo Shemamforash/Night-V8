@@ -59,6 +59,7 @@ public class TutorialManager : MonoBehaviour
         InputHandler.InterruptListeners(true);
         InputHandler.SetCurrentListener(_closeButton);
         _closeButton.SetCallback(ShowTutorialPart);
+        _closeButton.SetOnClick(ShowTutorialPart);
         SetCurrentSelectableActive(false);
     }
 
@@ -78,7 +79,11 @@ public class TutorialManager : MonoBehaviour
         _overlayController.SetTutorialArea(_currentTutorialPart.MinOffset, _currentTutorialPart.MaxOffset);
         _currentTutorialPart.MarkComplete();
 
-        if (_currentTutorialPart.NextPart() == null) _closeButton.SetCallback(Close);
+        if (_currentTutorialPart.NextPart() == null)
+        {
+            _closeButton.SetCallback(Close);
+            _closeButton.SetOnClick(Close);
+        }
         else _currentTutorialPart = _currentTutorialPart.NextPart();
     }
 

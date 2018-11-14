@@ -45,6 +45,7 @@ public class UiJournalController : UiInventoryMenuController
 
     protected override void OnShow()
     {
+        UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
         _journalList.Show(GetAvailableJournalEntries);
     }
 

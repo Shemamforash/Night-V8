@@ -16,6 +16,9 @@ namespace Game.Exploration.Environment
         public readonly EnvironmentType EnvironmentType;
         private static List<EnvironmentType> _environmentTypes;
         private readonly List<string> _environmentNames = new List<string>();
+        public readonly int WaterSources;
+        public readonly int FoodSources;
+        public readonly int ResourceSources;
 
         public Environment(XmlNode environmentNode)
         {
@@ -32,6 +35,9 @@ namespace Game.Exploration.Environment
             Shelters = environmentNode.IntFromNode("Shelters");
             Animals = environmentNode.IntFromNode("Animals");
             Dangers = environmentNode.IntFromNode("Danger");
+            WaterSources = environmentNode.IntFromNode("WaterSources");
+            FoodSources = environmentNode.IntFromNode("FoodSources");
+            ResourceSources = environmentNode.IntFromNode("ResourceSources");
             RegionCount = Temples + Monuments + Shrines + Fountains + Shelters + Animals + Dangers;
             LoadEnvironmentNames();
         }

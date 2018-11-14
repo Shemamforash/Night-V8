@@ -36,6 +36,7 @@ namespace Facilitating.UIControllers
 
         protected override void OnShow()
         {
+            UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
             UpdatePlates();
             InputHandler.RegisterInputListener(this);
             SetPlateListActive(_plateOneUi);

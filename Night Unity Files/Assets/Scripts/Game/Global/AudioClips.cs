@@ -20,11 +20,11 @@ namespace Game.Global
         public static AudioClip[] ArmourBreakClips;
         public static AudioClip[] FootstepClips;
         public static AudioClip[] ExplosionClips;
-        public static AudioClip[] LightRainClips, MediumRainClips, HeavyRainClips;
-        public static AudioClip[] LightWindClips, MediumWindClips, HeavyWindClips;
-        public static AudioClip[] DayAudio, NightAudio;
-        public static AudioClip[] Ambient;
+        public static AudioClip[] DayAudio;
+        public static AudioClip Ambient, Night;
         public static AudioClip[] BulletLoad;
+        public static AudioClip LightRain, MediumRain, HeavyRain;
+        public static AudioClip LightWind, MediumWind, HeavyWind;
         public static AudioClip ClipIn, ClipOut;
         public static AudioClip SimmavA, SimmavB, SimmavC, SimmavD;
         private static readonly List<AssetBundle> _loadedBundles = new List<AssetBundle>();
@@ -100,15 +100,15 @@ namespace Game.Global
 
             Debug.Log("loading weather audio");
             yield return StartCoroutine(LoadAllClipsFromBundle(a => ThunderSounds = a, "thunder"));
-            yield return StartCoroutine(LoadAllClipsFromBundle(a => LightRainClips = a, "rain/light"));
-            yield return StartCoroutine(LoadAllClipsFromBundle(a => MediumRainClips = a, "rain/medium"));
-            yield return StartCoroutine(LoadAllClipsFromBundle(a => HeavyRainClips = a, "rain/heavy"));
-            yield return StartCoroutine(LoadAllClipsFromBundle(a => LightWindClips = a, "wind/light"));
-            yield return StartCoroutine(LoadAllClipsFromBundle(a => MediumWindClips = a, "wind/medium"));
-            yield return StartCoroutine(LoadAllClipsFromBundle(a => HeavyWindClips = a, "wind/heavy"));
-            yield return StartCoroutine(LoadAllClipsFromBundle(a => NightAudio = a, "nighttime"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => DayAudio = a, "daytime"));
-            yield return StartCoroutine(LoadAllClipsFromBundle(a => Ambient = a, "drones"));
+            yield return StartCoroutine(LoadClip(a => Night = a, "ambient", "Night"));
+            yield return StartCoroutine(LoadClip(a => Ambient = a, "ambient","Waiting For Time"));
+            yield return StartCoroutine(LoadClip(a => LightRain = a, "rain", "Light"));
+            yield return StartCoroutine(LoadClip(a => MediumRain = a, "rain", "Medium"));
+            yield return StartCoroutine(LoadClip(a => HeavyRain = a, "rain", "Heavy"));
+            yield return StartCoroutine(LoadClip(a => LightWind = a, "wind", "Light"));
+            yield return StartCoroutine(LoadClip(a => MediumWind = a, "wind", "Medium"));
+            yield return StartCoroutine(LoadClip(a => HeavyWind = a, "wind", "Heavy"));
 
             Debug.Log("loading music");
             yield return StartCoroutine(LoadClip(a => SimmavA = a, "music/combat/simmav", "simmav a"));

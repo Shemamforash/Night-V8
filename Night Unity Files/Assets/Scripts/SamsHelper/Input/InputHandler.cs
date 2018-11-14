@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -136,6 +137,7 @@ namespace SamsHelper.Input
 
             public void CheckPress()
             {
+                if (_axis == InputAxis.Mouse && Cursor.visible == false) return;
                 _currentInputValue = UnityEngine.Input.GetAxisRaw(_axisString);
                 bool isPressed = _currentInputValue != 0f;
                 if (isPressed)

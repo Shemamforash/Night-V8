@@ -1,4 +1,5 @@
 ﻿using DefaultNamespace;
+using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -17,19 +18,20 @@ namespace Facilitating.UIControllers.Inventories
         public void Show()
         {
             gameObject.SetActive(true);
-            VolumeController.FadeInMuffle();
+            AudioController.FadeInMuffle();
             OnShow();
         }
 
         public void Hide()
         {
             gameObject.SetActive(false);
-            VolumeController.FadeOutMuffle();
+            AudioController.FadeOutMuffle();
             OnHide();
         }
 
         protected virtual void OnShow()
         {
+            UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
         }
 
         protected virtual void OnHide()

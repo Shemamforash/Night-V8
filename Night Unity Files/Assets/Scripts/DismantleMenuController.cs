@@ -200,12 +200,16 @@ public class DismantleMenuController : Menu
 
     private void ShowList()
     {
+        _closeButton.SetOnClick(() => ShowDismantleMenu(null));
+        _closeButton.SetCallback(() => ShowDismantleMenu(null));
         _resourceMenuObject.SetActive(false);
         _dismantleList.Show(GetDismantleItems);
     }
 
     private void ShowDismantleMenu(object o)
     {
+        _closeButton.SetOnClick(Close);
+        _closeButton.SetCallback(Close);
         _objectToDismantle = (GearItem) o;
         _dismantleList.Hide();
         _resourceMenuObject.SetActive(true);

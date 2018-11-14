@@ -61,6 +61,7 @@ namespace Facilitating.UIControllers
             _swapButton.AddOnClick(() =>
             {
                 if (!WeaponsAreAvailable()) return;
+                UiGearMenuController.SetCloseButtonAction(Show);
                 _weaponList.Show(GetAvailableWeapons);
                 InputHandler.UnregisterInputListener(this);
                 _infoGameObject.SetActive(false);
@@ -68,6 +69,7 @@ namespace Facilitating.UIControllers
             _inscribeButton.AddOnClick(() =>
             {
                 if (!InscriptionsAreAvailable()) return;
+                UiGearMenuController.SetCloseButtonAction(Show);
                 _inscriptionList.Show(GetAvailableInscriptions);
                 InputHandler.UnregisterInputListener(this);
                 _infoGameObject.SetActive(false);
@@ -122,6 +124,7 @@ namespace Facilitating.UIControllers
 
         protected override void OnShow()
         {
+            UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
             _infoGameObject.SetActive(true);
             _weaponList.Hide();
             _inscriptionList.Hide();

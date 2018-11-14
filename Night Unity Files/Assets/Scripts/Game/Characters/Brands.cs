@@ -176,28 +176,6 @@ namespace Game.Characters.Brands
         }
     }
 
-    public class SkillKillBrand : Brand
-    {
-        public SkillKillBrand(Player player) : base(player, "Prowess")
-        {
-        }
-
-        protected override void OnSucceed()
-        {
-            Player.Attributes.InstantCooldownChance += SuccessModifier;
-        }
-
-        protected override void OnFail()
-        {
-            Player.Attributes.SkillDisableChance += FailModifier;
-        }
-
-        protected override string GetProgressSubstring()
-        {
-            return "Killed " + Progress() + " enemies with skills";
-        }
-    }
-
     public class InstantReloadBrand : Brand
     {
         public InstantReloadBrand(Player player) : base(player, "Ingenuity")

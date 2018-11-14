@@ -2,6 +2,7 @@
 {
     public enum InputAxis
     {
+        Mouse,
         Horizontal,
         Vertical,
         Menu,

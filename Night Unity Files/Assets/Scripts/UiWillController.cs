@@ -22,6 +22,7 @@ public class UiWillController : UiInventoryMenuController, IInputListener
 
     protected override void OnShow()
     {
+        UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
         InputHandler.RegisterInputListener(this);
         UpdateValues();
         _fettleButton.Select();
