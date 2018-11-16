@@ -28,7 +28,6 @@ public class BrandReplaceMenuController : Menu
         _riteShrine = riteShrine;
         _brand = brand;
         MenuStateMachine.ShowMenu("Brand Replace Menu");
-        _closeButton.SetInputAxis(InputAxis.Cover);
         _closeButton.Enable();
     }
 

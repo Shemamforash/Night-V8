@@ -24,10 +24,11 @@ namespace SamsHelper.ReactiveUI.Elements
         private event Action OnDeselectActions;
         private bool _isSelected;
         private bool _enabled = true;
+        private static EnhancedButton _currentButton;
 
         public void OnDeselect(BaseEventData eventData)
         {
-            Exit();
+//            Exit();
         }
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -48,13 +49,13 @@ namespace SamsHelper.ReactiveUI.Elements
             {
                 if (_button.navigation.selectOnUp == null || _onUpAction == null) return;
                 _onUpAction?.Invoke();
-                Exit();
+//                Exit();
             }
             else if (direction < 0)
             {
                 if (_button.navigation.selectOnDown == null || _onDownAction == null) return;
                 _onDownAction?.Invoke();
-                Exit();
+//                Exit();
             }
         }
 
@@ -74,7 +75,7 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public void OnPointerExit(PointerEventData p)
         {
-            Exit();
+//            Exit();
         }
 
         public void OnSelect(BaseEventData eventData)
@@ -100,6 +101,8 @@ namespace SamsHelper.ReactiveUI.Elements
 
         private void Enter()
         {
+            if(_currentButton != null) _currentButton.Exit();
+            _currentButton = this;
             OnSelectActions?.Invoke();
             _justEntered = true;
             if (!_hideBorder) _border.SetSelected();

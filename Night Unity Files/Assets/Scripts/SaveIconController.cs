@@ -9,15 +9,12 @@ using UnityEngine.UI;
 
 public class SaveIconController : MonoBehaviour
 {
-    private Image _glow;
     private ParticleSystem _spinParticles;
     private static GameObject _spinnerPrefab;
 
     public void Awake()
     {
-        _glow = gameObject.FindChildWithName<Image>("Sprite");
         _spinParticles = gameObject.FindChildWithName<ParticleSystem>("Particles");
-        _glow.color = UiAppearanceController.InvisibleColour;
         GetComponent<Canvas>().worldCamera = Camera.main;
         StartCoroutine(Spin());
     }
@@ -43,8 +40,6 @@ public class SaveIconController : MonoBehaviour
         }
 
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(_glow.DOColor(UiAppearanceController.FadedColour, 0.4f).SetEase(Ease.InExpo));
-        sequence.Append(_glow.DOColor(UiAppearanceController.InvisibleColour, 1f).SetEase(Ease.Linear));
         sequence.AppendCallback(() => Destroy(gameObject));
 
         minTime = 1f;

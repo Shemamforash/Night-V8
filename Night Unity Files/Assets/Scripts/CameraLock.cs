@@ -20,7 +20,9 @@ public class CameraLock : MonoBehaviour
 
     public void Update()
     {
-        _cameraLockText.SetText(_lockedCamera ? "Camera Locked" : "Camera Free");
+        string inputString = "Input Mode:\n";
+        inputString += _lockedCamera ? "Keyboard Only" : "Mouse and Keyboard";
+        _cameraLockText.SetText(inputString);
     }
 
     public static bool IsCameraLocked()
@@ -41,7 +43,6 @@ public class CameraLock : MonoBehaviour
     private static void SetLock(bool locked)
     {
         _lockedCamera = locked;
-        Cursor.visible = !_lockedCamera;
         SaveController.SaveSettings();
     }
 

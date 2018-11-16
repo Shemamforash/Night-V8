@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Fastlights;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class FireBurstBehaviour : FireDamageDeal
     private ParticleSystem _fire, _swirl, _burst;
     private FastLight _light;
     private const float LifeTime = 8f;
+    private AudioSource _audioSource;
 
     private void Awake()
     {
@@ -20,6 +22,8 @@ public class FireBurstBehaviour : FireDamageDeal
         _swirl = gameObject.FindChildWithName<ParticleSystem>("Swirl");
         _burst = gameObject.FindChildWithName<ParticleSystem>("Burst");
         _light = gameObject.FindChildWithName<FastLight>("Light");
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.clip = AudioClips.FireExplosion;
     }
 
     public static FireBurstBehaviour Create(Vector3 position)
@@ -57,6 +61,7 @@ public class FireBurstBehaviour : FireDamageDeal
         _smallFlash.SetAlpha(0f);
         _flash.SetAlpha(0f);
         _light.SetAlpha(0f);
+        _audioSource.Play();
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() => _smallFlash.SetAlpha(1));
         sequence.AppendInterval(0.1f);

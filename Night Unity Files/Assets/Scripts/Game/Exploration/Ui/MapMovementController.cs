@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
-using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Characters.CharacterActions;
 using Game.Exploration.Environment;
@@ -20,21 +19,21 @@ public class MapMovementController : MonoBehaviour, IInputListener
     private List<Region> _availableRegions;
     private Region _nearestRegion;
     private static Region _currentRegion;
-    private static UIAttributeMarkerController _gritMarker;
-    public static Camera MapCamera;
+    private static Camera MapCamera;
     private static Player _player;
     private static MapMovementController _instance;
     private bool _pressed;
     private Vector3 velocity;
     private static bool _visible;
+    private static AudioSource _audioSource;
 
     public void Awake()
     {
         _rigidBody2D = GetComponent<Rigidbody2D>();
         _availableRegions = MapGenerator.DiscoveredRegions();
-        _gritMarker = GameObject.Find("Grit").FindChildWithName<UIAttributeMarkerController>("Bar");
-        MapCamera = GameObject.Find("Map Camera").GetComponent<Camera>();
+        MapCamera = GetComponent<Camera>();
         _instance = this;
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public static void Enter(Player player)
@@ -42,9 +41,9 @@ public class MapMovementController : MonoBehaviour, IInputListener
         _visible = true;
         ResourcesUiController.Hide();
         _player = player;
-        _gritMarker.SetValue(_player.Attributes.Get(AttributeType.Grit));
+        MapMenuController.GritMarker().SetValue(_player.Attributes.Get(AttributeType.Grit));
         _currentRegion = _player.TravelAction.GetCurrentRegion();
-        MapCamera.DOOrthoSize(7, 1f);
+        MapCamera.DOOrthoSize(6, 1f);
         InputHandler.SetCurrentListener(_instance);
         Recenter();
     }
@@ -60,7 +59,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
     public static void UpdateGrit(int gritCost)
     {
         CharacterAttribute grit = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Grit);
-        _gritMarker.SetValue((int) grit.Max, (int) (grit.CurrentValue() - gritCost));
+        MapMenuController.GritMarker().SetValue((int) grit.Max, (int) (grit.CurrentValue() - gritCost));
     }
 
     private static void Recenter()
@@ -72,6 +71,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     public void FixedUpdate()
     {
+        if (InputHandler.GetCurrentListener() != this) return;
         if (!_visible) return;
         if (_player == null) return;
         if (!_pressed && _nearestRegion != null) LocateToNearestRegion();
@@ -83,6 +83,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     private void LocateToNearestRegion()
     {
+        if (Cursor.visible) return;
         float distance = ((Vector2) transform.position).Distance(_nearestRegion.Position);
         if (distance < 0.01f)
         {
@@ -100,6 +101,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
     {
         if (!_visible) return;
         if (_player == null) return;
+        if (Cursor.visible) MoveWithMouse();
         float nearestDistance = 1000;
         Region newNearestRegion = null;
         _availableRegions.ForEach(region =>
@@ -111,6 +113,36 @@ public class MapMovementController : MonoBehaviour, IInputListener
         });
         if (nearestDistance > 1.5f) newNearestRegion = null;
         SetNearestRegion(newNearestRegion);
+    }
+
+    private void MoveWithMouse()
+    {
+        Vector2 mousePosition = Input.mousePosition;
+        float screenRadius = Mathf.Min(Screen.height / 2f, Screen.width / 2f);
+        mousePosition.x -= Screen.width / 2f;
+        mousePosition.x = Mathf.Clamp(mousePosition.x, -screenRadius, screenRadius);
+        mousePosition.y -= Screen.height / 2f;
+        mousePosition.y = Mathf.Clamp(mousePosition.y, -screenRadius, screenRadius);
+        mousePosition.x /= screenRadius;
+        mousePosition.y /= screenRadius;
+        _direction = mousePosition;
+        if (mousePosition.magnitude < 0.25f) CurrentSpeed = 0f;
+        else CurrentSpeed = (mousePosition.magnitude - 0.25f) / 0.75f * PanSpeed / 2f;
+        ClampDirection();
+    }
+
+    private void ClampDirection()
+    {
+        bool isRegionVisible = false;
+        foreach (Region r in _availableRegions)
+        {
+            Vector2 potentialPosition = r.Position - _direction * 5;
+            if (!potentialPosition.InCameraView(MapCamera)) continue;
+            isRegionVisible = true;
+            break;
+        }
+
+        if (!isRegionVisible) _direction = Vector2.zero;
     }
 
     private void SetNearestRegion(Region newNearestRegion)
@@ -134,23 +166,17 @@ public class MapMovementController : MonoBehaviour, IInputListener
                 _direction.y += direction;
                 break;
             case InputAxis.Cover:
-                if (!MapMenuController.IsReturningFromCombat) ReturnToGame(null);
+                if (!MapMenuController.IsReturningFromCombat) ReturnToGame();
                 break;
             case InputAxis.Fire:
                 TravelToRegion();
                 break;
+            case InputAxis.Mouse:
+                TravelToRegion();
+                break;
         }
 
-        bool isRegionVisible = false;
-        foreach (Region r in _availableRegions)
-        {
-            Vector2 potentialPosition = r.Position - _direction * 5;
-            if (!potentialPosition.InCameraView(MapCamera)) continue;
-            isRegionVisible = true;
-            break;
-        }
-
-        if (!isRegionVisible) _direction = Vector2.zero;
+        ClampDirection();
         CurrentSpeed = PanSpeed;
     }
 
@@ -171,13 +197,12 @@ public class MapMovementController : MonoBehaviour, IInputListener
         travelAction.TravelTo(_nearestRegion, _nearestRegion.MapNode().GetGritCost());
         if (_currentRegion == _nearestRegion) return;
         MapMenuController.IsReturningFromCombat = false;
-        ReturnToGame(_nearestRegion);
+        ReturnToGame();
     }
 
-    private static void ReturnToGame(Region region)
+    public static void ReturnToGame()
     {
         MapMenuController.FlashCloseButton();
-        region?.MapNode().Enter();
         MenuStateMachine.ShowMenu("Game Menu");
         InputHandler.SetCurrentListener(null);
         _visible = false;
@@ -191,5 +216,15 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     public void OnDoubleTap(InputAxis axis, float direction)
     {
+    }
+
+    public static void FadeInAudio()
+    {
+        _audioSource.DOFade(1f, 3f);
+    }
+
+    public static void FadeOutAudio()
+    {
+        _audioSource.DOFade(0f, 3f);
     }
 }

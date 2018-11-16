@@ -55,7 +55,7 @@ namespace Facilitating
             ParticleSystem.EmissionModule fireEmission = _fire.emission;
             float fireEmissionLevel = _fireLevel - FireBurnOutPoint;
             if (fireEmissionLevel < 0) fireEmissionLevel = 0;
-            fireEmissionLevel /= (1 - FireBurnOutPoint);
+            fireEmissionLevel /= 1 - FireBurnOutPoint;
             fireEmission.rateOverTime = FireEmissionRateMax * fireEmissionLevel;
 
             ParticleSystem.MainModule _smoke1Main = _smoke1.main;

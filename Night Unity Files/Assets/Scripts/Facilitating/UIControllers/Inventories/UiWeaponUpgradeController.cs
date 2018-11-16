@@ -43,7 +43,7 @@ namespace Facilitating.UIControllers
             _infoGameObject = gameObject.FindChildWithName("Info");
 
             List<ItemQuality> qualities = new List<ItemQuality>();
-//#if UNITY_EDITOR
+#if UNITY_EDITOR
             foreach (ItemQuality value in Enum.GetValues(typeof(ItemQuality))) qualities.Add(value);
             for (int i = 0; i < 1; ++i)
             {
@@ -56,7 +56,7 @@ namespace Facilitating.UIControllers
                 Accessory accessory = Accessory.Generate();
                 Inventory.Move(accessory);
             }
-//#endif
+#endif
 
             _swapButton.AddOnClick(() =>
             {

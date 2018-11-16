@@ -16,6 +16,8 @@ namespace Game.Exploration.Ui
     public class MapNodeController : MonoBehaviour
     {
         private const float LetterFadeInDuration = 0.5f;
+        private static Sprite _animalSprite, _dangerSprite, _gateSprite, _fountainSprite, _monumentSprite, _shelterSprite, _shrineSprite, _templeSprite, _noneSprite;
+
         private readonly List<Letter> _letters = new List<Letter>();
         private string _completeWord;
         private int _currentLetter;
@@ -23,36 +25,28 @@ namespace Game.Exploration.Ui
         private bool _doneFading;
         private TextMeshProUGUI _nameText, _costText, _claimText;
 
-        private CanvasGroup _canvas;
-        private SpriteRenderer _ring1, _ring2, _ring3, _icon, _shadow;
+        private Image _icon;
+        private float _targetCentreAlpha, _targetNodeAlpha;
+        private CanvasGroup _nodeCanvas, _centreCanvas;
         private UIBorderController _border;
-        private static Sprite _animalSprite, _dangerSprite, _gateSprite, _fountainSprite, _monumentSprite, _shelterSprite, _shrineSprite, _templeSprite, _noneSprite;
         private int _gritCost;
         private Region _region;
         private ParticleSystem _claimedParticles;
 
-        private const float Ring1Alpha = 0.1f;
-        private const float Ring2Alpha = 0.1f;
-        private const float Ring3Alpha = 0.25f;
-        private const float IconAlpha = 0.8f;
-        private const float FadeTime = 0.5f;
-
-        private AudioSource _audioSource;
         public AudioClip _enterClip;
         private bool _hidden;
+        private bool _canAfford;
 
         public void Awake()
         {
-            _canvas = gameObject.FindChildWithName<CanvasGroup>("Canvas");
+            _nodeCanvas = gameObject.FindChildWithName<CanvasGroup>("Canvas");
+            _centreCanvas = gameObject.FindChildWithName<CanvasGroup>("Centre Canvas");
+
             _nameText = gameObject.FindChildWithName<TextMeshProUGUI>("Name");
             _costText = gameObject.FindChildWithName<TextMeshProUGUI>("Cost");
             _claimText = gameObject.FindChildWithName<TextMeshProUGUI>("Claim Bonus");
-            _audioSource = GetComponent<AudioSource>();
-            _ring1 = gameObject.FindChildWithName<SpriteRenderer>("Ring 1");
-            _ring2 = gameObject.FindChildWithName<SpriteRenderer>("Ring 2");
-            _ring3 = gameObject.FindChildWithName<SpriteRenderer>("Ring 3");
-            _icon = gameObject.FindChildWithName<SpriteRenderer>("Icon");
-            _shadow = gameObject.FindChildWithName<SpriteRenderer>("Shadow");
+            _icon = gameObject.FindChildWithName<Image>("Icon");
+
             _border = gameObject.FindChildWithName<UIBorderController>("Border");
             _border.SetActive();
             _claimedParticles = gameObject.FindChildWithName<ParticleSystem>("Claimed");
@@ -77,33 +71,32 @@ namespace Game.Exploration.Ui
             return _claimedParticles.trails.colorOverTrail.color.a;
         }
 
+        private void SetGritText()
+        {
+            if (_region.GetRegionType() == RegionType.Gate) _costText.text = "Return home";
+            else if (!_canAfford) _costText.text = "Not Enough Grit To Reach";
+            else _costText.text = _gritCost + " Grit";
+        }
+
         public void Show()
         {
-            Debug.Log("Show");
+            Debug.Log("Shown");
             _hidden = false;
             _gritCost = RoutePlotter.RouteBetween(_region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion()).Count - 1;
-            if (_region.GetRegionType() == RegionType.Gate) _costText.text = "Return home";
-            else _costText.text = _gritCost + " Grit";
-            _ring1.DOFade(Ring1Alpha, FadeTime).SetUpdate(UpdateType.Normal, true);
-            _ring2.DOFade(Ring2Alpha, FadeTime).SetUpdate(UpdateType.Normal, true);
-            _ring3.DOFade(Ring3Alpha, FadeTime).SetUpdate(UpdateType.Normal, true);
-            _icon.DOFade(IconAlpha, FadeTime).SetUpdate(UpdateType.Normal, true);
-            _shadow.DOFade(1f, FadeTime).SetUpdate(UpdateType.Normal, true);
-            DOTween.To(GetTrailAlpha, SetTrailAlpha, 1f, FadeTime).SetUpdate(UpdateType.Normal, true);
-            _canvas.DOFade(1f, FadeTime).SetUpdate(UpdateType.Normal, true);
+            _canAfford = CharacterManager.SelectedCharacter.CanAffordTravel(_gritCost);
+            SetGritText();
+            _targetCentreAlpha = 0.6f;
+            _targetNodeAlpha = _canAfford ? 1f : 0.5f;
+            DOTween.To(GetTrailAlpha, SetTrailAlpha, 1f, 1f).SetUpdate(UpdateType.Normal, true);
         }
 
         public void Hide()
         {
+            Debug.Log("Hidden");
             _hidden = true;
-            _audioSource.DOFade(0, FadeTime).SetUpdate(UpdateType.Normal, true);
-            _ring1.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
-            _ring2.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
-            _ring3.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
-            _icon.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
-            _shadow.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
-            DOTween.To(GetTrailAlpha, SetTrailAlpha, 0f, FadeTime).SetUpdate(UpdateType.Normal, true);
-            _canvas.DOFade(0f, FadeTime).SetUpdate(UpdateType.Normal, true);
+            MapMovementController.FadeOutAudio();
+            _targetNodeAlpha = 0f;
+            DOTween.To(GetTrailAlpha, SetTrailAlpha, 0f, 1f).SetUpdate(UpdateType.Normal, true);
         }
 
         public void SetRegion(Region region)
@@ -168,17 +161,24 @@ namespace Game.Exploration.Ui
             }
         }
 
-        public void Enter()
-        {
-            _audioSource = GetComponent<AudioSource>();
-            _audioSource.PlayOneShot(_enterClip);
-        }
-
         public void Update()
         {
-            _ring1.transform.Rotate(new Vector3(0, 0, 1), 5 * Time.deltaTime);
-            _ring2.transform.Rotate(new Vector3(0, 0, 1), 3 * Time.deltaTime);
-            _ring3.transform.Rotate(new Vector3(0, 0, 1), -4 * Time.deltaTime);
+            if (_nodeCanvas.alpha == 0 && _targetNodeAlpha == 0f) return;
+            float currentCentreAlpha = _centreCanvas.alpha;
+            float centreAlphaDifference = _targetCentreAlpha - currentCentreAlpha;
+            if (Mathf.Abs(centreAlphaDifference) > 0.005f)
+            {
+                centreAlphaDifference = Time.deltaTime > Mathf.Abs(centreAlphaDifference) ? centreAlphaDifference : Time.deltaTime * centreAlphaDifference.Polarity();
+                _centreCanvas.alpha += centreAlphaDifference;
+            }
+
+            float currentNodeAlpha = _nodeCanvas.alpha;
+            float nodeAlphaDifference = _targetNodeAlpha - currentNodeAlpha;
+            if (Mathf.Abs(nodeAlphaDifference) > 0.01f)
+            {
+                nodeAlphaDifference = Time.deltaTime > Mathf.Abs(nodeAlphaDifference) ? nodeAlphaDifference : Time.deltaTime * nodeAlphaDifference.Polarity();
+                _nodeCanvas.alpha += nodeAlphaDifference;
+            }
         }
 
         public int GetGritCost()
@@ -207,22 +207,11 @@ namespace Game.Exploration.Ui
 
         public void GainFocus()
         {
-            if (_hidden) return;
-            Debug.Log("focus");
-            _audioSource.pitch = Random.Range(0.9f, 1.1f);
-            _audioSource.volume = 0.8f;
-            _audioSource.DOFade(0.5f, FadeTime).SetUpdate(UpdateType.Normal, true);
-
-            _icon.DOFade(IconAlpha * 2f, 1f).SetUpdate(UpdateType.Normal, true);
-            _ring1.DOFade(Ring1Alpha * 2f, 1f).SetUpdate(UpdateType.Normal, true);
-            _ring2.DOFade(Ring2Alpha * 2f, 1f).SetUpdate(UpdateType.Normal, true);
-            _ring3.DOFade(Ring3Alpha * 2f, 1f).SetUpdate(UpdateType.Normal, true);
-
-            _nameText.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
-            _costText.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
-            _claimText.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
+            if (_hidden || !_canAfford) return;
+            Debug.Log(_hidden);
+            MapMovementController.FadeInAudio();
+            _targetCentreAlpha = 1f;
             _border.SetSelected();
-
             transform.DOScale(Vector2.one * 1.25f, 1f).SetUpdate(UpdateType.Normal, true);
             MapMenuController.SetRoute(_region);
             MapMovementController.UpdateGrit(_gritCost);
@@ -230,18 +219,11 @@ namespace Game.Exploration.Ui
 
         public void LoseFocus(float time = 1f)
         {
-            _audioSource.DOFade(0, time).SetUpdate(UpdateType.Normal, true);
-
-            _icon.DOFade(IconAlpha, time).SetUpdate(UpdateType.Normal, true);
-            _ring1.DOFade(Ring1Alpha, time).SetUpdate(UpdateType.Normal, true);
-            _ring2.DOFade(Ring2Alpha, time).SetUpdate(UpdateType.Normal, true);
-            _ring3.DOFade(Ring3Alpha, time).SetUpdate(UpdateType.Normal, true);
-
-            _nameText.DOFade(0.4f, time).SetUpdate(UpdateType.Normal, true);
-            _costText.DOFade(0.4f, time).SetUpdate(UpdateType.Normal, true);
-            _claimText.DOFade(0.4f, time).SetUpdate(UpdateType.Normal, true);
+            if (_hidden || !_canAfford) return;
+            Debug.Log(_hidden);
+            MapMovementController.FadeOutAudio();
+            _targetCentreAlpha = 0.5f;
             _border.SetActive();
-
             transform.DOScale(Vector2.one, time).SetUpdate(UpdateType.Normal, true);
             MapMovementController.UpdateGrit(0);
         }

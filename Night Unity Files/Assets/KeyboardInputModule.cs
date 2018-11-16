@@ -12,6 +12,7 @@ public class KeyboardInputModule : StandaloneInputModule
             if (!usedEvent) SendSubmitEventToSelectedObject();
         }
 
+        Cursor.visible = !CameraLock.IsCameraLocked();
         if (Cursor.visible) ProcessMouseEvent();
     }
 }

@@ -86,7 +86,7 @@ namespace Game.Combat.Misc
                     weaponSkillTwo = player.EquippedWeapon.WeaponSkillTwo;
             }
 
-//#if UNITY_EDITOR
+#if UNITY_EDITOR
             characterSkillOne = player.CharacterSkillOne;
             characterSkillTwo = player.CharacterSkillTwo;
 
@@ -95,7 +95,7 @@ namespace Game.Combat.Misc
                 weaponSkillOne = player.EquippedWeapon.WeaponSkillOne;
                 weaponSkillTwo = player.EquippedWeapon.WeaponSkillTwo;
             }
-//#endif
+#endif
 
             BindSkill(0, characterSkillOne);
             BindSkill(1, characterSkillTwo);

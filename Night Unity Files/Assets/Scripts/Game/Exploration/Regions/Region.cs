@@ -249,6 +249,7 @@ namespace Game.Exploration.Regions
         private void CreateNodeObject()
         {
             if (_nodePrefab == null) _nodePrefab = Resources.Load<GameObject>("Prefabs/Map/Map Node");
+            Debug.Log("created");
             _nodeObject = GameObject.Instantiate(_nodePrefab);
             _nodeObject.transform.SetParent(MapMenuController.MapTransform);
             _nodeObject.name = Name;
@@ -278,7 +279,7 @@ namespace Game.Exploration.Regions
         {
             List<EnemyTemplate> templates = new List<EnemyTemplate>();
             if (!_canHaveEnemies) return templates;
-            int size = (int) (0.5 * WorldState.Difficulty() + 4);
+            int size = WorldState.Difficulty() + 4;
             templates.AddRange(CombatManager.GenerateEnemies(size, allowedTypes));
             return templates;
         }

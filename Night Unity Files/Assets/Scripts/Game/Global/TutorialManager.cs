@@ -37,8 +37,6 @@ public class TutorialManager : MonoBehaviour
         _closeButton = top.FindChildWithName<CloseButtonController>("Close Button");
         _tutorialCanvas = GetComponent<CanvasGroup>();
         _tutorialCanvas.alpha = 0f;
-        _closeButton.SetInputAxis(InputAxis.Fire);
-        _closeButton.SetText("K");
     }
 
     public static void TryOpenTutorial(int tutorialPart)
@@ -94,6 +92,7 @@ public class TutorialManager : MonoBehaviour
         _showingTutorial = true;
         DOTween.defaultTimeScaleIndependent = true;
         _alreadyPaused = CombatManager.IsCombatActive() ? CombatManager.IsCombatPaused() : WorldState.Paused();
+        _tutorialCanvas.blocksRaycasts = true;
         if (!_alreadyPaused)
         {
             WorldState.Pause();
@@ -117,7 +116,7 @@ public class TutorialManager : MonoBehaviour
                 WorldState.UnPause();
                 CombatManager.Resume();
             }
-
+            _tutorialCanvas.blocksRaycasts = false;
             _showingTutorial = false;
         });
         SetCurrentSelectableActive(true);

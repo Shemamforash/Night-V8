@@ -64,7 +64,8 @@ public class GateTransitController : MonoBehaviour
         r.SetRegionType(RegionType.Tomb);
         Player wanderer = CharacterManager.Characters.Find(c => c.CharacterTemplate.CharacterClass == CharacterClass.Wanderer);
         CharacterManager.SelectedCharacter = wanderer;
-        yield return SceneChanger.FlashWhite(3f).WaitForCompletion();
+        ScreenFaderController.FlashWhite(3f);
+        yield return new WaitForSeconds(3f);
         wanderer.TravelAction.TravelToInstant(r);
     }
 }

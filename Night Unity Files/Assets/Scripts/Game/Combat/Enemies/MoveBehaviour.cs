@@ -40,7 +40,7 @@ namespace Game.Combat.Enemies
             _tooFar = distanceToTargetCell > _maxDistance;
             _tooClose = distanceToTargetCell < _minDistance;
         }
-
+        
         private void FixedUpdate()
         {
             if (_targetCell == null) return;

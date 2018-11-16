@@ -1,21 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using DG.Tweening;
 using Game.Characters;
 using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper;
 using SamsHelper.Libraries;
 using UnityEngine;
-using System.Text.RegularExpressions;
-using System.Xml;
-using Facilitating.Persistence;
-using QuickEngine.Extensions;
+using Facilitating.UIControllers;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Environment
@@ -33,12 +26,14 @@ namespace Game.Exploration.Environment
         private readonly List<RingDrawer> _rings = new List<RingDrawer>();
         public static bool IsReturningFromCombat;
         private static CloseButtonController _closeButton;
+        private static UIAttributeMarkerController _gritMarker;
 
         public override void Awake()
         {
             base.Awake();
             _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
-            _closeButton.SetOnClick(Exit);
+            _closeButton.SetOnClick(() => MapMovementController.ReturnToGame());
+            _gritMarker = gameObject.FindChildWithName("Grit").FindChildWithName<UIAttributeMarkerController>("Bar");
             _nextRouteTime = 2f / MapGenerator.Regions().Count;
             MapTransform = GameObject.Find("Nodes").transform;
             CreateMapRings();
@@ -201,6 +196,11 @@ namespace Game.Exploration.Environment
         public static void FlashCloseButton()
         {
             _closeButton.Flash();
+        }
+
+        public static UIAttributeMarkerController GritMarker()
+        {
+            return _gritMarker;
         }
     }
 }

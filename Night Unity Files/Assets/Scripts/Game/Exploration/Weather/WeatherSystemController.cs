@@ -116,7 +116,6 @@ namespace Game.Exploration.Weather
                 float mediumTarget = amount >= 0.4f && amount < 0.7f ? 1f : 0f;
                 float heavyTarget = amount >= 0.7f ? 1f : 0f;
 
-                Debug.Log(lightTarget / 0.4f * 0.5f);
                 AudioController.FadeRainLight(lightTarget / 0.4f, Duration);
                 AudioController.FadeRainMedium(mediumTarget / 0.7f, Duration);
                 AudioController.FadeRainHeavy(heavyTarget, Duration);
@@ -131,6 +130,7 @@ namespace Game.Exploration.Weather
 
             public override void ChangeWeather(float amount, bool instant)
             {
+                base.ChangeWeather(amount, instant);
                 AudioController.FadeFog(amount, Duration);
             }
         }

@@ -32,6 +32,11 @@ namespace Game.Characters
         public void SetPlayer(Player player)
         {
             _player = player;
+            if (_player == null)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
             CacheElements();
             BindUi();
             _player.SetCharacterView(this);
@@ -53,6 +58,7 @@ namespace Game.Characters
 
         public void Update()
         {
+            if (_player == null) return;
             UpdateAttributes();
             _brandUi.UpdateBrands(_player.BrandManager);
             UpdateCurrentAction();
@@ -124,7 +130,7 @@ namespace Game.Characters
             text.SetColor(enableButton ? Color.white : UiAppearanceController.FadedColour);
         }
 
-        public void RefreshNavigation()
+        private void RefreshNavigation()
         {
             bool atHome = _player.TravelAction.AtHome();
             bool resting = _player.States.GetCurrentState() is Rest;

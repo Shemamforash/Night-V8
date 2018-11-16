@@ -78,7 +78,7 @@ namespace Game.Combat.Enemies
         private void SetPosition()
         {
             transform.SetParent(GameObject.Find("World").transform);
-            transform.position = PathingGrid.GetCellNearMe(Vector2.zero, 8f, 4f).Position;
+            transform.position = PathingGrid.GetCellNearMe(PlayerCombat.Instance.transform.position, 20f, 7f).Position;
         }
 
         private void AssignSprite()

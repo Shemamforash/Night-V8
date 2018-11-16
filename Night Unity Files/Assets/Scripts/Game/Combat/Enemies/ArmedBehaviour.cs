@@ -2,15 +2,19 @@
 using Game.Gear.Weapons;
 using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Enemies
 {
     public class ArmedBehaviour : UnarmedBehaviour
     {
-        private float IdealWeaponDistance;
         private bool _waitingForHeal;
         private BaseWeaponBehaviour _weaponBehaviour;
+        private Cell _coverCell;
+        private float _aimTime;
+        private bool _automatic;
+        private float _fireTime;
 
         public override void Initialise(Enemy enemy)
         {
@@ -18,6 +22,10 @@ namespace Game.Combat.Enemies
             Assert.IsNotNull(Weapon());
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
             CalculateMaxMinDistance();
+            _aimTime = Random.Range(0.5f, 1f);
+            _automatic = Weapon().WeaponAttributes.Automatic;
+            _fireTime = 2f;
+            TryFire();
         }
 
         protected void CalculateMaxMinDistance()
@@ -27,21 +35,12 @@ namespace Game.Combat.Enemies
             if (MaxDistance > 4f) MaxDistance = 4f;
         }
 
-        protected override void OnAlert()
-        {
-            _aimTime = Random.Range(0.5f, 1f);
-            TryFire();
-        }
-
         protected virtual void TryFire()
         {
             Aim();
         }
 
         public override Weapon Weapon() => Enemy.EquippedWeapon;
-
-        private Cell _coverCell;
-        private float _aimTime;
 
         public override void MyUpdate()
         {
@@ -65,6 +64,7 @@ namespace Game.Combat.Enemies
         {
             CurrentAction = () =>
             {
+                _fireTime = 2f;
                 if (_aimTime > 0f) return;
                 if (_weaponBehaviour.Empty()) Reload();
                 else CurrentAction = Fire;
@@ -73,29 +73,32 @@ namespace Game.Combat.Enemies
 
         private void Fire()
         {
-            bool automatic = Weapon().WeaponAttributes.Automatic;
-            float fireTime = 2f;
-            CurrentAction = () =>
+            bool outOfRange = transform.Distance(GetTarget().transform) > MaxDistance;
+            bool outOfSight = outOfRange || Physics2D.Linecast(transform.position, GetTarget().transform.position, 1 << 8).collider != null;
+            if (outOfSight)
             {
-                fireTime -= Time.deltaTime;
-                if (fireTime <= 0)
-                {
-                    _weaponBehaviour.StopFiring();
-                    _aimTime = Random.Range(0.5f, 1f);
-                    Aim();
-                    return;
-                }
+                TryFire();
+                return;
+            }
 
-                if (!_weaponBehaviour.CanFire())
-                {
-                    if (!_weaponBehaviour.Empty() && automatic) return;
-                    _weaponBehaviour.StopFiring();
-                    Aim();
-                    return;
-                }
+            _fireTime -= Time.deltaTime;
+            if (_fireTime <= 0)
+            {
+                _weaponBehaviour.StopFiring();
+                _aimTime = Random.Range(0.5f, 1f);
+                Aim();
+                return;
+            }
 
-                _weaponBehaviour.StartFiring();
-            };
+            if (!_weaponBehaviour.CanFire())
+            {
+                if (!_weaponBehaviour.Empty() && _automatic) return;
+                _weaponBehaviour.StopFiring();
+                Aim();
+                return;
+            }
+
+            _weaponBehaviour.StartFiring();
         }
     }
 }

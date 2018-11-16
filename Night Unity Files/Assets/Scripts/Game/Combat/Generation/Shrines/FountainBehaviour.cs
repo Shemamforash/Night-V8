@@ -98,13 +98,13 @@ namespace Game.Combat.Generation.Shrines
 
         public string GetEventText()
         {
-            return "Drink from the fountain... [T]";
+            return Triggered ? "All attributes have been restored" : "Drink from the fountain... [T]";
         }
 
         public void Activate()
         {
+            if (Triggered) return;
             GetComponent<CompassItem>().Die();
-            Destroy(gameObject.GetComponent<Collider2D>());
             Triggered = true;
             StartCoroutine(SpawnEnemies());
         }

@@ -16,7 +16,7 @@ namespace Game.Exploration.Environment
 {
     public static class MapGenerator
     {
-        public const int MinRadius = 4;
+        public const int MinRadius = 3;
 
         private static readonly Dictionary<RegionType, string[]> prefixes = new Dictionary<RegionType, string[]>();
         private static readonly Dictionary<RegionType, string[]> suffixes = new Dictionary<RegionType, string[]>();
@@ -80,9 +80,6 @@ namespace Game.Exploration.Environment
             ConnectRegions();
             SetRegionTypes();
             initialNode.Discover();
-//#if UNITY_EDITOR
-//            _regions.ForEach(r => r.Discover());
-//#endif
         }
 
         private static void GenerateRegions()

@@ -28,7 +28,7 @@ namespace Game.Combat.Enemies.Humans
         public override void MyUpdate()
         {
             base.MyUpdate();
-            if (!Alerted || _healing) return;
+            if ( _healing) return;
             UpdateHealCooldown();
             TryHeal();
         }

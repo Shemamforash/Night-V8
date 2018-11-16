@@ -193,6 +193,9 @@ namespace Game.Combat.Player
         {
             switch (axis)
             {
+                case InputAxis.Mouse:
+                    _weaponBehaviour.StopFiring();
+                    break;
                 case InputAxis.Fire:
                     _weaponBehaviour.StopFiring();
                     break;

@@ -85,10 +85,10 @@ public class WeaponAudioController : MonoBehaviour
         float durability = weapon.WeaponAttributes.GetDurability().CurrentValue();
         float hpfValue = -15f * durability + 750;
         hpfValue = Mathf.Clamp(hpfValue, 0, 750);
-        _audioPool.PlayClip(shots.RandomElement(), 0, hpfValue);
+        _audioPool.PlayClip(shots[0], 0, hpfValue);
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(0.25f);
-        sequence.AppendCallback(() => { _audioPool.PlayClip(casings.RandomElement(), -0.6f); });
+        sequence.AppendCallback(() => { _audioPool.PlayClip(casings[0], -0.6f); });
     }
 
     public void BreakArmour()

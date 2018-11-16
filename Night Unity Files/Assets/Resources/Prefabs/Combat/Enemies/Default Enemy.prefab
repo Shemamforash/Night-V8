@@ -11,6 +11,22 @@ Prefab:
   m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1969838416443470}
   m_IsPrefabAsset: 1
+--- !u!1 &1310044646943810
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4735199255608262}
+  - component: {fileID: 58192423042232344}
+  m_Layer: 22
+  m_Name: Wall Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1361386719365014
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,6 +110,19 @@ Transform:
   m_Father: {fileID: 4906875525235332}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4735199255608262
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1310044646943810}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4906875525235332}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4906875525235332
 Transform:
   m_ObjectHideFlags: 1
@@ -101,11 +130,12 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1969838416443470}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.8892202, y: -2.8199313, z: 0}
+  m_LocalPosition: {x: -5.688269, y: 5.595921, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4201150100652938}
   - {fileID: 4328941477604530}
+  - {fileID: 4735199255608262}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -129,6 +159,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!58 &58192423042232344
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1310044646943810}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.02
 --- !u!58 &58215125495486528
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -299,16 +344,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bada4488ddac4d4bb99626e84df18aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pistolClipIn: {fileID: 8300000, guid: 1f327117f7bc9524bb5cd8870a94406c, type: 3}
-  _pistolClipOut: {fileID: 8300000, guid: daf5283ee66dca7449f90c36c3a91af0, type: 3}
-  _lmgClipIn: {fileID: 8300000, guid: eccda95838f4b8747ad24375ef8bc4b0, type: 3}
-  _lmgClipOut: {fileID: 8300000, guid: d277e41ce47d816498623d4d9c3342e7, type: 3}
-  _smgClipIn: {fileID: 8300000, guid: abf4a1d145a03c946bd9fa5c91364abf, type: 3}
-  _smgClipOut: {fileID: 8300000, guid: 356064910ee0a6040a7f14513408c140, type: 3}
-  _rifleClipIn: {fileID: 8300000, guid: b0aa93b9f87e97f4f9248a71b367cc35, type: 3}
-  _rifleClipOut: {fileID: 8300000, guid: 035a0091c65cf7243bae713bc94792f1, type: 3}
-  _shotgunClipIn: {fileID: 0}
-  _shotgunClipOut: {fileID: 0}
   SpoolClip: {fileID: 0}
 --- !u!114 &114661499513471804
 MonoBehaviour:

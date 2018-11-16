@@ -18,22 +18,21 @@ namespace Facilitating.UIControllers
 {
     public class UiGearMenuController : Menu, IInputListener
     {
-        private static UiAccessoryController _accessoryController;
-        private static UiArmourUpgradeController _armourUpgradeController;
-        private static UiWeaponUpgradeController _weaponUpgradeController;
-        private static UICraftingController _craftingController;
-        private static UiConsumableController _consumableController;
-        private static UiJournalController _journalController;
-        private static UiInventoryMenuController _currentMenuController;
-        private static UiWillController _willController;
+        private UiAccessoryController _accessoryController;
+        private UiArmourUpgradeController _armourUpgradeController;
+        private UiWeaponUpgradeController _weaponUpgradeController;
+        private UICraftingController _craftingController;
+        private UiConsumableController _consumableController;
+        private UiJournalController _journalController;
+        private UiInventoryMenuController _currentMenuController;
+        private UiWillController _willController;
         private static UiGearMenuController _instance;
-        private static CloseButtonController _closeButton;
-        private static TabController _leftTab, _rightTab;
+        private CloseButtonController _closeButton;
+        private TabController _leftTab, _rightTab;
 
-        private static Tab _currentTab;
-        private static bool _open;
-        private static readonly List<Tab> _tabs = new List<Tab>();
-        private static GameObject _tabParent;
+        private bool _open;
+        private readonly List<InventoryTab> _tabs = new List<InventoryTab>();
+        private GameObject _tabParent;
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
@@ -41,8 +40,8 @@ namespace Facilitating.UIControllers
             switch (axis)
             {
                 case InputAxis.SwitchTab:
-                    if (direction < 0) _currentTab.SelectPreviousTab();
-                    else _currentTab.SelectNextTab();
+                    if (direction < 0) InventoryTab.CurrentTab().SelectPreviousTab();
+                    else InventoryTab.CurrentTab().SelectNextTab();
                     break;
                 case InputAxis.Inventory:
                     Close();
@@ -60,68 +59,14 @@ namespace Facilitating.UIControllers
 
         private void CreateTab(string tabName, UiInventoryMenuController menu)
         {
-            Tab tab = new Tab(tabName, menu);
+            InventoryTab tab = _tabParent.FindChildWithName(tabName).FindChildWithName<InventoryTab>("Image");
+            tab.SetMenu(menu);
             _tabs.Add(tab);
         }
 
-        private class Tab
+        public void OnDestroy()
         {
-            private readonly UiInventoryMenuController _menu;
-            private Tab _prevTab;
-            private Tab _nextTab;
-            private readonly Image _highlightImage;
-
-            public Tab(string name, UiInventoryMenuController menu)
-            {
-                EnhancedText tabText = _tabParent.FindChildWithName<EnhancedText>(name);
-                _highlightImage = tabText.gameObject.FindChildWithName<Image>("Image");
-                _highlightImage.GetComponent<EnhancedButton>().AddOnClick(Select);
-                _menu = menu;
-            }
-
-            public void Select()
-            {
-                if (_currentTab == null)
-                {
-                    if (_prevTab == null) _leftTab.InstantFade();
-                    if (_nextTab == null) _rightTab.InstantFade();
-                }
-
-                _currentTab = this;
-                _highlightImage.DOFade(0.5f, 0.5f).SetUpdate(UpdateType.Normal, true);
-                OpenInventoryMenu(_menu);
-            }
-
-            public void Deselect()
-            {
-                _highlightImage.DOFade(0f, 0.5f).SetUpdate(UpdateType.Normal, true);
-            }
-
-            public void SetNeighbors(Tab prevTab, Tab nextTab)
-            {
-                _prevTab = prevTab;
-                _nextTab = nextTab;
-            }
-
-            public void SelectNextTab()
-            {
-                _leftTab.FadeIn();
-                if (_nextTab == null) return;
-                if (_nextTab._nextTab == null) _rightTab.FlashAndFade();
-                else _rightTab.Flash();
-                Deselect();
-                _nextTab.Select();
-            }
-
-            public void SelectPreviousTab()
-            {
-                _rightTab.FadeIn();
-                if (_prevTab == null) return;
-                if (_prevTab._prevTab == null) _leftTab.FlashAndFade();
-                else _leftTab.Flash();
-                Deselect();
-                _prevTab.Select();
-            }
+            _instance = null;
         }
 
         public override void Awake()
@@ -159,10 +104,10 @@ namespace Facilitating.UIControllers
             for (int i = 0; i < _tabs.Count; ++i)
             {
                 int prevIndex = i - 1;
-                Tab prevTab = prevIndex == -1 ? null : _tabs[prevIndex];
+                InventoryTab prevTab = prevIndex == -1 ? null : _tabs[prevIndex];
 
                 int nextIndex = i + 1;
-                Tab nextTab = nextIndex == _tabs.Count ? null : _tabs[nextIndex];
+                InventoryTab nextTab = nextIndex == _tabs.Count ? null : _tabs[nextIndex];
 
                 _tabs[i].SetNeighbors(prevTab, nextTab);
             }
@@ -170,22 +115,22 @@ namespace Facilitating.UIControllers
 
         public static void SetCloseButtonAction(UnityAction a)
         {
-            _closeButton.SetOnClick(a);
+            _instance._closeButton.SetOnClick(a);
         }
-        
+
         public static void FlashCloseButton()
         {
-            _closeButton.Flash();
+            _instance._closeButton.Flash();
         }
 
         public static void Close()
         {
             FlashCloseButton();
-            _currentTab.Deselect();
-            _currentMenuController.Hide();
+            InventoryTab.ClearActiveTab();
+            _instance._currentMenuController.Hide();
             InputHandler.UnregisterInputListener(_instance);
             MenuStateMachine.ReturnToDefault();
-            _open = false;
+            _instance._open = false;
             CombatManager.Resume();
             DOTween.defaultTimeScaleIndependent = false;
         }
@@ -198,25 +143,25 @@ namespace Facilitating.UIControllers
             CombatManager.Pause();
         }
 
-        private static void OpenInventoryMenu(UiInventoryMenuController menu)
+        public static void OpenInventoryMenu(UiInventoryMenuController menu)
         {
-            if (!_open)
+            if (!_instance._open)
             {
-                _currentMenuController = menu;
-                MenuStateMachine.ShowMenu("Inventories", _currentMenuController.Show);
-                _open = true;
+                _instance._currentMenuController = menu;
+                MenuStateMachine.ShowMenu("Inventories", _instance._currentMenuController.Show);
+                _instance._open = true;
             }
             else
             {
-                _currentMenuController.Hide();
-                _currentMenuController = menu;
-                _currentMenuController.Show();
+                _instance._currentMenuController.Hide();
+                _instance._currentMenuController = menu;
+                _instance._currentMenuController.Show();
             }
         }
 
         private static void SelectTab(int tabNumber)
         {
-            _tabs[tabNumber].Select();
+            _instance._tabs[tabNumber].Select();
         }
 
         public static void ShowArmourMenu() => SelectTab(0);
@@ -230,5 +175,15 @@ namespace Facilitating.UIControllers
         public static void ShowConsumableMenu() => SelectTab(4);
 
         public static void ShowJournalMenu() => SelectTab(5);
+
+        public static TabController RightTab()
+        {
+            return _instance._rightTab;
+        }
+
+        public static TabController LeftTab()
+        {
+            return _instance._leftTab;
+        }
     }
 }

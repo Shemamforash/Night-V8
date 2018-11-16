@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Fastlights;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
@@ -44,6 +45,7 @@ namespace Game.Combat.Misc
             _light = gameObject.FindChildWithName<FastLight>("Light");
             _spriteObject = gameObject.FindChildWithName("Sprites");
             _audioSource = gameObject.FindChildWithName<AudioSource>("Audio");
+            _audioSource.clip = AudioClips.StandardExplosion;
 
             _explosionSprite.color = UiAppearanceController.InvisibleColour;
             _light.Colour = UiAppearanceController.InvisibleColour;
@@ -164,7 +166,6 @@ namespace Game.Combat.Misc
                 {
                     if (!emitted)
                     {
-                        _audioSource.clip = AudioClips.ExplosionClips.RandomElement();
                         _audioSource.Play();
                         AddConditions();
                         DealDamage();
@@ -203,9 +204,11 @@ namespace Game.Combat.Misc
 
         private void AddConditions()
         {
-            if (_incendiary) FireBurstBehaviour.Create(transform.position).AddIgnoreTargets(_targetsToIgnore);
-            if (_decay) DecayBehaviour.Create(transform.position).AddIgnoreTargets(_targetsToIgnore);
-            if (_sicken) SickenBehaviour.Create(transform.position, _targetsToIgnore);
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendInterval(0.2f);
+            if (_incendiary) sequence.AppendCallback(() => FireBurstBehaviour.Create(transform.position).AddIgnoreTargets(_targetsToIgnore));
+            if (_decay) sequence.AppendCallback(() => DecayBehaviour.Create(transform.position).AddIgnoreTargets(_targetsToIgnore));
+            if (_sicken) sequence.AppendCallback(() => SickenBehaviour.Create(transform.position, _targetsToIgnore));
         }
 
         public void AddOnDetonate(Action<List<EnemyBehaviour>> action)

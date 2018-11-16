@@ -19,7 +19,6 @@ namespace Game.Global
         public static AudioClip[] DryFireClips;
         public static AudioClip[] ArmourBreakClips;
         public static AudioClip[] FootstepClips;
-        public static AudioClip[] ExplosionClips;
         public static AudioClip[] DayAudio;
         public static AudioClip Ambient, Night;
         public static AudioClip[] BulletLoad;
@@ -27,6 +26,7 @@ namespace Game.Global
         public static AudioClip LightWind, MediumWind, HeavyWind;
         public static AudioClip ClipIn, ClipOut;
         public static AudioClip SimmavA, SimmavB, SimmavC, SimmavD;
+        public static AudioClip StandardExplosion, FireExplosion, ShatterExplosion;
         private static readonly List<AssetBundle> _loadedBundles = new List<AssetBundle>();
         private static bool _loaded;
 
@@ -93,8 +93,10 @@ namespace Game.Global
             yield return StartCoroutine(LoadAllClipsFromBundle(a => DryFireClips = a, "combat/dryfire"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => ArmourBreakClips = a, "combat/armourbreak"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => FootstepClips = a, "combat/footsteps"));
-            yield return StartCoroutine(LoadAllClipsFromBundle(a => ExplosionClips = a, "combat/explosions"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => BulletLoad = a, "combat/reload/bullets"));
+            yield return StartCoroutine(LoadClip(a => StandardExplosion = a, "combat/explosions", "standard explosion"));
+            yield return StartCoroutine(LoadClip(a => FireExplosion = a, "combat/explosions", "fire explosion"));
+            yield return StartCoroutine(LoadClip(a => ShatterExplosion = a, "combat/explosions", "shatter explosion"));
             yield return StartCoroutine(LoadClip(a => ClipIn = a, "combat/reload/clip", "clipin"));
             yield return StartCoroutine(LoadClip(a => ClipOut = a, "combat/reload/clip", "clipout"));
 

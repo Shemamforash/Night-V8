@@ -355,6 +355,7 @@
           <e p="CleanSave.xml" t="Include" />
           <e p="NightSave.xml" t="Include" />
         </e>
+        <e p="ScreenFaderController.cs" t="Include" />
         <e p="Scripts" t="Include">
           <e p="ActionProgressController.cs" t="Include" />
           <e p="ActiveSkillController.cs" t="Include" />
@@ -372,7 +373,6 @@
           <e p="EventTextController.cs" t="Include" />
           <e p="Facilitating" t="Include">
             <e p="Audio" t="Include">
-              <e p="CombatMusicController.cs" t="Include" />
               <e p="CrossFader.cs" t="Include" />
               <e p="ThunderController.cs" t="Include" />
               <e p="VolumeController.cs" t="Include" />
@@ -409,6 +409,7 @@
                 <e p="UIPlayerWeaponController.cs" t="Include" />
               </e>
               <e p="Inventories" t="Include">
+                <e p="InventoryTab.cs" t="Include" />
                 <e p="ListController.cs" t="Include" />
                 <e p="ListElement.cs" t="Include" />
                 <e p="UiAccessoryController.cs" t="Include" />

@@ -322,6 +322,16 @@ namespace SamsHelper.Libraries
             return foundComponent;
         }
 
+        public static T FindChildWithName<T>(this Transform t, string name) where T : class
+        {
+            return t.gameObject.FindChildWithName<T>(name);
+        }
+
+        public static T FindChildWithName<T>(this MonoBehaviour u, string name) where T : class
+        {
+            return u.gameObject.FindChildWithName<T>(name);
+        }
+
         public static GameObject FindChildWithName(this GameObject g, string name)
         {
             Transform t = FindChildWithName(g.transform, name);

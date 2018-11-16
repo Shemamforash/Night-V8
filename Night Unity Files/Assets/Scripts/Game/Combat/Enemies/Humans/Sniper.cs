@@ -18,22 +18,16 @@ namespace Game.Combat.Enemies.Humans
         private void FirePowerShot()
         {
             Shot powerShot = Shot.Create(this);
-            powerShot.Attributes().GuaranteeBurn();
+            powerShot.Attributes().AddOnHit(() => FireBurstBehaviour.Create(powerShot.transform.position));
             powerShot.Fire();
             ResetCooldown();
             TryFire();
         }
 
-        protected override void OnAlert()
-        {
-            base.OnAlert();
-            ResetCooldown();
-        }
-
         public override void MyUpdate()
         {
             base.MyUpdate();
-            if (!Alerted || _firing) return;
+            if (_firing) return;
             _powerShotCooldown -= Time.deltaTime;
             if (_powerShotCooldown > 0) return;
             CurrentAction = null;

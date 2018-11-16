@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
+using Game.Combat.Player;
 using Game.Gear;
 using Game.Gear.Weapons;
 using SamsHelper;
@@ -23,9 +24,8 @@ namespace Game.Characters
         public static void Reset(bool includeDriver = true)
         {
             SelectedCharacter = null;
-            for (int i = Characters.Count - 1; i >= 0; --i)
-                RemoveCharacter(Characters[i]);
-            if(includeDriver) GenerateDriver();
+            Characters.Clear();
+            if (includeDriver) GenerateDriver();
         }
 
         public static void Load(XmlNode doc)
@@ -51,32 +51,27 @@ namespace Game.Characters
 
         public static void Start()
         {
-            for (int i = 0; i < Characters.Count; i++)
+            Transform characterAreaTransform = GameObject.Find("Character Section").transform;
+            for (int i = 0; i < 3; i++)
             {
-                Player player = Characters[i];
-                if (player.CharacterView() != null) continue;
-                Transform characterAreaTransform = GameObject.Find("Character Section").transform;
-                if (i > 1) Helper.AddDelineator(characterAreaTransform);
-                GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", characterAreaTransform);
-                characterObject.GetComponent<CharacterView>().SetPlayer(player);
-                characterObject.name = player.Name;
+                CharacterView characterView = characterAreaTransform.FindChildWithName<CharacterView>("Character " + i);
+                Player player = null;
+                if (i < Characters.Count) player = Characters[i];
+                characterView.SetPlayer(player);
             }
 
             Characters[0].CharacterView().SelectInitial();
-            Characters.ForEach(c => c.CharacterView().RefreshNavigation());
         }
 
         public static void AddCharacter(Player playerCharacter)
         {
             Characters.Add(playerCharacter);
-            Characters.ForEach(c => c.CharacterView()?.RefreshNavigation());
         }
 
         public static void RemoveCharacter(Player playerCharacter)
         {
-            GameObject.Destroy(playerCharacter.CharacterView());
+            playerCharacter.CharacterView().SetPlayer(null);
             Characters.Remove(playerCharacter);
-            Characters.ForEach(c => c.CharacterView().RefreshNavigation());
         }
 
         public static void SelectCharacter(Player player)
@@ -151,13 +146,12 @@ namespace Game.Characters
             attributes.SetMax(AttributeType.Focus, playerCharacter.CharacterTemplate.Focus);
             attributes.SetMax(AttributeType.Will, playerCharacter.CharacterTemplate.Will);
 
-//#if UNITY_EDITOR
-            int max = 20;
+#if UNITY_EDITOR
             attributes.SetMax(AttributeType.Grit, Random.Range(6, 12));
             attributes.SetMax(AttributeType.Fettle, Random.Range(6, 12));
             attributes.SetMax(AttributeType.Focus, Random.Range(6, 12));
             attributes.SetMax(AttributeType.Will, Random.Range(6, 12));
-//#endif
+#endif
 
             attributes.Get(AttributeType.Grit).SetToMax();
             attributes.Get(AttributeType.Fettle).SetToMax();

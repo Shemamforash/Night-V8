@@ -78,6 +78,7 @@ public abstract class ContainerController
 
         if (Item is GearItem) player.BrandManager.IncreaseItemsFound();
 
+        Debug.Log(Item is Weapon);
         if (Item is Weapon) Inventory.Move((Weapon) Item);
         else if (Item is Armour) Inventory.Move((Armour) Item);
         else if (Item is Accessory) Inventory.Move((Accessory) Item);

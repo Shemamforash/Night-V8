@@ -31,9 +31,10 @@ namespace Game.Combat.Generation
         private readonly List<CanTakeDamage> _enemies = new List<CanTakeDamage>();
         private static CombatManager _instance;
         public bool _drawGizmos;
-        private TextMeshProUGUI _regionNameText;
         private static bool _paused;
-        private Image _regionUnderline;
+        private static List<Enemy> _inactiveEnemies;
+        private static int _maxSize;
+        private int _currentSize;
 
         public static List<EnemyTemplate> GenerateEnemies(int size, List<EnemyTemplate> allowedTypes)
         {
@@ -64,10 +65,7 @@ namespace Game.Combat.Generation
             base.Awake();
             _instance = this;
             Resume();
-            GameObject regionNameObject = GameObject.Find("Screen Fader");
-            _regionUnderline = regionNameObject.FindChildWithName<Image>("Underline");
-            _regionNameText = regionNameObject.FindChildWithName<TextMeshProUGUI>("Text");
-            _regionNameText.text = GetCurrentRegionName();
+            ScreenFaderController.ShowText(GetCurrentRegionName());
         }
 
         private string GetCurrentRegionName()
@@ -105,6 +103,7 @@ namespace Game.Combat.Generation
         public void Update()
         {
             if (!IsCombatActive()) return;
+            UpdateEnemiesOnScreen();
             AIMoveManager.UpdateMoveBehaviours();
             if (Time.timeSinceLevelLoad < 1f) return;
             PlayerCombat.Instance.MyUpdate();
@@ -205,14 +204,35 @@ namespace Game.Combat.Generation
             }
 
             PlayerCombat.Instance.Initialise();
+            _inactiveEnemies = _currentRegion.GetEnemies();
+            _maxSize = Mathf.CeilToInt(_inactiveEnemies.Count / 2f);
+            _currentSize = 0;
+            if (_maxSize > 15) _maxSize = 15;
+            PlaceAnimals();
+        }
+
+        private float _timeSinceLastSpawn;
+
+        private void UpdateEnemiesOnScreen()
+        {
+            if (_inactiveEnemies.Empty()) return;
+            if (_currentSize >= _maxSize) return;
+            _timeSinceLastSpawn -= Time.deltaTime;
+            if (_timeSinceLastSpawn > 0) return;
+            _timeSinceLastSpawn = Random.Range(1f, 3f);
+            Enemy e = _inactiveEnemies.RemoveLast();
+            e.GetEnemyBehaviour();
+        }
+
+        private static void PlaceAnimals()
+        {
+            if (_currentRegion.GetRegionType() != RegionType.Animal) return;
             List<List<EnemyBehaviour>> GrazerHerds = new List<List<EnemyBehaviour>>();
             List<EnemyBehaviour> currentGrazerHerd = new List<EnemyBehaviour>();
             List<List<EnemyBehaviour>> FlitHerds = new List<List<EnemyBehaviour>>();
             List<EnemyBehaviour> currentFlitHerd = new List<EnemyBehaviour>();
             Queue<EnemyBehaviour> watchers = new Queue<EnemyBehaviour>();
-
-            List<Enemy> enemies = _currentRegion.GetEnemies();
-            enemies.ForEach(e =>
+            _inactiveEnemies.ForEach(e =>
             {
                 EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
                 switch (e.Template.EnemyType)
@@ -245,6 +265,7 @@ namespace Game.Combat.Generation
                 }
             }
 
+            _inactiveEnemies.Clear();
             PositionHerds(GrazerHerds, 1.5f);
             PositionHerds(FlitHerds, 1);
         }
@@ -284,8 +305,7 @@ namespace Game.Combat.Generation
             }
 
             _inCombat = false;
-            Instance()._regionNameText.text = "";
-            Instance()._regionUnderline.color = UiAppearanceController.InvisibleColour;
+            ScreenFaderController.HideText();
             PlayerCombat.Instance.ExitCombat();
             ChangeScene(returnToMap);
             _instance = null;
@@ -326,7 +346,6 @@ namespace Game.Combat.Generation
             Enemy e = type.Create();
             EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
             if (target != null) enemyBehaviour.SetTarget(target);
-            (enemyBehaviour as UnarmedBehaviour)?.Alert(true);
             return enemyBehaviour;
         }
 

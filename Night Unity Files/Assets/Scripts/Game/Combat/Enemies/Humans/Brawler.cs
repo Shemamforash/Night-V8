@@ -27,7 +27,6 @@ namespace Game.Combat.Enemies.Humans
         public override void MyUpdate()
         {
             base.MyUpdate();
-            if (!Alerted) return;
             if (DistanceToTarget() > MinMeleeDistance) return;
             StrikePlayer();
         }

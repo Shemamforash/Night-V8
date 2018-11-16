@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DefaultNamespace;
 using NUnit.Framework;
 using SamsHelper.Input;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
@@ -19,6 +20,7 @@ public class ListController : MonoBehaviour, IInputListener
     private int _listSize;
     private EnhancedButton _centreButton;
     private float _skipTime;
+    private float _currentScrollAmount;
     private const float SkipTimeMax = 0.25f;
 
     private void CacheElements()
@@ -31,7 +33,7 @@ public class ListController : MonoBehaviour, IInputListener
         {
             _listItems.Add(transform.GetChild(i));
             if (i != _centreItemIndex) continue;
-            _centreButton = _listItems[i].GetComponent<EnhancedButton>();
+            _centreButton = _listItems[i].FindChildWithName<EnhancedButton>("Button");
         }
     }
 
@@ -100,6 +102,32 @@ public class ListController : MonoBehaviour, IInputListener
         _listObjects = GetContentsAction.Invoke();
         _listSize = _listObjects.Count;
         Select(playSound);
+    }
+
+    public void Update()
+    {
+        if (!Cursor.visible) return;
+        if (InputHandler.GetCurrentListener() != this)
+        {
+            _currentScrollAmount = 0f;
+            return;
+        }
+
+        float mouseDelta = Input.mouseScrollDelta.y;
+        if (mouseDelta == 0) return;
+        if (mouseDelta < 0 && _currentScrollAmount > 0) _currentScrollAmount = 0;
+        else if (mouseDelta > 0 && _currentScrollAmount < 0) _currentScrollAmount = 0;
+        _currentScrollAmount += mouseDelta;
+        if (_currentScrollAmount <= -1)
+        {
+            TrySelectBelow();
+            _currentScrollAmount = 0f;
+        }
+        else if (_currentScrollAmount >= 1)
+        {
+            TrySelectAbove();
+            _currentScrollAmount = 0f;
+        }
     }
 
     public void Hide()

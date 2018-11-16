@@ -60,7 +60,7 @@ namespace Game.Combat.Player
         protected override void InstantEffect()
         {
             Shot s = Shot.Create(PlayerCombat.Instance);
-            s.Attributes().GuaranteeBurn();
+            s.Attributes().AddOnHit(() => FireBurstBehaviour.Create(s.transform.position));
             s.Fire();
         }
     }

@@ -49,16 +49,10 @@ namespace Game.Combat.Enemies.Humans
             _cooldownTime = Random.Range(5, 10);
         }
 
-        protected override void OnAlert()
-        {
-            base.OnAlert();
-            ResetCooldown();
-        }
-
         public override void MyUpdate()
         {
             base.MyUpdate();
-            if (_throwing || !Alerted) return;
+            if (_throwing) return;
             _cooldownTime -= Time.deltaTime;
             if (_cooldownTime > 0) return;
             ThrowGrenade();

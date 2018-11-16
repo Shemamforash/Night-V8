@@ -8,11 +8,64 @@ namespace Game.Combat.Enemies.Nightmares
 {
     public class AnimalBehaviour : UnarmedBehaviour
     {
+        protected bool Alerted;
         private bool Fleeing;
         private Cell _fleeTarget;
-
-        protected override void OnAlert()
+        private float DetectionRange = 6f;
+        private const float LoseTargetRange = 10f;
+        protected float WanderDistance = 3;
+        private Cell _originCell;
+        
+        protected virtual void OnAlert()
         {
+        }
+
+        private void Wander(bool resetOrigin)
+        {
+            Alerted = false;
+            if (resetOrigin) _originCell = PathingGrid.WorldToCellPosition(transform.position);
+            TargetCell = PathingGrid.GetCellNearMe(_originCell, WanderDistance);
+            float waitDuration = Random.Range(1f, 3f);
+            CurrentAction = () =>
+            {
+                if (MoveBehaviour.Moving()) return;
+                waitDuration -= Time.deltaTime;
+                if (waitDuration > 0) return;
+                Wander(false);
+            };
+        }
+
+        public void Alert(bool alertOthers)
+        {
+            if (Alerted) return;
+            Alerted = true;
+            OnAlert();
+            if (!alertOthers) return;
+            CombatManager.Enemies().ForEach(e =>
+            {
+                AnimalBehaviour enemy = e as AnimalBehaviour;
+                if (enemy == this || enemy == null) return;
+                float distance = TargetTransform().Distance(enemy.transform);
+                if (distance > LoseTargetRange) return;
+                enemy.Alert(false);
+            });
+        }
+
+        private void UpdateDistanceToTarget()
+        {
+            float distance = DistanceToTarget();
+            if (Alerted && distance > LoseTargetRange) Wander(true);
+            else if (distance < DetectionRange && !Alerted) Alert(true);
+        }
+
+        private void DrawLine()
+        {
+            Vector2 to = TargetPosition();
+            Vector2 from = transform.position;
+            Vector2 dir = (to - from).normalized;
+            to = from + dir * MaxDistance;
+            from = from + dir * MinDistance;
+            Debug.DrawLine(to, from, Color.red, 0.02f);
         }
 
         public override void Initialise(Enemy e)
@@ -24,13 +77,14 @@ namespace Game.Combat.Enemies.Nightmares
         public override void MyUpdate()
         {
             base.MyUpdate();
+            UpdateDistanceToTarget();
             CheckToFade();
         }
 
         private void CheckToFade()
         {
             if (!Fleeing) return;
-            if (_fleeTarget.Position.Distance(transform.position) > 1f) return;
+            if (!CurrentCell().IsEdgeCell) return;
             StartCoroutine(FleeArea());
         }
 

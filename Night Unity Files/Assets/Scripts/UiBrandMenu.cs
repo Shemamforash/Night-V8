@@ -20,7 +20,6 @@ public class UiBrandMenu : Menu
         _effectText = gameObject.FindChildWithName<EnhancedText>("Effect");
         _instance = this;
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
-        _closeButton.SetInputAxis(InputAxis.Fire);
         _closeButton.SetCallback(Hide);
         _closeButton.SetOnClick(Hide);
     }

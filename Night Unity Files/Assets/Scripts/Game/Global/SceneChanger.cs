@@ -9,8 +9,6 @@ namespace Game.Global
 {
     public class SceneChanger : MonoBehaviour
     {
-        private static CanvasGroup _fader;
-        private static Image _faderImage;
         private static SceneChanger _instance;
         private AudioSource _audioSource;
         private static string _sceneToLoad;
@@ -20,24 +18,12 @@ namespace Game.Global
         {
             _instance = this;
             _audioSource = GetComponent<AudioSource>();
-            _fader = GameObject.Find("Screen Fader").GetComponent<CanvasGroup>();
-            _faderImage = _fader.GetComponent<Image>();
             VolumeController.SetModifiedVolume(0f);
             float fadeInTime = SceneManager.GetActiveScene().name == "Combat" ? 3f : DefaultFadeTime;
             DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 1f, fadeInTime).SetUpdate(UpdateType.Normal, true);
-            _fader.alpha = 1;
-            _faderImage.color = Color.black;
-
-            _fader.DOFade(0, fadeInTime).SetUpdate(UpdateType.Normal, true);
+            ScreenFaderController.SetAlpha(1);
+            ScreenFaderController.FadeOut(fadeInTime);
             if (SceneManager.GetActiveScene().name == "Game") WorldState.UnPause();
-        }
-
-        public static Tweener FlashWhite(float duration)
-        {
-            _faderImage.color = Color.white;
-            _fader.alpha = 1;
-            _fader.gameObject.GetComponent<CanvasGroup>().alpha = 1;
-            return _faderImage.DOColor(Color.black, duration).SetUpdate(UpdateType.Normal, true);
         }
 
         private IEnumerator LoadNextScene()
@@ -56,11 +42,10 @@ namespace Game.Global
             if (_audioSource != null) _audioSource.DOFade(1, DefaultFadeTime);
             VolumeController.SetModifiedVolume(1f);
             DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 0f, DefaultFadeTime).SetUpdate(UpdateType.Normal, true);
-            _faderImage.color = Color.black;
-            yield return _fader.DOFade(1, DefaultFadeTime).WaitForCompletion();
+            ScreenFaderController.FadeIn(DefaultFadeTime);
+            yield return new WaitForSeconds(DefaultFadeTime);
             StartCoroutine(LoadNextScene());
         }
-
 
         public static void GoToGameOverScene()
         {

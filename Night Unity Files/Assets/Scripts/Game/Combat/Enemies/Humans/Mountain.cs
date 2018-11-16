@@ -39,16 +39,10 @@ namespace Game.Combat.Enemies.Humans
             });
         }
 
-        protected override void OnAlert()
-        {
-            base.OnAlert();
-            ResetCooldown();
-        }
-
         public override void MyUpdate()
         {
             base.MyUpdate();
-            if (!Alerted || _pushing) return;
+            if (_pushing) return;
             _forceCooldown -= Time.deltaTime;
             if (_forceCooldown > 0) return;
             if (DistanceToTarget() > MinDistanceToTarget) return;

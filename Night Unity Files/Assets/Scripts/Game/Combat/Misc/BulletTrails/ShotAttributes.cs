@@ -22,9 +22,9 @@ namespace Game.Combat.Misc
         private Weapon _weapon;
         private event Action OnHitAction;
 
-        private float _speed, _burnChance, _decayChance, _sicknessChance, _accuracy, _knockBackForce, _knockBackModifier, _seekModifier, _age;
+        private float _speed, _burnChance, _decayChance, _sicknessChance, _accuracy, _knockBackForce, _knockBackModifier, _age, _seekModifier = 1;
         private float _finalDamageModifier = 1f;
-        private bool _willBurn, _willDecay, _willSicken, _seekTarget;
+        private bool _seekTarget;
         private int _damage, _damageDealt;
         public bool Piercing, Fired, HasHit;
 
@@ -111,21 +111,6 @@ namespace Game.Combat.Misc
             }
         }
 
-        public void GuaranteeBurn()
-        {
-            _willBurn = true;
-        }
-
-        public void GuaranteeDecay()
-        {
-            _willDecay = true;
-        }
-
-        public void GuaranteeSickness()
-        {
-            _willSicken = true;
-        }
-
         public void AddOnHit(Action a)
         {
             OnHitAction += a;
@@ -147,9 +132,9 @@ namespace Game.Combat.Misc
         {
             float random = Random.Range(0f, 1f);
             float conditionModifier = _weapon.GetAttributeValue(AttributeType.Pellets) * _weapon.GetAttributeValue(AttributeType.Capacity);
-            bool canDecay = _willDecay || random < _decayChance / conditionModifier;
-            bool canBurn = _willBurn || random < _burnChance / conditionModifier;
-            bool canSicken = _willSicken || random < _sicknessChance / conditionModifier;
+            bool canDecay = random < _decayChance / conditionModifier;
+            bool canBurn = random < _burnChance / conditionModifier;
+            bool canSicken = random < _sicknessChance / conditionModifier;
             List<int> conditions = new List<int>();
             if (canDecay) conditions.Add(0);
             if (canBurn) conditions.Add(1);

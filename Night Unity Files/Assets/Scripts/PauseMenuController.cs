@@ -29,7 +29,6 @@ public class PauseMenuController : MonoBehaviour
         _open = false;
         _background = GetComponent<CanvasGroup>();
         _background.alpha = 0f;
-        _closeButton.SetInputAxis(InputAxis.Cover);
         _closeButton.SetCallback(CloseClicked);
         _closeButton.SetOnClick(CloseClicked);
     }
@@ -42,6 +41,7 @@ public class PauseMenuController : MonoBehaviour
 
     private void Show()
     {
+        _background.blocksRaycasts = true;
         AudioController.FadeInMuffle();
         _lastMenu = MenuStateMachine.CurrentMenu().gameObject.name;
         _instance.ShowPauseMenu();
@@ -69,7 +69,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void Hide()
     {
-        Debug.Log("hidden");
+        _background.blocksRaycasts = false;
         _closeButton.Disable();
         AudioController.FadeOutMuffle();
         MenuStateMachine.ShowMenu(_lastMenu);

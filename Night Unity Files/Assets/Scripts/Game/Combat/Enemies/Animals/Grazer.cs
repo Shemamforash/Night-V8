@@ -1,6 +1,5 @@
 ﻿using Game.Combat.Enemies.Nightmares;
 using Game.Combat.Generation;
-using Game.Combat.Misc;
 
 namespace Game.Combat.Enemies.Animals
 {

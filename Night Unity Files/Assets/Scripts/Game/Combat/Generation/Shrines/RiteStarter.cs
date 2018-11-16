@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.Characters;
-using Game.Characters.Brands;
 using Game.Combat.Player;
 using Game.Exploration.Regions;
 using Game.Global;
@@ -18,7 +16,6 @@ namespace Game.Combat.Generation.Shrines
         public static void Generate(Brand brand)
         {
             Vector2 position = GetPosition();
-            
             if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Rite Starter");
             GameObject riteObject = Instantiate(_prefab);
             RiteStarter riteStarter = riteObject.GetComponent<RiteStarter>();
@@ -28,7 +25,7 @@ namespace Game.Combat.Generation.Shrines
 
         private static Vector2 GetPosition()
         {
-            List<Vector2> points = AdvancedMaths.GetPoissonDiscDistribution(50, 5);
+            List<Vector2> points = AdvancedMaths.GetPoissonDiscDistribution(100, 5);
             foreach (Vector2 p in points)
             {
                 if (p.magnitude > PathingGrid.CombatMovementDistance - 1) continue;
@@ -38,7 +35,8 @@ namespace Game.Combat.Generation.Shrines
                 if (!PathingGrid.IsSpaceAvailable(topLeft, bottomRight)) continue;
                 return newPoint;
             }
-            throw new Exception("No valid position found");
+
+            return PathingGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 5, 1).Position;
         }
 
         private void OnTriggerEnter2D(Collider2D other)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using Game.Combat.Generation;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace Game.Combat.Misc
         private SpriteRenderer _impact;
         private float _impactValue;
         private const int EmitCount = 100;
+        private AudioSource _audioSource;
 
         private void Awake()
         {
@@ -24,6 +26,8 @@ namespace Game.Combat.Misc
             _thunderParticles = gameObject.FindChildWithName<ParticleSystem>("Thunder");
             _decayDamage = GetComponent<DecayDamageDeal>();
             _impact = gameObject.FindChildWithName<SpriteRenderer>("Impact");
+            _audioSource = GetComponent<AudioSource>();
+            _audioSource.clip = AudioClips.ShatterExplosion;
         }
 
         public static DecayBehaviour Create(Vector3 position)
@@ -50,6 +54,7 @@ namespace Game.Combat.Misc
                 _thunderParticles.Emit(15);
             });
             sequence.AppendInterval(0.2f);
+            sequence.AppendCallback(() => _audioSource.Play());
             sequence.Append(DOTween.To(GetImpactValue, SetImpactValue, 0f, 2.5f));
             sequence.AppendCallback(() => StartCoroutine(Fade()));
         }

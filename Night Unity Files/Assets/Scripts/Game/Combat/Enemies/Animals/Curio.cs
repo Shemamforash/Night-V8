@@ -14,18 +14,14 @@ namespace Game.Combat.Enemies.Animals
             CurrentAction = WaitForPlayer;
         }
         
-        private void RunAway()
-        {
-            Vector2 dir = (transform.position - PlayerCombat.Instance.transform.position).normalized;
-            Cell target = PathingGrid.GetCellsInFrontOfMe(CurrentCell(), dir, 3).RandomElement();
-            MoveBehaviour.GoToCell(target);
-            CurrentAction = WaitForPlayer;
-        }
-
         private void WaitForPlayer()
         {
             if (Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position) > 2) return;
-            RunAway();
+            Vector2 dir = (transform.position - PlayerCombat.Instance.transform.position).normalized;
+            Cell target = PathingGrid.GetCellsInFrontOfMe(CurrentCell(), dir, 0.5f).RandomElement();
+            if (target == null) target = PathingGrid.GetCellNearMe(CurrentCell(), 1f, 0.5f);
+            MoveBehaviour.GoToCell(target);
+            CurrentAction = WaitForPlayer;
         }
     }
 }
