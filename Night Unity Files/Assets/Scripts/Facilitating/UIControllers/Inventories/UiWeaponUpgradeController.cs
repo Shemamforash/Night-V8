@@ -146,6 +146,7 @@ namespace Facilitating.UIControllers
         {
             Weapon weapon = (Weapon) weaponObject;
             CharacterManager.SelectedCharacter.EquipWeapon(weapon);
+            UiGearMenuController.PlayAudio(AudioClips.EquipWeapon);
             Show();
         }
 

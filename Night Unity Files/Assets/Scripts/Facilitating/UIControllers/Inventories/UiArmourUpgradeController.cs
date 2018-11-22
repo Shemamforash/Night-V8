@@ -76,6 +76,7 @@ namespace Facilitating.UIControllers
         {
             Armour armour = (Armour) armourObject;
             CharacterManager.SelectedCharacter.EquipChestArmour(armour);
+            UiGearMenuController.PlayAudio(AudioClips.EquipArmour);
             UpdatePlates();
             SetPlateListActive(_plateOneUi);
         }
@@ -84,6 +85,7 @@ namespace Facilitating.UIControllers
         {
             Armour armour = (Armour) armourObject;
             CharacterManager.SelectedCharacter.EquipHeadArmour(armour);
+            UiGearMenuController.PlayAudio(AudioClips.EquipArmour);
             UpdatePlates();
             SetPlateListActive(_plateTwoUi);
         }

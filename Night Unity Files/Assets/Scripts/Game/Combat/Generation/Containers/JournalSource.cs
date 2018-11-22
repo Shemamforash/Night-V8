@@ -1,4 +1,5 @@
-﻿using Game.Global;
+﻿using System;
+using Game.Global;
 using UnityEngine;
 
 public class JournalSource : ContainerController
@@ -14,6 +15,11 @@ public class JournalSource : ContainerController
     public void SetEntry(JournalEntry journalEntry)
     {
         _journalEntry = journalEntry;
+    }
+
+    public override String GetContents()
+    {
+        return _journalEntry.Title;
     }
 
     public override void Take()

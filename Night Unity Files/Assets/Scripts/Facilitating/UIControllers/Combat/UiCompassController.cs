@@ -14,12 +14,13 @@ public class UiCompassController : MonoBehaviour
 {
     private ParticleSystem _compassPulse;
     private float _showItemTimeCurrent;
-    private const float ShowItemTimeMax = 5f;
+    private const float ShowItemTimeMax = 7.5f;
     private static UiCompassController _instance;
     private const float MaxDetectDistance = 10f;
     private AudioSource _audioSource;
     private static List<CompassItem> _compassItems;
     private readonly List<CompassIndicatorBehaviour> _indicators = new List<CompassIndicatorBehaviour>();
+    private readonly List<Tuple<float, float, float>> _alphaRotations = new List<Tuple<float, float, float>>();
 
     public void Awake()
     {
@@ -105,46 +106,6 @@ public class UiCompassController : MonoBehaviour
             _indicators[i].SetRotation(angle);
         }
     }
-
-//    private List<Tuple<float, float>> SquashRotations(List<Tuple<float, float>> alphaRotations)
-//    {
-//        alphaRotations.Sort((a, b) => a.Item2.CompareTo(b.Item2));
-//        bool changed = true;
-//        int count = 10;
-//        while (changed && count > 0)
-//        {
-//            changed = false;
-//            List<Tuple<float, float>> newAlphaRotations = new List<Tuple<float, float>>();
-//            for (int i = 0; i < alphaRotations.Count; ++i)
-//            {
-//                int next = Helper.NextIndex(i, alphaRotations);
-//                float angleA = alphaRotations[i].Item2;
-//                float angleB = alphaRotations[next].Item2;
-//                if (angleB < angleA) angleB += 360;
-//
-//                float angleBetween = angleB - angleA;
-//                if (angleBetween > 20f)
-//                {
-//                    newAlphaRotations.Add(alphaRotations[i]);
-//                    continue;
-//                }
-//
-//                float newAngle = (angleA + angleB) / 2f;
-//                float newAlpha = (alphaRotations[i].Item1 + alphaRotations[next].Item1) / 2f;
-//                newAlphaRotations.Add(Tuple.Create(newAlpha, newAngle));
-//                ++i;
-//                changed = true;
-//            }
-//
-//            --count;
-//            alphaRotations = newAlphaRotations;
-//        }
-//
-//        return alphaRotations;
-//    }
-
-    private List<Tuple<float, float, float>> _alphaRotations = new List<Tuple<float, float, float>>();
-
 
     private List<Tuple<float, float, float>> GetItemsInRange(float baseAlpha)
     {

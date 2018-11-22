@@ -22,6 +22,7 @@ public class StoryController : Menu, IInputListener
     private float _heldCounter;
     private bool _skipAll;
     private CanvasGroup _skipCanvas;
+    private AudioSource _audioSource;
 
     public override void Awake()
     {
@@ -29,6 +30,9 @@ public class StoryController : Menu, IInputListener
         _storyText = GetComponent<TextMeshProUGUI>();
         _storyText.color = UiAppearanceController.InvisibleColour;
         _skipCanvas = GameObject.Find("Skip").GetComponent<CanvasGroup>();
+        _audioSource = Camera.main.GetComponent<AudioSource>();
+        _audioSource.volume = 0f;
+        _audioSource.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
         _skipCanvas.alpha = MinAlpha;
         _paused = false;
     }
@@ -84,6 +88,7 @@ public class StoryController : Menu, IInputListener
 
             //fade out
             _storyText.color = Color.white;
+            _audioSource.DOFade(0f, 1f).SetUpdate(UpdateType.Normal, true);
             yield return _storyText.DOFade(0f, 1f).WaitForCompletion();
         }
 
@@ -92,6 +97,7 @@ public class StoryController : Menu, IInputListener
 
     private void End()
     {
+        SceneChanger.FadeInAudio();
         if (_goToCredits) SceneChanger.GoToCreditsScene();
         else SceneChanger.GoToGameScene();
     }

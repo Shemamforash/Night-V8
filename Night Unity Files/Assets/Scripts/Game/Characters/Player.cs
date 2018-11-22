@@ -26,7 +26,6 @@ namespace Game.Characters
         private CharacterView _characterView;
 
         public Craft CraftAction;
-        public LightFire LightFireAction;
         public Consume ConsumeAction;
         public Rest RestAction;
         public Travel TravelAction;
@@ -85,9 +84,6 @@ namespace Game.Characters
                 case "Meditate":
                     currentAction = MeditateAction;
                     break;
-                case "LightFire":
-                    currentAction = LightFireAction;
-                    break;
                 case "Craft":
                     currentAction = CraftAction;
                     break;
@@ -130,7 +126,6 @@ namespace Game.Characters
             TravelAction = new Travel(this);
             MeditateAction = new Meditate(this);
             SleepAction = new Sleep(this);
-            LightFireAction = new LightFire(this);
             CraftAction = new Craft(this);
             ConsumeAction = new Consume(this);
             States.SetDefaultState(RestAction);

@@ -39,6 +39,7 @@ namespace Facilitating.UIControllers.Inventories
             }
             else
             {
+                UiGearMenuController.PlayTabAudio();
                 if (_currentTab == _nextTab)
                 {
                     if (_prevTab == null) UiGearMenuController.LeftTab().FlashAndFade();

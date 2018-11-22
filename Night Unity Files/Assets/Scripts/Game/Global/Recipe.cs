@@ -8,6 +8,7 @@ using Game.Gear.Armour;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Game.Global
@@ -24,19 +25,39 @@ namespace Game.Global
         public readonly string Name;
         public readonly int ProductQuantity;
         private readonly bool _requiresFire;
-        public readonly bool IsBuilding;
+        public readonly RecipeType RecipeType;
+        private bool _unlocked;
+        private readonly int _levelNo;
 
-        private Recipe(string ingredient1, string ingredient2, int ingredient1Quantity, int ingredient2Quantity, string name, int productQuantity, bool isBuilding, int levelNo)
+        private Recipe(XmlNode recipeNode)
         {
-            Ingredient1 = ingredient1;
-            Ingredient2 = ingredient2;
-            Ingredient1Quantity = ingredient1Quantity;
-            Ingredient2Quantity = ingredient2Quantity;
-            ProductQuantity = productQuantity;
-            Name = name;
-            _requiresFire = ingredient1 == "Fire" || ingredient2 == "Fire";
-            IsBuilding = isBuilding;
-            _levelNo = levelNo;
+            Ingredient1 = recipeNode.StringFromNode("Ingredient1Name");
+            Ingredient2 = recipeNode.StringFromNode("Ingredient2Name");
+            Ingredient1Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
+            Ingredient2Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
+            ProductQuantity = recipeNode.IntFromNode("ProductQuantity");
+            Name = recipeNode.StringFromNode("ProductName");
+            _requiresFire = Ingredient1 == "Fire" || Ingredient2 == "Fire";
+            string recipeTypeString = recipeNode.StringFromNode("RecipeType");
+            switch (recipeTypeString)
+            {
+                    case "BUILDING":
+                        RecipeType = RecipeType.Building;
+                        break;
+                    case "OTHER":
+                        RecipeType = RecipeType.Other;
+                        break;
+                    case "ITEM":
+                        RecipeType = RecipeType.Item;
+                        break;
+                    case "RESOURCE":
+                        RecipeType = RecipeType.Resource;
+                        break;
+                    default:
+                        Debug.Log(recipeTypeString);
+                        break;
+            }
+            _levelNo = recipeNode.IntFromNode("LevelNo");
         }
 
         public bool CanCraft()
@@ -57,12 +78,10 @@ namespace Game.Global
             if (Ingredient2 != "None") Inventory.DecrementResource(Ingredient2, Ingredient2Quantity);
         }
 
-        public void Craft()
+        private void Build()
         {
             switch (Name)
             {
-                case "Fire":
-                    break;
                 case "Shelter":
                     Inventory.AddBuilding(new Shelter());
                     break;
@@ -78,14 +97,21 @@ namespace Game.Global
                 case "Essence Filter":
                     Inventory.AddBuilding(new EssenceFilter());
                     break;
-                case "Leather Plate":
-                    Inventory.Move(Armour.Create(ItemQuality.Dark));
-                    break;
                 case "Smoker":
                     Inventory.AddBuilding(new Smoker());
                     break;
                 case "Purifier":
                     Inventory.AddBuilding(new Purifier());
+                    break;
+            }
+        }
+
+        private void CraftArmour()
+        {
+            switch (Name)
+            {
+                case "Leather Plate":
+                    Inventory.Move(Armour.Create(ItemQuality.Dark));
                     break;
                 case "Reinforced Leather Plate":
                     Inventory.Move(Armour.Create(ItemQuality.Dull));
@@ -99,17 +125,32 @@ namespace Game.Global
                 case "Living Metal Plate":
                     Inventory.Move(Armour.Create(ItemQuality.Shining));
                     break;
-                case "Ice":
-                    Inventory.IncrementResource(Name, ProductQuantity);
-                    break;
-                case "Radiance":
-                    Inventory.IncrementResource(Name, 1);
-                    break;
             }
         }
 
-        private bool _unlocked;
-        private int _levelNo;
+        private void CraftOther()
+        {
+            Assert.IsTrue(Name == "Fire");
+        }
+
+        public void Craft()
+        {
+            switch (RecipeType)
+            {
+                case RecipeType.Building:
+                    Build();
+                    break;
+                case RecipeType.Resource:
+                    Inventory.IncrementResource(Name, ProductQuantity);
+                    break;
+                case RecipeType.Item:
+                    CraftArmour();
+                    break;
+                case RecipeType.Other:
+                    CraftOther();
+                    break;
+            }
+        }
 
         private bool Available()
         {
@@ -143,16 +184,7 @@ namespace Game.Global
             XmlNode root = Helper.OpenRootNode("Recipes");
             foreach (XmlNode recipeNode in Helper.GetNodesWithName(root, "Recipe"))
             {
-                string ingredient1Name = recipeNode.StringFromNode("Ingredient1Name");
-                int ingredient1Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
-                string ingredient2Name = recipeNode.StringFromNode("Ingredient2Name");
-                int ingredient2Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
-                string productName = recipeNode.StringFromNode("ProductName");
-                int productQuantity = recipeNode.IntFromNode("ProductQuantity");
-                bool isBuilding = recipeNode.BoolFromNode("IsBuilding");
-                int levelNo = recipeNode.IntFromNode("LevelNo");
-
-                Recipe recipe = new Recipe(ingredient1Name, ingredient2Name, ingredient1Quantity, ingredient2Quantity, productName, productQuantity, isBuilding, levelNo);
+                Recipe recipe = new Recipe(recipeNode);
                 _recipes.Add(recipe);
             }
 

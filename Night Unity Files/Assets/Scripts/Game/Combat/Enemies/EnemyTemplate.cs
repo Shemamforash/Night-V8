@@ -13,7 +13,7 @@ namespace Game.Combat.Enemies
         private static readonly Dictionary<EnemyType, EnemyTemplate> EnemyTemplates = new Dictionary<EnemyType, EnemyTemplate>();
         private static readonly List<EnemyType> _enemyTypes = new List<EnemyType>();
         public readonly EnemyType EnemyType;
-        public readonly int Health, Speed, Value, DropCount;
+        public readonly int Health, Speed, Value;
         public readonly string DropResource, Species;
         public readonly bool HasWeapon, HasGear;
 
@@ -26,12 +26,8 @@ namespace Game.Combat.Enemies
             HasWeapon = enemyNode.BoolFromNode("HasWeapon");
             Species = enemyNode.StringFromNode("Species");
             HasGear = enemyNode.BoolFromNode("HasGear");
-            string dropString = enemyNode.StringFromNode("Drops");
             EnemyTemplates[EnemyType] = this;
-            if (dropString == "") return;
-            string[] drops = dropString.Split(' ');
-            DropCount = int.Parse(drops[0]);
-            DropResource = drops[1];
+            DropResource = enemyNode.StringFromNode("Drops");
         }
 
         public static List<EnemyTemplate> GetEnemyTypes()

@@ -38,6 +38,11 @@ namespace Game.Characters.CharacterActions
             };
         }
 
+        public override string GetDisplayName()
+        {
+            return _target.GetRegionType() == RegionType.Gate ? "Returning Home" : base.GetDisplayName();
+        }
+
         public bool AtHome()
         {
             if (CurrentRegion == null) return true;

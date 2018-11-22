@@ -78,35 +78,43 @@ namespace Game.Global
             source.Play();
         }
 
+        private int GetEnemiesInRange()
+        {
+            if (PlayerCombat.Instance == null) return -1;
+            Vector2 playerPosition = PlayerCombat.Instance.transform.position;
+            List<CanTakeDamage> enemies = CombatManager.Enemies();
+            if (enemies.Count == 0) return -1;
+            int enemiesInRange = enemies.Count(e => e.transform.Distance(playerPosition) <= ThresholdCombatMusicDistance);
+            return enemiesInRange;
+        }
+
         public void Update()
         {
             float ambientVolumeModifier = 1;
-            int enemiesInRange = 0;
-            if (PlayerCombat.Instance != null)
-            {
-                Vector2 playerPosition = PlayerCombat.Instance.transform.position;
-                List<CanTakeDamage> enemies = CombatManager.Enemies();
-                enemiesInRange = enemies.Count(e => e.transform.Distance(playerPosition) <= ThresholdCombatMusicDistance);
-                float timeChange = Time.deltaTime / MusicFadeDuration;
-                if (enemiesInRange == 0) _timeNearEnemies -= timeChange;
-                else _timeNearEnemies += timeChange;
-                _timeNearEnemies = Mathf.Clamp(_timeNearEnemies, 0, 1);
-                ambientVolumeModifier = 1 - _timeNearEnemies;
-            }
-            else if (ambientVolumeModifier < 1)
+
+            int enemiesInRange = GetEnemiesInRange();
+            float timeChange = Time.deltaTime;
+            if (enemiesInRange == -1) timeChange *= -MusicFadeDuration;
+            if (enemiesInRange == 0) timeChange *= -1;
+            
+            _timeNearEnemies = Mathf.Clamp(_timeNearEnemies + timeChange, 0, 25);
+            ambientVolumeModifier = 1 - _timeNearEnemies;
+
+            if (ambientVolumeModifier < 1)
             {
                 ambientVolumeModifier += Time.deltaTime;
                 if (ambientVolumeModifier > 1) ambientVolumeModifier = 1;
             }
 
-            _layer4TargetVolume = 1 * _timeNearEnemies;
-            _layer3TargetVolume = 1 * _timeNearEnemies;
-            _layer2TargetVolume = 1 * _timeNearEnemies;
-            _layer1TargetVolume = 1 * _timeNearEnemies;
-            if (enemiesInRange < 9) _layer4TargetVolume = 0;
-            if (enemiesInRange < 6) _layer3TargetVolume = 0;
-            if (enemiesInRange < 3) _layer2TargetVolume = 0;
-            if (enemiesInRange == 0) _layer1TargetVolume = 0;
+            _layer4TargetVolume = 0.1f * (_timeNearEnemies - 15f);
+            _layer3TargetVolume = 0.1f * (_timeNearEnemies - 10f);
+            _layer2TargetVolume = 0.1f * (_timeNearEnemies - 5f);
+            _layer1TargetVolume = 0.1f * _timeNearEnemies;
+
+            _layer1TargetVolume = Mathf.Clamp(_layer1TargetVolume, 0f, 1f);
+            _layer2TargetVolume = Mathf.Clamp(_layer2TargetVolume, 0f, 1f);
+            _layer3TargetVolume = Mathf.Clamp(_layer3TargetVolume, 0f, 1f);
+            _layer4TargetVolume = Mathf.Clamp(_layer4TargetVolume, 0f, 1f);
 
             UpdateLayerVolume(_layer1TargetVolume, _layer1, _layer1VolumeGain);
             UpdateLayerVolume(_layer2TargetVolume, _layer2, _layer2VolumeGain);

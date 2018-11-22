@@ -1,13 +1,14 @@
 ﻿using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Global;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
 
 public class SaltBehaviour : MonoBehaviour
 {
-    private static GameObject _prefab;
+    private static ObjectPool<SaltBehaviour> _saltPool = new ObjectPool<SaltBehaviour>("Salt", "Prefabs/Combat/Salt");
     private Rigidbody2D _rigidBody;
     private const float Force = 0.4f;
     private const float PickupRadius = 2f;
@@ -17,15 +18,11 @@ public class SaltBehaviour : MonoBehaviour
         _rigidBody = GetComponent<Rigidbody2D>();
     }
 
-    public static void Create(Vector2 position, int count)
+    public static void Create(Vector2 position)
     {
-        if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Salt");
-        for (int i = 0; i < count; ++i)
-        {
-            GameObject salt = Instantiate(_prefab);
-            salt.transform.position = AdvancedMaths.RandomVectorWithinRange(position, 0.5f);
-            salt.GetComponent<Rigidbody2D>().AddForce(AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized);
-        }
+        SaltBehaviour salt = _saltPool.Create();
+        salt.transform.position = AdvancedMaths.RandomVectorWithinRange(position, 0.5f);
+        salt._rigidBody.AddForce(AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized);
     }
 
     public void Update()
@@ -42,6 +39,11 @@ public class SaltBehaviour : MonoBehaviour
     {
         if (!other.gameObject.CompareTag("Player")) return;
         Inventory.IncrementResource("Salt", 1);
-        Destroy(gameObject);
+        _saltPool.Return(this);
+    }
+
+    private void OnDestroy()
+    {
+        _saltPool.Return(this);
     }
 }

@@ -10,19 +10,23 @@ namespace Game.Global
     public class SceneChanger : MonoBehaviour
     {
         private static SceneChanger _instance;
-        private AudioSource _audioSource;
         private static string _sceneToLoad;
+        private static bool _fadeInAudio;
         private const float DefaultFadeTime = 0.5f;
 
         public void Awake()
         {
             _instance = this;
-            _audioSource = GetComponent<AudioSource>();
-            VolumeController.SetModifiedVolume(0f);
             float fadeInTime = SceneManager.GetActiveScene().name == "Combat" ? 3f : DefaultFadeTime;
-            DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 1f, fadeInTime).SetUpdate(UpdateType.Normal, true);
             ScreenFaderController.SetAlpha(1);
             ScreenFaderController.FadeOut(fadeInTime);
+            if (_fadeInAudio)
+            {
+                VolumeController.SetModifiedVolume(0f);
+                DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 1f, DefaultFadeTime).SetUpdate(UpdateType.Normal, true);
+                _fadeInAudio = false;
+            }
+
             if (SceneManager.GetActiveScene().name == "Game") WorldState.UnPause();
         }
 
@@ -39,21 +43,25 @@ namespace Game.Global
         private IEnumerator FadeOut(string sceneName)
         {
             _sceneToLoad = sceneName;
-            if (_audioSource != null) _audioSource.DOFade(1, DefaultFadeTime);
-            VolumeController.SetModifiedVolume(1f);
-            DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 0f, DefaultFadeTime).SetUpdate(UpdateType.Normal, true);
             ScreenFaderController.FadeIn(DefaultFadeTime);
+            if (_fadeInAudio)
+            {
+                DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 0f, DefaultFadeTime).SetUpdate(UpdateType.Normal, true);
+            }
+
             yield return new WaitForSeconds(DefaultFadeTime);
             StartCoroutine(LoadNextScene());
         }
 
         public static void GoToGameOverScene()
         {
+            FadeInAudio();
             ChangeScene("Game Over");
         }
 
         public static void GoToStoryScene()
         {
+            FadeInAudio();
             ChangeScene("Story");
         }
 
@@ -64,17 +72,24 @@ namespace Game.Global
 
         public static void GoToMainMenuScene()
         {
+            FadeInAudio();
             ChangeScene("Menu");
         }
 
         public static void GoToCreditsScene()
         {
+            FadeInAudio();
             ChangeScene("Credits");
         }
 
         public static void GoToGameScene()
         {
             ChangeScene("Game");
+        }
+
+        public static void FadeInAudio()
+        {
+            _fadeInAudio = true;
         }
 
         private static void ChangeScene(string sceneName)

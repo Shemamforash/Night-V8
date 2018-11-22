@@ -187,7 +187,7 @@ namespace Game.Combat.Enemies
 
         private Loot DropHumanLoot(Vector2 position)
         {
-            SaltBehaviour.Create(position, Template.DropCount);
+            if (Helper.RollDie(0, Template.Value)) SaltBehaviour.Create(position);
             bool dropWeapon = Random.Range(0, 20) == 0 && EquippedWeapon != null;
             bool dropAccessory = Random.Range(0, 30) == 0;
             if (dropWeapon && dropAccessory)
@@ -198,14 +198,20 @@ namespace Game.Combat.Enemies
 
             if (!dropWeapon && !dropAccessory) return null;
             Loot loot = new Loot(position);
-            if (dropWeapon) loot.SetItem(EquippedWeapon);
+
+            if (dropWeapon)
+            {
+                EquippedWeapon.UnEquip();
+                loot.SetItem(EquippedWeapon);
+            }
+
             if (dropAccessory) loot.SetItem(Accessory.Generate());
             return loot;
         }
 
         private Loot DropNightmareLoot(Vector2 position)
         {
-            EssenceCloudBehaviour.Create(position, Template.DropCount);
+            if (Helper.RollDie(0, Template.Value)) EssenceCloudBehaviour.Create(position);
             bool dropInscription = Random.Range(0, 20) == 0;
             if (!dropInscription) return null;
             Loot loot = new Loot(position);
@@ -215,11 +221,12 @@ namespace Game.Combat.Enemies
 
         private Loot DropAnimalLoot(Vector2 position)
         {
-            ResourceItem item;
-            if (Template.EnemyType == EnemyType.Grazer || Template.EnemyType == EnemyType.Watcher && Random.Range(0, 3) == 1)
+            ResourceItem item = null;
+            if (Template.EnemyType == EnemyType.Grazer || Template.EnemyType == EnemyType.Watcher && Helper.RollDie(0, 4))
                 item = ResourceTemplate.Create("Skin");
-            else
+            else if (Helper.RollDie(0, Template.Value))
                 item = ResourceTemplate.GetMeat();
+            if (item == null) return null;
             Loot loot = new Loot(position);
             loot.SetResource(item);
             return loot;

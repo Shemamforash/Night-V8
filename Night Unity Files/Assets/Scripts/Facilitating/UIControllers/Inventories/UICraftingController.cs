@@ -3,6 +3,7 @@ using DG.Tweening;
 using Facilitating.UIControllers;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
+using Game.Combat.Player;
 using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -73,8 +74,10 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
     {
         Recipe recipe = (Recipe) obj;
         if (!recipe.CanCraft()) return;
+        if (!CharacterManager.SelectedCharacter.TravelAction.AtHome()) return;
         CharacterManager.SelectedCharacter.CraftAction.StartCrafting(recipe);
         ShowCurrentlyCrafting();
+        UiGearMenuController.PlayAudio(AudioClips.Craft);
     }
 
     private class RecipeElement : BasicListElement
@@ -94,9 +97,13 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
             productString += " (" + durationString + ")";
             LeftText.SetText("");
 
-            if (recipe.IsBuilding) LeftText.SetText("Built " + recipe.Built());
+            if (recipe.RecipeType == RecipeType.Building) LeftText.SetText("Built " + recipe.Built());
             bool canAfford = recipe.CanCraft();
-            if (!canAfford) productString += " - Insufficient Resources";
+            bool canCraft = CharacterManager.SelectedCharacter.TravelAction.AtHome();
+
+            if (!canCraft) productString += " - Cannot Craft When Travelling";
+            else if (!canAfford) productString += " - Insufficient Resources";
+
             CentreText.SetText(productString);
 
             string ingredient1String = recipe.Ingredient1Quantity > 1 ? recipe.Ingredient1 + " x" + recipe.Ingredient1Quantity : recipe.Ingredient1;

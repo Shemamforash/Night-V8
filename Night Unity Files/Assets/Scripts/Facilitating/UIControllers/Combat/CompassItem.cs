@@ -1,4 +1,5 @@
 using DG.Tweening;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace Facilitating.UIControllers
 
         private void Awake()
         {
-            if(_glowPrefab == null) _glowPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Glow");
+            if (_glowPrefab == null) _glowPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Glow");
             GameObject glowObject = Instantiate(_glowPrefab);
             glowObject.transform.SetParent(transform);
             glowObject.transform.localPosition = Vector2.zero;
@@ -39,8 +40,8 @@ namespace Facilitating.UIControllers
 
         public void Pulse()
         {
-            _glow.color = new Color(1, 1, 1, 0.3f);
-            _glow.DOFade(0f, 2f);
+            _glow.color = new Color(1, 1, 1, 0.5f);
+            _glow.DOFade(0.25f, 2f);
         }
     }
 }

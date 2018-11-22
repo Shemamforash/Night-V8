@@ -14,8 +14,8 @@ namespace Facilitating.UI
 
         public void Update()
         {
-            if (EventSystem.current.currentSelectedGameObject == null) EventSystem.current.SetSelectedGameObject(selected);
-            selected = EventSystem.current.currentSelectedGameObject;
+//            if (EventSystem.current.currentSelectedGameObject == null) EventSystem.current.SetSelectedGameObject(selected);
+//            selected = EventSystem.current.currentSelectedGameObject;
         }
     }
 }

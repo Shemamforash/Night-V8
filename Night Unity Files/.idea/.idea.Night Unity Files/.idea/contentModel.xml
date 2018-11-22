@@ -447,7 +447,6 @@
                 <e p="BaseCharacterAction.cs" t="Include" />
                 <e p="Consume.cs" t="Include" />
                 <e p="Craft.cs" t="Include" />
-                <e p="LightFire.cs" t="Include" />
                 <e p="Meditate.cs" t="Include" />
                 <e p="Rest.cs" t="Include" />
                 <e p="Sleep.cs" t="Include" />
@@ -726,6 +725,7 @@
               <e p="GameController.cs" t="Include" />
               <e p="JournalEntry.cs" t="Include" />
               <e p="Recipe.cs" t="Include" />
+              <e p="RecipeType.cs" t="Include" />
               <e p="SceneChanger.cs" t="Include" />
               <e p="SceneryController.cs" t="Include" />
               <e p="TutorialManager.cs" t="Include" />

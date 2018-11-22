@@ -2,6 +2,7 @@
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Gear.Armour;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -46,6 +47,7 @@ namespace Facilitating.UIControllers
         {
             Accessory accessory = (Accessory) accessoryObject;
             CharacterManager.SelectedCharacter.EquipAccessory(accessory);
+            UiGearMenuController.PlayAudio(AudioClips.EquipAccessory);
             Show();
         }
 

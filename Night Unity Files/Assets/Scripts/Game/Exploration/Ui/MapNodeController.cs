@@ -33,7 +33,6 @@ namespace Game.Exploration.Ui
         private Region _region;
         private ParticleSystem _claimedParticles;
 
-        public AudioClip _enterClip;
         private bool _hidden;
         private bool _canAfford;
 
@@ -74,7 +73,7 @@ namespace Game.Exploration.Ui
         private void SetGritText()
         {
             if (_region.GetRegionType() == RegionType.Gate) _costText.text = "Return home";
-            else if (!_canAfford) _costText.text = "Not Enough Grit To Reach";
+            else if (!_canAfford) _costText.text = "Not Enough Grit";
             else _costText.text = _gritCost + " Grit";
         }
 

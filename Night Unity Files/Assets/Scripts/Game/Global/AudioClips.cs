@@ -27,6 +27,7 @@ namespace Game.Global
         public static AudioClip ClipIn, ClipOut;
         public static AudioClip SimmavA, SimmavB, SimmavC, SimmavD;
         public static AudioClip StandardExplosion, FireExplosion, ShatterExplosion;
+        public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Craft, OpenJournal, Eat;
         private static readonly List<AssetBundle> _loadedBundles = new List<AssetBundle>();
         private static bool _loaded;
 
@@ -117,6 +118,16 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => SimmavB = a, "music/combat/simmav", "simmav b"));
             yield return StartCoroutine(LoadClip(a => SimmavC = a, "music/combat/simmav", "simmav c"));
             yield return StartCoroutine(LoadClip(a => SimmavD = a, "music/combat/simmav", "simmav d"));
+            
+            Debug.Log("loading misc audio");
+            yield return StartCoroutine(LoadClip(a => TabChange = a, "misc/inventories", "Tab Change"));
+            yield return StartCoroutine(LoadClip(a => EquipAccessory = a, "misc/inventories", "Equip Accessory"));
+            yield return StartCoroutine(LoadClip(a => EquipArmour = a, "misc/inventories", "Equip Armour"));
+            yield return StartCoroutine(LoadClip(a => EquipWeapon = a, "misc/inventories", "Equip Weapon"));
+            yield return StartCoroutine(LoadClip(a => Craft = a, "misc/inventories", "Craft"));
+            yield return StartCoroutine(LoadClip(a => OpenJournal = a, "misc/inventories", "Open Journal"));
+            yield return StartCoroutine(LoadClip(a => Eat = a, "misc/inventories", "Eat"));
+
 
             watch.Stop();
             watch.PrintTime("Done loading audio in: ");

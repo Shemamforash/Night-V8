@@ -1,4 +1,6 @@
-﻿using Game.Characters;
+﻿using System.Xml;
+using Facilitating.Persistence;
+using Game.Characters;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -16,11 +18,11 @@ namespace Facilitating
         private const float Smoke2DurationMax = 10;
         private const float Smoke3DurationMax = 5;
         private const float Smoke4DurationMax = 3;
-        private static float _fireLevel;
         private const float FireBurnOutPoint = 0.2f;
         private Image _fireLightImage;
         private static int _hourCounter;
         private static bool _tending;
+        private static float _fireLevel;
         private static Crackling _crackling;
 
         public void Awake()
@@ -92,7 +94,7 @@ namespace Facilitating
         private static void TryAddFuel()
         {
             ++_hourCounter;
-            if (_hourCounter != WorldState.MinutesPerHour) return;
+            if (_hourCounter != WorldState.MinutesPerHour * 2) return;
             CharacterManager.Characters.ForEach(c =>
             {
                 if (!c.TravelAction.AtHome()) return;
@@ -126,5 +128,20 @@ namespace Facilitating
         {
             return _fireLevel > FireBurnOutPoint;
         }
+
+        public static void Save(XmlNode root)
+        {
+            root = root.CreateChild("Campfire");
+            root.CreateChild("HourCounter", _hourCounter);
+            root.CreateChild("FireLevel", _fireLevel);
+        }
+
+        public static void Load(XmlNode root)
+        {
+            root = root.GetNode("Campfire");
+            _hourCounter = root.IntFromNode("HourCounter");
+            _fireLevel = root.FloatFromNode("FireLevel");
+        }
+        
     }
 }

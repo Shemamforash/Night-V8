@@ -162,7 +162,9 @@ namespace Game.Combat.Generation
             _inCombat = true;
             WorldState.Pause();
             _visibilityRange = 10f;
-
+            float visibilityModifier = 0.5f * Mathf.Sin((WorldState.Hours - 6) * Mathf.PI / 12f) + 0.5f;
+            _visibilityRange = Mathf.Lerp(3f, 10f, visibilityModifier);
+            _visibilityRange *= WeatherManager.CurrentWeather().GetVisibility();
             GameObject worldObject = GameObject.Find("World");
             if (_currentRegion.GetRegionType() == RegionType.Temple)
             {
@@ -182,7 +184,6 @@ namespace Game.Combat.Generation
             }
             else
             {
-                _visibilityRange = 5f * WeatherManager.CurrentWeather().GetVisibility() + 2f;
                 switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
                 {
                     case EnvironmentType.Desert:

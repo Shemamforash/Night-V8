@@ -71,7 +71,6 @@ namespace Game.Gear.Weapons
 
         public void SetInscription(Inscription inscription)
         {
-            Debug.Log(inscription);
             RemoveInscription();
             RemoveInscriptionModifier();
             _inscription = inscription;

@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using Facilitating;
 using Facilitating.Persistence;
 using Facilitating.UIControllers;
 using Game.Global;
@@ -13,13 +14,6 @@ namespace Game.Characters.CharacterActions
 
         public Craft(Player playerCharacter) : base("Craft", playerCharacter)
         {
-            DisplayName = "Crafting";
-            MinuteCallback = () =>
-            {
-                --Duration;
-                if (Duration != 0) return;
-                CraftRecipe();
-            };
         }
 
         protected override void OnClick()
@@ -34,18 +28,37 @@ namespace Game.Characters.CharacterActions
             PlayerCharacter.RestAction.Enter();
         }
 
+        private void LightFire()
+        {
+            DisplayName = "Lighting Fire";
+            MinuteCallback = () =>
+            {
+                --Duration;
+                Campfire.Tend();
+                if (Duration != 0) return;
+                Campfire.FinishTending();
+                PlayerCharacter.RestAction.Enter();
+            };
+        }
+
+        private void CraftThing()
+        {
+            DisplayName = "Crafting";
+            MinuteCallback = () =>
+            {
+                --Duration;
+                if (Duration != 0) return;
+                CraftRecipe();
+            };
+        }
+
         public void StartCrafting(Recipe recipe)
         {
             Assert.IsTrue(_recipe == null);
             _recipe = recipe;
             _recipe.ConsumeResources();
-            if (recipe.Name == "Fire")
-            {
-                CharacterManager.SelectedCharacter.LightFireAction.Enter();
-                _recipe = null;
-                return;
-            }
-
+            if (recipe.Name == "Fire") LightFire();
+            else CraftThing();
             SetDuration();
             Enter();
         }

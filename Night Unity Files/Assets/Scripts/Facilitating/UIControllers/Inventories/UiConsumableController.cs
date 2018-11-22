@@ -2,6 +2,7 @@
 using Facilitating.UIControllers;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -57,8 +58,8 @@ public class UiConsumableController : UiInventoryMenuController
             Consumable consumable = (Consumable) o;
             bool canConsume = consumable.CanConsume();
             string nameText = consumable.Quantity() > 1 ? consumable.Name + " x" + consumable.Quantity() : consumable.Name;
-            LeftText.SetText(nameText);
-            CentreText.SetText(canConsume ? "" : "Cannot Consume");
+            LeftText.SetText(nameText + (canConsume ? "" : "Cannot Consume"));
+            CentreText.SetText("");
             RightText.SetText(consumable.Template.Description);
         }
     }
@@ -72,6 +73,7 @@ public class UiConsumableController : UiInventoryMenuController
     {
         Consumable consumable = (Consumable) consumableObject;
         consumable.Consume();
+        UiGearMenuController.PlayAudio(AudioClips.Eat);
         UpdateCondition();
     }
 }

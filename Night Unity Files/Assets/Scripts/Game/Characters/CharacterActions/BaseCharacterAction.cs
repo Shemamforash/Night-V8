@@ -85,7 +85,7 @@ namespace Game.Characters.CharacterActions
             return doc;
         }
 
-        public string GetDisplayName()
+        public  virtual string GetDisplayName()
         {
             return DisplayName;
         }

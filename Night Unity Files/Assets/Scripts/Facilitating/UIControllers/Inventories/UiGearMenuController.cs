@@ -33,6 +33,7 @@ namespace Facilitating.UIControllers
         private bool _open;
         private readonly List<InventoryTab> _tabs = new List<InventoryTab>();
         private GameObject _tabParent;
+        private AudioPoolController _audioPool;
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
@@ -75,7 +76,7 @@ namespace Facilitating.UIControllers
             bool isCombat = SceneManager.GetActiveScene().name == "Combat";
 
             _instance = this;
-
+            _audioPool = GetComponent<AudioPoolController>();
             _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
 
             _tabParent = gameObject.FindChildWithName("Tabs");
@@ -184,6 +185,16 @@ namespace Facilitating.UIControllers
         public static TabController LeftTab()
         {
             return _instance._leftTab;
+        }
+
+        public static void PlayAudio(AudioClip clip)
+        {
+            _instance._audioPool.PlayClip(clip);
+        }
+        
+        public static void PlayTabAudio()
+        {
+            PlayAudio(AudioClips.TabChange);
         }
     }
 }

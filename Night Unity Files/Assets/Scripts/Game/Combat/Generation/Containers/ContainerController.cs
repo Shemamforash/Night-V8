@@ -8,6 +8,7 @@ using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
+using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
@@ -78,7 +79,6 @@ public abstract class ContainerController
 
         if (Item is GearItem) player.BrandManager.IncreaseItemsFound();
 
-        Debug.Log(Item is Weapon);
         if (Item is Weapon) Inventory.Move((Weapon) Item);
         else if (Item is Armour) Inventory.Move((Armour) Item);
         else if (Item is Accessory) Inventory.Move((Accessory) Item);
@@ -86,9 +86,13 @@ public abstract class ContainerController
         else Inventory.Move((ResourceItem) Item);
     }
 
-    public string GetContents()
+    public virtual string GetContents()
     {
-        return Item == null ? "" : Item.Name;
+        Assert.IsNotNull(Item);
+        int quantity = Item is ResourceItem ? ((ResourceItem) Item).Quantity() : 1;
+        string contentsName = Item.Name;
+        if (quantity != 1) contentsName += " x" + quantity;
+        return contentsName;
     }
 
     public string GetImageLocation()
