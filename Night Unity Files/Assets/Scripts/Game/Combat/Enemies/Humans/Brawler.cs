@@ -1,4 +1,5 @@
 ﻿using Game.Combat.Misc;
+using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -56,6 +57,7 @@ namespace Game.Combat.Enemies.Humans
             direction.x = x;
             direction.y = y;
             _slashParticles.Emit(1);
+            WeaponAudio.PlayBrawlerSlash();
             GetTarget().TakeRawDamage(MeleeDamage, direction);
             direction = TargetPosition().Direction(transform);
             ((CharacterCombat) GetTarget()).MovementController.KnockBack(direction, MeleeForce);

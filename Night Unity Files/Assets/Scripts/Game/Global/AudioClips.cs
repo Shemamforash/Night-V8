@@ -24,10 +24,10 @@ namespace Game.Global
         public static AudioClip[] BulletLoad;
         public static AudioClip LightRain, MediumRain, HeavyRain;
         public static AudioClip LightWind, MediumWind, HeavyWind;
-        public static AudioClip ClipIn, ClipOut;
+        public static AudioClip ClipIn, ClipOut, BrawlerSlash;
         public static AudioClip SimmavA, SimmavB, SimmavC, SimmavD;
         public static AudioClip StandardExplosion, FireExplosion, ShatterExplosion;
-        public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Craft, OpenJournal, Eat;
+        public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Craft, OpenJournal, CloseJournal, Eat, ListScroll;
         private static readonly List<AssetBundle> _loadedBundles = new List<AssetBundle>();
         private static bool _loaded;
 
@@ -100,12 +100,13 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => ShatterExplosion = a, "combat/explosions", "shatter explosion"));
             yield return StartCoroutine(LoadClip(a => ClipIn = a, "combat/reload/clip", "clipin"));
             yield return StartCoroutine(LoadClip(a => ClipOut = a, "combat/reload/clip", "clipout"));
+            yield return StartCoroutine(LoadClip(a => BrawlerSlash = a, "combat/misc", "Brawler Slash"));
 
             Debug.Log("loading weather audio");
             yield return StartCoroutine(LoadAllClipsFromBundle(a => ThunderSounds = a, "thunder"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => DayAudio = a, "daytime"));
             yield return StartCoroutine(LoadClip(a => Night = a, "ambient", "Night"));
-            yield return StartCoroutine(LoadClip(a => Ambient = a, "ambient","Waiting For Time"));
+            yield return StartCoroutine(LoadClip(a => Ambient = a, "ambient", "Waiting For Time"));
             yield return StartCoroutine(LoadClip(a => LightRain = a, "rain", "Light"));
             yield return StartCoroutine(LoadClip(a => MediumRain = a, "rain", "Medium"));
             yield return StartCoroutine(LoadClip(a => HeavyRain = a, "rain", "Heavy"));
@@ -118,7 +119,7 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => SimmavB = a, "music/combat/simmav", "simmav b"));
             yield return StartCoroutine(LoadClip(a => SimmavC = a, "music/combat/simmav", "simmav c"));
             yield return StartCoroutine(LoadClip(a => SimmavD = a, "music/combat/simmav", "simmav d"));
-            
+
             Debug.Log("loading misc audio");
             yield return StartCoroutine(LoadClip(a => TabChange = a, "misc/inventories", "Tab Change"));
             yield return StartCoroutine(LoadClip(a => EquipAccessory = a, "misc/inventories", "Equip Accessory"));
@@ -126,7 +127,9 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => EquipWeapon = a, "misc/inventories", "Equip Weapon"));
             yield return StartCoroutine(LoadClip(a => Craft = a, "misc/inventories", "Craft"));
             yield return StartCoroutine(LoadClip(a => OpenJournal = a, "misc/inventories", "Open Journal"));
+            yield return StartCoroutine(LoadClip(a => CloseJournal = a, "misc/inventories", "Close Journal"));
             yield return StartCoroutine(LoadClip(a => Eat = a, "misc/inventories", "Eat"));
+            yield return StartCoroutine(LoadClip(a => ListScroll = a, "misc/inventories", "List Scroll"));
 
 
             watch.Stop();

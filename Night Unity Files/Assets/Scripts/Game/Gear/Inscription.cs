@@ -34,7 +34,7 @@ namespace Game.Gear
             rawBonus *= tierModifier;
             _modifier.SetFinalBonus(finalBonus);
             _modifier.SetRawBonus(rawBonus);
-            _inscriptionCost = ((int) quality + 1) * 5;
+            _inscriptionCost = (int) quality + 1;
         }
 
         public AttributeModifier Modifier()

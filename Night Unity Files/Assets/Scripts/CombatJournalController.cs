@@ -22,7 +22,6 @@ public class CombatJournalController : Menu, IInputListener
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
         _closeButton.SetOnClick(Close);
         _audioSource = GetComponent<AudioSource>();
-        _audioSource.clip = AudioClips.OpenJournal;
     }
 
     public static void ShowJournal(JournalEntry journal)
@@ -37,6 +36,7 @@ public class CombatJournalController : Menu, IInputListener
     {
         InputHandler.SetCurrentListener(this);
         CombatManager.Pause();
+        _audioSource.clip = AudioClips.OpenJournal;
         _audioSource.Play();
     }
 
@@ -47,11 +47,13 @@ public class CombatJournalController : Menu, IInputListener
         _closeButton.Flash();
         CombatManager.Resume();
         MenuStateMachine.ReturnToDefault();
+        _audioSource.clip = AudioClips.CloseJournal;
+        _audioSource.Play();
     }
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
-        if (axis != InputAxis.Fire || isHeld) return;
+        if (axis != InputAxis.Cover || isHeld) return;
         Close();
     }
 

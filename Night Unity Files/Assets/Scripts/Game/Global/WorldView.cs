@@ -15,7 +15,6 @@ namespace Game.Global
     {
         private static string _environmentString, _temperatureString, _weatherString, _timeString;
         private static TextMeshProUGUI _environmentText;
-        private readonly Dictionary<string, TextMeshProUGUI> _resourceText = new Dictionary<string, TextMeshProUGUI>();
         private Selectable _lastSelectedButton;
 
         public static void SetEnvironmentText(string text)
@@ -59,20 +58,12 @@ namespace Game.Global
             _environmentText.text = _timeString + " in the " + _environmentString + ". It is " + _temperatureString + " and " + _weatherString + ". " + templeString;
         }
 
-        private static readonly string[] resources = {"Meat", "Water", "Essence", "Ice", "Salt", "Scrap", "Fuel", "Charcoal", "Fruit", "Skin", "Leather", "Metal", "Meteor", "Alloy"};
 
         public override void Awake()
         {
             base.Awake();
             PauseOnOpen = false;
             _environmentText = gameObject.FindChildWithName<TextMeshProUGUI>("Environment");
-
-            GameObject resourcesObject = GameObject.Find("Resources");
-            foreach (string resourceType in resources)
-            {
-                TextMeshProUGUI resourceText = resourcesObject.FindChildWithName<TextMeshProUGUI>(resourceType);
-                _resourceText.Add(resourceType, resourceText);
-            }
         }
 
         public override void Enter()
@@ -99,36 +90,6 @@ namespace Game.Global
             if (hours > 13 && hours <= 17) return "Afternoon";
             if (hours > 17 && hours < 20) return "Evening";
             return "Night";
-        }
-
-
-        public void Update()
-        {
-            foreach (string resourceType in resources)
-            {
-                int quantity;
-                switch (resourceType)
-                {
-                    case "Meat":
-                        quantity = Inventory.Consumables().Count(c => c.Template.ResourceType == "Meat");
-                        _resourceText[resourceType].text = "Meat\n" + quantity;
-                        continue;
-                    case "Water":
-                        quantity = Inventory.Consumables().Count(c => c.Template.ResourceType == "Water");
-                        _resourceText[resourceType].text = "Water\n" + quantity;
-                        continue;
-                }
-
-                quantity = Mathf.FloorToInt(Inventory.GetResourceQuantity(resourceType));
-                if (quantity == 0 && resourceType != "Food" && resourceType != "Water")
-                {
-                    _resourceText[resourceType].gameObject.SetActive(false);
-                    continue;
-                }
-
-                _resourceText[resourceType].gameObject.SetActive(true);
-                _resourceText[resourceType].text = resourceType + "\n" + quantity;
-            }
         }
     }
 }

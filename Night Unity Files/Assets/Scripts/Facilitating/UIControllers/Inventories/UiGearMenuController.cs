@@ -77,6 +77,7 @@ namespace Facilitating.UIControllers
 
             _instance = this;
             _audioPool = GetComponent<AudioPoolController>();
+            _audioPool.SetMixerGroup("Modified", 0);
             _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
 
             _tabParent = gameObject.FindChildWithName("Tabs");
@@ -189,12 +190,17 @@ namespace Facilitating.UIControllers
 
         public static void PlayAudio(AudioClip clip)
         {
-            _instance._audioPool.PlayClip(clip);
+            _instance._audioPool.Create().Play(clip);
         }
-        
+
         public static void PlayTabAudio()
         {
-            PlayAudio(AudioClips.TabChange);
+            _instance._audioPool.Create().Play(AudioClips.TabChange, Random.Range(0.9f, 0.5f), Random.Range(0.9f, 1f));
+        }
+
+        public static void PlayScrollAudio()
+        {
+            _instance._audioPool.Create().Play(AudioClips.ListScroll, Random.Range(0.25f, 0.3f), Random.Range(0.9f, 1f));
         }
     }
 }

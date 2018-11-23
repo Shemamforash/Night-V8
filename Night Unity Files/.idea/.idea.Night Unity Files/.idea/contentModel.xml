@@ -726,6 +726,8 @@
               <e p="JournalEntry.cs" t="Include" />
               <e p="Recipe.cs" t="Include" />
               <e p="RecipeType.cs" t="Include" />
+              <e p="ResourcesUiController.cs" t="Include" />
+              <e p="ResourceTab.cs" t="Include" />
               <e p="SceneChanger.cs" t="Include" />
               <e p="SceneryController.cs" t="Include" />
               <e p="TutorialManager.cs" t="Include" />
@@ -753,7 +755,6 @@
           </e>
           <e p="PauseMenuController.cs" t="Include" />
           <e p="RadianceController.cs" t="Include" />
-          <e p="ResourcesUiController.cs" t="Include" />
           <e p="SamsHelper" t="Include">
             <e p="AudioPoolController.cs" t="Include" />
             <e p="BaseGameFunctionality" t="Include">

@@ -163,8 +163,8 @@ namespace Game.Combat.Generation
             WorldState.Pause();
             _visibilityRange = 10f;
             float visibilityModifier = 0.5f * Mathf.Sin((WorldState.Hours - 6) * Mathf.PI / 12f) + 0.5f;
-            _visibilityRange = Mathf.Lerp(3f, 10f, visibilityModifier);
             _visibilityRange *= WeatherManager.CurrentWeather().GetVisibility();
+            _visibilityRange = Mathf.Lerp(3f, 10f, visibilityModifier);
             GameObject worldObject = GameObject.Find("World");
             if (_currentRegion.GetRegionType() == RegionType.Temple)
             {

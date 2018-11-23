@@ -20,13 +20,13 @@ namespace Game.Combat.Misc
         private Rigidbody2D _rigidBody;
         public bool UseHoofprint;
         private int _nextClip;
-        private AudioSource _audioSource;
+        private AudioPoolController _audioPool;
 
         public void Awake()
         {
             if (_footstepParent == null) _footstepParent = GameObject.Find("World").transform.Find("Footsteps");
-            _audioSource = GetComponent<AudioSource>();
-            _audioSource.volume = 0.4f;
+            _audioPool = GetComponent<AudioPoolController>();
+            _audioPool.SetMixerGroup("Modified", 1);
             _nextClip = AudioClips.FootstepClips.Length + 1;
             _lastPosition = transform.position;
         }
@@ -84,9 +84,10 @@ namespace Game.Combat.Misc
                 _nextClip = 0;
             }
 
-            _audioSource.volume = Random.Range(0.4f, 0.5f);
-            _audioSource.pitch = Random.Range(0.9f, 1.1f);
-            if (AudioClips.FootstepClips.Length != 0) _audioSource.PlayOneShot(AudioClips.FootstepClips[_nextClip]);
+            AudioClip clip = AudioClips.FootstepClips[_nextClip];
+            float volume = Random.Range(0.3f, 0.4f);
+            float pitch = Random.Range(0.9f, 1f);
+            _audioPool.Create().Play(clip, volume, pitch, 2000);
         }
 
         private void Update()

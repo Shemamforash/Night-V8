@@ -1,6 +1,7 @@
 using System.Collections;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class InstancedAudio : MonoBehaviour
 {
@@ -14,15 +15,41 @@ public class InstancedAudio : MonoBehaviour
         _hpf = GetComponent<AudioHighPassFilter>();
     }
 
-    public void Play(ObjectPool<InstancedAudio> audioPool, AudioClip clip, float volumeOffset, float hpfValue)
+    public void SetMixerGroup(ObjectPool<InstancedAudio> audioPool, AudioMixerGroup mixerGroup, float spatialBlend)
     {
         _audioPool = audioPool;
-        _hpf.cutoffFrequency = hpfValue;
+        _audioSource.outputAudioMixerGroup = mixerGroup;
+        _audioSource.spatialBlend = spatialBlend;
+    }
+    
+    public void Play(AudioClip clip)
+    {
+        Play(clip, 1);
+    }
+
+    public void Play(AudioClip clip, float volume)
+    {
+        Play(clip, volume, 1);
+    }
+
+    public void Play(AudioClip clip, float volume, float pitch)
+    {
+        _audioSource.pitch = pitch;
+        _audioSource.volume = volume;
+        PlayClip(clip);
+    }
+    
+    private void PlayClip(AudioClip clip)
+    {
         _audioSource.clip = clip;
-        _audioSource.pitch = Random.Range(0.9f, 1.1f);
-        _audioSource.volume = Random.Range(0.9f, 1.1f) + volumeOffset;
         _audioSource.Play();
         StartCoroutine(WaitToDie());
+    }
+
+    public void Play(AudioClip clip, float volume, float pitch, float hpfValue)
+    {
+        _hpf.cutoffFrequency = hpfValue;
+        Play(clip, volume, pitch);
     }
 
     private IEnumerator WaitToDie()

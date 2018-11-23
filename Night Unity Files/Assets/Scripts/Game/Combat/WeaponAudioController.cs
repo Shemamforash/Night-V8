@@ -16,6 +16,7 @@ public class WeaponAudioController : MonoBehaviour
     public void Awake()
     {
         _audioPool = GetComponent<AudioPoolController>();
+        _audioPool.SetMixerGroup("Gunshots", 1);
     }
 
     public void Destroy()
@@ -38,17 +39,17 @@ public class WeaponAudioController : MonoBehaviour
 
     public void StartReload()
     {
-        _audioPool.PlayClip(AudioClips.ClipOut);
+        _audioPool.Create().Play(AudioClips.ClipOut);
     }
 
     public void DryFire()
     {
-        _audioPool.PlayClip(AudioClips.DryFireClips.RandomElement());
+        _audioPool.Create().Play(AudioClips.DryFireClips.RandomElement());
     }
 
     public void StopReload()
     {
-        _audioPool.PlayClip(AudioClips.ClipIn);
+        _audioPool.Create().Play(AudioClips.ClipIn);
     }
 
     public void Fire(Weapon weapon)
@@ -63,7 +64,7 @@ public class WeaponAudioController : MonoBehaviour
                 casings = AudioClips.PistolCasings;
                 break;
             case WeaponType.Rifle:
-                shots = new[]{AudioClips.RifleShots[0]};
+                shots = new[] {AudioClips.RifleShots[0]};
                 casings = AudioClips.RifleCasings;
                 break;
             case WeaponType.Shotgun:
@@ -85,19 +86,24 @@ public class WeaponAudioController : MonoBehaviour
         float durability = weapon.WeaponAttributes.GetDurability().CurrentValue();
         float hpfValue = -15f * durability + 750;
         hpfValue = Mathf.Clamp(hpfValue, 0, 750);
-        _audioPool.PlayClip(shots[0], 0, hpfValue);
+        _audioPool.Create().Play(shots[0], 1f, Random.Range(0.9f, 1f), hpfValue);
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(0.25f);
-        sequence.AppendCallback(() => { _audioPool.PlayClip(casings[0], -0.6f); });
+        sequence.AppendCallback(() => { _audioPool.Create().Play(casings[0], -0.6f); });
     }
 
     public void BreakArmour()
     {
-        _audioPool.PlayClip(AudioClips.ArmourBreakClips.RandomElement());
+        _audioPool.Create().Play(AudioClips.ArmourBreakClips.RandomElement());
     }
 
     public void AddRound()
     {
-        _audioPool.PlayClip(AudioClips.BulletLoad.RandomElement());
+        _audioPool.Create().Play(AudioClips.BulletLoad.RandomElement());
+    }
+
+    public void PlayBrawlerSlash()
+    {
+        _audioPool.Create().Play(AudioClips.BrawlerSlash, Random.Range(0.4f, 0.5f), Random.Range(0.9f, 1f), 1000);
     }
 }

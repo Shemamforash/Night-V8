@@ -114,7 +114,7 @@ namespace Game.Gear.Weapons
 
         public void IncreaseDurability(int durabilityGain)
         {
-            _durability.Increment(durabilityGain);
+            _durability.Increment(durabilityGain * 10);
             RecalculateAttributeValues();
         }
 
