@@ -131,8 +131,8 @@ namespace Game.Gear.Armour
         {
             int plateOne = range > 5 ? 5 : range;
             int plateTwo = range > 5 ? range - 5 : 0;
-            if (plateOne != 0) SetChestArmour(Armour.Create((ItemQuality) plateOne - 1));
-            if (plateTwo != 0) SetHeadArmour(Armour.Create((ItemQuality) plateTwo - 1));
+            if (plateOne != 0) SetChestArmour(Armour.Create((ItemQuality) plateOne - 1, Armour.ArmourType.Chest));
+            if (plateTwo != 0) SetHeadArmour(Armour.Create((ItemQuality) plateTwo - 1, Armour.ArmourType.Head));
         }
 
         public int GetTotalProtection()

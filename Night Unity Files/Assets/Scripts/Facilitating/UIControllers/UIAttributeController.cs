@@ -1,4 +1,5 @@
 ﻿using Game.Characters;
+using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -22,12 +23,28 @@ namespace Facilitating.UIControllers
             return gameObject.FindChildWithName(elementName).transform.Find("Bar").GetComponent<UIAttributeMarkerController>();
         }
 
+        public void UpdateAttributesOffset(Player player, AttributeType attributeType, float offset)
+        {
+            UpdateMarker(_fettleMarker, player, AttributeType.Fettle, attributeType == AttributeType.Fettle ? offset : 0);
+            UpdateMarker(_gritMarker, player, AttributeType.Grit, attributeType == AttributeType.Grit ? offset : 0);
+            UpdateMarker(_focusMarker, player, AttributeType.Focus, attributeType == AttributeType.Focus ? offset : 0);
+            UpdateMarker(_willMarker, player, AttributeType.Will, attributeType == AttributeType.Will ? offset : 0);
+        }
+
+        private void UpdateMarker(UIAttributeMarkerController marker, Player player, AttributeType attributeType, float offset = 0)
+        {
+            float current = player.Attributes.Val(attributeType) + offset;
+            float max = player.Attributes.Max(attributeType);
+            current = Mathf.Clamp(current, 0, max);
+            marker.SetValue(max, current);
+        }
+
         public void UpdateAttributes(Player player)
         {
-            _fettleMarker.SetValue(player.Attributes.Get(AttributeType.Fettle));
-            _gritMarker.SetValue(player.Attributes.Get(AttributeType.Grit));
-            _focusMarker.SetValue(player.Attributes.Get(AttributeType.Focus));
-            _willMarker.SetValue(player.Attributes.Get(AttributeType.Will));
+            UpdateMarker(_fettleMarker, player, AttributeType.Fettle);
+            UpdateMarker(_gritMarker, player, AttributeType.Grit);
+            UpdateMarker(_focusMarker, player, AttributeType.Focus);
+            UpdateMarker(_willMarker, player, AttributeType.Will);
         }
     }
 }

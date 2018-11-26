@@ -75,7 +75,6 @@ namespace Game.Characters
 
         public void Succeed()
         {
-            Debug.Log("unlocked " + _successName);
             SetStatus(BrandStatus.Succeeded);
             UiBrandMenu.ShowBrand(this);
             OnSucceed();
@@ -84,6 +83,7 @@ namespace Game.Characters
         public void Fail()
         {
             SetStatus(BrandStatus.Failed);
+            UiBrandMenu.ShowBrand(this);
             OnFail();
         }
 

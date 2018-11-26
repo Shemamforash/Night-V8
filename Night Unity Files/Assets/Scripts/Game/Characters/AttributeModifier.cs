@@ -18,7 +18,7 @@ namespace Game.Characters
         }
 
         public int Depth() => _depth;
-        
+
         public void SetFinalBonus(float finalBonus)
         {
             _finalBonus = finalBonus;
@@ -45,15 +45,16 @@ namespace Game.Characters
 
         public string RawBonusToString()
         {
-            string rawBonusString = ModifierToString(_rawBonus);
-            return rawBonusString; // + " " + _targetAttribute;
+            if (_rawBonus == 0) return "";
+            string rawBonusString = ModifierToString(_rawBonus * 100) + "%";
+            return rawBonusString;
         }
 
         public string FinalBonusToString()
         {
             if (_finalBonus == 0) return "";
-            string finalBonusString = ModifierToString((_finalBonus - 1) * 100);
-            return finalBonusString; // + " " + _targetAttribute;
+            string finalBonusString = ModifierToString(_finalBonus * 100) + "%";
+            return finalBonusString;
         }
 
         public float FinalBonus()
@@ -64,20 +65,6 @@ namespace Game.Characters
         public float RawBonus()
         {
             return _rawBonus;
-        }
-
-        public void Save(XmlNode doc)
-        {
-            doc.CreateChild("FinalBonus", _finalBonus);
-            doc.CreateChild("RawBonus", _rawBonus);
-        }
-
-        public static AttributeModifier Load(XmlNode modifierNode)
-        {
-            AttributeModifier modifier = new AttributeModifier();
-            modifier.SetFinalBonus(modifierNode.FloatFromNode("FinalBonus"));
-            modifier.SetRawBonus(modifierNode.FloatFromNode("RawBonus"));
-            return modifier;
         }
     }
 }

@@ -249,7 +249,6 @@ namespace Game.Exploration.Regions
         private void CreateNodeObject()
         {
             if (_nodePrefab == null) _nodePrefab = Resources.Load<GameObject>("Prefabs/Map/Map Node");
-            Debug.Log("created");
             _nodeObject = GameObject.Instantiate(_nodePrefab);
             _nodeObject.transform.SetParent(MapMenuController.MapTransform);
             _nodeObject.name = Name;

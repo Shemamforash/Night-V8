@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Game.Exploration.Environment;
+using InventorySystem;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public class ResourceTemplate
     {
-        public readonly string Name, ResourceType;
+        public readonly string Name;
+        public readonly ResourceType ResourceType;
         private readonly bool Consumable;
         public readonly string Description;
         public readonly bool IsEffectPermanent;
@@ -49,32 +50,39 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return AllResources.FirstOrDefault(t => t.Name == templateString);
         }
 
-        private static string _lastType = "";
+        private static ResourceType _lastType = ResourceType.None;
 
         public ResourceTemplate(XmlNode resourceNode)
         {
             Name = resourceNode.StringFromNode("Name");
             Consumable = true;
-            ResourceType = resourceNode.StringFromNode("Type");
-            IsEffectPermanent = resourceNode.BoolFromNode("Permanent");
-            Description = resourceNode.StringFromNode("Description");
-            AllResources.Add(this);
-            switch (ResourceType)
+            switch (resourceNode.StringFromNode("Type"))
             {
                 case "Water":
+                    ResourceType = ResourceType.Water;
                     Water.Add(this);
                     break;
-                case "Plant":
-                    Plant.Add(this);
-                    break;
                 case "Meat":
+                    ResourceType = ResourceType.Meat;
                     Meat.Add(this);
                     break;
                 case "Resource":
+                    ResourceType = ResourceType.Resource;
                     Resources.Add(this);
                     Consumable = false;
                     break;
+                case "Plant":
+                    ResourceType = ResourceType.Plant;
+                    Plant.Add(this);
+                    break;
+                case "Potion":
+                    ResourceType = ResourceType.Potion;
+                    break;
             }
+
+            IsEffectPermanent = resourceNode.BoolFromNode("Permanent");
+            Description = resourceNode.StringFromNode("Description");
+            AllResources.Add(this);
 
             if (_lastType != ResourceType)
             {

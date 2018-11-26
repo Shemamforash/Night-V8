@@ -156,7 +156,7 @@ public class DismantleMenuController : Menu
             _text = transform.GetComponent<EnhancedText>();
         }
 
-        protected override void Update(object o)
+        protected override void Update(object o, bool isCentreItem)
         {
             GearItem item = (GearItem) o;
             _text.SetText(item.Name);
@@ -192,7 +192,7 @@ public class DismantleMenuController : Menu
             _receiveText = transform.FindChildWithName<EnhancedText>("Receive");
         }
 
-        protected override void Update(object o)
+        protected override void Update(object o, bool isCentreItem)
         {
             GearItem item = (GearItem) o;
             _nameText.SetText(item.Name);

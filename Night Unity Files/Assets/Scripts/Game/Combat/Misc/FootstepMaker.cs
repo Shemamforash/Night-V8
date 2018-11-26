@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Combat.Generation;
 using Game.Global;
+using NUnit.Framework;
 using SamsHelper;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -26,6 +27,7 @@ namespace Game.Combat.Misc
         {
             if (_footstepParent == null) _footstepParent = GameObject.Find("World").transform.Find("Footsteps");
             _audioPool = GetComponent<AudioPoolController>();
+            Assert.IsNotNull(_audioPool);
             _audioPool.SetMixerGroup("Modified", 1);
             _nextClip = AudioClips.FootstepClips.Length + 1;
             _lastPosition = transform.position;

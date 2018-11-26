@@ -68,7 +68,7 @@ public class UiJournalController : UiInventoryMenuController
             _nameText = transform.GetComponent<EnhancedText>();
         }
 
-        protected override void Update(object o)
+        protected override void Update(object o, bool isCentreItem)
         {
             JournalEntry entry = (JournalEntry) o;
             _nameText.SetText(entry.Title);

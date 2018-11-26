@@ -82,6 +82,7 @@ namespace Game.Combat.Generation.Shrines
                 _targetBrand = 1;
             else if (riteColliderBehaviour == _collider3)
                 _targetBrand = 2;
+            Debug.Log(_targetBrand);
         }
 
         public void ExitShrineCollider()

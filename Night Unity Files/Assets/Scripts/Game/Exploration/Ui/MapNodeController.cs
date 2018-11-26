@@ -79,7 +79,6 @@ namespace Game.Exploration.Ui
 
         public void Show()
         {
-            Debug.Log("Shown");
             _hidden = false;
             _gritCost = RoutePlotter.RouteBetween(_region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion()).Count - 1;
             _canAfford = CharacterManager.SelectedCharacter.CanAffordTravel(_gritCost);
@@ -91,7 +90,6 @@ namespace Game.Exploration.Ui
 
         public void Hide()
         {
-            Debug.Log("Hidden");
             _hidden = true;
             MapMovementController.FadeOutAudio();
             _targetNodeAlpha = 0f;
@@ -207,7 +205,6 @@ namespace Game.Exploration.Ui
         public void GainFocus()
         {
             if (_hidden || !_canAfford) return;
-            Debug.Log(_hidden);
             MapMovementController.FadeInAudio();
             _targetCentreAlpha = 1f;
             _border.SetSelected();
@@ -219,7 +216,6 @@ namespace Game.Exploration.Ui
         public void LoseFocus(float time = 1f)
         {
             if (_hidden || !_canAfford) return;
-            Debug.Log(_hidden);
             MapMovementController.FadeOutAudio();
             _targetCentreAlpha = 0.5f;
             _border.SetActive();

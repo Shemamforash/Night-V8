@@ -8,7 +8,7 @@ namespace Game.Combat.Enemies.Nightmares
 {
     public class AnimalBehaviour : UnarmedBehaviour
     {
-        protected bool Alerted;
+        private bool Alerted;
         private bool Fleeing;
         private Cell _fleeTarget;
         private float DetectionRange = 6f;

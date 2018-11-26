@@ -9,6 +9,7 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Gear.Armour
@@ -18,22 +19,32 @@ namespace Game.Gear.Armour
         private static readonly List<AccessoryTemplate> _accessoryTemplates = new List<AccessoryTemplate>();
         private static bool _loaded;
         private readonly AccessoryTemplate _template;
-        private AttributeModifier modifier;
+        private readonly AttributeModifier _modifier;
+        private readonly string _summary;
 
         private Accessory(AccessoryTemplate template, ItemQuality itemQuality) : base(template.Name, itemQuality)
         {
             _template = template;
+            _modifier = template.GetModifier((int) itemQuality + 1);
+            _summary = template.ModifiesCondition ? _modifier.RawBonusToString() : _modifier.FinalBonusToString();
+            string attributeString = _template.TargetAttribute.AttributeToDisplayString();
+            _summary += " " + attributeString;
         }
 
+        public string Description()
+        {
+            return _template.Description;
+        }
+        
         public override string GetSummary()
         {
-            return "+" + modifier.FinalBonus() + " " + _template.TargetAttribute;
+            return _summary;
         }
 
         public override void Equip(Character character)
         {
             base.Equip(character);
-            (character as Player)?.ApplyModifier(_template.TargetAttribute, modifier);
+            (character as Player)?.ApplyModifier(_template.TargetAttribute, _modifier);
             ApplyToWeapon(character.EquippedWeapon);
             if (PlayerCombat.Instance == null) return;
             PlayerCombat.Instance.RecalculateAttributes();
@@ -41,7 +52,7 @@ namespace Game.Gear.Armour
 
         public override void UnEquip()
         {
-            (EquippedCharacter as Player)?.RemoveModifier(_template.TargetAttribute, modifier);
+            (EquippedCharacter as Player)?.RemoveModifier(_template.TargetAttribute, _modifier);
             RemoveFromWeapon(EquippedCharacter.EquippedWeapon);
             base.UnEquip();
             if (PlayerCombat.Instance == null) return;
@@ -61,18 +72,8 @@ namespace Game.Gear.Armour
         {
             ReadTemplates();
             AccessoryTemplate randomTemplate = _accessoryTemplates[Random.Range(0, _accessoryTemplates.Count)];
-
-            ItemQuality quality = (ItemQuality) WorldState.GenerateGearLevel();
-
-            Accessory accessory = new Accessory(randomTemplate, quality);
-            AttributeModifier modifier = new AttributeModifier();
-            modifier = randomTemplate.GetModifier();
-            float rawBonus = modifier.RawBonus() * (int) quality;
-            float finalBonus = modifier.FinalBonus() * (int) quality;
-            modifier.SetFinalBonus(finalBonus);
-            modifier.SetRawBonus(rawBonus);
-            accessory.modifier = modifier;
-            return accessory;
+            ItemQuality quality = WorldState.GenerateGearLevel();
+            return new Accessory(randomTemplate, quality);
         }
 
         public override XmlNode Save(XmlNode root)
@@ -84,22 +85,28 @@ namespace Game.Gear.Armour
 
         private class AccessoryTemplate
         {
-            public readonly string Name;
+            public readonly string Name, Description;
             public readonly AttributeType TargetAttribute;
             private readonly float _modifierValue;
+            public readonly bool ModifiesCondition;
 
             public AccessoryTemplate(XmlNode accessoryNode)
             {
                 Name = accessoryNode.StringFromNode("Name");
+                Description = accessoryNode.StringFromNode("Description");
                 TargetAttribute = Inventory.StringToAttributeType(accessoryNode.StringFromNode("Attribute"));
                 _modifierValue = accessoryNode.FloatFromNode("Bonus");
                 _accessoryTemplates.Add(this);
+                ModifiesCondition = TargetAttribute == AttributeType.DecayChance ||
+                                    TargetAttribute == AttributeType.SicknessChance ||
+                                    TargetAttribute == AttributeType.DecayChance;
             }
 
-            public AttributeModifier GetModifier()
+            public AttributeModifier GetModifier(int qualityMultiplier)
             {
                 AttributeModifier modifier = new AttributeModifier();
-                modifier.SetFinalBonus(_modifierValue);
+                if (ModifiesCondition) modifier.SetRawBonus(_modifierValue * qualityMultiplier);
+                else modifier.SetFinalBonus(_modifierValue * qualityMultiplier);
                 return modifier;
             }
         }
@@ -116,12 +123,12 @@ namespace Game.Gear.Armour
 
         public void ApplyToWeapon(Weapon weapon)
         {
-            weapon?.ApplyModifier(_template.TargetAttribute, modifier);
+            weapon?.ApplyModifier(_template.TargetAttribute, _modifier);
         }
 
         public void RemoveFromWeapon(Weapon weapon)
         {
-            weapon?.RemoveModifier(_template.TargetAttribute, modifier);
+            weapon?.RemoveModifier(_template.TargetAttribute, _modifier);
         }
     }
 }

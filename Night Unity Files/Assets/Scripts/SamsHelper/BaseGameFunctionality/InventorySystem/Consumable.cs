@@ -1,5 +1,6 @@
 ﻿using Game.Characters;
 using Game.Combat.Player;
+using InventorySystem;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
@@ -19,10 +20,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _player = CharacterManager.SelectedCharacter;
             switch (Template.ResourceType)
             {
-                case "Meat":
+                case ResourceType.Meat:
                     _player.Attributes.Eat((int) Template.EffectBonus);
                     return;
-                case "Water":
+                case ResourceType.Water:
                     _player.Attributes.Drink((int) Template.EffectBonus);
                     return;
             }
@@ -81,9 +82,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _player = CharacterManager.SelectedCharacter;
             switch (Template.ResourceType)
             {
-                case "Meat":
+                case ResourceType.Meat:
                     return !_player.Attributes.Get(AttributeType.Hunger).ReachedMin();
-                case "Water":
+                case ResourceType.Water:
                     return !_player.Attributes.Get(AttributeType.Thirst).ReachedMin();
             }
 

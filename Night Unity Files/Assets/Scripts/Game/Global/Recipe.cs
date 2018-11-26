@@ -41,22 +41,23 @@ namespace Game.Global
             string recipeTypeString = recipeNode.StringFromNode("RecipeType");
             switch (recipeTypeString)
             {
-                    case "BUILDING":
-                        RecipeType = RecipeType.Building;
-                        break;
-                    case "OTHER":
-                        RecipeType = RecipeType.Other;
-                        break;
-                    case "ITEM":
-                        RecipeType = RecipeType.Item;
-                        break;
-                    case "RESOURCE":
-                        RecipeType = RecipeType.Resource;
-                        break;
-                    default:
-                        Debug.Log(recipeTypeString);
-                        break;
+                case "BUILDING":
+                    RecipeType = RecipeType.Building;
+                    break;
+                case "OTHER":
+                    RecipeType = RecipeType.Other;
+                    break;
+                case "ITEM":
+                    RecipeType = RecipeType.Item;
+                    break;
+                case "RESOURCE":
+                    RecipeType = RecipeType.Resource;
+                    break;
+                default:
+                    Debug.Log(recipeTypeString);
+                    break;
             }
+
             _levelNo = recipeNode.IntFromNode("LevelNo");
         }
 
@@ -110,20 +111,35 @@ namespace Game.Global
         {
             switch (Name)
             {
-                case "Leather Plate":
-                    Inventory.Move(Armour.Create(ItemQuality.Dark));
+                case "Dark Hide":
+                    Inventory.Move(Armour.Create(ItemQuality.Dark, Armour.ArmourType.Chest));
                     break;
-                case "Reinforced Leather Plate":
-                    Inventory.Move(Armour.Create(ItemQuality.Dull));
+                case "Dark Veil":
+                    Inventory.Move(Armour.Create(ItemQuality.Dark, Armour.ArmourType.Head));
                     break;
-                case "Metal Plate":
-                    Inventory.Move(Armour.Create(ItemQuality.Glowing));
+                case "Dull Weave":
+                    Inventory.Move(Armour.Create(ItemQuality.Dull, Armour.ArmourType.Chest));
                     break;
-                case "Alloy Plate":
-                    Inventory.Move(Armour.Create(ItemQuality.Radiant));
+                case "Dull Mask":
+                    Inventory.Move(Armour.Create(ItemQuality.Dull, Armour.ArmourType.Head));
                     break;
-                case "Living Metal Plate":
-                    Inventory.Move(Armour.Create(ItemQuality.Shining));
+                case "Glowing Plate":
+                    Inventory.Move(Armour.Create(ItemQuality.Glowing, Armour.ArmourType.Chest));
+                    break;
+                case "Glowing Visor":
+                    Inventory.Move(Armour.Create(ItemQuality.Glowing, Armour.ArmourType.Head));
+                    break;
+                case "Shining Scale":
+                    Inventory.Move(Armour.Create(ItemQuality.Shining, Armour.ArmourType.Chest));
+                    break;
+                case "Shining Crown":
+                    Inventory.Move(Armour.Create(ItemQuality.Shining, Armour.ArmourType.Head));
+                    break;
+                case "Radiant Aegis":
+                    Inventory.Move(Armour.Create(ItemQuality.Radiant, Armour.ArmourType.Chest));
+                    break;
+                case "Radiant Halo":
+                    Inventory.Move(Armour.Create(ItemQuality.Radiant, Armour.ArmourType.Head));
                     break;
             }
         }

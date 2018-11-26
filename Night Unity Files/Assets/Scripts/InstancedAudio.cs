@@ -21,7 +21,7 @@ public class InstancedAudio : MonoBehaviour
         _audioSource.outputAudioMixerGroup = mixerGroup;
         _audioSource.spatialBlend = spatialBlend;
     }
-    
+
     public void Play(AudioClip clip)
     {
         Play(clip, 1);
@@ -32,24 +32,19 @@ public class InstancedAudio : MonoBehaviour
         Play(clip, volume, 1);
     }
 
-    public void Play(AudioClip clip, float volume, float pitch)
+    public void Play(AudioClip clip, float volume, float pitch, float hpfCutoff = 0f)
     {
+        _hpf.cutoffFrequency = hpfCutoff;
         _audioSource.pitch = pitch;
         _audioSource.volume = volume;
         PlayClip(clip);
     }
-    
+
     private void PlayClip(AudioClip clip)
     {
         _audioSource.clip = clip;
         _audioSource.Play();
         StartCoroutine(WaitToDie());
-    }
-
-    public void Play(AudioClip clip, float volume, float pitch, float hpfValue)
-    {
-        _hpf.cutoffFrequency = hpfValue;
-        Play(clip, volume, pitch);
     }
 
     private IEnumerator WaitToDie()

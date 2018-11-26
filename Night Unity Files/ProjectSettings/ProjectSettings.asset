@@ -545,7 +545,7 @@ PlayerSettings:
   webGLLinkerTarget: 0
   webGLThreadsSupport: 0
   scriptingDefineSymbols:
-    1: DEBUG;DOTWEEN_TMP;AMPLIFY_SHADER_EDITOR;dUI_DoozyUI;dUI_TextMeshPro
+    1: DEBUG;DOTWEEN_TMP;AMPLIFY_SHADER_EDITOR;dUI_DoozyUI;dUI_TextMeshPro;ODIN_INSPECTOR
     4: DOTWEEN_TMP
     7: DOTWEEN_TMP
     13: DOTWEEN_TMP;AMPLIFY_SHADER_EDITOR

@@ -1,4 +1,6 @@
-﻿using Game.Exploration.Weather;
+﻿using Game.Combat.Generation;
+using Game.Exploration.Regions;
+using Game.Exploration.Weather;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -29,6 +31,7 @@ public class CombatWeatherController : MonoBehaviour
     private static void SetParticleSystemEmissionRate(ParticleSystem ps, float amount, float max)
     {
         float emissionRate = amount * max;
+        if (CombatManager.Region().GetRegionType() == RegionType.Rite) emissionRate = 0f;
         ParticleSystem.EmissionModule emission = ps.emission;
         emission.rateOverTime = emissionRate;
         ps.Play();

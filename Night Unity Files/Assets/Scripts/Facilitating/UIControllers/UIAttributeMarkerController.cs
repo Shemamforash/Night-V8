@@ -64,8 +64,10 @@ namespace Facilitating.UIControllers
             }
         }
 
-        public void SetValue(int max, int current)
+        public void SetValue(float maxF, float currentF)
         {
+            int max = Mathf.CeilToInt(maxF);
+            int current = Mathf.CeilToInt(currentF);
             for (int i = 0; i < 20; ++i)
             {
                 MarkerState newState;
@@ -79,13 +81,6 @@ namespace Facilitating.UIControllers
             }
 
             _markers.ForEach(m => m.UpdateColor());
-        }
-
-        public void SetValue(CharacterAttribute attribute)
-        {
-            int max = (int) attribute.Max;
-            int currentValue = Mathf.CeilToInt(attribute.CurrentValue());
-            SetValue(max, currentValue);
         }
     }
 }

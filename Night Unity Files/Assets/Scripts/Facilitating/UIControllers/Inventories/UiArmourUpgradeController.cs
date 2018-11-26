@@ -114,7 +114,7 @@ namespace Facilitating.UIControllers
                 _armourText.SetColor(c);
             }
 
-            protected override void Update(object o)
+            protected override void Update(object o, bool isCentreItem)
             {
                 Armour armour = (Armour) o;
                 _armourText.SetText(GetArmourProtection(armour));

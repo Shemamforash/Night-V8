@@ -41,7 +41,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         _visible = true;
         ResourcesUiController.Hide();
         _player = player;
-        MapMenuController.GritMarker().SetValue(_player.Attributes.Get(AttributeType.Grit));
+        UpdateGrit(0);
         _currentRegion = _player.TravelAction.GetCurrentRegion();
         MapCamera.DOOrthoSize(6, 1f);
         InputHandler.SetCurrentListener(_instance);

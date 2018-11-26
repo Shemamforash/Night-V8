@@ -89,7 +89,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
             RightText.SetText("");
         }
 
-        protected override void Update(object o)
+        protected override void Update(object o, bool isCentreItem)
         {
             Recipe recipe = (Recipe) o;
             string productString = recipe.ProductQuantity > 1 ? recipe.Name + " x" + recipe.ProductQuantity : recipe.Name;

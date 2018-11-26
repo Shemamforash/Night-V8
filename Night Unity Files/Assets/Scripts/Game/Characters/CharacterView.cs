@@ -4,6 +4,7 @@ using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
 using Game.Global;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -37,6 +38,7 @@ namespace Game.Characters
                 gameObject.SetActive(false);
                 return;
             }
+
             CacheElements();
             BindUi();
             _player.SetCharacterView(this);
@@ -137,7 +139,7 @@ namespace Game.Characters
             SetButtonEnabled(_exploreButton, _exploreText, atHome && resting);
             SetButtonEnabled(_craftButton, _craftText, Recipe.RecipesAvailable() && atHome && resting);
             SetButtonEnabled(_consumeButton, _consumeText, Inventory.Consumables().Count > 0);
-            SetButtonEnabled(_meditateButton, _meditateText, _player.CanMeditate() && atHome && resting);
+            SetButtonEnabled(_meditateButton, _meditateText, _player.Attributes.Val(AttributeType.Will) > 0 && resting);
             SetButtonEnabled(_sleepButton, _sleepText, _player.CanSleep() && atHome && resting);
         }
 

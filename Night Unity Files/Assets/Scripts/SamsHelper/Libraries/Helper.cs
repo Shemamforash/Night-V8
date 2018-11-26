@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,28 @@ namespace SamsHelper.Libraries
 {
     public static class Helper
     {
+        public static string AttributeToDisplayString(this AttributeType attributeType)
+        {
+            string attributeString = attributeType.ToString();
+            switch (attributeType)
+            {
+                case AttributeType.ReloadSpeed:
+                    attributeString = "Reload Speed";
+                    break;
+                case AttributeType.BurnChance:
+                    attributeString = "Burn Chance";
+                    break;
+                case AttributeType.DecayChance:
+                    attributeString = "Shatter Chance";
+                    break;
+                case AttributeType.SicknessChance:
+                    attributeString = "Sickness Chance";
+                    break;
+            }
+
+            return attributeString;
+        }
+        
         public static bool Empty<T>(this Queue<T> queue) => queue.Count == 0;
 
         public static bool Empty<T>(this List<T> list) => list.Count == 0;

@@ -17,7 +17,6 @@ namespace Game.Gear.Weapons
         private const float RangeMax = 5.5f;
         public readonly WeaponAttributes WeaponAttributes;
         public readonly Skill WeaponSkillOne, WeaponSkillTwo;
-        private Character _character;
         private Inscription _inscription;
         private bool _inscriptionApplied;
 
@@ -103,6 +102,7 @@ namespace Game.Gear.Weapons
         {
             if (CharacterAttribute.IsCharacterAttribute(target)) return;
             WeaponAttributes.Get(target).AddModifier(modifier);
+            Debug.Log(target + " " + modifier.FinalBonusToString());
             WeaponAttributes.RecalculateAttributeValues();
         }
 
@@ -110,6 +110,7 @@ namespace Game.Gear.Weapons
         {
             if (CharacterAttribute.IsCharacterAttribute(target)) return;
             WeaponAttributes.Get(target).RemoveModifier(modifier);
+            Debug.Log(target + " " + modifier.FinalBonusToString());
             WeaponAttributes.RecalculateAttributeValues();
         }
 
@@ -169,29 +170,29 @@ namespace Game.Gear.Weapons
         public override void Equip(Character character)
         {
             base.Equip(character);
-            _character = character;
             ApplyInscription();
-            _character.EquippedAccessory?.ApplyToWeapon(this);
+            EquippedCharacter.EquippedAccessory?.ApplyToWeapon(this);
         }
 
         public override void UnEquip()
         {
-            base.UnEquip();
+            if (EquippedCharacter == null) return;
             RemoveInscription();
-            _character.EquippedAccessory?.RemoveFromWeapon(this);
+            EquippedCharacter.EquippedAccessory?.RemoveFromWeapon(this);
+            base.UnEquip();
         }
 
         private void ApplyInscription()
         {
             if (_inscriptionApplied || _inscription == null) return;
-            (_character as Player)?.ApplyModifier(_inscription.Target(), _inscription.Modifier());
+            (EquippedCharacter as Player)?.ApplyModifier(_inscription.Target(), _inscription.Modifier());
             _inscriptionApplied = true;
         }
 
         private void RemoveInscription()
         {
             if (!_inscriptionApplied || _inscription == null) return;
-            (_character as Player)?.RemoveModifier(_inscription.Target(), _inscription.Modifier());
+            (EquippedCharacter as Player)?.RemoveModifier(_inscription.Target(), _inscription.Modifier());
             _inscriptionApplied = false;
         }
 

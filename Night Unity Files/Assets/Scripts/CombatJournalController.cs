@@ -47,6 +47,7 @@ public class CombatJournalController : Menu, IInputListener
         _closeButton.Flash();
         CombatManager.Resume();
         MenuStateMachine.ReturnToDefault();
+        _audioSource.Stop();
         _audioSource.clip = AudioClips.CloseJournal;
         _audioSource.Play();
     }

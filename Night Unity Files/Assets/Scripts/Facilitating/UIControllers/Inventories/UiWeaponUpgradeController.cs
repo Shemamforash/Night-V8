@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using DefaultNamespace;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
@@ -45,14 +44,16 @@ namespace Facilitating.UIControllers
             List<ItemQuality> qualities = new List<ItemQuality>();
 #if UNITY_EDITOR
             foreach (ItemQuality value in Enum.GetValues(typeof(ItemQuality))) qualities.Add(value);
-            for (int i = 0; i < 1; ++i)
+            for (int i = 0; i < 3; ++i)
             {
                 Weapon weapon = WeaponGenerator.GenerateWeapon();
                 Inventory.Move(weapon);
                 Inscription inscription = Inscription.Generate();
                 Inventory.Move(inscription);
-                Armour plate = Armour.Create(qualities.RandomElement());
+                Armour plate = Armour.Create(qualities.RandomElement(), Armour.ArmourType.Chest);
                 Inventory.Move(plate);
+                Armour head = Armour.Create(qualities.RandomElement(), Armour.ArmourType.Head);
+                Inventory.Move(head);
                 Accessory accessory = Accessory.Generate();
                 Inventory.Move(accessory);
             }
@@ -210,7 +211,7 @@ namespace Facilitating.UIControllers
             {
             }
 
-            protected override void Update(object o)
+            protected override void Update(object o, bool isCentreItem)
             {
                 Weapon weapon = (Weapon) o;
                 CentreText.SetText(weapon.GetDisplayName());
@@ -221,7 +222,7 @@ namespace Facilitating.UIControllers
 
         private class InscriptionElement : WeaponElement
         {
-            protected override void Update(object o)
+            protected override void Update(object o, bool isCentreItem)
             {
                 Inscription inscription = (Inscription) o;
                 string inscriptionString = inscription.Name;
@@ -255,7 +256,7 @@ namespace Facilitating.UIControllers
                 _detailController = transform.GetComponent<WeaponDetailController>();
             }
 
-            protected override void Update(object o)
+            protected override void Update(object o, bool isCentreItem)
             {
                 Weapon weapon = (Weapon) o;
                 _detailController.SetWeapon(weapon);

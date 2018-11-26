@@ -8,6 +8,7 @@ using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
+using InventorySystem;
 using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
@@ -50,7 +51,7 @@ public abstract class ContainerController
             {
                 ResourceTemplate resourceTemplate = resourceItem.Template;
                 if (resourceTemplate == null) return;
-                if (resourceTemplate.ResourceType != "Resource") return;
+                if (resourceTemplate.ResourceType != ResourceType.Resource) return;
                 if (resourceBonus > 0) resourceItem.Increment(resourceBonus);
                 else
                 {
@@ -61,16 +62,16 @@ public abstract class ContainerController
 
                 switch (resourceTemplate.ResourceType)
                 {
-                    case "Water":
+                    case ResourceType.Water:
                         player.BrandManager.IncreaseWaterFound();
                         break;
-                    case "Plant":
+                    case ResourceType.Plant:
                         player.BrandManager.IncreaseFoodFound();
                         break;
-                    case "Meat":
+                    case ResourceType.Meat:
                         player.BrandManager.IncreaseFoodFound();
                         break;
-                    case "Resource":
+                    case ResourceType.Resource:
                         player.BrandManager.IncreaseResourceFound();
                         break;
                 }

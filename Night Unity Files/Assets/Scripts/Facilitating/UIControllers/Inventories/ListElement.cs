@@ -23,7 +23,7 @@ namespace DefaultNamespace
 
             _canvasGroup.alpha = isCentreItem ? 1 : 0.4f;
             SetVisible(true);
-            Update(o);
+            Update(o, isCentreItem);
         }
 
         protected abstract void UpdateCentreItemEmpty();
@@ -40,6 +40,6 @@ namespace DefaultNamespace
         }
 
         protected abstract void CacheUiElements(Transform transform);
-        protected abstract void Update(object o);
+        protected abstract void Update(object o, bool isCentreItem);
     }
 }

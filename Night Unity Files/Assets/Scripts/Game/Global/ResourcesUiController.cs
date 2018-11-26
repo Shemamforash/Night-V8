@@ -2,6 +2,7 @@
 using System.Linq;
 using DG.Tweening;
 using Game.Global;
+using InventorySystem;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -50,7 +51,7 @@ public class ResourcesUiController : MonoBehaviour
         int quantity = (int) Inventory.Consumables().Sum(c =>
         {
             ResourceTemplate template = c.Template;
-            return template.ResourceType == "Meat" ? template.EffectBonus : 0;
+            return template.ResourceType == ResourceType.Meat ? template.EffectBonus : 0;
         });
         _food.UpdateTab("Food", quantity);
     }
@@ -60,7 +61,7 @@ public class ResourcesUiController : MonoBehaviour
         int quantity = (int) Inventory.Consumables().Sum(c =>
         {
             ResourceTemplate template = c.Template;
-            return template.ResourceType == "Water" ? template.EffectBonus : 0;
+            return template.ResourceType == ResourceType.Water ? template.EffectBonus : 0;
         });
         _water.UpdateTab("Water", quantity);
     }
@@ -69,7 +70,7 @@ public class ResourcesUiController : MonoBehaviour
     {
         ResourceTemplate.AllResources.ForEach(r =>
         {
-            if (r.ResourceType != "Resource") return;
+            if (r.ResourceType != ResourceType.Resource) return;
             GameObject resourceTab = Instantiate(_resourcePrefab);
             resourceTab.transform.SetParent(transform);
             resourceTab.transform.SetAsLastSibling();
@@ -87,7 +88,7 @@ public class ResourcesUiController : MonoBehaviour
         UpdateWater();
         foreach (ResourceTemplate resourceTemplate in ResourceTemplate.AllResources)
         {
-            if (resourceTemplate.ResourceType != "Resource") continue;
+            if (resourceTemplate.ResourceType != ResourceType.Resource) continue;
             int quantity = Mathf.FloorToInt(Inventory.GetResourceQuantity(resourceTemplate.Name));
             UpdateResource(resourceTemplate.Name, quantity);
         }

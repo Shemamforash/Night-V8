@@ -27,7 +27,8 @@ namespace Game.Global
         public static AudioClip ClipIn, ClipOut, BrawlerSlash;
         public static AudioClip SimmavA, SimmavB, SimmavC, SimmavD;
         public static AudioClip StandardExplosion, FireExplosion, ShatterExplosion;
-        public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Craft, OpenJournal, CloseJournal, Eat, ListScroll;
+        public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Craft, OpenJournal, CloseJournal, ListScroll;
+        public static AudioClip EatWater, EatMeat, EatPlant, EatPotion;
         private static readonly List<AssetBundle> _loadedBundles = new List<AssetBundle>();
         private static bool _loaded;
 
@@ -122,13 +123,17 @@ namespace Game.Global
 
             Debug.Log("loading misc audio");
             yield return StartCoroutine(LoadClip(a => TabChange = a, "misc/inventories", "Tab Change"));
-            yield return StartCoroutine(LoadClip(a => EquipAccessory = a, "misc/inventories", "Equip Accessory"));
+            //todo
+            yield return StartCoroutine(LoadClip(a => EquipAccessory = a, "misc/inventories", "Pickup"));
             yield return StartCoroutine(LoadClip(a => EquipArmour = a, "misc/inventories", "Equip Armour"));
             yield return StartCoroutine(LoadClip(a => EquipWeapon = a, "misc/inventories", "Equip Weapon"));
             yield return StartCoroutine(LoadClip(a => Craft = a, "misc/inventories", "Craft"));
             yield return StartCoroutine(LoadClip(a => OpenJournal = a, "misc/inventories", "Open Journal"));
             yield return StartCoroutine(LoadClip(a => CloseJournal = a, "misc/inventories", "Close Journal"));
-            yield return StartCoroutine(LoadClip(a => Eat = a, "misc/inventories", "Eat"));
+            yield return StartCoroutine(LoadClip(a => EatMeat = a, "misc/inventories", "Eat Meat"));
+            yield return StartCoroutine(LoadClip(a => EatPlant = a, "misc/inventories", "Eat Plant"));
+            yield return StartCoroutine(LoadClip(a => EatWater = a, "misc/inventories", "Eat Water"));
+            yield return StartCoroutine(LoadClip(a => EatPotion = a, "misc/inventories", "Eat Potion"));
             yield return StartCoroutine(LoadClip(a => ListScroll = a, "misc/inventories", "List Scroll"));
 
 

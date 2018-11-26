@@ -137,6 +137,7 @@ class GearImporter(XMLWriter):
         write_single_value(self, "Name", get_value(self, "A", row))
         write_single_value(self, "Attribute", get_value(self, "B", row))
         write_single_value(self, "Bonus", get_value(self, "C", row))
+        write_single_value(self, "Description", get_value(self, "D", row))
 
 
 class WeatherImporter(XMLWriter):
@@ -363,7 +364,7 @@ class WeatherProbabilityImporter(XMLWriter):
         for column in range(2, difference + 1):
             probabilities = ""
             for row in range(row_from + 1, row_to):
-                probabilities = probabilities  + get_value(self, num2alpha[column], row)+ ","
+                probabilities = probabilities + get_value(self, num2alpha[column], row) + ","
             probabilities = probabilities[:-1]
             write_single_value(self, get_value(self, num2alpha[column], row_from), probabilities)
 
@@ -396,14 +397,14 @@ def write_single_value(xml_writer, stat_name, value):
 
 
 # WeaponImporter()
-# GearImporter()
+GearImporter()
 # WeatherImporter()
 # WeatherProbabilityImporter();
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
 # RecipeImporter()
-ResourceImporter()
+# ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()
 # EnvironmentImporter()

@@ -1,10 +1,10 @@
 ﻿using Game.Characters;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
-using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
+using UnityEngine;
 
 public class UiBrandMenu : Menu
 {
@@ -37,10 +37,12 @@ public class UiBrandMenu : Menu
         switch (brand.Status)
         {
             case BrandStatus.Failed:
+                Debug.Log("failed " + brand.GetFailName());
                 titleString = "failed";
                 benefitString = "A curse of " + brand.GetFailName() + " has been cast upon " + CharacterManager.SelectedCharacter.Name;
                 break;
             case BrandStatus.Succeeded:
+                Debug.Log("passed " + brand.GetSuccessName());
                 titleString = "passed";
                 benefitString = "A boon of " + brand.GetSuccessName() + " has been granted upon " + CharacterManager.SelectedCharacter.Name;
                 break;

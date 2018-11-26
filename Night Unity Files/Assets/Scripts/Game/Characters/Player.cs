@@ -173,17 +173,6 @@ namespace Game.Characters
             }
         }
 
-        public void Meditate()
-        {
-            CharacterAttribute focus = Attributes.Get(AttributeType.Focus);
-            CharacterAttribute will = Attributes.Get(AttributeType.Will);
-            focus.Increment();
-            will.Increment();
-            if (!(focus.ReachedMax() && will.ReachedMax())) return;
-            WorldEventManager.GenerateEvent(new CharacterMessage("My mind is clear, I can focus now", this));
-            RestAction.Enter();
-        }
-
         public bool CanAffordTravel(int gritCost = 1)
         {
             int gritRemaining = Mathf.CeilToInt(Attributes.Val(AttributeType.Grit));
@@ -194,9 +183,13 @@ namespace Game.Characters
         {
             CharacterAttribute fettle = Attributes.Get(AttributeType.Fettle);
             CharacterAttribute grit = Attributes.Get(AttributeType.Grit);
+            CharacterAttribute focus = Attributes.Get(AttributeType.Focus);
+            CharacterAttribute will = Attributes.Get(AttributeType.Will);
+            focus.Increment();
+            will.Increment();
             fettle.Increment();
             grit.Increment();
-            if (!(fettle.ReachedMax() && grit.ReachedMax())) return;
+            if (!(fettle.ReachedMax() && grit.ReachedMax() && focus.ReachedMax() && will.ReachedMax())) return;
             WorldEventManager.GenerateEvent(new CharacterMessage("My mind is clear, I can focus now", this));
             RestAction.Enter();
         }
@@ -249,34 +242,17 @@ namespace Game.Characters
                 Attributes.UnlockWeaponSkillTwo(weaponType, showScreen);
         }
 
-        public bool CanMeditate()
-        {
-            return Attributes.Val(AttributeType.Focus) < Attributes.Max(AttributeType.Focus) ||
-                   Attributes.Val(AttributeType.Will) < Attributes.Max(AttributeType.Will);
-        }
-
         public bool CanSleep()
         {
             return Attributes.Val(AttributeType.Fettle) < Attributes.Max(AttributeType.Fettle) ||
-                   Attributes.Val(AttributeType.Grit) < Attributes.Max(AttributeType.Grit);
+                   Attributes.Val(AttributeType.Grit) < Attributes.Max(AttributeType.Grit) ||
+                   Attributes.Val(AttributeType.Focus) < Attributes.Max(AttributeType.Focus) ||
+                   Attributes.Val(AttributeType.Will) < Attributes.Max(AttributeType.Will);
         }
 
         public CharacterView CharacterView()
         {
             return _characterView;
-        }
-
-        public int GetMaxMeditateTime()
-        {
-            int will = Mathf.CeilToInt(Attributes.Val(AttributeType.Will));
-            int willMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Will));
-            int willLoss = willMax - will;
-
-            int focus = Mathf.CeilToInt(Attributes.Val(AttributeType.Focus));
-            int focusMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Focus));
-            int focusLoss = focusMax - focus;
-
-            return Mathf.Max(willLoss, focusLoss);
         }
 
         public int GetMaxSleepTime()
@@ -289,7 +265,15 @@ namespace Game.Characters
             int fettleMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Fettle));
             int fettleLoss = fettleMax - fettle;
 
-            return Mathf.Max(gritLoss, fettleLoss);
+            int will = Mathf.CeilToInt(Attributes.Val(AttributeType.Will));
+            int willMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Will));
+            int willLoss = willMax - will;
+
+            int focus = Mathf.CeilToInt(Attributes.Val(AttributeType.Focus));
+            int focusMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Focus));
+            int focusLoss = focusMax - focus;
+
+            return Mathf.Max(gritLoss, fettleLoss, focusLoss, willLoss);
         }
 
         public bool IsConsuming()

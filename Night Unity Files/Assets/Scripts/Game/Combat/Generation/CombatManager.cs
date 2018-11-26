@@ -157,6 +157,14 @@ namespace Game.Combat.Generation
             _currentRegion = region;
         }
 
+        private void PlayNightmareParticles()
+        {
+            ParticleSystem _nightmareParticles = transform.Find("Nightmare Particles").GetComponent<ParticleSystem>();
+            _nightmareParticles.Play();
+            ParticleSystem.ShapeModule shape = _nightmareParticles.shape;
+            shape.radius = PathingGrid.CombatAreaWidth + 4;
+        }
+
         private void EnterCombat()
         {
             _inCombat = true;
@@ -172,14 +180,17 @@ namespace Game.Combat.Generation
             }
             else if (_currentRegion.GetRegionType() == RegionType.Nightmare)
             {
+                PlayNightmareParticles();
                 worldObject.AddComponent<Nightmare>().Initialise(_currentRegion);
             }
             else if (_currentRegion.GetRegionType() == RegionType.Rite)
             {
+                PlayNightmareParticles();
                 worldObject.AddComponent<Rite>().Initialise(_currentRegion);
             }
             else if (_currentRegion.GetRegionType() == RegionType.Tomb)
             {
+                PlayNightmareParticles();
                 worldObject.AddComponent<Tomb>().Initialise(_currentRegion);
             }
             else

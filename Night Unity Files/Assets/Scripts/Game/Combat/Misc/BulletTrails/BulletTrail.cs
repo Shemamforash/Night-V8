@@ -32,7 +32,7 @@ namespace Game.Combat.Misc
 
         protected abstract bool Done();
 
-        public void LateUpdate()
+        private void FixedUpdate()
         {
             if (_followTransform == null) return;
             transform.position = _followTransform.transform.position;

@@ -1,23 +1,36 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Facilitating.UIControllers;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Global;
+using InventorySystem;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class UiConsumableController : UiInventoryMenuController
 {
-    private UIConditionController _thirstController, _hungerController;
-    private UIAttributeController _uiAttributeController;
+    private static UIConditionController _thirstController;
+    private static UIConditionController _hungerController;
+    private static UIAttributeController _uiAttributeController;
     private ListController _consumableList;
 
-    private void UpdateCondition()
+    private static void UpdateConditions(Consumable consumable = null)
     {
-        _hungerController.UpdateHunger(CharacterManager.SelectedCharacter);
-        _thirstController.UpdateThirst(CharacterManager.SelectedCharacter);
-        _uiAttributeController.UpdateAttributes(CharacterManager.SelectedCharacter);
+        float hungerOffset = 0f;
+        float waterOffset = 0f;
+        float attributeOffset = 0;
+        if (consumable != null)
+        {
+            hungerOffset = consumable.Template.ResourceType == ResourceType.Meat ? consumable.Template.EffectBonus : 0;
+            waterOffset = consumable.Template.ResourceType == ResourceType.Water ? consumable.Template.EffectBonus : 0;
+            if (consumable.Template.ResourceType == ResourceType.Plant) attributeOffset = consumable.Template.EffectBonus;
+        }
+        _hungerController.UpdateHunger(CharacterManager.SelectedCharacter, -hungerOffset);
+        _thirstController.UpdateThirst(CharacterManager.SelectedCharacter, -waterOffset);
+        if (attributeOffset == 0) _uiAttributeController.UpdateAttributes(CharacterManager.SelectedCharacter);
+        else _uiAttributeController.UpdateAttributesOffset(CharacterManager.SelectedCharacter, consumable.Template.AttributeType, attributeOffset);
     }
 
     protected override void CacheElements()
@@ -31,7 +44,7 @@ public class UiConsumableController : UiInventoryMenuController
     protected override void OnShow()
     {
         UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
-        UpdateCondition();
+        UpdateConditions();
 #if UNITY_EDITOR
         ResourceTemplate.AllResources.ForEach(r => { Inventory.IncrementResource(r.Name, Random.Range(5, 20)); });
         Inventory.IncrementResource("Essence", 38);
@@ -53,7 +66,7 @@ public class UiConsumableController : UiInventoryMenuController
             RightText.SetText("");
         }
 
-        protected override void Update(object o)
+        protected override void Update(object o, bool isCentreItem)
         {
             Consumable consumable = (Consumable) o;
             bool canConsume = consumable.CanConsume();
@@ -61,6 +74,7 @@ public class UiConsumableController : UiInventoryMenuController
             LeftText.SetText(nameText + (canConsume ? "" : "Cannot Consume"));
             CentreText.SetText("");
             RightText.SetText(consumable.Template.Description);
+            if (isCentreItem) UpdateConditions(consumable);
         }
     }
 
@@ -73,7 +87,22 @@ public class UiConsumableController : UiInventoryMenuController
     {
         Consumable consumable = (Consumable) consumableObject;
         consumable.Consume();
-        UiGearMenuController.PlayAudio(AudioClips.Eat);
-        UpdateCondition();
+        switch (consumable.Template.ResourceType)
+        {
+            case ResourceType.Water:
+                UiGearMenuController.PlayAudio(AudioClips.EatWater);
+                break;
+            case ResourceType.Meat:
+                UiGearMenuController.PlayAudio(AudioClips.EatMeat);
+                break;
+            case ResourceType.Plant:
+                UiGearMenuController.PlayAudio(AudioClips.EatPlant);
+                break;
+            case ResourceType.Potion:
+                UiGearMenuController.PlayAudio(AudioClips.EatPotion);
+                break;
+        }
+        
+        UpdateConditions();
     }
 }

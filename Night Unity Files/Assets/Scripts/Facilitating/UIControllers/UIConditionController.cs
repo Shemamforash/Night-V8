@@ -5,6 +5,7 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Facilitating.UIControllers
@@ -26,18 +27,27 @@ namespace Facilitating.UIControllers
             ConditionSlider = gameObject.FindChildWithName<Slider>("Progress");
         }
 
-        public void UpdateThirst(Player player)
+        public void UpdateThirst(Player player, float offset = 0)
         {
             ConditionText.SetText(player.Attributes.GetThirstStatus());
             if (ConditionSlider == null) return;
-            ConditionSlider.value = 1 - player.Attributes.Get(AttributeType.Thirst).Normalised();
+            UpdateSlider(AttributeType.Thirst, player, offset);
         }
 
-        public void UpdateHunger(Player player)
+        private void UpdateSlider(AttributeType attributeType, Player player, float offset)
+        {
+            float currentValue = player.Attributes.Val(attributeType) + offset;
+            float maxValue = player.Attributes.Max(attributeType);
+            currentValue = Mathf.Clamp(currentValue, 0, maxValue);
+            currentValue /= maxValue;
+            ConditionSlider.value = 1 - currentValue;
+        }
+
+        public void UpdateHunger(Player player, float offset = 0)
         {
             ConditionText.SetText(player.Attributes.GetHungerStatus());
             if (ConditionSlider == null) return;
-            ConditionSlider.value = 1 - player.Attributes.Get(AttributeType.Hunger).Normalised();
+            UpdateSlider(AttributeType.Hunger, player, offset);
         }
     }
 }

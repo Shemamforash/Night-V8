@@ -202,5 +202,10 @@ namespace Facilitating.UIControllers
         {
             _instance._audioPool.Create().Play(AudioClips.ListScroll, Random.Range(0.25f, 0.3f), Random.Range(0.9f, 1f));
         }
+
+        public static void ShowMeditateMenu()
+        {
+            SelectTab(6);
+        }
     }
 }

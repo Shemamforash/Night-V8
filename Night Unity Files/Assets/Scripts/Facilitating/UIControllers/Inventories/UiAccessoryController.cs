@@ -60,12 +60,12 @@ namespace Facilitating.UIControllers
                 RightText.SetText("");
             }
 
-            protected override void Update(object o)
+            protected override void Update(object o, bool isCentreItem)
             {
                 Accessory accessory = (Accessory) o;
-                CentreText.SetText("");
+                CentreText.SetText(accessory.GetSummary());
                 LeftText.SetText(accessory.Name);
-                RightText.SetText(accessory.GetSummary());
+                RightText.SetText(accessory.Description());
             }
         }
 

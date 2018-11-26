@@ -8,10 +8,11 @@ using UnityEngine;
 public class WeaponDetailController : MonoBehaviour
 {
     private EnhancedText _nameText, _inscriptionNameText, _inscriptionEffectText, _typeText;
-    private EnhancedText _damageText, _fireRateText, _reloadSpeedText, _accuracyText, _handlingText, _dpsText, _capacityText;
+    private EnhancedText _damageText, _fireRateText, _reloadSpeedText, _accuracyText, _handlingText, _dpsText, _capacityText, _shatterText, _burnText, _sicknessText;
 
     private Weapon _weapon;
     private DurabilityBarController _durabilityBar;
+    [SerializeField] private bool IsDetailed;
 
     public void Awake()
     {
@@ -28,6 +29,11 @@ public class WeaponDetailController : MonoBehaviour
         _inscriptionNameText = inscriptionObject.FindChildWithName<EnhancedText>("Inscription Name");
         _inscriptionEffectText = inscriptionObject.FindChildWithName<EnhancedText>("Effect");
         _durabilityBar = gameObject.FindChildWithName<DurabilityBarController>("Durability Bar");
+        if (!IsDetailed) return;
+        GameObject conditionObject = gameObject.FindChildWithName("Conditions");
+        _shatterText = conditionObject.FindChildWithName<EnhancedText>("Shatter");
+        _burnText = conditionObject.FindChildWithName<EnhancedText>("Burn");
+        _sicknessText = conditionObject.FindChildWithName<EnhancedText>("Sickness");
     }
 
     public void SetWeapon(Weapon weapon)
@@ -52,6 +58,23 @@ public class WeaponDetailController : MonoBehaviour
         _inscriptionNameText.SetText(inscriptionText);
         _inscriptionEffectText.SetText(inscription == null ? "-" : inscription.GetSummary());
         _typeText.SetText(weapon.WeaponType().ToString());
+        SetConditionText();
+    }
+
+    private void SetConditionText()
+    {
+        if (!IsDetailed) return;
+        WeaponAttributes attributes = _weapon?.WeaponAttributes;
+        Debug.Log(attributes);
+        Debug.Log(attributes.Val(AttributeType.DecayChance));
+        Debug.Log(attributes.Val(AttributeType.BurnChance));
+        Debug.Log(attributes.Val(AttributeType.SicknessChance));
+        float decayChance = attributes?.Val(AttributeType.DecayChance) ?? 0;
+        float burnChance = attributes?.Val(AttributeType.BurnChance) ?? 0;
+        float sicknessChance = attributes?.Val(AttributeType.SicknessChance) ?? 0;
+        _shatterText.SetText(decayChance == 0 ? "" : "+" + decayChance + "% Shatter");
+        _burnText.SetText(burnChance == 0 ? "" : "+" + burnChance + "% Shatter");
+        _sicknessText.SetText(sicknessChance == 0 ? "" : "+" + sicknessChance + "% Shatter");
     }
 
     public void UpdateWeaponInfo()
@@ -75,6 +98,7 @@ public class WeaponDetailController : MonoBehaviour
         _inscriptionNameText.SetText("");
         _inscriptionEffectText.SetText("");
         _typeText.SetText("");
+        SetConditionText();
     }
 
     public void Hide()

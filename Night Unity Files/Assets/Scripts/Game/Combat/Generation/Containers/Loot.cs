@@ -1,4 +1,5 @@
-﻿using SamsHelper.BaseGameFunctionality.InventorySystem;
+﻿using InventorySystem;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
 namespace Game.Combat.Generation
@@ -12,9 +13,9 @@ namespace Game.Combat.Generation
         public void SetResource(ResourceItem item)
         {
             Item = item;
-            if (item.Template?.ResourceType == "Meat") ImageLocation = "Meat";   
+            if (item.Template?.ResourceType == ResourceType.Meat) ImageLocation = "Meat";
         }
-        
+
         public void SetItem(GearItem item)
         {
             Item = item;
