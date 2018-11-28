@@ -37,8 +37,8 @@ namespace Game.Combat.Generation
                     foreach (Edge e in existingEdges)
                     {
                         if (nextPointIntersects && previousPointIntersects) break;
-                        if (!nextPointIntersects && AdvancedMaths.LineIntersection(points[i].Position, next.Position, e.A.Position, e.B.Position).Item1) nextPointIntersects = true;
-                        if (!nextPointIntersects && AdvancedMaths.LineIntersection(points[i].Position, previous.Position, e.A.Position, e.B.Position).Item1) previousPointIntersects = true;
+                        if (!nextPointIntersects && AdvancedMaths.LineIntersection(points[i].Position, next.Position, e.A.Position, e.B.Position) != null) nextPointIntersects = true;
+                        if (!nextPointIntersects && AdvancedMaths.LineIntersection(points[i].Position, previous.Position, e.A.Position, e.B.Position) != null) previousPointIntersects = true;
                     }
                 }
 

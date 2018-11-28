@@ -45,10 +45,9 @@ namespace Game.Characters
         public float DecayDamageModifier;
         public float SicknessStackModifier;
         public float FreeSkillChance;
-        public float InstantCooldownChance;
         public float SkillDisableChance;
         public bool ReloadOnEmptyMag;
-        public bool ReloadOnLastRound;
+        public bool ReloadOnFatalShot;
         public bool SpreadSickness;
 
         public CharacterAttributes(Player player)
@@ -93,8 +92,7 @@ namespace Game.Characters
         private bool IncreaseAttribute(AttributeType attributeType, int polarity)
         {
             int newMax = (int) (Max(attributeType) + polarity);
-            if (newMax > 20) return false;
-            if (newMax < 0) newMax = 0;
+            if (newMax > 20 || newMax <= 0) return false;
             SetMax(attributeType, newMax);
             return true;
         }
@@ -108,6 +106,7 @@ namespace Game.Characters
 
         public void ChangeFocusMax(int polarity)
         {
+            Debug.Log("fart");
             if (!IncreaseAttribute(AttributeType.Focus, polarity)) return;
             string message = polarity > 0 ? "My eyes become keener" : "My vision blurs";
             WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
@@ -223,11 +222,6 @@ namespace Game.Characters
             }
 
             return GetAttributeStatus(Get(AttributeType.Thirst), _dehydrationLevels);
-        }
-
-        public int CalculateCompassPulses()
-        {
-            return Mathf.CeilToInt(Val(AttributeType.Focus) + Val(AttributeType.CompassBonus));
         }
 
         public void Drink(int thirstRecovery)

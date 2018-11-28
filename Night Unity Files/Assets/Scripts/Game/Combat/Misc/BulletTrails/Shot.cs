@@ -23,7 +23,6 @@ namespace Game.Combat.Misc
         private Vector2 _direction, _originPosition, _lastPosition;
         private ShotAttributes _shotAttributes;
 
-
         public void Awake()
         {
             _rigidBody = GetComponent<Rigidbody2D>();
@@ -109,7 +108,6 @@ namespace Game.Combat.Misc
 
         public void Fire()
         {
-            if (_origin is PlayerCombat) RadianceController.SetHasFiredShot();
             if (_shotAttributes.Piercing) gameObject.layer = 20;
             float angleModifier = 1 - Mathf.Sqrt(Random.Range(0f, 1f));
             if (Random.Range(0, 2) == 0) angleModifier = -angleModifier;

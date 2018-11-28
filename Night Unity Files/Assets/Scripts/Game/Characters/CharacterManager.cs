@@ -10,6 +10,7 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Game.Characters
 {
@@ -35,8 +36,8 @@ namespace Game.Characters
             foreach (XmlNode characterNode in Helper.GetNodesWithName(characterManagerNode, "Character"))
             {
                 string className = characterNode.StringFromNode("CharacterClass");
-                Debug.Log(className);
                 CharacterTemplate template = FindClass(className);
+                Templates.Remove(template);
                 Player player = new Player(template);
                 player.Load(characterNode);
                 AddCharacter(player);
@@ -107,6 +108,7 @@ namespace Game.Characters
         private static void GenerateDriver()
         {
             Wanderer = GenerateCharacter(CharacterClass.Wanderer);
+            Templates.Remove(Wanderer.CharacterTemplate);
             Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Dark, WeaponType.Pistol);
             Inventory.Move(weapon);
             Wanderer.EquipWeapon(weapon);
@@ -123,6 +125,7 @@ namespace Game.Characters
         {
             LoadTemplates();
             CharacterTemplate newTemplate = Templates.RemoveRandom();
+            Assert.IsFalse(Templates.Any(t => t.CharacterClass == CharacterClass.Wanderer));
             Player playerCharacter = GenerateCharacterObject(newTemplate);
             Weapon weapon = WeaponGenerator.GenerateWeapon();
             Inventory.Move(weapon);

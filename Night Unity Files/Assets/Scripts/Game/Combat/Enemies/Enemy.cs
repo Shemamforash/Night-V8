@@ -30,15 +30,8 @@ namespace Game.Combat.Enemies
         public Enemy(EnemyTemplate template) : base(template.EnemyType.ToString())
         {
             Template = template;
-            if (Template.HasGear)
-            {
-                GenerateArmour();
-            }
-
-            if (Template.HasWeapon)
-            {
-                GenerateWeapon();
-            }
+            if (Template.HasGear) GenerateArmour();
+            if (Template.HasWeapon) GenerateWeapon();
         }
 
         public override XmlNode Save(XmlNode doc)
@@ -50,6 +43,34 @@ namespace Game.Combat.Enemies
 
         private void GenerateWeapon()
         {
+            List<WeaponType> possibleTypes = new List<WeaponType>();
+            switch (Template.EnemyType)
+            {
+                case EnemyType.Medic:
+                    possibleTypes.Add(WeaponType.Pistol);
+                    possibleTypes.Add(WeaponType.SMG);
+                    break;
+                case EnemyType.Mountain:
+                    possibleTypes.Add(WeaponType.LMG);
+                    break;
+                case EnemyType.Sentinel:
+                    possibleTypes.Add(WeaponType.Shotgun);
+                    possibleTypes.Add(WeaponType.SMG);
+                    break;
+                case EnemyType.Sniper:
+                    possibleTypes.Add(WeaponType.Rifle);
+                    possibleTypes.Add(WeaponType.Pistol);
+                    break;
+                case EnemyType.Warlord:
+                    possibleTypes.Add(WeaponType.SMG);
+                    possibleTypes.Add(WeaponType.LMG);
+                    break;
+                case EnemyType.Witch:
+                    possibleTypes.Add(WeaponType.Rifle);
+                    possibleTypes.Add(WeaponType.Shotgun);
+                    break;
+            }
+            
             Weapon weapon = WeaponGenerator.GenerateWeapon();
             EquipWeapon(weapon);
             if (Helper.RollDie(0, 5)) weapon.SetInscription(Inscription.Generate());
@@ -174,9 +195,6 @@ namespace Game.Combat.Enemies
                 case EnemyType.Curio:
                     enemyBehaviour = enemyObject.AddComponent<Curio>();
                     break;
-                case EnemyType.Flit:
-                    enemyBehaviour = enemyObject.AddComponent<Flit>();
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -187,9 +205,9 @@ namespace Game.Combat.Enemies
 
         private Loot DropHumanLoot(Vector2 position)
         {
-            if (Helper.RollDie(0, Template.Value)) SaltBehaviour.Create(position);
-            bool dropWeapon = Random.Range(0, 20) == 0 && EquippedWeapon != null;
-            bool dropAccessory = Random.Range(0, 30) == 0;
+            if (Random.Range(0f, 1f) < Template.DropRate) SaltBehaviour.Create(position);
+            bool dropWeapon = Random.Range(0, 30) == 0 && EquippedWeapon != null;
+            bool dropAccessory = Random.Range(0, 50) == 0;
             if (dropWeapon && dropAccessory)
             {
                 if (Random.Range(0, 2) == 0) dropWeapon = false;
@@ -211,7 +229,7 @@ namespace Game.Combat.Enemies
 
         private Loot DropNightmareLoot(Vector2 position)
         {
-            if (Helper.RollDie(0, Template.Value)) EssenceCloudBehaviour.Create(position);
+            if (Random.Range(0f, 1f) < Template.DropRate) EssenceCloudBehaviour.Create(position);
             bool dropInscription = Random.Range(0, 20) == 0;
             if (!dropInscription) return null;
             Loot loot = new Loot(position);
@@ -222,10 +240,9 @@ namespace Game.Combat.Enemies
         private Loot DropAnimalLoot(Vector2 position)
         {
             ResourceItem item = null;
-            if (Template.EnemyType == EnemyType.Grazer || Template.EnemyType == EnemyType.Watcher && Helper.RollDie(0, 4))
-                item = ResourceTemplate.Create("Skin");
-            else if (Helper.RollDie(0, Template.Value))
-                item = ResourceTemplate.GetMeat();
+            if (Random.Range(0f, 1f) < Template.DropRate)
+                item = Helper.RollDie(0, 3) ? ResourceTemplate.GetMeat() : ResourceTemplate.Create("Skin");
+
             if (item == null) return null;
             Loot loot = new Loot(position);
             loot.SetResource(item);

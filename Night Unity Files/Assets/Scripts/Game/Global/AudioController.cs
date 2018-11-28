@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using Game.Combat.Enemies.Nightmares;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -84,21 +85,19 @@ namespace Game.Global
             Vector2 playerPosition = PlayerCombat.Instance.transform.position;
             List<CanTakeDamage> enemies = CombatManager.Enemies();
             if (enemies.Count == 0) return -1;
-            int enemiesInRange = enemies.Count(e => e.transform.Distance(playerPosition) <= ThresholdCombatMusicDistance);
+            int enemiesInRange = enemies.Count(e => e.transform.Distance(playerPosition) <= ThresholdCombatMusicDistance && !(e is AnimalBehaviour));
             return enemiesInRange;
         }
 
         public void Update()
         {
-            float ambientVolumeModifier = 1;
-
             int enemiesInRange = GetEnemiesInRange();
             float timeChange = Time.deltaTime;
             if (enemiesInRange == -1) timeChange *= -MusicFadeDuration;
             if (enemiesInRange == 0) timeChange *= -1;
-            
+
             _timeNearEnemies = Mathf.Clamp(_timeNearEnemies + timeChange, 0, 25);
-            ambientVolumeModifier = 1 - _timeNearEnemies;
+            float ambientVolumeModifier = 1 - _timeNearEnemies;
 
             if (ambientVolumeModifier < 1)
             {

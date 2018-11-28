@@ -16,6 +16,7 @@ namespace Game.Combat.Enemies
         public readonly int Health, Speed, Value;
         public readonly string DropResource, Species;
         public readonly bool HasWeapon, HasGear;
+        public readonly float DropRate;
 
         private EnemyTemplate(XmlNode enemyNode)
         {
@@ -28,6 +29,7 @@ namespace Game.Combat.Enemies
             HasGear = enemyNode.BoolFromNode("HasGear");
             EnemyTemplates[EnemyType] = this;
             DropResource = enemyNode.StringFromNode("Drops");
+            DropRate = enemyNode.FloatFromNode("DropRate");
         }
 
         public static List<EnemyTemplate> GetEnemyTypes()
@@ -36,7 +38,7 @@ namespace Game.Combat.Enemies
             return EnemyTemplates.Values.ToList();
         }
 
-        public static EnemyType StringToType(string typeName)
+        private static EnemyType StringToType(string typeName)
         {
             if (_enemyTypes.Count == 0)
             {

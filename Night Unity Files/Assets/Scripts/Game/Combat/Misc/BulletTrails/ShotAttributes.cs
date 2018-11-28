@@ -124,7 +124,7 @@ namespace Game.Combat.Misc
         public int DamageDealt()
         {
             int damageDealt = _damageDealt;
-            if (_origin is EnemyBehaviour) damageDealt = Mathf.FloorToInt(EnemyDamageModifier * _damageDealt);
+            if (_origin is EnemyBehaviour) damageDealt = Mathf.CeilToInt(EnemyDamageModifier * _damageDealt);
             return damageDealt;
         }
 
@@ -163,9 +163,9 @@ namespace Game.Combat.Misc
             CanTakeDamage hit = other.GetComponent<CanTakeDamage>();
             if (hit == null) return;
             PlayerCombat player = _origin as PlayerCombat;
-            if (player != null) player.OnShotConnects(hit);
             CalculateKnockBackForce();
             hit.TakeShotDamage(shot);
+            if (player != null) player.OnShotConnects(hit);
             _damage = Mathf.CeilToInt(_damage * 0.5f);
         }
 

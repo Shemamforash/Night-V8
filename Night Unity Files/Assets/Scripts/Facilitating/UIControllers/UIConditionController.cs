@@ -12,41 +12,43 @@ namespace Facilitating.UIControllers
 {
     public class UIConditionController : MonoBehaviour
     {
-        private Slider ConditionSlider;
-        private EnhancedText ConditionText;
+        private Image _fillImage, _offsetImage;
+        private EnhancedText _conditionText;
 
         public void Awake()
         {
             if (transform.parent.parent.name == "Simple")
             {
-                ConditionText = GetComponent<EnhancedText>();
+                _conditionText = GetComponent<EnhancedText>();
                 return;
             }
 
-            ConditionText = gameObject.FindChildWithName<EnhancedText>("Text");
-            ConditionSlider = gameObject.FindChildWithName<Slider>("Progress");
+            _conditionText = gameObject.FindChildWithName<EnhancedText>("Text");
+            _offsetImage = gameObject.FindChildWithName<Image>("Offset");
+            _fillImage = gameObject.FindChildWithName<Image>("Fill");
         }
 
         public void UpdateThirst(Player player, float offset = 0)
         {
-            ConditionText.SetText(player.Attributes.GetThirstStatus());
-            if (ConditionSlider == null) return;
+            _conditionText.SetText(player.Attributes.GetThirstStatus());
+            if (_fillImage == null) return;
             UpdateSlider(AttributeType.Thirst, player, offset);
         }
 
         private void UpdateSlider(AttributeType attributeType, Player player, float offset)
         {
-            float currentValue = player.Attributes.Val(attributeType) + offset;
-            float maxValue = player.Attributes.Max(attributeType);
-            currentValue = Mathf.Clamp(currentValue, 0, maxValue);
-            currentValue /= maxValue;
-            ConditionSlider.value = 1 - currentValue;
+            float current = player.Attributes.Val(attributeType);
+            float max = player.Attributes.Max(attributeType);
+            if (current + offset > max) offset -= current + offset - max;
+            current /= max;
+            _fillImage.fillAmount = 1 - current;
+            _offsetImage.fillAmount = offset == 0 ? 0 : 1 - (current + offset) / max;
         }
 
         public void UpdateHunger(Player player, float offset = 0)
         {
-            ConditionText.SetText(player.Attributes.GetHungerStatus());
-            if (ConditionSlider == null) return;
+            _conditionText.SetText(player.Attributes.GetHungerStatus());
+            if (_fillImage == null) return;
             UpdateSlider(AttributeType.Hunger, player, offset);
         }
     }

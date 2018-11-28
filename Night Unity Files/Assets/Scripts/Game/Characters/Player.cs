@@ -25,14 +25,18 @@ namespace Game.Characters
         public readonly BrandManager BrandManager = new BrandManager();
         private CharacterView _characterView;
 
+        public bool IsDead;
         public Craft CraftAction;
         public Consume ConsumeAction;
         public Rest RestAction;
         public Travel TravelAction;
         public Meditate MeditateAction;
         public Sleep SleepAction;
-
+        
+        private readonly Dictionary<WeaponType, int> _weaponKills = new Dictionary<WeaponType, int>();
+        private int _daysSurvived;
         private int _timeAlive;
+        private bool _showJournal;
 
         public override XmlNode Save(XmlNode doc)
         {
@@ -96,6 +100,13 @@ namespace Game.Characters
             currentAction.Load(root);
         }
 
+        public bool CanShowJournal()
+        {
+            if (!_showJournal) return false;
+            _showJournal = false;
+            return true;
+        }
+
         //Create Character in code only- no view section, no references to objects in the scene
         public Player(CharacterTemplate characterTemplate) : base("The " + characterTemplate.CharacterClass)
         {
@@ -117,8 +128,6 @@ namespace Game.Characters
             else
                 CharacterManager.RemoveCharacter(this);
         }
-
-        public bool IsDead;
 
         private void AddStates()
         {
@@ -147,15 +156,16 @@ namespace Game.Characters
 
         private void IncreaseTimeSurvived()
         {
-            ++_timeSurvived;
+            ++_daysSurvived;
+            _showJournal = true;
             TryUnlockCharacterSkill(true);
         }
 
         private void TryUnlockCharacterSkill(bool showScreen)
         {
-            if (_timeSurvived >= 7)
+            if (_daysSurvived >= 7)
                 Attributes.UnlockCharacterSkillOne(showScreen);
-            if (_timeSurvived >= 14)
+            if (_daysSurvived >= 14)
                 Attributes.UnlockCharacterSkillTwo(showScreen);
         }
 
@@ -222,9 +232,6 @@ namespace Game.Characters
             base.EquipAccessory(accessory);
             if (_characterView != null) _characterView.AccessoryController.UpdateAccessory();
         }
-
-        private readonly Dictionary<WeaponType, int> _weaponKills = new Dictionary<WeaponType, int>();
-        private int _timeSurvived;
 
         public void IncreaseKills()
         {

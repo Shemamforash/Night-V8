@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Game.Global;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -12,6 +13,7 @@ public class Crackling : MonoBehaviour
 	public void Awake ()
 	{
 		_audioSource = GetComponent<AudioSource>();
+		_audioSource.clip = AudioClips.Campfire;
 	}
 	
 	public void Update ()
@@ -22,7 +24,7 @@ public class Crackling : MonoBehaviour
 
 	public void FadeIn(float duration = 0.5f)
 	{
-		DOTween.To(() => _volumeOverride, f => _volumeOverride = f, 1, duration);
+		DOTween.To(() => _volumeOverride, f => _volumeOverride = f, 0.5f, duration);
 	}
 
 	public void FadeOut(float duration = 0.5f)

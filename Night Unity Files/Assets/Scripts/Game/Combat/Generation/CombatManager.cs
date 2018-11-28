@@ -256,7 +256,7 @@ namespace Game.Combat.Generation
                         if (Random.Range(3, 6) >= currentGrazerHerd.Count)
                             currentGrazerHerd = new List<EnemyBehaviour>();
                         break;
-                    case EnemyType.Flit:
+                    case EnemyType.Curio:
                         if (currentFlitHerd.Count == 0)
                             FlitHerds.Add(currentFlitHerd);
                         currentFlitHerd.Add(enemyBehaviour);

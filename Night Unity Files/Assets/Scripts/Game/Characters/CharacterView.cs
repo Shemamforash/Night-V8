@@ -140,7 +140,10 @@ namespace Game.Characters
             SetButtonEnabled(_craftButton, _craftText, Recipe.RecipesAvailable() && atHome && resting);
             SetButtonEnabled(_consumeButton, _consumeText, Inventory.Consumables().Count > 0);
             SetButtonEnabled(_meditateButton, _meditateText, _player.Attributes.Val(AttributeType.Will) > 0 && resting);
-            SetButtonEnabled(_sleepButton, _sleepText, _player.CanSleep() && atHome && resting);
+            bool sleepEnabled = false;
+            sleepEnabled |= _player.CanSleep() && atHome && resting;
+            sleepEnabled |= _player.States.GetCurrentState() == _player.SleepAction;
+            SetButtonEnabled(_sleepButton, _sleepText, sleepEnabled);
         }
 
         private void UpdateCurrentAction()

@@ -288,18 +288,23 @@ namespace Game.Exploration.Regions
         private List<EnemyTemplate> GenerateAnimalEncounter()
         {
             List<EnemyTemplate> templates = new List<EnemyTemplate>();
-            switch (Random.Range(0, 3))
+            int size = WorldState.Difficulty() + 4;
+            List<EnemyTemplate> animalTypes = new List<EnemyTemplate>
             {
-                case 0:
-                    for (int i = 0; i < 10; ++i) templates.Add(EnemyTemplate.GetEnemyTemplate(EnemyType.Grazer));
-                    for (int i = 0; i < 3; ++i) templates.Add(EnemyTemplate.GetEnemyTemplate(EnemyType.Watcher));
+                EnemyTemplate.GetEnemyTemplate(EnemyType.Grazer),
+                EnemyTemplate.GetEnemyTemplate(EnemyType.Watcher),
+                EnemyTemplate.GetEnemyTemplate(EnemyType.Curio)
+            };
+            while (size > 0)
+            {
+                animalTypes.Shuffle();
+                foreach (EnemyTemplate e in animalTypes)
+                {
+                    if (e.Value > size) continue;
+                    templates.Add(e);
+                    size -= e.Value;
                     break;
-                case 1:
-                    for (int i = 0; i < Random.Range(1, 4); ++i) templates.Add(EnemyTemplate.GetEnemyTemplate(EnemyType.Curio));
-                    break;
-                case 2:
-                    for (int i = 0; i < 20; ++i) templates.Add(EnemyTemplate.GetEnemyTemplate(EnemyType.Flit));
-                    break;
+                }
             }
 
             return templates;

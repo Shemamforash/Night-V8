@@ -150,7 +150,13 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public static void IncrementResource(string name, int amount)
         {
             if (amount < 0) throw new Exceptions.ResourceValueChangeInvalid(name, "increment", amount);
-            ResourceItem resourceItem = GetResource(name) ?? AddResource(name);
+            ResourceItem resourceItem = GetResource(name);
+            if (resourceItem == null)
+            {
+                resourceItem = AddResource(name);
+                --amount;
+            }
+
             resourceItem.Increment(amount);
         }
 

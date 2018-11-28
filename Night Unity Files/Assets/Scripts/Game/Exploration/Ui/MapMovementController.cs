@@ -46,12 +46,14 @@ public class MapMovementController : MonoBehaviour, IInputListener
         MapCamera.DOOrthoSize(6, 1f);
         InputHandler.SetCurrentListener(_instance);
         Recenter();
+        _audioSource.DOFade(1f, 3f);
     }
 
     public static void Exit()
     {
         ResourcesUiController.Show();
         InputHandler.SetCurrentListener(null);
+        _audioSource.DOFade(0f, 3f);
         MapCamera.DOOrthoSize(3, 1f);
         _player = null;
     }
@@ -59,7 +61,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
     public static void UpdateGrit(int gritCost)
     {
         CharacterAttribute grit = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Grit);
-        MapMenuController.GritMarker().SetValue((int) grit.Max, (int) (grit.CurrentValue() - gritCost));
+        MapMenuController.GritMarker().SetValue(grit.Max, grit.CurrentValue(), -gritCost);
     }
 
     private static void Recenter()
@@ -216,15 +218,5 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     public void OnDoubleTap(InputAxis axis, float direction)
     {
-    }
-
-    public static void FadeInAudio()
-    {
-        _audioSource.DOFade(1f, 3f);
-    }
-
-    public static void FadeOutAudio()
-    {
-        _audioSource.DOFade(0f, 3f);
     }
 }

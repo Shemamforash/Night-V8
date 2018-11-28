@@ -13,7 +13,7 @@ public class StoryController : Menu, IInputListener
 {
     private static string _text;
     public const float SkipAllTimerMax = 1f;
-    private const float _timePerWord = 0.2f, MinAlpha = 0.25f;
+    private const float _timePerWord = 0.3f, MinAlpha = 0.25f;
     private List<string> _paragraphs;
     private TextMeshProUGUI _storyText;
     private static bool _goToCredits;
@@ -88,10 +88,10 @@ public class StoryController : Menu, IInputListener
 
             //fade out
             _storyText.color = Color.white;
-            _audioSource.DOFade(0f, 1f).SetUpdate(UpdateType.Normal, true);
             yield return _storyText.DOFade(0f, 1f).WaitForCompletion();
         }
 
+        yield return _audioSource.DOFade(0f, 1f).SetUpdate(UpdateType.Normal, true).WaitForCompletion();
         End();
     }
 

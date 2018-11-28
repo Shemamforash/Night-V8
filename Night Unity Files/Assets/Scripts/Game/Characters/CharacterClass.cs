@@ -2,6 +2,7 @@
 {
     public enum CharacterClass
     {
+        None,
         Villain,
         Deserter,
         Beast,

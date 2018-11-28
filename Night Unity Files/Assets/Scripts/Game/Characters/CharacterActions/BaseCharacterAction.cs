@@ -8,7 +8,7 @@ using SamsHelper.ReactiveUI.Elements;
 
 namespace Game.Characters.CharacterActions
 {
-    public class BaseCharacterAction : State
+    public abstract class BaseCharacterAction : State
     {
         protected readonly Player PlayerCharacter;
         private int _timeRemaining;
@@ -24,7 +24,7 @@ namespace Game.Characters.CharacterActions
             PlayerCharacter = playerCharacter;
         }
 
-        public void SetButton(EnhancedButton button)
+        public virtual void SetButton(EnhancedButton button)
         {
             _button = button;
             _button.AddOnClick(TryClick);
@@ -35,9 +35,7 @@ namespace Game.Characters.CharacterActions
             if (_button.IsEnabled()) OnClick();
         }
 
-        protected virtual void OnClick()
-        {
-        }
+        protected abstract void OnClick();
 
         public void UpdateAction()
         {

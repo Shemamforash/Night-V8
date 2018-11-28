@@ -76,7 +76,7 @@ namespace Game.Characters
         public void Succeed()
         {
             SetStatus(BrandStatus.Succeeded);
-            UiBrandMenu.ShowBrand(this);
+//            UiBrandMenu.ShowBrand(this);
             OnSucceed();
         }
 

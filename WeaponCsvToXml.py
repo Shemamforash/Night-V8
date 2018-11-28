@@ -266,7 +266,7 @@ class EnemyImporter(XMLWriter):
         write_tag(self, "Enemies", self.read_enemies)
 
     def read_enemies(self):
-        for row in range(3, 24):
+        for row in range(3, 23):
             write_tag(self, "Enemy", self.read_enemy, [row])
 
     def read_enemy(self, row):
@@ -274,10 +274,11 @@ class EnemyImporter(XMLWriter):
         write_single_value(self, "Health", get_value(self, "B", row))
         write_single_value(self, "Speed", get_value(self, "D", row))
         write_single_value(self, "Value", get_value(self, "E", row))
-        write_single_value(self, "Drops", get_value(self, "F", row, ""))
-        write_single_value(self, "HasWeapon", get_value(self, "G", row))
-        write_single_value(self, "HasGear", get_value(self, "H", row))
-        write_single_value(self, "Species", get_value(self, "I", row))
+        write_single_value(self, "DropRate", get_value(self, "F", row))
+        write_single_value(self, "Drops", get_value(self, "G", row, ""))
+        write_single_value(self, "HasWeapon", get_value(self, "H", row))
+        write_single_value(self, "HasGear", get_value(self, "I", row))
+        write_single_value(self, "Species", get_value(self, "J", row))
 
 
 class BrandImporter(XMLWriter):
@@ -307,20 +308,25 @@ class StoryImporter(XMLWriter):
         write_tag(self, "Story", self.read_brands)
 
     def read_brands(self):
-        for row in range(2, 36):
-            write_tag(self, "JournalEntry", self.read_journal_entry, [row])
-        for row in range(39, 41):
+        for row in range(2, 27):
+            write_tag(self, "JournalEntry", self.read_journal_entry, [row, False])
+        for row in range(29, 32):
             write_tag(self, "StoryPart", self.read_story_part, [row])
+        for row in range(36, 54):
+            write_tag(self, "CharacterPart", self.read_journal_entry, [row, False])
+        for row in range(56, 65):
+            write_tag(self, "WandererPart", self.read_journal_entry, [row, True])
 
     def read_story_part(self, row):
         write_single_value(self, "Number", get_value(self, "A", row))
         write_single_value(self, "Text", get_value(self, "B", row))
 
-    def read_journal_entry(self, row):
+    def read_journal_entry(self, row, is_wanderer):
         write_single_value(self, "Title", get_value(self, "A", row))
         write_single_value(self, "Group", get_value(self, "B", row))
         write_single_value(self, "Part", get_value(self, "C", row))
         write_single_value(self, "Text", get_value(self, "D", row))
+        write_single_value(self, "IsWanderer", str(is_wanderer))
 
 
 class SkillImporter(XMLWriter):
@@ -397,7 +403,7 @@ def write_single_value(xml_writer, stat_name, value):
 
 
 # WeaponImporter()
-GearImporter()
+# GearImporter()
 # WeatherImporter()
 # WeatherProbabilityImporter();
 # RegionImporter()
@@ -409,5 +415,5 @@ GearImporter()
 # SkillImporter()
 # EnvironmentImporter()
 # BrandImporter()
-# StoryImporter()
+StoryImporter()
 # TutorialImporter()

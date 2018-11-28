@@ -34,6 +34,7 @@ namespace Game.Combat.Enemies
         private void UpdateCurrentCell()
         {
             _currentCell = PathingGrid.WorldToCellPosition(transform.position);
+            if (_currentCell == null || _targetCell == null) return;
             _outOfSight = Physics2D.Linecast(transform.position, _targetCell.Position, 1 << 8).collider != null;
             Vector2 difference = _targetCell.Position - _currentCell.Position;
             float distanceToTargetCell = difference.magnitude;

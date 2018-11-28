@@ -65,16 +65,12 @@ public class WeaponDetailController : MonoBehaviour
     {
         if (!IsDetailed) return;
         WeaponAttributes attributes = _weapon?.WeaponAttributes;
-        Debug.Log(attributes);
-        Debug.Log(attributes.Val(AttributeType.DecayChance));
-        Debug.Log(attributes.Val(AttributeType.BurnChance));
-        Debug.Log(attributes.Val(AttributeType.SicknessChance));
-        float decayChance = attributes?.Val(AttributeType.DecayChance) ?? 0;
-        float burnChance = attributes?.Val(AttributeType.BurnChance) ?? 0;
-        float sicknessChance = attributes?.Val(AttributeType.SicknessChance) ?? 0;
+        float decayChance = attributes?.Val(AttributeType.DecayChance) * 100 ?? 0;
+        float burnChance = attributes?.Val(AttributeType.BurnChance) * 100 ?? 0;
+        float sicknessChance = attributes?.Val(AttributeType.SicknessChance) * 100 ?? 0;
         _shatterText.SetText(decayChance == 0 ? "" : "+" + decayChance + "% Shatter");
-        _burnText.SetText(burnChance == 0 ? "" : "+" + burnChance + "% Shatter");
-        _sicknessText.SetText(sicknessChance == 0 ? "" : "+" + sicknessChance + "% Shatter");
+        _burnText.SetText(burnChance == 0 ? "" : "+" + burnChance + "% Burn");
+        _sicknessText.SetText(sicknessChance == 0 ? "" : "+" + sicknessChance + "% Sickness");
     }
 
     public void UpdateWeaponInfo()

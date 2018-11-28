@@ -51,30 +51,27 @@ namespace Game.Exploration.Ui
             _claimedParticles = gameObject.FindChildWithName<ParticleSystem>("Claimed");
         }
 
-        private void SetClaimParticlesActive(bool active)
-        {
-            ParticleSystem claimedParticles = gameObject.FindChildWithName<ParticleSystem>("Claimed");
-            if (active) claimedParticles.Play();
-        }
-
-        private void SetTrailAlpha(float alpha)
-        {
-            ParticleSystem.TrailModule trails = _claimedParticles.trails;
-            Color c = trails.colorOverTrail.color;
-            c.a = alpha;
-            trails.colorOverTrail = c;
-        }
-
-        private float GetTrailAlpha()
-        {
-            return _claimedParticles.trails.colorOverTrail.color.a;
-        }
+//        private void SetTrailAlpha(float alpha)
+//        {
+//            ParticleSystem.TrailModule trails = _claimedParticles.trails;
+//            Color c = trails.colorOverTrail.color;
+//            c.a = alpha;
+//            trails.colorOverTrail = c;
+//        }
+//
+//        private float GetTrailAlpha()
+//        {
+//            return _claimedParticles.trails.colorOverTrail.color.a;
+//        }
 
         private void SetGritText()
         {
-            if (_region.GetRegionType() == RegionType.Gate) _costText.text = "Return home";
-            else if (!_canAfford) _costText.text = "Not Enough Grit";
-            else _costText.text = _gritCost + " Grit";
+            string gritString;
+            if (_region.GetRegionType() == RegionType.Gate) gritString = "Return home";
+            else if (!_canAfford) gritString = "Not Enough Grit";
+            else if (_gritCost == 0) gritString = "Current Location";
+            else gritString = _gritCost + " Grit";
+            _costText.text = gritString;
         }
 
         public void Show()
@@ -85,21 +82,22 @@ namespace Game.Exploration.Ui
             SetGritText();
             _targetCentreAlpha = 0.6f;
             _targetNodeAlpha = _canAfford ? 1f : 0.5f;
-            DOTween.To(GetTrailAlpha, SetTrailAlpha, 1f, 1f).SetUpdate(UpdateType.Normal, true);
+//            DOTween.To(GetTrailAlpha, SetTrailAlpha, 1f, 1f).SetUpdate(UpdateType.Normal, true);
         }
 
         public void Hide()
         {
             _hidden = true;
-            MapMovementController.FadeOutAudio();
             _targetNodeAlpha = 0f;
-            DOTween.To(GetTrailAlpha, SetTrailAlpha, 0f, 1f).SetUpdate(UpdateType.Normal, true);
+            _claimedParticles.Stop();
+//            DOTween.To(GetTrailAlpha, SetTrailAlpha, 0f, 1f).SetUpdate(UpdateType.Normal, true);
         }
 
         public void SetRegion(Region region)
         {
             _region = region;
-            SetClaimParticlesActive(region.ClaimRemaining > 0);
+            if (region.ClaimRemaining > 0) _claimedParticles.Play();
+            else _claimedParticles.Stop();
             string nameText = region.GetRegionType() == RegionType.None ? "Unknown Region" : region.Name;
             for (int i = 0; i < nameText.Length; ++i)
             {
@@ -205,7 +203,6 @@ namespace Game.Exploration.Ui
         public void GainFocus()
         {
             if (_hidden || !_canAfford) return;
-            MapMovementController.FadeInAudio();
             _targetCentreAlpha = 1f;
             _border.SetSelected();
             transform.DOScale(Vector2.one * 1.25f, 1f).SetUpdate(UpdateType.Normal, true);
@@ -216,7 +213,6 @@ namespace Game.Exploration.Ui
         public void LoseFocus(float time = 1f)
         {
             if (_hidden || !_canAfford) return;
-            MapMovementController.FadeOutAudio();
             _targetCentreAlpha = 0.5f;
             _border.SetActive();
             transform.DOScale(Vector2.one, time).SetUpdate(UpdateType.Normal, true);

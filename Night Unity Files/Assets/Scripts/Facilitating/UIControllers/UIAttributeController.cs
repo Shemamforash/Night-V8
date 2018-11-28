@@ -33,10 +33,9 @@ namespace Facilitating.UIControllers
 
         private void UpdateMarker(UIAttributeMarkerController marker, Player player, AttributeType attributeType, float offset = 0)
         {
-            float current = player.Attributes.Val(attributeType) + offset;
+            float current = player.Attributes.Val(attributeType);
             float max = player.Attributes.Max(attributeType);
-            current = Mathf.Clamp(current, 0, max);
-            marker.SetValue(max, current);
+            marker.SetValue(max, current, offset);
         }
 
         public void UpdateAttributes(Player player)

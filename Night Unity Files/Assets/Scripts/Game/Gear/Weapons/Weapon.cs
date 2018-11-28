@@ -102,7 +102,7 @@ namespace Game.Gear.Weapons
         {
             if (CharacterAttribute.IsCharacterAttribute(target)) return;
             WeaponAttributes.Get(target).AddModifier(modifier);
-            Debug.Log(target + " " + modifier.FinalBonusToString());
+            Debug.Log(target + " " + modifier.FinalBonusToString() + " " + modifier.RawBonusToString());
             WeaponAttributes.RecalculateAttributeValues();
         }
 

@@ -134,6 +134,11 @@ namespace Game.Characters
             Assert.IsTrue(_completedBrands.Count == 0);
         }
 
+        public void UnlockAllBrands()
+        {
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i) _lockedBrands[i].Succeed();
+        }
+
         private void CreateBrands()
         {
             CreateAttributeBrands();
@@ -209,10 +214,12 @@ namespace Game.Characters
         public void IncreaseItemsFound() => UpdateBrandValue(typeof(FocusBrand), 1);
         public void IncreaseSkillsUsed() => UpdateBrandValue(typeof(WillBrand), 1);
         public void IncreaseRegionsExplored() => UpdateBrandValue(typeof(GritBrand), 1);
+
         public void IncreaseEssenceInfused() => UpdateBrandValue(typeof(EssenceChangeBrand), 1);
         public void IncreaseDamageTaken(int damage) => UpdateBrandValue(typeof(HealthRecoveryBrand), damage);
         public void IncreaseEnemiesKilled() => UpdateBrandValue(typeof(WillRecoveryBrand), 1);
-        public void IncreaseBattlesNoSkills() => UpdateBrandValue(typeof(AutomaticReloadBrand), 1);
+        public void IncreasePerfectReloadCount() => UpdateBrandValue(typeof(AutomaticReloadBrand), 1);
+        public void IncreaseLastRoundKills() => UpdateBrandValue(typeof(InstantReloadBrand), 1);
         public void IncreaseResourceFound() => UpdateBrandValue(typeof(ResourceBrand), 1);
         public void IncreaseFoodFound() => UpdateBrandValue(typeof(FoodBrand), 1);
         public void IncreaseWaterFound() => UpdateBrandValue(typeof(WaterBrand), 1);
@@ -220,7 +227,6 @@ namespace Game.Characters
         public void IncreaseBurnCount() => UpdateBrandValue(typeof(IgniteBrand), 1);
         public void IncreaseDecayCount() => UpdateBrandValue(typeof(DecayBrand), 1);
         public void IncreaseSickenCount() => UpdateBrandValue(typeof(SicknessBrand), 1);
-//todo        public void IncreaseIndirectKills() => UpdateBrandValue(typeof(IndirectKillBrand), 1);
 
         public void UpdateBrandStatus(Brand brand)
         {

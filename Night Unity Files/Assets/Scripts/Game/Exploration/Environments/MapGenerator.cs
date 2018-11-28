@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Exploration.Regions;
-using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;

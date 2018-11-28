@@ -86,7 +86,6 @@ namespace Game.Combat.Player
 
             UIMagazineController.UpdateMagazineUi();
             PlayerCombat.Instance.Player.BrandManager.IncreaseSkillsUsed();
-            RadianceController.SetSkillWasUsed();
             return true;
         }
 

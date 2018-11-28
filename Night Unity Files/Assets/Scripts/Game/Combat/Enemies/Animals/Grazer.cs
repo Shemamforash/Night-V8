@@ -1,20 +1,18 @@
 ﻿using Game.Combat.Enemies.Nightmares;
 using Game.Combat.Generation;
+using UnityEngine;
 
 namespace Game.Combat.Enemies.Animals
 {
     public class Grazer : AnimalBehaviour
     {
-        public override void Initialise(Enemy e)
+        public override void Alert(bool alertOthers)
         {
-            base.Initialise(e);
-            WanderDistance = 1f;
-        }
-
-        protected override void OnAlert()
-        {
+            Debug.Log("alerted");
+            if (Alerted) return;
+            Alerted = true;
             Cell target = PathingGrid.GetCellOutOfRange(transform.position);
-            Flee(target);
+            MoveBehaviour.GoToCell(target);
         }
     }
 }

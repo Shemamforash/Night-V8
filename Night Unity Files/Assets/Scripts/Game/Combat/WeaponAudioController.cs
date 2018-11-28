@@ -37,9 +37,27 @@ public class WeaponAudioController : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void StartReload()
+    public void StartReload(Weapon weapon)
     {
-        _audioPool.Create().Play(AudioClips.ClipOut);
+        WeaponType weaponType = weapon.WeaponAttributes.WeaponType;
+        switch (weaponType)
+        {
+            case WeaponType.Pistol:
+                _audioPool.Create().Play(AudioClips.PistolClipOut, 0.9f, Random.Range(0.9f, 1f));
+                break;
+            case WeaponType.Rifle:
+                _audioPool.Create().Play(AudioClips.RifleClipOut, 0.9f, Random.Range(0.9f, 1f));
+                break;
+            case WeaponType.Shotgun:
+                _audioPool.Create().Play(AudioClips.ShotgunClipOut, 0.9f, Random.Range(0.9f, 1f));
+                break;
+            case WeaponType.SMG:
+                _audioPool.Create().Play(AudioClips.SMGClipOut, 0.9f, Random.Range(0.9f, 1f));
+                break;
+            case WeaponType.LMG:
+                _audioPool.Create().Play(AudioClips.LMGClipOut, 0.9f, Random.Range(0.9f, 1f));
+                break;
+        }
     }
 
     public void DryFire()
@@ -47,9 +65,27 @@ public class WeaponAudioController : MonoBehaviour
         _audioPool.Create().Play(AudioClips.DryFireClips.RandomElement());
     }
 
-    public void StopReload()
+    public void StopReload(Weapon weapon)
     {
-        _audioPool.Create().Play(AudioClips.ClipIn);
+        WeaponType weaponType = weapon.WeaponAttributes.WeaponType;
+        switch (weaponType)
+        {
+            case WeaponType.Pistol:
+                _audioPool.Create().Play(AudioClips.PistolClipIn, 0.9f, Random.Range(0.9f, 1f));
+                break;
+            case WeaponType.Rifle:
+                _audioPool.Create().Play(AudioClips.RifleClipIn, 0.9f, Random.Range(0.9f, 1f));
+                break;
+            case WeaponType.Shotgun:
+                _audioPool.Create().Play(AudioClips.ShotgunClipIn, 0.9f, Random.Range(0.9f, 1f));
+                break;
+            case WeaponType.SMG:
+                _audioPool.Create().Play(AudioClips.SMGClipIn, 0.9f, Random.Range(0.9f, 1f));
+                break;
+            case WeaponType.LMG:
+                _audioPool.Create().Play(AudioClips.LMGClipIn, 0.9f, Random.Range(0.9f, 1f));
+                break;
+        }
     }
 
     public void Fire(Weapon weapon)
@@ -89,7 +125,7 @@ public class WeaponAudioController : MonoBehaviour
         _audioPool.Create().Play(shots[0], 1f, Random.Range(0.9f, 1f), hpfValue);
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(0.25f);
-        sequence.AppendCallback(() => { _audioPool.Create().Play(casings[0], -0.6f); });
+        sequence.AppendCallback(() => { _audioPool.Create().Play(casings[0], 0.6f); });
     }
 
     public void BreakArmour()
@@ -97,13 +133,13 @@ public class WeaponAudioController : MonoBehaviour
         _audioPool.Create().Play(AudioClips.ArmourBreakClips.RandomElement());
     }
 
-    public void AddRound()
-    {
-        _audioPool.Create().Play(AudioClips.BulletLoad.RandomElement());
-    }
-
     public void PlayBrawlerSlash()
     {
         _audioPool.Create().Play(AudioClips.BrawlerSlash, Random.Range(0.4f, 0.5f), Random.Range(0.9f, 1f), 1000);
+    }
+
+    public void PlayTakeItem()
+    {
+        _audioPool.Create().Play(AudioClips.TakeItem, Random.Range(0.5f, 0.6f), Random.Range(0.9f, 1f), Random.Range(800, 1200));
     }
 }

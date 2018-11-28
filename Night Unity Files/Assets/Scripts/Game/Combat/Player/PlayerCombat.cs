@@ -23,6 +23,12 @@ namespace Game.Combat.Player
 {
     public class PlayerCombat : CharacterCombat, IInputListener, ICombatEvent
     {
+        private bool _reloading;
+        public int DamageDealtSinceMarkStarted;
+        private bool _damageTakenSinceMarkStarted;
+        private float _dryFireTimer;
+        private float _adrenalineRecoveryRate;
+        private const float DryFireTimerMax = 0.3f;
         private float _skillCooldownModifier;
         private readonly Number _adrenalineLevel = new Number(0, 0, 8);
         private Coroutine _dashCooldown;
@@ -284,7 +290,7 @@ namespace Game.Combat.Player
 
         public void UpdateAdrenaline(int damageDealt)
         {
-            _adrenalineLevel.Increment(damageDealt / 150f * _adrenalineRecoveryRate);
+            _adrenalineLevel.Increment(damageDealt / 300f * _adrenalineRecoveryRate);
             Player.BrandManager.IncreaseDamageDealt(damageDealt);
             DamageDealtSinceMarkStarted += damageDealt;
             RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
@@ -307,25 +313,18 @@ namespace Game.Combat.Player
             _damageTakenSinceMarkStarted = true;
             DamageTakenSinceLastShot = true;
             Player.BrandManager.IncreaseDamageTaken(shot.Attributes().DamageDealt());
-            TryExplode();
         }
 
         public override void TakeExplosionDamage(int damage, Vector2 direction, float radius)
         {
             base.TakeExplosionDamage(damage, direction, radius);
-            TryExplode();
             Shake(damage * 100);
-        }
-
-        public override void TakeRawDamage(int damage, Vector2 direction)
-        {
-            base.TakeRawDamage(damage, direction);
-            TryExplode();
         }
 
         protected override void TakeDamage(int damage, Vector2 direction)
         {
             base.TakeDamage(damage, direction);
+            TryExplode();
             Player.Attributes.CalculateNewFettle(HealthController.GetCurrentHealth());
         }
 
@@ -334,21 +333,14 @@ namespace Game.Combat.Player
             bool explodeWithFire = Random.Range(0f, 1f) < Player.Attributes.FireExplodeChance;
             bool explodeWithDecay = Random.Range(0f, 1f) < Player.Attributes.DecayExplodeChance;
             if (!explodeWithFire && !explodeWithDecay) return;
-            Explosion explosion = Explosion.CreateExplosion(transform.position, 20);
-            explosion.AddIgnoreTarget(this);
             if (explodeWithFire && explodeWithDecay)
             {
-                if (Random.Range(0, 2) == 0)
-                    explosion.SetBurn();
-                else
-                    explosion.SetDecay();
+                explodeWithFire = Helper.RollDie(0, 2);
+                explodeWithDecay = !explodeWithFire;
             }
-            else if (explodeWithFire)
-                explosion.SetBurn();
-            else if (explodeWithDecay)
-                explosion.SetDecay();
 
-            explosion.InstantDetonate();
+            if (explodeWithDecay) DecayBehaviour.Create(transform.position).AddIgnoreTarget(this);
+            else FireBurstBehaviour.Create(transform.position).AddIgnoreTarget(this);
         }
 
         public void EquipWeapon(Weapon weapon)
@@ -383,8 +375,11 @@ namespace Game.Combat.Player
 
         public void ResetCompass()
         {
-            _compassPulses = Player.Attributes.CalculateCompassPulses();
-            UiCompassPulseController.InitialisePulses(_compassPulses);
+            int compassBonus = Mathf.CeilToInt(Player.Attributes.Val(AttributeType.CompassBonus));
+            int focusMax = Mathf.CeilToInt(Player.Attributes.Max(AttributeType.Focus)) + compassBonus;
+            int focusCurrent = Mathf.CeilToInt(Player.Attributes.Val(AttributeType.Focus)) + compassBonus;
+            _compassPulses = focusCurrent;
+            UiCompassPulseController.InitialisePulses(focusMax, focusCurrent);
         }
 
         private IEnumerator Dash()
@@ -446,17 +441,6 @@ namespace Game.Combat.Player
             return _dashCooldown == null && _dashPressed && ConsumeAdrenaline(1);
         }
 
-        public override void SetTarget(CanTakeDamage target)
-        {
-            if (target != null)
-            {
-                Flit flit = target as Flit;
-                if (flit != null && !flit.Discovered()) return;
-            }
-
-            base.SetTarget(target);
-        }
-
         public override Weapon Weapon() => Player.EquippedWeapon;
 
         public void ExitCombat()
@@ -470,6 +454,7 @@ namespace Game.Combat.Player
             if (_reloadingCoroutine != null) return;
             if (_weaponBehaviour.FullyLoaded()) return;
             if (!_weaponBehaviour.CanReload()) return;
+            if (_weaponBehaviour.Empty()) Player.BrandManager.IncreasePerfectReloadCount();
             _reloadingCoroutine = StartCoroutine(StartReloading());
             _dryFireTimer = 0f;
         }
@@ -481,13 +466,6 @@ namespace Game.Combat.Player
             UIMagazineController.UpdateMagazineUi();
             _reloading = false;
         }
-
-        private bool _reloading;
-        public int DamageDealtSinceMarkStarted;
-        private bool _damageTakenSinceMarkStarted;
-        private float _dryFireTimer;
-        private float _adrenalineRecoveryRate;
-        public const float DryFireTimerMax = 0.3f;
 
         //COOLDOWNS
 
@@ -502,24 +480,14 @@ namespace Game.Combat.Player
             float duration = Player.EquippedWeapon.GetAttributeValue(AttributeType.ReloadSpeed);
             UIMagazineController.EmptyMagazine();
             _reloading = true;
-            WeaponAudio.StartReload();
+            WeaponAudio.StartReload(Weapon());
 
             float age = 0;
             while (age < duration)
             {
                 age += Time.deltaTime;
                 float t = age / duration;
-                if (t < 0.2f)
-                {
-                    UIMagazineController.EmptyMagazine();
-                }
-                else
-                {
-                    t = (t - 0.2f) / 0.8f;
-                    bool addedRound = UIMagazineController.UpdateReloadTime(t);
-                    if (addedRound) WeaponAudio.AddRound();
-                }
-
+                UIMagazineController.UpdateReloadTime(t);
                 yield return null;
             }
 
@@ -529,7 +497,7 @@ namespace Game.Combat.Player
                 _weaponBehaviour.Reload();
                 OnFireActions.Clear();
                 ActiveSkillController.Stop();
-                WeaponAudio.StopReload();
+                WeaponAudio.StopReload(Weapon());
             }
 
             StopReloading();
@@ -570,8 +538,11 @@ namespace Game.Combat.Player
 
         public void OnShotConnects(CanTakeDamage hit)
         {
-            if (!Player.Attributes.ReloadOnLastRound || !_weaponBehaviour.Empty()) return;
-            InstantReload();
+            bool enemyDead = hit.HealthController.GetCurrentHealth() == 0;
+            bool magazineEmpty = _weaponBehaviour.Empty();
+            if (!enemyDead || !magazineEmpty) return;
+            Player.BrandManager.IncreaseLastRoundKills();
+            if (Player.Attributes.ReloadOnFatalShot) InstantReload();
         }
 
         //MISC
@@ -598,8 +569,6 @@ namespace Game.Combat.Player
         {
             int damage = Mathf.FloorToInt(HealthController.GetMaxHealth() * Player.Attributes.EnemyKillHealthLoss);
             TakeRawDamage(damage, Vector2.zero);
-            if (Random.Range(0f, 1f) >= Player.Attributes.InstantCooldownChance) return;
-            SkillBar.ResetCooldowns();
         }
 
         public void ReduceAdrenaline(float amount)

@@ -32,42 +32,25 @@ namespace SamsHelper.Libraries
 
         private static float Cross(Vector2 a, Vector2 b) => a.x * b.y - a.y * b.x;
 
-        public static Tuple<bool, Vector2> LineIntersection(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
+        public static Vector2? LineIntersection(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
         {
-//            float x1 = a.x;
-//            float x2 = b.x;
-//            float x3 = c.x;
-//            float x4 = d.x;
-//            float y1 = a.y;
-//            float y2 = b.y;
-//            float y3 = c.y;
-//            float y4 = d.y;
-//
-//            float xNumerator = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4);
-//            float yNumerator = (x1 * y2 - y1 * x2) * (x3 - x4) - (y1 - y2) * (x3 * y4 - y3 * x4);
-//            float denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-//            if (denominator == 0) return Tuple.Create(false, Vector2.zero);
-//            return Tuple.Create(true, new Vector2(xNumerator / denominator, yNumerator / denominator));
-
-            Vector2 intersectionPoint = new Vector2();
             Vector2 r = b - a;
             Vector2 s = d - c;
             float rxs = Cross(r, s);
-            if (Mathf.Abs(rxs) < 0.001f) return Tuple.Create(false, intersectionPoint);
+            if (Mathf.Abs(rxs) < 0.001f) return null;
             float t = Cross(c - a, s) / rxs;
             float u = Cross(c - a, r) / rxs;
-            if (0 > t || t > 1 || 0 > u || u > 1) return Tuple.Create(false, intersectionPoint);
-            intersectionPoint = a + t * r;
+            if (0 > t || t > 1 || 0 > u || u > 1) return null;
+            Vector2 intersectionPoint = a + t * r;
             if (intersectionPoint == Vector2.zero) Debug.Log(a + " " + t + " " + r);
-            return Tuple.Create(true, intersectionPoint);
+            return intersectionPoint;
         }
 
-        public static Tuple<bool, Vector2> LineSegmentIntersection(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
+        public static Vector2? LineSegmentIntersection(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
         {
-            Tuple<bool, Vector2> intersection = LineIntersection(a, b, c, d);
-            if (!intersection.Item1) return intersection;
-            if (!DoesPointLieOnLine(a, b, intersection.Item2)) intersection = Tuple.Create(false, intersection.Item2);
-            return intersection;
+            Vector2? intersection = LineIntersection(a, b, c, d);
+            if (intersection == null) return null;
+            return !DoesPointLieOnLine(a, b, intersection.Value) ? null : intersection;
         }
 
         public static Vector2 RandomVectorWithinRange(Vector2 origin, float range)
@@ -307,7 +290,7 @@ namespace SamsHelper.Libraries
                 {
                     Vector2 fromRect = rectVerts[j];
                     Vector2 toRect = Helper.NextElement(j, rectVerts);
-                    if (LineSegmentIntersection(fromCamera, toCamera, fromRect, toRect).Item1) return true;
+                    if (LineSegmentIntersection(fromCamera, toCamera, fromRect, toRect) != null) return true;
                 }
             }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
+using NUnit.Framework;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,16 +17,21 @@ public class UiCompassPulseController : MonoBehaviour
         _pulsePrefab = Resources.Load("Prefabs/Combat/Visuals/Compass Pulse") as GameObject;
     }
 
-    public static void InitialisePulses(int count)
+    public static void InitialisePulses(int max, int current)
     {
         _pulses.ForEach(a => a.Destroy());
         _pulses.Clear();
-        for (int i = 0; i < count; ++i)
+        for (int i = 0; i < max; ++i)
         {
             Pulse newPulse = new Pulse(Helper.InstantiateUiObject(_pulsePrefab, _pulseContent));
             _pulses.Add(newPulse);
         }
+
         _pulses.Reverse();
+        for (int i = 0; i < max; ++i)
+        {
+            if (i > current) _pulses[i].MarkUsed();
+        }
     }
 
     public static void UsePulse(int pulsesRemaining)
@@ -34,7 +40,7 @@ public class UiCompassPulseController : MonoBehaviour
         if (pulsesRemaining == 0) return;
         _pulses[pulsesRemaining - 1].MarkReady();
     }
-    
+
     private class Pulse
     {
         private readonly GameObject _pulseObject;
@@ -48,7 +54,7 @@ public class UiCompassPulseController : MonoBehaviour
             _pulseObject = pulseObject;
             _pulseImage = pulseObject.GetComponent<Image>();
             _glowImage = pulseObject.FindChildWithName<Image>("Glow");
-            _glowImage.color = new Color(1,1,1,0);
+            _glowImage.color = new Color(1, 1, 1, 0);
         }
 
         public void MarkUsed()
@@ -62,7 +68,7 @@ public class UiCompassPulseController : MonoBehaviour
         {
             _glowImage.DOFade(0.5f, 0.5f);
         }
-        
+
         public void Destroy()
         {
             Object.Destroy(_pulseObject);

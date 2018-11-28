@@ -11,7 +11,6 @@ namespace Game.Combat.Generation
         {
             string foodType = ResourceTemplate.GetPlant().Name;
             ResourceItem resource = ResourceTemplate.Create(foodType);
-            resource.Increment(1);
             Item = resource;
             ImageLocation = "Plants/" + foodType;
         }

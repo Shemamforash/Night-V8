@@ -19,7 +19,6 @@ namespace Game.Global
         public readonly string Ingredient2;
         public readonly int Ingredient1Quantity;
         public readonly int Ingredient2Quantity;
-        public const float DurationInHours = 1f;
         private static readonly List<Recipe> _recipes = new List<Recipe>();
         private static bool _loaded;
         public readonly string Name;

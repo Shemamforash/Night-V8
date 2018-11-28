@@ -1,1 +1,56 @@
-<GearList><Gear><Name>Eye of the Tempest</Name><Attribute>ReloadSpeed</Attribute><Bonus>-0.05</Bonus><Description>A blessing of the eternal storm</Description></Gear><Gear><Name>Ocean's Deep</Name><Attribute>Capacity</Attribute><Bonus>0.05</Bonus><Description>May it never run dry</Description></Gear><Gear><Name>Sigil of Darkness</Name><Attribute>Damage</Attribute><Bonus>0.05</Bonus><Description>A spiteful sigil, painful to the touch</Description></Gear><Gear><Name>Godsgaze</Name><Attribute>Accuracy</Attribute><Bonus>0.05</Bonus><Description>All seeing, all knowing</Description></Gear><Gear><Name>Grace of Time</Name><Attribute>FireRate</Attribute><Bonus>0.05</Bonus><Description>Marching ever onwards</Description></Gear><Gear><Name>Heavenly Amulet</Name><Attribute>Handling</Attribute><Bonus>0.05</Bonus><Description>Be stable, never falter</Description></Gear><Gear><Name>Embers of the Fire God</Name><Attribute>BurnChance</Attribute><Bonus>0.025</Bonus><Description>The forge embers can never be quenched</Description></Gear><Gear><Name>Taint of the Abyss</Name><Attribute>DecayChance</Attribute><Bonus>0.025</Bonus><Description>Only dark things are found in dark places</Description></Gear><Gear><Name>Marrow of Cursed Bones</Name><Attribute>SicknessChance</Attribute><Bonus>0.025</Bonus><Description>Rotten souls leave restless remains</Description></Gear></GearList>
+<GearList>
+	<Gear>
+		<Name>Eye of the Tempest</Name>
+		<Attribute>ReloadSpeed</Attribute>
+		<Bonus>-0.05</Bonus>
+		<Description>A blessing of the eternal storm</Description>
+	</Gear>
+	<Gear>
+		<Name>Ocean's Deep</Name>
+		<Attribute>Capacity</Attribute>
+		<Bonus>0.05</Bonus>
+		<Description>May it never run dry</Description>
+	</Gear>
+	<Gear>
+		<Name>Sigil of Darkness</Name>
+		<Attribute>Damage</Attribute>
+		<Bonus>0.05</Bonus>
+		<Description>A spiteful sigil, painful to the touch</Description>
+	</Gear>
+	<Gear>
+		<Name>Godsgaze</Name>
+		<Attribute>Accuracy</Attribute>
+		<Bonus>0.05</Bonus>
+		<Description>All seeing, all knowing</Description>
+	</Gear>
+	<Gear>
+		<Name>Grace of Time</Name>
+		<Attribute>FireRate</Attribute>
+		<Bonus>0.05</Bonus>
+		<Description>Marching ever onwards</Description>
+	</Gear>
+	<Gear>
+		<Name>Heavenly Amulet</Name>
+		<Attribute>Handling</Attribute>
+		<Bonus>0.05</Bonus>
+		<Description>Be stable, never falter</Description>
+	</Gear>
+	<Gear>
+		<Name>Embers of the Fire God</Name>
+		<Attribute>BurnChance</Attribute>
+		<Bonus>0.025</Bonus>
+		<Description>The forge embers can never be quenched</Description>
+	</Gear>
+	<Gear>
+		<Name>Taint of the Abyss</Name>
+		<Attribute>DecayChance</Attribute>
+		<Bonus>0.025</Bonus>
+		<Description>Only dark things are found in dark places</Description>
+	</Gear>
+	<Gear>
+		<Name>Marrow of Cursed Bones</Name>
+		<Attribute>SicknessChance</Attribute>
+		<Bonus>0.025</Bonus>
+		<Description>Rotten souls leave restless remains</Description>
+	</Gear>
+</GearList>

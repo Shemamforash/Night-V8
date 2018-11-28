@@ -1,24 +1,23 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Game.Combat.Generation;
+using Game.Gear.Armour;
+using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies.Nightmares
 {
-    public class AnimalBehaviour : UnarmedBehaviour
+    public abstract class AnimalBehaviour : UnarmedBehaviour
     {
-        private bool Alerted;
+        protected bool Alerted;
         private bool Fleeing;
-        private Cell _fleeTarget;
-        private float DetectionRange = 6f;
-        private const float LoseTargetRange = 10f;
-        protected float WanderDistance = 3;
+        protected const float DetectionRange = 6f;
+        private const float WanderDistance = 3;
         private Cell _originCell;
-        
-        protected virtual void OnAlert()
-        {
-        }
+        private Rigidbody2D _rigidBody2d;
 
         private void Wander(bool resetOrigin)
         {
@@ -35,27 +34,17 @@ namespace Game.Combat.Enemies.Nightmares
             };
         }
 
-        public void Alert(bool alertOthers)
-        {
-            if (Alerted) return;
-            Alerted = true;
-            OnAlert();
-            if (!alertOthers) return;
-            CombatManager.Enemies().ForEach(e =>
-            {
-                AnimalBehaviour enemy = e as AnimalBehaviour;
-                if (enemy == this || enemy == null) return;
-                float distance = TargetTransform().Distance(enemy.transform);
-                if (distance > LoseTargetRange) return;
-                enemy.Alert(false);
-            });
-        }
-
-        private void UpdateDistanceToTarget()
+        protected virtual void UpdateDistanceToTarget()
         {
             float distance = DistanceToTarget();
-            if (Alerted && distance > LoseTargetRange) Wander(true);
-            else if (distance < DetectionRange && !Alerted) Alert(true);
+            if (Alerted && distance > DetectionRange) Wander(true);
+        }
+
+        protected override void UpdateRotation()
+        {
+            Vector2 velocity = _rigidBody2d.velocity;
+            float targetRotation = AdvancedMaths.AngleFromUp(Vector2.zero, velocity);
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, targetRotation));
         }
 
         private void DrawLine()
@@ -71,7 +60,18 @@ namespace Game.Combat.Enemies.Nightmares
         public override void Initialise(Enemy e)
         {
             base.Initialise(e);
-            DetectionRange = 0f;
+            _rigidBody2d = GetComponent<Rigidbody2D>();
+            Wander(true);
+            CreateArmour();
+        }
+
+        private void CreateArmour()
+        {
+            int minArmour = Mathf.FloorToInt(WorldState.Difficulty() / 5f);
+            int maxArmour = minArmour + 3;
+            if (minArmour > 10) minArmour = 10;
+            if (maxArmour > 10) maxArmour = 10;
+            ArmourController.AutoFillSlots(Random.Range(minArmour, maxArmour));
         }
 
         public override void MyUpdate()
@@ -83,23 +83,25 @@ namespace Game.Combat.Enemies.Nightmares
 
         private void CheckToFade()
         {
-            if (!Fleeing) return;
-            if (!CurrentCell().IsEdgeCell) return;
-            StartCoroutine(FleeArea());
+            bool fade = CurrentCell().OutOfRange;
+            fade |= Fleeing && CurrentCell().IsEdgeCell;
+            if (!fade) return;
+            StartCoroutine(FadeOut());
         }
 
-        protected void Flee(Cell target)
+        public abstract void Alert(bool alertOthers);
+
+        protected override void TakeDamage(int damage, Vector2 direction)
         {
-            _fleeTarget = target;
-            MoveBehaviour.GoToCell(_fleeTarget);
-            CurrentAction = () => StartCoroutine(FleeArea());
+            base.TakeDamage(damage, direction);
+            Alert(true);
         }
 
         protected override void UpdateTargetCell()
         {
         }
 
-        private IEnumerator FleeArea()
+        private IEnumerator FadeOut()
         {
             Fleeing = true;
             SpriteRenderer sprite = GetComponent<SpriteRenderer>();

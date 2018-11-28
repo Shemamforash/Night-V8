@@ -20,14 +20,14 @@ namespace Game.Global
         public static AudioClip[] ArmourBreakClips;
         public static AudioClip[] FootstepClips;
         public static AudioClip[] DayAudio;
-        public static AudioClip Ambient, Night;
-        public static AudioClip[] BulletLoad;
+        public static AudioClip Ambient, Night, Campfire, TakeItem;
         public static AudioClip LightRain, MediumRain, HeavyRain;
         public static AudioClip LightWind, MediumWind, HeavyWind;
-        public static AudioClip ClipIn, ClipOut, BrawlerSlash;
+        public static AudioClip PistolClipIn, PistolClipOut, ShotgunClipIn, ShotgunClipOut, RifleClipIn, RifleClipOut, SMGClipIn, SMGClipOut, LMGClipIn, LMGClipOut;
+        public static AudioClip BrawlerSlash;
         public static AudioClip SimmavA, SimmavB, SimmavC, SimmavD;
         public static AudioClip StandardExplosion, FireExplosion, ShatterExplosion;
-        public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Craft, OpenJournal, CloseJournal, ListScroll;
+        public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Craft, OpenJournal, CloseJournal;
         public static AudioClip EatWater, EatMeat, EatPlant, EatPotion;
         private static readonly List<AssetBundle> _loadedBundles = new List<AssetBundle>();
         private static bool _loaded;
@@ -95,12 +95,19 @@ namespace Game.Global
             yield return StartCoroutine(LoadAllClipsFromBundle(a => DryFireClips = a, "combat/dryfire"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => ArmourBreakClips = a, "combat/armourbreak"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => FootstepClips = a, "combat/footsteps"));
-            yield return StartCoroutine(LoadAllClipsFromBundle(a => BulletLoad = a, "combat/reload/bullets"));
             yield return StartCoroutine(LoadClip(a => StandardExplosion = a, "combat/explosions", "standard explosion"));
             yield return StartCoroutine(LoadClip(a => FireExplosion = a, "combat/explosions", "fire explosion"));
             yield return StartCoroutine(LoadClip(a => ShatterExplosion = a, "combat/explosions", "shatter explosion"));
-            yield return StartCoroutine(LoadClip(a => ClipIn = a, "combat/reload/clip", "clipin"));
-            yield return StartCoroutine(LoadClip(a => ClipOut = a, "combat/reload/clip", "clipout"));
+            yield return StartCoroutine(LoadClip(a => PistolClipIn = a, "combat/reload/clip", "Pistol Clip In"));
+            yield return StartCoroutine(LoadClip(a => PistolClipOut = a, "combat/reload/clip", "Pistol Clip Out"));
+            yield return StartCoroutine(LoadClip(a => ShotgunClipIn = a, "combat/reload/clip", "Shotgun Clip In"));
+            yield return StartCoroutine(LoadClip(a => ShotgunClipOut = a, "combat/reload/clip", "Shotgun Clip Out"));
+            yield return StartCoroutine(LoadClip(a => RifleClipIn = a, "combat/reload/clip", "Rifle Clip In"));
+            yield return StartCoroutine(LoadClip(a => RifleClipOut = a, "combat/reload/clip", "Rifle Clip Out"));
+            yield return StartCoroutine(LoadClip(a => SMGClipIn = a, "combat/reload/clip", "SMG Clip In"));
+            yield return StartCoroutine(LoadClip(a => SMGClipOut = a, "combat/reload/clip", "SMG Clip Out"));
+            yield return StartCoroutine(LoadClip(a => LMGClipIn = a, "combat/reload/clip", "LMG Clip In"));
+            yield return StartCoroutine(LoadClip(a => LMGClipOut = a, "combat/reload/clip", "LMG Clip Out"));
             yield return StartCoroutine(LoadClip(a => BrawlerSlash = a, "combat/misc", "Brawler Slash"));
 
             Debug.Log("loading weather audio");
@@ -123,8 +130,8 @@ namespace Game.Global
 
             Debug.Log("loading misc audio");
             yield return StartCoroutine(LoadClip(a => TabChange = a, "misc/inventories", "Tab Change"));
-            //todo
-            yield return StartCoroutine(LoadClip(a => EquipAccessory = a, "misc/inventories", "Pickup"));
+            yield return StartCoroutine(LoadClip(a => TakeItem = a, "misc/inventories", "Item Take"));
+            yield return StartCoroutine(LoadClip(a => EquipAccessory = a, "misc/inventories", "Equip Accessory"));
             yield return StartCoroutine(LoadClip(a => EquipArmour = a, "misc/inventories", "Equip Armour"));
             yield return StartCoroutine(LoadClip(a => EquipWeapon = a, "misc/inventories", "Equip Weapon"));
             yield return StartCoroutine(LoadClip(a => Craft = a, "misc/inventories", "Craft"));
@@ -134,7 +141,7 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => EatPlant = a, "misc/inventories", "Eat Plant"));
             yield return StartCoroutine(LoadClip(a => EatWater = a, "misc/inventories", "Eat Water"));
             yield return StartCoroutine(LoadClip(a => EatPotion = a, "misc/inventories", "Eat Potion"));
-            yield return StartCoroutine(LoadClip(a => ListScroll = a, "misc/inventories", "List Scroll"));
+            yield return StartCoroutine(LoadClip(a => Campfire = a, "campfire", "Campfire"));
 
 
             watch.Stop();

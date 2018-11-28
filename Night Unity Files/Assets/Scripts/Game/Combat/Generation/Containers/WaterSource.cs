@@ -8,7 +8,7 @@ namespace Game.Combat.Generation
     {
         public WaterSource(Vector2 position) : base(position)
         {
-            int capacity = Random.Range(0, 3) + 1;
+            int capacity = Random.Range(0, 3);
             ResourceItem resource = ResourceTemplate.GetWater().Create();
             if (EnvironmentManager.BelowFreezing() && Item.Name == "Water")
                 resource = ResourceTemplate.Create("Ice");

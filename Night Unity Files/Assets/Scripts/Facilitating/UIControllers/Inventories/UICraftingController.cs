@@ -93,18 +93,15 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         {
             Recipe recipe = (Recipe) o;
             string productString = recipe.ProductQuantity > 1 ? recipe.Name + " x" + recipe.ProductQuantity : recipe.Name;
-            string durationString = WorldState.TimeToHours((int) (Recipe.DurationInHours * WorldState.MinutesPerHour));
-            productString += " (" + durationString + ")";
-            LeftText.SetText("");
+            if (recipe.RecipeType == RecipeType.Building) productString += " (Built " + recipe.Built() + ")";
+            LeftText.SetText(productString);
 
-            if (recipe.RecipeType == RecipeType.Building) LeftText.SetText("Built " + recipe.Built());
             bool canAfford = recipe.CanCraft();
             bool canCraft = CharacterManager.SelectedCharacter.TravelAction.AtHome();
-
-            if (!canCraft) productString += " - Cannot Craft When Travelling";
-            else if (!canAfford) productString += " - Insufficient Resources";
-
-            CentreText.SetText(productString);
+            string affordString = "";
+            if (!canCraft) affordString += "Cannot Craft When Travelling";
+            else if (!canAfford) affordString += "Insufficient Resources";
+            CentreText.SetText(affordString);
 
             string ingredient1String = recipe.Ingredient1Quantity > 1 ? recipe.Ingredient1 + " x" + recipe.Ingredient1Quantity : recipe.Ingredient1;
             if (recipe.Ingredient1 == "None") ingredient1String = "";

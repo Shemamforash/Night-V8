@@ -16,7 +16,7 @@ namespace Game.Combat.Generation
     //place items
     //place echo
     //place obstacles
-    
+
     public class Ruins : RegionGenerator
     {
         private RuinNode[,] nodes;
@@ -192,7 +192,7 @@ namespace Game.Combat.Generation
 
             CarvePassages(0, 0);
             List<Vector2> islandPositions = new List<Vector2>();
-            if(ShouldPlaceShrine()) islandPositions.Add(Vector2.zero);
+            if (ShouldPlaceShrine()) islandPositions.Add(Vector2.zero);
             for (int i = 0; i < Random.Range(4, 8); ++i)
             {
                 Vector2? potentialPosition = FindAndRemoveValidPosition(0.4f, true);
@@ -200,16 +200,17 @@ namespace Game.Combat.Generation
                 Vector2 position = potentialPosition.Value;
                 islandPositions.Add(position);
             }
+
             CreateIslands(islandPositions);
             while (_nodesWithWalls.Count > 0) CombineWalls();
         }
-        
+
         protected override void Generate()
         {
             PlaceShrine();
             PlaceWalls();
             PlaceItems();
-            GenerateTinyRocks(Random.Range(100, 300));
+            GenerateTinyRocks(Random.Range(50, 125));
         }
 
 //get random cell with a wall
@@ -359,25 +360,23 @@ namespace Game.Combat.Generation
             {
                 Vector2 current = _finalShape[i];
                 Vector2 next = Helper.NextElement(i, _finalShape);
-                //2 points per unit
+                //1 points per unit
                 float distance = Vector2.Distance(current, next);
-                int noPoints = Mathf.CeilToInt(distance * 2);
+                int noPoints = Mathf.CeilToInt(distance);
                 List<float> points = new List<float>();
                 while (noPoints > 0)
                 {
                     points.Add(Random.Range(0.1f, 0.9f));
                     --noPoints;
                 }
-                points.Sort((p1,p2) => p1.CompareTo(p2));
+
+                points.Sort((p1, p2) => p1.CompareTo(p2));
                 _tempFinal.Add(current);
-                points.ForEach(p =>
-                {
-                    _tempFinal.Add(AdvancedMaths.PointAlongLine(current, next, p));
-                });
+                points.ForEach(p => { _tempFinal.Add(AdvancedMaths.PointAlongLine(current, next, p)); });
             }
 
             _finalShape = _tempFinal;
-            
+
             for (int i = 0; i < _finalShape.Count; i++)
             {
                 _finalShape[i] += Mathf.PerlinNoise(_finalShape[i].x, _finalShape[i].y) * 0.25f * Vector2.one;
@@ -517,11 +516,11 @@ namespace Game.Combat.Generation
             }
         }
 
-        
+
         private void CreateIslands(List<Vector2> positions)
         {
             HashSet<RuinNode> nodesToKeep = new HashSet<RuinNode>();
-            foreach(Vector2 position in positions)
+            foreach (Vector2 position in positions)
             {
                 float range = Random.Range(5, 10);
                 for (int x = 0; x < WidthInCells; ++x)

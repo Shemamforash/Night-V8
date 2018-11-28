@@ -17,6 +17,7 @@ namespace Game.Global
         {
             _text = GetComponent<TextMeshProUGUI>();
             _glow = gameObject.FindChildWithName<Image>("Glow");
+            _glow.SetAlpha(0);
         }
 
         public void UpdateTab(string resourceName, int quantity)
@@ -28,6 +29,9 @@ namespace Game.Global
             }
 
             gameObject.SetActive(true);
+            Vector3 position = transform.position;
+            position.z = 0;
+            transform.position = position;
 
             if (quantity == _lastValue) return;
             _text.text = quantity + " " + resourceName;

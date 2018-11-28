@@ -14,7 +14,6 @@ namespace Game.Combat.Ui
         private static int _capacity;
         private static BaseWeaponBehaviour _weapon;
         private static bool _empty;
-        private static int _oldCapacity;
 
         public void Awake()
         {
@@ -40,17 +39,12 @@ namespace Game.Combat.Ui
             if (_empty) return;
             foreach (Ammo ammo in MagazineAmmo) ammo.SetUnspent(false);
             _empty = true;
-            _oldCapacity = 0;
         }
 
-        public static bool UpdateReloadTime(float time)
+        public static void UpdateReloadTime(float time)
         {
-            bool increased = false;
             int newCapacity = (int) (_capacity * time);
-            if (_oldCapacity != newCapacity) increased = true;
             UpdateMagazine(newCapacity);
-            _oldCapacity = newCapacity;
-            return increased;
         }
 
         public static void SetWeapon(BaseWeaponBehaviour weapon)

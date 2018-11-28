@@ -14,15 +14,11 @@ public class RadianceController : MonoBehaviour, ICombatEvent
     private int _radianceAvailable;
     private static RadianceController _instance;
     private bool _activated;
-    private static bool _skillWasUsed;
-    private static bool _shotFired;
 
     public void Awake()
     {
         _instance = this;
         _radianceAvailable = Inventory.GetResourceQuantity("Radiance");
-        _skillWasUsed = false;
-        _shotFired = false;
     }
 
     private class RadianceBehaviour : MonoBehaviour
@@ -65,20 +61,7 @@ public class RadianceController : MonoBehaviour, ICombatEvent
         stoneObject.AddComponent<RadianceBehaviour>();
         stoneObject.transform.position = transform.position;
         _activated = true;
-        if (!_shotFired && !_skillWasUsed)
-            PlayerCombat.Instance.Player.BrandManager.IncreaseBattlesNoSkills();
     }
-
-    public static void SetSkillWasUsed()
-    {
-        _skillWasUsed = true;
-    }
-
-    public static void SetHasFiredShot()
-    {
-        _shotFired = true;
-    }
-
     public static RadianceController Instance()
     {
         return _instance;

@@ -16,9 +16,7 @@ namespace Facilitating.UIControllers
         {
             for (int i = 0; i < 20; ++i)
             {
-                string markerName = "Marker";
-                if (i != 0) markerName += " (" + i + ")";
-                Image primaryMarker = gameObject.FindChildWithName<Image>(markerName);
+                Image primaryMarker = gameObject.transform.GetChild(i).FindChildWithName<Image>("Outline");
                 _markers.Add(new Marker(primaryMarker));
             }
         }
@@ -27,13 +25,15 @@ namespace Facilitating.UIControllers
         {
             Inactive,
             Faded,
-            Active
+            Active,
+            ActiveOffset
         }
 
         private class Marker
         {
             private MarkerState _state;
             private readonly Image _image;
+            private readonly GameObject _markerParent;
             private bool _stateChanged;
 
             public Marker(Image image)
@@ -41,11 +41,12 @@ namespace Facilitating.UIControllers
                 _image = image;
                 _state = MarkerState.Inactive;
                 _image.color = UiAppearanceController.InvisibleColour;
+                _markerParent = _image.transform.parent.gameObject;
             }
 
             public void SetState(MarkerState state)
             {
-                _image.gameObject.SetActive(state != MarkerState.Inactive);
+                _markerParent.SetActive(state != MarkerState.Inactive);
                 if (state == _state)
                 {
                     _stateChanged = false;
@@ -59,20 +60,38 @@ namespace Facilitating.UIControllers
             public void UpdateColor()
             {
                 if (!_stateChanged) return;
-                Color c = _state == MarkerState.Faded ? UiAppearanceController.InvisibleColour : Color.white;
+                Color c;
+                switch (_state)
+                {
+                    case MarkerState.Faded:
+                        c = UiAppearanceController.InvisibleColour;
+                        break;
+                    case MarkerState.Active:
+                        c = Color.white;
+                        break;
+                    default:
+                        c = Color.red;
+                        break;
+                }
+
                 _image.DOColor(c, 1f).SetUpdate(UpdateType.Normal, true);
             }
         }
 
-        public void SetValue(float maxF, float currentF)
+        public void SetValue(float maxF, float currentF, float offsetF)
         {
             int max = Mathf.CeilToInt(maxF);
             int current = Mathf.CeilToInt(currentF);
+            int offset = Mathf.CeilToInt(offsetF);
+            if (current + offset > max) offset -= current + offset - max;
+
             for (int i = 0; i < 20; ++i)
             {
                 MarkerState newState;
                 if (i < current)
                     newState = MarkerState.Active;
+                else if (i < current + offset)
+                    newState = MarkerState.ActiveOffset;
                 else if (i < max)
                     newState = MarkerState.Faded;
                 else

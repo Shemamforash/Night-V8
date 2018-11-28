@@ -48,7 +48,7 @@ namespace Game.Combat.Enemies
             MovementController.AddForce(forceDir);
         }
 
-        private void UpdateRotation()
+        protected virtual void UpdateRotation()
         {
             float targetRotation;
             if (GetTarget() != null) targetRotation = AdvancedMaths.AngleFromUp(transform.position, TargetPosition());
@@ -78,7 +78,9 @@ namespace Game.Combat.Enemies
         private void SetPosition()
         {
             transform.SetParent(GameObject.Find("World").transform);
-            transform.position = PathingGrid.GetCellNearMe(PlayerCombat.Instance.transform.position, 20f, 7f).Position;
+            Cell c = PathingGrid.GetCellNearMe(PlayerCombat.Instance.transform.position, 10f, 7f);
+            if (c == null) c = PathingGrid.GetCellNearMe(PlayerCombat.Instance.transform.position, 20f, 7f);
+            transform.position = c.Position;
         }
 
         private void AssignSprite()

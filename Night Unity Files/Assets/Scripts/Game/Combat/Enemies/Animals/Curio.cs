@@ -1,4 +1,5 @@
-﻿using Game.Combat.Enemies.Nightmares;
+﻿using System.Collections.Generic;
+using Game.Combat.Enemies.Nightmares;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
@@ -13,14 +14,24 @@ namespace Game.Combat.Enemies.Animals
             base.Initialise(enemy);
             CurrentAction = WaitForPlayer;
         }
-        
+
+        public override void Alert(bool alertOthers)
+        {
+            Move();
+        }
+
+        private void Move()
+        {
+            Vector2 dir = (transform.position - PlayerCombat.Instance.transform.position).normalized;
+            List<Cell> possibleCells = PathingGrid.GetCellsInFrontOfMe(CurrentCell(), dir, 0.5f);
+            Cell target = possibleCells.Count == 0 ? PathingGrid.GetCellNearMe(CurrentCell(), 1f, 0.5f) : possibleCells.RandomElement();
+            MoveBehaviour.GoToCell(target);
+        }
+
         private void WaitForPlayer()
         {
             if (Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position) > 2) return;
-            Vector2 dir = (transform.position - PlayerCombat.Instance.transform.position).normalized;
-            Cell target = PathingGrid.GetCellsInFrontOfMe(CurrentCell(), dir, 0.5f).RandomElement();
-            if (target == null) target = PathingGrid.GetCellNearMe(CurrentCell(), 1f, 0.5f);
-            MoveBehaviour.GoToCell(target);
+            Move();
             CurrentAction = WaitForPlayer;
         }
     }

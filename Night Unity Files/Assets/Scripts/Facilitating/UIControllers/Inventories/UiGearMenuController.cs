@@ -190,19 +190,13 @@ namespace Facilitating.UIControllers
 
         public static void PlayAudio(AudioClip clip)
         {
-            _instance._audioPool.Create().Play(clip);
+            _instance._audioPool.Create().Play(clip, Random.Range(0.9f, 1f), Random.Range(0.8f, 1f));
         }
 
         public static void PlayTabAudio()
         {
-            _instance._audioPool.Create().Play(AudioClips.TabChange, Random.Range(0.9f, 0.5f), Random.Range(0.9f, 1f));
+            _instance._audioPool.Create().Play(AudioClips.TabChange, Random.Range(0.9f, 1f), Random.Range(0.9f, 1f));
         }
-
-        public static void PlayScrollAudio()
-        {
-            _instance._audioPool.Create().Play(AudioClips.ListScroll, Random.Range(0.25f, 0.3f), Random.Range(0.9f, 1f));
-        }
-
         public static void ShowMeditateMenu()
         {
             SelectTab(6);

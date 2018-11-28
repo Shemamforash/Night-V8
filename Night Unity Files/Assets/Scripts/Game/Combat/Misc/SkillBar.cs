@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Facilitating.UIControllers;
 using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
@@ -16,16 +15,13 @@ namespace Game.Combat.Misc
         private static List<CooldownController> CooldownControllers;
         private static List<UISkillCostController> CostControllers;
         private static float _cooldownModifier;
-        private static SkillBar _instance;
-        private static bool _finishEarly;
-        private bool SkillsAreFree = true;
+        private static bool SkillsAreFree;
         private static bool _skillsReady;
         private static float _cooldownRemaining;
         private static float _duration;
 
         public void Awake()
         {
-            _instance = this;
             CooldownControllers = new List<CooldownController>();
             CostControllers = new List<UISkillCostController>();
 
@@ -48,14 +44,12 @@ namespace Game.Combat.Misc
         public void Update()
         {
             if (_skillsReady) return;
-            if (_finishEarly) _cooldownRemaining = -1;
             _cooldownRemaining -= Time.deltaTime;
             if (_cooldownRemaining < 0)
             {
                 _cooldownRemaining = 0;
                 UpdateCooldownControllers(1);
                 _skillsReady = true;
-                _finishEarly = false;
                 return;
             }
 
@@ -87,6 +81,7 @@ namespace Game.Combat.Misc
             }
 
 #if UNITY_EDITOR
+            SkillsAreFree = true;
             characterSkillOne = player.CharacterSkillOne;
             characterSkillTwo = player.CharacterSkillTwo;
 
@@ -131,8 +126,9 @@ namespace Game.Combat.Misc
             if (!_skillsReady) return;
             if (TryLockSkill(skillNo)) return;
             bool freeSkill = IsSkillFree();
-            if (!_skills[skillNo].Activate(freeSkill || _instance.SkillsAreFree)) return;
+            if (!_skills[skillNo].Activate(freeSkill || SkillsAreFree)) return;
             TutorialManager.TryOpenTutorial(9);
+            if (freeSkill) return;
             StartCooldown(_skills[skillNo].AdrenalineCost());
         }
 
@@ -141,11 +137,6 @@ namespace Game.Combat.Misc
             _skillsReady = false;
             _duration = duration * _cooldownModifier;
             _cooldownRemaining = _duration;
-        }
-
-        public static void ResetCooldowns()
-        {
-            _finishEarly = true;
         }
     }
 }

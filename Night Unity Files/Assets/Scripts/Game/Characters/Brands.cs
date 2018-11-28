@@ -8,12 +8,12 @@ namespace Game.Characters.Brands
 
         protected override void OnSucceed()
         {
-            Player.Attributes.ChangeFettleMax((int) SuccessModifier);
+            Player.Attributes.ChangeFettleMax(1);
         }
 
         protected override void OnFail()
         {
-            Player.Attributes.ChangeFettleMax((int) FailModifier);
+            Player.Attributes.ChangeFettleMax(-1);
         }
 
         protected override string GetProgressSubstring()
@@ -30,12 +30,12 @@ namespace Game.Characters.Brands
 
         protected override void OnSucceed()
         {
-            Player.Attributes.ChangeGritMax((int) SuccessModifier);
+            Player.Attributes.ChangeGritMax(1);
         }
 
         protected override void OnFail()
         {
-            Player.Attributes.ChangeGritMax((int) FailModifier);
+            Player.Attributes.ChangeGritMax(-1);
         }
 
         protected override string GetProgressSubstring()
@@ -52,12 +52,12 @@ namespace Game.Characters.Brands
 
         protected override void OnSucceed()
         {
-            Player.Attributes.ChangeFocusMax((int) SuccessModifier);
+            Player.Attributes.ChangeFocusMax(1);
         }
 
         protected override void OnFail()
         {
-            Player.Attributes.ChangeFocusMax((int) FailModifier);
+            Player.Attributes.ChangeFocusMax(-1);
         }
 
         protected override string GetProgressSubstring()
@@ -74,12 +74,12 @@ namespace Game.Characters.Brands
 
         protected override void OnSucceed()
         {
-            Player.Attributes.ChangeWillMax((int) SuccessModifier);
+            Player.Attributes.ChangeWillMax(1);
         }
 
         protected override void OnFail()
         {
-            Player.Attributes.ChangeWillMax((int) FailModifier);
+            Player.Attributes.ChangeWillMax(-1);
         }
 
         protected override string GetProgressSubstring()
@@ -184,7 +184,7 @@ namespace Game.Characters.Brands
 
         protected override void OnSucceed()
         {
-            Player.Attributes.ReloadOnLastRound = true;
+            Player.Attributes.ReloadOnFatalShot = true;
         }
 
         protected override void OnFail()

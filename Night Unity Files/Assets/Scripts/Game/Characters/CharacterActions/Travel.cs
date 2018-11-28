@@ -77,6 +77,7 @@ namespace Game.Characters.CharacterActions
             bool justDiscovered = CurrentRegion.Discover();
             if (justDiscovered) PlayerCharacter.BrandManager.IncreaseRegionsExplored();
             CombatManager.SetCurrentRegion(CurrentRegion);
+            CharacterManager.SelectedCharacter = PlayerCharacter;
             SceneChanger.GoToCombatScene();
         }
 

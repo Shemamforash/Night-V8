@@ -70,17 +70,21 @@ namespace Fastlights
         private Tuple<bool, Vector2, float> _intersection;
 
         private readonly List<Vector2> meshVertices = new List<Vector2>();
+        private Vector2 dirToVertex, lineSegmentEnd, intersectPoint;
+        private float nearestDistance;
+        private bool didIntersect;
+        private int edgeCount;
 
         private void CalculateNearestIntersection(FLVertex target, List<FLEdge> edges)
         {
-            Vector2 dirToVertex = (target.InRangePosition - _position).normalized;
-            Vector2 lineSegmentEnd = _position + dirToVertex * Radius;
-            Vector2 intersectPoint = lineSegmentEnd * 2;
+            dirToVertex = (target.InRangePosition - _position).normalized;
+            lineSegmentEnd = _position + dirToVertex * Radius;
+            intersectPoint = lineSegmentEnd * 2;
 
-            float nearestDistance = float.MaxValue;
-            bool didIntersect = false;
+            nearestDistance = float.MaxValue;
+            didIntersect = false;
 
-            int edgeCount = edges.Count;
+            edgeCount = edges.Count;
 
             for (int i = 0; i < edgeCount; i++)
             {
@@ -102,15 +106,15 @@ namespace Fastlights
                 if (fromAngle > tempRayAngle && toAngle > tempRayAngle) continue;
                 if (fromAngle < tempRayAngle && toAngle < tempRayAngle) continue;
 
-                Tuple<bool, Vector2> tempIntersect = AdvancedMaths.LineIntersection(_position, lineSegmentEnd, e.From.InRangePosition, e.To.InRangePosition);
-                if (!tempIntersect.Item1) continue;
+                Vector2? tempIntersect = AdvancedMaths.LineIntersection(_position, lineSegmentEnd, e.From.InRangePosition, e.To.InRangePosition);
+                if (tempIntersect == null) continue;
 
                 didIntersect = true;
 
-                float distance = Vector2.SqrMagnitude(_position - tempIntersect.Item2);
+                float distance = Vector2.SqrMagnitude(_position - tempIntersect.Value);
                 if (distance >= nearestDistance) continue;
                 nearestDistance = distance;
-                intersectPoint = tempIntersect.Item2;
+                intersectPoint = tempIntersect.Value;
             }
 
             _intersectionExists = didIntersect;
@@ -324,7 +328,9 @@ namespace Fastlights
         {
             FollowTarget();
             Vector2 newPosition = new Vector2(transform.position.x, transform.position.y);
+            Stopwatch watch = Stopwatch.StartNew();
             UpdateLight(newPosition);
+            watch.Restart();
             UpdateColour();
             _hasUpdated = false;
         }

@@ -107,6 +107,7 @@ namespace Game.Combat.Generation
         public void Activate()
         {
             ContainerController.Take();
+            PlayerCombat.Instance.WeaponAudio.PlayTakeItem();
             StartCoroutine(Fade());
         }
     }

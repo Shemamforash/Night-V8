@@ -6,5 +6,9 @@
         {
             DisplayName = "Resting";
         }
+
+        protected override void OnClick()
+        {
+        }
     }
 }

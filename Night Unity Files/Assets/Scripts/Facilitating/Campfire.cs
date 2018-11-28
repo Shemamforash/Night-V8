@@ -118,9 +118,9 @@ namespace Facilitating
             }
 
             TryAddFuel();
-            _crackling.FadeOut(6f);
             _fireLevel -= 0.01f;
             if (_fireLevel > 0) return;
+            _crackling.FadeOut(1f);
             _fireLevel = 0;
         }
 

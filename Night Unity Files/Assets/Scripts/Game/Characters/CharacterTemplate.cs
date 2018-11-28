@@ -22,7 +22,7 @@ namespace Game.Characters
             templates.Add(this);
         }
 
-        private static CharacterClass StringToClass(string className)
+        public static CharacterClass StringToClass(string className)
         {
             if (_characterClasses.Count == 0)
             {
