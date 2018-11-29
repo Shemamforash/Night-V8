@@ -3,25 +3,57 @@
 		<SectionNumber>1</SectionNumber>
 		<PartNumber>1</PartNumber>
 		<Title>Exploration</Title>
-		<MinOffset>865,495</MinOffset>
-		<MaxOffset>865,465</MaxOffset>
-		<Text>To survive the harsh world of Beyond the Veil you will need to explore your surroundings. Use the explore action to open the map.</Text>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>Exploration is the key to survival in Beyond The Veil. By exploring you can discover numerous regions, each with their own obstacles.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>1</SectionNumber>
+		<PartNumber>2</PartNumber>
+		<Title>Temples</Title>
+		<MinOffset>520,145</MinOffset>
+		<MaxOffset>520,865</MaxOffset>
+		<Text>All Temple regions must be visited and cleansed before the Gate will open, and allow you to travel into The Veil.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>1</SectionNumber>
+		<PartNumber>3</PartNumber>
+		<Title>Actions</Title>
+		<MinOffset>700,520</MinOffset>
+		<MaxOffset>700,340</MaxOffset>
+		<Text>Characters have a number of actions they can perform. Some actions are available only at certain times, for example you cannot use the Craft action unless the character is at the gate.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>1</SectionNumber>
+		<PartNumber>4</PartNumber>
+		<Title>Saving Progress</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>Remember- your progress must be saved manually. Beyond the Veil uses only a single save slot, so be wise when saving your progress as there is no turning back time.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>1</SectionNumber>
+		<PartNumber>5</PartNumber>
+		<Title>Start Exploring</Title>
+		<MinOffset>860,530</MinOffset>
+		<MaxOffset>860,495</MaxOffset>
+		<Text>Use the Explore action to begin your search for the Temples.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>2</SectionNumber>
 		<PartNumber>1</PartNumber>
 		<Title>The Map</Title>
-		<MinOffset>810,375</MinOffset>
-		<MaxOffset>810,375</MaxOffset>
+		<MinOffset>780,425</MinOffset>
+		<MaxOffset>780,360</MaxOffset>
 		<Text>Characters can discover new regions and travel to existing ones via the map. The map shows all visited and reachable regions. At the centre of the map is your camp- the gate.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>2</SectionNumber>
 		<PartNumber>2</PartNumber>
 		<Title>Travelling</Title>
-		<MinOffset>808,860</MinOffset>
-		<MaxOffset>808,30</MaxOffset>
-		<Text>Travelling to regions requires an amount of grit, shown below the region name. Returning to camp never consumes grit. More distant regions consume more grit.</Text>
+		<MinOffset>650,905</MinOffset>
+		<MaxOffset>650,25</MaxOffset>
+		<Text>Travelling to regions requires grit, shown below the region name. Returning to the gate never consumes grit. The further the region, the more grit required to travel.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>3</SectionNumber>
@@ -43,7 +75,7 @@
 		<SectionNumber>3</SectionNumber>
 		<PartNumber>3</PartNumber>
 		<Title>Adrenaline</Title>
-		<MinOffset>895,885</MinOffset>
+		<MinOffset>895,935</MinOffset>
 		<MaxOffset>895,20</MaxOffset>
 		<Text>Combat requires focus and keen reflexes. Dealing damage to enemies builds up your adrenaline. Adrenaline can be used to dash, or to activate skills.</Text>
 	</TutorialPart>
@@ -51,7 +83,7 @@
 		<SectionNumber>3</SectionNumber>
 		<PartNumber>4</PartNumber>
 		<Title>Ammunition</Title>
-		<MinOffset>785,975</MinOffset>
+		<MinOffset>785,1025</MinOffset>
 		<MaxOffset>1010,10</MaxOffset>
 		<Text>This bar shows the remaining ammunition in your weapon. Although weapons have infinite ammunition, you still need to reload at the end of a clip.</Text>
 	</TutorialPart>
@@ -59,29 +91,29 @@
 		<SectionNumber>3</SectionNumber>
 		<PartNumber>5</PartNumber>
 		<Title>Compass</Title>
-		<MinOffset>990,975</MinOffset>
+		<MinOffset>1010,1025</MinOffset>
 		<MaxOffset>750,10</MaxOffset>
 		<Text>You can consume compass charges to find hidden resources, enemies, and other locations of interest. The compass will show the direction of nearby points of interest.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>3</SectionNumber>
-		<PartNumber>6</PartNumber>
-		<Title>Enemy</Title>
-		<MinOffset>565,10</MinOffset>
-		<MaxOffset>565,915</MaxOffset>
-		<Text>Like you, enemies have health and armour, shown at the top of screen. Also shown is a meter that measures your current accuracy. Continuous fire decreases your accuracy, so fire in short bursts for maximum effectiveness.</Text>
+		<SectionNumber>4</SectionNumber>
+		<PartNumber>1</PartNumber>
+		<Title>Enemies</Title>
+		<MinOffset>530,10</MinOffset>
+		<MaxOffset>530,960</MaxOffset>
+		<Text>Like you, enemies have health and armour, shown at the top of screen. Enemy difficult increases as time goes on, increasing their health, armour, and the quality of their weapons and loot.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>3</SectionNumber>
-		<PartNumber>7</PartNumber>
-		<Title>Leaving</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
-		<Text>You can return to the map screen by moving into the ring surrounding a region. This can be useful to get out of difficult fights.</Text>
+		<SectionNumber>4</SectionNumber>
+		<PartNumber>2</PartNumber>
+		<Title>Accuracy</Title>
+		<MinOffset>890,45</MinOffset>
+		<MaxOffset>890,915</MaxOffset>
+		<Text>Also shown is a meter that measures your current accuracy. Continuous fire decreases your accuracy, so fire in short bursts for maximum effectiveness.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>3</SectionNumber>
-		<PartNumber>8</PartNumber>
+		<SectionNumber>4</SectionNumber>
+		<PartNumber>3</PartNumber>
 		<Title>Damage</Title>
 		<MinOffset>0,0</MinOffset>
 		<MaxOffset>0,0</MaxOffset>
@@ -89,62 +121,102 @@
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>4</SectionNumber>
-		<PartNumber>1</PartNumber>
-		<Title>Attributes</Title>
-		<MinOffset>645,320</MinOffset>
-		<MaxOffset>645,645</MaxOffset>
-		<Text>Characters have 4 attributes- 2 Physical, and 2 Mental:</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>4</SectionNumber>
-		<PartNumber>2</PartNumber>
-		<Title>Physical</Title>
-		<MinOffset>645,320</MinOffset>
-		<MaxOffset>960,645</MaxOffset>
-		<Text>Fettle- Increases your maximum health in combat. Grit- Increases movement speed and map travel distance.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>4</SectionNumber>
-		<PartNumber>3</PartNumber>
-		<Title>Mental</Title>
-		<MinOffset>960,320</MinOffset>
-		<MaxOffset>645,645</MaxOffset>
-		<Text>Focus- Increases adrenaline recharge rate, and the number of compass charges available. Will- Decreases the recharge time of your skills, and can be used to restore other attributes.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>4</SectionNumber>
 		<PartNumber>4</PartNumber>
-		<Title>Restoring Attributes</Title>
-		<MinOffset>840,840</MinOffset>
-		<MaxOffset>840,115</MaxOffset>
-		<Text>Attributes can be restored in a number of ways. The simplest two methods are by Sleeping, and by Meditating. Sleeping restores your Fettle and Grit, whilst Meditating restores your Focus and Will. Keeping the fire lit at camp will also restore Fettle and Grit whilst your characters remain there.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>4</SectionNumber>
-		<PartNumber>5</PartNumber>
-		<Title>Hunger and Thirst</Title>
-		<MinOffset>635,375</MinOffset>
-		<MaxOffset>635,605</MaxOffset>
-		<Text>Your Hunger and Thirst will decrease over time, eventually killing you if allowed to fully deplete. Eat food and drink water to stave them off. Hot weather will cause you to dehydrate, whilst Cold weather increases your Hunger.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>4</SectionNumber>
-		<PartNumber>6</PartNumber>
-		<Title>Progress</Title>
+		<Title>Leaving a Region</Title>
 		<MinOffset>0,0</MinOffset>
 		<MaxOffset>0,0</MaxOffset>
-		<Text>Your progress must be saved manually. Be warned, as only the most recent save is kept active.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>4</SectionNumber>
-		<PartNumber>7</PartNumber>
-		<Title>Gear</Title>
-		<MinOffset>745,707</MinOffset>
-		<MaxOffset>745,160</MaxOffset>
-		<Text>The gear section shows your currently equipped Weapon, Armour, and Accessory. To learn more about each gear type, select the relevant element.</Text>
+		<Text>When you have finished exploring, or a fight is too difficult, you can exit a region via the white ring at the regions edge.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>5</SectionNumber>
+		<PartNumber>1</PartNumber>
+		<Title>Salt</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>Human enemies have a chance to drop Salt. Unlike other loot, Salt will automatically be collected when you are near to it.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>5</SectionNumber>
+		<PartNumber>2</PartNumber>
+		<Title>Radiance</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>Salt can be used to craft one of the most useful resources in the game- Radiance. Radiance can be used to claim regions. Over time, these regions add either food, water, or resources to your supply.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>6</SectionNumber>
+		<PartNumber>1</PartNumber>
+		<Title>Attributes</Title>
+		<MinOffset>650,315</MinOffset>
+		<MaxOffset>650,640</MaxOffset>
+		<Text>Characters have 4 attributes- 2 Physical, and 2 Mental:</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>6</SectionNumber>
+		<PartNumber>2</PartNumber>
+		<Title>Physical</Title>
+		<MinOffset>650,315</MinOffset>
+		<MaxOffset>960,640</MaxOffset>
+		<Text>Fettle- Increases your maximum health in combat. Grit- Increases movement speed and map travel distance.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>6</SectionNumber>
+		<PartNumber>3</PartNumber>
+		<Title>Mental</Title>
+		<MinOffset>960,315</MinOffset>
+		<MaxOffset>650,640</MaxOffset>
+		<Text>Focus- Increases adrenaline recharge rate, and the number of compass charges available. Will- Decreases the recharge time of your skills, and can be used to restore other attributes.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>6</SectionNumber>
+		<PartNumber>4</PartNumber>
+		<Title>Restoring Attributes</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>Attributes can be restored in a number of ways. Sleeping, Meditating, and by eating certain plants.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>6</SectionNumber>
+		<PartNumber>5</PartNumber>
+		<Title>Sleeping</Title>
+		<MinOffset>860,650</MinOffset>
+		<MaxOffset>860,330</MaxOffset>
+		<Text>The sleep action will restore all your attributes over time. Sleeping can only be done at home, and character can be woken from sleep at any time.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>6</SectionNumber>
+		<PartNumber>6</PartNumber>
+		<Title>Meditating</Title>
+		<MinOffset>860,615</MinOffset>
+		<MaxOffset>860,370</MaxOffset>
+		<Text>The Meditate action allows you to consume Will to restore your other attributes instantly. Meditating can be done anywhere whilst your character still has Will.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>6</SectionNumber>
+		<PartNumber>7</PartNumber>
+		<Title>Fire</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>Keeping a fire lit at the gate will also restore Fettle and Grit whilst your characters remain there, even whilst they engage in other activities.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>6</SectionNumber>
+		<PartNumber>8</PartNumber>
+		<Title>Hunger and Thirst</Title>
+		<MinOffset>645,385</MinOffset>
+		<MaxOffset>645,600</MaxOffset>
+		<Text>Your Hunger and Thirst will decrease over time, eventually killing you if allowed to fully deplete. Eat food and drink water to stave them off. Hot weather will cause you to dehydrate, whilst Cold weather increases your Hunger.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>6</SectionNumber>
+		<PartNumber>9</PartNumber>
+		<Title>Gear</Title>
+		<MinOffset>645,705</MinOffset>
+		<MaxOffset>645,160</MaxOffset>
+		<Text>The gear section shows your currently equipped Weapon, Armour, and Accessory. To learn more about each gear type, select the relevant element.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>7</SectionNumber>
 		<PartNumber>1</PartNumber>
 		<Title>Crafting</Title>
 		<MinOffset>20,10</MinOffset>
@@ -152,71 +224,63 @@
 		<Text>Resources found in the world can be used to craft a variety of different items. Recipes are unlocked as you pass through the world. Crafting is performed via the crafting action, and only when at camp.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>5</SectionNumber>
+		<SectionNumber>7</SectionNumber>
 		<PartNumber>2</PartNumber>
 		<Title>Resources</Title>
 		<MinOffset>0,0</MinOffset>
 		<MaxOffset>0,0</MaxOffset>
-		<Text>Some resources are always dropped by enemies, some can be found scattered throughout the world, and some can only be crafted.</Text>
+		<Text>Some resources are dropped by enemies, some can be found scattered throughout the world, and some can only be crafted.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>5</SectionNumber>
-		<PartNumber>3</PartNumber>
-		<Title>Radiance</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
-		<Text>Salt is dropped by enemies, and can be used to craft one of the most useful resources in the game- Radiance. Radiance can be used to claim regions. Over time, these regions add either food, water, or resources to your supply.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>6</SectionNumber>
+		<SectionNumber>8</SectionNumber>
 		<PartNumber>1</PartNumber>
 		<Title>Weapons</Title>
-		<MinOffset>620,300</MinOffset>
-		<MaxOffset>620,640</MaxOffset>
+		<MinOffset>650,305</MinOffset>
+		<MaxOffset>650,620</MaxOffset>
 		<Text>Weapons come in a number of different varieties, all of which with unique firing behaviours.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>6</SectionNumber>
+		<SectionNumber>8</SectionNumber>
 		<PartNumber>2</PartNumber>
 		<Title>Power</Title>
-		<MinOffset>745,370</MinOffset>
-		<MaxOffset>745,600</MaxOffset>
+		<MinOffset>825,390</MinOffset>
+		<MaxOffset>825,590</MaxOffset>
 		<Text>Weapon Power affects the damage output of a weapon. Lower power reduces the effectiveness of your weapons, whilst higher power increases it. The current weapon Power is shown on this bar.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>6</SectionNumber>
+		<SectionNumber>8</SectionNumber>
 		<PartNumber>3</PartNumber>
 		<Title>Quality</Title>
-		<MinOffset>745,370</MinOffset>
-		<MaxOffset>745,600</MaxOffset>
+		<MinOffset>825,390</MinOffset>
+		<MaxOffset>825,590</MaxOffset>
 		<Text>Higher quality weapons have higher maximum Power- represented by the width of the power bar. Weapons of equal Power will have similar damage outputs, regardless of their quality.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>6</SectionNumber>
+		<SectionNumber>8</SectionNumber>
 		<PartNumber>4</PartNumber>
 		<Title>Chanelling</Title>
-		<MinOffset>1190,700</MinOffset>
-		<MaxOffset>565,275</MaxOffset>
+		<MinOffset>1190,680</MinOffset>
+		<MaxOffset>570,285</MaxOffset>
 		<Text>Weapon power is drained through use, decreasing the damage you deal in combat. If you have essence available, it can be channelled into the weapon to restore its power.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>6</SectionNumber>
+		<SectionNumber>8</SectionNumber>
 		<PartNumber>5</PartNumber>
 		<Title>Infusions</Title>
-		<MinOffset>565,700</MinOffset>
-		<MaxOffset>1190,275</MaxOffset>
+		<MinOffset>570,680</MinOffset>
+		<MaxOffset>1190,285</MaxOffset>
 		<Text>Infusions can be used to grant large, passive bonuses to weapons. Applying Infusions requires Essence, and replaces any Infusions already applied.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>7</SectionNumber>
+		<SectionNumber>9</SectionNumber>
 		<PartNumber>1</PartNumber>
 		<Title>Armour</Title>
-		<MinOffset>505,305</MinOffset>
-		<MaxOffset>505,660</MaxOffset>
+		<MinOffset>460,300</MinOffset>
+		<MaxOffset>460,615</MaxOffset>
 		<Text>Armour can be equipped to reduce incoming damage. All characters have two armour slots for Chest and Head armour respectively.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>7</SectionNumber>
+		<SectionNumber>9</SectionNumber>
 		<PartNumber>2</PartNumber>
 		<Title>Protection</Title>
 		<MinOffset>0,0</MinOffset>
@@ -224,15 +288,15 @@
 		<Text>Armour offers varying levels of protection, with higher quality armour offering more protection. Each point of protection offers a 5% reduction in damage, up to a maximum of 50%.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>7</SectionNumber>
+		<SectionNumber>9</SectionNumber>
 		<PartNumber>3</PartNumber>
 		<Title>Damage</Title>
 		<MinOffset>0,0</MinOffset>
 		<MaxOffset>0,0</MaxOffset>
-		<Text>Shatter causes damage to armour. When enough Shatter damage is taken, armour will lose a point of protection. If a piece of armour loses all it�s protection, it will break, and be lost.</Text>
+		<Text>Shatter causes damage to armour. When enough Shatter damage is taken, armour will lose a point of protection. If a piece of armour loses all it's protection, it will break, and be lost.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>7</SectionNumber>
+		<SectionNumber>9</SectionNumber>
 		<PartNumber>4</PartNumber>
 		<Title>Sources</Title>
 		<MinOffset>0,0</MinOffset>
@@ -240,7 +304,7 @@
 		<Text>Armour cannot be repaired, and so must be replaced, either through crafting, or found as loot. Instead of a permanent health boost, it is best to think of armour as an expendable source of extra protection.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>8</SectionNumber>
+		<SectionNumber>10</SectionNumber>
 		<PartNumber>1</PartNumber>
 		<Title>Accessories</Title>
 		<MinOffset>0,0</MinOffset>
@@ -248,7 +312,7 @@
 		<Text>Accessories are small trinkets that can further modify the power of your weapon. Only one accessory can be equipped at a time.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>9</SectionNumber>
+		<SectionNumber>11</SectionNumber>
 		<PartNumber>1</PartNumber>
 		<Title>Skills</Title>
 		<MinOffset>525,900</MinOffset>
@@ -256,27 +320,43 @@
 		<Text>Skills can have a large impact on how a battle plays out. In total there are 4 skill slots available during combat.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>9</SectionNumber>
+		<SectionNumber>11</SectionNumber>
 		<PartNumber>2</PartNumber>
 		<Title>Character Skills</Title>
 		<MinOffset>570,900</MinOffset>
 		<MaxOffset>1020,55</MaxOffset>
-		<Text>2 skills are linked to the character�s class. These skills are unlocked over time, and are generally geared towards survival.</Text>
+		<Text>2 skills are linked to the character's class. These skills are unlocked over time, and are generally geared towards survival.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>9</SectionNumber>
+		<SectionNumber>11</SectionNumber>
 		<PartNumber>3</PartNumber>
 		<Title>Weapon Skills</Title>
 		<MinOffset>1020,900</MinOffset>
 		<MaxOffset>570,55</MaxOffset>
-		<Text>The remaining 2 skills are linked to the type of your currently equipped weapon. As you use weapons of this type, you will slowly unlock it�s skills. Weapon skills generally have an offensive focus.</Text>
+		<Text>The remaining 2 skills are linked to the type of your currently equipped weapon. As you use weapons of this type, you will slowly unlock it's skills. Weapon skills generally have an offensive focus.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>9</SectionNumber>
+		<SectionNumber>11</SectionNumber>
 		<PartNumber>4</PartNumber>
 		<Title>Cost</Title>
 		<MinOffset>585,900</MinOffset>
 		<MaxOffset>1195,110</MaxOffset>
 		<Text>The cost of a skill is shown above its name. Activating any skill will reset the cooldown period of all your skills, regardless of their cost.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>12</SectionNumber>
+		<PartNumber>1</PartNumber>
+		<Title>Shrines</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>Some areas contain shrines where you can show your devotion to the gods. To do so you can accept Rites, each of which have different requirements to complete.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>12</SectionNumber>
+		<PartNumber>2</PartNumber>
+		<Title>Trials</Title>
+		<MinOffset>0,0</MinOffset>
+		<MaxOffset>0,0</MaxOffset>
+		<Text>When the requirements are met, you must partake in a final trial, the outcome of which will either provide you with a blessing or a curse.</Text>
 	</TutorialPart>
 </Tutorial>

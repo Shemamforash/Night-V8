@@ -32,7 +32,7 @@ namespace Game.Exploration.Environment
         {
             base.Awake();
             _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
-            _closeButton.SetOnClick(() => MapMovementController.ReturnToGame());
+            _closeButton.SetOnClick(MapMovementController.ReturnToGame);
             _gritMarker = gameObject.FindChildWithName("Grit").FindChildWithName<UIAttributeMarkerController>("Bar");
             _nextRouteTime = 2f / MapGenerator.Regions().Count;
             MapTransform = GameObject.Find("Nodes").transform;

@@ -40,7 +40,7 @@ namespace Facilitating.UIControllers
             UpdatePlates();
             InputHandler.RegisterInputListener(this);
             SetPlateListActive(_plateOneUi);
-            TutorialManager.TryOpenTutorial(7);
+            TutorialManager.TryOpenTutorial(9);
         }
 
         private void UpdateArmourDescriptions()

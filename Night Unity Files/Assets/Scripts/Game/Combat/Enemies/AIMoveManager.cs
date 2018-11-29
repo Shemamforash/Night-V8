@@ -5,7 +5,7 @@ namespace Game.Combat.Enemies
 {
     public static class AIMoveManager
     {
-        private const int BucketSize = 15;
+        private const int BucketSize = 5;
         private static readonly List<List<MoveBehaviour>> _moveBuckets = new List<List<MoveBehaviour>>();
         private static int _currentUpdateBucket;
 

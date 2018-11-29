@@ -168,7 +168,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
                 _direction.y += direction;
                 break;
             case InputAxis.Cover:
-                if (!MapMenuController.IsReturningFromCombat) ReturnToGame();
+                if (!MapMenuController.IsReturningFromCombat && !TutorialManager.IsTutorialActive()) ReturnToGame();
                 break;
             case InputAxis.Fire:
                 TravelToRegion();

@@ -4,6 +4,7 @@ using Game.Combat.Generation.Shrines;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Game.Characters.Brands;
+using Game.Global;
 
 namespace Game.Characters
 {
@@ -19,6 +20,7 @@ namespace Game.Characters
         private int _counter;
         public BrandStatus Status = BrandStatus.Locked;
         private bool _requiresSkillUnlock;
+        private int _minLevel;
 
         protected Brand(Player player, string riteName)
         {
@@ -29,8 +31,9 @@ namespace Game.Characters
 
         public bool PlayerRequirementsMet(Player player)
         {
-            if (!_requiresSkillUnlock) return true;
-            return player.CharacterSkillOne != null;
+            if (_requiresSkillUnlock && player.CharacterSkillOne != null) return false;
+            if (_minLevel > WorldState.CurrentLevel()) return false;
+            return true;
         }
 
         public void ReadData(XmlNode root)
@@ -46,6 +49,7 @@ namespace Game.Characters
             _failEffect = root.StringFromNode("FailEffect");
             FailModifier = root.FloatFromNode("FailValue");
             _requiresSkillUnlock = root.BoolFromNode("RequiresSkill");
+            _minLevel = root.IntFromNode("MinLevel");
         }
 
         protected string Progress()

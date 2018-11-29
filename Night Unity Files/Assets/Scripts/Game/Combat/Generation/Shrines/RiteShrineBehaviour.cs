@@ -19,6 +19,7 @@ namespace Game.Combat.Generation.Shrines
         private int _targetBrand = -1;
         private RiteColliderBehaviour _targetRiteCollider;
         private static RiteShrineBehaviour _instance;
+        private static bool _seenBrandTutorial;
 
         public void Awake()
         {
@@ -115,6 +116,7 @@ namespace Game.Combat.Generation.Shrines
 
         public float InRange()
         {
+            TutorialManager.TryOpenTutorial(12);
             return _targetBrand;
         }
 

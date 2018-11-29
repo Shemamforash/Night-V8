@@ -67,7 +67,7 @@ class TutorialImporter(XMLWriter):
         write_tag(self, "Tutorial", self.read_tutorials)
 
     def read_tutorials(self):
-        for row in range(2, 37):
+        for row in range(2, 47):
             write_tag(self, "TutorialPart", self.read_single_tutorial, [row])
 
     def read_single_tutorial(self, row):
@@ -287,7 +287,7 @@ class BrandImporter(XMLWriter):
         write_tag(self, "Brands", self.read_brands)
 
     def read_brands(self):
-        for row in range(3, 20):
+        for row in range(3, 19):
             write_tag(self, get_value(self, "A", row), self.read_brand, [row])
 
     def read_brand(self, row):
@@ -300,6 +300,7 @@ class BrandImporter(XMLWriter):
         write_single_value(self, "FailEffect", get_value(self, "H", row))
         write_single_value(self, "FailValue", get_value(self, "I", row))
         write_single_value(self, "RequiresSkill", get_value(self, "J", row))
+        write_single_value(self, "MinLevel", get_value(self, "K", row))
 
 
 class StoryImporter(XMLWriter):
@@ -415,5 +416,5 @@ def write_single_value(xml_writer, stat_name, value):
 # SkillImporter()
 # EnvironmentImporter()
 # BrandImporter()
-StoryImporter()
-# TutorialImporter()
+# StoryImporter()
+TutorialImporter()

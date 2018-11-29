@@ -762,6 +762,168 @@
         <e p="KeyboardInputModule.cs" t="Include" />
         <e p="NeedleBehaviour.cs" t="Include" />
         <e p="Plugins" t="Include">
+          <e p="DarkTonic" t="Include">
+            <e p="MasterAudio" t="Include">
+              <e p="ExampleScenes" t="Include">
+                <e p="Scripts" t="Include">
+                  <e p="MA_Bootstrapper.cs" t="Include" />
+                  <e p="MA_DestroyFinishedParticle.cs" t="Include" />
+                  <e p="MA_EnemyOne.cs" t="Include" />
+                  <e p="MA_EnemySpawner.cs" t="Include" />
+                  <e p="MA_GameScene.cs" t="Include" />
+                  <e p="MA_Laser.cs" t="Include" />
+                  <e p="MA_LocalizationUI.cs" t="Include" />
+                  <e p="MA_PlayerControl.cs" t="Include" />
+                  <e p="MA_PlayerSpawnerControl.cs" t="Include" />
+                  <e p="MA_SampleICustomEventReceiver.cs" t="Include" />
+                  <e p="MA_TestUI.cs" t="Include" />
+                </e>
+              </e>
+              <e p="ReleaseNotes.txt" t="Include" />
+              <e p="Scripts" t="Include">
+                <e p="Events" t="Include">
+                  <e p="AmbientSound.cs" t="Include" />
+                  <e p="ButtonClicker.cs" t="Include" />
+                  <e p="EventSounds.cs" t="Include" />
+                  <e p="FootstepSounds.cs" t="Include" />
+                  <e p="MechanimStateCustomEvents.cs" t="Include" />
+                  <e p="MechanimStateSounds.cs" t="Include" />
+                </e>
+                <e p="ResultObjects" t="Include">
+                  <e p="PlaySoundResult.cs" t="Include" />
+                </e>
+                <e p="Settings" t="Include">
+                  <e p="AudioEvent.cs" t="Include" />
+                  <e p="AudioEventGroup.cs" t="Include" />
+                  <e p="AudioScriptOrder.cs" t="Include" />
+                  <e p="BusFadeInfo.cs" t="Include" />
+                  <e p="BusPitchGlideInfo.cs" t="Include" />
+                  <e p="CustomEvent.cs" t="Include" />
+                  <e p="CustomEventCategory.cs" t="Include" />
+                  <e p="CustomEventToFireInfo.cs" t="Include" />
+                  <e p="DuckGroupInfo.cs" t="Include" />
+                  <e p="DynamicGroupVariation.cs" t="Include" />
+                  <e p="DynamicSoundGroup.cs" t="Include" />
+                  <e p="FootstepGroup.cs" t="Include" />
+                  <e p="GroupBus.cs" t="Include" />
+                  <e p="GroupFadeInfo.cs" t="Include" />
+                  <e p="GroupPitchGlideInfo.cs" t="Include" />
+                  <e p="ICustomEventReceiver.cs" t="Include" />
+                  <e p="MasterAudioGroup.cs" t="Include" />
+                  <e p="MasterAudioSettings.cs" t="Include" />
+                  <e p="MasterCustomEventAttribute.cs" t="Include" />
+                  <e p="MusicSetting.cs" t="Include" />
+                  <e p="OcclusionFreqChangeInfo.cs" t="Include" />
+                  <e p="SongMetadata" t="Include">
+                    <e p="SongMetadataBoolValue.cs" t="Include" />
+                    <e p="SongMetadataFloatValue.cs" t="Include" />
+                    <e p="SongMetadataIntValue.cs" t="Include" />
+                    <e p="SongMetadataProperty.cs" t="Include" />
+                    <e p="SongMetadataStringValue.cs" t="Include" />
+                  </e>
+                  <e p="SoundGroupAttribute.cs" t="Include" />
+                  <e p="SoundGroupVariation.cs" t="Include" />
+                  <e p="SoundGroupVariationUpdater.cs" t="Include" />
+                </e>
+                <e p="Singleton" t="Include">
+                  <e p="AudioLoaderOptimizer.cs" t="Include" />
+                  <e p="AudioPrioritizer.cs" t="Include" />
+                  <e p="AudioResourceOptimizer.cs" t="Include" />
+                  <e p="MasterAudio.cs" t="Include" />
+                  <e p="PersistentAudioSettings.cs" t="Include" />
+                  <e p="SingletonScriptable.cs" t="Include" />
+                  <e p="SoundGroupOrganizer.cs" t="Include" />
+                </e>
+                <e p="Utility" t="Include">
+                  <e p="AmbientUtil.cs" t="Include" />
+                  <e p="ArrayListUtil.cs" t="Include" />
+                  <e p="AudioTransformExtensions.cs" t="Include" />
+                  <e p="AudioTransformTracker.cs" t="Include" />
+                  <e p="AudioUtil.cs" t="Include" />
+                  <e p="CoroutineHelper.cs" t="Include" />
+                  <e p="DelayBetweenSongs.cs" t="Include" />
+                  <e p="DTMonoHelper.cs" t="Include" />
+                  <e p="DynamicSoundGroupCreator.cs" t="Include" />
+                  <e p="ListenerFollower.cs" t="Include" />
+                  <e p="PlayerPrefs.cs" t="Include" />
+                  <e p="PlaylistController.cs" t="Include" />
+                  <e p="ResonanceAudioHelper.cs" t="Include" />
+                  <e p="SpatializerHelper.cs" t="Include" />
+                  <e p="TransformFollower.cs" t="Include" />
+                  <e p="UtilStrings.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="Editor" t="Include">
+            <e p="DarkTonic" t="Include">
+              <e p="MasterAudio" t="Include">
+                <e p="AmbientSoundInspector.cs" t="Include" />
+                <e p="AudioEventInspector.cs" t="Include" />
+                <e p="AudioScriptOrderManager.cs" t="Include" />
+                <e p="AudioTransformTrackerInspector.cs" t="Include" />
+                <e p="AudioUndoHelper.cs" t="Include" />
+                <e p="BulkAudioImporter.cs" t="Include" />
+                <e p="ButtonClickerInspector.cs" t="Include" />
+                <e p="DTGUIHelper.cs" t="Include" />
+                <e p="DynamicGroupVariationInspector.cs" t="Include" />
+                <e p="DynamicSoundGroupCreatorInspector.cs" t="Include" />
+                <e p="DynamicSoundGroupInspector.cs" t="Include" />
+                <e p="FootstepsSoundsInspector.cs" t="Include" />
+                <e p="MasterAudioGroupInspector.cs" t="Include" />
+                <e p="MasterAudioHierIcon.cs" t="Include" />
+                <e p="MasterAudioInspector.cs" t="Include" />
+                <e p="MasterAudioInspectorResources.cs" t="Include" />
+                <e p="MasterAudioManager.cs" t="Include" />
+                <e p="MasterAudioSoundUpgrader.cs" t="Include" />
+                <e p="MasterCustomEventPropertyDrawer.cs" t="Include" />
+                <e p="PersistChanges" t="Include">
+                  <e p="MAComponentPatch.cs" t="Include" />
+                  <e p="MAGOSetting.cs" t="Include" />
+                  <e p="MAObjectContext.cs" t="Include" />
+                </e>
+                <e p="PlaylistControllerInspector.cs" t="Include" />
+                <e p="SoundGroupOrganizerInspector.cs" t="Include" />
+                <e p="SoundGroupPropertyDrawer.cs" t="Include" />
+                <e p="SoundGroupVariationInspector.cs" t="Include" />
+              </e>
+            </e>
+            <e p="RelationsInspector" t="Include">
+              <e p="Backends" t="Include">
+                <e p="AutoBackend" t="Include">
+                  <e p="ReflectionUtil.cs" t="Include" />
+                  <e p="RIAutoBackend.cs" t="Include" />
+                </e>
+                <e p="HierarchyExample" t="Include">
+                  <e p="SceneHierarchyBackend.cs" t="Include" />
+                  <e p="TagBackend.cs" t="Include" />
+                </e>
+                <e p="MasterAudioEventBackend.cs" t="Include" />
+                <e p="SocialNetworkExample" t="Include">
+                  <e p="Person.cs" t="Include" />
+                  <e p="SocialNetworkBackend.cs" t="Include" />
+                  <e p="StudyNetworkBackend.cs" t="Include" />
+                </e>
+                <e p="TypeGraphExample" t="Include">
+                  <e p="TypeInheritanceBackend.cs" t="Include" />
+                  <e p="TypeUtility.cs" t="Include" />
+                </e>
+              </e>
+              <e p="BackendUtils" t="Include">
+                <e p="BackendUtil.cs" t="Include" />
+                <e p="ColorLegendWidget.cs" t="Include" />
+                <e p="DrawUtil.cs" t="Include" />
+                <e p="MinimalBackend.cs" t="Include" />
+                <e p="RandomColor.cs" t="Include" />
+                <e p="ScriptableObjectBackend.cs" t="Include" />
+                <e p="ScriptableObjectBackendToolbar.cs" t="Include" />
+              </e>
+              <e p="CHANGELOG.txt" t="Include" />
+              <e p="readme.txt" t="Include" />
+              <e p="RelationsInspectorLink.cs" t="Include" />
+              <e p="RelationsInspectorMenuItem.cs" t="Include" />
+            </e>
+          </e>
           <e p="Quick" t="Include">
             <e p="Editor" t="Include">
               <e p="Classes" t="Include">
@@ -836,6 +998,9 @@
                 <e p="QReflection.cs" t="Include" />
               </e>
             </e>
+          </e>
+          <e p="RelationsInspector" t="Include">
+            <e p="AutoBackendAttributes.cs" t="Include" />
           </e>
           <e p="Sirenix" t="Include">
             <e p="Assemblies" t="Include">

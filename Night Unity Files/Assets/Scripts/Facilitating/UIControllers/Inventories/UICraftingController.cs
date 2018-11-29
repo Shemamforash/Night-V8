@@ -40,7 +40,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         InputHandler.RegisterInputListener(this);
         if (CharacterManager.SelectedCharacter.CraftAction.IsCurrentState()) ShowCurrentlyCrafting();
         else ShowCraftingList();
-        TutorialManager.TryOpenTutorial(5);
+        TutorialManager.TryOpenTutorial(7);
     }
 
     private void ShowCurrentlyCrafting()

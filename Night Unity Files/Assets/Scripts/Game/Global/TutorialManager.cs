@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using DG.Tweening;
@@ -10,7 +10,6 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.UI;
 
 public class TutorialManager : MonoBehaviour
@@ -182,6 +181,11 @@ public class TutorialManager : MonoBehaviour
         _loaded = true;
     }
 
+    public static bool IsTutorialActive()
+    {
+        return _tutorialActive;
+    }
+    
     private class TutorialPart
     {
         public readonly Vector2 MinOffset, MaxOffset;

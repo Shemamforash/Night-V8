@@ -31,8 +31,15 @@ public class SaltBehaviour : MonoBehaviour
         Vector2 directionToPlayer = PlayerCombat.Instance.transform.position - transform.position;
         float distanceToPlayer = directionToPlayer.magnitude;
         if (distanceToPlayer > PickupRadius) return;
+        TryShowTutorial();
+        
         float forceMod = 1f - distanceToPlayer / PickupRadius;
         _rigidBody.AddForce(directionToPlayer.normalized * Force * forceMod);
+    }
+
+    private void TryShowTutorial()
+    {
+        TutorialManager.TryOpenTutorial(5);
     }
 
     private void OnCollisionEnter2D(Collision2D other)

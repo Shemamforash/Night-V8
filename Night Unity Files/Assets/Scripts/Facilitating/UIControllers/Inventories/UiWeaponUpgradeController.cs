@@ -135,7 +135,7 @@ namespace Facilitating.UIControllers
 
             InputHandler.RegisterInputListener(this);
             SetWeapon();
-            TutorialManager.TryOpenTutorial(6);
+            TutorialManager.TryOpenTutorial(8);
         }
 
         protected override void OnHide()

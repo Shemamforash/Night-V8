@@ -83,6 +83,7 @@ namespace Facilitating.UIControllers
             int max = Mathf.CeilToInt(maxF);
             int current = Mathf.CeilToInt(currentF);
             int offset = Mathf.CeilToInt(offsetF);
+            if (offsetF < 0) current += offset;
             if (current + offset > max) offset -= current + offset - max;
 
             for (int i = 0; i < 20; ++i)

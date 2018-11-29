@@ -6,6 +6,7 @@ using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Game.Characters.CharacterActions
@@ -23,6 +24,8 @@ namespace Game.Characters.CharacterActions
             DisplayName = "Travelling";
             MinuteCallback = () =>
             {
+                Debug.Log(Duration + " " + _travelTime);
+                
                 if (Duration == 0)
                 {
                     if (_inTransit) ReachTarget();
@@ -63,7 +66,7 @@ namespace Game.Characters.CharacterActions
             CurrentRegion = _target;
             if (AtHome())
             {
-                TutorialManager.TryOpenTutorial(4);
+                TutorialManager.TryOpenTutorial(6);
                 PlayerCharacter.RestAction.Enter();
             }
             else

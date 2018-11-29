@@ -73,7 +73,7 @@ namespace Facilitating.UIControllers
         {
             UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
             _accessoryList.Show(GetAvailableAccessories);
-            TutorialManager.TryOpenTutorial(8);
+            TutorialManager.TryOpenTutorial(10);
             UpdateEquipped();
         }
 
