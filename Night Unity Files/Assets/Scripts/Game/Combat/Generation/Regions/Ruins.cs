@@ -408,21 +408,18 @@ namespace Game.Combat.Generation
             {
                 _nextWall = nextCell.RightEdge;
                 AddFinalShapePoints(2, 3, 1, 2); //a
-//                Debug.Log("A");
             }
             else if (nextCell.RightNeighbor?.BottomEdge != null)
             {
                 nextCell = nextCell.RightNeighbor;
                 _nextWall = nextCell.BottomEdge;
                 AddFinalShapePoints(2, 3, 2, 3);
-//                Debug.Log("B");
             } //
             else if (nextCell.BottomNeighbor?.RightEdge != null)
             {
                 nextCell = nextCell.BottomNeighbor;
                 _nextWall = nextCell.RightEdge;
                 AddFinalShapePoints(2, 3, 3, 0); //c
-                //Debug.Log("C");
             }
             else
             {
@@ -437,21 +434,18 @@ namespace Game.Combat.Generation
                 nextCell = nextCell.LeftNeighbor.BottomNeighbor;
                 _nextWall = nextCell.RightEdge;
                 AddFinalShapePoints(0, 1, 3, 0); //d
-                //Debug.Log("D");
             }
             else if (nextCell.LeftNeighbor?.BottomEdge != null)
             {
                 nextCell = nextCell.LeftNeighbor;
                 _nextWall = nextCell.BottomEdge;
                 AddFinalShapePoints(0, 1, 0, 1); //e
-                //Debug.Log("E");
             }
             else if (nextCell.LeftNeighbor?.RightEdge != null)
             {
                 nextCell = nextCell.LeftNeighbor;
                 _nextWall = nextCell.RightEdge;
                 AddFinalShapePoints(0, 1, 1, 2); //f
-                //Debug.Log("F");
             }
             else
             {
@@ -466,21 +460,18 @@ namespace Game.Combat.Generation
                 nextCell = nextCell.TopNeighbor;
                 _nextWall = nextCell.BottomEdge;
                 AddFinalShapePoints(1, 2, 0, 1); //h
-                //Debug.Log("H");
             }
             else if (nextCell.TopNeighbor?.RightEdge != null)
             {
                 nextCell = nextCell.TopNeighbor;
                 _nextWall = nextCell.RightEdge;
                 AddFinalShapePoints(1, 2, 1, 2); //i
-                //Debug.Log("I");
             }
             else if (nextCell.TopNeighbor?.RightNeighbor?.BottomEdge != null)
             {
                 nextCell = nextCell.TopNeighbor.RightNeighbor;
                 _nextWall = nextCell.BottomEdge;
                 AddFinalShapePoints(1, 2, 2, 3); //j
-                //Debug.Log("J");
             }
             else
             {
@@ -495,20 +486,17 @@ namespace Game.Combat.Generation
                 nextCell = nextCell.RightNeighbor;
                 _nextWall = nextCell.BottomEdge;
                 AddFinalShapePoints(3, 0, 2, 3); //k
-                //Debug.Log("K");
             }
             else if (nextCell.BottomNeighbor?.RightEdge != null)
             {
                 nextCell = nextCell.BottomNeighbor;
                 _nextWall = nextCell.RightEdge;
                 AddFinalShapePoints(3, 0, 3, 0); //l
-                //Debug.Log("L");
             }
             else if (nextCell.BottomEdge != null)
             {
                 _nextWall = nextCell.BottomEdge;
                 AddFinalShapePoints(3, 0, 0, 1); //m
-                //Debug.Log("M");
             }
             else
             {

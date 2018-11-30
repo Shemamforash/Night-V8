@@ -29,7 +29,6 @@ namespace Game.Exploration.Regions
         public readonly List<ContainerController> Containers = new List<ContainerController>();
         private static GameObject _nodePrefab;
         public int RegionID;
-        private int _lastVisitDay = -1;
         public int WaterSourceCount, FoodSourceCount, ResourceSourceCount;
         public Player CharacterHere;
         public Vector2 CharacterPosition;
@@ -40,7 +39,7 @@ namespace Game.Exploration.Regions
         public int RitesRemaining = 3;
         public bool FountainVisited;
         private static int _currentId;
-        private bool _canHaveEnemies;
+        private int _timeToNextVisit;
         private GameObject _nodeObject;
 
         public Region() : base(Vector2.zero)
@@ -110,6 +109,7 @@ namespace Game.Exploration.Regions
 
         public void Update()
         {
+            if(_timeToNextVisit > 0) --_timeToNextVisit;
             if (ClaimRemaining == 0) return;
             --ClaimRemaining;
             if (ClaimRemaining == 0)
@@ -132,43 +132,12 @@ namespace Game.Exploration.Regions
             _generated = true;
         }
 
-        private bool Visited()
-        {
-            return _lastVisitDay != -1;
-        }
-
-        private string TimeSinceLastVisit()
-        {
-            if (!Visited()) return "Unexplored";
-            return "Visited " + (WorldState.Days - _lastVisitDay) + " days ago.";
-        }
-
         public void Visit()
         {
-            if (!Visited())
-            {
-                switch (_regionType)
-                {
-                    case RegionType.Nightmare:
-                        GenerateEncounter(WorldState.GetAllowedNightmareEnemyTypes());
-                        break;
-                    case RegionType.Shelter:
-                        GenerateShelter();
-                        break;
-                    case RegionType.Animal:
-                        GenerateAnimalEncounter();
-                        break;
-                    case RegionType.Rite:
-                        break;
-                    case RegionType.Temple:
-                        break;
-                    default:
-                        GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
-                        break;
-                }
-            }
-
-            _lastVisitDay = WorldState.Days;
+            _timeToNextVisit = WorldState.Days;
+            if (_discovered) return;
+            if (_regionType != RegionType.Shelter) return;
+            GenerateShelter();
         }
 
         public static Region Load(XmlNode doc)
@@ -186,7 +155,7 @@ namespace Game.Exploration.Regions
             region._regionType = (RegionType) doc.IntFromNode("Type");
             region._discovered = doc.BoolFromNode("Discovered");
             region._seen = doc.BoolFromNode("Seen");
-            region._lastVisitDay = doc.IntFromNode("LastVisited");
+            region._timeToNextVisit = doc.IntFromNode("TimeToNextVisit");
             region.WaterSourceCount = doc.IntFromNode("WaterSourceCount");
             region.FoodSourceCount = doc.IntFromNode("FoodSourceCount");
             region.ResourceSourceCount = doc.IntFromNode("ResourceSourceCount");
@@ -213,7 +182,7 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("Type", (int) _regionType);
             regionNode.CreateChild("Discovered", _discovered);
             regionNode.CreateChild("Seen", _seen);
-            regionNode.CreateChild("LastVisited", _lastVisitDay);
+            regionNode.CreateChild("TimeToNextVisit", _timeToNextVisit);
             regionNode.CreateChild("WaterSourceCount", WaterSourceCount);
             regionNode.CreateChild("FoodSourceCount", FoodSourceCount);
             regionNode.CreateChild("ResourceSourceCount", ResourceSourceCount);
@@ -222,8 +191,6 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("ClaimBenefit", _claimBenefit);
             regionNode.CreateChild("RitesRemaining", RitesRemaining);
             regionNode.CreateChild("FountainVisited", FountainVisited);
-
-            XmlNode enemyNode = regionNode.CreateChild("Enemies");
         }
 
         private MapNodeController _mapNode;
@@ -277,7 +244,7 @@ namespace Game.Exploration.Regions
         private List<EnemyTemplate> GenerateEncounter(List<EnemyTemplate> allowedTypes)
         {
             List<EnemyTemplate> templates = new List<EnemyTemplate>();
-            if (!_canHaveEnemies) return templates;
+            if (!CanHaveEnemies()) return templates;
             int size = WorldState.Difficulty() + 4;
             templates.AddRange(CombatManager.GenerateEnemies(size, allowedTypes));
             return templates;
@@ -320,9 +287,13 @@ namespace Game.Exploration.Regions
         {
             _regionType = regionType;
             Name = MapGenerator.GenerateName(_regionType);
-            _canHaveEnemies = _regionType != RegionType.Gate && _regionType != RegionType.Nightmare && _regionType != RegionType.Rite && _regionType != RegionType.Tomb;
         }
 
+        private bool CanHaveEnemies()
+        {
+            return _regionType != RegionType.Gate && _regionType != RegionType.Nightmare && _regionType != RegionType.Rite && _regionType != RegionType.Tomb;
+        }
+        
         private void SetSeen()
         {
             if (_seen) return;
@@ -357,9 +328,31 @@ namespace Game.Exploration.Regions
 
         public List<Enemy> GetEnemies()
         {
+            Debug.Log(ClaimRemaining);
             List<Enemy> enemies = new List<Enemy>();
-            if (ClaimRemaining != 0) return enemies;
-            List<EnemyTemplate> templates = _regionType == RegionType.Animal ? GenerateAnimalEncounter() : GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
+            if (ClaimRemaining != 0 || _timeToNextVisit != 0) return enemies;
+            List<EnemyTemplate> templates;
+            switch (_regionType)
+            {
+                case RegionType.Danger:
+                    templates = GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
+                    break;
+                case RegionType.Fountain:
+                    templates = GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
+                    break;
+                case RegionType.Monument:
+                    templates = GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
+                    break;
+                case RegionType.Shrine:
+                    templates = GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
+                    break;
+                case RegionType.Animal:
+                    templates = GenerateAnimalEncounter();
+                    break;
+                default:
+                    return enemies;
+            }
+
             templates.ForEach(t => enemies.Add(t.Create()));
             return enemies;
         }

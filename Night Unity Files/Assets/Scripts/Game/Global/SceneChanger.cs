@@ -3,7 +3,6 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace Game.Global
 {
@@ -55,6 +54,7 @@ namespace Game.Global
 
         public static void GoToGameOverScene()
         {
+            Debug.Log("GameOver");
             FadeInAudio();
             ChangeScene("Game Over");
         }
@@ -67,7 +67,7 @@ namespace Game.Global
 
         public static void GoToCombatScene()
         {
-            ChangeScene("Combat"); // true);
+            ChangeScene("Combat");
         }
 
         public static void GoToMainMenuScene()

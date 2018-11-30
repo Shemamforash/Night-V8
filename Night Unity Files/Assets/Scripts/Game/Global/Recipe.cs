@@ -208,6 +208,7 @@ namespace Game.Global
 
         public static Recipe FindRecipe(string recipeName)
         {
+            LoadRecipes();
             return _recipes.FirstOrDefault(r => r.Name == recipeName);
         }
 

@@ -5,57 +5,63 @@ using SamsHelper.Input;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
-public class GameController : MonoBehaviour {
-	private bool _starting;
+public class GameController : MonoBehaviour
+{
+    private bool _starting;
 
-	public void Awake()
-	{
-		_starting = false;
-	}
+    public void Awake()
+    {
+        _starting = false;
+    }
 
-	public void StartGame(bool newGame, Travel travel = null)
-	{
-		_starting = true;
-		InputHandler.SetCurrentListener(null);
-		if (newGame) StoryController.ShowText(JournalEntry.GetStoryText(1), false);
-		else {
-			if (travel != null) travel.Enter();
-			else SceneChanger.GoToGameScene();
-			SceneChanger.FadeInAudio();
-		}
-	}
+    public void StartGame(bool newGame)
+    {
+        _starting = true;
+        InputHandler.SetCurrentListener(null);
+        if (newGame) StoryController.ShowText(JournalEntry.GetStoryText(1), false);
+        else
+        {
+            SceneChanger.GoToGameScene();
+            SceneChanger.FadeInAudio();
+        }
+    }
 
-	public void ContinueGame()
-	{
-		if (_starting) return;
-		Travel travel = SaveController.LoadGame();
-		StartGame(false, travel);
-	}
+    public void ContinueGame()
+    {
+        if (_starting) return;
+        SaveController.LoadGame();
+        StartGame(false);
+    }
 
-	public void QuitToDesktop()
-	{
-		Application.Quit();
-	}
+    public void QuitToDesktop()
+    {
+        Application.Quit();
+    }
 
-	private void ClearSaveAndLoad()
-	{
-		if (_starting) return;
-		_starting = true;
-		SaveController.ClearSave();
-		WorldState.ResetWorld();
-		SaveController.SaveGame();
-		StartGame(true);
-	}
+    public void GoToMenu()
+    {
+        SceneChanger.GoToMainMenuScene();
+    }
 
-	public void EnableTutorial()
-	{
-		ClearSaveAndLoad();
-		TutorialManager.SetTutorialActive(true);
-	}
+    private void ClearSaveAndLoad()
+    {
+        if (_starting) return;
+        _starting = true;
+        SaveController.ClearSave();
+        WorldState.ResetWorld();
+        SaveController.SaveGame();
+        StartGame(true);
+    }
 
-	public void DisableTutorial()
-	{
-		ClearSaveAndLoad();
-		TutorialManager.SetTutorialActive(false);
-	}
+    public void EnableTutorial()
+    {
+        ClearSaveAndLoad();
+        TutorialManager.SetTutorialActive(true);
+    }
+
+    public void DisableTutorial()
+    {
+        ClearSaveAndLoad();
+        TutorialManager.SetTutorialActive(false);
+    }
 }

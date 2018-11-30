@@ -1,4 +1,4 @@
-﻿﻿using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using DG.Tweening;
@@ -115,6 +115,7 @@ public class TutorialManager : MonoBehaviour
                 WorldState.UnPause();
                 CombatManager.Resume();
             }
+
             _tutorialCanvas.blocksRaycasts = false;
             _showingTutorial = false;
         });
@@ -125,7 +126,7 @@ public class TutorialManager : MonoBehaviour
 
     public static void Load(XmlNode root)
     {
-        ReadTutorialParts();
+        ReadTutorialParts(true);
         root = root.SelectSingleNode("Tutorial");
         _tutorialActive = root.BoolFromNode("TutorialActive");
         if (!_tutorialActive) return;
@@ -137,8 +138,7 @@ public class TutorialManager : MonoBehaviour
                 int partNumber = partNode.IntFromNode("PartNumber");
                 bool completed = partNode.BoolFromNode("Completed");
                 if (!completed) continue;
-                Debug.Log(sectionNumber + " " + partNumber);
-                _tutorialParts[sectionNumber][partNumber].MarkComplete();
+                _tutorialParts[sectionNumber][partNumber - 1].MarkComplete();
             }
         }
     }
@@ -156,9 +156,10 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    private static void ReadTutorialParts()
+    private static void ReadTutorialParts(bool force = false)
     {
-        if (_loaded) return;
+        if (!force && _loaded) return;
+        _tutorialParts.Clear();
         XmlNode root = Helper.OpenRootNode("Tutorial", "Tutorial");
         foreach (XmlNode tutorialNode in root.SelectNodes("TutorialPart"))
         {
@@ -181,11 +182,11 @@ public class TutorialManager : MonoBehaviour
         _loaded = true;
     }
 
-    public static bool IsTutorialActive()
+    public static bool IsTutorialVisible()
     {
-        return _tutorialActive;
+        return _showingTutorial;
     }
-    
+
     private class TutorialPart
     {
         public readonly Vector2 MinOffset, MaxOffset;

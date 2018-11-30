@@ -32,7 +32,7 @@ namespace Game.Characters
         public Travel TravelAction;
         public Meditate MeditateAction;
         public Sleep SleepAction;
-        
+
         private readonly Dictionary<WeaponType, int> _weaponKills = new Dictionary<WeaponType, int>();
         private int _daysSurvived;
         private int _timeAlive;
@@ -76,12 +76,9 @@ namespace Game.Characters
         {
             XmlNode currentActionNode = root.SelectSingleNode("CurrentAction");
             string currentActionName = currentActionNode.StringFromNode("Name");
-            BaseCharacterAction currentAction = null;
+            BaseCharacterAction currentAction;
             switch (currentActionName)
             {
-                case "Rest":
-                    currentAction = RestAction;
-                    break;
                 case "Sleep":
                     currentAction = SleepAction;
                     break;
@@ -94,10 +91,13 @@ namespace Game.Characters
                 case "Travel":
                     currentAction = TravelAction;
                     break;
+                default:
+                    currentAction = RestAction;
+                    break;
             }
 
+            if (currentAction != RestAction) currentAction.Load(root);
             currentAction.Enter();
-            currentAction.Load(root);
         }
 
         public bool CanShowJournal()

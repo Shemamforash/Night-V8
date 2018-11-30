@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Game.Combat.Player;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -132,7 +133,8 @@ public class BeamController : MonoBehaviour
             Collider2D hit = hits[i];
             if (!hit.gameObject.CompareTag("Player")) continue;
             Vector2 dir = transform.up;
-            PlayerCombat.Instance.TakeRawDamage(BeamDamage, dir);
+            int damage = Mathf.CeilToInt(BeamDamage + WorldState.NormalisedDifficulty() * BeamDamage);
+            PlayerCombat.Instance.TakeRawDamage(damage, dir);
             PlayerCombat.Instance.MovementController.KnockBack(dir, 15f);
             break;
         }

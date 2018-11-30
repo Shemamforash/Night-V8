@@ -88,7 +88,7 @@ namespace Game.Exploration.Environment
             int minutes = WorldState.Minutes;
             hours -= 6;
             if (hours < 0) hours = 24 + hours;
-            int arrayPosition = hours * 12 + minutes / 5 - 1;
+            int arrayPosition = hours * 12 + minutes / 5;
             return (int) _temperatureArray[arrayPosition];
         }
 

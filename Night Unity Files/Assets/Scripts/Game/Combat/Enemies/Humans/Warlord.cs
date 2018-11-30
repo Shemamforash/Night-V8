@@ -8,6 +8,7 @@ namespace Game.Combat.Enemies.Humans
 {
     public class Warlord : ArmedBehaviour
     {
+        private bool _calledReinforcements;
         private const float ReinforceCallTime = 3f;
 
         public override void Initialise(Enemy enemy)
@@ -17,13 +18,11 @@ namespace Game.Combat.Enemies.Humans
             {
                 float normalHealthBefore = (HealthController.GetCurrentHealth() + a) / HealthController.GetMaxHealth();
                 float currentNormalHealth = HealthController.GetNormalisedHealthValue();
-                if (normalHealthBefore > 0.25f && currentNormalHealth <= 0.25f
-                    || normalHealthBefore > 0.5f && currentNormalHealth <= 0.5f
-                    || normalHealthBefore > 0.75f && currentNormalHealth <= 0.75f)
-                {
-                    CurrentAction = null;
-                    SkillAnimationController.Create(transform, "Warlord", ReinforceCallTime, SummonEnemies);
-                }
+                if (_calledReinforcements) return;
+                if (normalHealthBefore < 0.5f || currentNormalHealth > 0.5f) return;
+                CurrentAction = null;
+                SkillAnimationController.Create(transform, "Warlord", ReinforceCallTime, SummonEnemies);
+                _calledReinforcements = true;
             });
         }
 

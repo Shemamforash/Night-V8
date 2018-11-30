@@ -2,8 +2,6 @@
 using Facilitating.Persistence;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
-using Game.Global;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 
@@ -28,8 +26,8 @@ namespace Game.Characters
             doc.CreateChild("Name", Name);
             XmlNode equipped = doc.CreateChild("EquippedItems");
             if (EquippedWeapon != null) equipped.CreateChild("Weapon", EquippedWeapon.ID());
-            ArmourController.Save(doc);
             if (EquippedAccessory != null) equipped.CreateChild("Accessory", EquippedAccessory.ID());
+            ArmourController.Save(equipped);
             return doc;
         }
 
@@ -38,7 +36,7 @@ namespace Game.Characters
             Name = root.StringFromNode("Name");
             root = root.SelectSingleNode("EquippedItems");
             XmlNode weaponNode = root.SelectSingleNode("Weapon");
-            XmlNode accessoryNode = root.SelectSingleNode("Accesory");
+            XmlNode accessoryNode = root.SelectSingleNode("Accessory");
             int weaponId = weaponNode?.IntFromNode("Weapon") ?? -1;
             int accessoryId = accessoryNode?.IntFromNode("Accessory") ?? -1;
             ArmourController.Load(root);

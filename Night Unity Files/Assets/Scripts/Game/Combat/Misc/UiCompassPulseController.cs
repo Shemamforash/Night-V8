@@ -28,9 +28,9 @@ public class UiCompassPulseController : MonoBehaviour
         }
 
         _pulses.Reverse();
-        for (int i = 0; i < max; ++i)
+        for (int i = max - 1; i >= current; --i)
         {
-            if (i > current) _pulses[i].MarkUsed();
+            UsePulse(i);
         }
     }
 

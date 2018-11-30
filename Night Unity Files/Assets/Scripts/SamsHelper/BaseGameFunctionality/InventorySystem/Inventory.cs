@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
-using Game.Characters;
 using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
-using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem

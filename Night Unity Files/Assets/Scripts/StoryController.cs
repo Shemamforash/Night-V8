@@ -91,7 +91,7 @@ public class StoryController : Menu, IInputListener
             yield return _storyText.DOFade(0f, 1f).WaitForCompletion();
         }
 
-        yield return _audioSource.DOFade(0f, 1f).SetUpdate(UpdateType.Normal, true).WaitForCompletion();
+        _audioSource.DOFade(0f, 0.5f).SetUpdate(UpdateType.Normal, true);
         End();
     }
 

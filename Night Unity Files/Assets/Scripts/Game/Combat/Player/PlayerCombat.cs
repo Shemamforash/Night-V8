@@ -260,11 +260,9 @@ namespace Game.Combat.Player
             InputHandler.SetCurrentListener(null);
             InputHandler.UnregisterInputListener(this);
             base.Kill();
-            Player.Kill();
             bool isWanderer = Player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer;
-            CombatManager.ExitCombat(!isWanderer);
-            if (!isWanderer) return;
-            SceneChanger.GoToGameOverScene();
+            if (!isWanderer) CombatManager.ExitCombat(!isWanderer);
+            Player.Kill();
         }
 
         public override void MyUpdate()

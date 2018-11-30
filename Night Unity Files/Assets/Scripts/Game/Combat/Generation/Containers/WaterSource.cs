@@ -10,7 +10,7 @@ namespace Game.Combat.Generation
         {
             int capacity = Random.Range(0, 3);
             ResourceItem resource = ResourceTemplate.GetWater().Create();
-            if (EnvironmentManager.BelowFreezing() && Item.Name == "Water")
+            if (EnvironmentManager.BelowFreezing() && resource.Name == "Water")
                 resource = ResourceTemplate.Create("Ice");
             resource.Increment(capacity);
             Item = resource;

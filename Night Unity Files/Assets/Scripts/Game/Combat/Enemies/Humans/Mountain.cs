@@ -48,7 +48,6 @@ namespace Game.Combat.Enemies.Humans
             if (DistanceToTarget() > MinDistanceToTarget) return;
             CurrentAction = null;
             _pushing = true;
-            //todo mountain skill image
             SkillAnimationController.Create(transform, "Sniper", 1f, Push);
         }
     }

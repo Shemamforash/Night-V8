@@ -5,6 +5,7 @@ using Facilitating.UIControllers;
 using Game.Global;
 using NUnit.Framework;
 using SamsHelper.Libraries;
+using UnityEngine;
 
 namespace Game.Characters.CharacterActions
 {
@@ -35,6 +36,7 @@ namespace Game.Characters.CharacterActions
             {
                 --Duration;
                 Campfire.Tend();
+                Debug.Log(Duration);
                 if (Duration != 0) return;
                 Campfire.FinishTending();
                 PlayerCharacter.RestAction.Enter();
@@ -65,8 +67,10 @@ namespace Game.Characters.CharacterActions
 
         public override XmlNode Load(XmlNode doc)
         {
-            doc = base.Save(doc);
+            doc = base.Load(doc);
             _recipe = Recipe.FindRecipe(doc.StringFromNode("Recipe"));
+            if (_recipe.Name == "Fire") LightFire();
+            else CraftThing();
             return doc;
         }
 

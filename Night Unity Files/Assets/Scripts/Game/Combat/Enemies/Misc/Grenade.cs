@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -95,7 +96,8 @@ namespace Game.Combat.Enemies.Misc
 
         private void Detonate()
         {
-            Explosion explosion = Explosion.CreateExplosion(transform.position, Damage, _radius);
+            int damage = Mathf.CeilToInt(Damage + WorldState.NormalisedDifficulty() * Damage);
+            Explosion explosion = Explosion.CreateExplosion(transform.position, damage, _radius);
             explosion.AddOnDetonate(OnDetonate);
             if (_incendiary) explosion.SetBurn();
             if (_decaying) explosion.SetDecay();

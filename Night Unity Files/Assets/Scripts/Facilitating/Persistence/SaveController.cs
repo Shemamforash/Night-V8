@@ -13,7 +13,6 @@ namespace Facilitating.Persistence
         private static readonly string GameSaveLocation = SaveDirectory + "/FullSave.xml";
         private static readonly string SettingsSaveLocation = SaveDirectory + "/GameSettings.xml";
         private static XmlDocument _saveDoc;
-        public static Travel ResumeInCombat;
 
 
         public static void SaveGame()
@@ -23,6 +22,7 @@ namespace Facilitating.Persistence
             XmlNode root = _saveDoc.CreateChild("BTVSave");
             WorldState.Save(root);
             _saveDoc.Save(GameSaveLocation);
+            Debug.Log(GameSaveLocation);
         }
 
         public static void ClearSave()
@@ -44,19 +44,15 @@ namespace Facilitating.Persistence
             return !isPermanentSave ? null : GameSaveLocation;
         }
 
-        public static Travel LoadGame()
+        public static bool LoadGame()
         {
             string saveLocation = GetMostRecentSaveLocation();
-            if (saveLocation == null) return null;
-            Debug.Log(saveLocation);
+            if (saveLocation == null) return false;
             _saveDoc = new XmlDocument();
             _saveDoc.Load(saveLocation);
             XmlNode root = _saveDoc.GetNode("BTVSave");
             WorldState.Load(root);
-            if (ResumeInCombat == null) return null;
-            ResumeInCombat.Enter();
-            ResumeInCombat = null;
-            return ResumeInCombat;
+            return true;
         }
 
         public static bool SaveExists()

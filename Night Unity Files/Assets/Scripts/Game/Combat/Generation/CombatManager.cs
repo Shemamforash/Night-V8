@@ -174,10 +174,9 @@ namespace Game.Combat.Generation
         {
             _inCombat = true;
             WorldState.Pause();
-            _visibilityRange = 10f;
             float visibilityModifier = 0.5f * Mathf.Sin((WorldState.Hours - 6) * Mathf.PI / 12f) + 0.5f;
             _visibilityRange *= WeatherManager.CurrentWeather().GetVisibility();
-            _visibilityRange = Mathf.Lerp(3f, 10f, visibilityModifier);
+            _visibilityRange = Mathf.Lerp(2f, 8f, visibilityModifier);
             GameObject worldObject = GameObject.Find("World");
             if (_currentRegion.GetRegionType() == RegionType.Temple)
             {
@@ -248,7 +247,6 @@ namespace Game.Combat.Generation
             List<EnemyBehaviour> currentGrazerHerd = new List<EnemyBehaviour>();
             List<List<EnemyBehaviour>> FlitHerds = new List<List<EnemyBehaviour>>();
             List<EnemyBehaviour> currentFlitHerd = new List<EnemyBehaviour>();
-            Queue<EnemyBehaviour> watchers = new Queue<EnemyBehaviour>();
             _inactiveEnemies.ForEach(e =>
             {
                 EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
@@ -268,19 +266,8 @@ namespace Game.Combat.Generation
                         if (Random.Range(5, 12) >= currentFlitHerd.Count)
                             currentFlitHerd = new List<EnemyBehaviour>();
                         break;
-                    case EnemyType.Watcher:
-                        watchers.Enqueue(enemyBehaviour);
-                        break;
                 }
             });
-            while (watchers.Count > 0)
-            {
-                foreach (List<EnemyBehaviour> herd in GrazerHerds)
-                {
-                    herd.Add(watchers.Dequeue());
-                    if (watchers.Count == 0) break;
-                }
-            }
 
             _inactiveEnemies.Clear();
             PositionHerds(GrazerHerds, 1.5f);

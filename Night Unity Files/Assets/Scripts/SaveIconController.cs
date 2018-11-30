@@ -5,7 +5,6 @@ using Facilitating.Persistence;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SaveIconController : MonoBehaviour
 {
@@ -27,6 +26,7 @@ public class SaveIconController : MonoBehaviour
 
     private IEnumerator Spin()
     {
+        Debug.Log("saving");
         Thread thread = new Thread(SaveController.SaveGame);
         thread.Start();
         ParticleSystem.MainModule main = _spinParticles.main;

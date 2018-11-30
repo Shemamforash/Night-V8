@@ -7,8 +7,8 @@ namespace Game.Combat.Enemies.Humans
 {
     public class Witch : ArmedBehaviour
     {
+        private const float MaxCooldownTime = 10f;
         private float _cooldownTime;
-        private int _damageTaken;
         private bool _throwing;
 
         private void ThrowGrenade()
@@ -46,7 +46,8 @@ namespace Game.Combat.Enemies.Humans
 
         private void ResetCooldown()
         {
-            _cooldownTime = Random.Range(5, 10);
+            float cooldownTime = MaxCooldownTime - (WorldState.NormalisedDifficulty() * MaxCooldownTime / 2f);
+            _cooldownTime = Random.Range(cooldownTime, cooldownTime + 5f);
         }
 
         public override void MyUpdate()

@@ -24,8 +24,6 @@ namespace Game.Characters.CharacterActions
             DisplayName = "Travelling";
             MinuteCallback = () =>
             {
-                Debug.Log(Duration + " " + _travelTime);
-                
                 if (Duration == 0)
                 {
                     if (_inTransit) ReachTarget();
@@ -61,7 +59,6 @@ namespace Game.Characters.CharacterActions
 
         private void ReachTarget()
         {
-            Assert.IsTrue(CurrentRegion != _target);
             _inTransit = false;
             CurrentRegion = _target;
             if (AtHome())
@@ -120,9 +117,8 @@ namespace Game.Characters.CharacterActions
             doc = base.Load(doc);
             _target = MapGenerator.GetRegionById(doc.IntFromNode("Target"));
             CurrentRegion = MapGenerator.GetRegionById(doc.IntFromNode("CurrentRegion"));
-            _inTransit = doc.BoolFromNode("InTransit");
+            _inTransit = true;
             _travelTime = doc.IntFromNode("TravelTime");
-            if (!_inTransit && !AtHome()) SaveController.ResumeInCombat = this;
             return doc;
         }
 
@@ -131,7 +127,6 @@ namespace Game.Characters.CharacterActions
             doc = base.Save(doc);
             doc.CreateChild("Target", _target.RegionID);
             doc.CreateChild("CurrentRegion", CurrentRegion.RegionID);
-            doc.CreateChild("InTransit", _inTransit);
             doc.CreateChild("TravelTime", _travelTime);
             return doc;
         }

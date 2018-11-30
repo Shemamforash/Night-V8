@@ -106,7 +106,6 @@ namespace Game.Characters
 
         public void ChangeFocusMax(int polarity)
         {
-            Debug.Log("fart");
             if (!IncreaseAttribute(AttributeType.Focus, polarity)) return;
             string message = polarity > 0 ? "My eyes become keener" : "My vision blurs";
             WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));

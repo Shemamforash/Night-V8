@@ -161,7 +161,7 @@ PlayerSettings:
   ForceSDCardPermission: 0
   CreateWallpaper: 0
   APKExpansionFiles: 0
-  keepLoadedShadersAlive: 0
+  keepLoadedShadersAlive: 1
   StripUnusedMeshComponents: 0
   VertexChannelCompressionMask: 214
   iPhoneSdkVersion: 988
@@ -545,7 +545,7 @@ PlayerSettings:
   webGLLinkerTarget: 0
   webGLThreadsSupport: 0
   scriptingDefineSymbols:
-    1: DEBUG;DOTWEEN_TMP;AMPLIFY_SHADER_EDITOR;dUI_DoozyUI;dUI_TextMeshPro
+    1: DEBUG;DOTWEEN_TMP;AMPLIFY_SHADER_EDITOR;dUI_DoozyUI;dUI_TextMeshPro;ODIN_INSPECTOR
     4: DOTWEEN_TMP
     7: DOTWEEN_TMP
     13: DOTWEEN_TMP;AMPLIFY_SHADER_EDITOR
@@ -560,7 +560,7 @@ PlayerSettings:
     27: DOTWEEN_TMP
   platformArchitecture: {}
   scriptingBackend:
-    Standalone: 0
+    Standalone: 1
   il2cppCompilerConfiguration: {}
   managedStrippingLevel: {}
   incrementalIl2cppBuild: {}

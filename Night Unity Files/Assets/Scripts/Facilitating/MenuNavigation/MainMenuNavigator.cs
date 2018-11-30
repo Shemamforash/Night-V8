@@ -4,7 +4,6 @@ using Facilitating.Persistence;
 using Game.Characters;
 using Game.Gear.Weapons;
 using Game.Global;
-using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -118,7 +117,7 @@ namespace Facilitating.MenuNavigation
         private void SkipToPoint(int num)
         {
             SaveController.ClearSave();
-            WorldState.ResetWorld(num, (num - 1) * 10);
+            WorldState.ResetWorld(true, num, (num - 1) * 10);
             if (num > 2) CharacterManager.AddCharacter(CharacterManager.GenerateRandomCharacter());
             if (num > 4) CharacterManager.AddCharacter(CharacterManager.GenerateRandomCharacter());
             SaveController.SaveGame();

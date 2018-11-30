@@ -83,7 +83,6 @@ namespace Game.Combat.Generation.Shrines
                 _targetBrand = 1;
             else if (riteColliderBehaviour == _collider3)
                 _targetBrand = 2;
-            Debug.Log(_targetBrand);
         }
 
         public void ExitShrineCollider()
@@ -116,7 +115,13 @@ namespace Game.Combat.Generation.Shrines
 
         public float InRange()
         {
-            TutorialManager.TryOpenTutorial(12);
+            if (!_seenBrandTutorial && _targetBrand != -1)
+            {
+                TutorialManager.TryOpenTutorial(12);
+                _seenBrandTutorial = true;
+                return -1;
+            }
+
             return _targetBrand;
         }
 

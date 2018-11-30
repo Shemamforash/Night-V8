@@ -11,7 +11,7 @@ namespace Game.Characters.CharacterActions
     public abstract class BaseCharacterAction : State
     {
         protected readonly Player PlayerCharacter;
-        private int _timeRemaining;
+        private int _timeToNextHour;
         protected int Duration;
         private int InitialDuration;
         protected Action HourCallback;
@@ -39,16 +39,16 @@ namespace Game.Characters.CharacterActions
 
         public void UpdateAction()
         {
-            --_timeRemaining;
+            --_timeToNextHour;
             MinuteCallback?.Invoke();
-            if (_timeRemaining != 0) return;
+            if (_timeToNextHour != 0) return;
             HourCallback?.Invoke();
             ResetTimeRemaining();
         }
 
         private void ResetTimeRemaining()
         {
-            _timeRemaining = WorldState.MinutesPerHour;
+            _timeToNextHour = WorldState.MinutesPerHour;
         }
 
         public override void Enter()
@@ -70,7 +70,7 @@ namespace Game.Characters.CharacterActions
             doc.CreateChild("Name", GetType().Name);
             doc.CreateChild("InitialDuration", InitialDuration);
             doc.CreateChild("Duration", Duration);
-            doc.CreateChild("TimeRemaining", _timeRemaining);
+            doc.CreateChild("TimeRemaining", _timeToNextHour);
             return doc;
         }
 
@@ -79,7 +79,7 @@ namespace Game.Characters.CharacterActions
             doc = doc.SelectSingleNode("CurrentAction");
             InitialDuration = doc.IntFromNode("InitialDuration");
             Duration = doc.IntFromNode("Duration");
-            _timeRemaining = doc.IntFromNode("TimeRemaining");
+            _timeToNextHour = doc.IntFromNode("TimeRemaining");
             return doc;
         }
 

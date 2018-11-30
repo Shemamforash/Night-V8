@@ -127,6 +127,7 @@ namespace Facilitating.UIControllers
 
         public static void Close()
         {
+            if (TutorialManager.IsTutorialVisible()) return;
             FlashCloseButton();
             InventoryTab.ClearActiveTab();
             _instance._currentMenuController.Hide();
@@ -197,6 +198,7 @@ namespace Facilitating.UIControllers
         {
             _instance._audioPool.Create().Play(AudioClips.TabChange, Random.Range(0.9f, 1f), Random.Range(0.9f, 1f));
         }
+
         public static void ShowMeditateMenu()
         {
             SelectTab(6);

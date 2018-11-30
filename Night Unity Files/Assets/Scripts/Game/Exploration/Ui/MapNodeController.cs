@@ -51,18 +51,16 @@ namespace Game.Exploration.Ui
             _claimedParticles = gameObject.FindChildWithName<ParticleSystem>("Claimed");
         }
 
-//        private void SetTrailAlpha(float alpha)
-//        {
-//            ParticleSystem.TrailModule trails = _claimedParticles.trails;
-//            Color c = trails.colorOverTrail.color;
-//            c.a = alpha;
-//            trails.colorOverTrail = c;
-//        }
-//
-//        private float GetTrailAlpha()
-//        {
-//            return _claimedParticles.trails.colorOverTrail.color.a;
-//        }
+        private void SetTrailAlpha(float alpha)
+        {
+            ParticleSystem.TrailModule trails = _claimedParticles.trails;
+            trails.colorOverTrail = new Color(1, 1, 1, alpha);
+        }
+
+        private float GetTrailAlpha()
+        {
+            return _claimedParticles.trails.colorOverTrail.color.a;
+        }
 
         private void SetGritText()
         {
@@ -78,26 +76,24 @@ namespace Game.Exploration.Ui
         {
             _hidden = false;
             _gritCost = RoutePlotter.RouteBetween(_region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion()).Count - 1;
-            _canAfford = CharacterManager.SelectedCharacter.CanAffordTravel(_gritCost);
+            _canAfford = CharacterManager.SelectedCharacter.CanAffordTravel(_gritCost) || _region.GetRegionType() == RegionType.Gate;
             SetGritText();
             _targetCentreAlpha = 0.6f;
             _targetNodeAlpha = _canAfford ? 1f : 0.5f;
-//            DOTween.To(GetTrailAlpha, SetTrailAlpha, 1f, 1f).SetUpdate(UpdateType.Normal, true);
+            float claimAlpha = _region.ClaimRemaining > 0 ? 1 : 0;
+            DOTween.To(GetTrailAlpha, SetTrailAlpha, claimAlpha, 1f).SetUpdate(UpdateType.Normal, true);
         }
 
         public void Hide()
         {
             _hidden = true;
             _targetNodeAlpha = 0f;
-            _claimedParticles.Stop();
-//            DOTween.To(GetTrailAlpha, SetTrailAlpha, 0f, 1f).SetUpdate(UpdateType.Normal, true);
+            DOTween.To(GetTrailAlpha, SetTrailAlpha, 0f, 1f).SetUpdate(UpdateType.Normal, true);
         }
 
         public void SetRegion(Region region)
         {
             _region = region;
-            if (region.ClaimRemaining > 0) _claimedParticles.Play();
-            else _claimedParticles.Stop();
             string nameText = region.GetRegionType() == RegionType.None ? "Unknown Region" : region.Name;
             for (int i = 0; i < nameText.Length; ++i)
             {

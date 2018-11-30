@@ -17,7 +17,7 @@ namespace Game.Combat.Generation
     {
         public static int CombatAreaWidth = 30;
         public static int CombatMovementDistance = CombatAreaWidth - 3;
-        public const int CellResolution = 6;
+        public const int CellResolution = 4;
         public const float CellWidth = 1f / CellResolution;
         public static int GridWidth;
 

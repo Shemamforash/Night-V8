@@ -59,7 +59,7 @@ namespace Game.Global
 
         public static void Load(XmlNode doc)
         {
-            ResetWorld();
+            ResetWorld(false);
             XmlNode worldStateValues = doc.GetNode("WorldState");
             Seed = worldStateValues.IntFromNode("Seed");
             DaysSpentHere = worldStateValues.IntFromNode("DaysSpentHere");
@@ -70,8 +70,8 @@ namespace Game.Global
             MinutesPassed = worldStateValues.IntFromNode("MinutesPassed");
             _difficulty = worldStateValues.IntFromNode("Difficulty");
             Inventory.Load(doc);
-            CharacterManager.Load(doc);
             MapGenerator.Load(doc);
+            CharacterManager.Load(doc);
             WeatherManager.Load(doc);
             EnvironmentManager.Load(doc);
             WorldEventManager.Load(doc);
@@ -102,10 +102,10 @@ namespace Game.Global
             Campfire.Save(doc);
         }
 
-        public static void ResetWorld(int currentLevel = 1, int difficulty = 0)
+        public static void ResetWorld(bool clearSave = true, int currentLevel = 1, int difficulty = 0)
         {
             Inventory.Reset();
-            CharacterManager.Reset();
+            CharacterManager.Reset(clearSave);
             DaysSpentHere = 0;
             _currentLevel = currentLevel;
             Days = 0;
@@ -118,7 +118,6 @@ namespace Game.Global
 #if UNITY_EDITOR
 //            _difficulty = 30;
 #endif
-
             Random.InitState(Seed);
             EnvironmentManager.Reset();
             WeatherManager.Reset();
@@ -175,6 +174,8 @@ namespace Game.Global
 
         public static int Difficulty() => _difficulty;
 
+        public static int NormalisedDifficulty() => _difficulty / MaxDifficulty;
+
         public static int GetDaysSpentHere() => DaysSpentHere;
 
         public static int CurrentLevel() => _currentLevel;
@@ -211,10 +212,13 @@ namespace Game.Global
         private void IncrementMinutes()
         {
             Minutes += MinuteInterval;
+            if (Minutes == 60)
+            {
+                Minutes = 0;
+                IncrementHours();
+            }
+
             MinutePasses();
-            if (Minutes != 60) return;
-            Minutes = 0;
-            IncrementHours();
         }
 
         private static void MinutePasses()

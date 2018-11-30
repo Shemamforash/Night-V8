@@ -58,7 +58,8 @@ namespace Game.Combat.Enemies.Humans
             direction.y = y;
             _slashParticles.Emit(1);
             WeaponAudio.PlayBrawlerSlash();
-            GetTarget().TakeRawDamage(MeleeDamage, direction);
+            int damage = Mathf.CeilToInt(MeleeDamage + WorldState.NormalisedDifficulty() * MeleeDamage);
+            GetTarget().TakeRawDamage(damage, direction);
             direction = TargetPosition().Direction(transform);
             ((CharacterCombat) GetTarget()).MovementController.KnockBack(direction, MeleeForce);
         }

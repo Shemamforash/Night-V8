@@ -62,11 +62,10 @@ namespace Game.Combat.Misc
 
         public static void Generate(Vector2 position)
         {
-            Debug.Log("generated");
             if (_shelterCharacterPrefab == null) _shelterCharacterPrefab = Resources.Load<GameObject>("Prefabs/Combat/Shelter Character");
             GameObject characterObject = Instantiate(_shelterCharacterPrefab);
             characterObject.transform.position = position;
-            Debug.Log(position);
+            Debug.Log("generated" + " " + position);
         }
 
         public bool ShowText()

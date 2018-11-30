@@ -26,11 +26,14 @@ namespace Game.Characters
         {
             SelectedCharacter = null;
             Characters.Clear();
-            if (includeDriver) GenerateDriver();
+            if (!includeDriver) return;
+            LoadTemplates(true);
+            GenerateDriver();
         }
 
         public static void Load(XmlNode doc)
         {
+            LoadTemplates(true);
             Reset(false);
             XmlNode characterManagerNode = doc.GetNode("Characters");
             foreach (XmlNode characterNode in Helper.GetNodesWithName(characterManagerNode, "Character"))
@@ -42,6 +45,7 @@ namespace Game.Characters
                 player.Load(characterNode);
                 AddCharacter(player);
             }
+            Assert.IsFalse(Templates.Any(t => t.CharacterClass == CharacterClass.Wanderer));
         }
 
         public static void Save(XmlNode doc)
@@ -80,9 +84,10 @@ namespace Game.Characters
             SelectedCharacter = player;
         }
 
-        private static void LoadTemplates()
+        private static void LoadTemplates(bool force = false)
         {
-            if (_loaded) return;
+            if (!force && _loaded) return;
+            Templates.Clear();
             XmlNode root = Helper.OpenRootNode("Classes");
             foreach (XmlNode classNode in Helper.GetNodesWithName(root, "Class"))
                 new CharacterTemplate(classNode, Templates);

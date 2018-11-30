@@ -78,18 +78,15 @@ public class StarfishBehaviour : Boss
 
     private void PushPulse()
     {
-        //debug.log("j");
         PushController.Create(transform.position, 0f, false, 40);
         PushController.Create(transform.position, 72f, false, 40f);
         PushController.Create(transform.position, 144f, false, 40f);
         PushController.Create(transform.position, 216f, false, 40f);
         PushController.Create(transform.position, 288f, false, 40f);
-        //debug.log("k");
     }
 
     private void LaunchBombs()
     {
-        //debug.log("h");
         if (_bombsToLaunch == 0) return;
         float angleDivision = 360f / _bombsToLaunch;
         for (int i = 0; i < _bombsToLaunch; ++i)
@@ -102,8 +99,6 @@ public class StarfishBehaviour : Boss
             Vector3 direction = new Vector2(x, y) * Random.Range(3f, 5f);
             Grenade.CreateBasic(transform.position, direction, false);
         }
-
-        //debug.log("i");
     }
 
     private void Contract()

@@ -8,7 +8,6 @@ namespace Game.Combat.Enemies.Animals
     {
         public override void Alert(bool alertOthers)
         {
-            Debug.Log("alerted");
             if (Alerted) return;
             Alerted = true;
             Cell target = PathingGrid.GetCellOutOfRange(transform.position);
