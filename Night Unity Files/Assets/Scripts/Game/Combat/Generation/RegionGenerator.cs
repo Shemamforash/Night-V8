@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using Game.Exploration.Regions;
 using Game.Global;
 using NUnit.Framework;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -17,7 +15,7 @@ namespace Game.Combat.Generation
     public abstract class RegionGenerator : MonoBehaviour
     {
         private const float MinPolyWidth = 0.1f, SmallPolyWidth = 0.2f, MediumPolyWidth = 2f, LargePolyWidth = 3f;
-        protected Region _region;
+        private Region _region;
         private List<Vector2> _availablePositions;
         private int _barrierNumber;
         protected readonly List<Barrier> barriers = new List<Barrier>();
@@ -27,7 +25,7 @@ namespace Game.Combat.Generation
             _region = region;
             Random.InitState(region.RegionID + WorldState.Seed);
             SetRegionWidth();
-            PathingGrid.InitialiseGrid();
+            PathingGrid.InitialiseGrid(_region.GetRegionType() != RegionType.Rite);
             GenerateFreshEnvironment();
             GenerateObjects();
             GenerateEdges();
@@ -94,7 +92,7 @@ namespace Game.Combat.Generation
             _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(900, PathingGrid.CombatAreaWidth * 1.5f));
             Generate();
             _region.Barriers = barriers;
-            PathingGrid.InitialiseGrid();
+            PathingGrid.InitialiseGrid(_region.GetRegionType() != RegionType.Rite);
             _region.MarkGenerated();
         }
 
@@ -117,7 +115,7 @@ namespace Game.Combat.Generation
 
             if (_region.GetRegionType() == RegionType.Monument)
             {
-                SaveStoneBehaviour.Generate(_region);
+                SaveStoneBehaviour.Generate();
             }
         }
 
@@ -276,7 +274,7 @@ namespace Game.Combat.Generation
             }
 
             JournalEntry journalEntry = JournalEntry.GetEntry();
-            if (journalEntry != null)
+            if (!_region.ReadJournal && journalEntry != null)
                 CreateContainer<JournalSource>()?.SetEntry(journalEntry);
 
             for (int i = 0; i < _region.WaterSourceCount; ++i)

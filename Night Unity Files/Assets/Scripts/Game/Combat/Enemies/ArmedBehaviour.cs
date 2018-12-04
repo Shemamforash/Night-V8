@@ -60,7 +60,7 @@ namespace Game.Combat.Enemies
             };
         }
 
-        private void Aim()
+        protected virtual void Aim()
         {
             CurrentAction = () =>
             {

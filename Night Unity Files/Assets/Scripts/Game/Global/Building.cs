@@ -1,5 +1,6 @@
 ﻿using System.Xml;
 using Facilitating.Persistence;
+using Game.Exploration.Environment;
 using Game.Exploration.Weather;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -76,9 +77,10 @@ namespace Game.Global
 
         public override void Update()
         {
-            if (WeatherManager.CurrentWeather().Name == "Drizzle") Inventory.IncrementResource("Water", 1);
-            else if (WeatherManager.CurrentWeather().Name == "Rain") Inventory.IncrementResource("Water", 1);
-            else if (WeatherManager.CurrentWeather().Name == "Downpour") Inventory.IncrementResource("Water", 1);
+            string resource = EnvironmentManager.GetTemperature() <= 0 ? "Ice" : "Water";
+            if (WeatherManager.CurrentWeather().Name == "Drizzle") Inventory.IncrementResource(resource, 1);
+            else if (WeatherManager.CurrentWeather().Name == "Rain") Inventory.IncrementResource(resource, 1);
+            else if (WeatherManager.CurrentWeather().Name == "Downpour") Inventory.IncrementResource(resource, 1);
         }
     }
 

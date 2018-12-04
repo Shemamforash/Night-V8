@@ -50,7 +50,7 @@ public class UiBrandMenu : Menu
 
         titleString = brand.GetName() + "has been " + titleString;
         _titleText.SetText(titleString);
-        _benefitText.SetText(benefitString);
+        _benefitText.SetText(brand.Description() + "\n\n" +benefitString);
         _effectText.SetText(brand.GetEffectString());
         gameObject.SetActive(true);
         _closeButton.Enable();

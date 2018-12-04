@@ -46,8 +46,6 @@ namespace Game.Combat.Misc
             _spriteObject = gameObject.FindChildWithName("Sprites");
             _audioSource = gameObject.FindChildWithName<AudioSource>("Audio");
             _audioSource.clip = AudioClips.StandardExplosion;
-            Debug.Log(_audioSource.clip + " " + AudioClips.StandardExplosion);
-
             _explosionSprite.color = UiAppearanceController.InvisibleColour;
             _light.Colour = UiAppearanceController.InvisibleColour;
         }

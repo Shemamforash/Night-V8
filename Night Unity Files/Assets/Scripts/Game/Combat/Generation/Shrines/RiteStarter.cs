@@ -12,15 +12,22 @@ namespace Game.Combat.Generation.Shrines
     {
         private Brand _brand;
         private static GameObject _prefab;
+        private bool _returnHome;
 
-        public static void Generate(Brand brand)
+        public static void Generate(Brand brand, bool returnHome)
         {
-            Vector2 position = GetPosition();
+            Vector2 position = brand == null ? Vector2.zero : GetPosition();
             if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Rite Starter");
             GameObject riteObject = Instantiate(_prefab);
             RiteStarter riteStarter = riteObject.GetComponent<RiteStarter>();
-            riteStarter._brand = brand;
+            riteStarter.Initialise(brand, returnHome);
             riteObject.transform.position = position;
+        }
+
+        private void Initialise(Brand brand, bool returnHome)
+        {
+            _brand = brand;
+            _returnHome = returnHome;
         }
 
         private static Vector2 GetPosition()
@@ -42,11 +49,24 @@ namespace Game.Combat.Generation.Shrines
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!other.CompareTag("Player")) return;
+            if (_returnHome)
+                ReturnHome();
+            else
+                GoToRite();
+        }
+
+        private void GoToRite()
+        {
             Region r = new Region();
             r.SetRegionType(RegionType.Rite);
             Rite.SetBrand(_brand, CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion());
             CombatManager.SetCurrentRegion(r);
             SceneChanger.GoToCombatScene();
+        }
+
+        private void ReturnHome()
+        {
+            SceneChanger.GoToGameScene();
         }
     }
 }

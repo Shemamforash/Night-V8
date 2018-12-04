@@ -43,6 +43,7 @@ public class TempleBehaviour : BasicShrineBehaviour
 
     protected override void StartShrine()
     {
+        if (CombatManager.GetCurrentRegion().TempleCleansed) return;
         Triggered = true;
         _flames.Play();
         _dust.Play();

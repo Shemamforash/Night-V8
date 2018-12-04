@@ -18,16 +18,21 @@ public class DismantleMenuController : Menu
     private ListController _dismantleList;
     private static readonly Dictionary<string, int> _dismantleRewards = new Dictionary<string, int>();
     private CloseButtonController _closeButton;
+    private GameObject _dismantledScreen;
+    private EnhancedText _receivedText;
 
     public override void Awake()
     {
         base.Awake();
         _dismantleList = gameObject.FindChildWithName<ListController>("List");
-        List<ListElement> listElements = new List<ListElement> {new DismantleElement(), new DismantleElement(), new DismantleElementDetailed(), new DismantleElement(), new DismantleElement()};
-        _dismantleList.Initialise(listElements, Dismantle, Close);
+        _dismantleList.Initialise(typeof(DismantleElement), Dismantle, Close);
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
         _closeButton.SetOnClick(Close);
         _closeButton.SetCallback(Close);
+
+        _dismantledScreen = gameObject.FindChildWithName("Dismantled");
+        _receivedText = _dismantledScreen.FindChildWithName<EnhancedText>("Receive");
+        _dismantledScreen.FindChildWithName<EnhancedButton>("Button").AddOnClick(Show);
     }
 
     private static void AddReward(string reward, int quantity)
@@ -50,15 +55,12 @@ public class DismantleMenuController : Menu
     private static string GetDismantleText(GearItem gear)
     {
         CalculateDismantleRewards(gear);
-        string dismantleText = "In sacrificing your\n";
-        dismantleText += "<size=40>" + gear.Name + "</size>\n";
-        dismantleText += "You will receive\n\n";
+        string dismantleText = "";
         foreach (string reward in _dismantleRewards.Keys)
         {
             int quantity = _dismantleRewards[reward];
             dismantleText += quantity + "x " + reward + "\n";
         }
-
         return dismantleText;
     }
 
@@ -139,6 +141,7 @@ public class DismantleMenuController : Menu
 
         protected override void UpdateCentreItemEmpty()
         {
+            _text.SetText("No Items found to sacrifice");
         }
 
         public override void SetColour(Color colour)
@@ -163,43 +166,6 @@ public class DismantleMenuController : Menu
         }
     }
 
-    private class DismantleElementDetailed : ListElement
-    {
-        private EnhancedText _nameText, _receiveText;
-
-        protected override void UpdateCentreItemEmpty()
-        {
-            _nameText.SetText("No Items found to sacrifice");
-            _receiveText.SetText("-");
-        }
-
-        public override void SetColour(Color colour)
-        {
-            _nameText.SetColor(colour);
-            _receiveText.SetColor(colour);
-        }
-
-        protected override void SetVisible(bool visible)
-        {
-            if (visible) return;
-            _nameText.SetText("");
-            _receiveText.SetText("");
-        }
-
-        protected override void CacheUiElements(Transform transform)
-        {
-            _nameText = transform.FindChildWithName<EnhancedText>("Name");
-            _receiveText = transform.FindChildWithName<EnhancedText>("Receive");
-        }
-
-        protected override void Update(object o, bool isCentreItem)
-        {
-            GearItem item = (GearItem) o;
-            _nameText.SetText(item.Name);
-            _receiveText.SetText(GetDismantleText(item));
-        }
-    }
-
     private static List<object> GetDismantleItems()
     {
         List<object> items = Inventory.GetAvailableWeapons().ToObjectList();
@@ -209,7 +175,7 @@ public class DismantleMenuController : Menu
         return items;
     }
 
-    public void Dismantle(object o)
+    private void Dismantle(object o)
     {
         GearItem gear = (GearItem) o;
         foreach (string reward in _dismantleRewards.Keys)
@@ -219,10 +185,19 @@ public class DismantleMenuController : Menu
         }
 
         gear.UnEquip();
+        ShowDismantledScreen(o);
         if (gear is Weapon) Inventory.Destroy((Weapon) gear);
         else if (gear is Accessory) Inventory.Destroy((Accessory) gear);
         else if (gear is Armour) Inventory.Destroy((Armour) gear);
         else if (gear is Inscription) Inventory.Destroy((Inscription) gear);
+    }
+
+    private void ShowDismantledScreen(object o)
+    {
+        GearItem gear = (GearItem) o;
+        _dismantledScreen.SetActive(true);
+        _dismantleList.gameObject.SetActive(false);
+        _receivedText.SetText(GetDismantleText(gear));
     }
 
     public override void Enter()
@@ -230,6 +205,8 @@ public class DismantleMenuController : Menu
         base.Enter();
         CombatManager.Pause();
         DOTween.defaultTimeScaleIndependent = true;
+        _dismantledScreen.SetActive(false);
+        _dismantleList.gameObject.SetActive(true);
         _dismantleList.Show(GetDismantleItems);
     }
 

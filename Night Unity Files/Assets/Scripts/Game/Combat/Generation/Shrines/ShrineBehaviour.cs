@@ -173,6 +173,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
 
     protected virtual void EndChallenge()
     {
+        RiteStarter.Generate(null, true);
         End();
     }
 }

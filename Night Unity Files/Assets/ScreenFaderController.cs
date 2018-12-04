@@ -9,6 +9,7 @@ public class ScreenFaderController : MonoBehaviour
     private static Image _faderImage;
     private static CanvasGroup _faderCanvas, _textCanvas;
     private static TextMeshProUGUI _text;
+    private static Tweener _tweener;
 
     private void Awake()
     {
@@ -39,15 +40,15 @@ public class ScreenFaderController : MonoBehaviour
     public static void FadeIn(float duration)
     {
         if (_faderCanvas == null) Initialise();
-        _faderCanvas.DOFade(1, duration).SetUpdate(UpdateType.Normal, true);
+        _tweener?.Kill();
+        _tweener = _faderCanvas.DOFade(1, duration).SetUpdate(UpdateType.Normal, true);
     }
 
     public static void FadeOut(float duration)
     {
         if (_faderCanvas == null) Initialise();
-        Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
-        sequence.AppendInterval(1f);
-        sequence.Append(_faderCanvas.DOFade(0, duration));
+        _tweener?.Kill();
+        _tweener = _faderCanvas.DOFade(0, duration).SetUpdate(UpdateType.Normal, true);
     }
 
     public static void SetAlpha(float alpha)

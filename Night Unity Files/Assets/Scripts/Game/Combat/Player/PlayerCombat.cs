@@ -10,6 +10,7 @@ using Game.Combat.Enemies.Animals;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
+using Game.Exploration.Regions;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -228,6 +229,7 @@ namespace Game.Combat.Player
 
         public float InRange()
         {
+            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Rite) return -1;
             return CurrentCell().OutOfRange ? 1 : -1;
         }
 

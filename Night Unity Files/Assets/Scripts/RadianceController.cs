@@ -13,12 +13,16 @@ public class RadianceController : MonoBehaviour, ICombatEvent
     private static GameObject _stonePrefab;
     private int _radianceAvailable;
     private static RadianceController _instance;
-    private bool _activated;
+    private static bool _activated;
 
     public void Awake()
     {
         _instance = this;
         _radianceAvailable = Inventory.GetResourceQuantity("Radiance");
+        _activated = false;
+        Vector2? existingRadianceStone = CombatManager.GetCurrentRegion().RadianceStonePosition;
+        if (existingRadianceStone == null) return;
+        CreateRadianceStone(existingRadianceStone.Value);
     }
 
     private class RadianceBehaviour : MonoBehaviour
@@ -52,16 +56,22 @@ public class RadianceController : MonoBehaviour, ICombatEvent
         return "Claim region [T] (" + _radianceAvailable + " radiance left)";
     }
 
-    public void Activate()
+    private static void CreateRadianceStone(Vector2 position)
     {
-        Inventory.DecrementResource("Essence", 1);
-        PlayerCombat.Instance.Player.TravelAction.GetCurrentRegion().Claim();
         if (_stonePrefab == null) _stonePrefab = Resources.Load<GameObject>("Prefabs/Combat/Effects/Radiance Stone");
         GameObject stoneObject = Instantiate(_stonePrefab);
         stoneObject.AddComponent<RadianceBehaviour>();
-        stoneObject.transform.position = transform.position;
+        stoneObject.transform.position = position;
         _activated = true;
     }
+
+    public void Activate()
+    {
+        Inventory.DecrementResource("Radiance", 1);
+        PlayerCombat.Instance.Player.TravelAction.GetCurrentRegion().Claim(transform.position);
+        CreateRadianceStone(transform.position);
+    }
+
     public static RadianceController Instance()
     {
         return _instance;

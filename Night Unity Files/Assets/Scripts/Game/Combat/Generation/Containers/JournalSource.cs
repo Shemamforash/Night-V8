@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Combat.Generation;
 using Game.Global;
 using UnityEngine;
 
@@ -24,7 +25,9 @@ public class JournalSource : ContainerController
 
     public override void Take()
     {
+        base.Take();
         _journalEntry.Unlock();
         CombatJournalController.ShowJournal(_journalEntry);
+        CombatManager.GetCurrentRegion().ReadJournal = true;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat.Enemies;
@@ -16,20 +17,26 @@ namespace Game.Combat.Generation.Shrines
     public class FountainBehaviour : BasicShrineBehaviour, ICombatEvent
     {
         private static GameObject _fountainPrefab;
+        private static FountainBehaviour _instance;
+
         private List<EnemyBehaviour> _enemies;
         private Region _region;
-        private static FountainBehaviour _instance;
+        private ParticleSystem[] _particleSystems;
+        private AudioSource _audioSource;
+
 
         public void Awake()
         {
             _instance = this;
+            _particleSystems = transform.GetComponentsInChildren<ParticleSystem>();
+            _audioSource = GetComponent<AudioSource>();
         }
 
         public static FountainBehaviour Instance()
         {
             return _instance;
         }
-        
+
         public static void Generate(Region region)
         {
             if (_fountainPrefab == null) _fountainPrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Fountain");
@@ -41,7 +48,7 @@ namespace Game.Combat.Generation.Shrines
         {
             _region = region;
             transform.position = Vector2.zero;
-            PathingGrid.AddBlockingArea(Vector2.zero, 1.5f );
+            PathingGrid.AddBlockingArea(Vector2.zero, 1.5f);
             if (!_region.FountainVisited) return;
             GetComponent<CompassItem>().Die();
             Destroy(this);
@@ -78,12 +85,10 @@ namespace Game.Combat.Generation.Shrines
         {
             CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Thirst).Decrement(10);
             CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Hunger).Decrement(10);
-            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Grit).SetToMax();
-            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Focus).SetToMax();
-            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Fettle).SetToMax();
-            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Will).SetToMax();
             PlayerCombat.Instance.HealthController.Heal(1000000);
             PlayerCombat.Instance.ResetCompass();
+            foreach (ParticleSystem system in _particleSystems) system.Stop();
+            _audioSource.DOFade(0f, 2f);
         }
 
         protected override void StartShrine()
@@ -92,13 +97,12 @@ namespace Game.Combat.Generation.Shrines
 
         public float InRange()
         {
-            if (Triggered) return -1;
             return IsInRange ? 1 : -1;
         }
 
         public string GetEventText()
         {
-            return Triggered ? "All attributes have been restored" : "Drink from the fountain... [T]";
+            return Triggered ? "The blessed water quenches your thirst and sates your hunger" : "Drink from the fountain... [T]";
         }
 
         public void Activate()

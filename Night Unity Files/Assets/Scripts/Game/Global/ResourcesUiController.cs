@@ -51,7 +51,8 @@ public class ResourcesUiController : MonoBehaviour
         int quantity = (int) Inventory.Consumables().Sum(c =>
         {
             ResourceTemplate template = c.Template;
-            return template.ResourceType == ResourceType.Meat ? template.EffectBonus : 0;
+            float hungerOffset = template.ResourceType == ResourceType.Meat ? template.EffectBonus : 0;
+            return hungerOffset * c.Quantity();
         });
         _food.UpdateTab("Food", quantity);
     }
@@ -61,7 +62,8 @@ public class ResourcesUiController : MonoBehaviour
         int quantity = (int) Inventory.Consumables().Sum(c =>
         {
             ResourceTemplate template = c.Template;
-            return template.ResourceType == ResourceType.Water ? template.EffectBonus : 0;
+            float thirstOffset = template.ResourceType == ResourceType.Water ? template.EffectBonus : 0; 
+            return thirstOffset * c.Quantity();
         });
         _water.UpdateTab("Water", quantity);
     }

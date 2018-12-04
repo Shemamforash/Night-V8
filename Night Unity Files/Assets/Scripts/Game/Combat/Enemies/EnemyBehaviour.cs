@@ -33,16 +33,17 @@ namespace Game.Combat.Enemies
 
         private void PushAwayFromNeighbors()
         {
-            List<CanTakeDamage> chars = CombatManager.GetCharactersInRange(transform.position, 1f);
+            return;
+            List<CanTakeDamage> chars = CombatManager.GetCharactersInRange(transform.position, 2f);
             Vector2 forceDir = Vector2.zero;
             chars.ForEach(c =>
             {
                 EnemyBehaviour enemy = c as EnemyBehaviour;
                 if (enemy == null || enemy == this) return;
-                if (Vector2.Distance(transform.position, enemy.transform.position) > 0.25f) return;
                 Vector2 dir = enemy.transform.position - transform.position;
                 if (dir == Vector2.zero) dir = AdvancedMaths.RandomVectorWithinRange(transform.position, 1).normalized;
-                float force = 1 / dir.magnitude;
+                float force = 20f / dir.magnitude;
+                if (force > 50) force = 50;
                 forceDir += -dir * force;
             });
             MovementController.AddForce(forceDir);
@@ -114,8 +115,9 @@ namespace Game.Combat.Enemies
 
         public override void TakeShotDamage(Shot shot)
         {
+            float healthBefore = HealthController.GetCurrentHealth();
             base.TakeShotDamage(shot);
-            if (HealthController.GetCurrentHealth() != 0) return;
+            if (HealthController.GetCurrentHealth() != 0 || healthBefore == 0) return;
             PlayerCombat.Instance.Player.IncreaseKills();
         }
 
@@ -136,15 +138,9 @@ namespace Game.Combat.Enemies
             }
 
             Loot loot = Enemy.DropLoot(transform.position);
-
-            if (loot != null)
-            {
-                loot.CreateObject(true);
-                CombatManager.Region().Containers.Add(loot);
-            }
-
+            loot?.CreateObject(true);
             PlayerCombat.Instance.TriggerEnemyDeathEffect();
-            CombatManager.Remove(this);
+            CombatManager.RemoveEnemy(this);
             Destroy(gameObject);
         }
     }

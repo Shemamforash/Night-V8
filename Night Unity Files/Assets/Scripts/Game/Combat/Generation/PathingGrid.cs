@@ -37,11 +37,11 @@ namespace Game.Combat.Generation
         private static readonly List<Cell> _cellsInRange = new List<Cell>();
         private static Stopwatch _stopwatch;
 
-        public static void InitialiseGrid()
+        public static void InitialiseGrid(bool drawInner)
         {
             _stopwatch = Stopwatch.StartNew();
             GenerateBaseGrid();
-            UiCombatRingBoundDrawer.Draw();
+            UiCombatRingBoundDrawer.Draw(drawInner);
             _stopwatch.Stop();
             _stopwatch.PrintTime("Grid: ");
             _stopwatch = Stopwatch.StartNew();
@@ -141,7 +141,6 @@ namespace Game.Combat.Generation
             }
         }
 
-        //todo slow
         private static bool IsLineObstructed(Vector2 start, Vector2 end, bool includeReachable = false)
         {
             float distance = Vector2.Distance(start, end);
@@ -161,7 +160,7 @@ namespace Game.Combat.Generation
             return false;
         }
 
-        private static List<Cell> _cellsToRemove = new List<Cell>();
+        private static readonly List<Cell> _cellsToRemove = new List<Cell>();
 
         public static void SmoothRoute(List<Cell> route)
         {
@@ -189,7 +188,7 @@ namespace Game.Combat.Generation
             }
         }
 
-        private static List<Cell> _cellPath = new List<Cell>();
+        private static readonly List<Cell> _cellPath = new List<Cell>();
 
         public static List<Cell> JPS(Cell start, Cell end)
         {

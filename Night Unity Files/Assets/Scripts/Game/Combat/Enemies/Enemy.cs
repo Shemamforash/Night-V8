@@ -30,8 +30,8 @@ namespace Game.Combat.Enemies
         public Enemy(EnemyTemplate template) : base(template.EnemyType.ToString())
         {
             Template = template;
-            if (Template.HasGear) GenerateArmour();
-            if (Template.HasWeapon) GenerateWeapon();
+            GenerateArmour();
+            GenerateWeapon();
         }
 
         public override XmlNode Save(XmlNode doc)
@@ -43,6 +43,7 @@ namespace Game.Combat.Enemies
 
         private void GenerateWeapon()
         {
+            if (!Template.HasWeapon) return;
             List<WeaponType> possibleTypes = new List<WeaponType>();
             switch (Template.EnemyType)
             {
@@ -51,10 +52,9 @@ namespace Game.Combat.Enemies
                     possibleTypes.Add(WeaponType.SMG);
                     break;
                 case EnemyType.Mountain:
-                    possibleTypes.Add(WeaponType.LMG);
+                    possibleTypes.Add(WeaponType.Shotgun);
                     break;
                 case EnemyType.Sentinel:
-                    possibleTypes.Add(WeaponType.Shotgun);
                     possibleTypes.Add(WeaponType.SMG);
                     break;
                 case EnemyType.Sniper:
@@ -63,21 +63,22 @@ namespace Game.Combat.Enemies
                     break;
                 case EnemyType.Warlord:
                     possibleTypes.Add(WeaponType.SMG);
-                    possibleTypes.Add(WeaponType.LMG);
+                    possibleTypes.Add(WeaponType.Shotgun);
                     break;
                 case EnemyType.Witch:
                     possibleTypes.Add(WeaponType.Rifle);
                     possibleTypes.Add(WeaponType.Shotgun);
                     break;
             }
-            
-            Weapon weapon = WeaponGenerator.GenerateWeapon();
+
+            Weapon weapon = WeaponGenerator.GenerateWeapon();//possibleTypes.RandomElement());
             EquipWeapon(weapon);
             if (Helper.RollDie(0, 5)) weapon.SetInscription(Inscription.Generate());
         }
 
         private void GenerateArmour()
         {
+            if (!Template.HasGear) return;
             int difficulty = Mathf.FloorToInt(WorldState.Difficulty() / 5f);
             int armourMin = difficulty - 3;
             if (armourMin < 0) armourMin = 0;

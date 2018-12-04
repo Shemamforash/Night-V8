@@ -20,11 +20,11 @@ public class UiCombatRingBoundDrawer : MonoBehaviour
 		_instance = null;
 	}
 	
-	public static void Draw()
+	public static void Draw(bool drawInner)
 	{
 		_rings.ForEach(Destroy);
 		_rings.Clear();
-		CreateRing(PathingGrid.CombatMovementDistance / 2f, 0.02f, Color.white);
+		if(drawInner) CreateRing(PathingGrid.CombatMovementDistance / 2f, 0.02f, Color.white);
 		CreateRing(PathingGrid.CombatAreaWidth / 2f, 0.01f, UiAppearanceController.FadedColour);
 	}
 	

@@ -35,7 +35,7 @@ class WeaponImporter(XMLWriter):
                       [subtype_name, automatic])
 
     def read_weapon_classes(self):
-        for row_no in range(1, 6):
+        for row_no in range(1, 5):
             weapon_class = get_value(self, "A", row_no * 3)
             write_tag(self, "Class", self.read_weapon_subtypes, [row_no * 3], ["name"],
                       [weapon_class])
@@ -291,16 +291,17 @@ class BrandImporter(XMLWriter):
             write_tag(self, get_value(self, "A", row), self.read_brand, [row])
 
     def read_brand(self, row):
-        write_single_value(self, "Requirement", get_value(self, "B", row))
-        write_single_value(self, "TargetValue", get_value(self, "C", row))
-        write_single_value(self, "SuccessName", get_value(self, "D", row))
-        write_single_value(self, "SuccessEffect", get_value(self, "E", row))
-        write_single_value(self, "SuccessValue", get_value(self, "F", row, "0"))
-        write_single_value(self, "FailName", get_value(self, "G", row))
-        write_single_value(self, "FailEffect", get_value(self, "H", row))
-        write_single_value(self, "FailValue", get_value(self, "I", row))
-        write_single_value(self, "RequiresSkill", get_value(self, "J", row))
-        write_single_value(self, "MinLevel", get_value(self, "K", row))
+        write_single_value(self, "Description", get_value(self, "B", row))
+        write_single_value(self, "Requirement", get_value(self, "C", row))
+        write_single_value(self, "TargetValue", get_value(self, "D", row))
+        write_single_value(self, "SuccessName", get_value(self, "E", row))
+        write_single_value(self, "SuccessEffect", get_value(self, "F", row))
+        write_single_value(self, "SuccessValue", get_value(self, "G", row, "0"))
+        write_single_value(self, "FailName", get_value(self, "H", row))
+        write_single_value(self, "FailEffect", get_value(self, "I", row))
+        write_single_value(self, "FailValue", get_value(self, "J", row))
+        write_single_value(self, "RequiresSkill", get_value(self, "K", row))
+        write_single_value(self, "MinLevel", get_value(self, "L", row))
 
 
 class StoryImporter(XMLWriter):
@@ -403,7 +404,7 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-# WeaponImporter()
+WeaponImporter()
 # GearImporter()
 # WeatherImporter()
 # WeatherProbabilityImporter();
@@ -417,4 +418,4 @@ def write_single_value(xml_writer, stat_name, value):
 # EnvironmentImporter()
 # BrandImporter()
 # StoryImporter()
-TutorialImporter()
+# TutorialImporter()

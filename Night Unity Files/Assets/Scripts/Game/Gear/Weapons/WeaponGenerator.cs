@@ -12,6 +12,12 @@ namespace Game.Gear.Weapons
         private static bool _readWeapons;
         private static readonly List<WeaponType> _weaponTypes = new List<WeaponType>();
 
+        public static Weapon GenerateWeapon(WeaponType type)
+        {
+            LoadBaseWeapons();
+            return Weapon.Generate(WorldState.GenerateGearLevel(), WeaponClasses[type].RandomElement());
+        }
+        
         public static Weapon GenerateWeapon(ItemQuality quality, WeaponType type)
         {
             LoadBaseWeapons();

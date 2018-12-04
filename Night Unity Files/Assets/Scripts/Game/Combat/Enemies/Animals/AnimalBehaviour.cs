@@ -105,7 +105,7 @@ namespace Game.Combat.Enemies.Nightmares
         {
             Fleeing = true;
             SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-            CombatManager.Remove(this);
+            CombatManager.RemoveEnemy(this);
             float currentTime = 2f;
             while (currentTime > 0f)
             {

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using DG.Tweening;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
@@ -6,6 +7,7 @@ using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Random = UnityEngine.Random;
 
 public class WeaponAudioController : MonoBehaviour
 {
@@ -40,24 +42,26 @@ public class WeaponAudioController : MonoBehaviour
     public void StartReload(Weapon weapon)
     {
         WeaponType weaponType = weapon.WeaponAttributes.WeaponType;
+        AudioClip clip;
         switch (weaponType)
         {
             case WeaponType.Pistol:
-                _audioPool.Create().Play(AudioClips.PistolClipOut, 0.9f, Random.Range(0.9f, 1f));
+                clip = AudioClips.PistolClipOut;
                 break;
             case WeaponType.Rifle:
-                _audioPool.Create().Play(AudioClips.RifleClipOut, 0.9f, Random.Range(0.9f, 1f));
+                clip = AudioClips.RifleClipOut;
                 break;
             case WeaponType.Shotgun:
-                _audioPool.Create().Play(AudioClips.ShotgunClipOut, 0.9f, Random.Range(0.9f, 1f));
+                clip = AudioClips.ShotgunClipOut;
                 break;
             case WeaponType.SMG:
-                _audioPool.Create().Play(AudioClips.SMGClipOut, 0.9f, Random.Range(0.9f, 1f));
+                clip = AudioClips.SMGClipOut;
                 break;
-            case WeaponType.LMG:
-                _audioPool.Create().Play(AudioClips.LMGClipOut, 0.9f, Random.Range(0.9f, 1f));
-                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
+
+        _audioPool.Create().Play(clip, 0.6f, Random.Range(0.9f, 1f));
     }
 
     public void DryFire()
@@ -68,24 +72,26 @@ public class WeaponAudioController : MonoBehaviour
     public void StopReload(Weapon weapon)
     {
         WeaponType weaponType = weapon.WeaponAttributes.WeaponType;
+        AudioClip clip;
         switch (weaponType)
         {
             case WeaponType.Pistol:
-                _audioPool.Create().Play(AudioClips.PistolClipIn, 0.9f, Random.Range(0.9f, 1f));
+                clip = AudioClips.PistolClipIn;
                 break;
             case WeaponType.Rifle:
-                _audioPool.Create().Play(AudioClips.RifleClipIn, 0.9f, Random.Range(0.9f, 1f));
+                clip = AudioClips.RifleClipIn;
                 break;
             case WeaponType.Shotgun:
-                _audioPool.Create().Play(AudioClips.ShotgunClipIn, 0.9f, Random.Range(0.9f, 1f));
+                clip = AudioClips.ShotgunClipIn;
                 break;
             case WeaponType.SMG:
-                _audioPool.Create().Play(AudioClips.SMGClipIn, 0.9f, Random.Range(0.9f, 1f));
+                clip = AudioClips.SMGClipIn;
                 break;
-            case WeaponType.LMG:
-                _audioPool.Create().Play(AudioClips.LMGClipIn, 0.9f, Random.Range(0.9f, 1f));
-                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
+
+        _audioPool.Create().Play(clip, 0.6f, Random.Range(0.9f, 1f));
     }
 
     public void Fire(Weapon weapon)
@@ -111,10 +117,6 @@ public class WeaponAudioController : MonoBehaviour
                 shots = AudioClips.SMGShots;
                 casings = AudioClips.SMGCasings;
                 break;
-            case WeaponType.LMG:
-                shots = AudioClips.LMGShots;
-                casings = AudioClips.LMGCasings;
-                break;
         }
 
         Assert.IsNotNull(shots);
@@ -122,10 +124,17 @@ public class WeaponAudioController : MonoBehaviour
         float durability = weapon.WeaponAttributes.GetDurability().CurrentValue();
         float hpfValue = -15f * durability + 750;
         hpfValue = Mathf.Clamp(hpfValue, 0, 750);
-        _audioPool.Create().Play(shots[0], 1f, Random.Range(0.9f, 1f), hpfValue);
+        InstancedAudio audio = _audioPool.Create();
+        audio.SetMinMaxDistance(0.5f, 15f);
+        audio.Play(shots[0], Random.Range(0.6f, 0.7f), Random.Range(0.8f, 1f), hpfValue);
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(0.25f);
-        sequence.AppendCallback(() => { _audioPool.Create().Play(casings[0], 0.6f); });
+        sequence.AppendCallback(() =>
+        {
+            audio = _audioPool.Create();
+            audio.SetMinMaxDistance(0.5f, 15f);
+            audio.Play(casings[0], 0.2f);
+        });
     }
 
     public void BreakArmour()

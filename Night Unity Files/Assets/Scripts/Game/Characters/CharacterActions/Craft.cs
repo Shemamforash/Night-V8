@@ -41,6 +41,7 @@ namespace Game.Characters.CharacterActions
                 Campfire.FinishTending();
                 PlayerCharacter.RestAction.Enter();
             };
+            _recipe = null;
         }
 
         private void CraftThing()

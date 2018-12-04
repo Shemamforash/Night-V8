@@ -32,6 +32,12 @@ public class InstancedAudio : MonoBehaviour
         Play(clip, volume, 1);
     }
 
+    public void SetMinMaxDistance(float min, float max)
+    {
+        _audioSource.minDistance = min;
+        _audioSource.maxDistance = max;
+    }
+    
     public void Play(AudioClip clip, float volume, float pitch, float hpfCutoff = 0f)
     {
         _hpf.cutoffFrequency = hpfCutoff;

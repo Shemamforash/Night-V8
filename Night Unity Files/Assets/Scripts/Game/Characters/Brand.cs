@@ -14,7 +14,7 @@ namespace Game.Characters
         protected readonly Player Player;
 
         private int _counterTarget;
-        private string _successName, _failName, _successEffect, _failEffect, _requirementString;
+        private string _description, _successName, _failName, _successEffect, _failEffect, _requirementString;
         protected float SuccessModifier, FailModifier;
 
         private int _counter;
@@ -32,13 +32,13 @@ namespace Game.Characters
         public bool PlayerRequirementsMet(Player player)
         {
             if (_requiresSkillUnlock && player.CharacterSkillOne != null) return false;
-            if (_minLevel > WorldState.CurrentLevel()) return false;
-            return true;
+            return _minLevel <= WorldState.CurrentLevel();
         }
 
         public void ReadData(XmlNode root)
         {
             root = root.SelectSingleNode(_riteName);
+            _description = root.StringFromNode("Description");
             _requirementString = root.StringFromNode("Requirement");
             _counterTarget = root.IntFromNode("TargetValue");
             _requirementString = _requirementString.Replace("num", _counterTarget.ToString());
@@ -71,16 +71,14 @@ namespace Game.Characters
         public void UpdateValue(int amount)
         {
             _counter += amount;
-            if (_counter >= _counterTarget)
-            {
-                RiteStarter.Generate(this);
-            }
+            if (_counter < _counterTarget) return;
+            RiteStarter.Generate(this, false);
         }
 
         public void Succeed()
         {
             SetStatus(BrandStatus.Succeeded);
-//            UiBrandMenu.ShowBrand(this);
+            UiBrandMenu.ShowBrand(this);
             OnSucceed();
         }
 
@@ -115,12 +113,12 @@ namespace Game.Characters
             else if (Status == BrandStatus.Failed) OnFail();
         }
 
-        public XmlNode Save(XmlNode doc)
+        public void Save(XmlNode doc)
         {
             doc.CreateChild("Name", _riteName);
             doc.CreateChild("TimeRemaining", _counter);
             doc.CreateChild("Status", (int) Status);
-            return doc;
+            return;
         }
 
         public string GetSuccessName()
@@ -141,6 +139,11 @@ namespace Game.Characters
         public string GetRequirementText()
         {
             return _requirementString;
+        }
+
+        public string Description()
+        {
+            return _description;
         }
     }
 }

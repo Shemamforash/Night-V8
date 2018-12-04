@@ -10,8 +10,7 @@ namespace Game.Exploration.Weather
     {
         private static WeatherSystemController _instance;
         private WeatherSystem _fog, _rain, _hail, _dust, _wind;
-        private ParticleSystem _sun;
-        private ParticleSystem _stars;
+        private ParticleSystem _sun, _stars, _lightning;
         [SerializeField] private float _fogMax;
         [SerializeField] private float _hailMax;
         [SerializeField] private float _rainMax;
@@ -31,7 +30,13 @@ namespace Game.Exploration.Weather
             _wind = new WindSystem(gameObject.FindChildWithName("Wind"), _windMax);
             _sun = gameObject.FindChildWithName<ParticleSystem>("Sun");
             _stars = gameObject.FindChildWithName<ParticleSystem>("Stars");
+            _lightning = gameObject.FindChildWithName<ParticleSystem>("Lightning Strikes");
             _instance = this;
+        }
+
+        public static void TriggerLightning()
+        {
+            _instance._lightning.Emit(1);
         }
 
         public void Start()

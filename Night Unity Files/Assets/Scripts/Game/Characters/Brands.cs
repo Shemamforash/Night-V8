@@ -244,7 +244,7 @@ namespace Game.Characters.Brands
 
     public class DecayBrand : Brand
     {
-        public DecayBrand(Player player) : base(player, "Decay")
+        public DecayBrand(Player player) : base(player, "Shattering")
         {
         }
 
@@ -310,7 +310,7 @@ namespace Game.Characters.Brands
 
     public class FoodBrand : Brand
     {
-        public FoodBrand(Player player) : base(player, "Gathering")
+        public FoodBrand(Player player) : base(player, "Hunting")
         {
         }
 

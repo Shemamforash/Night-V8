@@ -18,8 +18,6 @@ namespace Game.Combat.Player
                     return new Splinter();
                 case WeaponType.Shotgun:
                     return new Sweep();
-                case WeaponType.LMG:
-                    return new Refill();
                 case WeaponType.SMG:
                     return new Hairpin();
                 case WeaponType.Pistol:
@@ -37,8 +35,6 @@ namespace Game.Combat.Player
                     return new Gouge();
                 case WeaponType.Shotgun:
                     return new Swarm();
-                case WeaponType.LMG:
-                    return new Compel();
                 case WeaponType.SMG:
                     return new Impact();
                 case WeaponType.Pistol:
@@ -114,32 +110,6 @@ namespace Game.Combat.Player
                 s.OverrideDirection(dir);
                 s.Fire();
             }
-        }
-    }
-
-    //LMG
-
-    public class Refill : Skill
-    {
-        public Refill() : base(nameof(Refill))
-        {
-        }
-
-        protected override void InstantEffect()
-        {
-            PlayerCombat.Instance.InstantReload();
-        }
-    }
-
-    public class Compel : Skill
-    {
-        public Compel() : base(nameof(Compel))
-        {
-        }
-
-        protected override void InstantEffect()
-        {
-            ((Spoolup) PlayerCombat.Instance._weaponBehaviour).AutoSpool = true;
         }
     }
 

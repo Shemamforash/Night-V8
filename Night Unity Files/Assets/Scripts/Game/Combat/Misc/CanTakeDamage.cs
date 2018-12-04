@@ -42,7 +42,7 @@ namespace Game.Combat.Misc
         {
             Destroy(gameObject);
             if (IsPlayer) return;
-            CombatManager.Remove(this);
+            CombatManager.RemoveEnemy(this);
         }
 
         public virtual void MyUpdate()

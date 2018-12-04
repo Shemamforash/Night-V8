@@ -12,10 +12,7 @@
         Bonebreaker,
         Skullcrusher,
         Spitter,
-        Gripshaker,
-        Spewer,
-        Breacher,
-        Gouger,
-        Annihilator
+        Annihilator,
+        Gouger
     }
 }

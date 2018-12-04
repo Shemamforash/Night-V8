@@ -27,23 +27,31 @@ namespace Game.Combat.Enemies.Humans
 
         public override void MyUpdate()
         {
+            CheckForNullTarget();
             base.MyUpdate();
             if ( _healing) return;
             UpdateHealCooldown();
             TryHeal();
         }
 
+        private void CheckForNullTarget()
+        {
+            if (GetTarget() != null) return;
+            _goingToHeal = false;
+            SetTarget(PlayerCombat.Instance);
+        }
+
         private void TryHeal()
         {
             if (!_goingToHeal) return;
-            if (GetTarget() == null)
-            {
-                _goingToHeal = false;
-                SetTarget(PlayerCombat.Instance);
-            }
-
             if (DistanceToTarget() > HealDistance / 2f) return;
             Heal();
+        }
+
+        protected override void Aim()
+        {
+            if (GetTarget() is UnarmedBehaviour) return;
+            base.Aim();
         }
 
         private void UpdateHealCooldown()

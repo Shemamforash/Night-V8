@@ -102,7 +102,6 @@ namespace Game.Gear.Weapons
         {
             if (CharacterAttribute.IsCharacterAttribute(target)) return;
             WeaponAttributes.Get(target).AddModifier(modifier);
-            Debug.Log(target + " " + modifier.FinalBonusToString() + " " + modifier.RawBonusToString());
             WeaponAttributes.RecalculateAttributeValues();
         }
 
@@ -146,17 +145,8 @@ namespace Game.Gear.Weapons
                 case WeaponClassType.Spitter:
                     weaponBehaviour = player.gameObject.AddComponent<Burstfire>();
                     break;
-                case WeaponClassType.Spewer:
-                    weaponBehaviour = player.gameObject.AddComponent<AccuracyGainer>();
-                    break;
-                case WeaponClassType.Breacher:
-                    weaponBehaviour = player.gameObject.AddComponent<AttributeGainer>();
-                    break;
-                case WeaponClassType.Annihilator:
-                    weaponBehaviour = player.gameObject.AddComponent<RandomFire>();
-                    break;
                 case WeaponClassType.Gouger:
-                    weaponBehaviour = player.gameObject.AddComponent<Spoolup>();
+                    weaponBehaviour = player.gameObject.AddComponent<AccuracyGainer>();
                     break;
                 default:
                     weaponBehaviour = player.gameObject.AddComponent<DefaultBehaviour>();

@@ -53,7 +53,7 @@ namespace Game.Combat.Enemies
         private void DoMove()
         {
             if (_nextCell == null) return;
-            if (Vector2.Distance(_currentCell.Position, _nextCell.Position) > 0.25f)
+            if (_currentCell == null || Vector2.Distance(_currentCell.Position, _nextCell.Position) > 0.25f)
             {
                 Vector3 direction = ((Vector3) _nextCell.Position - transform.position).normalized;
                 _movementController.Move(direction);
@@ -73,8 +73,8 @@ namespace Game.Combat.Enemies
         {
             Vector2 direction = (_targetCell.Position - _currentCell.Position).normalized;
             Vector2 targetPosition = _targetCell.Position + direction * _minDistance * 1.2f;
-            _targetCell = PathingGrid.WorldToCellPosition(targetPosition);
-            if(_targetCell == null) Debug.Log(direction + " " + _minDistance);
+            _targetCell = PathingGrid.WorldToCellPosition(targetPosition, false);
+            if (_targetCell == null) return null;
             return new List<Cell>(new[] {_targetCell});
         }
 

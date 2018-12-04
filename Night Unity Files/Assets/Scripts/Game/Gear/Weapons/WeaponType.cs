@@ -5,7 +5,6 @@
         Pistol,
         Rifle,
         Shotgun,
-        SMG,
-        LMG
+        SMG
     }
 }

@@ -14,8 +14,8 @@ namespace Game.Global
     public class AudioClips : MonoBehaviour
     {
         public static AudioClip[] ThunderSounds;
-        public static AudioClip[] LMGShots, SMGShots, RifleShots, PistolShots, ShotgunShots;
-        public static AudioClip[] LMGCasings, SMGCasings, RifleCasings, PistolCasings, ShotgunCasings;
+        public static AudioClip[] SMGShots, RifleShots, PistolShots, ShotgunShots;
+        public static AudioClip[] SMGCasings, RifleCasings, PistolCasings, ShotgunCasings;
         public static AudioClip[] DryFireClips;
         public static AudioClip[] ArmourBreakClips;
         public static AudioClip[] FootstepClips;
@@ -23,7 +23,7 @@ namespace Game.Global
         public static AudioClip Ambient, Night, Campfire, TakeItem;
         public static AudioClip LightRain, MediumRain, HeavyRain;
         public static AudioClip LightWind, MediumWind, HeavyWind;
-        public static AudioClip PistolClipIn, PistolClipOut, ShotgunClipIn, ShotgunClipOut, RifleClipIn, RifleClipOut, SMGClipIn, SMGClipOut, LMGClipIn, LMGClipOut;
+        public static AudioClip PistolClipIn, PistolClipOut, ShotgunClipIn, ShotgunClipOut, RifleClipIn, RifleClipOut, SMGClipIn, SMGClipOut;
         public static AudioClip BrawlerSlash;
         public static AudioClip SimmavA, SimmavB, SimmavC, SimmavD;
         public static AudioClip StandardExplosion, FireExplosion, ShatterExplosion;
@@ -78,14 +78,12 @@ namespace Game.Global
             if (_loaded) yield break;
             Stopwatch watch = Stopwatch.StartNew();
             Debug.Log("loading shots audio");
-            yield return StartCoroutine(LoadAllClipsFromBundle(a => LMGShots = a, "combat/lmg/shots"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => SMGShots = a, "combat/smg/shots"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => RifleShots = a, "combat/rifle/shots"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => PistolShots = a, "combat/pistol/shots"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => ShotgunShots = a, "combat/shotgun/shots"));
 
             Debug.Log("loading casings audio");
-            yield return StartCoroutine(LoadAllClipsFromBundle(a => LMGCasings = a, "combat/lmg/casings"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => SMGCasings = a, "combat/smg/casings"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => RifleCasings = a, "combat/rifle/casings"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => PistolCasings = a, "combat/pistol/casings"));
@@ -106,8 +104,6 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => RifleClipOut = a, "combat/reload/clip", "Rifle Clip Out"));
             yield return StartCoroutine(LoadClip(a => SMGClipIn = a, "combat/reload/clip", "SMG Clip In"));
             yield return StartCoroutine(LoadClip(a => SMGClipOut = a, "combat/reload/clip", "SMG Clip Out"));
-            yield return StartCoroutine(LoadClip(a => LMGClipIn = a, "combat/reload/clip", "LMG Clip In"));
-            yield return StartCoroutine(LoadClip(a => LMGClipOut = a, "combat/reload/clip", "LMG Clip Out"));
             yield return StartCoroutine(LoadClip(a => BrawlerSlash = a, "combat/misc", "Brawler Slash"));
 
             Debug.Log("loading weather audio");

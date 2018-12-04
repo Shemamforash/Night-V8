@@ -186,8 +186,45 @@ namespace Game.Exploration.Environment
 
         public static string GenerateName(RegionType type)
         {
-            if (type == RegionType.Rite || type == RegionType.Tomb) return "";
-            return type == RegionType.Gate ? "Gate" : _regionNames[type].RemoveRandom();
+            switch (type)
+            {
+                case RegionType.Tomb:
+                    switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
+                    {
+                        case EnvironmentType.Desert:
+                            return "Eo's Tomb";
+                        case EnvironmentType.Mountains:
+                            return "The Garden of Hythinea";
+                        case EnvironmentType.Ruins:
+                            return "Rhallos' Armory";
+                        case EnvironmentType.Sea:
+                            return "Chambers of Ahna";
+                        case EnvironmentType.Wasteland:
+                            return "The Throne of Corypthos";
+                    }
+
+                    break;
+                case RegionType.Rite:
+                    return "Chamber of Rites";
+                case RegionType.Gate:
+                    switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
+                    {
+                        case EnvironmentType.Desert:
+                            return "Eo's Gate";
+                        case EnvironmentType.Mountains:
+                            return "Hythinea's Gate";
+                        case EnvironmentType.Ruins:
+                            return "Rhallos' Gate";
+                        case EnvironmentType.Sea:
+                            return "Ahna's Gate";
+                        case EnvironmentType.Wasteland:
+                            return "Corypthos' Gate";
+                    }
+
+                    break;
+            }
+
+            return _regionNames[type].RemoveRandom();
         }
 
         private static readonly List<RegionType> _regionTypes = new List<RegionType>();

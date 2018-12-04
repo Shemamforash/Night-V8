@@ -74,8 +74,7 @@ namespace Game.Characters.CharacterActions
 
         private void EnterRegion()
         {
-            bool justDiscovered = CurrentRegion.Discover();
-            if (justDiscovered) PlayerCharacter.BrandManager.IncreaseRegionsExplored();
+            if (CurrentRegion.Discover()) PlayerCharacter.BrandManager.IncreaseRegionsExplored();
             CombatManager.SetCurrentRegion(CurrentRegion);
             CharacterManager.SelectedCharacter = PlayerCharacter;
             SceneChanger.GoToCombatScene();
@@ -93,12 +92,12 @@ namespace Game.Characters.CharacterActions
 
         public void TravelTo(Region target, int gritCost)
         {
+            target.ShouldGenerateEncounter = target != CurrentRegion;
             if (target == CurrentRegion && CurrentRegion.GetRegionType() != RegionType.Gate)
             {
                 EnterRegion();
                 return;
             }
-
             Enter();
             _travelTime = 0;
             _inTransit = true;

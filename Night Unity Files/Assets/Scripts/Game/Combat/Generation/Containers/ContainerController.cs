@@ -39,58 +39,86 @@ public abstract class ContainerController
         return cb;
     }
 
-    public virtual void Take()
+    private void TakeResource(Player player)
     {
-        Player player = CharacterManager.SelectedCharacter;
-
+        ResourceItem resourceItem = (ResourceItem) Item;
         int resourceBonus = (int) PlayerCombat.Instance.Player.Attributes.ResourceFindModifier;
         if (resourceBonus != 0)
         {
-            ResourceItem resourceItem = Item as ResourceItem;
-            if (resourceItem != null)
+            ResourceTemplate resourceTemplate = resourceItem.Template;
+            Assert.IsNotNull(resourceTemplate);
+            Assert.IsTrue(resourceTemplate.ResourceType == ResourceType.Resource);
+            if (resourceBonus > 0) resourceItem.Increment(resourceBonus);
+            else
             {
-                ResourceTemplate resourceTemplate = resourceItem.Template;
-                if (resourceTemplate == null) return;
-                if (resourceTemplate.ResourceType != ResourceType.Resource) return;
-                if (resourceBonus > 0) resourceItem.Increment(resourceBonus);
-                else
-                {
-                    int quantity = resourceItem.Quantity();
-                    if (quantity - resourceBonus <= 0) resourceBonus = quantity - 1;
-                    resourceItem.Decrement(resourceBonus);
-                }
+                int quantity = resourceItem.Quantity();
+                if (quantity - resourceBonus <= 0) resourceBonus = quantity - 1;
+                resourceItem.Decrement(resourceBonus);
+            }
 
-                switch (resourceTemplate.ResourceType)
-                {
-                    case ResourceType.Water:
-                        player.BrandManager.IncreaseWaterFound();
-                        break;
-                    case ResourceType.Plant:
-                        player.BrandManager.IncreaseFoodFound();
-                        break;
-                    case ResourceType.Meat:
-                        player.BrandManager.IncreaseFoodFound();
-                        break;
-                    case ResourceType.Resource:
-                        player.BrandManager.IncreaseResourceFound();
-                        break;
-                }
+            switch (resourceTemplate.ResourceType)
+            {
+                case ResourceType.Water:
+                    --CombatManager.GetCurrentRegion().WaterSourceCount;
+                    player.BrandManager.IncreaseWaterFound();
+                    break;
+                case ResourceType.Plant:
+                    --CombatManager.GetCurrentRegion().FoodSourceCount;
+                    player.BrandManager.IncreaseFoodFound();
+                    break;
+                case ResourceType.Meat:
+                    player.BrandManager.IncreaseFoodFound();
+                    break;
+                case ResourceType.Resource:
+                    --CombatManager.GetCurrentRegion().ResourceSourceCount;
+                    player.BrandManager.IncreaseResourceFound();
+                    break;
             }
         }
 
+        Inventory.Move((ResourceItem) Item);
+    }
+
+    private void TakeItem(Player player)
+    {
         if (Item is GearItem) player.BrandManager.IncreaseItemsFound();
 
-        if (Item is Weapon) Inventory.Move((Weapon) Item);
-        else if (Item is Armour) Inventory.Move((Armour) Item);
-        else if (Item is Accessory) Inventory.Move((Accessory) Item);
-        else if (Item is Inscription) Inventory.Move((Inscription) Item);
-        else Inventory.Move((ResourceItem) Item);
+        switch (Item)
+        {
+            case Weapon weapon:
+                Inventory.Move(weapon);
+                break;
+            case Armour armour:
+                Inventory.Move(armour);
+                break;
+            case Accessory accessory:
+                Inventory.Move(accessory);
+                break;
+            case Inscription inscription:
+                Inventory.Move(inscription);
+                break;
+        }
+    }
+
+    public virtual void Take()
+    {
+        CombatManager.GetCurrentRegion().Containers.Remove(this);
+        Player player = CharacterManager.SelectedCharacter;
+        switch (Item)
+        {
+            case ResourceItem _:
+                TakeResource(player);
+                break;
+            case GearItem _:
+                TakeItem(player);
+                break;
+        }
     }
 
     public virtual string GetContents()
     {
         Assert.IsNotNull(Item);
-        int quantity = Item is ResourceItem ? ((ResourceItem) Item).Quantity() : 1;
+        int quantity = Item is ResourceItem item ? item.Quantity() : 1;
         string contentsName = Item.Name;
         if (quantity != 1) contentsName += " x" + quantity;
         return contentsName;

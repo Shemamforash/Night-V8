@@ -63,6 +63,9 @@ public class ListController : MonoBehaviour, IInputListener
             if (_selectedItemIndex == _listObjects.Count) --_selectedItemIndex;
             onButtonDown?.Invoke(_listObjects[_selectedItemIndex]);
             UpdateList();
+            if (_selectedItemIndex <= _listObjects.Count || _listObjects.Count == 0) return;
+            _selectedItemIndex = _listObjects.Count - 1;
+            Select(false);
         });
         OnReturn = onReturn;
     }

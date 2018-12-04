@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
@@ -11,6 +13,7 @@ namespace Game.Global
         private static SceneChanger _instance;
         private static string _sceneToLoad;
         private static bool _fadeInAudio;
+        private Tweener _volumeTweener;
         private const float DefaultFadeTime = 0.5f;
 
         public void Awake()
@@ -22,7 +25,7 @@ namespace Game.Global
             if (_fadeInAudio)
             {
                 VolumeController.SetModifiedVolume(0f);
-                DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 1f, DefaultFadeTime).SetUpdate(UpdateType.Normal, true);
+                _volumeTweener = DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 1f, DefaultFadeTime).SetUpdate(UpdateType.Normal, true);
                 _fadeInAudio = false;
             }
 
@@ -45,6 +48,7 @@ namespace Game.Global
             ScreenFaderController.FadeIn(DefaultFadeTime);
             if (_fadeInAudio)
             {
+                _volumeTweener?.Kill();
                 DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 0f, DefaultFadeTime).SetUpdate(UpdateType.Normal, true);
             }
 

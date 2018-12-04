@@ -1,5 +1,4 @@
 ﻿using Game.Characters;
-using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;

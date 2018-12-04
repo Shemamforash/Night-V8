@@ -4,7 +4,6 @@ using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters.Brands;
-using Game.Combat.Generation.Shrines;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;

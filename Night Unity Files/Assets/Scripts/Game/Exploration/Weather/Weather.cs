@@ -49,14 +49,8 @@ namespace Game.Exploration.Weather
         public void Update()
         {
             --_timeRemaining;
-            if(_timeRemaining % 12 == 0) UpdateEnvironmentResources();
             if (_timeRemaining != 0) return;
             WeatherManager.GoToWeather();
-        }
-
-        private void UpdateEnvironmentResources()
-        {
-            WorldState.UpdateWeather(this);
         }
 
         public void Save(XmlNode doc)

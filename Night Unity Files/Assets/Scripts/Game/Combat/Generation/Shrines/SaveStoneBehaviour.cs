@@ -1,7 +1,6 @@
 ﻿using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
-using Game.Exploration.Regions;
 using UnityEngine;
 
 public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
@@ -23,7 +22,7 @@ public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
     {
     }
 
-    public static void Generate(Region region)
+    public static void Generate()
     {
         if (_saveStonePrefab == null) _saveStonePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Save Stone");
         GameObject saveStoneObject = Instantiate(_saveStonePrefab);

@@ -1,1 +1,210 @@
-<Brands><Power><Requirement>Deal num damage to enemies</Requirement><TargetValue>5000</TargetValue><SuccessName>Power</SuccessName><SuccessEffect>+1 Maximum Fettle</SuccessEffect><SuccessValue>1</SuccessValue><FailName>Weakness</FailName><FailEffect>-1 Maximum Fettle</FailEffect><FailValue>-1</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>1</MinLevel></Power><Vigilance><Requirement>Find num items</Requirement><TargetValue>25</TargetValue><SuccessName>Vigilance</SuccessName><SuccessEffect>+1 Maximum Focus</SuccessEffect><SuccessValue>1</SuccessValue><FailName>Obliviousness</FailName><FailEffect>-1 Maximum Focus</FailEffect><FailValue>-1</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>1</MinLevel></Vigilance><Resolution><Requirement>Use skills num times</Requirement><TargetValue>25</TargetValue><SuccessName>Resolution</SuccessName><SuccessEffect>+1 Maximum Will</SuccessEffect><SuccessValue>1</SuccessValue><FailName>Fear</FailName><FailEffect>-1 Maximum Will</FailEffect><FailValue>-1</FailValue><RequiresSkill>TRUE</RequiresSkill><MinLevel>2</MinLevel></Resolution><Stamina><Requirement>Discover num regions</Requirement><TargetValue>10</TargetValue><SuccessName>Stamina</SuccessName><SuccessEffect>+1 Maximum Grit</SuccessEffect><SuccessValue>1</SuccessValue><FailName>Sloth</FailName><FailEffect>-1 Maximum Grit</FailEffect><FailValue>-1</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>1</MinLevel></Stamina><Insight><Requirement>Gain num essence</Requirement><TargetValue>400</TargetValue><SuccessName>Insight</SuccessName><SuccessEffect>Essence recovers more durability on weapons</SuccessEffect><SuccessValue>1</SuccessValue><FailName>Ignorance</FailName><FailEffect>Weapons lose durability faster</FailEffect><FailValue>0.25</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>2</MinLevel></Insight><Revival><Requirement>Take num damage</Requirement><TargetValue>5000</TargetValue><SuccessName>Immortality</SuccessName><SuccessEffect>When taking fatal damage, rally with a small amount of health</SuccessEffect><SuccessValue>0.25</SuccessValue><FailName>Frailty</FailName><FailEffect>Start combat with less health</FailEffect><FailValue>0.1</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>1</MinLevel></Revival><Apathy><Requirement>Kill num enemies</Requirement><TargetValue>50</TargetValue><SuccessName>Barbarity</SuccessName><SuccessEffect>Gain willpower when claiming a region</SuccessEffect><SuccessValue>1</SuccessValue><FailName>Timidity</FailName><FailEffect>Killing enemies causes you damage</FailEffect><FailValue>0.02</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>2</MinLevel></Apathy><Finesse><Requirement>Reload only when magazine empty num times</Requirement><TargetValue>50</TargetValue><SuccessName>Finesse</SuccessName><SuccessEffect>Automatically reload when magazine is exhausted</SuccessEffect><SuccessValue>0</SuccessValue><FailName>Clumsiness</FailName><FailEffect>Small chance reloading fails</FailEffect><FailValue>0.05</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>3</MinLevel></Finesse><Ingenuity><Requirement>Kill num enemy with last round</Requirement><TargetValue>50</TargetValue><SuccessName>Deviousness</SuccessName><SuccessEffect>Instantly reload if the last round kills an enemy</SuccessEffect><SuccessValue>0</SuccessValue><FailName>Ineptitude</FailName><FailEffect>Small chance reloading fails</FailEffect><FailValue>0.05</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>3</MinLevel></Ingenuity><Scavenging><Requirement>Find num resources</Requirement><TargetValue>50</TargetValue><SuccessName>Fortitude</SuccessName><SuccessEffect>+1 Resource on finding resource</SuccessEffect><SuccessValue>1</SuccessValue><FailName>Blindness</FailName><FailEffect>-1 Resource on finding resource</FailEffect><FailValue>-1</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>2</MinLevel></Scavenging><Gathering><Requirement>Find num food sources</Requirement><TargetValue>50</TargetValue><SuccessName>Fullness</SuccessName><SuccessEffect>Food sates your hunger more</SuccessEffect><SuccessValue>1</SuccessValue><FailName>Emptiness</FailName><FailEffect>Water causes you to become hungry</FailEffect><FailValue>1</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>2</MinLevel></Gathering><Divining><Requirement>Find num water sources</Requirement><TargetValue>50</TargetValue><SuccessName>Wellness</SuccessName><SuccessEffect>Water quenches your thirst more</SuccessEffect><SuccessValue>1</SuccessValue><FailName>Dryness</FailName><FailEffect>Food causes you to become thirsty</FailEffect><FailValue>1</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>2</MinLevel></Divining><Fire><Requirement>Set num enemies on fire</Requirement><TargetValue>100</TargetValue><SuccessName>The Inferno</SuccessName><SuccessEffect>Occasionally explode with fire on taking damage</SuccessEffect><SuccessValue>0.02</SuccessValue><FailName>Flammability</FailName><FailEffect>Take double damage from burning</FailEffect><FailValue>2</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>3</MinLevel></Fire><Decay><Requirement>Shatter on num pieces of armour</Requirement><TargetValue>100</TargetValue><SuccessName>The Void</SuccessName><SuccessEffect>Occasionally explode with decay on taking damage</SuccessEffect><SuccessValue>0.02</SuccessValue><FailName>Fragility</FailName><FailEffect>Take double damage from decay</FailEffect><FailValue>2</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>3</MinLevel></Decay><Sickness><Requirement>Cause num enemies to become sick</Requirement><TargetValue>100</TargetValue><SuccessName>The Pit</SuccessName><SuccessEffect>Killing sick enemies spreads it to nearby enemies</SuccessEffect><SuccessValue>0.02</SuccessValue><FailName>Sickliness</FailName><FailEffect>Less sickness is required to damage you</FailEffect><FailValue>4</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>3</MinLevel></Sickness><Mastery><Requirement>Consume num adrenaline</Requirement><TargetValue>5000</TargetValue><SuccessName>Mastery</SuccessName><SuccessEffect>Small chance for free skill activation</SuccessEffect><SuccessValue>0.05</SuccessValue><FailName>Distraction</FailName><FailEffect>Small chance skill becomes disabled in combat</FailEffect><FailValue>0.05</FailValue><RequiresSkill>FALSE</RequiresSkill><MinLevel>3</MinLevel></Mastery></Brands>
+<Brands>
+	<Power>
+		<Description>True power is that which is exerted over others</Description>
+		<Requirement>Deal num damage to enemies</Requirement>
+		<TargetValue>5000</TargetValue>
+		<SuccessName>Power</SuccessName>
+		<SuccessEffect>+1 Maximum Fettle</SuccessEffect>
+		<SuccessValue>1</SuccessValue>
+		<FailName>Weakness</FailName>
+		<FailEffect>-1 Maximum Fettle</FailEffect>
+		<FailValue>-1</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>1</MinLevel>
+	</Power>
+	<Vigilance>
+		<Description>Our world is dictated by what our mind will allow us to see</Description>
+		<Requirement>Find num items</Requirement>
+		<TargetValue>25</TargetValue>
+		<SuccessName>Vigilance</SuccessName>
+		<SuccessEffect>+1 Maximum Focus</SuccessEffect>
+		<SuccessValue>1</SuccessValue>
+		<FailName>Obliviousness</FailName>
+		<FailEffect>-1 Maximum Focus</FailEffect>
+		<FailValue>-1</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>1</MinLevel>
+	</Vigilance>
+	<Resolution>
+		<Description>The only being to which we must prove our abilities is ourselves</Description>
+		<Requirement>Use skills num times</Requirement>
+		<TargetValue>25</TargetValue>
+		<SuccessName>Resolution</SuccessName>
+		<SuccessEffect>+1 Maximum Will</SuccessEffect>
+		<SuccessValue>1</SuccessValue>
+		<FailName>Fear</FailName>
+		<FailEffect>-1 Maximum Will</FailEffect>
+		<FailValue>-1</FailValue>
+		<RequiresSkill>TRUE</RequiresSkill>
+		<MinLevel>2</MinLevel>
+	</Resolution>
+	<Stamina>
+		<Description>It is not enough to will it, our bodies must be capable of doing to succeed</Description>
+		<Requirement>Discover num regions</Requirement>
+		<TargetValue>10</TargetValue>
+		<SuccessName>Stamina</SuccessName>
+		<SuccessEffect>+1 Maximum Grit</SuccessEffect>
+		<SuccessValue>1</SuccessValue>
+		<FailName>Sloth</FailName>
+		<FailEffect>-1 Maximum Grit</FailEffect>
+		<FailValue>-1</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>1</MinLevel>
+	</Stamina>
+	<Insight>
+		<Description>Knowledge itself is useless without the insight to apply it</Description>
+		<Requirement>Gain num essence</Requirement>
+		<TargetValue>400</TargetValue>
+		<SuccessName>Insight</SuccessName>
+		<SuccessEffect>Essence recovers more durability on weapons</SuccessEffect>
+		<SuccessValue>1</SuccessValue>
+		<FailName>Ignorance</FailName>
+		<FailEffect>Weapons lose durability faster</FailEffect>
+		<FailValue>0.25</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>2</MinLevel>
+	</Insight>
+	<Revival>
+		<Description>Know what it is like to look death in the eyes and command him to back down</Description>
+		<Requirement>Take num damage</Requirement>
+		<TargetValue>5000</TargetValue>
+		<SuccessName>Immortality</SuccessName>
+		<SuccessEffect>When taking fatal damage, rally with a small amount of health</SuccessEffect>
+		<SuccessValue>0.25</SuccessValue>
+		<FailName>Frailty</FailName>
+		<FailEffect>Start combat with less health</FailEffect>
+		<FailValue>0.1</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>1</MinLevel>
+	</Revival>
+	<Apathy>
+		<Description>When your life depends on the loss of another, you can begin to relish death</Description>
+		<Requirement>Kill num enemies</Requirement>
+		<TargetValue>50</TargetValue>
+		<SuccessName>Barbarity</SuccessName>
+		<SuccessEffect>Gain willpower when claiming a region</SuccessEffect>
+		<SuccessValue>1</SuccessValue>
+		<FailName>Timidity</FailName>
+		<FailEffect>Killing enemies causes you damage</FailEffect>
+		<FailValue>0.02</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>2</MinLevel>
+	</Apathy>
+	<Finesse>
+		<Description>Mastering your tools is to take control of your fate</Description>
+		<Requirement>Reload only when magazine empty num times</Requirement>
+		<TargetValue>50</TargetValue>
+		<SuccessName>Finesse</SuccessName>
+		<SuccessEffect>Automatically reload when magazine is exhausted</SuccessEffect>
+		<SuccessValue>0</SuccessValue>
+		<FailName>Clumsiness</FailName>
+		<FailEffect>Small chance reloading fails</FailEffect>
+		<FailValue>0.05</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>3</MinLevel>
+	</Finesse>
+	<Ingenuity>
+		<Description>1</Description>
+		<Requirement>Kill num enemy with last round</Requirement>
+		<TargetValue>50</TargetValue>
+		<SuccessName>Deviousness</SuccessName>
+		<SuccessEffect>Instantly reload if the last round kills an enemy</SuccessEffect>
+		<SuccessValue>0</SuccessValue>
+		<FailName>Ineptitude</FailName>
+		<FailEffect>Small chance reloading fails</FailEffect>
+		<FailValue>0.05</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>3</MinLevel>
+	</Ingenuity>
+	<Scavenging>
+		<Description>No land is barren to the eyes of the scavenger</Description>
+		<Requirement>Find num resources</Requirement>
+		<TargetValue>50</TargetValue>
+		<SuccessName>Fortitude</SuccessName>
+		<SuccessEffect>+1 Resource on finding resource</SuccessEffect>
+		<SuccessValue>1</SuccessValue>
+		<FailName>Blindness</FailName>
+		<FailEffect>-1 Resource on finding resource</FailEffect>
+		<FailValue>-1</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>2</MinLevel>
+	</Scavenging>
+	<Hunting>
+		<Description>The greatest prey wait only for the worthy hunters</Description>
+		<Requirement>Find num food sources</Requirement>
+		<TargetValue>50</TargetValue>
+		<SuccessName>Fullness</SuccessName>
+		<SuccessEffect>Food sates your hunger more</SuccessEffect>
+		<SuccessValue>1</SuccessValue>
+		<FailName>Emptiness</FailName>
+		<FailEffect>Water causes you to become hungry</FailEffect>
+		<FailValue>1</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>2</MinLevel>
+	</Hunting>
+	<Divining>
+		<Description>To the diviners, the earth herself offers up her blood</Description>
+		<Requirement>Find num water sources</Requirement>
+		<TargetValue>50</TargetValue>
+		<SuccessName>Wellness</SuccessName>
+		<SuccessEffect>Water quenches your thirst more</SuccessEffect>
+		<SuccessValue>1</SuccessValue>
+		<FailName>Dryness</FailName>
+		<FailEffect>Food causes you to become thirsty</FailEffect>
+		<FailValue>1</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>2</MinLevel>
+	</Divining>
+	<Fire>
+		<Description>No other beast feeds off the life of another as fire</Description>
+		<Requirement>Set num enemies on fire</Requirement>
+		<TargetValue>100</TargetValue>
+		<SuccessName>The Inferno</SuccessName>
+		<SuccessEffect>Occasionally explode with fire on taking damage</SuccessEffect>
+		<SuccessValue>0.02</SuccessValue>
+		<FailName>Flammability</FailName>
+		<FailEffect>Take double damage from burning</FailEffect>
+		<FailValue>2</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>3</MinLevel>
+	</Fire>
+	<Shattering>
+		<Description>All armour is only as strong as it's weakest part</Description>
+		<Requirement>Shatter on num pieces of armour</Requirement>
+		<TargetValue>100</TargetValue>
+		<SuccessName>The Void</SuccessName>
+		<SuccessEffect>Occasionally explode with decay on taking damage</SuccessEffect>
+		<SuccessValue>0.02</SuccessValue>
+		<FailName>Fragility</FailName>
+		<FailEffect>Take double damage from decay</FailEffect>
+		<FailValue>2</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>3</MinLevel>
+	</Shattering>
+	<Sickness>
+		<Description>1</Description>
+		<Requirement>Cause num enemies to become sick</Requirement>
+		<TargetValue>100</TargetValue>
+		<SuccessName>The Pit</SuccessName>
+		<SuccessEffect>Killing sick enemies spreads it to nearby enemies</SuccessEffect>
+		<SuccessValue>0.02</SuccessValue>
+		<FailName>Sickliness</FailName>
+		<FailEffect>Less sickness is required to damage you</FailEffect>
+		<FailValue>4</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>3</MinLevel>
+	</Sickness>
+	<Mastery>
+		<Description>Wisdom is but knowledge tempered by years of experience</Description>
+		<Requirement>Consume num adrenaline</Requirement>
+		<TargetValue>5000</TargetValue>
+		<SuccessName>Mastery</SuccessName>
+		<SuccessEffect>Small chance for free skill activation</SuccessEffect>
+		<SuccessValue>0.05</SuccessValue>
+		<FailName>Distraction</FailName>
+		<FailEffect>Small chance skill becomes disabled in combat</FailEffect>
+		<FailValue>0.05</FailValue>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>3</MinLevel>
+	</Mastery>
+</Brands>

@@ -15,13 +15,14 @@ namespace Facilitating.Audio
     {
         private const float LightningDuration = 0.15f;
         private static ThunderController _instance;
+        private ParticleSystem _lightningSystem;
 
         private AudioSource thunderSource;
         private float lightningTimer;
         private bool _waitingForThunder;
 
         public Image lightningImage;
-        private bool _inCombat;
+        private static bool _inCombat;
 
         public void Awake()
         {
@@ -30,8 +31,9 @@ namespace Facilitating.Audio
             _inCombat = SceneManager.GetActiveScene().name == "Combat";
         }
 
-        private IEnumerator LightningFlash()
+        private IEnumerator LightningFlash(float waitTime = 0f)
         {
+            yield return new WaitForSeconds(waitTime);
             thunderSource.volume = Random.Range(0.9f, 1f);
             thunderSource.pitch = Random.Range(0.8f, 1f);
             thunderSource.PlayOneShot(AudioClips.ThunderSounds.RandomElement(), Random.Range(0.6f, 1f));
@@ -48,10 +50,17 @@ namespace Facilitating.Audio
 
         private static void Strike()
         {
-            _instance.StartCoroutine(_instance.LightningFlash());
-            if (!CombatManager.IsCombatActive()) return;
-            Vector2 firePosition = PathingGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 12f).Position;
-            FireBurstBehaviour.Create(firePosition);
+            if (_inCombat)
+            {
+                Vector2 firePosition = PathingGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 12f).Position;
+                FireBurstBehaviour.Create(firePosition);
+                _instance.StartCoroutine(_instance.LightningFlash());
+            }
+            else
+            {
+                WeatherSystemController.TriggerLightning();
+                _instance.StartCoroutine(_instance.LightningFlash(1.5f));
+            }
         }
 
         public void Update()

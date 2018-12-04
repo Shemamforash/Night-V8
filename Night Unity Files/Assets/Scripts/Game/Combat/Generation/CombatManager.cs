@@ -11,6 +11,7 @@ using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using Game.Global;
+using NUnit.Framework;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -34,7 +35,7 @@ namespace Game.Combat.Generation
         private static bool _paused;
         private static List<Enemy> _inactiveEnemies;
         private static int _maxSize;
-        private int _currentSize;
+        private static int _currentSize;
 
         public static List<EnemyTemplate> GenerateEnemies(int size, List<EnemyTemplate> allowedTypes)
         {
@@ -65,39 +66,7 @@ namespace Game.Combat.Generation
             base.Awake();
             _instance = this;
             Resume();
-            ScreenFaderController.ShowText(GetCurrentRegionName());
-        }
-
-        private string GetCurrentRegionName()
-        {
-            string regionName = _currentRegion.Name;
-            if (_currentRegion.GetRegionType() == RegionType.Tomb)
-            {
-                switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
-                {
-                    case EnvironmentType.Desert:
-                        regionName = "Eo's Tomb";
-                        break;
-                    case EnvironmentType.Mountains:
-                        regionName = "The Garden of Hythinea";
-                        break;
-                    case EnvironmentType.Ruins:
-                        regionName = "Rhallos' Armory";
-                        break;
-                    case EnvironmentType.Sea:
-                        regionName = "Chambers of Ahna";
-                        break;
-                    case EnvironmentType.Wasteland:
-                        regionName = "The Throne of Corypthos";
-                        break;
-                }
-            }
-            else if (_currentRegion.GetRegionType() == RegionType.Rite)
-            {
-                regionName = "Chamber of Rites";
-            }
-
-            return regionName;
+            ScreenFaderController.ShowText(_currentRegion.Name);
         }
 
         public void Update()
@@ -221,9 +190,8 @@ namespace Game.Combat.Generation
 
             PlayerCombat.Instance.Initialise();
             _inactiveEnemies = _currentRegion.GetEnemies();
-            _maxSize = Mathf.CeilToInt(_inactiveEnemies.Count / 2f);
+            _maxSize = WorldState.Difficulty() / 10 + 2;
             _currentSize = 0;
-            if (_maxSize > 15) _maxSize = 15;
             PlaceAnimals();
         }
 
@@ -308,6 +276,8 @@ namespace Game.Combat.Generation
                 return;
             }
 
+            _inactiveEnemies.ForEach(e => _currentRegion.RestoreSize(e.Template.Value));
+            _instance._enemies.ForEach(e => _currentRegion.RestoreSize(((EnemyBehaviour) e).Enemy.Template.Value));
             _inCombat = false;
             ScreenFaderController.HideText();
             PlayerCombat.Instance.ExitCombat();
@@ -367,13 +337,16 @@ namespace Game.Combat.Generation
             return enemy;
         }
 
-        public static void Remove(CanTakeDamage enemy)
+        public static void RemoveEnemy(CanTakeDamage enemy)
         {
+            --_currentSize;
+            Assert.IsTrue(_currentSize >= 0);
             Instance()._enemies.Remove(enemy);
         }
 
         public void AddEnemy(CanTakeDamage e)
         {
+            ++_currentSize;
             _enemies.Add(e);
         }
 
@@ -413,6 +386,11 @@ namespace Game.Combat.Generation
             if (_instance == null) return;
             _paused = false;
             Time.timeScale = 1;
+        }
+
+        public static Region GetCurrentRegion()
+        {
+            return _currentRegion;
         }
     }
 }

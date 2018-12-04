@@ -19,7 +19,6 @@ namespace Game.Combat.Generation.Shrines
         private int _targetBrand = -1;
         private RiteColliderBehaviour _targetRiteCollider;
         private static RiteShrineBehaviour _instance;
-        private static bool _seenBrandTutorial;
 
         public void Awake()
         {
@@ -46,6 +45,7 @@ namespace Game.Combat.Generation.Shrines
             _collider2 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 2");
             _collider3 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 3");
             _brandChoice = CharacterManager.SelectedCharacter.BrandManager.GetBrandChoice(ritesRemaining);
+            Debug.Log(_brandChoice.Count);
             if (_brandChoice.Count < 3)
             {
                 StopCandles(_collider3.transform);
@@ -62,6 +62,7 @@ namespace Game.Combat.Generation.Shrines
             GetComponent<CompassItem>().Die();
             StopCandles(_collider1.transform);
             Destroy(_collider1);
+            Debug.Log("Destroyed");
             Destroy(this);
         }
 
@@ -115,13 +116,8 @@ namespace Game.Combat.Generation.Shrines
 
         public float InRange()
         {
-            if (!_seenBrandTutorial && _targetBrand != -1)
-            {
-                TutorialManager.TryOpenTutorial(12);
-                _seenBrandTutorial = true;
-                return -1;
-            }
-
+            Debug.Log(_targetBrand);
+            if (_targetBrand != -1) TutorialManager.TryOpenTutorial(12);
             return _targetBrand;
         }
 

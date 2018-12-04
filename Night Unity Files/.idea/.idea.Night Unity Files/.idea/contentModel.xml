@@ -1387,13 +1387,13 @@
                   <e p="BasicTrail.cs" t="Include" />
                   <e p="BulletImpactBehaviour.cs" t="Include" />
                   <e p="BulletTrail.cs" t="Include" />
-                  <e p="LMGTrail.cs" t="Include" />
                   <e p="MaelstromShotTrail.cs" t="Include" />
                   <e p="PistolTrail.cs" t="Include" />
                   <e p="RifleTrail.cs" t="Include" />
                   <e p="Shot.cs" t="Include" />
                   <e p="ShotAttributes.cs" t="Include" />
                   <e p="ShotgunTrail.cs" t="Include" />
+                  <e p="SMGTrail.cs" t="Include" />
                 </e>
                 <e p="CanTakeDamage.cs" t="Include" />
                 <e p="CharacterCombat.cs" t="Include" />
@@ -1475,14 +1475,11 @@
               <e p="Weapons" t="Include">
                 <e p="Behaviour" t="Include">
                   <e p="AccuracyGainer.cs" t="Include" />
-                  <e p="AttributeGainer.cs" t="Include" />
                   <e p="BaseWeaponBehaviour.cs" t="Include" />
                   <e p="Burstfire.cs" t="Include" />
                   <e p="DefaultBehaviour.cs" t="Include" />
                   <e p="DoubleFireDelay.cs" t="Include" />
                   <e p="HoldAndFire.cs" t="Include" />
-                  <e p="RandomFire.cs" t="Include" />
-                  <e p="Spoolup.cs" t="Include" />
                 </e>
                 <e p="Weapon.cs" t="Include" />
                 <e p="WeaponAttributes.cs" t="Include" />

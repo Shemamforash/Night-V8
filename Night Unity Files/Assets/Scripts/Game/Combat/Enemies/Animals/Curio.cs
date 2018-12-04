@@ -17,6 +17,7 @@ namespace Game.Combat.Enemies.Animals
 
         public override void Alert(bool alertOthers)
         {
+            Debug.Log("curio alerted");
             Move();
         }
 

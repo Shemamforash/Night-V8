@@ -132,6 +132,15 @@ namespace Game.Characters
             text.SetColor(enableButton ? Color.white : UiAppearanceController.FadedColour);
         }
 
+        private bool CanMeditate()
+        {
+            if (_player.Attributes.Val(AttributeType.Will) == 0) return false;
+            if (_player.Attributes.Get(AttributeType.Fettle).ReachedMax() &&
+                _player.Attributes.Get(AttributeType.Grit).ReachedMax() &&
+                _player.Attributes.Get(AttributeType.Focus).ReachedMax()) return false;
+            return true;
+        }
+
         private void RefreshNavigation()
         {
             bool atHome = _player.TravelAction.AtHome();
@@ -139,7 +148,7 @@ namespace Game.Characters
             SetButtonEnabled(_exploreButton, _exploreText, atHome && resting);
             SetButtonEnabled(_craftButton, _craftText, Recipe.RecipesAvailable() && atHome && resting);
             SetButtonEnabled(_consumeButton, _consumeText, Inventory.Consumables().Count > 0);
-            SetButtonEnabled(_meditateButton, _meditateText, _player.Attributes.Val(AttributeType.Will) > 0 && resting);
+            SetButtonEnabled(_meditateButton, _meditateText, CanMeditate());
             bool sleepEnabled = false;
             sleepEnabled |= _player.CanSleep() && atHome && resting;
             sleepEnabled |= _player.States.GetCurrentState() == _player.SleepAction;

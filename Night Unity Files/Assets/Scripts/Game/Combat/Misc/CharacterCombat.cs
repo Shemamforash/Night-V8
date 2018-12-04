@@ -13,14 +13,14 @@ namespace Game.Combat.Misc
     public abstract class CharacterCombat : CanTakeDamage
     {
         public WeaponAudioController WeaponAudio;
-        private const float RecoilRecoveryRate = 2f;
+        private const float RecoilRecoveryRate = 0.5f;
         private readonly Number Recoil = new Number(0, 0, 1f);
         private float _distanceToTarget = -1;
         protected SpriteRenderer Sprite;
         private CanTakeDamage _target;
         public MovementController MovementController;
-        private const float ExplosionForceModifier = 10;
-        
+        private const float ExplosionForceModifier = 20;
+
         protected float DistanceToTarget()
         {
             if (_distanceToTarget == -1) _distanceToTarget = Vector2.Distance(transform.position, TargetPosition());
@@ -94,7 +94,7 @@ namespace Game.Combat.Misc
 
         public virtual float GetAccuracyModifier() => Recoil.CurrentValue();
 
-        public virtual void SetTarget(CanTakeDamage target)
+        public void SetTarget(CanTakeDamage target)
         {
             _target = target;
         }

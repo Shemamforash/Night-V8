@@ -21,26 +21,31 @@ namespace Game.Exploration.Regions
 {
     public class Region : Node
     {
-        public string Name;
-        private RegionType _regionType;
-        private bool _discovered, _seen, _generated;
-        public List<Barrier> Barriers = new List<Barrier>();
+        private static GameObject _nodePrefab;
+        private static int _currentId;
+
+        private readonly List<int> _neighborIds = new List<int>();
         public readonly List<EnemyCampfire> Fires = new List<EnemyCampfire>();
         public readonly List<ContainerController> Containers = new List<ContainerController>();
-        private static GameObject _nodePrefab;
-        public int RegionID;
-        public int WaterSourceCount, FoodSourceCount, ResourceSourceCount;
+
+        private RegionType _regionType;
+        private bool _discovered, _seen, _generated;
+        private int _size;
+        public bool ShouldGenerateEncounter;
+        private GameObject _nodeObject;
+        private MapNodeController _mapNode;
+
+        private string _claimBenefit = "";
+        private int _claimQuantity;
+        public List<Barrier> Barriers = new List<Barrier>();
+        public string Name;
+        public int RegionID, WaterSourceCount, FoodSourceCount, ResourceSourceCount, ClaimRemaining, RitesRemaining = 3;
+        public bool ReadJournal;
         public Player CharacterHere;
         public Vector2 CharacterPosition;
-        private readonly List<int> _neighborIds = new List<int>();
-        public int ClaimRemaining;
-        private int _claimQuantity;
-        private string _claimBenefit = "";
-        public int RitesRemaining = 3;
+        public Vector2? RadianceStonePosition;
+        public bool TempleCleansed;
         public bool FountainVisited;
-        private static int _currentId;
-        private int _timeToNextVisit;
-        private GameObject _nodeObject;
 
         public Region() : base(Vector2.zero)
         {
@@ -59,8 +64,9 @@ namespace Game.Exploration.Regions
             return " +" + _claimQuantity + " " + _claimBenefit + " in " + timeRemainingInHours + hourString;
         }
 
-        public void Claim()
+        public void Claim(Vector2 position)
         {
+            RadianceStonePosition = position;
             ClaimRemaining = 2 * 24 * WorldState.MinutesPerHour;
             switch (_regionType)
             {
@@ -109,32 +115,21 @@ namespace Game.Exploration.Regions
 
         public void Update()
         {
-            if(_timeToNextVisit > 0) --_timeToNextVisit;
             if (ClaimRemaining == 0) return;
             --ClaimRemaining;
             if (ClaimRemaining == 0)
             {
                 _claimBenefit = "";
                 WorldEventManager.GenerateEvent(new WorldEvent(Name + " has been lost to the darkness"));
+                RadianceStonePosition = null;
             }
 
             if (ClaimRemaining % (24 * WorldState.MinutesPerHour) != 0) return;
             Inventory.IncrementResource(_claimBenefit, 1);
         }
 
-        public bool Generated()
-        {
-            return _generated;
-        }
-
-        public void MarkGenerated()
-        {
-            _generated = true;
-        }
-
         public void Visit()
         {
-            _timeToNextVisit = WorldState.Days;
             if (_discovered) return;
             if (_regionType != RegionType.Shelter) return;
             GenerateShelter();
@@ -148,17 +143,18 @@ namespace Game.Exploration.Regions
             if (region.RegionID > _currentId) _currentId = region.RegionID + 1;
             region.Position = doc.StringFromNode("Position").ToVector2();
             foreach (XmlNode n in doc.SelectSingleNode("Neighbors").SelectNodes("ID"))
-            {
                 region._neighborIds.Add(n.IntFromNode("ID"));
-            }
-
             region._regionType = (RegionType) doc.IntFromNode("Type");
             region._discovered = doc.BoolFromNode("Discovered");
             region._seen = doc.BoolFromNode("Seen");
-            region._timeToNextVisit = doc.IntFromNode("TimeToNextVisit");
+            region._size = doc.IntFromNode("Size");
+            region.TempleCleansed = doc.BoolFromNode("TempleCleansed");
+            string radianceStoneString = doc.StringFromNode("RadianceStonePosition");
+            if (radianceStoneString != "") region.RadianceStonePosition = radianceStoneString.ToVector2();
             region.WaterSourceCount = doc.IntFromNode("WaterSourceCount");
             region.FoodSourceCount = doc.IntFromNode("FoodSourceCount");
             region.ResourceSourceCount = doc.IntFromNode("ResourceSourceCount");
+            region.ReadJournal = doc.BoolFromNode("ReadJournal");
             region.ClaimRemaining = doc.IntFromNode("ClaimRemaining");
             region._claimQuantity = doc.IntFromNode("ClaimQuantity");
             region._claimBenefit = doc.StringFromNode("ClaimBenefit");
@@ -175,29 +171,22 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("Position", Position.ToString());
             XmlNode neighborNode = regionNode.CreateChild("Neighbors");
             foreach (Node n in Neighbors())
-            {
                 neighborNode.CreateChild("ID", ((Region) n).RegionID);
-            }
-
             regionNode.CreateChild("Type", (int) _regionType);
             regionNode.CreateChild("Discovered", _discovered);
             regionNode.CreateChild("Seen", _seen);
-            regionNode.CreateChild("TimeToNextVisit", _timeToNextVisit);
+            regionNode.CreateChild("Size", _size);
+            regionNode.CreateChild("TempleCleansed", TempleCleansed);
+            regionNode.CreateChild("RadianceStonePosition", RadianceStonePosition == null ? RadianceStonePosition.ToString() : "");
             regionNode.CreateChild("WaterSourceCount", WaterSourceCount);
             regionNode.CreateChild("FoodSourceCount", FoodSourceCount);
             regionNode.CreateChild("ResourceSourceCount", ResourceSourceCount);
+            regionNode.CreateChild("ReadJournal", ReadJournal);
             regionNode.CreateChild("ClaimRemaining", ClaimRemaining);
             regionNode.CreateChild("ClaimQuantity", _claimQuantity);
             regionNode.CreateChild("ClaimBenefit", _claimBenefit);
             regionNode.CreateChild("RitesRemaining", RitesRemaining);
             regionNode.CreateChild("FountainVisited", FountainVisited);
-        }
-
-        private MapNodeController _mapNode;
-
-        public MapNodeController MapNode()
-        {
-            return _mapNode;
         }
 
         public void HideNode()
@@ -222,54 +211,39 @@ namespace Game.Exploration.Regions
             _nodeObject.transform.position = new Vector3(Position.x, Position.y, 0);
             _nodeObject.transform.localScale = Vector3.one;
             _mapNode = _nodeObject.transform.GetComponentInChildren<MapNodeController>(true);
-            if (_regionType == RegionType.Temple)
-            {
-                GameObject g = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Map/Map Shadow"));
-                g.transform.SetParent(_nodeObject.transform, false);
-                g.transform.position = _nodeObject.transform.position;
-            }
-
             _mapNode.SetRegion(this);
         }
-
-        public void SetPosition(Vector2 position)
-        {
-            Position = position;
-        }
-
-        public float DistanceToPoint(Region node) => DistanceToPoint(node.Position);
-
-        private float DistanceToPoint(Vector3 point) => Vector3.Distance(point, Position);
 
         private List<EnemyTemplate> GenerateEncounter(List<EnemyTemplate> allowedTypes)
         {
             List<EnemyTemplate> templates = new List<EnemyTemplate>();
             if (!CanHaveEnemies()) return templates;
-            int size = WorldState.Difficulty() + 4;
-            templates.AddRange(CombatManager.GenerateEnemies(size, allowedTypes));
+            if (ShouldGenerateEncounter && RadianceStonePosition == null)
+                _size = WorldState.Difficulty() + 4;
+            templates.AddRange(CombatManager.GenerateEnemies(_size, allowedTypes));
+            _size = 0;
             return templates;
         }
-
-        public RegionType GetRegionType() => _regionType;
 
         private List<EnemyTemplate> GenerateAnimalEncounter()
         {
             List<EnemyTemplate> templates = new List<EnemyTemplate>();
-            int size = WorldState.Difficulty() + 4;
             List<EnemyTemplate> animalTypes = new List<EnemyTemplate>
             {
                 EnemyTemplate.GetEnemyTemplate(EnemyType.Grazer),
                 EnemyTemplate.GetEnemyTemplate(EnemyType.Watcher),
                 EnemyTemplate.GetEnemyTemplate(EnemyType.Curio)
             };
-            while (size > 0)
+            if (ShouldGenerateEncounter && RadianceStonePosition == null)
+                _size = WorldState.Difficulty() / 10 + 5;
+            while (_size > 0)
             {
                 animalTypes.Shuffle();
                 foreach (EnemyTemplate e in animalTypes)
                 {
-                    if (e.Value > size) continue;
+                    if (e.Value > _size) continue;
                     templates.Add(e);
-                    size -= e.Value;
+                    _size -= e.Value;
                     break;
                 }
             }
@@ -293,11 +267,10 @@ namespace Game.Exploration.Regions
         {
             return _regionType != RegionType.Gate && _regionType != RegionType.Nightmare && _regionType != RegionType.Rite && _regionType != RegionType.Tomb;
         }
-        
-        private void SetSeen()
+
+        public void ConnectNeighbors()
         {
-            if (_seen) return;
-            _seen = true;
+            _neighborIds.ForEach(i => AddNeighbor(MapGenerator.GetRegionById(i)));
         }
 
         public bool Discover()
@@ -305,32 +278,15 @@ namespace Game.Exploration.Regions
             if (_discovered) return false;
             SetRegionType(MapGenerator.GetNewRegionType());
             _discovered = true;
-            SetSeen();
+            _seen = true;
             foreach (Node neighbor in Neighbors())
-            {
-                Region region = neighbor as Region;
-                if (!region._seen)
-                    region.SetSeen();
-            }
-
+                ((Region) neighbor)._seen = true;
             return true;
-        }
-
-        public bool Seen()
-        {
-            return _seen;
-        }
-
-        public void ConnectNeighbors()
-        {
-            _neighborIds.ForEach(i => AddNeighbor(MapGenerator.GetRegionById(i)));
         }
 
         public List<Enemy> GetEnemies()
         {
-            Debug.Log(ClaimRemaining);
             List<Enemy> enemies = new List<Enemy>();
-            if (ClaimRemaining != 0 || _timeToNextVisit != 0) return enemies;
             List<EnemyTemplate> templates;
             switch (_regionType)
             {
@@ -356,5 +312,19 @@ namespace Game.Exploration.Regions
             templates.ForEach(t => enemies.Add(t.Create()));
             return enemies;
         }
+
+        public bool Seen() => _seen;
+
+        public void SetPosition(Vector2 position) => Position = position;
+
+        public MapNodeController MapNode() => _mapNode;
+
+        public bool Generated() => _generated;
+
+        public void MarkGenerated() => _generated = true;
+
+        public RegionType GetRegionType() => _regionType;
+
+        public void RestoreSize(int size) => _size += size;
     }
 }

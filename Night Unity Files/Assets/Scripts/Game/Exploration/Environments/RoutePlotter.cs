@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Exploration.Regions;
+using SamsHelper.Libraries;
 
 namespace Game.Exploration.Environment
 {
@@ -51,7 +52,7 @@ namespace Game.Exploration.Environment
                 foreach (Region neighbor in closest.node.Neighbors())
                 {
                     if (!vertices.ContainsKey(neighbor)) continue;
-                    float distance = closest.node.DistanceToPoint(neighbor);
+                    float distance = neighbor.Position.Distance(closest.node.Position);
                     float altRouteDistance = currentRouteDistance + distance;
                     if (altRouteDistance >= vertices[neighbor].distance) continue;
                     vertices[neighbor].distance = altRouteDistance;
