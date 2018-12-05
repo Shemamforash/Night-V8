@@ -40,7 +40,7 @@ namespace Facilitating.UIControllers
             UpdatePlates();
             InputHandler.RegisterInputListener(this);
             SetPlateListActive(_plateOneUi);
-            TutorialManager.TryOpenTutorial(9);
+            TutorialManager.TryOpenTutorial(12);
         }
 
         private void UpdateArmourDescriptions()
@@ -151,12 +151,12 @@ namespace Facilitating.UIControllers
             
             public void SetPlate()
             {
-                PlateList.Show(() => GetAvailableArmour(_armourType));
+                PlateList.Show();
             }
 
             public void Initialise(Action<object> equipPlateAction)
             {
-                PlateList.Initialise(typeof(ArmourElement), equipPlateAction, () => { });
+                PlateList.Initialise(typeof(ArmourElement), equipPlateAction, () => { }, () => GetAvailableArmour(_armourType));
             }
         }
 

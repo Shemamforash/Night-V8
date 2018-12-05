@@ -117,7 +117,7 @@ namespace Game.Combat.Generation.Shrines
         public float InRange()
         {
             Debug.Log(_targetBrand);
-            if (_targetBrand != -1) TutorialManager.TryOpenTutorial(12);
+            if (_targetBrand != -1) TutorialManager.TryOpenTutorial(15);
             return _targetBrand;
         }
 

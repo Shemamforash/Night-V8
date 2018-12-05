@@ -48,12 +48,12 @@ public class UiConsumableController : UiInventoryMenuController
         ResourceTemplate.AllResources.ForEach(r => { Inventory.IncrementResource(r.Name, Random.Range(5, 20)); });
         Inventory.IncrementResource("Essence", 38);
 #endif
-        _consumableList.Show(GetAvailableConsumables);
+        _consumableList.Show();
     }
 
     protected override void Initialise()
     {
-        _consumableList.Initialise(typeof(ConsumableElement), Consume, UiGearMenuController.Close);
+        _consumableList.Initialise(typeof(ConsumableElement), Consume, UiGearMenuController.Close, GetAvailableConsumables);
     }
 
     private class ConsumableElement : BasicListElement
@@ -68,10 +68,9 @@ public class UiConsumableController : UiInventoryMenuController
         protected override void Update(object o, bool isCentreItem)
         {
             Consumable consumable = (Consumable) o;
-            bool canConsume = consumable.CanConsume();
             string nameText = consumable.Quantity() > 1 ? consumable.Name + " x" + consumable.Quantity() : consumable.Name;
-            LeftText.SetText(nameText + (canConsume ? "" : "Cannot Consume"));
-            CentreText.SetText("");
+            LeftText.SetText(nameText);
+            CentreText.SetText(consumable.CanConsume() ? "" : "Cannot Consume");
             RightText.SetText(consumable.Template.Description);
             if (isCentreItem) UpdateConditions(consumable);
         }

@@ -25,7 +25,7 @@ public class DismantleMenuController : Menu
     {
         base.Awake();
         _dismantleList = gameObject.FindChildWithName<ListController>("List");
-        _dismantleList.Initialise(typeof(DismantleElement), Dismantle, Close);
+        _dismantleList.Initialise(typeof(DismantleElement), Dismantle, Close, GetDismantleItems);
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
         _closeButton.SetOnClick(Close);
         _closeButton.SetCallback(Close);
@@ -207,7 +207,7 @@ public class DismantleMenuController : Menu
         DOTween.defaultTimeScaleIndependent = true;
         _dismantledScreen.SetActive(false);
         _dismantleList.gameObject.SetActive(true);
-        _dismantleList.Show(GetDismantleItems);
+        _dismantleList.Show();
     }
 
     public static void Show()

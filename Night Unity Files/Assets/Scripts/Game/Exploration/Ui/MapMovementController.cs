@@ -30,7 +30,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
     public void Awake()
     {
         _rigidBody2D = GetComponent<Rigidbody2D>();
-        _availableRegions = MapGenerator.DiscoveredRegions();
+        _availableRegions = MapGenerator.SeenRegions();
         MapCamera = GetComponent<Camera>();
         _instance = this;
         _audioSource = GetComponent<AudioSource>();
@@ -96,7 +96,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         }
 
         _direction = _nearestRegion.Position.Direction(transform.position);
-        CurrentSpeed = distance * Time.fixedDeltaTime * 250;
+        CurrentSpeed = distance * Time.fixedDeltaTime * 400;
     }
 
     public void Update()
@@ -113,7 +113,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
             nearestDistance = distance;
             newNearestRegion = region;
         });
-        if (nearestDistance > 1.5f) newNearestRegion = null;
+        if (nearestDistance > 1f) newNearestRegion = null;
         SetNearestRegion(newNearestRegion);
     }
 

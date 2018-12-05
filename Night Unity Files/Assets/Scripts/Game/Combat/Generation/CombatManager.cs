@@ -12,6 +12,7 @@ using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using Game.Global;
 using NUnit.Framework;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -36,6 +37,9 @@ namespace Game.Combat.Generation
         private static List<Enemy> _inactiveEnemies;
         private static int _maxSize;
         private static int _currentSize;
+        private CanvasGroup _hudCanvas;
+        private bool _hudShown;
+        private Sequence _hudTween;
 
         public static List<EnemyTemplate> GenerateEnemies(int size, List<EnemyTemplate> allowedTypes)
         {
@@ -64,22 +68,46 @@ namespace Game.Combat.Generation
         public override void Awake()
         {
             base.Awake();
+            _hudCanvas = gameObject.FindChildWithName<CanvasGroup>("HUD Container");
+            _hudCanvas.alpha = 0.25f;
             _instance = this;
             Resume();
             ScreenFaderController.ShowText(_currentRegion.Name);
         }
 
+        private void UpdateHud()
+        {
+            bool enemiesRemain = _inactiveEnemies.Count > 0 || _enemies.Count > 0;
+            if (enemiesRemain && !_hudShown)
+            {
+                _hudTween?.Kill();
+                Sequence sequence = DOTween.Sequence();
+                sequence.Append(_hudCanvas.DOFade(1f, 1f));
+                sequence.AppendInterval(2f);
+                sequence.AppendCallback(() => TutorialManager.TryOpenTutorial(6));
+                _hudTween = sequence;
+                _hudShown = true;
+            }
+            else if (!enemiesRemain && _hudShown)
+            {
+                _hudTween?.Kill();
+                Sequence sequence = DOTween.Sequence();
+                sequence.Append(_hudCanvas.DOFade(0.25f, 1f));
+                _hudTween = sequence;
+                _hudShown = false;
+            }
+        }
+
         public void Update()
         {
             if (!IsCombatActive()) return;
+            UpdateHud();
             UpdateEnemiesOnScreen();
             AIMoveManager.UpdateMoveBehaviours();
             if (Time.timeSinceLevelLoad < 1f) return;
             PlayerCombat.Instance.MyUpdate();
             for (int i = _enemies.Count - 1; i >= 0; --i)
-            {
                 _enemies[i].MyUpdate();
-            }
         }
 
         public static CombatManager Instance()
@@ -96,19 +124,21 @@ namespace Game.Combat.Generation
         public void Start()
         {
             EnterCombat();
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendInterval(3f);
+            sequence.AppendCallback(() =>
+            {
+                if (PlayerCombat.Instance == null) return;
+                TutorialManager.TryOpenTutorial(4);
+                if (PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Grit) != 0) return;
+                TutorialManager.TryOpenTutorial(5);
+            });
         }
 
         public override void Enter()
         {
             base.Enter();
             InputHandler.SetCurrentListener(PlayerCombat.Instance);
-            Sequence sequence = DOTween.Sequence();
-            sequence.AppendInterval(3f);
-            sequence.AppendCallback(() =>
-            {
-                if (PlayerCombat.Instance == null) return;
-                TutorialManager.TryOpenTutorial(3);
-            });
         }
 
         public static bool IsPlayerInCombat()

@@ -53,7 +53,7 @@ public class SaltBehaviour : MonoBehaviour
 
     private void TryShowTutorial()
     {
-        TutorialManager.TryOpenTutorial(5);
+        TutorialManager.TryOpenTutorial(8);
     }
 
     private void OnCollisionEnter2D(Collision2D other)

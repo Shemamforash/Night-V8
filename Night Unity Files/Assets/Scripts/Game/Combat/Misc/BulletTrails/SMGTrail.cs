@@ -13,9 +13,11 @@ namespace Game.Combat.Misc
             _path = GetComponent<ParticleSystem>();
         }
 
-        public static SMGTrail Create()
+        public static SMGTrail Create(bool isPlayer)
         {
-            return (SMGTrail) _pool.Create();
+            SMGTrail trail = (SMGTrail) _pool.Create();
+            trail.Initialise(isPlayer);
+            return trail;
         }
 
         protected override bool Done()
@@ -31,6 +33,12 @@ namespace Game.Combat.Misc
         protected override void ClearTrails()
         {
             _path.Clear();
+        }
+
+        private void Initialise(bool isPlayer)
+        {
+            ParticleSystem.MainModule main = _path.main;
+            main.startColor = isPlayer ? Color.white : Color.red;
         }
     }
 }

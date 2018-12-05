@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Facilitating.UIControllers;
 using Game.Exploration.Environment;
 using Game.Exploration.Weather;
 using Game.Exploration.WorldEvents;
@@ -184,11 +185,18 @@ namespace Game.Characters
 
             CharacterAttribute hunger = Get(AttributeType.Hunger);
             hunger.Increment(hungerIncrementAmount);
-            if (hunger.ReachedMax()) _player.Kill();
+            if (hunger.ReachedMax())
+            {
+                _player.Kill(DeathReason.Hunger);
+                return;
+            }
 
             CharacterAttribute thirst = Get(AttributeType.Thirst);
             thirst.Increment(thirstIncrementAmount);
-            if (thirst.ReachedMax()) _player.Kill();
+            if (thirst.ReachedMax())
+            {
+                _player.Kill(DeathReason.Thirst);
+            }
         }
 
         private string GetAttributeStatus(Number characterAttribute, string[] levels)

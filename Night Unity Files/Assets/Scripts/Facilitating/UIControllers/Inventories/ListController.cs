@@ -43,9 +43,10 @@ public class ListController : MonoBehaviour, IInputListener
         OnItemHover = onItemHover;
     }
 
-    public void Initialise(Type elementListType, Action<object> onButtonDown, Action onReturn)
+    public void Initialise(Type elementListType, Action<object> onButtonDown, Action onReturn, Func<List<object>> getContentsAction)
     {
         CacheElements();
+        GetContentsAction = getContentsAction;
         int listSize = _listItems.Count;
         for (int i = 0; i < listSize; ++i)
         {
@@ -57,22 +58,24 @@ public class ListController : MonoBehaviour, IInputListener
             element.SetColour(elementColour);
         }
 
+        _centreButton.AddOnSelectEvent(() => { InputHandler.SetCurrentListener(this); });
         _centreButton.AddOnClick(() =>
         {
             if (_listObjects.Count == 0) return;
             if (_selectedItemIndex == _listObjects.Count) --_selectedItemIndex;
             onButtonDown?.Invoke(_listObjects[_selectedItemIndex]);
             UpdateList();
-            if (_selectedItemIndex <= _listObjects.Count || _listObjects.Count == 0) return;
+            if (_selectedItemIndex < _listObjects.Count || _listObjects.Count == 0) return;
             _selectedItemIndex = _listObjects.Count - 1;
             Select(false);
         });
         OnReturn = onReturn;
     }
 
-    public void Initialise(List<ListElement> itemsUi, Action<object> onButtonDown, Action onReturn)
+    public void Initialise(List<ListElement> itemsUi, Action<object> onButtonDown, Action onReturn, Func<List<object>> getContentsAction)
     {
         CacheElements();
+        GetContentsAction = getContentsAction;
         int itemCount = itemsUi.Count;
         Assert.AreEqual(itemCount, _listItems.Count);
         _uiElements = itemsUi;
@@ -91,9 +94,8 @@ public class ListController : MonoBehaviour, IInputListener
         OnReturn = onReturn;
     }
 
-    public void Show(Func<List<object>> getContentsAction)
+    public void Show()
     {
-        GetContentsAction = getContentsAction;
         gameObject.SetActive(true);
         _centreButton.Select();
         _selectedItemIndex = 0;

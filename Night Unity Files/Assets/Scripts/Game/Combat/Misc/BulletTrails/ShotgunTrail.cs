@@ -16,9 +16,11 @@ namespace Game.Combat.Misc
             _points = gameObject.FindChildWithName<ParticleSystem>("Points");
         }
 
-        public static ShotgunTrail Create()
+        public static ShotgunTrail Create(bool isPlayer)
         {
-            return (ShotgunTrail) _pool.Create();
+            ShotgunTrail trail = (ShotgunTrail) _pool.Create();
+            trail.Initialise(isPlayer);
+            return trail;
         }
 
         protected override bool Done()
@@ -35,6 +37,14 @@ namespace Game.Combat.Misc
         {
             _trail.Clear();
             _points.Clear();
+        }
+
+        private void Initialise(bool isPlayer)
+        {
+            ParticleSystem.MainModule main = _points.main;
+            main.startColor = isPlayer ? Color.white : Color.red;
+            _trail.startColor = isPlayer ? Color.white : Color.red;
+            _trail.endColor = isPlayer ? new Color(1f, 1f, 1f, 0f) : new Color(1f, 0f, 0f, 0f);
         }
     }
 }

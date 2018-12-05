@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Game.Exploration.Environment;
+using Game.Exploration.Regions;
 using InventorySystem;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
@@ -31,9 +32,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private class DropRate
         {
             private readonly float _drMin, _dr;
+            public readonly bool CanDrop;
 
             public DropRate(ref float drCur, float drDiff)
             {
+                CanDrop = drDiff != 0;
                 _drMin = drCur;
                 _dr = _drMin + drDiff;
                 drCur = _dr;
@@ -151,12 +154,16 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             float rand = Random.Range(0f, 1f);
             EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironment.EnvironmentType;
+            if (Region.InTutorialPeriod())
+            {
+                return Plant.FindAll(r => r.AttributeType != AttributeType.Grit && r._dropRates[currentEnvironment].CanDrop).RandomElement();
+            }
             foreach (ResourceTemplate plantTemplate in Plant)
             {
                 if (!plantTemplate._dropRates[currentEnvironment].ValueWithinRange(rand)) continue;
                 return plantTemplate;
             }
-
+            
             throw new Exception("Can't have invalid Plant!");
         }
 

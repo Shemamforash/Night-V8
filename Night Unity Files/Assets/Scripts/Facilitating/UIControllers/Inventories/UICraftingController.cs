@@ -40,7 +40,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         InputHandler.RegisterInputListener(this);
         if (CharacterManager.SelectedCharacter.CraftAction.IsCurrentState()) ShowCurrentlyCrafting();
         else ShowCraftingList();
-        TutorialManager.TryOpenTutorial(7);
+        TutorialManager.TryOpenTutorial(10);
     }
 
     private void ShowCurrentlyCrafting()
@@ -57,12 +57,12 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
     {
         _listCanvas.alpha = 1;
         _currentCraftingCanvas.alpha = 0;
-        _craftingList.Show(GetAvailableRecipes);
+        _craftingList.Show();
     }
 
     protected override void Initialise()
     {
-        _craftingList.Initialise(typeof(RecipeElement), CreateRecipe, UiGearMenuController.Close);
+        _craftingList.Initialise(typeof(RecipeElement), CreateRecipe, UiGearMenuController.Close, GetAvailableRecipes);
     }
 
     protected override void OnHide()

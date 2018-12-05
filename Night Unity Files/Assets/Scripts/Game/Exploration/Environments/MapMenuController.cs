@@ -70,7 +70,7 @@ namespace Game.Exploration.Environment
 
         private void CreateRouteLinks()
         {
-            List<Region> _discovered = MapGenerator.DiscoveredRegions();
+            List<Region> _discovered = MapGenerator.SeenRegions();
             foreach (Region from in _discovered)
             {
                 foreach (Region to in _discovered)

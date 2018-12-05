@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
+using Facilitating.UIControllers;
 using Game.Characters.Brands;
 using Game.Characters.CharacterActions;
 using Game.Combat.Player;
@@ -120,11 +121,11 @@ namespace Game.Characters
             WeaponGenerator.GetWeaponTypes().ForEach(t => { _weaponKills.Add(t, 0); });
         }
 
-        public void Kill()
+        public void Kill(DeathReason deathReason)
         {
             IsDead = true;
             if (CharacterTemplate.CharacterClass == CharacterClass.Wanderer)
-                SceneChanger.GoToGameOverScene();
+                SceneChanger.GoToGameOverScene(deathReason);
             else
                 CharacterManager.RemoveCharacter(this);
         }

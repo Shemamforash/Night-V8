@@ -44,9 +44,14 @@ namespace Game.Exploration.Environment
             return _regions.First(r => r.RegionID == id);
         }
 
-        public static List<Region> DiscoveredRegions()
+        public static List<Region> SeenRegions()
         {
             return _regions.FindAll(n => n.Seen());
+        }
+
+        public static List<Region> DiscoveredRegions()
+        {
+            return _regions.FindAll(n => n.Discovered());
         }
 
         public static void Load(XmlNode doc)
@@ -345,7 +350,9 @@ namespace Game.Exploration.Environment
 
             UpdateAvailableRegionTypes();
             ++_regionsDiscovered;
-            return _regionTypeBag.RemoveRandom();
+            if (!Region.InTutorialPeriod()) return _regionTypeBag.RemoveRandom();
+            _regionTypeBag.Remove(RegionType.Danger);
+            return RegionType.Danger;
         }
 
         private static void SetWaterQuantities()

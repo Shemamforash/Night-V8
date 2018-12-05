@@ -25,7 +25,7 @@ namespace Game.Exploration.Ui
         private bool _doneFading;
         private TextMeshProUGUI _nameText, _costText, _claimText;
 
-        private Image _icon;
+        private Image _icon, _selectedImage;
         private float _targetCentreAlpha, _targetNodeAlpha;
         private CanvasGroup _nodeCanvas, _centreCanvas;
         private UIBorderController _border;
@@ -41,6 +41,7 @@ namespace Game.Exploration.Ui
             _nodeCanvas = gameObject.FindChildWithName<CanvasGroup>("Canvas");
             _centreCanvas = gameObject.FindChildWithName<CanvasGroup>("Centre Canvas");
 
+            _selectedImage = gameObject.FindChildWithName<Image>("Selected");
             _nameText = gameObject.FindChildWithName<TextMeshProUGUI>("Name");
             _costText = gameObject.FindChildWithName<TextMeshProUGUI>("Cost");
             _claimText = gameObject.FindChildWithName<TextMeshProUGUI>("Claim Bonus");
@@ -163,6 +164,8 @@ namespace Game.Exploration.Ui
                 _centreCanvas.alpha += centreAlphaDifference;
             }
 
+            _selectedImage.SetAlpha(Mathf.Clamp(_centreCanvas.alpha - 0.8f, 0f, 1f));
+            
             float currentNodeAlpha = _nodeCanvas.alpha;
             float nodeAlphaDifference = _targetNodeAlpha - currentNodeAlpha;
             if (Mathf.Abs(nodeAlphaDifference) > 0.01f)
@@ -204,6 +207,7 @@ namespace Game.Exploration.Ui
             transform.DOScale(Vector2.one * 1.25f, 1f).SetUpdate(UpdateType.Normal, true);
             MapMenuController.SetRoute(_region);
             MapMovementController.UpdateGrit(_gritCost);
+            TutorialManager.TryOpenTutorial(3);
         }
 
         public void LoseFocus(float time = 1f)

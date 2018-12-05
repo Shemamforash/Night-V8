@@ -127,7 +127,7 @@ namespace Game.Combat.Misc
             if (TryLockSkill(skillNo)) return;
             bool freeSkill = IsSkillFree();
             if (!_skills[skillNo].Activate(freeSkill || SkillsAreFree)) return;
-            TutorialManager.TryOpenTutorial(11);
+            TutorialManager.TryOpenTutorial(14);
             if (freeSkill) return;
             StartCooldown(_skills[skillNo].AdrenalineCost());
         }

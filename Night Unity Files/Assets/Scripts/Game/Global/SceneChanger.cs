@@ -2,6 +2,7 @@
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
+using Facilitating.UIControllers;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
@@ -56,9 +57,9 @@ namespace Game.Global
             StartCoroutine(LoadNextScene());
         }
 
-        public static void GoToGameOverScene()
+        public static void GoToGameOverScene(DeathReason deathReason)
         {
-            Debug.Log("GameOver");
+            UIDeathController.DeathReason = deathReason;
             FadeInAudio();
             ChangeScene("Game Over");
         }

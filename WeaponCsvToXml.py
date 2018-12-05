@@ -67,7 +67,7 @@ class TutorialImporter(XMLWriter):
         write_tag(self, "Tutorial", self.read_tutorials)
 
     def read_tutorials(self):
-        for row in range(2, 47):
+        for row in range(2, 52):
             write_tag(self, "TutorialPart", self.read_single_tutorial, [row])
 
     def read_single_tutorial(self, row):
@@ -404,7 +404,7 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-WeaponImporter()
+# WeaponImporter()
 # GearImporter()
 # WeatherImporter()
 # WeatherProbabilityImporter();
@@ -418,4 +418,4 @@ WeaponImporter()
 # EnvironmentImporter()
 # BrandImporter()
 # StoryImporter()
-# TutorialImporter()
+TutorialImporter()

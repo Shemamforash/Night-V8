@@ -216,7 +216,7 @@ namespace Game.Combat.Generation
             while (number > 0)
             {
                 float radius = Random.Range(minPolyWidth, maxPolyWidth);
-                Vector2? potentialPosition = FindAndRemoveValidPosition(0.4f);
+                Vector2? potentialPosition = FindAndRemoveValidPosition(radius);
                 if (potentialPosition == null) return;
                 Vector2 position = potentialPosition.Value;
                 GenerateGenericRock(radius, radiusVariation, smoothness, position);

@@ -1138,7 +1138,6 @@
           <e p="ActiveSkillController.cs" t="Include" />
           <e p="BrandReplaceMenuController.cs" t="Include" />
           <e p="CameraFollow.cs" t="Include" />
-          <e p="CameraLock.cs" t="Include" />
           <e p="CharacterBrandUIController.cs" t="Include" />
           <e p="CombatJournalController.cs" t="Include" />
           <e p="CombatWeatherController.cs" t="Include" />
@@ -1179,6 +1178,7 @@
                 <e p="UiCompassController.cs" t="Include" />
                 <e p="UISkillCostController.cs" t="Include" />
               </e>
+              <e p="DeathReason.cs" t="Include" />
               <e p="DetailedViewGear" t="Include">
                 <e p="GlowButtonBehaviour.cs" t="Include" />
                 <e p="UIPlayerAccessoryController.cs" t="Include" />
@@ -1202,6 +1202,7 @@
               <e p="UIAttributeController.cs" t="Include" />
               <e p="UIAttributeMarkerController.cs" t="Include" />
               <e p="UIConditionController.cs" t="Include" />
+              <e p="UIDeathController.cs" t="Include" />
             </e>
           </e>
           <e p="FastLights" t="Include">
@@ -1384,7 +1385,6 @@
               </e>
               <e p="Misc" t="Include">
                 <e p="BulletTrails" t="Include">
-                  <e p="BasicTrail.cs" t="Include" />
                   <e p="BulletImpactBehaviour.cs" t="Include" />
                   <e p="BulletTrail.cs" t="Include" />
                   <e p="MaelstromShotTrail.cs" t="Include" />

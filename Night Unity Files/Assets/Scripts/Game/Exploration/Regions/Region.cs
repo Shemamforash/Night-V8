@@ -284,9 +284,20 @@ namespace Game.Exploration.Regions
             return true;
         }
 
+        public bool Discovered()
+        {
+            return _discovered;
+        }
+
+        public static bool InTutorialPeriod()
+        {
+            return EnvironmentManager.CurrentEnvironment.EnvironmentType == EnvironmentType.Desert && MapGenerator.DiscoveredRegions().Count <= 3;
+        }
+        
         public List<Enemy> GetEnemies()
         {
             List<Enemy> enemies = new List<Enemy>();
+            if (InTutorialPeriod()) return enemies;
             List<EnemyTemplate> templates;
             switch (_regionType)
             {

@@ -14,7 +14,7 @@ namespace Game.Combat.Misc
     public class ShotAttributes
     {
         private const float MaxAge = 3f;
-        private const float EnemyDamageModifier = 0.25f;
+        private const float EnemyDamageModifier = 0.2f;
         private const float SeekDecay = 0.95f;
 
         private readonly CharacterCombat _origin;
@@ -41,16 +41,16 @@ namespace Game.Combat.Misc
             switch (_weapon.WeaponType())
             {
                 case WeaponType.Pistol:
-                    _speed = 20f;
+                    _speed = 12.5f;
                     break;
                 case WeaponType.Rifle:
-                    _speed = 25;
+                    _speed = 15;
                     break;
                 case WeaponType.Shotgun:
-                    _speed = 15f;
+                    _speed = 7.5f;
                     break;
                 case WeaponType.SMG:
-                    _speed = 15f;
+                    _speed = 10f;
                     break;
             }
         }
@@ -93,16 +93,17 @@ namespace Game.Combat.Misc
 
         public BulletTrail GetBulletTrail()
         {
+            bool isPlayer = _origin is PlayerCombat;
             switch (_weapon.WeaponType())
             {
                 case WeaponType.Pistol:
-                    return PistolTrail.Create();
+                    return PistolTrail.Create(isPlayer);
                 case WeaponType.Rifle:
-                    return RifleTrail.Create();
+                    return RifleTrail.Create(isPlayer);
                 case WeaponType.Shotgun:
-                    return ShotgunTrail.Create();
+                    return ShotgunTrail.Create(isPlayer);
                 case WeaponType.SMG:
-                    return SMGTrail.Create();
+                    return SMGTrail.Create(isPlayer);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

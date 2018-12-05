@@ -57,8 +57,13 @@ namespace Game.Combat.Player
         public List<Action> UpdateSkillActions = new List<Action>();
         public BaseWeaponBehaviour _weaponBehaviour;
         private FastLight _muzzleFlash;
+        private DeathReason _currentDeathReason;
 
         public bool DamageTakenSinceLastShot;
+        private bool _useKeyboardMovement = true;
+        private Vector2? _lastMousePosition;
+        private Camera _mainCamera;
+        
 
         public bool ConsumeAdrenaline(int amount)
         {
@@ -93,6 +98,7 @@ namespace Game.Combat.Player
             IsPlayer = true;
             base.Awake();
             Instance = this;
+            _mainCamera = Camera.main;
         }
 
         protected override int GetBurnDamage()
@@ -118,14 +124,14 @@ namespace Game.Combat.Player
 
         private void MoveVertical(float direction = 0)
         {
-            if (CameraLock.IsCameraLocked()) Move(direction * transform.up);
-            else Move(direction * Camera.main.transform.up);
+            if (_useKeyboardMovement) Move(direction * transform.up);
+            else Move(direction * _mainCamera.transform.up);
         }
 
         private void MoveHorizontal(float direction = 0)
         {
-            if (CameraLock.IsCameraLocked()) Move(direction * transform.right);
-            else Move(direction * Camera.main.transform.right);
+            if (_useKeyboardMovement) Move(direction * transform.right);
+            else Move(direction * _mainCamera.transform.right);
         }
 
         //input
@@ -221,10 +227,22 @@ namespace Game.Combat.Player
 
         private void Rotate(float direction)
         {
-            if (!CameraLock.IsCameraLocked()) return;
+            _useKeyboardMovement = true;
             _rotateSpeedCurrent += RotateAcceleration * Time.deltaTime;
             if (_rotateSpeedCurrent > RotateSpeedMax) _rotateSpeedCurrent = RotateSpeedMax;
             transform.Rotate(Vector3.forward, _rotateSpeedCurrent * Time.deltaTime * (-direction).Polarity());
+        }
+
+        private void UpdateRotation()
+        {
+            Vector2 mouseScreenPosition = Input.mousePosition;
+            if (_lastMousePosition == null) return;
+            if (_useKeyboardMovement && mouseScreenPosition == _lastMousePosition.Value) return;
+            _lastMousePosition = mouseScreenPosition;
+            _useKeyboardMovement = false;
+            Vector2 mousePosition = Helper.MouseToWorldCoordinates();
+            float rotation = AdvancedMaths.AngleFromUp(transform.position, mousePosition);
+            transform.rotation = Quaternion.Euler(0, 0, rotation);
         }
 
         public float InRange()
@@ -236,6 +254,18 @@ namespace Game.Combat.Player
         public string GetEventText()
         {
             return "Leave region [T]";
+        }
+
+        public override void Burn()
+        {
+            _currentDeathReason = DeathReason.Fire;
+            base.Burn();
+        }
+
+        public override void Sicken(int stacks = 1)
+        {
+            _currentDeathReason = DeathReason.Sickness;
+            base.Sicken(stacks);
         }
 
         public void Activate()
@@ -263,8 +293,8 @@ namespace Game.Combat.Player
             InputHandler.UnregisterInputListener(this);
             base.Kill();
             bool isWanderer = Player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer;
-            if (!isWanderer) CombatManager.ExitCombat(!isWanderer);
-            Player.Kill();
+            if (!isWanderer) CombatManager.ExitCombat();
+            Player.Kill(_currentDeathReason);
         }
 
         public override void MyUpdate()
@@ -273,14 +303,6 @@ namespace Game.Combat.Player
             UpdateSkillActions.ForEach(a => a());
             UpdateMuzzleFlash();
             UpdateRotation();
-        }
-
-        private void UpdateRotation()
-        {
-            if (CameraLock.IsCameraLocked()) return;
-            Vector2 mousePosition = Helper.MouseToWorldCoordinates();
-            float rotation = AdvancedMaths.AngleFromUp(transform.position, mousePosition);
-            transform.rotation = Quaternion.Euler(0, 0, rotation);
         }
 
         public override string GetDisplayName()
@@ -308,6 +330,7 @@ namespace Game.Combat.Player
 
         public override void TakeShotDamage(Shot shot)
         {
+            _currentDeathReason = DeathReason.Standard;
             base.TakeShotDamage(shot);
             UpdateSkillActions.Clear();
             _damageTakenSinceMarkStarted = true;
@@ -317,6 +340,7 @@ namespace Game.Combat.Player
 
         public override void TakeExplosionDamage(int damage, Vector2 direction, float radius)
         {
+            _currentDeathReason = DeathReason.Standard;
             base.TakeExplosionDamage(damage, direction, radius);
             Shake(damage * 100);
         }
@@ -575,5 +599,7 @@ namespace Game.Combat.Player
         {
             _adrenalineLevel.Decrement(amount);
         }
+
+        public bool IsKeyboardBeingUsed() => _useKeyboardMovement;
     }
 }

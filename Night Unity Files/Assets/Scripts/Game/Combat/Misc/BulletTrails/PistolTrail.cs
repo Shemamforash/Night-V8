@@ -13,9 +13,11 @@ namespace Game.Combat.Misc
             _path = GetComponent<ParticleSystem>();
         }
 
-        public static PistolTrail Create()
+        public static PistolTrail Create(bool isPlayer)
         {
-            return (PistolTrail) _pool.Create();
+            PistolTrail trail = (PistolTrail) _pool.Create();
+            trail.Initialise(isPlayer);
+            return trail;
         }
 
         protected override bool Done()
@@ -23,6 +25,12 @@ namespace Game.Combat.Misc
             return _path.particleCount == 0;
         }
 
+        public override void SetFinalPosition(Vector2 position)
+        {
+            base.SetFinalPosition(position);
+            _path.Stop();
+        }
+        
         protected override ObjectPool<BulletTrail> GetObjectPool()
         {
             return _pool;
@@ -31,6 +39,13 @@ namespace Game.Combat.Misc
         protected override void ClearTrails()
         {
             _path.Clear();
+        }
+
+        private void Initialise(bool isPlayer)
+        {
+            ParticleSystem.MainModule main = _path.main;
+            main.startColor = isPlayer ? Color.white : Color.red;
+            _path.Play();
         }
     }
 }

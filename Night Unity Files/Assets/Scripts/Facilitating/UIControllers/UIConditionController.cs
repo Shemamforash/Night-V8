@@ -40,8 +40,7 @@ namespace Facilitating.UIControllers
             float current = player.Attributes.Val(attributeType);
             float max = player.Attributes.Max(attributeType);
             if (current + offset > max) offset -= current + offset - max;
-            current /= max;
-            _fillImage.fillAmount = 1 - current;
+            _fillImage.fillAmount = 1 - current / max;
             _offsetImage.fillAmount = offset == 0 ? 0 : 1 - (current + offset) / max;
         }
 

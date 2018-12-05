@@ -97,7 +97,6 @@ namespace Facilitating.Persistence
             XmlNode root = _saveDoc.GetNode("Settings");
             VolumeController.Load(root);
             FullScreenController.Load(root);
-            CameraLock.Load(root);
         }
 
         public static void SaveSettings()
@@ -107,7 +106,6 @@ namespace Facilitating.Persistence
             XmlNode root = _saveDoc.CreateChild("Settings");
             VolumeController.Save(root);
             FullScreenController.Save(root);
-            CameraLock.Save(root);
             _saveDoc.Save(SettingsSaveLocation);
         }
     }

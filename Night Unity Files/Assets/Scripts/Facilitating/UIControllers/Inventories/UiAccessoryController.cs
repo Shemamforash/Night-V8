@@ -40,7 +40,7 @@ namespace Facilitating.UIControllers
 
         protected override void Initialise()
         {
-            _accessoryList.Initialise(typeof(AccessoryElement), Equip, UiGearMenuController.Close);
+            _accessoryList.Initialise(typeof(AccessoryElement), Equip, UiGearMenuController.Close, GetAvailableAccessories);
         }
 
         private void Equip(object accessoryObject)
@@ -72,8 +72,8 @@ namespace Facilitating.UIControllers
         protected override void OnShow()
         {
             UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
-            _accessoryList.Show(GetAvailableAccessories);
-            TutorialManager.TryOpenTutorial(10);
+            _accessoryList.Show();
+            TutorialManager.TryOpenTutorial(13);
             UpdateEquipped();
         }
 

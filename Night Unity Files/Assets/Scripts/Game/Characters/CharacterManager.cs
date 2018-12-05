@@ -45,6 +45,7 @@ namespace Game.Characters
                 player.Load(characterNode);
                 AddCharacter(player);
             }
+
             Assert.IsFalse(Templates.Any(t => t.CharacterClass == CharacterClass.Wanderer));
         }
 
@@ -118,6 +119,12 @@ namespace Game.Characters
             Inventory.Move(weapon);
             Wanderer.EquipWeapon(weapon);
             AddCharacter(Wanderer);
+
+            CharacterAttributes attributes = Wanderer.Attributes;
+            attributes.Get(AttributeType.Grit).SetCurrentValue(2);
+            attributes.Get(AttributeType.Fettle).SetCurrentValue(3);
+            attributes.Get(AttributeType.Focus).SetCurrentValue(3);
+            attributes.Get(AttributeType.Will).SetCurrentValue(2);
         }
 
         private static Player GenerateCharacter(CharacterClass characterClass)

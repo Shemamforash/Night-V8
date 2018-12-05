@@ -22,7 +22,7 @@ public class CameraFollow : MonoBehaviour
             return;
         }
 
-        if (CameraLock.IsCameraLocked()) _rotation = _playerTransform.rotation;
+        if (PlayerCombat.Instance.IsKeyboardBeingUsed()) _rotation = _playerTransform.rotation;
         transform.rotation = _rotation;
         _position = _playerTransform.position;
         _position.z = transform.position.z;

@@ -15,7 +15,7 @@ public class UiJournalController : UiInventoryMenuController
 
     protected override void Initialise()
     {
-        _journalList.Initialise(typeof(JournalElement), o => { }, UiGearMenuController.Close);
+        _journalList.Initialise(typeof(JournalElement), o => { }, UiGearMenuController.Close, GetAvailableJournalEntries);
         _journalList.SetOnItemHover(UpdateJournalDescription);
     }
 
@@ -46,7 +46,7 @@ public class UiJournalController : UiInventoryMenuController
     protected override void OnShow()
     {
         UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
-        _journalList.Show(GetAvailableJournalEntries);
+        _journalList.Show();
     }
 
     private List<object> GetAvailableJournalEntries()

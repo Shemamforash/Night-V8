@@ -47,18 +47,35 @@ public class WeaponDetailController : MonoBehaviour
         WeaponAttributes attr = weapon.WeaponAttributes;
         _nameText.SetText(weapon.GetDisplayName());
         _dpsText.SetText(attr.DPS().Round(1).ToString());
-        _damageText.SetText(attr.Val(AttributeType.Damage).Round(1) + " Damage");
-        _fireRateText.SetText(attr.Val(AttributeType.FireRate).Round(1) + " Rounds/Sec");
-        _reloadSpeedText.SetText(attr.Val(AttributeType.ReloadSpeed).Round(1) + "s Reload");
-        _handlingText.SetText(attr.Val(AttributeType.Handling).Round(1) + "% Handling");
-        _capacityText.SetText(Mathf.FloorToInt(attr.Val(AttributeType.Capacity)) + " Capacity");
-        _accuracyText.SetText((attr.Val(AttributeType.Accuracy) * 100).Round(1) + "% Accuracy");
         Inscription inscription = weapon.GetInscription();
         string inscriptionText = inscription == null ? "No Inscription" : inscription.Name;
         _inscriptionNameText.SetText(inscriptionText);
         _inscriptionEffectText.SetText(inscription == null ? "-" : inscription.GetSummary());
         _typeText.SetText(weapon.WeaponType().ToString());
         SetConditionText();
+        SetAttibuteText(attr);
+    }
+
+    private void SetAttibuteText(WeaponAttributes attr)
+    {
+        if (!IsDetailed) return;
+        _damageText.SetText(attr.Val(AttributeType.Damage).Round(1) + " Damage");
+        _fireRateText.SetText(attr.Val(AttributeType.FireRate).Round(1) + " Rounds/Sec");
+        _reloadSpeedText.SetText(attr.Val(AttributeType.ReloadSpeed).Round(1) + "s Reload");
+        _handlingText.SetText(attr.Val(AttributeType.Handling).Round(1) + "% Handling");
+        _capacityText.SetText(Mathf.FloorToInt(attr.Val(AttributeType.Capacity)) + " Capacity");
+        _accuracyText.SetText((attr.Val(AttributeType.Accuracy) * 100).Round(1) + "% Accuracy");
+    }
+
+    private void SetNoAttributeText()
+    {
+        if (!IsDetailed) return;
+        _damageText.SetText("");
+        _fireRateText.SetText("");
+        _capacityText.SetText("");
+        _reloadSpeedText.SetText("");
+        _accuracyText.SetText("");
+        _handlingText.SetText("");
     }
 
     private void SetConditionText()
@@ -84,16 +101,11 @@ public class WeaponDetailController : MonoBehaviour
     {
         _durabilityBar.Reset();
         _nameText.SetText("");
-        _damageText.SetText("");
-        _fireRateText.SetText("");
         _dpsText.SetText("Nothing Equipped");
-        _capacityText.SetText("");
-        _reloadSpeedText.SetText("");
-        _accuracyText.SetText("");
-        _handlingText.SetText("");
         _inscriptionNameText.SetText("");
         _inscriptionEffectText.SetText("");
         _typeText.SetText("");
+        SetNoAttributeText();
         SetConditionText();
     }
 

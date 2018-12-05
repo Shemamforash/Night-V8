@@ -63,7 +63,7 @@ namespace Facilitating.UIControllers
             {
                 if (!WeaponsAreAvailable()) return;
                 UiGearMenuController.SetCloseButtonAction(Show);
-                _weaponList.Show(GetAvailableWeapons);
+                _weaponList.Show();
                 InputHandler.UnregisterInputListener(this);
                 _infoGameObject.SetActive(false);
             });
@@ -71,7 +71,7 @@ namespace Facilitating.UIControllers
             {
                 if (!InscriptionsAreAvailable()) return;
                 UiGearMenuController.SetCloseButtonAction(Show);
-                _inscriptionList.Show(GetAvailableInscriptions);
+                _inscriptionList.Show();
                 InputHandler.UnregisterInputListener(this);
                 _infoGameObject.SetActive(false);
             });
@@ -84,12 +84,14 @@ namespace Facilitating.UIControllers
             List<ListElement> weaponListElements = new List<ListElement>();
             weaponListElements.Add(new WeaponElement());
             weaponListElements.Add(new WeaponElement());
+            weaponListElements.Add(new WeaponElement());
             weaponListElements.Add(new DetailedWeaponElement());
             weaponListElements.Add(new WeaponElement());
             weaponListElements.Add(new WeaponElement());
-            _weaponList.Initialise(weaponListElements, Equip, BackToWeaponInfo);
+            weaponListElements.Add(new WeaponElement());
+            _weaponList.Initialise(weaponListElements, Equip, BackToWeaponInfo, GetAvailableWeapons);
             _weaponList.Hide();
-            _inscriptionList.Initialise(typeof(InscriptionElement), Inscribe, BackToWeaponInfo);
+            _inscriptionList.Initialise(typeof(InscriptionElement), Inscribe, BackToWeaponInfo, GetAvailableInscriptions);
             _inscriptionList.Hide();
         }
 
@@ -135,7 +137,7 @@ namespace Facilitating.UIControllers
 
             InputHandler.RegisterInputListener(this);
             SetWeapon();
-            TutorialManager.TryOpenTutorial(8);
+            TutorialManager.TryOpenTutorial(11);
         }
 
         protected override void OnHide()

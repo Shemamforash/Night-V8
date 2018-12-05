@@ -46,7 +46,7 @@ namespace Game.Combat.Misc
         protected abstract ObjectPool<BulletTrail> GetObjectPool();
         protected abstract void ClearTrails();
 
-        public void SetFinalPosition(Vector2 finalPosition)
+        public virtual void SetFinalPosition(Vector2 finalPosition)
         {
             transform.position = finalPosition;
             _followTransform = null;

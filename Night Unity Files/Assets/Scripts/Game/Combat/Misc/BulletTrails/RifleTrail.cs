@@ -11,12 +11,23 @@ namespace Game.Combat.Misc
 
         public void Awake()
         {
-            _path = gameObject.FindChildWithName<ParticleSystem>("Trail 1");
+            _path = GetComponent<ParticleSystem>();
         }
 
-        public static RifleTrail Create()
+        public static RifleTrail Create(bool isPlayer)
         {
-            return (RifleTrail) _pool.Create();
+            RifleTrail trail = (RifleTrail) _pool.Create();
+            trail.Initialise(isPlayer);
+            return trail;
+        }
+
+        private void Initialise(bool isPlayer)
+        {
+            ParticleSystem.ColorOverLifetimeModule colorModule = _path.colorOverLifetime;
+            if (isPlayer)
+                colorModule.color = new ParticleSystem.MinMaxGradient(new Color(1, 1, 1, 0.5f), new Color(1, 1, 1, 0.8f));
+            else
+                colorModule.color = new ParticleSystem.MinMaxGradient(new Color(1, 0, 0, 0.5f), new Color(1, 0, 0, 0.8f));
         }
 
         protected override bool Done()
