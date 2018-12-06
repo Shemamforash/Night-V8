@@ -1,5 +1,6 @@
 ﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
+using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -7,11 +8,12 @@ namespace Game.Combat.Enemies.Nightmares
 {
     public class Shadow : NightmareEnemyBehaviour
     {
-        public void Start()
+        public override void Initialise(Enemy enemy)
         {
+            base.Initialise(enemy);
             gameObject.AddComponent<ErraticDash>();
-            if (Helper.RollDie(0, 2)) gameObject.AddComponent<Push>().Initialise(4, 2);
-            else gameObject.AddComponent<Needler>().Initialise(1);
+            gameObject.AddComponent<Push>().Initialise(4, 2);
+            if (WorldState.Difficulty() > 15) gameObject.AddComponent<Needler>().Initialise(1);
         }
     }
 }

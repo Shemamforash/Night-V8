@@ -27,6 +27,15 @@ namespace Facilitating.UIControllers
         private WeaponDetailController _weaponDetail;
         private GameObject _infoGameObject;
         private Weapon _equippedWeapon;
+        private static bool _unlocked;
+
+        protected override void SetUnlocked(bool unlocked) => _unlocked = unlocked;
+        
+        public override bool Unlocked()
+        {
+            if (!_unlocked) _unlocked = Inventory.GetAvailableWeapons().Count != 0 || Inventory.Inscriptions.Count != 0;
+            return _unlocked;
+        }
 
         protected override void CacheElements()
         {
@@ -270,7 +279,7 @@ namespace Facilitating.UIControllers
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
-            if (isHeld || axis != InputAxis.Cover) return;
+            if (isHeld || axis != InputAxis.Menu) return;
             UiGearMenuController.Close();
         }
 

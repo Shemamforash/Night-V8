@@ -23,6 +23,7 @@ namespace Fastlights
         private bool _needsUpdate;
         private MeshRenderer _meshRenderer;
         private MeshFilter _meshFilter;
+        private MaterialPropertyBlock _propBlock;
         private Color _lastColour;
         private float _lastRadius;
 
@@ -38,6 +39,7 @@ namespace Fastlights
 
         public void Awake()
         {
+            _propBlock = new MaterialPropertyBlock();
             _lights.Add(this);
             if (LightMaterial == null) LightMaterial = new Material(Shader.Find("Unlit/Texture"));
             gameObject.layer = 21;
@@ -320,7 +322,9 @@ namespace Fastlights
         private void UpdateColour()
         {
             if (!_hasUpdated && _lastColour == Colour) return;
-            _meshRenderer.material.SetColor("_Color", Colour);
+            _meshRenderer.GetPropertyBlock(_propBlock);
+            _propBlock.SetColor("_Color", Colour);
+            _meshRenderer.SetPropertyBlock(_propBlock);
             _lastColour = Colour;
         }
 

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
 using DG.Tweening;
+using Facilitating.Persistence;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Combat.Generation;
@@ -62,7 +64,35 @@ namespace Facilitating.UIControllers
         {
             InventoryTab tab = _tabParent.FindChildWithName(tabName).FindChildWithName<InventoryTab>("Image");
             tab.SetMenu(menu);
+            if (!menu.Unlocked())
+            {
+                tab.transform.parent.gameObject.SetActive(false);
+                return;
+            }
             _tabs.Add(tab);
+        }
+
+        public static void Save(XmlNode root)
+        {
+            root = root.CreateChild("Inventories");
+            if (_instance == null) return;
+            _instance._accessoryController.Save(root);
+            _instance._armourUpgradeController.Save(root);
+            _instance._weaponUpgradeController.Save(root);
+            _instance._craftingController.Save(root);
+            _instance._consumableController.Save(root);
+            _instance._journalController.Save(root);
+        }
+
+        public static void Load(XmlNode root)
+        {
+            root = root.SelectSingleNode("Inventories");
+            _instance._accessoryController.Load(root);
+            _instance._armourUpgradeController.Load(root);
+            _instance._weaponUpgradeController.Load(root);
+            _instance._craftingController.Load(root);
+            _instance._consumableController.Load(root);
+            _instance._journalController.Load(root);
         }
 
         public void OnDestroy()

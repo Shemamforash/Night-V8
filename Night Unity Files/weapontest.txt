@@ -1,8 +1,8 @@
 Type: Pistol  ---  Quality: Dark
         DPS: 105.5 (min: 102.5 /max: 106.8 )
-        Damage: 34.8 (min: 23.4 /max: 45)
+        Damage: 34.5 (min: 23.4 /max: 45)
         Accuracy: 0.7 (min: 0.6 /max: 0.7)
-        FireRate: 5.5 (min: 3.6 /max: 7.2)
+        FireRate: 5.6 (min: 3.6 /max: 7.2)
 
 Pistol Shortshooter Dark
 Durability: 10 (10)
@@ -25,10 +25,10 @@ Fire Rate:  7.2
 Reload:     1.8
 Accuracy: 0.715
 Type: Pistol  ---  Quality: Radiant
-        DPS: 501.7 (min: 500 /max: 503.2 )
-        Damage: 67.6 (min: 23.4 /max: 125)
+        DPS: 501.6 (min: 500 /max: 503.2 )
+        Damage: 68.2 (min: 23.4 /max: 125)
         Accuracy: 0.8 (min: 0.6 /max: 1)
-        FireRate: 7.3 (min: 3.6 /max: 12)
+        FireRate: 7.4 (min: 3.6 /max: 12)
 
 Pistol Shortshooter Radiant
 Durability: 50 (50)
@@ -53,8 +53,8 @@ Accuracy: 0.975
 
 
 Type: Rifle  ---  Quality: Dark
-        DPS: 104.6 (min: 103.8 /max: 105.2 )
-        Damage: 131.3 (min: 90 /max: 165.6)
+        DPS: 104.5 (min: 103.8 /max: 105.2 )
+        Damage: 132.8 (min: 90 /max: 165.6)
         Accuracy: 0.8 (min: 0.8 /max: 0.8)
         FireRate: 1.6 (min: 1.2 /max: 2.4)
 
@@ -79,10 +79,10 @@ Fire Rate:  2.4
 Reload:     2.7
 Accuracy: 0.77
 Type: Rifle  ---  Quality: Radiant
-        DPS: 500.6 (min: 500 /max: 501.8 )
-        Damage: 250.1 (min: 90 /max: 460)
+        DPS: 500.7 (min: 500 /max: 501.8 )
+        Damage: 251.5 (min: 90 /max: 460)
         Accuracy: 0.9 (min: 0.8 /max: 1)
-        FireRate: 2 (min: 1.2 /max: 4)
+        FireRate: 2.1 (min: 1.2 /max: 4)
 
 Rifle Voidwalker Radiant
 Durability: 50 (50)
@@ -94,23 +94,23 @@ Damage:     460
 Fire Rate:  2
 Reload:     2.5
 Accuracy: 1
-Rifle Groundrider Radiant
+Rifle Shoulderbreaker Radiant
 Durability: 50 (50)
 DPS: 500
-Automatic: False
+Automatic: True
 Capacity:   6
 Pellets:    1
-Damage:     375
-Fire Rate:  2
+Damage:     250
+Fire Rate:  4
 Reload:     1.5
 Accuracy: 1
 
 
 Type: Shotgun  ---  Quality: Dark
-        DPS: 103.4 (min: 101.3 /max: 105.6 )
-        Damage: 9.7 (min: 5.4 /max: 14.4)
+        DPS: 103.3 (min: 101.3 /max: 105.6 )
+        Damage: 9.8 (min: 5.4 /max: 14.4)
         Accuracy: 0.2 (min: 0.2 /max: 0.2)
-        FireRate: 4.5 (min: 1.8 /max: 7.2)
+        FireRate: 4.7 (min: 1.8 /max: 7.2)
 
 Shotgun Bonebreaker Dark
 Durability: 10 (10)
@@ -136,7 +136,7 @@ Type: Shotgun  ---  Quality: Radiant
         DPS: 501.5 (min: 500 /max: 502.6 )
         Damage: 18.5 (min: 5.4 /max: 40)
         Accuracy: 0.3 (min: 0.2 /max: 0.3)
-        FireRate: 6 (min: 1.8 /max: 12)
+        FireRate: 6.1 (min: 1.8 /max: 12)
 
 Shotgun Skullcrusher Radiant
 Durability: 50 (50)
@@ -162,9 +162,9 @@ Accuracy: 0.3
 
 Type: SMG  ---  Quality: Dark
         DPS: 106.5 (min: 105.4 /max: 107.3 )
-        Damage: 14 (min: 10.8 /max: 18)
+        Damage: 13.8 (min: 10.8 /max: 18)
         Accuracy: 0.3 (min: 0.3 /max: 0.3)
-        FireRate: 10.8 (min: 7.2 /max: 14.4)
+        FireRate: 10.9 (min: 7.2 /max: 14.4)
 
 SMG Gouger Dark
 Durability: 10 (10)
@@ -187,10 +187,10 @@ Fire Rate:  14.4
 Reload:     0.99
 Accuracy: 0.33
 Type: SMG  ---  Quality: Radiant
-        DPS: 502.1 (min: 500 /max: 503.4 )
-        Damage: 26.5 (min: 10.8 /max: 50)
+        DPS: 502 (min: 500 /max: 503.4 )
+        Damage: 25.2 (min: 10.8 /max: 50)
         Accuracy: 0.4 (min: 0.3 /max: 0.5)
-        FireRate: 14.3 (min: 7.2 /max: 24)
+        FireRate: 14.9 (min: 7.2 /max: 24)
 
 SMG Gouger Radiant
 Durability: 50 (50)

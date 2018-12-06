@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -141,12 +142,12 @@ namespace SamsHelper.Libraries
 
         public static int IntFromNode(this XmlNode root, string nodeName)
         {
-            return int.Parse(StringFromNode(root, nodeName));
+            return int.Parse(StringFromNode(root, nodeName), CultureInfo.InvariantCulture.NumberFormat);
         }
 
         public static float FloatFromNode(this XmlNode root, string nodeName)
         {
-            return float.Parse(StringFromNode(root, nodeName));
+            return float.Parse(StringFromNode(root, nodeName), CultureInfo.InvariantCulture.NumberFormat);
         }
 
         public static XmlNode GetNode(this XmlNode root, string nodeName)

@@ -49,7 +49,7 @@ namespace Game.Combat.Player
 
         private bool _dashPressed;
 
-        private const float RotateSpeedMax = 100f;
+        private const float RotateSpeedMax = 150f;
         private float _rotateSpeedCurrent;
         private const float RotateAcceleration = 400f;
         private bool _recovered;
@@ -63,7 +63,7 @@ namespace Game.Combat.Player
         private bool _useKeyboardMovement = true;
         private Vector2? _lastMousePosition;
         private Camera _mainCamera;
-        
+
 
         public bool ConsumeAdrenaline(int amount)
         {
@@ -236,9 +236,9 @@ namespace Game.Combat.Player
         private void UpdateRotation()
         {
             Vector2 mouseScreenPosition = Input.mousePosition;
-            if (_lastMousePosition == null) return;
-            if (_useKeyboardMovement && mouseScreenPosition == _lastMousePosition.Value) return;
+            bool ignoreMouseRotation = _lastMousePosition == null || _useKeyboardMovement && mouseScreenPosition == _lastMousePosition.Value;
             _lastMousePosition = mouseScreenPosition;
+            if (ignoreMouseRotation) return;
             _useKeyboardMovement = false;
             Vector2 mousePosition = Helper.MouseToWorldCoordinates();
             float rotation = AdvancedMaths.AngleFromUp(transform.position, mousePosition);

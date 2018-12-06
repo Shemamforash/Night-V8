@@ -12,6 +12,7 @@ namespace Game.Characters.CharacterActions
     public class Craft : BaseCharacterAction
     {
         private Recipe _recipe;
+        private string _recipeName;
 
         public Craft(Player playerCharacter) : base("Craft", playerCharacter)
         {
@@ -36,7 +37,6 @@ namespace Game.Characters.CharacterActions
             {
                 --Duration;
                 Campfire.Tend();
-                Debug.Log(Duration);
                 if (Duration != 0) return;
                 Campfire.FinishTending();
                 PlayerCharacter.RestAction.Enter();
@@ -60,7 +60,8 @@ namespace Game.Characters.CharacterActions
             Assert.IsTrue(_recipe == null);
             _recipe = recipe;
             _recipe.ConsumeResources();
-            if (recipe.Name == "Fire") LightFire();
+            _recipeName = _recipe.Name;
+            if (_recipeName == "Fire") LightFire();
             else CraftThing();
             SetDuration();
             Enter();
@@ -82,9 +83,6 @@ namespace Game.Characters.CharacterActions
             return doc;
         }
 
-        public string GetRecipeName()
-        {
-            return _recipe.Name;
-        }
+        public string GetRecipeName() => _recipeName;
     }
 }

@@ -13,14 +13,15 @@ namespace Facilitating.UIControllers
     public class UiAccessoryController : UiInventoryMenuController
     {
         private ListController _accessoryList;
-        private EnhancedText _equippedName, _equippedDescription;
-
+        private EnhancedText _name, _bonus, _description;
+        private static bool _unlocked;
         protected override void CacheElements()
         {
             _accessoryList = gameObject.FindChildWithName<ListController>("List");
             GameObject equipped = gameObject.FindChildWithName("Equipped");
-            _equippedName = equipped.FindChildWithName<EnhancedText>("Name");
-            _equippedDescription = equipped.FindChildWithName<EnhancedText>("Description");
+            _name = equipped.FindChildWithName<EnhancedText>("Name");
+            _bonus = equipped.FindChildWithName<EnhancedText>("Bonus");
+            _description = equipped.FindChildWithName<EnhancedText>("Description");
         }
 
         private void UpdateEquipped()
@@ -28,19 +29,29 @@ namespace Facilitating.UIControllers
             Accessory equippedAccessory = CharacterManager.SelectedCharacter.EquippedAccessory;
             if (equippedAccessory == null)
             {
-                _equippedName.SetText("No Accessory Equipped");
-                _equippedDescription.SetText("-");
+                _name.SetText("No Accessory Equipped");
+                _bonus.SetText("-");
+                _description.SetText("-");
             }
             else
             {
-                _equippedName.SetText(equippedAccessory.Name);
-                _equippedDescription.SetText(equippedAccessory.GetSummary());
+                _name.SetText(equippedAccessory.Name);
+                _bonus.SetText(equippedAccessory.GetSummary());
+                _description.SetText(equippedAccessory.Description());
             }
         }
 
         protected override void Initialise()
         {
             _accessoryList.Initialise(typeof(AccessoryElement), Equip, UiGearMenuController.Close, GetAvailableAccessories);
+        }
+
+        protected override void SetUnlocked(bool unlocked) => _unlocked = unlocked;
+
+        public override bool Unlocked()
+        {
+            if(!_unlocked) _unlocked = Inventory.GetAvailableAccessories().Count != 0;
+            return _unlocked;
         }
 
         private void Equip(object accessoryObject)

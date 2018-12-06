@@ -14,7 +14,16 @@ public class UiConsumableController : UiInventoryMenuController
     private static UIConditionController _hungerController;
     private static UIAttributeController _uiAttributeController;
     private ListController _consumableList;
+    private static bool _unlocked;
 
+    protected override void SetUnlocked(bool unlocked) => _unlocked = unlocked;
+
+    public override bool Unlocked()
+    {
+        if (!_unlocked) _unlocked = Inventory.Consumables().Count != 0;
+        return _unlocked;
+    }
+    
     private static void UpdateConditions(Consumable consumable = null)
     {
         float hungerOffset = 0f;

@@ -11,16 +11,21 @@ using UnityEngine;
 public class EventTextController : MonoBehaviour
 {
     private CanvasGroup _canvasGroup;
-    private TextMeshProUGUI _text;
+    private TextMeshProUGUI _eventText;
     private static ICombatEvent _currentCombatEvent;
     private RadianceController _radianceController;
     private PlayerCombat _player;
+    private bool _overridingText;
+    private static EventTextController _instance;
+    private Sequence _revealSequence;
+    private bool _seenRegionClearText;
 
     private void Awake()
     {
+        _instance = this;
         _canvasGroup = GetComponent<CanvasGroup>();
         _canvasGroup.alpha = 0;
-        _text = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
+        _eventText = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
     }
 
     private void Start()
@@ -29,15 +34,24 @@ public class EventTextController : MonoBehaviour
         _player = PlayerCombat.Instance;
     }
 
-    //shelter
-    //container
-    //shrine
-    //outer ring
-    //radiance
+    private bool CheckRegionClear()
+    {
+        if (_seenRegionClearText) return false;
+        if (!CombatManager.GetCurrentRegion().IsDynamic()) return false;
+        if (ContainerController.Containers.Count > 0) return false;
+        if (!CombatManager.ClearOfEnemies()) return false;
+        Sequence sequence = DOTween.Sequence();
+        sequence.AppendInterval(3f);
+        sequence.AppendCallback(HideOverride);
+        _seenRegionClearText = true;
+        SetOverrideText("Region cleared");
+        return true;
+    }
 
     private bool CheckForNearbyContainer()
     {
         List<ContainerBehaviour> containers = ContainerController.Containers;
+        if (CheckRegionClear()) return true;
         ContainerBehaviour nearestContainer = null;
         float nearestContainerDistance = 10000;
         containers.ForEach(c =>
@@ -62,11 +76,18 @@ public class EventTextController : MonoBehaviour
     {
         if (currentEvent == _currentCombatEvent) return;
         _currentCombatEvent = currentEvent;
-        _canvasGroup.DOFade(1, 0.5f);
-        _text.text = currentEvent.GetEventText();
+        _eventText.text = currentEvent.GetEventText();
+        _revealSequence?.Kill();
+        _revealSequence = DOTween.Sequence();
+        _revealSequence.Append(_canvasGroup.DOFade(1, 0.5f));
     }
 
-    public void Update()
+    //shelter
+    //container
+    //shrine
+    //outer ring
+    //radiance
+    private void DoCheckForPointsOfInterest()
     {
         if (CheckForNearbyShelterCharacter()) return;
         if (CheckForNearbyContainer()) return;
@@ -76,6 +97,39 @@ public class EventTextController : MonoBehaviour
         _currentCombatEvent = null;
         if (_canvasGroup.alpha == 0) return;
         _canvasGroup.DOFade(0, 0.5f);
+    }
+
+    public void Update()
+    {
+        if (_overridingText) return;
+        DoCheckForPointsOfInterest();
+    }
+
+    public static void CloseOverrideText()
+    {
+        _instance.HideOverride();
+    }
+
+    public static void SetOverrideText(string overrideString)
+    {
+        _instance._eventText.text = overrideString;
+        _instance.ShowOverride();
+    }
+
+    private void HideOverride()
+    {
+        _revealSequence?.Kill();
+        _revealSequence = DOTween.Sequence();
+        _revealSequence.Append(_canvasGroup.DOFade(0f, 1f));
+        _revealSequence.AppendCallback(() => _overridingText = false);
+    }
+
+    private void ShowOverride()
+    {
+        _revealSequence?.Kill();
+        _revealSequence = DOTween.Sequence();
+        _revealSequence.AppendCallback(() => _overridingText = true);
+        _revealSequence.Append(_canvasGroup.DOFade(1f, 1f));
     }
 
     private bool CheckForNearbyShelterCharacter()

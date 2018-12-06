@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(CanvasGroup))]
 public class PauseMenuController : MonoBehaviour
 {
-    private static bool _open;
+    private bool _open;
     private static bool _fading;
     private static string _lastMenu;
     private static PauseMenuController _instance;
@@ -155,8 +155,13 @@ public class PauseMenuController : MonoBehaviour
     public static void ToggleOpen()
     {
         if (_fading) return;
-        _open = !_open;
-        if (!_open) _instance.Hide();
+        _instance._open = !_instance._open;
+        if (!_instance._open) _instance.Hide();
         else _instance.Show();
+    }
+
+    public static bool IsOpen()
+    {
+        return _instance != null && _instance._open;
     }
 }

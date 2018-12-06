@@ -17,13 +17,13 @@ namespace Game.Gear.Weapons
             LoadBaseWeapons();
             return Weapon.Generate(WorldState.GenerateGearLevel(), WeaponClasses[type].RandomElement());
         }
-        
+
         public static Weapon GenerateWeapon(ItemQuality quality, WeaponType type)
         {
             LoadBaseWeapons();
             return Weapon.Generate(quality, WeaponClasses[type].RandomElement());
         }
-        
+
         public static Weapon GenerateWeapon(ItemQuality quality)
         {
             LoadBaseWeapons();
@@ -45,7 +45,7 @@ namespace Game.Gear.Weapons
             {
                 _weaponTypes.Add(type);
                 WeaponClasses[type] = new List<WeaponClass>();
-                XmlNode classNode =classesNode.GetNode("Class[@name='" + type + "']");
+                XmlNode classNode = classesNode.GetNode("Class[@name='" + type + "']");
                 foreach (XmlNode subtypeNode in Helper.GetNodesWithName(classNode, "Subtype"))
                     WeaponClasses[type].Add(new WeaponClass(subtypeNode, type));
             }

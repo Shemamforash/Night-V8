@@ -17,7 +17,16 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
     private EnhancedButton _acceptButton;
     private EnhancedText _currentCraftingName;
     private ColourPulse _glow;
+    private static bool _unlocked;
 
+    protected override void SetUnlocked(bool unlocked) => _unlocked = unlocked;
+
+    public override bool Unlocked()
+    {
+        if (!_unlocked) _unlocked = Recipe.RecipesAvailable();
+        return _unlocked;
+    }
+    
     protected override void CacheElements()
     {
         _craftingList = gameObject.FindChildWithName<ListController>("List");
@@ -118,7 +127,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
-        if (isHeld || axis != InputAxis.Cover) return;
+        if (isHeld || axis != InputAxis.Menu) return;
         UiGearMenuController.Close();
     }
 

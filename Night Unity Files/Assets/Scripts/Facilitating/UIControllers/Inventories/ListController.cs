@@ -163,7 +163,7 @@ public class ListController : MonoBehaviour, IInputListener
                 else
                     TrySelectAbove();
                 return;
-            case InputAxis.Cover:
+            case InputAxis.Menu:
                 OnReturn?.Invoke();
                 break;
         }

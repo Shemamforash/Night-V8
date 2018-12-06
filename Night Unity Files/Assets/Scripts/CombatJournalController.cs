@@ -20,6 +20,7 @@ public class CombatJournalController : Menu, IInputListener
         _title = gameObject.FindChildWithName<TextMeshProUGUI>("Title");
         _body = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
+        _closeButton.UseFireInput();
         _closeButton.SetOnClick(Close);
         _audioSource = GetComponent<AudioSource>();
     }
@@ -56,7 +57,7 @@ public class CombatJournalController : Menu, IInputListener
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
-        if (axis != InputAxis.Cover || isHeld) return;
+        if (axis != InputAxis.Menu || isHeld) return;
         Close();
     }
 

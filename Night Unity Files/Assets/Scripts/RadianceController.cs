@@ -43,11 +43,7 @@ public class RadianceController : MonoBehaviour, ICombatEvent
     {
         if (_activated) return -1;
         if (!CombatManager.AllEnemiesDead()) return -1;
-        RegionType region = CombatManager.Region().GetRegionType();
-        if (region == RegionType.Nightmare
-            || region == RegionType.Temple
-            || region == RegionType.Tomb
-            || region == RegionType.Rite) return -1;
+        if (!CombatManager.Region().IsDynamic()) return -1;
         return _radianceAvailable > 0 ? 1 : -1;
     }
 

@@ -6,19 +6,21 @@ using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
+using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GateTransitController : MonoBehaviour
+public class GateTransitController : Menu
 {
     private ParticleSystem _gateParticles;
     private ParticleSystem _streakParticles;
     private SpriteRenderer _glow;
     private static GateTransitController _instance;
 
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
         _instance = this;
         _gateParticles = GetComponent<ParticleSystem>();
         _streakParticles = gameObject.FindChildWithName<ParticleSystem>("Streaks");
@@ -26,19 +28,23 @@ public class GateTransitController : MonoBehaviour
         _glow.color = UiAppearanceController.InvisibleColour;
     }
 
+    public override void Enter()
+    {
+        base.Enter();
+        _instance.StartCoroutine(_instance.Transit());
+    }
+
     public static void StartTransit()
     {
-        _instance.StartCoroutine(_instance.Transit());
+        MenuStateMachine.ShowMenu("Gate Particles");
     }
 
     private IEnumerator Transit()
     {
         WorldState.Pause();
-        GameObject.Find("Game").SetActive(false);
         _gateParticles.Play();
         _streakParticles.Stop();
         _streakParticles.Play();
-//        StartCoroutine(GoToNextArea());
 
         float maxTime = _streakParticles.main.duration;
         float currentTime = 0f;
@@ -46,7 +52,7 @@ public class GateTransitController : MonoBehaviour
         Color to = Color.white;
         while (currentTime < maxTime)
         {
-            if (WorldState.Paused()) yield return null;
+            if (PauseMenuController.IsOpen()) yield return null;
             currentTime += Time.deltaTime;
             float normalisedTime = currentTime / maxTime;
             _glow.color = Color.Lerp(from, to, normalisedTime);
@@ -62,10 +68,10 @@ public class GateTransitController : MonoBehaviour
     {
         Region r = new Region();
         r.SetRegionType(RegionType.Tomb);
-        Player wanderer = CharacterManager.Characters.Find(c => c.CharacterTemplate.CharacterClass == CharacterClass.Wanderer);
-        CharacterManager.SelectedCharacter = wanderer;
+        CharacterManager.SelectedCharacter = CharacterManager.Wanderer;
         ScreenFaderController.FlashWhite(3f);
         yield return new WaitForSeconds(3f);
-        wanderer.TravelAction.TravelToInstant(r);
+        CombatManager.SetCurrentRegion(r);
+        SceneChanger.GoToCombatScene();
     }
 }

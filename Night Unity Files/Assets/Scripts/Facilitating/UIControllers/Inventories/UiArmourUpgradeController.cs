@@ -20,7 +20,16 @@ namespace Facilitating.UIControllers
 
         private Armour _currentSelectedArmour;
         private bool _upgradingAllowed;
+        private static bool _unlocked;
 
+        protected override void SetUnlocked(bool unlocked) => _unlocked = unlocked;
+
+        public override bool Unlocked()
+        {
+            if (!_unlocked) _unlocked = Inventory.GetAvailableArmour().Count != 0;
+            return _unlocked;
+        }
+        
         protected override void CacheElements()
         {
             _plateOneUi = new ArmourPlateUi(gameObject.FindChildWithName("Left Plate"), Armour.ArmourType.Chest);
@@ -173,7 +182,7 @@ namespace Facilitating.UIControllers
                 case InputAxis.Horizontal:
                     SetPlateListActive(direction < 0 ? _plateOneUi : _plateTwoUi);
                     return;
-                case InputAxis.Cover:
+                case InputAxis.Menu:
                     UiGearMenuController.Close();
                     break;
             }

@@ -1197,6 +1197,7 @@
                 <e p="UiInventoryMenuController.cs" t="Include" />
                 <e p="UiJournalController.cs" t="Include" />
                 <e p="UIWeaponUpgradeController.cs" t="Include" />
+                <e p="UiWillController.cs" t="Include" />
                 <e p="WeaponDetailController.cs" t="Include" />
               </e>
               <e p="UIAttributeController.cs" t="Include" />
@@ -1236,6 +1237,7 @@
               <e p="CharacterTemplate.cs" t="Include" />
               <e p="CharacterView.cs" t="Include" />
               <e p="Player.cs" t="Include" />
+              <e p="UIActionListController.cs" t="Include" />
             </e>
             <e p="Combat" t="Include">
               <e p="Enemies" t="Include">
@@ -1503,8 +1505,11 @@
               <e p="ResourceTab.cs" t="Include" />
               <e p="SceneChanger.cs" t="Include" />
               <e p="SceneryController.cs" t="Include" />
-              <e p="TutorialManager.cs" t="Include" />
-              <e p="TutorialOverlayController.cs" t="Include" />
+              <e p="Tutorial" t="Include">
+                <e p="TutorialManager.cs" t="Include" />
+                <e p="TutorialOverlayController.cs" t="Include" />
+                <e p="TutorialPart.cs" t="Include" />
+              </e>
               <e p="WorldState.cs" t="Include" />
               <e p="WorldView.cs" t="Include" />
             </e>
@@ -1724,7 +1729,6 @@
           </e>
           <e p="UIBorderController.cs" t="Include" />
           <e p="UiBrandMenu.cs" t="Include" />
-          <e p="UiWillController.cs" t="Include" />
         </e>
         <e p="Shaders" t="Include">
           <e p="Combat Vignette Shader.shader" t="Include" />

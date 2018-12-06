@@ -125,7 +125,7 @@ public class WeaponAudioController : MonoBehaviour
         float hpfValue = -15f * durability + 750;
         hpfValue = Mathf.Clamp(hpfValue, 0, 750);
         InstancedAudio audio = _audioPool.Create();
-        audio.SetMinMaxDistance(0.5f, 15f);
+        audio.SetMinMaxDistance(0.5f, 25f);
         audio.Play(shots[0], Random.Range(0.6f, 0.7f), Random.Range(0.8f, 1f), hpfValue);
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(0.25f);

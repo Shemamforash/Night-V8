@@ -1,5 +1,6 @@
 ﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
+using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -7,21 +8,17 @@ namespace Game.Combat.Enemies.Nightmares
 {
     public class Nightmare : NightmareEnemyBehaviour
     {
-        private const int HealthLostTarget = 200;
-
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
-            Destroy(gameObject.GetComponent<MoveBehaviour>());
-            gameObject.AddComponent<Feed>().Initialise(HealthLostTarget);
-            gameObject.AddComponent<Bombardment>().Initialise(1, 0.5f, 0.2f);
+            gameObject.AddComponent<Feed>().Initialise(15f, 10f);
+            if(WorldState.Difficulty() > 25) gameObject.AddComponent<Beam>().Initialise(15f, 10f);
         }
 
         public void Start()
         {
-//            int numberOfDrones = Random.Range(2, 5);
-            int numberOfDrones = 1;
-            for (int i = 0; i < numberOfDrones; ++i)
+            int NumberOfDrones = (int) (WorldState.Difficulty() / 10f);
+            for (int i = 0; i < NumberOfDrones; ++i)
             {
                 EnemyBehaviour drone = CombatManager.QueueEnemyToAdd(EnemyType.Drone);
                 drone.transform.position = AdvancedMaths.CalculatePointOnCircle(Random.Range(0, 360), 5f, transform.position);

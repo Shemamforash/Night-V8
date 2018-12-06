@@ -1,4 +1,5 @@
-﻿using SamsHelper.Libraries;
+﻿using Game.Combat.Player;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
@@ -7,15 +8,15 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
     {
         public void Start()
         {
-            Initialise(0.4f, 0.6f);
+            Initialise(1f, 2f);
         }
 
         protected override void Attack()
         {
-            Vector2 position = AdvancedMaths.RandomDirection() * Random.Range(2f, 5f) + (Vector2)transform.position;
-            Vector2 dir = position - (Vector2)transform.position;
-            dir.Normalize();
-            Enemy.MovementController.AddForce(dir * Enemy.Enemy.Template.Speed * 50);
+            Vector2 randomPositionNearPlayer = AdvancedMaths.RandomPointInCircle(5f) + (Vector2) PlayerCombat.Instance.transform.position;
+            Vector2 directionToPoint = randomPositionNearPlayer - (Vector2) transform.position;
+            directionToPoint.Normalize();
+            Enemy.MovementController.AddForce(directionToPoint * Enemy.Enemy.Template.Speed * 50);
         }
     }
 }

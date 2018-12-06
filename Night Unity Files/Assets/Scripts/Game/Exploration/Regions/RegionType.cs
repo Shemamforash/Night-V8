@@ -3,16 +3,18 @@
     public enum RegionType
     {
         None,
-        Shelter,
+        //Non Dynamic
         Gate,
         Tomb,
+        Rite,
+        
+        //Dynamic
+        Shelter,
         Temple,
         Animal,
         Danger,
         Fountain,
         Shrine,
-        Monument,
-        Nightmare,
-        Rite
+        Monument
     }
 }

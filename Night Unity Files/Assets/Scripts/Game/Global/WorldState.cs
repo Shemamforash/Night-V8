@@ -5,6 +5,8 @@ using System.Xml;
 using DG.Tweening;
 using Facilitating;
 using Facilitating.Persistence;
+using Facilitating.UIControllers;
+using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
@@ -36,12 +38,12 @@ namespace Game.Global
 
         private static readonly List<EnemyTemplate> _allowedHumanEnemies = new List<EnemyTemplate>();
         private static readonly List<EnemyTemplate> _allowedNightmareEnemies = new List<EnemyTemplate>();
-        private static bool _needsTransit; //= true;
+        private static bool _needsTransit;// = true;
 
         private static int MinutesPassed;
         private static float _currentTime;
         public static int Days, Hours = 6, Minutes;
-        public static int _difficulty;
+        private static int _difficulty;
         private static bool _isNight, _isPaused;
         public static int Seed = -1;
         private static int _templesActivated;
@@ -78,6 +80,7 @@ namespace Game.Global
             JournalEntry.Load(doc);
             TutorialManager.Load(doc);
             Campfire.Load(doc);
+            UiGearMenuController.Load(doc);
         }
 
         public static void Save(XmlNode doc)
@@ -100,6 +103,7 @@ namespace Game.Global
             JournalEntry.Save(doc);
             TutorialManager.Save(doc);
             Campfire.Save(doc);
+            UiGearMenuController.Save(doc);
         }
 
         public static void ResetWorld(bool clearSave = true, int currentLevel = 1, int difficulty = 0)

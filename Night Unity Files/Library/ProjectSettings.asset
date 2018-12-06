@@ -255,7 +255,7 @@ PlayerSettings:
   - m_BuildTarget: Standalone
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 9fef7ba3e92f5b84fa26c214a575e532, type: 3}
+      m_Icon: {fileID: 2800000, guid: bc98bb1c7cff68e4781068e168dda7a1, type: 3}
       m_Width: 1024
       m_Height: 1024
       m_Kind: 0
@@ -560,7 +560,7 @@ PlayerSettings:
     27: DOTWEEN_TMP
   platformArchitecture: {}
   scriptingBackend:
-    Standalone: 1
+    Standalone: 0
   il2cppCompilerConfiguration: {}
   managedStrippingLevel: {}
   incrementalIl2cppBuild: {}

@@ -14,6 +14,7 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
     private Image _glowImage;
     private Action _callback;
     private Button _button;
+    private InputAxis _targetAxis = InputAxis.Menu;
 
     public void Awake()
     {
@@ -31,6 +32,12 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
     public void SetCallback(Action callback)
     {
         _callback = callback;
+    }
+
+    public void UseFireInput()
+    {
+        _targetAxis = InputAxis.Fire;
+        _button.FindChildWithName<TextMeshProUGUI>("Close Text").SetText("K");
     }
 
     public void Enable()
@@ -57,7 +64,7 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
-        if (axis != InputAxis.Cover || isHeld) return;
+        if (axis != _targetAxis || isHeld) return;
         Activate();
     }
 

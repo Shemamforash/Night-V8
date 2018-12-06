@@ -38,11 +38,6 @@ public class DecayBlastBehaviour : MonoBehaviour
         sequence.AppendCallback(() => _decayBlasts.Return(this));
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.layer == 8) _rigidBody2D.velocity = Vector2.zero;
-    }
-
     public void OnDestroy()
     {
         _decayBlasts.Dispose(this);

@@ -294,7 +294,7 @@ namespace Game.Exploration.Environment
             XmlNode root = Helper.OpenRootNode("Regions", "RegionType");
             foreach (RegionType type in Enum.GetValues(typeof(RegionType)))
             {
-                if (type == RegionType.None || type == RegionType.Gate || type == RegionType.Nightmare || type == RegionType.Rite || type == RegionType.Tomb) continue;
+                if (type == RegionType.None || type == RegionType.Gate || type == RegionType.Rite || type == RegionType.Tomb) continue;
                 _regionTypes.Add(type);
             }
 
@@ -348,6 +348,7 @@ namespace Game.Exploration.Environment
                 return RegionType.Gate;
             }
 
+//            return RegionType.Temple;
             UpdateAvailableRegionTypes();
             ++_regionsDiscovered;
             if (!Region.InTutorialPeriod()) return _regionTypeBag.RemoveRandom();

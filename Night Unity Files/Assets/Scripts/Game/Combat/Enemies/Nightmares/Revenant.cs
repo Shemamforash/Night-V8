@@ -1,7 +1,7 @@
-﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
-using Game.Combat.Generation;
+﻿using System.Collections.Generic;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Misc;
-using UnityEngine;
+using Game.Global;
 
 namespace Game.Combat.Enemies.Nightmares
 {
@@ -13,11 +13,14 @@ namespace Game.Combat.Enemies.Nightmares
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
-            _split = gameObject.AddComponent<Split>();
-            _fireTrail = gameObject.AddComponent<LeaveFireTrail>();
             gameObject.AddComponent<Orbit>().Initialise(GetTarget().transform, v => MovementController.Move(v), 1, 0.5f, 4f);
-            _fireTrail.Initialise();
+            
+            _split = gameObject.AddComponent<Split>();
             _split.Initialise(3, 200, EnemyType.Revenant, 1000, -1, true);
+
+            if (WorldState.Difficulty() < 10) return;
+            _fireTrail = gameObject.AddComponent<LeaveFireTrail>();
+            _fireTrail.Initialise();
         }
 
         public override void Kill()
@@ -30,8 +33,12 @@ namespace Game.Combat.Enemies.Nightmares
                 Revenant r = e as Revenant;
                 if (r == null) return;
                 r.HealthController.SetInitialHealth(newHealth, r);
-                r._fireTrail.Initialise();
             });
+            int explosionDamage = (int) (WorldState.Difficulty() / 5f);
+            Explosion explosion = Explosion.CreateExplosion(transform.position, explosionDamage, 0.5f);
+            explosion.AddIgnoreTargets(new List<CanTakeDamage>(_split.LastSplitEnemies()));
+            explosion.InstantDetonate();
+
         }
     }
 }

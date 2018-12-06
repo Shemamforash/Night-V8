@@ -105,15 +105,15 @@ public class SerpentBehaviour : Boss
         base.UnregisterSection(section);
         int currentWingCount = SectionCount();
 
-        if (prevWingCount > 30 && currentWingCount <= 30)
+        if (prevWingCount > 40 && currentWingCount <= 40)
         {
             GameObject tailEnd = transform.FindChildWithName("Tail End").gameObject;
-            tailEnd.AddComponent<LeaveFireTrail>().Initialise(20);
+            tailEnd.AddComponent<LeaveFireTrail>().Initialise();
         }
-        else if (prevWingCount > 10 && currentWingCount <= 10)
+        else if (prevWingCount > 20 && currentWingCount <= 20)
             _canPush = true;
 
-        if (currentWingCount > 20) return;
+        if (currentWingCount > 30) return;
         float timeToBomb = currentWingCount / 40f + 0.25f;
         _bombAttack.SetMinTimeToBomb(timeToBomb);
     }
@@ -142,8 +142,8 @@ public class SerpentBehaviour : Boss
         {
             float angleA = AdvancedMaths.AngleFromUp(Vector2.zero, current.transform.right);
             float angleB = angleA + 180;
-            PushController.Create(current.transform.position, angleA, false, 90);
-            PushController.Create(current.transform.position, angleB, false, 90);
+            PushController.Create(current.transform.position, angleA, false, 10);
+            PushController.Create(current.transform.position, angleB, false, 10);
             yield return new WaitForSeconds(0.05f);
             current = current.GetChild();
         }

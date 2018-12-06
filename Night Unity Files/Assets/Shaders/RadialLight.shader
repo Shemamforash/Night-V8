@@ -3,7 +3,7 @@
 Shader "LOS/Radial Light" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "radial" {}
-		_Color ("Color", Color) = (1,1,1,1)
+		[PerRendererData]_Color ("Color", Color) = (1,1,1,1)
 	}
 	SubShader {
         Tags {

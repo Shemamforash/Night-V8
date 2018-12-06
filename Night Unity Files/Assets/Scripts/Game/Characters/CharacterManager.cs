@@ -44,6 +44,7 @@ namespace Game.Characters
                 Player player = new Player(template);
                 player.Load(characterNode);
                 AddCharacter(player);
+                if (player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer) Wanderer = player;
             }
 
             Assert.IsFalse(Templates.Any(t => t.CharacterClass == CharacterClass.Wanderer));

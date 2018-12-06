@@ -22,6 +22,7 @@ namespace Game.Combat.Generation
         private bool _fading;
         private float _targetAlpha;
         private float _currentAlpha;
+        private ParticleSystem _puddleDrops;
 
         public void Awake()
         {
@@ -38,6 +39,8 @@ namespace Game.Combat.Generation
             ContainerController.Containers.Add(this);
             ContainerController = containerController;
             _iconSprite.sprite = Resources.Load<Sprite>("Images/Container Symbols/" + containerController.GetImageLocation());
+            if (!(containerController is WaterSource)) return;
+            _puddleDrops = gameObject.FindChildWithName<ParticleSystem>("Drop Randomiser");
         }
 
         private void OnDestroy()
@@ -106,6 +109,7 @@ namespace Game.Combat.Generation
 
         public void Activate()
         {
+            if (_puddleDrops != null) _puddleDrops.Stop();
             ContainerController.Take();
             PlayerCombat.Instance.WeaponAudio.PlayTakeItem();
             StartCoroutine(Fade());

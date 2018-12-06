@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml;
 using Game.Exploration.Environment;
@@ -28,7 +29,7 @@ namespace Game.Exploration.Weather
                 foreach (XmlNode subNode in node.ChildNodes)
                 {
                     if (subNode.Name == "Types") continue;
-                    List<float> probabilityValues = subNode.InnerText.Split(',').Select(float.Parse).ToList();
+                    List<float> probabilityValues = subNode.InnerText.Split(',').Select(f => float.Parse(f, CultureInfo.InvariantCulture.NumberFormat)).ToList();
                     _probabilities.Add(subNode.Name, probabilityValues);
                 }
             }

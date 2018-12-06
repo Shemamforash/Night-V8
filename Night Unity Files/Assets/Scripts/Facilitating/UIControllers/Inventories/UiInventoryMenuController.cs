@@ -1,4 +1,6 @@
-﻿using DefaultNamespace;
+﻿using System.Xml;
+using DefaultNamespace;
+using Facilitating.Persistence;
 using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -40,6 +42,19 @@ namespace Facilitating.UIControllers.Inventories
 
         protected abstract void CacheElements();
         protected abstract void Initialise();
+
+        public abstract bool Unlocked();
+        protected abstract void SetUnlocked(bool unlocked);
+
+        public void Load(XmlNode root)
+        {
+            SetUnlocked(root.BoolFromNode(nameof(GetType)));
+        }
+
+        public void Save(XmlNode root)
+        {
+            root.CreateChild(nameof(GetType), Unlocked());
+        }
         
         protected abstract class BasicListElement : ListElement
         {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Game.Characters;
@@ -68,8 +69,8 @@ namespace Game.Combat.Generation
         public override void Awake()
         {
             base.Awake();
-            _hudCanvas = gameObject.FindChildWithName<CanvasGroup>("HUD Container");
-            _hudCanvas.alpha = 0.25f;
+            _hudCanvas = gameObject.FindChildWithName<CanvasGroup>("Combat");
+            _hudCanvas.alpha = 0f;
             _instance = this;
             Resume();
             ScreenFaderController.ShowText(_currentRegion.Name);
@@ -77,8 +78,7 @@ namespace Game.Combat.Generation
 
         private void UpdateHud()
         {
-            bool enemiesRemain = _inactiveEnemies.Count > 0 || _enemies.Count > 0;
-            if (enemiesRemain && !_hudShown)
+            if (!ClearOfEnemies() && !_hudShown)
             {
                 _hudTween?.Kill();
                 Sequence sequence = DOTween.Sequence();
@@ -88,11 +88,11 @@ namespace Game.Combat.Generation
                 _hudTween = sequence;
                 _hudShown = true;
             }
-            else if (!enemiesRemain && _hudShown)
+            else if (ClearOfEnemies() && _hudShown)
             {
                 _hudTween?.Kill();
                 Sequence sequence = DOTween.Sequence();
-                sequence.Append(_hudCanvas.DOFade(0.25f, 1f));
+                sequence.Append(_hudCanvas.DOFade(0f, 1f));
                 _hudTween = sequence;
                 _hudShown = false;
             }
@@ -163,61 +163,67 @@ namespace Game.Combat.Generation
 
         private void PlayNightmareParticles()
         {
-            ParticleSystem _nightmareParticles = transform.Find("Nightmare Particles").GetComponent<ParticleSystem>();
+            ParticleSystem _nightmareParticles = GameObject.Find("Nightmare Particles").GetComponent<ParticleSystem>();
             _nightmareParticles.Play();
             ParticleSystem.ShapeModule shape = _nightmareParticles.shape;
             shape.radius = PathingGrid.CombatAreaWidth + 4;
+        }
+
+        private void SetUpDynamicRegion()
+        {
+            GameObject worldObject = GameObject.Find("World");
+            switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
+            {
+                case EnvironmentType.Desert:
+                    worldObject.AddComponent<Desert>().Initialise(_currentRegion);
+                    break;
+                case EnvironmentType.Mountains:
+                    worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
+                    break;
+                case EnvironmentType.Ruins:
+                    worldObject.AddComponent<Ruins>().Initialise(_currentRegion);
+                    break;
+                case EnvironmentType.Sea:
+                    worldObject.AddComponent<Labyrinth>().Initialise(_currentRegion);
+                    break;
+                case EnvironmentType.Wasteland:
+                    worldObject.AddComponent<Canyon>().Initialise(_currentRegion);
+                    break;
+            }
+        }
+
+        private void SetUpNonDynamicRegion()
+        {
+            GameObject worldObject = GameObject.Find("World");
+            PlayNightmareParticles();
+            switch (_currentRegion.GetRegionType())
+            {
+                case RegionType.Tomb:
+                    worldObject.AddComponent<Tomb>().Initialise(_currentRegion);
+                    break;
+                case RegionType.Rite:
+                    worldObject.AddComponent<Rite>().Initialise(_currentRegion);
+                    break;
+                case RegionType.Temple:
+                    worldObject.AddComponent<Temple>().Initialise(_currentRegion);
+                    break;
+            }
+        }
+
+        private void CalculateVisibility()
+        {
+            float visibilityModifier = 0.5f * Mathf.Sin((WorldState.Hours - 6) * Mathf.PI / 12f) + 0.5f;
+            _visibilityRange *= WeatherManager.CurrentWeather().GetVisibility();
+            _visibilityRange = Mathf.Lerp(2f, 8f, visibilityModifier);
         }
 
         private void EnterCombat()
         {
             _inCombat = true;
             WorldState.Pause();
-            float visibilityModifier = 0.5f * Mathf.Sin((WorldState.Hours - 6) * Mathf.PI / 12f) + 0.5f;
-            _visibilityRange *= WeatherManager.CurrentWeather().GetVisibility();
-            _visibilityRange = Mathf.Lerp(2f, 8f, visibilityModifier);
-            GameObject worldObject = GameObject.Find("World");
-            if (_currentRegion.GetRegionType() == RegionType.Temple)
-            {
-                worldObject.AddComponent<Temple>().Initialise(_currentRegion);
-            }
-            else if (_currentRegion.GetRegionType() == RegionType.Nightmare)
-            {
-                PlayNightmareParticles();
-                worldObject.AddComponent<Nightmare>().Initialise(_currentRegion);
-            }
-            else if (_currentRegion.GetRegionType() == RegionType.Rite)
-            {
-                PlayNightmareParticles();
-                worldObject.AddComponent<Rite>().Initialise(_currentRegion);
-            }
-            else if (_currentRegion.GetRegionType() == RegionType.Tomb)
-            {
-                PlayNightmareParticles();
-                worldObject.AddComponent<Tomb>().Initialise(_currentRegion);
-            }
-            else
-            {
-                switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
-                {
-                    case EnvironmentType.Desert:
-                        worldObject.AddComponent<Desert>().Initialise(_currentRegion);
-                        break;
-                    case EnvironmentType.Mountains:
-                        worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
-                        break;
-                    case EnvironmentType.Ruins:
-                        worldObject.AddComponent<Ruins>().Initialise(_currentRegion);
-                        break;
-                    case EnvironmentType.Sea:
-                        worldObject.AddComponent<Labyrinth>().Initialise(_currentRegion);
-                        break;
-                    case EnvironmentType.Wasteland:
-                        worldObject.AddComponent<Canyon>().Initialise(_currentRegion);
-                        break;
-                }
-            }
-
+            CalculateVisibility();
+            if (_currentRegion.IsDynamic()) SetUpDynamicRegion();
+            else SetUpNonDynamicRegion();
             PlayerCombat.Instance.Initialise();
             _inactiveEnemies = _currentRegion.GetEnemies();
             _maxSize = WorldState.Difficulty() / 10 + 2;
@@ -300,14 +306,15 @@ namespace Game.Combat.Generation
 
         public static void ExitCombat(bool returnToMap = true)
         {
-            if (!_inCombat)
+            Debug.Log("exiting");
+            Assert.IsTrue(_inCombat);
+
+            if (!_currentRegion.IsDynamic()) return;
             {
-                Debug.Log("Don't try and exit combat twice!");
-                return;
+                _inactiveEnemies.ForEach(e => _currentRegion.RestoreSize(e.Template.Value));
+                _instance._enemies.ForEach(e => _currentRegion.RestoreSize(((EnemyBehaviour) e).Enemy.Template.Value));
             }
 
-            _inactiveEnemies.ForEach(e => _currentRegion.RestoreSize(e.Template.Value));
-            _instance._enemies.ForEach(e => _currentRegion.RestoreSize(((EnemyBehaviour) e).Enemy.Template.Value));
             _inCombat = false;
             ScreenFaderController.HideText();
             PlayerCombat.Instance.ExitCombat();
@@ -421,6 +428,11 @@ namespace Game.Combat.Generation
         public static Region GetCurrentRegion()
         {
             return _currentRegion;
+        }
+
+        public static bool ClearOfEnemies()
+        {
+            return Enemies().Count == 0 && _inactiveEnemies.Count == 0;
         }
     }
 }

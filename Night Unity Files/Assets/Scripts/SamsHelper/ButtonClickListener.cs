@@ -26,7 +26,7 @@ public class ButtonClickListener : MonoBehaviour
 
         Assert.IsNotNull(_audioSource);
         _audioSource.pitch = Random.Range(0.9f, 1f);
-        _audioSource.volume = 0.2f;
+        _audioSource.volume = 0.15f;
         _lpf.cutoffFrequency = muffle ? 3000 : 20000;
         _audioSource.Play();
     }

@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using Game.Characters;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
+﻿using Game.Characters;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
-using System.Linq;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 

@@ -1,5 +1,11 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!224 &9011538955106185372 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 224449863733640408, guid: 3c737e886e2b4584e9a7c204003403e2,
+    type: 3}
+  m_PrefabInstance: {fileID: 9084337799503055940}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1007659800665874
 GameObject:
   m_ObjectHideFlags: 0
@@ -6442,7 +6448,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: j
+  m_text: J
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 17cc364f3139e4a4dac649afc2199d54, type: 2}
   m_sharedMaterial: {fileID: 21363733884576444, guid: 17cc364f3139e4a4dac649afc2199d54,
@@ -12087,12 +12093,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1000, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!224 &9011538955106185372 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 224449863733640408, guid: 3c737e886e2b4584e9a7c204003403e2,
-    type: 3}
-  m_PrefabInstance: {fileID: 9084337799503055940}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &9084337799503055940
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12302,6 +12302,16 @@ PrefabInstance:
     - target: {fileID: 3013976888195278861, guid: 3c737e886e2b4584e9a7c204003403e2,
         type: 3}
       propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1025767937373122483, guid: 3c737e886e2b4584e9a7c204003403e2,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1025767937373122483, guid: 3c737e886e2b4584e9a7c204003403e2,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

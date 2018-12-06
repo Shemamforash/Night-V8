@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using DG.Tweening;
+using Game.Combat.Generation;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -102,6 +104,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
             if (isHeld || axis != InputAxis.Menu) return;
+            if (!(CurrentMenu() is WorldView) && !(CurrentMenu() is CombatManager)) return;
             PauseMenuController.ToggleOpen();
         }
 

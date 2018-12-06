@@ -71,18 +71,6 @@ public class MapMovementController : MonoBehaviour, IInputListener
         MapCamera.transform.position = position;
     }
 
-    public void FixedUpdate()
-    {
-        if (InputHandler.GetCurrentListener() != this) return;
-        if (!_visible) return;
-        if (_player == null) return;
-        if (!_pressed && _nearestRegion != null) LocateToNearestRegion();
-        _direction.Normalize();
-        _direction *= CurrentSpeed;
-        _rigidBody2D.AddForce(_direction);
-        _direction = Vector2.zero;
-    }
-
     private void LocateToNearestRegion()
     {
         if (Cursor.visible) return;
@@ -99,22 +87,46 @@ public class MapMovementController : MonoBehaviour, IInputListener
         CurrentSpeed = distance * Time.fixedDeltaTime * 400;
     }
 
-    public void Update()
+    private Region FindNearestRegion(Vector2 point)
     {
-        if (!_visible) return;
-        if (_player == null) return;
-        if (Cursor.visible) MoveWithMouse();
         float nearestDistance = 1000;
         Region newNearestRegion = null;
         _availableRegions.ForEach(region =>
         {
-            float distance = Vector2.Distance(transform.position, region.Position);
+            float distance = Vector2.Distance(point, region.Position);
             if (distance > nearestDistance) return;
             nearestDistance = distance;
             newNearestRegion = region;
         });
         if (nearestDistance > 1f) newNearestRegion = null;
-        SetNearestRegion(newNearestRegion);
+        return newNearestRegion;
+    }
+    
+    public void Update()
+    {
+        if (!_visible || _player == null) return;
+        if (Cursor.visible)
+        {
+            MoveWithMouse();
+            Vector2 mouseWorldPosition = MapCamera.ScreenToWorldPoint(Input.mousePosition);
+            SetNearestRegion(FindNearestRegion(mouseWorldPosition));
+        }
+        else
+        {
+            SetNearestRegion(FindNearestRegion(transform.position));
+        }
+    }
+
+    public void FixedUpdate()
+    {
+        if (InputHandler.GetCurrentListener() != this) return;
+        if (!_visible) return;
+        if (_player == null) return;
+        if (!_pressed && _nearestRegion != null) LocateToNearestRegion();
+        _direction.Normalize();
+        _direction *= CurrentSpeed;
+        _rigidBody2D.AddForce(_direction);
+        _direction = Vector2.zero;
     }
 
     private void MoveWithMouse()
@@ -167,7 +179,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
                 _pressed = true;
                 _direction.y += direction;
                 break;
-            case InputAxis.Cover:
+            case InputAxis.Menu:
                 if (!MapMenuController.IsReturningFromCombat && !TutorialManager.IsTutorialVisible()) ReturnToGame();
                 break;
             case InputAxis.Fire:

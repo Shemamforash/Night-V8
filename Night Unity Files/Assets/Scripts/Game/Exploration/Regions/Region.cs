@@ -46,6 +46,7 @@ namespace Game.Exploration.Regions
         public Vector2? RadianceStonePosition;
         public bool TempleCleansed;
         public bool FountainVisited;
+        private bool _isDynamicRegion;
 
         public Region() : base(Vector2.zero)
         {
@@ -217,7 +218,7 @@ namespace Game.Exploration.Regions
         private List<EnemyTemplate> GenerateEncounter(List<EnemyTemplate> allowedTypes)
         {
             List<EnemyTemplate> templates = new List<EnemyTemplate>();
-            if (!CanHaveEnemies()) return templates;
+            if (!IsDynamic()) return templates;
             if (ShouldGenerateEncounter && RadianceStonePosition == null)
                 _size = WorldState.Difficulty() + 4;
             templates.AddRange(CombatManager.GenerateEnemies(_size, allowedTypes));
@@ -260,12 +261,13 @@ namespace Game.Exploration.Regions
         public void SetRegionType(RegionType regionType)
         {
             _regionType = regionType;
+            _isDynamicRegion = _regionType != RegionType.Gate && _regionType != RegionType.Rite && _regionType != RegionType.Tomb;
             Name = MapGenerator.GenerateName(_regionType);
         }
 
-        private bool CanHaveEnemies()
+        public bool IsDynamic()
         {
-            return _regionType != RegionType.Gate && _regionType != RegionType.Nightmare && _regionType != RegionType.Rite && _regionType != RegionType.Tomb;
+            return _isDynamicRegion;
         }
 
         public void ConnectNeighbors()
@@ -293,7 +295,7 @@ namespace Game.Exploration.Regions
         {
             return EnvironmentManager.CurrentEnvironment.EnvironmentType == EnvironmentType.Desert && MapGenerator.DiscoveredRegions().Count <= 3;
         }
-        
+
         public List<Enemy> GetEnemies()
         {
             List<Enemy> enemies = new List<Enemy>();

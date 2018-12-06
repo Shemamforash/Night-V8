@@ -7,8 +7,8 @@ namespace UnityEngine.EventSystems
     public class KeyboardInputModule : PointerInputModule
     {
         private float m_PrevActionTime;
-        Vector2 m_LastMoveVector;
-        int m_ConsecutiveMoveCount;
+        private Vector2 m_LastMoveVector;
+        private int m_ConsecutiveMoveCount;
 
         private Vector2 m_LastMousePosition;
         private Vector2 m_MousePosition;

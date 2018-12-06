@@ -70,7 +70,7 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public void OnPointerEnter(PointerEventData p)
         {
-            Enter();
+            Select();
         }
 
         public void OnPointerExit(PointerEventData p)

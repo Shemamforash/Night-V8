@@ -42,7 +42,7 @@ namespace Game.Combat.Generation
                 return;
             }
 
-            bool mustBeFullSize = _region.GetRegionType() == RegionType.Temple || _region.GetRegionType() == RegionType.Tomb || _region.GetRegionType() == RegionType.Nightmare;
+            bool mustBeFullSize = _region.GetRegionType() == RegionType.Temple || _region.GetRegionType() == RegionType.Tomb;
             if (mustBeFullSize)
             {
                 PathingGrid.SetCombatAreaWidth(30);

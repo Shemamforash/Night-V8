@@ -24,8 +24,9 @@ namespace Game.Combat.Enemies.Bosses
 
         public virtual void UnregisterSection(BossSectionHealthController section)
         {
+            int countBefore = Sections.Count;
             Sections.Remove(section);
-            if (Sections.Count == 0) Kill();
+            if (Sections.Count == 0 && countBefore > 0) Kill();
         }
 
         public void Kill()

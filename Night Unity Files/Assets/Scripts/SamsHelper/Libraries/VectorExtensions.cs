@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Globalization;
+using UnityEngine;
 
 namespace SamsHelper.Libraries
 {
@@ -9,9 +10,9 @@ namespace SamsHelper.Libraries
             vectorString = CleanupVectorString(vectorString);
             string[] arr = vectorString.Split(',');
             Vector3 vect = new Vector3();
-            vect.x = float.Parse(arr[0]);
-            vect.y = float.Parse(arr[1]);
-            vect.z = float.Parse(arr[2]);
+            vect.x = float.Parse(arr[0], CultureInfo.InvariantCulture.NumberFormat);
+            vect.y = float.Parse(arr[1], CultureInfo.InvariantCulture.NumberFormat);
+            vect.z = float.Parse(arr[2], CultureInfo.InvariantCulture.NumberFormat);
             return vect;
         }
 
@@ -28,8 +29,8 @@ namespace SamsHelper.Libraries
             vectorString = CleanupVectorString(vectorString);
             string[] arr = vectorString.Split(',');
             Vector2 vect = new Vector2();
-            vect.x = float.Parse(arr[0]);
-            vect.y = float.Parse(arr[1]);
+            vect.x = float.Parse(arr[0], CultureInfo.InvariantCulture.NumberFormat);
+            vect.y = float.Parse(arr[1], CultureInfo.InvariantCulture.NumberFormat);
             return vect;
         }
 

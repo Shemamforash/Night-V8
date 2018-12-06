@@ -136,8 +136,6 @@ namespace Game.Exploration.Ui
                 case RegionType.Danger:
                     _icon.sprite = _dangerSprite;
                     break;
-                case RegionType.Nightmare:
-                    break;
                 case RegionType.Fountain:
                     _icon.sprite = _fountainSprite;
                     break;
@@ -165,7 +163,7 @@ namespace Game.Exploration.Ui
             }
 
             _selectedImage.SetAlpha(Mathf.Clamp(_centreCanvas.alpha - 0.8f, 0f, 1f));
-            
+
             float currentNodeAlpha = _nodeCanvas.alpha;
             float nodeAlphaDifference = _targetNodeAlpha - currentNodeAlpha;
             if (Mathf.Abs(nodeAlphaDifference) > 0.01f)
@@ -207,7 +205,6 @@ namespace Game.Exploration.Ui
             transform.DOScale(Vector2.one * 1.25f, 1f).SetUpdate(UpdateType.Normal, true);
             MapMenuController.SetRoute(_region);
             MapMovementController.UpdateGrit(_gritCost);
-            TutorialManager.TryOpenTutorial(3);
         }
 
         public void LoseFocus(float time = 1f)

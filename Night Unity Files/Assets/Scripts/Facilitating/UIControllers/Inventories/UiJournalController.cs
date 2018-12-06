@@ -12,7 +12,16 @@ public class UiJournalController : UiInventoryMenuController
     private ListController _journalList;
     private static EnhancedText _journalDescription, _journalTitle;
     private CanvasGroup _noJournalGroup;
+    private static bool _unlocked;
 
+    protected override void SetUnlocked(bool unlocked) => _unlocked = unlocked;
+    
+    public override bool Unlocked()
+    {
+        if (!_unlocked) _unlocked = JournalEntry.GetUnlockedEntries().Count != 0;
+        return _unlocked;
+    }
+    
     protected override void Initialise()
     {
         _journalList.Initialise(typeof(JournalElement), o => { }, UiGearMenuController.Close, GetAvailableJournalEntries);

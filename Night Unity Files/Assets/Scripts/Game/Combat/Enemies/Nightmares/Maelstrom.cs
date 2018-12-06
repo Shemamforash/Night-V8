@@ -1,5 +1,6 @@
 ﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Player;
+using Game.Global;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
@@ -16,12 +17,17 @@ namespace Game.Combat.Enemies.Nightmares
 
 //        private Split _split;
         private Heavyshot _shot;
+        private Split _split;
 
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
-//            _split = gameObject.AddComponent<Split>();
-//            _split.Initialise(MinImagesReleased, Random.Range(100, 300), EnemyType.Decoy, DamageToSplit, MaxImagesReleased);
+            if (WorldState.Difficulty() >= 25)
+            {
+                _split = gameObject.AddComponent<Split>();
+                _split.Initialise(MinImagesReleased, Random.Range(100, 300), EnemyType.Decoy, DamageToSplit, MaxImagesReleased);
+            }
+
             _shot = gameObject.AddComponent<Heavyshot>();
             _shot.Initialise(ShotTimeMax, ShotTimeMin, 10, 0.2f);
             gameObject.AddComponent<Orbit>().Initialise(PlayerCombat.Instance.transform, v => MovementController.AddForce(v), 10, 2f, Random.Range(2.5f, 4f));

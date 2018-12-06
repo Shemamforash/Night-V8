@@ -1,17 +1,9 @@
-using System.Collections.Generic;
-using System.Linq;
 using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
-using Game.Global;
-using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace Game.Characters
 {
@@ -25,10 +17,8 @@ namespace Game.Characters
         [HideInInspector] public UIPlayerWeaponController WeaponController;
         private UIAttributeController _attributeController;
         private UIConditionController _thirstController, _hungerController;
-        private EnhancedButton _exploreButton, _craftButton, _consumeButton, _meditateButton, _sleepButton;
-        private EnhancedText _exploreText, _craftText, _consumeText, _meditateText, _sleepText;
         private CanvasGroup _viewCanvas;
-        private List<EnhancedButton> _buttons;
+        private UIActionListController _actionList;
 
         public void SetPlayer(Player player)
         {
@@ -50,12 +40,8 @@ namespace Game.Characters
 
             _thirstController = gameObject.FindChildWithName<UIConditionController>("Thirst");
             _hungerController = gameObject.FindChildWithName<UIConditionController>("Hunger");
-
-            _player.TravelAction.SetButton(_exploreButton);
-            _player.CraftAction.SetButton(_craftButton);
-            _player.ConsumeAction.SetButton(_consumeButton);
-            _player.MeditateAction.SetButton(_meditateButton);
-            _player.SleepAction.SetButton(_sleepButton);
+    
+            _actionList.SetPlayer(_player);      
         }
 
         public void Update()
@@ -78,18 +64,9 @@ namespace Game.Characters
             _viewCanvas = gameObject.FindChildWithName<CanvasGroup>("Vertical Group");
 
             _actionProgress = gameObject.FindChildWithName<ActionProgressController>("Current Action");
-            _exploreButton = gameObject.FindChildWithName<EnhancedButton>("Explore");
-            _exploreText = _exploreButton.gameObject.FindChildWithName<EnhancedText>("Text");
-            _craftButton = gameObject.FindChildWithName<EnhancedButton>("Craft");
-            _craftText = _craftButton.gameObject.FindChildWithName<EnhancedText>("Text");
-            _consumeButton = gameObject.FindChildWithName<EnhancedButton>("Consume");
-            _consumeText = _consumeButton.gameObject.FindChildWithName<EnhancedText>("Text");
-            _meditateButton = gameObject.FindChildWithName<EnhancedButton>("Meditate");
-            _meditateText = _meditateButton.gameObject.FindChildWithName<EnhancedText>("Text");
-            _sleepButton = gameObject.FindChildWithName<EnhancedButton>("Sleep");
-            _sleepText = _sleepButton.gameObject.FindChildWithName<EnhancedText>("Text");
-            _buttons = new List<EnhancedButton> {_exploreButton, _craftButton, _consumeButton, _meditateButton, _sleepButton};
-            _buttons.ForEach(b => b.AddOnSelectEvent(SelectCharacter));
+            _actionList = gameObject.FindChildWithName<UIActionListController>("Action List");
+
+            _actionList.Buttons().ForEach(b => b.AddOnSelectEvent(SelectCharacter));
 
             gameObject.FindChildWithName<TextMeshProUGUI>("Character Name").text = _player.Name;
 
@@ -120,46 +97,13 @@ namespace Game.Characters
             _viewCanvas.DOFade(0.4f, 0.3f);
         }
 
-        public void SelectInitial()
-        {
-            _exploreButton.Select();
-        }
-
-        private void SetButtonEnabled(EnhancedButton button, EnhancedText text, bool enableButton)
-        {
-            if (button.IsEnabled() == enableButton) return;
-            button.SetEnabled(enableButton);
-            text.SetColor(enableButton ? Color.white : UiAppearanceController.FadedColour);
-        }
-
-        private bool CanMeditate()
-        {
-            if (_player.Attributes.Val(AttributeType.Will) == 0) return false;
-            if (_player.Attributes.Get(AttributeType.Fettle).ReachedMax() &&
-                _player.Attributes.Get(AttributeType.Grit).ReachedMax() &&
-                _player.Attributes.Get(AttributeType.Focus).ReachedMax()) return false;
-            return true;
-        }
-
-        private void RefreshNavigation()
-        {
-            bool atHome = _player.TravelAction.AtHome();
-            bool resting = _player.States.GetCurrentState() is Rest;
-            SetButtonEnabled(_exploreButton, _exploreText, atHome && resting);
-            SetButtonEnabled(_craftButton, _craftText, Recipe.RecipesAvailable() && atHome && resting);
-            SetButtonEnabled(_consumeButton, _consumeText, Inventory.Consumables().Count > 0);
-            SetButtonEnabled(_meditateButton, _meditateText, CanMeditate());
-            bool sleepEnabled = false;
-            sleepEnabled |= _player.CanSleep() && atHome && resting;
-            sleepEnabled |= _player.States.GetCurrentState() == _player.SleepAction;
-            SetButtonEnabled(_sleepButton, _sleepText, sleepEnabled);
-        }
+        public void SelectInitial() => _actionList.SelectInitial();
 
         private void UpdateCurrentAction()
         {
             BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
             _actionProgress.UpdateCurrentAction(currentState);
-            RefreshNavigation();
+            _actionList.UpdateList();
         }
     }
 }
