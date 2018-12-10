@@ -37,13 +37,26 @@ namespace Game.Exploration.WorldEvents
         private static void UpdateEvent(string eventLog)
         {
             _eventLog = eventLog;
-            if (_eventLogText == null) return; 
+            if (_eventLogText == null) return;
             _eventLogText.text = _eventLog;
         }
 
         public static void Clear()
         {
             UpdateEvent("");
+        }
+
+
+        private static readonly string[] _saveStrings =
+        {
+            "I should remember this place if I ever want to return",
+            "I can retrace my steps if I record today's journey.",
+            "It is easy to lose track of time out here"
+        };
+
+        public static void SuggestSave()
+        {
+            GenerateEvent(new WorldEvent(_saveStrings.RandomElement()));
         }
     }
 }

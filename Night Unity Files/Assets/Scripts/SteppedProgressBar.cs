@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SteppedProgressBar : MonoBehaviour
 {
-//    private static readonly List<Fader> _faderPool = new List<Fader>();
+    private static readonly List<Fader> _faderPool = new List<Fader>();
     private RectTransform _rect;
     private Image _slider;
     private RectTransform _sliderRect;
@@ -17,7 +17,7 @@ public class SteppedProgressBar : MonoBehaviour
         ResetValue();
     }
 
-    public void ResetValue(float value = 1f)
+    private void ResetValue()
     {
         _slider.fillAmount = 1;
     }
@@ -47,21 +47,21 @@ public class SteppedProgressBar : MonoBehaviour
     {
         Fader fader;
         GameObject faderObject;
-//        if (_faderPool.Count == 0)
-//        {
-        faderObject = new GameObject();
-        faderObject.name = "Fader";
-        faderObject.transform.SetParent(_rect, false);
-        faderObject.AddComponent<Image>();
-        fader = faderObject.AddComponent<Fader>();
-//        }
-//        else
-//        {
-//            fader = _faderPool[0];
-//            _faderPool.RemoveAt(0);
-//            faderObject = fader.gameObject;
-//            faderObject.SetActive(true);
-//        }
+        if (_faderPool.Count == 0)
+        {
+            faderObject = new GameObject();
+            faderObject.name = "Fader";
+            faderObject.transform.SetParent(_rect, false);
+            faderObject.AddComponent<Image>();
+            fader = faderObject.AddComponent<Fader>();
+        }
+        else
+        {
+            fader = _faderPool[0];
+            _faderPool.RemoveAt(0);
+            faderObject = fader.gameObject;
+            faderObject.SetActive(true);
+        }
 
         faderObject.transform.SetSiblingIndex(1);
         return fader;
@@ -88,7 +88,7 @@ public class SteppedProgressBar : MonoBehaviour
 
         private void OnDestroy()
         {
-//            _faderPool.Remove(this);
+            _faderPool.Remove(this);
         }
 
         public void Restart()

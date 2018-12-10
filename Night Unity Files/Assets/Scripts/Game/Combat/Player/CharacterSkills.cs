@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using Game.Characters;
 using Game.Combat.Enemies.Misc;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Gear.Armour;
+using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -77,12 +79,8 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            CanTakeDamage target = Target();
-            float healPercent = 0;
-            if (target.IsBurning()) healPercent += 0.1f;
-            if (target.IsSick()) healPercent += 0.1f;
-            target.ClearConditions();
-            Heal(healPercent);
+            Heal(0.15f);
+            SickenBehaviour.Create(PlayerCombat.Instance.transform.position, new List<CanTakeDamage>());
         }
     }
 
@@ -94,9 +92,16 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            CanTakeDamage target = Target();
-            target.Sicken(10);
-            if (target.HealthController.GetCurrentHealth() == 0) Explosion.CreateExplosion(target.transform.position, 20).InstantDetonate();
+            PlayerCombat player = PlayerCombat.Instance;
+            List<CanTakeDamage> sickened = SickenBehaviour.Create(player.transform.position, new List<CanTakeDamage> {player}, 5);
+            int explosionDamage = (int) (10 + WorldState.Difficulty() / 2.5f);
+            sickened.ForEach(e =>
+            {
+                if (e.HealthController.GetHealth().CurrentValue() != 0) return;
+                Explosion explosion = Explosion.CreateExplosion(e.transform.position, explosionDamage, 0.5f);
+                explosion.AddIgnoreTarget(player);
+                explosion.InstantDetonate();
+            });
         }
     }
 
@@ -176,7 +181,8 @@ namespace Game.Combat.Player
         protected override void InstantEffect()
         {
             Heal(0.25f);
-            PlayerCombat.Instance.ClearConditions();
+            PlayerCombat player = PlayerCombat.Instance;
+            player.MovementController.AddForce(player.transform.up * 100);
         }
     }
 
@@ -188,8 +194,12 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            PlayerCombat.Instance.TakeArmourDamage(Armour.ArmourHealthUnit);
-            KnockbackInRange(4f, 100f);
+            Vector2 playerPosition = PlayerCombat.Instance.transform.position;
+            int explosionDamage = 50 + WorldState.Difficulty();
+            Explosion explosion = Explosion.CreateExplosion(playerPosition, explosionDamage, 2);
+            explosion.AddIgnoreTarget(PlayerCombat.Instance);
+            explosion.InstantDetonate();
+            FireBurstBehaviour.Create(playerPosition).AddIgnoreTarget(PlayerCombat.Instance);
         }
     }
 
@@ -256,7 +266,7 @@ namespace Game.Combat.Player
         {
             PlayerCombat.Instance.TakeArmourDamage(-Armour.ArmourHealthUnit);
             Vector2 position = PlayerCombat.Instance.transform.position;
-            FireBurstBehaviour.Create(position);
+            DecayBlastBehaviour.Create(PlayerCombat.Instance, position);
         }
     }
 
@@ -268,7 +278,7 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            PlayerCombat.Instance.ConsumeAmmo(1);
+            PlayerCombat.Instance.ConsumeAmmo();
             Heal(0.25f);
         }
     }

@@ -38,7 +38,7 @@ namespace Game.Combat.Generation
         {
             if (_region.GetRegionType() == RegionType.Rite)
             {
-                PathingGrid.SetCombatAreaWidth(20);
+                PathingGrid.SetCombatAreaWidth(15);
                 return;
             }
 

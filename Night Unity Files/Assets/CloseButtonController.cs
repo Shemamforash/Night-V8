@@ -37,6 +37,7 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
     public void UseFireInput()
     {
         _targetAxis = InputAxis.Fire;
+        if(_button == null) _button = GetComponent<Button>();
         _button.FindChildWithName<TextMeshProUGUI>("Close Text").SetText("K");
     }
 

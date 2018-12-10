@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
 using DefaultNamespace;
+using Facilitating.Persistence;
 using Facilitating.UIControllers;
 using Facilitating.UIControllers.Inventories;
 using Game.Global;
@@ -14,7 +16,15 @@ public class UiJournalController : UiInventoryMenuController
     private CanvasGroup _noJournalGroup;
     private static bool _unlocked;
 
-    protected override void SetUnlocked(bool unlocked) => _unlocked = unlocked;
+    public static void Load(XmlNode root)
+    {
+        _unlocked = root.BoolFromNode(nameof(GetType));
+    }
+
+    public static void Save(XmlNode root)
+    {
+        root.CreateChild(nameof(GetType), _unlocked);
+    }
     
     public override bool Unlocked()
     {

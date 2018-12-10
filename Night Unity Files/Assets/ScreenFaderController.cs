@@ -26,20 +26,21 @@ public class ScreenFaderController : MonoBehaviour
         _textCanvas.alpha = 1;
     }
 
-    public static void HideText()
-    {
-        if (_textCanvas == null) Initialise();
-        _textCanvas.alpha = 0;
-    }
-
     private static void Initialise()
     {
         GameObject.Find("Screen Fader").GetComponent<ScreenFaderController>().Awake();
     }
 
+    private static void ClearText()
+    {
+        _text.text = "";
+        _textCanvas.alpha = 0;
+    }
+    
     public static void FadeIn(float duration)
     {
         if (_faderCanvas == null) Initialise();
+       ClearText();
         _tweener?.Kill();
         _tweener = _faderCanvas.DOFade(1, duration).SetUpdate(UpdateType.Normal, true);
     }
@@ -60,6 +61,7 @@ public class ScreenFaderController : MonoBehaviour
     public static void FlashWhite(float duration)
     {
         if (_faderImage == null) Initialise();
+        ClearText();
         _faderImage.color = Color.white;
         _faderCanvas.alpha = 1;
         _faderImage.DOColor(Color.black, duration).SetUpdate(UpdateType.Normal, true);

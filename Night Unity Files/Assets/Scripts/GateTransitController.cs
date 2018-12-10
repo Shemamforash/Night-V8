@@ -13,7 +13,6 @@ using UnityEngine.UI;
 
 public class GateTransitController : Menu
 {
-    private ParticleSystem _gateParticles;
     private ParticleSystem _streakParticles;
     private SpriteRenderer _glow;
     private static GateTransitController _instance;
@@ -22,7 +21,6 @@ public class GateTransitController : Menu
     {
         base.Awake();
         _instance = this;
-        _gateParticles = GetComponent<ParticleSystem>();
         _streakParticles = gameObject.FindChildWithName<ParticleSystem>("Streaks");
         _glow = gameObject.FindChildWithName<SpriteRenderer>("Light");
         _glow.color = UiAppearanceController.InvisibleColour;
@@ -36,13 +34,12 @@ public class GateTransitController : Menu
 
     public static void StartTransit()
     {
-        MenuStateMachine.ShowMenu("Gate Particles");
+        MenuStateMachine.ShowMenu("Gate Mask");
     }
 
     private IEnumerator Transit()
     {
         WorldState.Pause();
-        _gateParticles.Play();
         _streakParticles.Stop();
         _streakParticles.Play();
 

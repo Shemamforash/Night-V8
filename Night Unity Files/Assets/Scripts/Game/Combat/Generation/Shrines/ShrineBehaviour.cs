@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
@@ -17,11 +18,13 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
     private SpriteMask _countdownMask;
     private SpriteRenderer _countdown;
     private Brand _brand;
+    public static ShrineBehaviour ActiveShrine;
 
     private static GameObject _bossPrefab, _firePrefab, _wavePrefab, _chasePrefab;
 
     public void Awake()
     {
+        ActiveShrine = this;
         _essence = gameObject.FindChildWithName<ParticleSystem>("Essence Cloud");
         _void = gameObject.FindChildWithName<ParticleSystem>("Void");
         _burst = gameObject.FindChildWithName<ParticleSystem>("Burst");
@@ -79,7 +82,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
         StartCoroutine(SucceedGlow());
     }
 
-    protected override void Fail()
+    public override void Fail()
     {
         base.Fail();
         _brand.Fail();
@@ -168,7 +171,24 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
     protected override void StartShrine()
     {
         Triggered = true;
+        ShowShrineInstructions();
         StartCoroutine(Flash());
+    }
+
+    protected abstract void StartChallenge();
+
+    protected abstract string GetInstructionText();
+    
+    private void ShowShrineInstructions()
+    {
+        Sequence sequence = DOTween.Sequence();
+        sequence.AppendCallback(() => EventTextController.SetOverrideText(GetInstructionText()));
+        sequence.AppendInterval(2f);
+        sequence.AppendCallback(() =>
+        {
+            EventTextController.CloseOverrideText();
+            StartChallenge();
+        });
     }
 
     protected virtual void EndChallenge()

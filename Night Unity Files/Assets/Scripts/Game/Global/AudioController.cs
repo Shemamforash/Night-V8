@@ -8,6 +8,7 @@ using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 namespace Game.Global
 {
@@ -17,8 +18,7 @@ namespace Game.Global
         private static AudioController _instance;
         private static AudioMixer _audioMixer;
         private static float _fogMuffle, _startTime;
-        private float _layer1TargetVolume, _layer2TargetVolume, _layer3TargetVolume, _layer4TargetVolume;
-        private float _layer1VolumeGain = 2f, _layer2VolumeGain = 1f, _layer3VolumeGain = 0.5f, _layer4VolumeGain = 0.25f;
+        private float _combatTargetVolume;
         private const float ThresholdCombatMusicDistance = 10f;
         private const float MusicFadeDuration = 5f;
         private float _timeNearEnemies;
@@ -89,45 +89,45 @@ namespace Game.Global
             return enemiesInRange;
         }
 
-        public void Update()
+        private void UpdateTimeNearEnemies()
         {
             int enemiesInRange = GetEnemiesInRange();
             float timeChange = Time.deltaTime;
             if (enemiesInRange == -1) timeChange *= -MusicFadeDuration;
             if (enemiesInRange == 0) timeChange *= -1;
-
             _timeNearEnemies = Mathf.Clamp(_timeNearEnemies + timeChange, 0, 5);
-            float ambientVolumeModifier = 1 - _timeNearEnemies / 5f;
-
-//            if (ambientVolumeModifier < 1)
-//            {
-//                ambientVolumeModifier += Time.deltaTime;
-//                if (ambientVolumeModifier > 1) ambientVolumeModifier = 1;
-//            }
-//
-//            _layer4TargetVolume = 0.1f * (_timeNearEnemies - 15f);
-//            _layer3TargetVolume = 0.1f * (_timeNearEnemies - 10f);
-//            _layer2TargetVolume = 0.1f * (_timeNearEnemies - 5f);
-//            _layer1TargetVolume = 0.1f * _timeNearEnemies;
-//
-//            _layer1TargetVolume = Mathf.Clamp(_layer1TargetVolume, 0f, 1f);
-//            _layer2TargetVolume = Mathf.Clamp(_layer2TargetVolume, 0f, 1f);
-//            _layer3TargetVolume = Mathf.Clamp(_layer3TargetVolume, 0f, 1f);
-//            _layer4TargetVolume = Mathf.Clamp(_layer4TargetVolume, 0f, 1f);
-
-            _layer1TargetVolume = 1 - ambientVolumeModifier;
-            UpdateLayerVolume(_layer1TargetVolume, _layer1, 1);
-            UpdateLayerVolume(_layer1TargetVolume, _layer2, 1);
-            UpdateLayerVolume(_layer1TargetVolume, _layer3, 1);
-            UpdateLayerVolume(_layer1TargetVolume, _layer4, 1);
-
-            if (ambientVolumeModifier < 0.2f) ambientVolumeModifier = 0.2f;
-            _ambient.volume = _ambientVolume * ambientVolumeModifier;
         }
 
-        private void UpdateLayerVolume(float targetVolume, AudioSource layer, float incrementAmount)
+        public void Update()
+        {
+            UpdateTimeNearEnemies();
+            _combatTargetVolume = _timeNearEnemies / 5f;
+
+            string currentScene = SceneManager.GetActiveScene().name; 
+            if (currentScene != "Game" && currentScene != "Combat")
+            {
+                _combatTargetVolume = 0;
+                _ambientVolume -= Time.deltaTime;
+                if (_ambientVolume < 0) _ambientVolume = 0f;
+                _ambient.volume = _ambientVolume;
+            }
+            else
+            {
+                float ambientVolumeModifier = 1 - _combatTargetVolume;
+                if (ambientVolumeModifier < 0.2f) ambientVolumeModifier = 0.2f;
+                _ambient.volume = _ambientVolume * ambientVolumeModifier;
+            }
+
+            UpdateLayerVolume(_combatTargetVolume, _layer1);
+            UpdateLayerVolume(_combatTargetVolume, _layer2);
+            UpdateLayerVolume(_combatTargetVolume, _layer3);
+            UpdateLayerVolume(_combatTargetVolume, _layer4);
+        }
+
+        private void UpdateLayerVolume(float targetVolume, AudioSource layer)
         {
             float layerDifference = targetVolume - layer.volume;
+            float incrementAmount = 1f;
             if (incrementAmount > Mathf.Abs(layerDifference)) incrementAmount = Mathf.Abs(layerDifference);
             if (layerDifference < 0) incrementAmount = -incrementAmount;
             layer.volume += incrementAmount * Time.deltaTime;

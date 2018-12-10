@@ -102,8 +102,8 @@ namespace Game.Combat.Enemies
 
         public override void Burn()
         {
-            if (GetBurnTicks() == 0) PlayerCombat.Instance.Player.BrandManager.IncreaseBurnCount();
             base.Burn();
+            PlayerCombat.Instance.Player.BrandManager.IncreaseBurnCount(GetBurnDamage());
         }
 
         public override void Sicken(int stacks = 1)
@@ -123,7 +123,6 @@ namespace Game.Combat.Enemies
 
         public override void Kill()
         {
-            base.Kill();
             Characters.Player player = PlayerCombat.Instance.Player;
             if (player.Attributes.SpreadSickness && IsSick())
             {
@@ -140,8 +139,7 @@ namespace Game.Combat.Enemies
             Loot loot = Enemy.DropLoot(transform.position);
             loot?.CreateObject(true);
             PlayerCombat.Instance.TriggerEnemyDeathEffect();
-            CombatManager.RemoveEnemy(this);
-            Destroy(gameObject);
+            base.Kill();
         }
     }
 }

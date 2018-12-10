@@ -77,7 +77,7 @@ namespace Game.Characters
 
         public static void RemoveCharacter(Player playerCharacter)
         {
-            playerCharacter.CharacterView().SetPlayer(null);
+            if(playerCharacter.CharacterView() != null) playerCharacter.CharacterView().SetPlayer(null);
             Characters.Remove(playerCharacter);
         }
 
@@ -134,11 +134,12 @@ namespace Game.Characters
             return GenerateCharacterObject(t);
         }
 
-        public static Player GenerateRandomCharacter()
+        public static Player GenerateRandomCharacter(CharacterClass characterClass = CharacterClass.None)
         {
             LoadTemplates();
             CharacterTemplate newTemplate = Templates.RemoveRandom();
-            Assert.IsFalse(Templates.Any(t => t.CharacterClass == CharacterClass.Wanderer));
+            if (characterClass != CharacterClass.None) newTemplate = FindClass(characterClass);
+            else Assert.IsFalse(Templates.Any(t => t.CharacterClass == CharacterClass.Wanderer));
             Player playerCharacter = GenerateCharacterObject(newTemplate);
             Weapon weapon = WeaponGenerator.GenerateWeapon();
             Inventory.Move(weapon);

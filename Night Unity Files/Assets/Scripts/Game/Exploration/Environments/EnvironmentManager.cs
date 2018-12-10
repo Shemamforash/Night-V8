@@ -3,7 +3,9 @@ using System.Xml;
 using Facilitating.Persistence;
 using Game.Exploration.Weather;
 using Game.Global;
+using NUnit.Framework;
 using SamsHelper.Libraries;
+using UnityEngine;
 
 namespace Game.Exploration.Environment
 {
@@ -21,27 +23,25 @@ namespace Game.Exploration.Environment
             SceneryController.UpdateEnvironmentBackground();
         }
 
-        public static void Reset()
+        public static void Reset(bool isLoading)
         {
-            NextLevel(true);
+            NextLevel(true, isLoading);
         }
 
         public static Environment CurrentEnvironment => _currentEnvironment;
 
-        public static void NextLevel(bool reset)
+        public static void NextLevel(bool reset, bool isLoading)
         {
             LoadEnvironments();
             if (reset) _currentEnvironment = _environments[WorldState._currentLevel - 1];
             else
             {
                 int nextEnvironmentIndex = _currentEnvironment.LevelNo + 1;
-                if (_environments.ContainsKey(nextEnvironmentIndex))
-                {
-                    _currentEnvironment = _environments[nextEnvironmentIndex];
-                }
+                Assert.IsTrue(_environments.ContainsKey(nextEnvironmentIndex));
+                _currentEnvironment = _environments[nextEnvironmentIndex];
             }
 
-            MapGenerator.Generate();
+            if (!isLoading) MapGenerator.Generate();
         }
 
         private static void LoadEnvironments()

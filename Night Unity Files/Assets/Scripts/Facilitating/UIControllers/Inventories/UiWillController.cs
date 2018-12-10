@@ -17,11 +17,6 @@ public class UiWillController : UiInventoryMenuController, IInputListener
         return true;
     }
 
-    protected override void SetUnlocked(bool unlocked)
-    {
-        
-    }
-
     protected override void CacheElements()
     {
         _uiAttributeController = GetComponent<UIAttributeController>();

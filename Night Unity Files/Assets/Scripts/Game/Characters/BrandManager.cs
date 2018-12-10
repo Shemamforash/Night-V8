@@ -103,11 +103,42 @@ namespace Game.Characters
             return brandSelection;
         }
 
+        public bool TryActivateBrand(Brand targetBrand)
+        {
+            if (_activeBrandOne == null)
+            {
+                SetActiveBrandOne(targetBrand);
+                return true;
+            }
+
+            if (_activeBrandTwo == null)
+            {
+                SetActiveBrandTwo(targetBrand);
+                return true;
+            }
+
+            if (_activeBrandThree == null)
+            {
+                SetActiveBrandThree(targetBrand);
+                return true;
+            }
+
+            return false;
+        }
+
+        public void UpdateActiveBrands(Brand brand)
+        {
+            if (brand == _activeBrandOne) _activeBrandOne = null;
+            else if (brand == _activeBrandTwo) _activeBrandTwo = null;
+            else if (brand == _activeBrandThree) _activeBrandThree = null;
+        }
+
         public void SetActiveBrandOne(Brand brand)
         {
             _activeBrandOne?.SetStatus(BrandStatus.Locked);
             _activeBrandOne = brand;
             brand.SetStatus(BrandStatus.Active);
+            brand.UpdateValue(5000);
         }
 
         public void SetActiveBrandTwo(Brand brand)
@@ -115,6 +146,7 @@ namespace Game.Characters
             _activeBrandTwo?.SetStatus(BrandStatus.Locked);
             _activeBrandTwo = brand;
             brand.SetStatus(BrandStatus.Active);
+            brand.UpdateValue(5000);
         }
 
         public void SetActiveBrandThree(Brand brand)
@@ -122,6 +154,7 @@ namespace Game.Characters
             _activeBrandThree?.SetStatus(BrandStatus.Locked);
             _activeBrandThree = brand;
             brand.SetStatus(BrandStatus.Active);
+            brand.UpdateValue(5000);
         }
 
         public void Initialise(Player player)
@@ -223,7 +256,7 @@ namespace Game.Characters
         public void IncreaseFoodFound() => UpdateBrandValue(typeof(FoodBrand), 1);
         public void IncreaseWaterFound() => UpdateBrandValue(typeof(WaterBrand), 1);
         public void IncreaseAdrenalineUsed(int amount) => UpdateBrandValue(typeof(AdrenalineUsedBrand), amount);
-        public void IncreaseBurnCount() => UpdateBrandValue(typeof(IgniteBrand), 1);
+        public void IncreaseBurnCount(int damage) => UpdateBrandValue(typeof(IgniteBrand), damage);
         public void IncreaseDecayCount() => UpdateBrandValue(typeof(DecayBrand), 1);
         public void IncreaseSickenCount() => UpdateBrandValue(typeof(SicknessBrand), 1);
 
@@ -246,29 +279,6 @@ namespace Game.Characters
                     _lockedBrands.Remove(brand);
                     break;
             }
-        }
-
-        public bool TryActivateBrand(Brand targetBrand)
-        {
-            if (_activeBrandOne == null)
-            {
-                _activeBrandOne = targetBrand;
-                return true;
-            }
-
-            if (_activeBrandTwo == null)
-            {
-                _activeBrandTwo = targetBrand;
-                return true;
-            }
-
-            if (_activeBrandThree == null)
-            {
-                _activeBrandThree = targetBrand;
-                return true;
-            }
-
-            return false;
         }
     }
 }

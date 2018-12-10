@@ -153,11 +153,20 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
+            int damage = ((int) PlayerCombat.Instance.Weapon().Quality() + 1) * 10;
             Transform playerTransform = PlayerCombat.Instance.transform;
+
             Vector2 startPos = playerTransform.position + playerTransform.up * 0.5f;
             Vector2 targetPos = playerTransform.position + playerTransform.up * 1f;
-            int damage = ((int) PlayerCombat.Instance.Weapon().Quality() + 1) * 10;
             NeedleBehaviour.Create(startPos, targetPos, damage, true);
+
+            Vector2 leftStartPos = startPos + (Vector2) playerTransform.right * 0.25f;
+            Vector2 leftEndPos = targetPos + (Vector2) playerTransform.right * 0.4f;
+            NeedleBehaviour.Create(leftStartPos, leftEndPos, damage, true);
+
+            Vector2 rightStartPos = startPos + (Vector2) playerTransform.right * -0.25f;
+            Vector2 rightEndPos = targetPos + (Vector2) playerTransform.right * -0.4f;
+            NeedleBehaviour.Create(rightStartPos, rightEndPos, damage, true);
         }
     }
 
@@ -169,12 +178,8 @@ namespace Game.Combat.Player
 
         protected override void MagazineEffect(Shot s)
         {
-            if (PlayerCombat.Instance.DamageTakenSinceLastShot)
-            {
-                s.Attributes().SetDamageModifier(5);
-            }
-
-            PlayerCombat.Instance.DamageTakenSinceLastShot = false;
+            float normalisedHealth = PlayerCombat.Instance.HealthController.GetNormalisedHealthValue();
+            s.Attributes().SetDamageModifier(1 + 1 - normalisedHealth);
         }
     }
 }

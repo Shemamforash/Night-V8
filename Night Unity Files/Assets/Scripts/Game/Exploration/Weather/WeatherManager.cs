@@ -133,7 +133,7 @@ namespace Game.Exploration.Weather
                 }
 
                 Debug.Log(weatherString);
-                EnvironmentManager.NextLevel(false);
+                EnvironmentManager.NextLevel(false, false);
             }
         }
 

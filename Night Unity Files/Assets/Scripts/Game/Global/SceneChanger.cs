@@ -15,10 +15,12 @@ namespace Game.Global
         private static string _sceneToLoad;
         private static bool _fadeInAudio;
         private Tweener _volumeTweener;
+        private static bool _changingScene;
         private const float DefaultFadeTime = 0.5f;
 
         public void Awake()
         {
+            _changingScene = false;
             _instance = this;
             float fadeInTime = SceneManager.GetActiveScene().name == "Combat" ? 3f : DefaultFadeTime;
             ScreenFaderController.SetAlpha(1);
@@ -45,6 +47,7 @@ namespace Game.Global
 
         private IEnumerator FadeOut(string sceneName)
         {
+            _changingScene = true;
             _sceneToLoad = sceneName;
             ScreenFaderController.FadeIn(DefaultFadeTime);
             if (_fadeInAudio)
@@ -101,6 +104,11 @@ namespace Game.Global
         {
             WorldState.Pause();
             _instance.StartCoroutine(_instance.FadeOut(sceneName));
+        }
+
+        public static bool ChangingScene()
+        {
+            return _changingScene;
         }
     }
 }

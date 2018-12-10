@@ -16,9 +16,7 @@ namespace Game.Combat.Misc
         public HealthController HealthController = new HealthController();
         private const float SicknessDurationMax = 5f;
         private const int SicknessTargetTicks = 10;
-        private readonly List<float> _burnTicks = new List<float>();
         private float _timeSinceLastBurn;
-        private const float BurnTickDuration = 4f;
         protected int SicknessStacks;
         private float _sicknessDuration;
         private float _markTime;
@@ -34,17 +32,15 @@ namespace Game.Combat.Misc
         {
             _spriteFlash = GetComponent<DamageSpriteFlash>();
             _bloodSpatter = GetComponent<BloodSpatter>();
-            if (IsPlayer) return;
-            CombatManager.Instance().AddEnemy(this);
+            if (!IsPlayer) CombatManager.AddEnemy(this);
         }
 
         public virtual void Kill()
         {
+            if (!IsPlayer) CombatManager.RemoveEnemy(this);
             Destroy(gameObject);
-            if (IsPlayer) return;
-            CombatManager.RemoveEnemy(this);
         }
-
+        
         public virtual void MyUpdate()
         {
             UpdateConditions();
@@ -57,15 +53,9 @@ namespace Game.Combat.Misc
         {
             if (_timeSinceLastBurn < 1f) return;
             _timeSinceLastBurn = 0f;
-            _burnTicks.Add(BurnTickDuration);
+            _spriteFlash.FlashSprite();
+            HealthController.TakeDamage(GetBurnDamage());
         }
-
-        protected int GetBurnTicks()
-        {
-            return _burnTicks.Count;
-        }
-
-        public bool IsBurning() => _burnTicks.Count > 0;
 
         public virtual void Decay()
         {
@@ -78,7 +68,8 @@ namespace Game.Combat.Misc
             if (SicknessStacks >= GetSicknessTargetTicks())
             {
                 _spriteFlash.FlashSprite();
-                HealthController.TakeDamage(HealthController.GetMaxHealth() / 4f);
+                float damage = (WorldState.Difficulty() / 25f + 1f) * 50f;
+                HealthController.TakeDamage(damage);
                 SicknessStacks = 0;
             }
 
@@ -89,7 +80,6 @@ namespace Game.Combat.Misc
 
         public void ClearConditions()
         {
-            _burnTicks.Clear();
             SicknessStacks = 0;
         }
 
@@ -120,23 +110,6 @@ namespace Game.Combat.Misc
         private void UpdateBurn()
         {
             _timeSinceLastBurn += Time.deltaTime;
-            if (_burnTicks.Count == 0) return;
-            for (int i = _burnTicks.Count - 1; i >= 0; --i)
-            {
-                float burnTick = _burnTicks[i];
-                float newBurnTick = burnTick - Time.deltaTime;
-                if (burnTick >= 3f && newBurnTick < 3f || burnTick >= 2f && newBurnTick < 2f || burnTick >= 1f && newBurnTick < 1f || burnTick > 0f && newBurnTick < 0f)
-                {
-                    _spriteFlash.FlashSprite();
-                    HealthController.TakeDamage(GetBurnDamage());
-                }
-
-                _burnTicks[i] = newBurnTick;
-                if (newBurnTick < 0f)
-                {
-                    _burnTicks.RemoveAt(i);
-                }
-            }
         }
 
         private void UpdateSickness()
@@ -161,6 +134,7 @@ namespace Game.Combat.Misc
 
         public virtual void TakeShotDamage(Shot shot)
         {
+            if (SceneChanger.ChangingScene()) return;
             int damageDealt = shot.Attributes().DamageDealt();
             TakeDamage(damageDealt, shot.Direction());
             if (IsPlayer) return;
@@ -169,6 +143,7 @@ namespace Game.Combat.Misc
 
         protected virtual void TakeDamage(int damage, Vector2 direction)
         {
+            if (SceneChanger.ChangingScene()) return;
             _spriteFlash.FlashSprite();
             float armourModifier = 1;
             if (ArmourController != null) armourModifier = ArmourController.CalculateDamageModifier();
@@ -181,11 +156,13 @@ namespace Game.Combat.Misc
 
         public virtual void TakeRawDamage(int damage, Vector2 direction)
         {
+        if (SceneChanger.ChangingScene()) return;
             TakeDamage(damage, direction);
         }
 
         public virtual void TakeExplosionDamage(int damage, Vector2 origin, float radius)
         {
+            if (SceneChanger.ChangingScene()) return;
             Vector2 direction = (origin - (Vector2) transform.position).normalized;
             TakeDamage(damage, direction);
         }

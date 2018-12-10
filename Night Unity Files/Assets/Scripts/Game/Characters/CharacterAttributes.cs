@@ -255,6 +255,7 @@ namespace Game.Characters
 
         public void UnlockWeaponSkillTwo(WeaponType weaponType, bool showScreen)
         {
+            if (WeaponSkillTwoUnlocks.Contains(weaponType)) return;
             WeaponSkillTwoUnlocks.Add(weaponType);
             if (!showScreen) return;
             UiBrandMenu.ShowWeaponSkillUnlock(weaponType, _player.EquippedWeapon.WeaponSkillTwo);
@@ -262,6 +263,7 @@ namespace Game.Characters
 
         public void UnlockWeaponSkillOne(WeaponType weaponType, bool showScreen)
         {
+            if (WeaponSkillOneUnlocks.Contains(weaponType)) return;
             WeaponSkillOneUnlocks.Add(weaponType);
             if (!showScreen) return;
             UiBrandMenu.ShowWeaponSkillUnlock(weaponType, _player.EquippedWeapon.WeaponSkillOne);

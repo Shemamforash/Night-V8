@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using DG.Tweening;
 using Game.Combat.Enemies;
 using Game.Global;
 using SamsHelper.Libraries;
@@ -29,16 +30,16 @@ namespace Game.Combat.Generation.Shrines
         private void AddIndicator()
         {
             if (_filledIndicatorPrefab == null) _filledIndicatorPrefab = Resources.Load<GameObject>("Prefabs/Combat/Filled Indicator");
-            GameObject filledIndicator = Instantiate(_filledIndicatorPrefab);
-            filledIndicator.transform.SetParent(DangerIndicator.transform, false);
+            GameObject filledIndicator = Instantiate(_filledIndicatorPrefab, DangerIndicator.transform, false);
             filledIndicator.transform.localRotation = Quaternion.Euler(0, 0, _currentShrineLevel * (360f / _shrineLevelMax));
         }
 
-        protected override void StartShrine()
+        protected override void StartChallenge()
         {
-            base.StartShrine();
             StartCoroutine(SpawnWaves());
         }
+
+        protected override string GetInstructionText() => "Defeat waves within the time limit";
 
         private IEnumerator SpawnWaves()
         {
@@ -56,7 +57,6 @@ namespace Game.Combat.Generation.Shrines
                     if (!CombatManager.IsCombatActive()) yield return null;
                     Vector2 ghoulPos = AdvancedMaths.CalculatePointOnCircle(currentAngle, SpawnRadius, transform.position);
                     EnemyBehaviour enemy = CombatManager.SpawnEnemy(EnemyType.Ghoul, ghoulPos);
-                    AddEnemy(enemy);
                     waveDuration += enemy.HealthController.GetMaxHealth() * Mathf.Sqrt(enemy.Enemy.ArmourController.GetCurrentProtection() + 1);
                     currentTime += SpawnDelay;
                     yield return null;
@@ -73,7 +73,7 @@ namespace Game.Combat.Generation.Shrines
                 if (!CombatManager.IsCombatActive()) yield return null;
                 currentTime -= Time.deltaTime;
                 UpdateCountdown(currentTime, waveDuration);
-                if (EnemiesDead()) break;
+                if (CombatManager.ClearOfEnemies()) break;
                 yield return null;
             }
 
@@ -82,7 +82,7 @@ namespace Game.Combat.Generation.Shrines
 
         protected override void EndChallenge()
         {
-            if (EnemiesDead())
+            if (CombatManager.ClearOfEnemies())
             {
                 AddIndicator();
                 if (_currentShrineLevel == _shrineLevelMax)

@@ -57,15 +57,18 @@ namespace Game.Combat.Generation.Shrines
 
         private void GoToRite()
         {
+            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Rite) return;
             Region r = new Region();
             r.SetRegionType(RegionType.Rite);
             Rite.SetBrand(_brand, CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion());
             CombatManager.SetCurrentRegion(r);
             SceneChanger.GoToCombatScene();
+            CombatManager.SetInCombat(false);
         }
 
         private void ReturnHome()
         {
+            CharacterManager.SelectedCharacter.TravelAction.ReturnToHomeInstant();
             SceneChanger.GoToGameScene();
         }
     }

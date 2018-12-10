@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Facilitating.Persistence;
+using Game.Global;
 using UnityEngine;
 
 public class SaveIconController : MonoBehaviour

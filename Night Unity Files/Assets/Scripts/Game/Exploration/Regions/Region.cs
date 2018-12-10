@@ -161,6 +161,7 @@ namespace Game.Exploration.Regions
             region._claimBenefit = doc.StringFromNode("ClaimBenefit");
             region.RitesRemaining = doc.IntFromNode("RitesRemaining");
             region.FountainVisited = doc.BoolFromNode("FountainVisited");
+            region.CheckIsDynamic();
             return region;
         }
 
@@ -258,10 +259,15 @@ namespace Game.Exploration.Regions
             CharacterHere = CharacterManager.GenerateRandomCharacter();
         }
 
+        private void CheckIsDynamic()
+        {
+            _isDynamicRegion = _regionType != RegionType.Gate && _regionType != RegionType.Rite && _regionType != RegionType.Tomb && _regionType != RegionType.Temple;
+        }
+        
         public void SetRegionType(RegionType regionType)
         {
             _regionType = regionType;
-            _isDynamicRegion = _regionType != RegionType.Gate && _regionType != RegionType.Rite && _regionType != RegionType.Tomb;
+            CheckIsDynamic();
             Name = MapGenerator.GenerateName(_regionType);
         }
 

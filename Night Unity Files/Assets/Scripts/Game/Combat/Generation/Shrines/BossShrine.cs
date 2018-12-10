@@ -1,7 +1,12 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using DG.Tweening;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+using Game.Combat.Misc;
 using Game.Combat.Player;
+using Game.Global;
+using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -9,123 +14,54 @@ namespace Game.Combat.Generation.Shrines
 {
     public class BossShrine : ShrineBehaviour
     {
-        protected override void StartShrine()
+        protected override void StartChallenge()
         {
-            base.StartShrine();
             StartCoroutine(SpawnBoss());
         }
 
+        protected override string GetInstructionText() => "Survive";
+
         private IEnumerator SpawnBoss()
         {
+            int maxSize = (int) (WorldState.Difficulty() / 5f + 5);
+            int currentSize = 1;
+            List<EnemyTemplate> allowedEnemies = WorldState.GetAllowedNightmareEnemyTypes();
+            List<Enemy> enemies = new List<Enemy>();
+            for (int i = 0; i < 500; ++i)
+                enemies.Add(new Enemy(allowedEnemies.RandomElement()));
+            CombatManager.OverrideMaxSize(currentSize, enemies);
+
             float roundTime = 60;
             float currentTime = roundTime;
-
-            EnemyBehaviour b = GenerateBoss(transform.position);
-            AddEnemy(b);
-
+            float sizeIncreaseTimer = 5f;
 
             while (currentTime > 0)
             {
                 if (!CombatManager.IsCombatActive()) yield return null;
-                currentTime -= Time.deltaTime;
-
                 UpdateCountdown(currentTime, roundTime);
-                if (EnemiesDead())
+                sizeIncreaseTimer -= Time.deltaTime;
+                if (sizeIncreaseTimer < 0)
                 {
-                    Succeed();
-                    break;
+                    sizeIncreaseTimer = 5f;
+                    if (currentSize < maxSize) ++currentSize;
+                    CombatManager.OverrideMaxSize(currentSize, enemies);
                 }
 
+                currentTime -= Time.deltaTime;
                 yield return null;
             }
 
-            EndChallenge();
-        }
-
-        private static T AddComponentOnce<T>(EnemyBehaviour b) where T : MonoBehaviour
-        {
-            T existing = b.gameObject.GetComponent<T>();
-            return existing != null ? existing : b.gameObject.AddComponent<T>();
-        }
-
-        public static EnemyBehaviour GenerateBoss(Vector2 position)
-        {
-            EnemyType type;
-            switch (Random.Range(0, 5))
-            {
-                case 0:
-                    type = EnemyType.GhoulMother;
-                    break;
-                case 1:
-                    type = EnemyType.Nightmare;
-                    break;
-                case 2:
-                    type = EnemyType.Ghast;
-                    break;
-                case 3:
-                    type = EnemyType.Maelstrom;
-                    break;
-                default:
-                    type = EnemyType.Revenant;
-                    break;
-            }
-
-            EnemyBehaviour boss = CombatManager.SpawnEnemy(type, position);
-            switch (Random.Range(0, 3))
-            {
-                case 0:
-                    AddComponentOnce<ErraticDash>(boss);
-                    break;
-                case 1:
-                    AddComponentOnce<Orbit>(boss).Initialise(PlayerCombat.Instance.transform, v => boss.MovementController.AddForce(v), 10, 2, 5);
-                    break;
-                case 2:
-                    AddComponentOnce<Teleport>(boss).Initialise(5, 2);
-                    break;
-            }
-
-            AddWeapon(boss);
-            AddWeapon(boss);
-            return boss;
-        }
-
-        private static void AddWeapon(EnemyBehaviour boss)
-        {
-            switch (Random.Range(0, 7))
-            {
-                case 0:
-                    int count = Random.Range(1, 5);
-                    AddComponentOnce<Bombardment>(boss).Initialise(count, count, count / 2f);
-                    break;
-                case 1:
-                    AddComponentOnce<Heavyshot>(boss).Initialise(6, 3);
-                    break;
-                case 2:
-                    AddComponentOnce<LeaveFireTrail>(boss).Initialise();
-                    break;
-                case 3:
-                    AddComponentOnce<Push>(boss).Initialise(10, 3);
-                    break;
-                case 4:
-                    AddComponentOnce<Split>(boss).Initialise(1, 6, EnemyType.Ghoul, 50, 2);
-                    break;
-                case 5:
-                    AddComponentOnce<Spawn>(boss).Initialise(EnemyType.Ghoul, 10, 2, 5);
-                    break;
-            }
+            Succeed();
+            base.EndChallenge();
+            CombatManager.OverrideMaxSize(0, new List<Enemy>());
         }
 
         protected override void EndChallenge()
         {
-            if (EnemiesDead())
-            {
+            if (CombatManager.ClearOfEnemies())
                 Succeed();
-            }
             else
-            {
                 Fail();
-            }
-
             base.EndChallenge();
         }
     }

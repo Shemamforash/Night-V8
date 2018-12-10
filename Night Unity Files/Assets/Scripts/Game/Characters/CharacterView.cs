@@ -40,8 +40,8 @@ namespace Game.Characters
 
             _thirstController = gameObject.FindChildWithName<UIConditionController>("Thirst");
             _hungerController = gameObject.FindChildWithName<UIConditionController>("Hunger");
-    
-            _actionList.SetPlayer(_player);      
+
+            _actionList.SetPlayer(_player);
         }
 
         public void Update()

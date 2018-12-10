@@ -10,5 +10,10 @@
         protected override void OnClick()
         {
         }
+
+        public override float GetRemainingTime()
+        {
+            return 0;
+        }
     }
 }

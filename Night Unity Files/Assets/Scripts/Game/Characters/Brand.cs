@@ -4,6 +4,8 @@ using Game.Combat.Generation.Shrines;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Game.Characters.Brands;
+using Game.Combat.Generation;
+using Game.Exploration.Regions;
 using Game.Global;
 
 namespace Game.Characters
@@ -70,6 +72,7 @@ namespace Game.Characters
 
         public void UpdateValue(int amount)
         {
+            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Rite) return;
             _counter += amount;
             if (_counter < _counterTarget) return;
             RiteStarter.Generate(this, false);
@@ -77,6 +80,7 @@ namespace Game.Characters
 
         public void Succeed()
         {
+            Player.BrandManager.UpdateActiveBrands(this);
             SetStatus(BrandStatus.Succeeded);
             UiBrandMenu.ShowBrand(this);
             OnSucceed();

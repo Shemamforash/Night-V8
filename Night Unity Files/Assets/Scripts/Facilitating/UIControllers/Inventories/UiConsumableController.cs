@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
+using Facilitating.Persistence;
 using Facilitating.UIControllers;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
@@ -16,14 +18,22 @@ public class UiConsumableController : UiInventoryMenuController
     private ListController _consumableList;
     private static bool _unlocked;
 
-    protected override void SetUnlocked(bool unlocked) => _unlocked = unlocked;
+    public static void Load(XmlNode root)
+    {
+        _unlocked = root.BoolFromNode(nameof(GetType));
+    }
+
+    public static void Save(XmlNode root)
+    {
+        root.CreateChild(nameof(GetType), _unlocked);
+    }
 
     public override bool Unlocked()
     {
         if (!_unlocked) _unlocked = Inventory.Consumables().Count != 0;
         return _unlocked;
     }
-    
+
     private static void UpdateConditions(Consumable consumable = null)
     {
         float hungerOffset = 0f;
@@ -35,6 +45,7 @@ public class UiConsumableController : UiInventoryMenuController
             waterOffset = consumable.Template.ResourceType == ResourceType.Water ? consumable.Template.EffectBonus : 0;
             if (consumable.Template.ResourceType == ResourceType.Plant) attributeOffset = consumable.Template.EffectBonus;
         }
+
         _hungerController.UpdateHunger(CharacterManager.SelectedCharacter, -hungerOffset);
         _thirstController.UpdateThirst(CharacterManager.SelectedCharacter, -waterOffset);
         if (attributeOffset == 0) _uiAttributeController.UpdateAttributes(CharacterManager.SelectedCharacter);
@@ -109,7 +120,7 @@ public class UiConsumableController : UiInventoryMenuController
                 UiGearMenuController.PlayAudio(AudioClips.EatPotion);
                 break;
         }
-        
+
         UpdateConditions();
     }
 }

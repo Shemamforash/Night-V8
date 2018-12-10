@@ -116,7 +116,7 @@ namespace Game.Exploration.Weather
 
             public override void ChangeWeather(float amount, bool instant)
             {
-                Debug.Log(amount);
+                Debug.Log(amount + " " + _currentWeather.Name);
 
                 base.ChangeWeather(amount, instant);
                 float lightTarget = amount > 0f && amount < 0.4f ? 1f : 0f;

@@ -103,7 +103,6 @@ namespace Facilitating.MenuNavigation
             newGameButton.SetDownNavigation(optionsButton);
         }
 
-
         public void Update()
         {
             if (_skipping) return;
@@ -118,7 +117,7 @@ namespace Facilitating.MenuNavigation
         {
             SaveController.ClearSave();
             WorldState.ResetWorld(true, num, (num - 1) * 10);
-            if (num > 2) CharacterManager.AddCharacter(CharacterManager.GenerateRandomCharacter());
+            if (num > 2) CharacterManager.AddCharacter(CharacterManager.GenerateRandomCharacter(CharacterClass.Deserter));
             if (num > 4) CharacterManager.AddCharacter(CharacterManager.GenerateRandomCharacter());
             SaveController.SaveGame();
             _gameController.StartGame(true);

@@ -22,8 +22,6 @@ namespace Game.Combat.Enemies.Humans
             Sequence sequence = DOTween.Sequence();
             sequence.AppendCallback(() => SkillAnimationController.Create(transform, "Beam", 0.25f, () => { PushController.Create(transform.position, 0f, false, 360); }, 0.5f));
             sequence.AppendInterval(0.25f);
-            sequence.AppendCallback(() => SkillAnimationController.Create(transform, "Beam", 0.25f, () => { PushController.Create(transform.position, 0f, false, 360); }, 0.5f));
-            sequence.AppendInterval(0.5f);
             sequence.AppendCallback(() =>
             {
                 for (int i = 0; i < 10; ++i)

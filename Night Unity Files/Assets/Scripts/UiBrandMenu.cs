@@ -1,4 +1,5 @@
-﻿using Game.Characters;
+﻿using DG.Tweening;
+using Game.Characters;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
 using SamsHelper.Libraries;
@@ -11,6 +12,7 @@ public class UiBrandMenu : Menu
     private EnhancedText _titleText, _benefitText, _effectText;
     private static UiBrandMenu _instance;
     private CloseButtonController _closeButton;
+    private Menu _lastMenu;
 
     public override void Awake()
     {
@@ -22,15 +24,25 @@ public class UiBrandMenu : Menu
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
         _closeButton.SetCallback(Hide);
         _closeButton.SetOnClick(Hide);
+        _closeButton.UseFireInput();
     }
 
     private void Hide()
     {
         _closeButton.Disable();
-        gameObject.SetActive(false);
+        MenuStateMachine.ShowMenu(_lastMenu.name);
     }
 
-    private void Show(Brand brand)
+    private void Show()
+    {
+        Sequence sequence = DOTween.Sequence();
+        sequence.AppendInterval(1f);
+        sequence.AppendCallback(_closeButton.Enable);
+        _lastMenu = MenuStateMachine.CurrentMenu();
+        MenuStateMachine.ShowMenu("Brand Menu");
+    }
+
+    public static void ShowBrand(Brand brand)
     {
         string titleString = "";
         string benefitString = "";
@@ -49,16 +61,10 @@ public class UiBrandMenu : Menu
         }
 
         titleString = brand.GetName() + "has been " + titleString;
-        _titleText.SetText(titleString);
-        _benefitText.SetText(brand.Description() + "\n\n" +benefitString);
-        _effectText.SetText(brand.GetEffectString());
-        gameObject.SetActive(true);
-        _closeButton.Enable();
-    }
-
-    public static void ShowBrand(Brand brand)
-    {
-        _instance.Show(brand);
+        _instance._titleText.SetText(titleString);
+        _instance._benefitText.SetText(brand.Description() + "\n\n" + benefitString);
+        _instance._effectText.SetText(brand.GetEffectString());
+        _instance.Show();
     }
 
     public static void ShowWeaponSkillUnlock(WeaponType weaponType, Skill weaponSkill)
@@ -90,5 +96,6 @@ public class UiBrandMenu : Menu
         _benefitText.SetText(benefitString);
         _effectText.SetText(skill.Description());
         gameObject.SetActive(true);
+        _instance.Show();
     }
 }

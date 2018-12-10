@@ -8,6 +8,7 @@ using Game.Combat.Enemies.Humans;
 using Game.Combat.Enemies.Nightmares;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
+using Game.Exploration.Regions;
 using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
@@ -78,12 +79,11 @@ namespace Game.Combat.Enemies
 
         private void GenerateArmour()
         {
-            if (!Template.HasGear) return;
             int difficulty = Mathf.FloorToInt(WorldState.Difficulty() / 5f);
-            int armourMin = difficulty - 3;
+            int armourMin = difficulty - 2;
             if (armourMin < 0) armourMin = 0;
             else if (armourMin > 10) armourMin = 10;
-            int armourMax = difficulty;
+            int armourMax = difficulty + 2;
             if (armourMax < 0) armourMax = 0;
             else if (armourMax > 10) armourMax = 10;
             ArmourController.AutoFillSlots(Random.Range(armourMin, armourMax));
@@ -231,6 +231,7 @@ namespace Game.Combat.Enemies
         private Loot DropNightmareLoot(Vector2 position)
         {
             if (Random.Range(0f, 1f) < Template.DropRate) EssenceCloudBehaviour.Create(position);
+            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Rite) return null;
             bool dropInscription = Random.Range(0, 20) == 0;
             if (!dropInscription) return null;
             Loot loot = new Loot(position);

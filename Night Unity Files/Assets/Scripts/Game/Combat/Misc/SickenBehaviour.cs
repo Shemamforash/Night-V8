@@ -18,16 +18,22 @@ namespace Game.Combat.Misc
             _particleSystems = transform.GetComponentsInChildren<ParticleSystem>();
         }
 
-        public static void Create(Vector2 position, List<CanTakeDamage> ignoreTargets)
+        public static List<CanTakeDamage> Create(Vector2 position, List<CanTakeDamage> ignoreTargets, int stacks = 1)
         {
             List<CanTakeDamage> characters = CombatManager.GetCharactersInRange(position, 1);
             characters.ForEach(c =>
             {
                 if (ignoreTargets.Contains(c)) return;
-                c.Sicken();
+                c.Sicken(stacks);
                 SickenBehaviour sickness = _sicknessPool.Create();
                 sickness.StartCoroutine(sickness.Sicken(c.transform.position));
             });
+            return characters;
+        }
+
+        public static List<CanTakeDamage> Create(Vector2 position, int stacks = 1)
+        {
+            return Create(position, new List<CanTakeDamage>(), stacks);
         }
 
         public static void Create(Vector2 position, CanTakeDamage target)

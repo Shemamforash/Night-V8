@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DG.Tweening;
 using Game.Combat.Enemies;
 using UnityEngine;
 
@@ -7,28 +8,28 @@ namespace Game.Combat.Generation.Shrines
     public abstract class BasicShrineBehaviour : MonoBehaviour
     {
         protected bool Triggered;
-        private readonly List<EnemyBehaviour> _enemiesAlive = new List<EnemyBehaviour>();
+//        private readonly List<EnemyBehaviour> _enemiesAlive = new List<EnemyBehaviour>();
         private static GameObject _disappearPrefab;
         protected bool IsInRange;
         
-        public void AddEnemy(EnemyBehaviour b)
-        {
-            _enemiesAlive.Add(b);
-        }
+//        public void AddEnemy(EnemyBehaviour b)
+//        {
+//            _enemiesAlive.Add(b);
+//        }
 
-        protected bool EnemiesDead()
-        {
-            List<EnemyBehaviour> enemies = _enemiesAlive.FindAll(e => e == null);
-            enemies.ForEach(e => _enemiesAlive.Remove(e));
-            return _enemiesAlive.Count == 0;
-        }
+//        protected bool EnemiesDead()
+//        {
+//            List<EnemyBehaviour> enemies = _enemiesAlive.FindAll(e => e == null);
+//            enemies.ForEach(e => _enemiesAlive.Remove(e));
+//            return _enemiesAlive.Count == 0;
+//        }
 
         public void OnTriggerEnter2D(Collider2D other)
         {
             if (Triggered) return;
             if (!other.gameObject.CompareTag("Player")) return;
             IsInRange = true;
-            StartShrine();
+            StartShrine();;
         }
 
         public void OnTriggerExit2D(Collider2D other)
@@ -40,7 +41,7 @@ namespace Game.Combat.Generation.Shrines
         public void Update()
         {
             if (!Triggered) return;
-            if (EnemiesDead()) OnEnemiesDead();
+            if (CombatManager.ClearOfEnemies()) OnEnemiesDead();
         }
 
         protected virtual void OnEnemiesDead()
@@ -53,19 +54,19 @@ namespace Game.Combat.Generation.Shrines
             End();
         }
 
-        protected virtual void Fail()
+        public virtual void Fail()
         {
             End();
         }
         
         protected void End()
         {
-            for (int i = _enemiesAlive.Count - 1; i >= 0; --i)
+            CombatManager.OverrideMaxSize(0, new List<Enemy>());
+            for (int i = CombatManager.Enemies().Count - 1; i >= 0; --i)
             {
                 if (_disappearPrefab == null) _disappearPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Disappear");
-                Instantiate(_disappearPrefab).transform.position = _enemiesAlive[i].transform.position;
-                Debug.Log("banana");
-                _enemiesAlive[i].Kill();
+                Instantiate(_disappearPrefab).transform.position = CombatManager.Enemies()[i].transform.position;
+                CombatManager.Enemies()[i].Kill();
             }
         }
         

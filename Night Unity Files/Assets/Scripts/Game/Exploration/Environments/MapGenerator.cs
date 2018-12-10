@@ -84,6 +84,7 @@ namespace Game.Exploration.Environment
             ConnectRegions();
             SetRegionTypes();
             initialNode.Discover();
+            _regions.ForEach(r => r.Discover());
         }
 
         private static void GenerateRegions()

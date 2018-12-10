@@ -62,16 +62,6 @@ namespace Game.Combat.Enemies.Nightmares
             base.Initialise(e);
             _rigidBody2d = GetComponent<Rigidbody2D>();
             Wander(true);
-            CreateArmour();
-        }
-
-        private void CreateArmour()
-        {
-            int minArmour = Mathf.FloorToInt(WorldState.Difficulty() / 5f);
-            int maxArmour = minArmour + 3;
-            if (minArmour > 10) minArmour = 10;
-            if (maxArmour > 10) maxArmour = 10;
-            ArmourController.AutoFillSlots(Random.Range(minArmour, maxArmour));
         }
 
         public override void MyUpdate()

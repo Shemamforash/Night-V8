@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Game.Combat.Enemies;
+using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -22,19 +23,22 @@ namespace Game.Combat.Generation.Shrines
             _pickupDropMarkerB = gameObject.FindChildWithName<ParticleSystem>("Ring B");
         }
 
-        protected override void StartShrine()
+        protected override void StartChallenge()
         {
-            base.StartShrine();
             StartCoroutine(SpawnChasers());
         }
-        
+
+        protected override string GetInstructionText() => "Return pure essence to the shrine before the timer ends";
+
         private IEnumerator SpawnChasers()
         {
             float shrineTimeMax = 20f;
             float currentTime = shrineTimeMax;
+            _pickupsLeft = (int) (WorldState.Difficulty() / 10f + 3);
             while (_pickupsLeft > 0 && currentTime > 0f)
             {
                 if (!CombatManager.IsCombatActive()) yield return null;
+                EventTextController.SetOverrideText(_pickupsLeft + " pure essence remains");
                 if (_currentPickup == null)
                 {
                     if (_shrinePickupPrefab == null) _shrinePickupPrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Shrine Pickup");
@@ -42,7 +46,6 @@ namespace Game.Combat.Generation.Shrines
                     _currentPickup.transform.position = PathingGrid.GetCellNearMe(PathingGrid.WorldToCellPosition(transform.position), 6f, 4f).Position;
                     _currentPickup.GetComponent<ShrinePickup>().SetShrine(this);
                     EnemyBehaviour b = CombatManager.SpawnEnemy(EnemyType.Shadow, PathingGrid.GetCellNearMe(PathingGrid.WorldToCellPosition(transform.position), 5f, 2f).Position);
-                    AddEnemy(b);
                     currentTime = shrineTimeMax;
                 }
 
@@ -51,6 +54,7 @@ namespace Game.Combat.Generation.Shrines
                 yield return null;
             }
 
+            EventTextController.CloseOverrideText();
             EndChallenge();
         }
 
@@ -65,7 +69,7 @@ namespace Game.Combat.Generation.Shrines
             _pickupDropMarkerA.Stop();
             _pickupDropMarkerB.Stop();
         }
-        
+
         protected override void EndChallenge()
         {
             base.EndChallenge();
@@ -98,7 +102,7 @@ namespace Game.Combat.Generation.Shrines
             while (currentTime > 0)
             {
                 if (!CombatManager.IsCombatActive()) yield return null;
-                _pickupGlow.color = new Color(1,1,1, currentTime / maxTime);
+                _pickupGlow.color = new Color(1, 1, 1, currentTime / maxTime);
                 currentTime -= Time.deltaTime;
                 yield return null;
             }

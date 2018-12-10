@@ -12,6 +12,7 @@ namespace Facilitating.UIControllers.Inventories
         private InventoryTab _nextTab;
         private Image _highlightImage;
         private static InventoryTab _currentTab;
+        private bool _active;
 
         public void SetMenu(UiInventoryMenuController menu)
         {
@@ -106,6 +107,23 @@ namespace Facilitating.UIControllers.Inventories
             if (_currentTab == null) return;
             _currentTab.Deselect();
             _currentTab = null;
+        }
+
+        public UiInventoryMenuController GetMenu()
+        {
+            return _menu;
+        }
+
+        public void UpdateActive()
+        {
+            bool unlocked = _menu.Unlocked();
+            _active = unlocked;
+            transform.parent.gameObject.SetActive(unlocked);
+        }
+
+        public bool Active()
+        {
+            return _active;
         }
     }
 }

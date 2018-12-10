@@ -169,9 +169,9 @@ public class DismantleMenuController : Menu
     private static List<object> GetDismantleItems()
     {
         List<object> items = Inventory.GetAvailableWeapons().ToObjectList();
-        items.Append(Inventory.GetAvailableArmour().ToObjectList());
-        items.Append(Inventory.GetAvailableAccessories().ToObjectList());
-        items.Append(Inventory.Inscriptions.ToObjectList());
+        items.AddRange(Inventory.GetAvailableArmour().ToObjectList());
+        items.AddRange(Inventory.GetAvailableAccessories().ToObjectList());
+        items.AddRange(Inventory.Inscriptions.ToObjectList());
         return items;
     }
 

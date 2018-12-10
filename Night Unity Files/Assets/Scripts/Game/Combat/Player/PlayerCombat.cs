@@ -59,7 +59,6 @@ namespace Game.Combat.Player
         private FastLight _muzzleFlash;
         private DeathReason _currentDeathReason;
 
-        public bool DamageTakenSinceLastShot;
         private bool _useKeyboardMovement = true;
         private Vector2? _lastMousePosition;
         private Camera _mainCamera;
@@ -289,6 +288,12 @@ namespace Game.Combat.Player
                 }
             }
 
+            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Rite)
+            {
+                ShrineBehaviour.ActiveShrine.Fail();
+                return;
+            }
+
             InputHandler.SetCurrentListener(null);
             InputHandler.UnregisterInputListener(this);
             base.Kill();
@@ -334,7 +339,6 @@ namespace Game.Combat.Player
             base.TakeShotDamage(shot);
             UpdateSkillActions.Clear();
             _damageTakenSinceMarkStarted = true;
-            DamageTakenSinceLastShot = true;
             Player.BrandManager.IncreaseDamageTaken(shot.Attributes().DamageDealt());
         }
 

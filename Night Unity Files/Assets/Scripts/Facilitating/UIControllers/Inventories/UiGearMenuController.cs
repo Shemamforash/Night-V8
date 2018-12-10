@@ -64,35 +64,55 @@ namespace Facilitating.UIControllers
         {
             InventoryTab tab = _tabParent.FindChildWithName(tabName).FindChildWithName<InventoryTab>("Image");
             tab.SetMenu(menu);
-            if (!menu.Unlocked())
-            {
-                tab.transform.parent.gameObject.SetActive(false);
-                return;
-            }
             _tabs.Add(tab);
+        }
+
+        private void UpdateTabs()
+        {
+            _tabs.ForEach(t => { t.UpdateActive(); });
+            for (int i = 0; i < _tabs.Count; ++i)
+            {
+                InventoryTab prevTab = null;
+                int prevIndex = i - 1;
+                while (prevTab == null && prevIndex >= 0)
+                {
+                    if (_tabs[prevIndex].Active()) prevTab = _tabs[prevIndex];
+                    --prevIndex;
+                }
+
+
+                int nextIndex = i + 1;
+                InventoryTab nextTab = null;
+                while (nextTab == null && nextIndex < _tabs.Count)
+                {
+                    if (_tabs[nextIndex].Active()) nextTab = _tabs[nextIndex];
+                    ++nextIndex;
+                }
+
+                _tabs[i].SetNeighbors(prevTab, nextTab);
+            }
         }
 
         public static void Save(XmlNode root)
         {
             root = root.CreateChild("Inventories");
-            if (_instance == null) return;
-            _instance._accessoryController.Save(root);
-            _instance._armourUpgradeController.Save(root);
-            _instance._weaponUpgradeController.Save(root);
-            _instance._craftingController.Save(root);
-            _instance._consumableController.Save(root);
-            _instance._journalController.Save(root);
+            UiAccessoryController.Save(root);
+            UiArmourUpgradeController.Save(root);
+            UiWeaponUpgradeController.Save(root);
+            UICraftingController.Save(root);
+            UiConsumableController.Save(root);
+            UiJournalController.Save(root);
         }
 
         public static void Load(XmlNode root)
         {
             root = root.SelectSingleNode("Inventories");
-            _instance._accessoryController.Load(root);
-            _instance._armourUpgradeController.Load(root);
-            _instance._weaponUpgradeController.Load(root);
-            _instance._craftingController.Load(root);
-            _instance._consumableController.Load(root);
-            _instance._journalController.Load(root);
+            UiAccessoryController.Load(root);
+            UiArmourUpgradeController.Load(root);
+            UiWeaponUpgradeController.Load(root);
+            UICraftingController.Load(root);
+            UiConsumableController.Load(root);
+            UiJournalController.Load(root);
         }
 
         public void OnDestroy()
@@ -132,17 +152,7 @@ namespace Facilitating.UIControllers
             CreateTab("Consumables", _consumableController);
             CreateTab("Journals", _journalController);
             CreateTab("Will Recovery", _willController);
-
-            for (int i = 0; i < _tabs.Count; ++i)
-            {
-                int prevIndex = i - 1;
-                InventoryTab prevTab = prevIndex == -1 ? null : _tabs[prevIndex];
-
-                int nextIndex = i + 1;
-                InventoryTab nextTab = nextIndex == _tabs.Count ? null : _tabs[nextIndex];
-
-                _tabs[i].SetNeighbors(prevTab, nextTab);
-            }
+            UpdateTabs();
         }
 
         public static void SetCloseButtonAction(UnityAction a)
@@ -194,6 +204,7 @@ namespace Facilitating.UIControllers
 
         private static void SelectTab(int tabNumber)
         {
+            _instance.UpdateTabs();
             _instance._tabs[tabNumber].Select();
         }
 

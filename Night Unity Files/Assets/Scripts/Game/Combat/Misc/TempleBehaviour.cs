@@ -19,7 +19,6 @@ public class TempleBehaviour : BasicShrineBehaviour
     [SerializeField] private AudioClip _fireIgniteAudioClip, _templateActivateAudioClip;
 
     private int _bossCount;
-    private List<EnemyBehaviour> _bosses = new List<EnemyBehaviour>();
 
     public void Awake()
     {
@@ -117,9 +116,7 @@ public class TempleBehaviour : BasicShrineBehaviour
     private void SpawnEnemy(EnemyTemplate template)
     {
         Cell cell = PathingGrid.GetCellNearMe(transform.position, 5, 2);
-        EnemyBehaviour enemy = CombatManager.SpawnEnemy(template.EnemyType, cell.Position);
-        enemy.GetComponent<Split>()?.SetShrine(this);
-        AddEnemy(enemy);
+        CombatManager.SpawnEnemy(template.EnemyType, cell.Position);
     }
 
     private IEnumerator StartSpawningEnemies()
@@ -141,42 +138,12 @@ public class TempleBehaviour : BasicShrineBehaviour
             SpawnEnemy(nextEnemy);
         }
 
-        StartCoroutine(StartSpawningBosses());
-    }
-
-    private void SpawnBoss()
-    {
-        EnemyBehaviour newBoss = BossShrine.GenerateBoss(transform.position);
-        newBoss.GetComponent<Split>()?.SetShrine(this);
-        AddEnemy(newBoss);
-        _bosses.Add(newBoss);
-    }
-
-    private IEnumerator StartSpawningBosses()
-    {
-        _bossCount = WorldState.CurrentLevel() + 1;
-        int currentBossCount = _bossCount;
-        while (currentBossCount > 0)
-        {
-            float bossTimer = 10f;
-            while (bossTimer > 0f)
-            {
-                if (!CombatManager.IsCombatActive()) yield return null;
-                bossTimer -= Time.deltaTime;
-                yield return null;
-            }
-
-            SpawnBoss();
-            --currentBossCount;
-        }
-
-        OnEnemiesDead();
         StartCoroutine(CheckAllEnemiesDead());
     }
 
     private IEnumerator CheckAllEnemiesDead()
     {
-        while (!EnemiesDead()) yield return null;
+        while (!CombatManager.ClearOfEnemies()) yield return null;
         End();
         WorldState.ActivateTemple();
         CombatManager.ExitCombat();

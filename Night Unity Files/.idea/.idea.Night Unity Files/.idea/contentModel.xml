@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\Sam\.Rider2018.2\config\extensions" t="IncludeRecursive" />
-    <e p="C:\Users\Sam\.Rider2018.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\Sam\.Rider2018.2\system\resharper-host\Local\Transient\ReSharperHost\v182\SolutionCaches\_Night Unity Files.-1407196519.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Sam\.Rider2018.3\config\extensions" t="IncludeRecursive" />
+    <e p="C:\Users\Sam\.Rider2018.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Sam\.Rider2018.3\system\resharper-host\Local\Transient\ReSharperHost\v183\SolutionCaches\_Night Unity Files.-1407196519.00" t="ExcludeRecursive" />
     <e p="C:\Users\Sam\Desktop\Desolation - The Last Road\Night-V8\Night Unity Files" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
@@ -1766,6 +1766,7 @@
           </e>
         </e>
         <e p="TrailFireBehaviour.cs" t="Include" />
+        <e p="WorldToCanvasSpace.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

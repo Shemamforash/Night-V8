@@ -37,7 +37,6 @@ namespace Game.Combat.Generation
         private static bool _paused;
         private static List<Enemy> _inactiveEnemies;
         private static int _maxSize;
-        private static int _currentSize;
         private CanvasGroup _hudCanvas;
         private bool _hudShown;
         private Sequence _hudTween;
@@ -102,7 +101,7 @@ namespace Game.Combat.Generation
         {
             if (!IsCombatActive()) return;
             UpdateHud();
-            UpdateEnemiesOnScreen();
+            TrySpawnNewEnemy();
             AIMoveManager.UpdateMoveBehaviours();
             if (Time.timeSinceLevelLoad < 1f) return;
             PlayerCombat.Instance.MyUpdate();
@@ -208,6 +207,8 @@ namespace Game.Combat.Generation
                     worldObject.AddComponent<Temple>().Initialise(_currentRegion);
                     break;
             }
+
+            _visibilityRange = 10f;
         }
 
         private void CalculateVisibility()
@@ -227,16 +228,21 @@ namespace Game.Combat.Generation
             PlayerCombat.Instance.Initialise();
             _inactiveEnemies = _currentRegion.GetEnemies();
             _maxSize = WorldState.Difficulty() / 10 + 2;
-            _currentSize = 0;
             PlaceAnimals();
+        }
+
+        public static void OverrideMaxSize(int maxSize, List<Enemy> inactiveEnemies = null)
+        {
+            _maxSize = maxSize;
+            if (_inactiveEnemies != null) _inactiveEnemies = inactiveEnemies;
         }
 
         private float _timeSinceLastSpawn;
 
-        private void UpdateEnemiesOnScreen()
+        private void TrySpawnNewEnemy()
         {
             if (_inactiveEnemies.Empty()) return;
-            if (_currentSize >= _maxSize) return;
+            if (_enemies.Count >= _maxSize) return;
             _timeSinceLastSpawn -= Time.deltaTime;
             if (_timeSinceLastSpawn > 0) return;
             _timeSinceLastSpawn = Random.Range(1f, 3f);
@@ -316,7 +322,6 @@ namespace Game.Combat.Generation
             }
 
             _inCombat = false;
-            ScreenFaderController.HideText();
             PlayerCombat.Instance.ExitCombat();
             ChangeScene(returnToMap);
             _instance = null;
@@ -352,12 +357,21 @@ namespace Game.Combat.Generation
             return new List<CanTakeDamage>(Instance()._enemies.Where(e => Vector2.Distance(e.transform.position, position) <= range));
         }
 
-        public static EnemyBehaviour QueueEnemyToAdd(EnemyTemplate type, CharacterCombat target = null)
+        public static void RemoveEnemy(CanTakeDamage enemy)
         {
-            Enemy e = type.Create();
-            EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
-            if (target != null) enemyBehaviour.SetTarget(target);
-            return enemyBehaviour;
+            Instance()._enemies.Remove(enemy);
+        }
+
+        public static void AddEnemy(CanTakeDamage enemy)
+        {
+            Instance()._enemies.Add(enemy);
+        }
+
+        
+        public static EnemyBehaviour QueueEnemyToAdd(EnemyTemplate template)
+        {
+            Enemy e = template.Create();
+            return e.GetEnemyBehaviour();
         }
 
         public static EnemyBehaviour QueueEnemyToAdd(EnemyType type)
@@ -372,19 +386,6 @@ namespace Game.Combat.Generation
             enemy.transform.position = position;
             TeleportInOnly.TeleportObjectIn(enemy.gameObject);
             return enemy;
-        }
-
-        public static void RemoveEnemy(CanTakeDamage enemy)
-        {
-            --_currentSize;
-            Assert.IsTrue(_currentSize >= 0);
-            Instance()._enemies.Remove(enemy);
-        }
-
-        public void AddEnemy(CanTakeDamage e)
-        {
-            ++_currentSize;
-            _enemies.Add(e);
         }
 
         public static CanTakeDamage NearestEnemy(Vector2 position)
@@ -433,6 +434,11 @@ namespace Game.Combat.Generation
         public static bool ClearOfEnemies()
         {
             return Enemies().Count == 0 && _inactiveEnemies.Count == 0;
+        }
+
+        public static void SetInCombat(bool b)
+        {
+            _inCombat = false;
         }
     }
 }

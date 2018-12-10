@@ -43,6 +43,7 @@ namespace Game.Combat.Misc
 
         public override void Kill()
         {
+            base.Kill();
             WeaponAudio.Destroy();
         }
 

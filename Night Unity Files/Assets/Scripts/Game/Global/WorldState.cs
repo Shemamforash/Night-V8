@@ -38,7 +38,7 @@ namespace Game.Global
 
         private static readonly List<EnemyTemplate> _allowedHumanEnemies = new List<EnemyTemplate>();
         private static readonly List<EnemyTemplate> _allowedNightmareEnemies = new List<EnemyTemplate>();
-        private static bool _needsTransit;// = true;
+        private static bool _needsTransit; // = true;
 
         private static int MinutesPassed;
         private static float _currentTime;
@@ -47,6 +47,7 @@ namespace Game.Global
         private static bool _isNight, _isPaused;
         public static int Seed = -1;
         private static int _templesActivated;
+        private static int _timeAtLastSave;
         public const int MaxDifficulty = 50;
 
         public static int GetRemainingTemples()
@@ -81,6 +82,7 @@ namespace Game.Global
             TutorialManager.Load(doc);
             Campfire.Load(doc);
             UiGearMenuController.Load(doc);
+            _timeAtLastSave = 0;
         }
 
         public static void Save(XmlNode doc)
@@ -104,6 +106,7 @@ namespace Game.Global
             TutorialManager.Save(doc);
             Campfire.Save(doc);
             UiGearMenuController.Save(doc);
+            _timeAtLastSave = 0;
         }
 
         public static void ResetWorld(bool clearSave = true, int currentLevel = 1, int difficulty = 0)
@@ -123,7 +126,7 @@ namespace Game.Global
 //            _difficulty = 30;
 #endif
             Random.InitState(Seed);
-            EnvironmentManager.Reset();
+            EnvironmentManager.Reset(!clearSave);
             WeatherManager.Reset();
             WorldEventManager.Clear();
         }
@@ -188,7 +191,7 @@ namespace Game.Global
             ++_currentLevel;
             _templesActivated = 0;
             DaysSpentHere = 0;
-            EnvironmentManager.NextLevel(false);
+            EnvironmentManager.NextLevel(false, false);
             CharacterManager.Characters.ForEach(c => { c.TravelAction.ReturnToHomeInstant(); });
             StoryController.ShowText(JournalEntry.GetStoryText(_currentLevel - 1), _currentLevel == 6);
         }
@@ -238,6 +241,8 @@ namespace Game.Global
         {
             Campfire.Die();
             Inventory.UpdateBuildings();
+            ++_timeAtLastSave;
+            if (_timeAtLastSave % 12 == 0) WorldEventManager.SuggestSave();
             if (Hours == 12 || Hours == 24) ++_difficulty;
         }
 

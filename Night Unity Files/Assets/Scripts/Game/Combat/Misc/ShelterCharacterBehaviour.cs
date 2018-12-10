@@ -108,7 +108,7 @@ namespace Game.Combat.Misc
             while (size > 0)
             {
                 EnemyTemplate template = allowedTypes.RandomElement();
-                CombatManager.QueueEnemyToAdd(template, this);
+                CombatManager.QueueEnemyToAdd(template).SetTarget(this);
                 size -= template.Value;
             }
         }

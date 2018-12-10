@@ -71,9 +71,9 @@ public class UIActionListController : MonoBehaviour
     {
         bool meditateEnabled = _resting
                                && _player.Attributes.Val(AttributeType.Will) > 0
-                               && _player.Attributes.Get(AttributeType.Fettle).ReachedMax()
-                               && _player.Attributes.Get(AttributeType.Grit).ReachedMax()
-                               && _player.Attributes.Get(AttributeType.Focus).ReachedMax();
+                               && !_player.Attributes.Get(AttributeType.Fettle).ReachedMax()
+                               && !_player.Attributes.Get(AttributeType.Grit).ReachedMax()
+                               && !_player.Attributes.Get(AttributeType.Focus).ReachedMax();
         SetButtonEnabled(_meditateButton, _meditateText, meditateEnabled);
     }
 

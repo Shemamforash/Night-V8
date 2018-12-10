@@ -96,7 +96,7 @@ namespace Game.Combat.Generation
 
         public static Cell GetEdgeCell()
         {
-            return Helper.RandomElement(_edgePositionList);
+            return _edgePositionList.RandomElement();
         }
 
         public static List<Cell> GetCellsInFrontOfMe(Cell current, Vector2 direction, float distance)
@@ -457,6 +457,9 @@ namespace Game.Combat.Generation
                     else if (distanceSqrd > edgeDistanceSquared) _edgePositionList.Add(c);
                 }
             }
+
+            AddBlockingArea(_edgePositionList.RandomElement().Position, 1f);
+
         }
 
         private class CellComparer : IEqualityComparer<Cell>

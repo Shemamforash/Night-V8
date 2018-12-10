@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
 using DG.Tweening;
+using Facilitating.Persistence;
 using Facilitating.UIControllers;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
@@ -19,7 +21,15 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
     private ColourPulse _glow;
     private static bool _unlocked;
 
-    protected override void SetUnlocked(bool unlocked) => _unlocked = unlocked;
+    public static void Load(XmlNode root)
+    {
+        _unlocked = root.BoolFromNode(nameof(GetType));
+    }
+
+    public static void Save(XmlNode root)
+    {
+        root.CreateChild(nameof(GetType), _unlocked);
+    }
 
     public override bool Unlocked()
     {

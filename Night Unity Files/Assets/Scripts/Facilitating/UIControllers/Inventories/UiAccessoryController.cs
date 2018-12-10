@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
+using Facilitating.Persistence;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Gear.Armour;
@@ -46,7 +48,15 @@ namespace Facilitating.UIControllers
             _accessoryList.Initialise(typeof(AccessoryElement), Equip, UiGearMenuController.Close, GetAvailableAccessories);
         }
 
-        protected override void SetUnlocked(bool unlocked) => _unlocked = unlocked;
+        public static void Load(XmlNode root)
+        {
+            _unlocked = root.BoolFromNode(nameof(GetType));
+        }
+
+        public static void Save(XmlNode root)
+        {
+            root.CreateChild(nameof(GetType), _unlocked);
+        }
 
         public override bool Unlocked()
         {
