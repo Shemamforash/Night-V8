@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using Facilitating;
 using Game.Characters;
 using Game.Characters.CharacterActions;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using Game.Combat.Ui;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using Game.Global;
+using Game.Global.Tutorial;
 using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
@@ -83,7 +86,16 @@ namespace Game.Combat.Generation
                 Sequence sequence = DOTween.Sequence();
                 sequence.Append(_hudCanvas.DOFade(1f, 1f));
                 sequence.AppendInterval(2f);
-                sequence.AppendCallback(() => TutorialManager.TryOpenTutorial(6));
+                sequence.AppendCallback(() =>
+                {
+                    List<TutorialOverlay> overlays = new List<TutorialOverlay>
+                    {
+                        new TutorialOverlay(PlayerUi.Instance.HealthRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                        new TutorialOverlay(PlayerUi.Instance.ArmourRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                        new TutorialOverlay(RageBarController.AdrenalineRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main)
+                    };
+                    TutorialManager.TryOpenTutorial(6, overlays);
+                });
                 _hudTween = sequence;
                 _hudShown = true;
             }
@@ -128,9 +140,18 @@ namespace Game.Combat.Generation
             sequence.AppendCallback(() =>
             {
                 if (PlayerCombat.Instance == null) return;
-                TutorialManager.TryOpenTutorial(4);
+                List<TutorialOverlay> overlays = new List<TutorialOverlay>
+                {
+                    new TutorialOverlay(UiCompassPulseController.CompassRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main)
+                };
+                TutorialManager.TryOpenTutorial(4, overlays);
                 if (PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Grit) != 0) return;
-                TutorialManager.TryOpenTutorial(5);
+                overlays = new List<TutorialOverlay>
+                {
+                    new TutorialOverlay(),
+                    new TutorialOverlay()
+                };
+                TutorialManager.TryOpenTutorial(5, overlays);
             });
         }
 

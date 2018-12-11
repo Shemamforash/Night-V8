@@ -430,6 +430,9 @@ namespace Game.Combat.Generation
         public static readonly List<Cell> _edgePositionList = new List<Cell>();
 
         private static StaticGrid _searchGrid;
+        private static Vector2 _playerStartPosition;
+
+        public static Vector2 PlayerStartPosition() => _edgePositionList.RandomElement().Position;
 
         private static void GenerateBaseGrid()
         {
@@ -458,7 +461,8 @@ namespace Game.Combat.Generation
                 }
             }
 
-            AddBlockingArea(_edgePositionList.RandomElement().Position, 1f);
+//            _playerStartPosition = _edgePositionList.RandomElement().Position;
+//            AddBlockingArea(_playerStartPosition, 1f);
 
         }
 

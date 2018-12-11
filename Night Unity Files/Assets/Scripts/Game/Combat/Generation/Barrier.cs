@@ -66,7 +66,15 @@ namespace Game.Combat.Generation
             Vector3[] meshVerts = new Vector3[Vertices.Count];
             for (int i = 0; i < Vertices.Count; ++i) meshVerts[i] = Vertices[i];
             mesh.vertices = meshVerts;
-            mesh.triangles = Triangulator.Triangulate(meshVerts);
+            try
+            {
+                mesh.triangles = Triangulator.Triangulate(meshVerts);
+            }
+            catch
+            {
+                
+            }
+
             Vector3[] normals = new Vector3[meshVerts.Length];
             for (int i = 0; i < normals.Length; i++) normals[i] = -Vector3.forward;
             mesh.normals = normals;

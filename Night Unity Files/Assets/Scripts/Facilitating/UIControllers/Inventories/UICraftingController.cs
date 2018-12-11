@@ -7,6 +7,7 @@ using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Combat.Player;
 using Game.Global;
+using Game.Global.Tutorial;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -59,7 +60,12 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         InputHandler.RegisterInputListener(this);
         if (CharacterManager.SelectedCharacter.CraftAction.IsCurrentState()) ShowCurrentlyCrafting();
         else ShowCraftingList();
-        TutorialManager.TryOpenTutorial(10);
+        List<TutorialOverlay> overlays = new List<TutorialOverlay>
+        {
+            new TutorialOverlay(ResourcesUiController.ResourceRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+            new TutorialOverlay(),
+        };
+        TutorialManager.TryOpenTutorial(10, overlays);
     }
 
     private void ShowCurrentlyCrafting()

@@ -17,6 +17,7 @@ using Game.Exploration.WorldEvents;
 using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
+using Game.Global.Tutorial;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -138,7 +139,13 @@ namespace Game.Global
             WeatherManager.Start();
             WorldView.Update(Hours);
             CharacterManager.Update();
-            TutorialManager.TryOpenTutorial(1);
+            List<TutorialOverlay> overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(),
+                new TutorialOverlay(WorldView.GetEnvironmentRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main), 
+                new TutorialOverlay() 
+            };
+            TutorialManager.TryOpenTutorial(1, overlays);
         }
 
         public static void ActivateTemple()

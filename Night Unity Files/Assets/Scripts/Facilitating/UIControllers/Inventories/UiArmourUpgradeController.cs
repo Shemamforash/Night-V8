@@ -7,6 +7,7 @@ using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Gear.Armour;
 using Game.Global;
+using Game.Global.Tutorial;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -59,7 +60,14 @@ namespace Facilitating.UIControllers
             UpdatePlates();
             InputHandler.RegisterInputListener(this);
             SetPlateListActive(_plateOneUi);
-            TutorialManager.TryOpenTutorial(12);
+            List<TutorialOverlay> overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                new TutorialOverlay(),
+                new TutorialOverlay(), 
+                new TutorialOverlay()
+            };
+            TutorialManager.TryOpenTutorial(12, overlays);
         }
 
         private void UpdateArmourDescriptions()

@@ -14,6 +14,7 @@ public class ResourcesUiController : MonoBehaviour
     private static GameObject _resourcePrefab;
     private ResourceTab _food, _water;
     private readonly Dictionary<string, ResourceTab> _resourceTabs = new Dictionary<string, ResourceTab>();
+    private static RectTransform _resourceRect;
 
     public void Awake()
     {
@@ -21,6 +22,7 @@ public class ResourcesUiController : MonoBehaviour
         _resourcePrefab = Resources.Load<GameObject>("Prefabs/Resource");
         _food = gameObject.FindChildWithName<ResourceTab>("Food");
         _water = gameObject.FindChildWithName<ResourceTab>("Water");
+        _resourceRect = GetComponent<RectTransform>();
         Populate();
     }
 
@@ -95,4 +97,6 @@ public class ResourcesUiController : MonoBehaviour
             UpdateResource(resourceTemplate.Name, quantity);
         }
     }
+
+    public static RectTransform ResourceRect() => _resourceRect;
 }

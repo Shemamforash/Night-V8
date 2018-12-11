@@ -19,8 +19,6 @@ namespace Game.Combat.Misc
         private float _timeSinceLastBurn;
         protected int SicknessStacks;
         private float _sicknessDuration;
-        private float _markTime;
-        private bool _marked;
         public bool IsPlayer;
 
         public void TakeArmourDamage(float damage)
@@ -40,11 +38,10 @@ namespace Game.Combat.Misc
             if (!IsPlayer) CombatManager.RemoveEnemy(this);
             Destroy(gameObject);
         }
-        
+
         public virtual void MyUpdate()
         {
             UpdateConditions();
-            UpdateMarkTime();
         }
 
         public abstract string GetDisplayName();
@@ -77,11 +74,6 @@ namespace Game.Combat.Misc
         }
 
         public bool IsSick() => SicknessStacks > 0;
-
-        public void ClearConditions()
-        {
-            SicknessStacks = 0;
-        }
 
         protected virtual int GetBurnDamage()
         {
@@ -144,6 +136,7 @@ namespace Game.Combat.Misc
         protected virtual void TakeDamage(int damage, Vector2 direction)
         {
             if (SceneChanger.ChangingScene()) return;
+            if (!IsPlayer && MarkController.InMarkArea(transform.position)) damage *= 2;
             _spriteFlash.FlashSprite();
             float armourModifier = 1;
             if (ArmourController != null) armourModifier = ArmourController.CalculateDamageModifier();
@@ -156,7 +149,7 @@ namespace Game.Combat.Misc
 
         public virtual void TakeRawDamage(int damage, Vector2 direction)
         {
-        if (SceneChanger.ChangingScene()) return;
+            if (SceneChanger.ChangingScene()) return;
             TakeDamage(damage, direction);
         }
 
@@ -165,20 +158,6 @@ namespace Game.Combat.Misc
             if (SceneChanger.ChangingScene()) return;
             Vector2 direction = (origin - (Vector2) transform.position).normalized;
             TakeDamage(damage, direction);
-        }
-
-        public void Mark()
-        {
-            _marked = true;
-            _markTime = 5f;
-        }
-
-        private void UpdateMarkTime()
-        {
-            if (!_marked) return;
-            if (_markTime < 0f) return;
-            _markTime -= Time.deltaTime;
-            if (_markTime < 0f) PlayerCombat.Instance.EndMark(this);
         }
     }
 }

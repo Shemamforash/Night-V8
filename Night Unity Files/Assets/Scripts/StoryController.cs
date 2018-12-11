@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Game.Global;
 using SamsHelper.Input;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
 
-public class StoryController : Menu, IInputListener
+public class StoryController : Menu
 {
     private static string _text;
     private const float _timePerWord = 0.3f, MinAlpha = 0.25f;
@@ -19,6 +20,7 @@ public class StoryController : Menu, IInputListener
     private static bool _paused;
     private bool _skipParagraph;
     private CanvasGroup _skipCanvas;
+    private CloseButtonController _closeButton;
     private AudioSource _audioSource;
     private bool _canSkip;
 
@@ -28,6 +30,10 @@ public class StoryController : Menu, IInputListener
         _storyText = GetComponent<TextMeshProUGUI>();
         _storyText.color = UiAppearanceController.InvisibleColour;
         _skipCanvas = GameObject.Find("Skip").GetComponent<CanvasGroup>();
+        _closeButton = _skipCanvas.gameObject.FindChildWithName<CloseButtonController>("Close Button");
+        _closeButton.SetCallback(Skip);
+        _closeButton.SetOnClick(Skip);
+        _closeButton.UseFireInput();
         _audioSource = Camera.main.GetComponent<AudioSource>();
         _audioSource.volume = 0f;
         _audioSource.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
@@ -37,7 +43,7 @@ public class StoryController : Menu, IInputListener
 
     public override void Enter()
     {
-        InputHandler.RegisterInputListener(this);
+        _closeButton.Enable();
         StartCoroutine(DisplayParagraph());
     }
 
@@ -101,24 +107,17 @@ public class StoryController : Menu, IInputListener
 
     private void End()
     {
+        _closeButton.Disable();
         SceneChanger.FadeInAudio();
         if (_goToCredits) SceneChanger.GoToCreditsScene();
         else SceneChanger.GoToGameScene();
     }
 
-    public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+    private void Skip()
     {
-        if (axis != InputAxis.Fire || _paused || isHeld || !_canSkip) return;
+        if (_skipParagraph || !_canSkip) return;
         _skipParagraph = true;
         _skipCanvas.alpha = 0.8f;
-    }
-
-    public void OnInputUp(InputAxis axis)
-    {
-    }
-
-    public void OnDoubleTap(InputAxis axis, float direction)
-    {
     }
 
     public static void Pause()

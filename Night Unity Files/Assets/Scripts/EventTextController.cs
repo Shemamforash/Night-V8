@@ -151,6 +151,7 @@ public class EventTextController : MonoBehaviour
 
     private bool CheckForOuterRing()
     {
+        if (_player == null) return false;
         if (_player.InRange() < 0) return false;
         SetCurrentCombatEvent(_player);
         return true;

@@ -10,12 +10,16 @@ public class UiCompassPulseController : MonoBehaviour
     private static GameObject _pulsePrefab;
     private static Transform _pulseContent;
     private static readonly List<Pulse> _pulses = new List<Pulse>();
+    private static RectTransform _rectTransform;
 
     public void Awake()
     {
         _pulseContent = transform;
         _pulsePrefab = Resources.Load("Prefabs/Combat/Visuals/Compass Pulse") as GameObject;
+        _rectTransform = GetComponent<RectTransform>();
     }
+
+    public static RectTransform CompassRect() => _rectTransform;
 
     public static void InitialisePulses(int max, int current)
     {

@@ -14,6 +14,11 @@ namespace Game.Global
         private static TextMeshProUGUI _environmentText;
         private Selectable _lastSelectedButton;
 
+        public static RectTransform GetEnvironmentRect()
+        {
+            return _environmentText.GetComponent<RectTransform>();
+        }
+        
         public static void SetEnvironmentText(string text)
         {
             _environmentString = text;

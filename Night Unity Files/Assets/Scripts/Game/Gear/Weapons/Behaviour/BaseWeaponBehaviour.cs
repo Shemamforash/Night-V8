@@ -99,5 +99,13 @@ namespace Game.Gear.Weapons
             AmmoInMagazine -= amount;
             if (AmmoInMagazine < 0) throw new Exceptions.MoreAmmoConsumedThanAvailableException();
         }
+
+        public void IncreaseAmmo(int amount)
+        {
+            AmmoInMagazine += amount;
+            if (AmmoInMagazine > Capacity()) AmmoInMagazine = Capacity();
+            if (!(Origin is PlayerCombat)) return;
+            UIMagazineController.UpdateMagazineUi();
+        }
     }
 }

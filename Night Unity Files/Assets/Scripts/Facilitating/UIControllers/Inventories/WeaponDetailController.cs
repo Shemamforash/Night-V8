@@ -158,4 +158,9 @@ public class WeaponDetailController : MonoBehaviour
         string prefixString = compareValue + displayText + " (" + differenceString + ")";
         return prefixString;
     }
+
+    public RectTransform DurabilityRect()
+    {
+        return _durabilityBar.GetComponent<RectTransform>();
+    }
 }

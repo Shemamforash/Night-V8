@@ -760,6 +760,7 @@
           </e>
         </e>
         <e p="KeyboardInputModule.cs" t="Include" />
+        <e p="MarkController.cs" t="Include" />
         <e p="NeedleBehaviour.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="DarkTonic" t="Include">
@@ -1507,6 +1508,7 @@
               <e p="SceneryController.cs" t="Include" />
               <e p="Tutorial" t="Include">
                 <e p="TutorialManager.cs" t="Include" />
+                <e p="TutorialOverlay.cs" t="Include" />
                 <e p="TutorialOverlayController.cs" t="Include" />
                 <e p="TutorialPart.cs" t="Include" />
               </e>

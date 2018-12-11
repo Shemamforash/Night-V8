@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Facilitating.UIControllers;
 using Game.Combat.Player;
+using Game.Global.Tutorial;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace Game.Combat.Misc
         private static bool _skillsReady;
         private static float _cooldownRemaining;
         private static float _duration;
+        private static RectTransform _skillBarRect;
 
         public void Awake()
         {
@@ -34,6 +36,7 @@ namespace Game.Combat.Misc
             _skills = new Skill[NoSlots];
             _skillsLocked = new List<int>();
             _skillsReady = false;
+            _skillBarRect = GetComponent<RectTransform>();
         }
 
         private void UpdateCooldownControllers(float normalisedDuration)
@@ -127,7 +130,14 @@ namespace Game.Combat.Misc
             if (TryLockSkill(skillNo)) return;
             bool freeSkill = IsSkillFree();
             if (!_skills[skillNo].Activate(freeSkill || SkillsAreFree)) return;
-            TutorialManager.TryOpenTutorial(14);
+            List<TutorialOverlay> overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(_skillBarRect, GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                new TutorialOverlay(_skillBarRect, GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                new TutorialOverlay(_skillBarRect, GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                new TutorialOverlay(_skillBarRect, GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main)
+            };
+            TutorialManager.TryOpenTutorial(14, overlays);
             if (freeSkill) return;
             StartCooldown(_skills[skillNo].AdrenalineCost());
         }

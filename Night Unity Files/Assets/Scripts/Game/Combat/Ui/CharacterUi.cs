@@ -48,5 +48,8 @@ namespace Game.Combat.Ui
             GetArmourController().UpdateArmour(Character.ArmourController);
             GetHealthController().SetSicknessLevel(Character.GetSicknessLevel());
         }
+
+        public RectTransform ArmourRect() => _armourController.GetComponent<RectTransform>();
+        public RectTransform HealthRect() => _healthBarController.GetComponent<RectTransform>();
     }
 }

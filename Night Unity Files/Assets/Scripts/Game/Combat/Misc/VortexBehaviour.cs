@@ -1,10 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.Libraries;
 using UnityEngine;
 
 public class VortexBehaviour : MonoBehaviour
@@ -13,22 +13,24 @@ public class VortexBehaviour : MonoBehaviour
     private ParticleSystem _particles;
 
     private Vector2 _position;
+    private Action _vortexEndAction;
 
     private void Awake()
     {
         _particles = GetComponent<ParticleSystem>();
     }
 
-    public static void Create(Vector2 position)
+    public static void Create(Vector2 position, Action vortexEndAction)
     {
         VortexBehaviour vortex = _vortexPool.Create();
-        vortex.Initialise(position);
+        vortex.Initialise(position, vortexEndAction);
     }
 
-    public void Initialise(Vector2 position)
+    private void Initialise(Vector2 position, Action vortexEndAction)
     {
         _position = position;
         transform.position = _position;
+        _vortexEndAction = vortexEndAction;
         _particles.Play();
         StartCoroutine(WaitAndDie());
     }
@@ -51,8 +53,8 @@ public class VortexBehaviour : MonoBehaviour
             time -= Time.deltaTime;
             yield return null;
         }
-
-        Explosion.CreateExplosion(_position, 25, 0.5f).InstantDetonate();
+        
+        _vortexEndAction?.Invoke();
         _vortexPool.Return(this);
     }
 

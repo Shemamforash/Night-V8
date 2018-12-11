@@ -25,8 +25,6 @@ namespace Game.Combat.Player
     public class PlayerCombat : CharacterCombat, IInputListener, ICombatEvent
     {
         private bool _reloading;
-        public int DamageDealtSinceMarkStarted;
-        private bool _damageTakenSinceMarkStarted;
         private float _dryFireTimer;
         private float _adrenalineRecoveryRate;
         private const float DryFireTimerMax = 0.3f;
@@ -319,7 +317,6 @@ namespace Game.Combat.Player
         {
             _adrenalineLevel.Increment(damageDealt / 300f * _adrenalineRecoveryRate);
             Player.BrandManager.IncreaseDamageDealt(damageDealt);
-            DamageDealtSinceMarkStarted += damageDealt;
             RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
         }
 
@@ -338,7 +335,6 @@ namespace Game.Combat.Player
             _currentDeathReason = DeathReason.Standard;
             base.TakeShotDamage(shot);
             UpdateSkillActions.Clear();
-            _damageTakenSinceMarkStarted = true;
             Player.BrandManager.IncreaseDamageTaken(shot.Attributes().DamageDealt());
         }
 
@@ -447,7 +443,7 @@ namespace Game.Combat.Player
             _playerLight.Radius = CombatManager.VisibilityRange();
 
             SkillBar.BindSkills(Player, _skillCooldownModifier);
-            transform.position = PathingGrid.GetEdgeCell().Position;
+            transform.position = PathingGrid.PlayerStartPosition();
             float zRot = AdvancedMaths.AngleFromUp(transform.position, Vector2.zero);
             transform.rotation = Quaternion.Euler(0f, 0f, zRot);
         }
@@ -578,19 +574,6 @@ namespace Game.Combat.Player
         public void ConsumeAmmo(int amount = -1)
         {
             _weaponBehaviour.ConsumeAmmo(amount);
-        }
-
-        public void StartMark(CanTakeDamage target)
-        {
-            target.Mark();
-            DamageDealtSinceMarkStarted = 0;
-            _damageTakenSinceMarkStarted = false;
-        }
-
-        public void EndMark(CanTakeDamage target)
-        {
-            if (_damageTakenSinceMarkStarted) return;
-            target.HealthController.TakeDamage(DamageDealtSinceMarkStarted);
         }
 
         public void TriggerEnemyDeathEffect()

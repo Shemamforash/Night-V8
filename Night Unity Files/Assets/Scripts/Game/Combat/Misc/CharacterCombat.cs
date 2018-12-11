@@ -80,6 +80,7 @@ namespace Game.Combat.Misc
 
         public override void MyUpdate()
         {
+            base.MyUpdate();
             if (GetTarget() != null) _distanceToTarget = Vector2.Distance(transform.position, TargetPosition());
             Recoil.Decrement(RecoilRecoveryRate * Time.deltaTime);
         }

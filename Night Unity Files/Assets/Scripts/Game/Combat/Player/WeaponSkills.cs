@@ -15,13 +15,13 @@ namespace Game.Combat.Player
             switch (weapon.WeaponType())
             {
                 case WeaponType.Rifle:
-                    return new Splinter();
+                    return new Void();
                 case WeaponType.Shotgun:
-                    return new Sweep();
+                    return new Shockwave();
                 case WeaponType.SMG:
-                    return new Hairpin();
+                    return new Seek();
                 case WeaponType.Pistol:
-                    return new Passion();
+                    return new Needle();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -32,7 +32,7 @@ namespace Game.Combat.Player
             switch (weapon.WeaponType())
             {
                 case WeaponType.Rifle:
-                    return new Gouge();
+                    return new Ignite();
                 case WeaponType.Shotgun:
                     return new Swarm();
                 case WeaponType.SMG:
@@ -47,9 +47,9 @@ namespace Game.Combat.Player
 
     //Rifle
 
-    public class Gouge : Skill
+    public class Ignite : Skill
     {
-        public Gouge() : base(nameof(Gouge))
+        public Ignite() : base(nameof(Ignite))
         {
         }
 
@@ -61,25 +61,26 @@ namespace Game.Combat.Player
         }
     }
 
-    public class Splinter : Skill
+    public class Void : Skill
     {
-        public Splinter() : base(nameof(Splinter))
+        public Void() : base(nameof(Void))
         {
         }
 
         protected override void InstantEffect()
         {
             Shot s = Shot.Create(PlayerCombat.Instance);
-            s.Attributes().AddOnHit(() => { VortexBehaviour.Create(s.transform.position); });
+            s.Attributes().AddOnHit(() => { VortexBehaviour.Create(s.transform.position, 
+                () => Explosion.CreateExplosion(s.transform.position, 25, 0.5f).InstantDetonate()); });
             s.Fire();
         }
     }
 
     //Shotgun
 
-    public class Sweep : Skill
+    public class Shockwave : Skill
     {
-        public Sweep() : base(nameof(Sweep))
+        public Shockwave() : base(nameof(Shockwave))
         {
         }
 
@@ -115,9 +116,9 @@ namespace Game.Combat.Player
 
     //SMG
 
-    public class Hairpin : Skill
+    public class Seek : Skill
     {
-        public Hairpin() : base(nameof(Hairpin))
+        public Seek() : base(nameof(Seek))
         {
         }
 
@@ -145,9 +146,9 @@ namespace Game.Combat.Player
 
     //Pistol
 
-    public class Passion : Skill
+    public class Needle : Skill
     {
-        public Passion() : base(nameof(Passion))
+        public Needle() : base(nameof(Needle))
         {
         }
 

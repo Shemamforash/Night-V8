@@ -57,10 +57,16 @@ public class ListController : MonoBehaviour, IInputListener
             Color elementColour = new Color(1f, 1f, 1f, 1f / opacityDivider);
             element.SetColour(elementColour);
         }
+        SetButtonBehaviour(onButtonDown, onReturn);
+        
+    }
 
+    private void SetButtonBehaviour(Action<object> onButtonDown, Action onReturn)
+    {
         _centreButton.AddOnSelectEvent(() => { InputHandler.SetCurrentListener(this); });
         _centreButton.AddOnClick(() =>
         {
+            Debug.Log("Clicked");
             if (_listObjects.Count == 0) return;
             if (_selectedItemIndex == _listObjects.Count) --_selectedItemIndex;
             onButtonDown?.Invoke(_listObjects[_selectedItemIndex]);
@@ -85,13 +91,7 @@ public class ListController : MonoBehaviour, IInputListener
             Color elementColour = new Color(1f, 1f, 1f, 1f / (Math.Abs(i - _centreItemIndex) + 1));
             _uiElements[i].SetColour(elementColour);
         }
-
-        _centreButton.AddOnClick(() =>
-        {
-            onButtonDown?.Invoke(_listObjects[_selectedItemIndex]);
-            UpdateList();
-        });
-        OnReturn = onReturn;
+        SetButtonBehaviour(onButtonDown, onReturn);
     }
 
     public void Show()

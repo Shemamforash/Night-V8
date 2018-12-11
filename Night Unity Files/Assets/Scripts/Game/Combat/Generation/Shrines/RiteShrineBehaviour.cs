@@ -5,6 +5,7 @@ using Game.Characters;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Exploration.Regions;
+using Game.Global.Tutorial;
 using NUnit.Framework;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -116,7 +117,15 @@ namespace Game.Combat.Generation.Shrines
 
         public float InRange()
         {
-            if (_targetBrand != -1) TutorialManager.TryOpenTutorial(15);
+            if (_targetBrand != -1)
+            {
+                List<TutorialOverlay> overlays = new List<TutorialOverlay>
+                {
+                    new TutorialOverlay(transform, 400, 400, GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                    new TutorialOverlay()
+                };
+                TutorialManager.TryOpenTutorial(15, overlays);
+            }
             return _targetBrand;
         }
 

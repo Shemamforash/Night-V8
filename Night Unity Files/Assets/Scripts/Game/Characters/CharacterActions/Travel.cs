@@ -1,9 +1,11 @@
-﻿using System.Xml;
+﻿using System.Collections.Generic;
+using System.Xml;
 using Facilitating.Persistence;
 using Game.Combat.Generation;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
+using Game.Global.Tutorial;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
@@ -63,7 +65,7 @@ namespace Game.Characters.CharacterActions
             CurrentRegion = _target;
             if (AtHome())
             {
-                TutorialManager.TryOpenTutorial(9);
+                PlayerCharacter.CharacterView().ShowTutorial();
                 PlayerCharacter.RestAction.Enter();
             }
             else

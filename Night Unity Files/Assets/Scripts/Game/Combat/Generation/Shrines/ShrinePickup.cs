@@ -1,4 +1,6 @@
-﻿using Game.Combat.Player;
+﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+using Game.Combat.Player;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Generation.Shrines
@@ -6,11 +8,11 @@ namespace Game.Combat.Generation.Shrines
     public class ShrinePickup : MonoBehaviour
     {
         private ChaseShrine _targetShrine;
-        private PlayerCombat _player;
         private Rigidbody2D _rigidbody2D;
         private Vector2 _forceToAdd = Vector2.zero;
         private bool _returning;
         private ParticleSystem _particles;
+        private bool _attractedToShrine, _followPlayer;
 
         public void SetShrine(ChaseShrine chaseShrine)
         {
@@ -25,30 +27,47 @@ namespace Game.Combat.Generation.Shrines
             _forceToAdd = Vector2.zero;
         }
 
-        public void Update()
+        private void TryAttractToShrine()
         {
-            if (!CombatManager.IsCombatActive()) return;
-            if (_player == null)
+            if (_returning) return;
+            float shrineDistance = transform.Distance(_targetShrine.transform);
+            if (!_attractedToShrine)
             {
-                if (Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position) > 0.2f) return;
-                _player = PlayerCombat.Instance;
-                _targetShrine.StartDropMarker();
+                if (shrineDistance > 0.5f) return;
+                _attractedToShrine = true;
             }
-            else if (!_returning)
+
+            if (shrineDistance < 0.1f)
             {
-                Vector2 dir = _player.transform.position - transform.position;
-                _forceToAdd = dir * 10f;
-                if (Vector2.Distance(transform.position, _targetShrine.transform.position) > 0.2f) return;
                 _targetShrine.ReturnPickup();
                 _particles.Stop();
                 _returning = true;
             }
-            else
+
+            Vector2 dir = _targetShrine.transform.position - transform.position;
+            _forceToAdd = dir * 10f;
+        }
+
+        private void TryFollowPlayer()
+        {
+            if (_attractedToShrine) return;
+            if (_followPlayer == false)
             {
-                Vector2 dir = _targetShrine.transform.position - transform.position;
-                _forceToAdd = dir * 10f;
-                if (_particles.particleCount == 0) Destroy(gameObject);
+                if (Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position) > 0.25f) return;
+                _followPlayer = true;
+                _targetShrine.StartDropMarker();
             }
+
+            Vector2 dir = PlayerCombat.Instance.transform.position - transform.position;
+            _forceToAdd = dir * 10f;
+        }
+
+        public void Update()
+        {
+            if (!CombatManager.IsCombatActive()) return;
+            TryFollowPlayer();
+            TryAttractToShrine();
+            if (_particles.particleCount == 0) Destroy(gameObject);
         }
     }
 }

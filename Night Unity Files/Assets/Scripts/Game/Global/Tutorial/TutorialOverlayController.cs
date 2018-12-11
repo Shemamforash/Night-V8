@@ -1,4 +1,5 @@
-﻿using SamsHelper.Libraries;
+﻿using Game.Global.Tutorial;
+using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,7 +7,7 @@ using UnityEngine.UI;
 public class TutorialOverlayController : MonoBehaviour
 {
     private RectTransform _top, _bottom, _left, _right, _topLeft, _topRight, _bottomLeft, _bottomRight, _centre;
-    private RectTransform _instructionsTop;
+    private RectTransform _instructionsTop, _rectTransform;
     private CanvasGroup _centreCanvas, _blankCanvas;
     private VerticalLayoutGroup _verticalGroup;
     private const int TutorialHeight = 250;
@@ -29,6 +30,8 @@ public class TutorialOverlayController : MonoBehaviour
 
         _centreCanvas = _centre.gameObject.FindChildWithName<CanvasGroup>("Window");
         _blankCanvas = _centre.gameObject.FindChildWithName<CanvasGroup>("Blank");
+
+        _rectTransform = GetComponent<RectTransform>();
     }
 
     public void SetTutorialArea(Vector2 minOffset, Vector2 maxOffset)
@@ -45,6 +48,15 @@ public class TutorialOverlayController : MonoBehaviour
 
         _centre.offsetMin = new Vector2(minOffset.x, maxOffset.y);
         _centre.offsetMax = new Vector2(-maxOffset.x, -minOffset.y);
+    }
+
+    public void SetTutorialArea(TutorialOverlay overlay)
+    {
+        float centreAlpha = overlay.Centred() ? 0f : 1f;
+        _centreCanvas.alpha = centreAlpha;
+        _blankCanvas.alpha = 1f - centreAlpha;
+        _centre.offsetMin = overlay.OffsetMin();
+        _centre.offsetMax = overlay.OffsetMax(_rectTransform);
     }
 
     private void SetOffset(RectTransform rectTransform, float top, float bottom, float left, float right)

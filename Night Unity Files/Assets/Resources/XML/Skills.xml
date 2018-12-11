@@ -1,20 +1,20 @@
 <Skills>
 	<Skill>
-		<Name>Splinter</Name>
+		<Name>Void</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>6</Cooldown>
 		<Description>Create a vortex that draws enemies together</Description>
 	</Skill>
 	<Skill>
-		<Name>Gouge</Name>
+		<Name>Ignite</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>4</Cooldown>
 		<Description>Launch fire shot</Description>
 	</Skill>
 	<Skill>
-		<Name>Sweep</Name>
+		<Name>Shockwave</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>3</Cooldown>
@@ -25,24 +25,10 @@
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>3</Cooldown>
-		<Description>Release a burt of bullets in a circle around you</Description>
+		<Description>Release a burst of bullets in a circle around you</Description>
 	</Skill>
 	<Skill>
-		<Name>Refill</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>6</Cooldown>
-		<Description>Refill magazine without reloading.</Description>
-	</Skill>
-	<Skill>
-		<Name>Compel</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>True</AppliesToMagazine>
-		<Cooldown>4</Cooldown>
-		<Description>Shots release a small shockwave, pushing enemies back</Description>
-	</Skill>
-	<Skill>
-		<Name>Hairpin</Name>
+		<Name>Seek</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>True</AppliesToMagazine>
 		<Cooldown>8</Cooldown>
@@ -56,32 +42,32 @@
 		<Description>Remaining shots in magazine explode.</Description>
 	</Skill>
 	<Skill>
-		<Name>Passion</Name>
+		<Name>Needle</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>1</Cooldown>
-		<Description>Launch a needle</Description>
+		<Description>Launches 3 fast moving shards</Description>
 	</Skill>
 	<Skill>
 		<Name>Revenge</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>True</AppliesToMagazine>
 		<Cooldown>4</Cooldown>
-		<Description>Deal double damage if you received damage before next shot.</Description>
+		<Description>Deals more damage when your health is low</Description>
 	</Skill>
 	<Skill>
-		<Name>Absolve</Name>
+		<Name>Drain</Name>
 		<RequiresTarget>True</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>2</Cooldown>
-		<Description>Remove conditions from enemy, heal 10% per condition removed</Description>
+		<Description>Apply sickness to everything around you, heal a small amount</Description>
 	</Skill>
 	<Skill>
 		<Name>Defile</Name>
 		<RequiresTarget>True</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>6</Cooldown>
-		<Description>Raise sickness to maximum level, if target dies, explode</Description>
+		<Description>Apply sickness to everything around you, if they die, they explode</Description>
 	</Skill>
 	<Skill>
 		<Name>Lacerate</Name>
@@ -98,35 +84,35 @@
 		<Description>Launch fire grenade</Description>
 	</Skill>
 	<Skill>
-		<Name>Terrify</Name>
+		<Name>Cleanse</Name>
 		<RequiresTarget>True</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>3</Cooldown>
-		<Description>Knockback enemy if within 0.5m, heal 10%</Description>
+		<Description>Draw enemies in, explode with fire</Description>
 	</Skill>
 	<Skill>
-		<Name>Unleash</Name>
+		<Name>Leach</Name>
 		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
+		<AppliesToMagazine>True</AppliesToMagazine>
 		<Cooldown>6</Cooldown>
-		<Description>Lose 1 armour piece, knockback (soft) all enemies within 5m, enemies lose 1 armour piece</Description>
+		<Description>Connecting shots heal you</Description>
 	</Skill>
 	<Skill>
-		<Name>Medicate</Name>
+		<Name>Escape</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>3</Cooldown>
-		<Description>Heal 25%, remove all conditions</Description>
+		<Description>Heal a small amount, dash forward quickly</Description>
 	</Skill>
 	<Skill>
-		<Name>Impel</Name>
+		<Name>Discharge</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>2</Cooldown>
-		<Description>Release cluster bombs.</Description>
+		<Description>Explode with fire and decay</Description>
 	</Skill>
 	<Skill>
-		<Name>Aegis</Name>
+		<Name>Tremor</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>3</Cooldown>
@@ -137,7 +123,7 @@
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>3</Cooldown>
-		<Description>Explode with fire and decay</Description>
+		<Description>Release a cluster of bombs</Description>
 	</Skill>
 	<Skill>
 		<Name>Relinquish</Name>
@@ -147,46 +133,46 @@
 		<Description>Lose all ammo, heal 25%</Description>
 	</Skill>
 	<Skill>
-		<Name>Shatter</Name>
+		<Name>Wake</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>5</Cooldown>
-		<Description>Recover 1 armour, explode with fire</Description>
+		<Description>Recover 1 armour, explode with shatter</Description>
 	</Skill>
 	<Skill>
-		<Name>Nourish</Name>
+		<Name>Sacrifice</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>4</Cooldown>
-		<Description>Lose 1 armour, gain 100% health</Description>
+		<Description>Lose 1 armour, regain all health</Description>
 	</Skill>
 	<Skill>
 		<Name>Mark</Name>
 		<RequiresTarget>True</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>4</Cooldown>
-		<Description>Mark target for 10 seconds. If you take no damage during this time, deal damage equal to all damage dealt when mark was cast.</Description>
+		<Description>All targets in range take 2x damage</Description>
 	</Skill>
 	<Skill>
-		<Name>Rejuvinate</Name>
+		<Name>Regenerate</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>3</Cooldown>
 		<Description>Heal 1%/s until hit</Description>
 	</Skill>
 	<Skill>
-		<Name>Sacrifice</Name>
+		<Name>Refill</Name>
 		<RequiresTarget>True</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
+		<AppliesToMagazine>True</AppliesToMagazine>
 		<Cooldown>3</Cooldown>
-		<Description>Lose 50 health, apply bleeding, burning, and sickness to target.</Description>
+		<Description>Chance to regain ammo on connecting shot</Description>
 	</Skill>
 	<Skill>
 		<Name>Staunch</Name>
 		<RequiresTarget>False</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>4</Cooldown>
-		<Description>Heal 50%</Description>
+		<Description>Heal 40%</Description>
 	</Skill>
 	<Skill>
 		<Name>Afflict</Name>

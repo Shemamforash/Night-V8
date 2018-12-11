@@ -71,6 +71,7 @@ namespace Game.Combat.Generation
 
         public void Update()
         {
+            if (PlayerCombat.Instance == null) return;
             transform.rotation = Quaternion.Euler(0, 0, PlayerCombat.Instance.transform.rotation.z);
             if (!_revealed || _fading) return;
             if (_currentAlpha == _targetAlpha) return;
@@ -89,6 +90,7 @@ namespace Game.Combat.Generation
 
         public float InRange()
         {
+            if (PlayerCombat.Instance == null) return -1;
             if (_fading) return -1;
             float distanceToPlayer = transform.position.Distance(PlayerCombat.Instance.transform.position);
             if (distanceToPlayer > MinDistanceToReveal)

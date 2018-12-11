@@ -16,6 +16,7 @@ namespace Facilitating
         private static float _currentTime;
         private static readonly float _dashFlashTime = 1f;
         private static Image _dashRing;
+        private static RectTransform _adrenalineRect;
 
         public void Awake()
         {
@@ -23,6 +24,7 @@ namespace Facilitating
             _instance = this;
             _dashFlash = gameObject.FindChildWithName<Image>("Ready");
             _dashRing = gameObject.FindChildWithName<Image>("Ring");
+            _adrenalineRect = GetComponent<RectTransform>();
         }
 
         public void Start()
@@ -71,5 +73,7 @@ namespace Facilitating
                 yield return null;
             }
         }
+
+        public static RectTransform AdrenalineRect() => _adrenalineRect;
     }
 }

@@ -1,6 +1,8 @@
-﻿using Game.Combat.Generation;
+﻿using System.Collections.Generic;
+using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Global;
+using Game.Global.Tutorial;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
@@ -53,7 +55,12 @@ public class SaltBehaviour : MonoBehaviour
 
     private void TryShowTutorial()
     {
-        TutorialManager.TryOpenTutorial(8);
+        List<TutorialOverlay> overlays = new List<TutorialOverlay>
+        {
+            new TutorialOverlay(transform, 100, 100, GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+            new TutorialOverlay()
+        };
+        TutorialManager.TryOpenTutorial(8, overlays);
     }
 
     private void OnCollisionEnter2D(Collision2D other)

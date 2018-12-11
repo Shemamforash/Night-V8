@@ -17,6 +17,8 @@ namespace Game.Combat.Player
 
         public readonly string Name;
         private SkillValue _skillValue;
+        private PlayerCombat _player;
+        private Transform _playerTransform;
 
         protected Skill(string name)
         {
@@ -73,10 +75,16 @@ namespace Game.Combat.Player
             return enemiesInRange;
         }
 
+        protected PlayerCombat Player() => _player;
+        protected Transform PlayerTransform() => _playerTransform;
+        protected Vector2 PlayerPosition() => _playerTransform.position;
+        
         public bool Activate(bool freeSkill)
         {
             if (Target() == null && _skillValue.NeedsTarget) return false;
             if (!freeSkill && !PlayerCombat.Instance.ConsumeAdrenaline(AdrenalineCost())) return false;
+            _player = PlayerCombat.Instance;
+            _playerTransform = _player.transform;
             InstantEffect();
             if (_skillValue.AppliesToMagazine)
             {

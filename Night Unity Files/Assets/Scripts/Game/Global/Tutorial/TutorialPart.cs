@@ -43,8 +43,4 @@ namespace Game.Global.Tutorial
 
         public bool IsComplete() => _completed;
     }
-    
-    
-    
-    
 }

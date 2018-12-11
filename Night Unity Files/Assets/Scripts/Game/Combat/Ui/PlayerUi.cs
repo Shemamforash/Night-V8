@@ -1,17 +1,25 @@
 ﻿using System.Collections.Generic;
-using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
-using SamsHelper.Libraries;
+using Game.Global.Tutorial;
 using UnityEngine;
 
 namespace Game.Combat.Ui
 {
     public class PlayerUi : CharacterUi
     {
+        public static PlayerUi Instance;
+
+        public override void Awake()
+        {
+            base.Awake();
+            Instance = this;
+        }
+
         public void Update()
         {
+            if (PlayerCombat.Instance == null) return;
             List<CanTakeDamage> chars = CombatManager.GetEnemiesInRange(PlayerCombat.Instance.transform.position, 5f);
             Vector2 playerDir = PlayerCombat.Instance.transform.up;
             float nearestAngle = 360;
@@ -27,7 +35,14 @@ namespace Game.Combat.Ui
             });
 
             PlayerCombat.Instance.SetTarget(nearestCharacter);
-            if(nearestCharacter != null) TutorialManager.TryOpenTutorial(7);
+            if (nearestCharacter == null) return;
+            List<TutorialOverlay> overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(EnemyUi.Instance.GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                new TutorialOverlay(EnemyUi.Instance.UiHitController.GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                new TutorialOverlay()
+            };
+            TutorialManager.TryOpenTutorial(7, overlays);
         }
 
         protected override void LateUpdate()

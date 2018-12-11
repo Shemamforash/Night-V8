@@ -105,4 +105,9 @@ public class UIActionListController : MonoBehaviour
         button.SetEnabled(enableButton);
         text.SetColor(enableButton ? Color.white : UiAppearanceController.FadedColour);
     }
+
+    public RectTransform SleepRect()
+    {
+        return _sleepButton.GetComponent<RectTransform>();
+    }
 }

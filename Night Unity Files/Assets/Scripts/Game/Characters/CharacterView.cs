@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
+using Game.Global.Tutorial;
 using SamsHelper.Libraries;
 using TMPro;
 using UnityEngine;
@@ -104,6 +106,19 @@ namespace Game.Characters
             BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
             _actionProgress.UpdateCurrentAction(currentState);
             _actionList.UpdateList();
+        }
+
+        public void ShowTutorial()
+        {
+            List<TutorialOverlay> overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(_attributeController.GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                new TutorialOverlay(_attributeController.GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                new TutorialOverlay(_attributeController.GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                new TutorialOverlay(_actionList.SleepRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                new TutorialOverlay(gameObject.FindChildWithName("Conditions").GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main)
+            };
+            TutorialManager.TryOpenTutorial(9, overlays);
         }
     }
 }

@@ -31,6 +31,7 @@ public class TutorialManager : MonoBehaviour
     private static bool _alreadyHidden;
 
     private static bool _seenControlsGuide;
+    private static List<TutorialOverlay> _overlays;
 
     public void Awake()
     {
@@ -49,10 +50,11 @@ public class TutorialManager : MonoBehaviour
         StartCoroutine(ShowControlsTutorial());
     }
 
-    public static void TryOpenTutorial(int tutorialPart)
+    public static void TryOpenTutorial(int tutorialPart, List<TutorialOverlay> overlays)
     {
         if (!_tutorialActive) return;
         if (_showingTutorial) return;
+        _overlays = overlays;
         ReadTutorialParts();
         _currentTutorialPart = _tutorialParts[tutorialPart].FirstOrDefault(p => !p.IsComplete());
         if (_currentTutorialPart == null) return;
@@ -84,9 +86,8 @@ public class TutorialManager : MonoBehaviour
         string content = _currentTutorialPart.Content;
         _titleText.SetText(title);
         _contentText.SetText(content);
-        _overlayController.SetTutorialArea(_currentTutorialPart.MinOffset, _currentTutorialPart.MaxOffset);
+        _overlayController.SetTutorialArea(_overlays[_currentTutorialPart.PartNumber - 1]);
         _currentTutorialPart.MarkComplete();
-
         if (_currentTutorialPart.NextPart() == null)
         {
             _closeButton.SetCallback(Close);

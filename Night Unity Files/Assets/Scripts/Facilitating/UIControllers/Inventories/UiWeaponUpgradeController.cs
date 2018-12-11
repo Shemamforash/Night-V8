@@ -10,6 +10,7 @@ using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
+using Game.Global.Tutorial;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -156,7 +157,15 @@ namespace Facilitating.UIControllers
 
             InputHandler.RegisterInputListener(this);
             SetWeapon();
-            TutorialManager.TryOpenTutorial(11);
+            List<TutorialOverlay> overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                new TutorialOverlay(_weaponDetail.DurabilityRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                new TutorialOverlay(_weaponDetail.DurabilityRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                new TutorialOverlay(_infuseButton.GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+                new TutorialOverlay(_inscribeButton.GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
+            };
+            TutorialManager.TryOpenTutorial(11, overlays);
         }
 
         protected override void OnHide()

@@ -16,7 +16,7 @@ public class FireDamageDeal : MonoBehaviour
         character.Burn();
     }
 
-    public void Clear()
+    protected void Clear()
     {
         _ignoreTargets.Clear();
     }

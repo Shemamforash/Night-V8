@@ -13,6 +13,7 @@ public class FireBurstBehaviour : FireDamageDeal
     private FastLight _light;
     private const float LifeTime = 8f;
     private AudioSource _audioSource;
+    private Sequence _sequence;
 
     private void Awake()
     {
@@ -42,6 +43,7 @@ public class FireBurstBehaviour : FireDamageDeal
 
     public void OnDestroy()
     {
+        _sequence.Kill();
         _firePool.Dispose(this);
     }
 
@@ -62,19 +64,19 @@ public class FireBurstBehaviour : FireDamageDeal
         _flash.SetAlpha(0f);
         _light.SetAlpha(0f);
         _audioSource.Play();
-        Sequence sequence = DOTween.Sequence();
-        sequence.AppendCallback(() => _smallFlash.SetAlpha(1));
-        sequence.AppendInterval(0.1f);
-        sequence.AppendCallback(() =>
+        _sequence = DOTween.Sequence();
+        _sequence.AppendCallback(() => _smallFlash.SetAlpha(1));
+        _sequence.AppendInterval(0.1f);
+        _sequence.AppendCallback(() =>
         {
             _smallFlash.SetAlpha(0f);
             _flash.SetAlpha(1f);
         });
-        sequence.AppendCallback(RestartParticles);
-        sequence.Append(_flash.DOFade(0f, 1f));
-        sequence.AppendInterval(LifeTime - 1f);
-        sequence.AppendCallback(() => _fire.Stop());
-        sequence.Append(DOTween.To(_light.GetAlpha, _light.SetAlpha, 0f, 1f));
-        sequence.AppendCallback(() => _firePool.Return(this));
+        _sequence.AppendCallback(RestartParticles);
+        _sequence.Append(_flash.DOFade(0f, 1f));
+        _sequence.AppendInterval(LifeTime - 1f);
+        _sequence.AppendCallback(() => _fire.Stop());
+        _sequence.Append(DOTween.To(_light.GetAlpha, _light.SetAlpha, 0f, 1f));
+        _sequence.AppendCallback(() => _firePool.Return(this));
     }
 }

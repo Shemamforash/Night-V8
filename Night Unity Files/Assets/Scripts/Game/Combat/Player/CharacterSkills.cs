@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Game.Characters;
 using Game.Combat.Enemies.Misc;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Gear.Armour;
@@ -20,21 +21,21 @@ namespace Game.Combat.Player
             switch (player.CharacterTemplate.CharacterClass)
             {
                 case CharacterClass.Villain:
-                    return new Absolve();
+                    return new Drain();
                 case CharacterClass.Deserter:
                     return new Lacerate();
                 case CharacterClass.Beast:
-                    return new Terrify();
+                    return new Cleanse();
                 case CharacterClass.Watcher:
-                    return new Medicate();
+                    return new Escape();
                 case CharacterClass.Survivor:
-                    return new Aegis();
+                    return new Tremor();
                 case CharacterClass.Protector:
                     return new Relinquish();
                 case CharacterClass.Hunter:
-                    return new Nourish();
+                    return new Sacrifice();
                 case CharacterClass.Ghost:
-                    return new Rejuvinate();
+                    return new Regenerate();
                 case CharacterClass.Wanderer:
                     return new Staunch();
                 default:
@@ -51,17 +52,17 @@ namespace Game.Combat.Player
                 case CharacterClass.Deserter:
                     return new Immolate();
                 case CharacterClass.Beast:
-                    return new Unleash();
+                    return new Leach();
                 case CharacterClass.Watcher:
-                    return new Impel();
+                    return new Discharge();
                 case CharacterClass.Survivor:
                     return new Erupt();
                 case CharacterClass.Protector:
-                    return new Shatter();
+                    return new Wake();
                 case CharacterClass.Hunter:
                     return new Mark();
                 case CharacterClass.Ghost:
-                    return new Sacrifice();
+                    return new Refill();
                 case CharacterClass.Wanderer:
                     return new Afflict();
                 default:
@@ -71,16 +72,16 @@ namespace Game.Combat.Player
     }
     //Villain
 
-    public class Absolve : Skill
+    public class Drain : Skill
     {
-        public Absolve() : base(nameof(Absolve))
+        public Drain() : base(nameof(Drain))
         {
         }
 
         protected override void InstantEffect()
         {
             Heal(0.15f);
-            SickenBehaviour.Create(PlayerCombat.Instance.transform.position, new List<CanTakeDamage>());
+            SickenBehaviour.Create(PlayerPosition(), new List<CanTakeDamage>());
         }
     }
 
@@ -92,7 +93,7 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            PlayerCombat player = PlayerCombat.Instance;
+            PlayerCombat player = Player();
             List<CanTakeDamage> sickened = SickenBehaviour.Create(player.transform.position, new List<CanTakeDamage> {player}, 5);
             int explosionDamage = (int) (10 + WorldState.Difficulty() / 2.5f);
             sickened.ForEach(e =>
@@ -115,8 +116,8 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            Vector3 playerPosition = PlayerCombat.Instance.transform.position;
-            Vector2 targetPosition = playerPosition + PlayerCombat.Instance.transform.up;
+            Vector3 playerPosition = PlayerPosition();
+            Vector2 targetPosition = playerPosition + PlayerTransform().up;
             Grenade g = Grenade.CreateBasic(playerPosition, targetPosition, true);
             g.AddOnDetonate(enemies => { Heal(enemies.Count * 0.05f); });
         }
@@ -130,91 +131,87 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            Vector3 playerPosition = PlayerCombat.Instance.transform.position;
-            Vector2 targetPosition = playerPosition + PlayerCombat.Instance.transform.up;
+            Vector3 playerPosition = PlayerPosition();
+            Vector2 targetPosition = playerPosition + PlayerTransform().up;
             Grenade.CreateIncendiary(playerPosition, targetPosition, true);
         }
     }
 
     //Beast
 
-    public class Terrify : Skill
+    public class Cleanse : Skill
     {
-        public Terrify() : base(nameof(Terrify))
+        public Cleanse() : base(nameof(Cleanse))
         {
         }
 
         protected override void InstantEffect()
         {
-            int hit = 0;
-            KnockbackInRange(1f, 100f).ForEach(e => ++hit);
-            Heal(hit * 0.05f);
+            Vector2 position = PlayerPosition();
+            VortexBehaviour.Create(position, () => { FireBurstBehaviour.Create(position).AddIgnoreTarget(Player()); });
         }
     }
 
-    public class Unleash : Skill
+    public class Leach : Skill
     {
-        public Unleash() : base(nameof(Unleash))
+        public Leach() : base(nameof(Leach))
         {
         }
 
-        protected override void InstantEffect()
+        protected override void MagazineEffect(Shot s)
         {
-            PlayerCombat.Instance.TakeArmourDamage(Armour.ArmourHealthUnit);
-            KnockbackInRange(2f, 25).ForEach(e =>
+            s.Attributes().AddOnHit(() =>
             {
-                CharacterCombat c = e as CharacterCombat;
-                if (c == null) return;
-                c.TakeArmourDamage(Armour.ArmourHealthUnit);
+                int damageDealt = s.Attributes().DamageDealt();
+                damageDealt = (int) (damageDealt / 4f);
+                if (damageDealt <= 0) damageDealt = 1;
+                Player().HealthController.Heal(damageDealt);
             });
         }
     }
 
     //Watcher
 
-    public class Medicate : Skill
+    public class Escape : Skill
     {
-        public Medicate() : base(nameof(Medicate))
+        public Escape() : base(nameof(Escape))
         {
         }
 
         protected override void InstantEffect()
         {
             Heal(0.25f);
-            PlayerCombat player = PlayerCombat.Instance;
-            player.MovementController.AddForce(player.transform.up * 100);
+            PlayerCombat player = Player();
+            player.MovementController.AddForce(player.transform.up * 1000);
         }
     }
 
-    public class Impel : Skill
+    public class Discharge : Skill
     {
-        public Impel() : base(nameof(Impel))
+        public Discharge() : base(nameof(Discharge))
         {
         }
 
         protected override void InstantEffect()
         {
-            Vector2 playerPosition = PlayerCombat.Instance.transform.position;
-            int explosionDamage = 50 + WorldState.Difficulty();
-            Explosion explosion = Explosion.CreateExplosion(playerPosition, explosionDamage, 2);
-            explosion.AddIgnoreTarget(PlayerCombat.Instance);
-            explosion.InstantDetonate();
-            FireBurstBehaviour.Create(playerPosition).AddIgnoreTarget(PlayerCombat.Instance);
+            Vector2 playerPosition = PlayerPosition();
+            DecayBehaviour.Create(playerPosition).AddIgnoreTarget(Player());
+            FireBurstBehaviour.Create(playerPosition).AddIgnoreTarget(Player());
         }
     }
 
     //Survivor
 
-    public class Aegis : Skill
+    public class Tremor : Skill
     {
-        public Aegis() : base(nameof(Aegis))
+        public Tremor() : base(nameof(Tremor))
         {
         }
 
         protected override void InstantEffect()
         {
-            Transform transform = PlayerCombat.Instance.transform;
-            DecayBlastBehaviour.Create(PlayerCombat.Instance, transform.position + transform.up);
+            Transform transform = PlayerTransform();
+            DecayBlastBehaviour.Create(Player(), transform.position + transform.up);
         }
     }
 
@@ -227,14 +224,13 @@ namespace Game.Combat.Player
         private void CreateExplosion(Vector2 position, int damage, float radius)
         {
             Explosion e = Explosion.CreateExplosion(position, damage, radius);
-            e.AddIgnoreTarget(PlayerCombat.Instance);
+            e.AddIgnoreTarget(Player());
             e.InstantDetonate();
         }
 
         protected override void InstantEffect()
         {
-            Vector2 position = PlayerCombat.Instance.transform.position;
-            CreateExplosion(position, 50, 2f);
+            Vector2 position = PlayerPosition();
             Sequence sequence = DOTween.Sequence();
             sequence.AppendInterval(0.5f);
             sequence.AppendCallback(() =>
@@ -256,17 +252,26 @@ namespace Game.Combat.Player
 
     //Protector
 
-    public class Shatter : Skill
+    public class Wake : Skill
     {
-        public Shatter() : base(nameof(Shatter))
+        private Sequence _sequence;
+
+        public Wake() : base(nameof(Wake))
         {
         }
 
         protected override void InstantEffect()
         {
-            PlayerCombat.Instance.TakeArmourDamage(-Armour.ArmourHealthUnit);
-            Vector2 position = PlayerCombat.Instance.transform.position;
-            DecayBlastBehaviour.Create(PlayerCombat.Instance, position);
+            _sequence?.Kill();
+            LeaveFireTrail fireTrail = Player().GetComponent<LeaveFireTrail>();
+            if (fireTrail == null) fireTrail = Player().gameObject.AddComponent<LeaveFireTrail>();
+            _sequence = DOTween.Sequence();
+            _sequence.AppendInterval(5f);
+            _sequence.AppendCallback(() =>
+            {
+                if (Player() == null) return;
+                GameObject.Destroy(fireTrail);
+            });
         }
     }
 
@@ -278,23 +283,23 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            PlayerCombat.Instance.ConsumeAmmo();
+            Player().ConsumeAmmo();
             Heal(0.25f);
         }
     }
 
     //Hunter
 
-    public class Nourish : Skill
+    public class Sacrifice : Skill
     {
-        public Nourish() : base(nameof(Nourish))
+        public Sacrifice() : base(nameof(Sacrifice))
         {
         }
 
         protected override void InstantEffect()
         {
-            PlayerCombat.Instance.TakeArmourDamage(Armour.ArmourHealthUnit);
-            Heal(0.5f);
+            DecayBehaviour.Create(PlayerPosition());
+            Heal(0.1f);
         }
     }
 
@@ -306,37 +311,43 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            float duration = 5f;
-            PlayerCombat.Instance.StartMark(Target());
+            MarkController.Create(PlayerPosition());
         }
     }
 
     //Ghost
 
-    public class Rejuvinate : Skill
+    public class Regenerate : Skill
     {
-        public Rejuvinate() : base(nameof(Rejuvinate))
+        public Regenerate() : base(nameof(Regenerate))
         {
         }
 
         protected override void InstantEffect()
         {
-            PlayerCombat.Instance.UpdateSkillActions.Add(() => { Heal(0.01f); });
+            float t = 0f;
+            Player().UpdateSkillActions.Add(() =>
+            {
+                t -= Time.deltaTime;
+                if (t > 0) return;
+                Heal(0.01f);
+                t = 0.5f;
+            });
         }
     }
 
-    public class Sacrifice : Skill
+    public class Refill : Skill
     {
-        public Sacrifice() : base(nameof(Sacrifice))
+        public Refill() : base(nameof(Refill))
         {
         }
 
-        protected override void InstantEffect()
+        protected override void MagazineEffect(Shot s)
         {
-            PlayerCombat.Instance.HealthController.TakeDamage(PlayerCombat.Instance.HealthController.GetMaxHealth() * 0.1f);
-            Target().Burn();
-            Target().Sicken(2);
-            Target().Decay();
+            s.Attributes().AddOnHit(() =>
+            {
+                if (Helper.RollDie(0, 2)) Player()._weaponBehaviour.IncreaseAmmo(1);
+            });
         }
     }
 
@@ -362,8 +373,8 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            Vector3 playerPosition = PlayerCombat.Instance.transform.position;
-            Vector2 targetPosition = playerPosition + PlayerCombat.Instance.transform.up;
+            Vector3 playerPosition = PlayerPosition();
+            Vector2 targetPosition = playerPosition + PlayerTransform().up;
             Grenade.CreateDecay(playerPosition, targetPosition, true);
         }
     }

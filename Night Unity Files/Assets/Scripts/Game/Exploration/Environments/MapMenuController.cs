@@ -7,6 +7,7 @@ using SamsHelper;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Facilitating.UIControllers;
+using Game.Global.Tutorial;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using Random = UnityEngine.Random;
@@ -54,7 +55,11 @@ namespace Game.Exploration.Environment
             MapGenerator.Regions().ForEach(n => { n.ShowNode(); });
             MapMovementController.Enter(CharacterManager.SelectedCharacter);
             AudioController.FadeInMuffle();
-            TutorialManager.TryOpenTutorial(2);
+            List<TutorialOverlay> overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(MapGenerator.GetInitialNode().MapNode().transform, 400, 400, GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main)
+            };
+            TutorialManager.TryOpenTutorial(2, overlays);
         }
 
         public override void Exit()

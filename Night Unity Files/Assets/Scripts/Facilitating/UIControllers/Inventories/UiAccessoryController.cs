@@ -5,6 +5,7 @@ using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Gear.Armour;
 using Game.Global;
+using Game.Global.Tutorial;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -94,7 +95,11 @@ namespace Facilitating.UIControllers
         {
             UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
             _accessoryList.Show();
-            TutorialManager.TryOpenTutorial(13);
+            List<TutorialOverlay> overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay()
+            };
+            TutorialManager.TryOpenTutorial(13, overlays);
             UpdateEquipped();
         }
 
