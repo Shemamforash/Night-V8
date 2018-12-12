@@ -27,7 +27,7 @@ namespace Game.Global
         public static AudioClip BrawlerSlash;
         public static AudioClip SimmavA, SimmavB, SimmavC, SimmavD;
         public static AudioClip StandardExplosion, FireExplosion, ShatterExplosion;
-        public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Craft, OpenJournal, CloseJournal;
+        public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Craft, OpenJournal, CloseJournal, Tick;
         public static AudioClip EatWater, EatMeat, EatPlant, EatPotion;
         private static readonly List<AssetBundle> _loadedBundles = new List<AssetBundle>();
         private static bool _loaded;
@@ -138,6 +138,7 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => EatWater = a, "misc/inventories", "Eat Water"));
             yield return StartCoroutine(LoadClip(a => EatPotion = a, "misc/inventories", "Eat Potion"));
             yield return StartCoroutine(LoadClip(a => Campfire = a, "campfire", "Campfire"));
+            yield return StartCoroutine(LoadClip(a => Tick = a, "misc/tick", "Tick"));
 
 
             watch.Stop();

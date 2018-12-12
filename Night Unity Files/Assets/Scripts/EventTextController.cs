@@ -28,6 +28,11 @@ public class EventTextController : MonoBehaviour
         _eventText = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
     }
 
+    private void OnDestroy()
+    {
+        _instance = null;
+    }
+
     private void Start()
     {
         _radianceController = RadianceController.Instance();

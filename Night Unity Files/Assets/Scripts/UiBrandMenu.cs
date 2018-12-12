@@ -35,8 +35,8 @@ public class UiBrandMenu : Menu
 
     private void Show()
     {
-        Sequence sequence = DOTween.Sequence();
-        sequence.AppendInterval(1f);
+        Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
+        sequence.AppendInterval(0.5f);
         sequence.AppendCallback(_closeButton.Enable);
         _lastMenu = MenuStateMachine.CurrentMenu();
         MenuStateMachine.ShowMenu("Brand Menu");
@@ -50,19 +50,20 @@ public class UiBrandMenu : Menu
         {
             case BrandStatus.Failed:
                 Debug.Log("failed " + brand.GetFailName());
-                titleString = "failed";
+                titleString = "Failed";
                 benefitString = "A curse of " + brand.GetFailName() + " has been cast upon " + CharacterManager.SelectedCharacter.Name;
                 break;
             case BrandStatus.Succeeded:
                 Debug.Log("passed " + brand.GetSuccessName());
-                titleString = "passed";
+                titleString = "Passed";
                 benefitString = "A boon of " + brand.GetSuccessName() + " has been granted upon " + CharacterManager.SelectedCharacter.Name;
                 break;
         }
 
-        titleString = brand.GetName() + "has been " + titleString;
+        titleString = titleString + " " + brand.GetName();
         _instance._titleText.SetText(titleString);
-        _instance._benefitText.SetText(brand.Description() + "\n\n" + benefitString);
+        string descriptionString = "\n<i><size=20>" + brand.Description() + "</size></i>";
+        _instance._benefitText.SetText(benefitString + descriptionString);
         _instance._effectText.SetText(brand.GetEffectString());
         _instance.Show();
     }

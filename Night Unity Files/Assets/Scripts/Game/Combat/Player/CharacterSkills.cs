@@ -375,7 +375,7 @@ namespace Game.Combat.Player
         {
             Vector3 playerPosition = PlayerPosition();
             Vector2 targetPosition = playerPosition + PlayerTransform().up;
-            Grenade.CreateDecay(playerPosition, targetPosition, true);
+            Grenade.CreateDecay(playerPosition, targetPosition, false);
         }
     }
 }

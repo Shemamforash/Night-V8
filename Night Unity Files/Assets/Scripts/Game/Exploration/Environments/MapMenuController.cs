@@ -57,7 +57,7 @@ namespace Game.Exploration.Environment
             AudioController.FadeInMuffle();
             List<TutorialOverlay> overlays = new List<TutorialOverlay>
             {
-                new TutorialOverlay(MapGenerator.GetInitialNode().MapNode().transform, 400, 400, GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main)
+                new TutorialOverlay(MapGenerator.GetInitialNode().MapNode().transform, 3, 3)
             };
             TutorialManager.TryOpenTutorial(2, overlays);
         }

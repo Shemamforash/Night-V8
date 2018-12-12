@@ -216,7 +216,6 @@ namespace Game.Characters
         public void EquipChestArmour(Armour plate)
         {
             ArmourController.SetArmour(plate);
-            WorldEventManager.GenerateEvent(new CharacterMessage("That might help", this));
             if (PlayerCombat.Instance == null) return;
             PlayerCombat.Instance.EquipArmour();
         }

@@ -21,6 +21,7 @@ namespace Facilitating.MenuNavigation
         private static bool _seenIntro;
         private GameController _gameController;
         private bool _skipping;
+        private Sequence _fadeInSequence;
 
         private void CacheGameObjects()
         {
@@ -45,33 +46,33 @@ namespace Facilitating.MenuNavigation
             float finalEnglishTextSize = 50;
             englishText.fontSize = finalEnglishTextSize - 5f;
 
-            Sequence fadeInSequence = DOTween.Sequence();
-            
+            _fadeInSequence = DOTween.Sequence();
+
 #if UNITY_EDITOR
             _seenIntro = true;
 #endif
-            
+
             if (!_seenIntro)
             {
-                fadeInSequence.Append(_logo.DOFade(1f, 2f)); //2
-                fadeInSequence.AppendInterval(2f); //5
-                fadeInSequence.Append(_logo.DOFade(0f, 2f)); //6
+                _fadeInSequence.Append(_logo.DOFade(1f, 2f)); //2
+                _fadeInSequence.AppendInterval(2f); //5
+                _fadeInSequence.Append(_logo.DOFade(0f, 2f)); //6
 
-                fadeInSequence.Append(_latin.DOFade(1f, 1f)); //7
-                fadeInSequence.AppendInterval(3f); //10
-                fadeInSequence.Append(_english.DOFade(1f, 1f)); //11
-                fadeInSequence.AppendInterval(5f); //15
-                fadeInSequence.Append(_latin.DOFade(0f, 1f)); //16
-                fadeInSequence.AppendInterval(1f);
+                _fadeInSequence.Append(_latin.DOFade(1f, 1f)); //7
+                _fadeInSequence.AppendInterval(3f); //10
+                _fadeInSequence.Append(_english.DOFade(1f, 1f)); //11
+                _fadeInSequence.AppendInterval(5f); //15
+                _fadeInSequence.Append(_latin.DOFade(0f, 1f)); //16
+                _fadeInSequence.AppendInterval(1f);
 
-                fadeInSequence.Insert(6, latinText.DOFontSize(finalLatinTextSize, 10));
-                fadeInSequence.Insert(10, englishText.DOFontSize(finalEnglishTextSize, 6));
-                fadeInSequence.Insert(16, _english.DOFade(0f, 1f));
+                _fadeInSequence.Insert(6, latinText.DOFontSize(finalLatinTextSize, 10));
+                _fadeInSequence.Insert(10, englishText.DOFontSize(finalEnglishTextSize, 6));
+                _fadeInSequence.Insert(16, _english.DOFade(0f, 1f));
 
                 _seenIntro = true;
             }
 
-            fadeInSequence.AppendCallback(() => StartCoroutine(FadeInMenu()));
+            _fadeInSequence.AppendCallback(() => StartCoroutine(FadeInMenu()));
         }
 
         private IEnumerator FadeInMenu()
@@ -98,9 +99,6 @@ namespace Facilitating.MenuNavigation
             GameObject menuContainer = gameObject.FindChildWithName("Main Menu");
             GameObject continueButton = menuContainer.FindChildWithName("Continue");
             continueButton.SetActive(false);
-            EnhancedButton newGameButton = menuContainer.FindChildWithName<EnhancedButton>("New Game");
-            EnhancedButton optionsButton = menuContainer.FindChildWithName<EnhancedButton>("Options");
-            newGameButton.SetDownNavigation(optionsButton);
         }
 
         public void Update()
@@ -126,11 +124,13 @@ namespace Facilitating.MenuNavigation
 
         public void StartNewGame()
         {
+            _fadeInSequence.Complete();
             MenuStateMachine.ShowMenu(SaveController.SaveExists() ? "Overwrite Save Warning" : "Tutorial Choice");
         }
 
         public void ShowMenu(Menu menu)
         {
+            _fadeInSequence.Complete();
             MenuStateMachine.ShowMenu(menu.name);
         }
     }

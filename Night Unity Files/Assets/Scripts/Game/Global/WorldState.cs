@@ -142,7 +142,7 @@ namespace Game.Global
             List<TutorialOverlay> overlays = new List<TutorialOverlay>
             {
                 new TutorialOverlay(),
-                new TutorialOverlay(WorldView.GetEnvironmentRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main), 
+                new TutorialOverlay(WorldView.GetEnvironmentRect()), 
                 new TutorialOverlay() 
             };
             TutorialManager.TryOpenTutorial(1, overlays);

@@ -78,6 +78,7 @@ namespace Game.Combat.Generation
             ScreenFaderController.ShowText(_currentRegion.Name);
         }
 
+        
         private void UpdateHud()
         {
             if (!ClearOfEnemies() && !_hudShown)
@@ -88,13 +89,7 @@ namespace Game.Combat.Generation
                 sequence.AppendInterval(2f);
                 sequence.AppendCallback(() =>
                 {
-                    List<TutorialOverlay> overlays = new List<TutorialOverlay>
-                    {
-                        new TutorialOverlay(PlayerUi.Instance.HealthRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                        new TutorialOverlay(PlayerUi.Instance.ArmourRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                        new TutorialOverlay(RageBarController.AdrenalineRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main)
-                    };
-                    TutorialManager.TryOpenTutorial(6, overlays);
+                    TutorialManager.TryOpenTutorial(6, _uiOverviewOverlays);
                 });
                 _hudTween = sequence;
                 _hudShown = true;
@@ -142,7 +137,7 @@ namespace Game.Combat.Generation
                 if (PlayerCombat.Instance == null) return;
                 List<TutorialOverlay> overlays = new List<TutorialOverlay>
                 {
-                    new TutorialOverlay(UiCompassPulseController.CompassRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main)
+                    new TutorialOverlay(UiCompassPulseController.CompassRect())
                 };
                 TutorialManager.TryOpenTutorial(4, overlays);
                 if (PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Grit) != 0) return;
@@ -153,6 +148,13 @@ namespace Game.Combat.Generation
                 };
                 TutorialManager.TryOpenTutorial(5, overlays);
             });
+
+            _uiOverviewOverlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(PlayerUi.Instance.HealthRect()),
+                new TutorialOverlay(PlayerUi.Instance.ArmourRect()),
+                new TutorialOverlay(RageBarController.AdrenalineRect())
+            };
         }
 
         public override void Enter()
@@ -184,9 +186,9 @@ namespace Game.Combat.Generation
         private void PlayNightmareParticles()
         {
             ParticleSystem _nightmareParticles = GameObject.Find("Nightmare Particles").GetComponent<ParticleSystem>();
-            _nightmareParticles.Play();
             ParticleSystem.ShapeModule shape = _nightmareParticles.shape;
-            shape.radius = PathingGrid.CombatAreaWidth + 4;
+            shape.radius = PathingGrid.CombatAreaWidth / 2f + 4;
+            _nightmareParticles.Play();
         }
 
         private void SetUpDynamicRegion()
@@ -259,6 +261,7 @@ namespace Game.Combat.Generation
         }
 
         private float _timeSinceLastSpawn;
+        private List<TutorialOverlay> _uiOverviewOverlays;
 
         private void TrySpawnNewEnemy()
         {
@@ -336,7 +339,7 @@ namespace Game.Combat.Generation
             Debug.Log("exiting");
             Assert.IsTrue(_inCombat);
 
-            if (!_currentRegion.IsDynamic()) return;
+            if (_currentRegion.IsDynamic())
             {
                 _inactiveEnemies.ForEach(e => _currentRegion.RestoreSize(e.Template.Value));
                 _instance._enemies.ForEach(e => _currentRegion.RestoreSize(((EnemyBehaviour) e).Enemy.Template.Value));

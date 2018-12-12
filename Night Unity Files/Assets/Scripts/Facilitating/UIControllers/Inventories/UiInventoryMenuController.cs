@@ -8,7 +8,7 @@ namespace Facilitating.UIControllers.Inventories
 {
     public abstract class UiInventoryMenuController : MonoBehaviour
     {
-        public void Awake()
+        public virtual void Awake()
         {
             CacheElements();
             Initialise();

@@ -75,12 +75,12 @@ namespace Game.Characters
             if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Rite) return;
             _counter += amount;
             if (_counter < _counterTarget) return;
-            RiteStarter.Generate(this, false);
+            RiteStarter.Generate(this);
         }
 
         public void Succeed()
         {
-            Player.BrandManager.UpdateActiveBrands(this);
+            Player.BrandManager.SetBrandInactive(this);
             SetStatus(BrandStatus.Succeeded);
             UiBrandMenu.ShowBrand(this);
             OnSucceed();
@@ -88,6 +88,7 @@ namespace Game.Characters
 
         public void Fail()
         {
+            Player.BrandManager.SetBrandInactive(this);
             SetStatus(BrandStatus.Failed);
             UiBrandMenu.ShowBrand(this);
             OnFail();
@@ -122,7 +123,6 @@ namespace Game.Characters
             doc.CreateChild("Name", _riteName);
             doc.CreateChild("TimeRemaining", _counter);
             doc.CreateChild("Status", (int) Status);
-            return;
         }
 
         public string GetSuccessName()

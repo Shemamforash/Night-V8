@@ -32,6 +32,7 @@ public class TutorialManager : MonoBehaviour
 
     private static bool _seenControlsGuide;
     private static List<TutorialOverlay> _overlays;
+    private static bool _hideResouces;
 
     public void Awake()
     {
@@ -50,17 +51,19 @@ public class TutorialManager : MonoBehaviour
         StartCoroutine(ShowControlsTutorial());
     }
 
-    public static void TryOpenTutorial(int tutorialPart, List<TutorialOverlay> overlays)
+    public static bool TryOpenTutorial(int tutorialPart, List<TutorialOverlay> overlays, bool hideResources = true)
     {
-        if (!_tutorialActive) return;
-        if (_showingTutorial) return;
+        if (!_tutorialActive) return false;
+        if (_showingTutorial) return false;
         _overlays = overlays;
+        _hideResouces = hideResources;
         ReadTutorialParts();
         _currentTutorialPart = _tutorialParts[tutorialPart].FirstOrDefault(p => !p.IsComplete());
-        if (_currentTutorialPart == null) return;
+        if (_currentTutorialPart == null) return false;
         EnableButton();
         ShowTutorialPart();
         Enter();
+        return true;
     }
 
     private static void EnableButton()
@@ -98,8 +101,10 @@ public class TutorialManager : MonoBehaviour
 
     private static void Enter()
     {
+        _tutorialCanvas.blocksRaycasts = true;
+        _tutorialCanvas.interactable = true;
         _alreadyHidden = ResourcesUiController.Hidden();
-        if (!_alreadyHidden) ResourcesUiController.Hide();
+        if (!_alreadyHidden && _hideResouces) ResourcesUiController.Hide();
         _showingTutorial = true;
         DOTween.defaultTimeScaleIndependent = true;
         _alreadyPaused = CombatManager.IsCombatActive() ? CombatManager.IsCombatPaused() : WorldState.Paused();
@@ -116,6 +121,8 @@ public class TutorialManager : MonoBehaviour
     private static void Close()
     {
         if (!_alreadyHidden) ResourcesUiController.Show();
+        _tutorialCanvas.blocksRaycasts = false;
+        _tutorialCanvas.interactable = false;
         _closeButton.SetCallback(null);
         Sequence sequence = DOTween.Sequence();
         sequence.Append(_tutorialCanvas.DOFade(0f, 0.5f));

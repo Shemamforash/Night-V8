@@ -32,9 +32,9 @@ namespace Game.Combat.Generation.Shrines
 
         private IEnumerator SpawnChasers()
         {
-            float shrineTimeMax = 20f;
-            float currentTime = shrineTimeMax;
             _pickupsLeft = (int) (WorldState.Difficulty() / 10f + 3);
+            float shrineTimeMax = 15f * _pickupsLeft;
+            float currentTime = shrineTimeMax;
             while (_pickupsLeft > 0 && currentTime > 0f)
             {
                 if (!CombatManager.IsCombatActive()) yield return null;
@@ -45,8 +45,7 @@ namespace Game.Combat.Generation.Shrines
                     _currentPickup = Instantiate(_shrinePickupPrefab);
                     _currentPickup.transform.position = PathingGrid.GetCellNearMe(PathingGrid.WorldToCellPosition(transform.position), 6f, 4f).Position;
                     _currentPickup.GetComponent<ShrinePickup>().SetShrine(this);
-                    EnemyBehaviour b = CombatManager.SpawnEnemy(EnemyType.Shadow, PathingGrid.GetCellNearMe(PathingGrid.WorldToCellPosition(transform.position), 5f, 2f).Position);
-                    currentTime = shrineTimeMax;
+                    CombatManager.SpawnEnemy(EnemyType.Shadow, PathingGrid.GetCellNearMe(PathingGrid.WorldToCellPosition(transform.position), 5f, 2f).Position);
                 }
 
                 currentTime -= Time.deltaTime;

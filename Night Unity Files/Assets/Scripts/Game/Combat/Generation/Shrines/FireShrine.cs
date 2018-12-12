@@ -11,7 +11,6 @@ namespace Game.Combat.Generation.Shrines
     public class FireShrine : ShrineBehaviour
     {
         private readonly List<FireBehaviour> _fires = new List<FireBehaviour>();
-        private float _timeToNextEnemy;
         private int _maxEnemies;
         private float _timeToNextBurst;
 
@@ -22,15 +21,6 @@ namespace Game.Combat.Generation.Shrines
 
         protected override string GetInstructionText() => "Kill all enemies within the time limit";
 
-        private void SpawnEnemy()
-        {
-            float angle = Random.Range(0, 360);
-            float radius = Random.Range(3f, 5f);
-            Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, radius, Vector2.zero);
-            EnemyType typeToSpawn = Helper.RollDie(0, 2) ? EnemyType.Maelstrom : EnemyType.Shadow;
-            EnemyBehaviour b = CombatManager.SpawnEnemy(typeToSpawn, position);
-        }
-
         private void CreateFires()
         {
             int fireCount = 30;
@@ -38,19 +28,6 @@ namespace Game.Combat.Generation.Shrines
             {
                 Vector2 firePosition = AdvancedMaths.CalculatePointOnCircle(360f / fireCount * i, 6.5f, transform.position);
                 _fires.Add(FireBehaviour.Create(firePosition));
-            }
-        }
-
-        private void TrySpawnEnemy()
-        {
-            if (CombatManager.Enemies().Count < _maxEnemies)
-            {
-                _timeToNextEnemy -= Time.deltaTime;
-                if (_timeToNextEnemy < 0)
-                {
-                    _timeToNextEnemy = Random.Range(0.5f, 1.5f);
-                    SpawnEnemy();
-                }
             }
         }
 
@@ -69,19 +46,28 @@ namespace Game.Combat.Generation.Shrines
             CreateFires();
 
             int numberOfEnemies = (int) (WorldState.Difficulty() / 5f + 10);
-            _maxEnemies = numberOfEnemies / 10;
+            _maxEnemies = numberOfEnemies / 5;
+
+            List<Enemy> inactiveEnemies = new List<Enemy>();
+            for (int i = 0; i < numberOfEnemies; ++i)
+            {
+                EnemyType spawnType = Helper.RollDie(0, 2) ? EnemyType.Maelstrom : EnemyType.Shadow;
+                EnemyTemplate template = EnemyTemplate.GetEnemyTemplate(spawnType);
+                Enemy enemy = new Enemy(template);
+                inactiveEnemies.Add(enemy);
+            }
+
+            CombatManager.OverrideMaxSize(_maxEnemies, inactiveEnemies);
 
             float roundTime = numberOfEnemies * 10;
             float currentTime = roundTime;
 
             _timeToNextBurst = Random.Range(1f, 3f);
-            _timeToNextEnemy = Random.Range(0.5f, 1.5f);
 
             while (currentTime > 0)
             {
                 if (!CombatManager.IsCombatActive()) yield return null;
                 currentTime -= Time.deltaTime;
-                TrySpawnEnemy();
                 TryCreateFireBurst();
                 UpdateCountdown(currentTime, roundTime);
                 if (CombatManager.ClearOfEnemies())

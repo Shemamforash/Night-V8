@@ -388,55 +388,27 @@ namespace SamsHelper.Libraries
             return new Vector2(x, y);
         }
 
-        public static Vector2 WorldToCanvasSpace(Canvas canvas, Camera camera, Transform transform)
-        {
-            Vector2 position = transform.position;
-            position = camera.WorldToScreenPoint(position);
-            CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
-            Vector2 scaleReference = new Vector2(scaler.referenceResolution.x / Screen.width, scaler.referenceResolution.y / Screen.height);
-            position.Scale(scaleReference);
-            return position;
+        private static Camera mainCamera;
 
+        public static Vector3[] WorldCornersToCanvasSpace(Vector3[] corners, float canvasWidth, float canvasHeight)
+        {
+            if (mainCamera == null) mainCamera = Camera.main;
+            
             float screenWidth = Screen.width;
             float screenHeight = Screen.height;
+           
+            float widthRatio = canvasWidth / screenWidth;
+            float heightRatio = canvasHeight / screenHeight;
 
-            RectTransform canvasRectTransform = canvas.GetComponent<RectTransform>();
-            float canvasActualWidth = canvasRectTransform.GetWidth();
-            float canvasActualHeight = canvasRectTransform.GetHeight();
-
-            position.x *= canvasActualWidth / screenWidth;
-            position.y *= canvasActualHeight / screenHeight;
-
-            return position;
-        }
-
-        public static Vector2 ScreenToCanvasSpace(Canvas canvas, Camera camera, RectTransform rectTransform)
-        {
-            CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
-            Vector2 scaleReference = new Vector2(scaler.referenceResolution.x / Screen.width, scaler.referenceResolution.y / Screen.height);
-
-            Vector2 size = Vector2.Scale(rectTransform.rect.size, rectTransform.lossyScale);
-            Rect screenRect = new Rect((Vector2) rectTransform.position - size * 0.5f, size);
-            Vector2 topLeft = new Vector2(screenRect.xMin, screenRect.yMin);
-            Vector2 bottomRight = new Vector2(screenRect.xMax, screenRect.yMax);
-            Vector2 position = (topLeft + bottomRight) / 2f;
-            position = camera.WorldToScreenPoint(position);
-
-//            Debug.Log(position);
-
-//            float screenWidth = Screen.width;
-//            float screenHeight = Screen.height;
-//
-//            RectTransform canvasRectTransform = canvas.GetComponent<RectTransform>();
-//            float canvasActualWidth = canvasRectTransform.GetWidth();
-//            float canvasActualHeight = canvasRectTransform.GetHeight();
-//
-//            position.x *= canvasActualWidth / screenWidth;
-//            position.y *= canvasActualHeight / screenHeight;
-
-            position.Scale(scaleReference);
-            return position;
-//            Debug.Log(targetWidth + " " + screenWidth + " " + canvasActualWidth + " " + position.x + " " + position.y);
+            for (int i = 0; i < corners.Length; i++)
+            {
+                Vector3 worldCorner = corners[i];
+                worldCorner = mainCamera.WorldToScreenPoint(worldCorner);
+                worldCorner.x *= widthRatio;
+                worldCorner.y *= heightRatio;
+                corners[i] = worldCorner;
+            }
+            return corners;
         }
     }
 }

@@ -16,23 +16,13 @@ namespace Game.Combat.Ui
         public virtual void Awake()
         {
             CanvasGroup = GetComponent<CanvasGroup>();
+            _healthBarController = gameObject.FindChildWithName<UIHealthBarController>("Health");
+            _armourController = gameObject.FindChildWithName<UIArmourController>("Armour");
         }
 
         private void SetAlpha(float a)
         {
             CanvasGroup.alpha = a;
-        }
-
-        private UIHealthBarController GetHealthController()
-        {
-            if (_healthBarController == null) _healthBarController = gameObject.FindChildWithName<UIHealthBarController>("Health");
-            return _healthBarController;
-        }
-
-        private UIArmourController GetArmourController()
-        {
-            if (_armourController == null) _armourController = gameObject.FindChildWithName<UIArmourController>("Armour");
-            return _armourController;
         }
 
         protected virtual void LateUpdate()
@@ -44,9 +34,9 @@ namespace Game.Combat.Ui
             }
 
             SetAlpha(1);
-            GetHealthController().SetValue(Character.HealthController.GetHealth());
-            GetArmourController().UpdateArmour(Character.ArmourController);
-            GetHealthController().SetSicknessLevel(Character.GetSicknessLevel());
+            _healthBarController.SetValue(Character.HealthController.GetHealth());
+            _armourController.UpdateArmour(Character.ArmourController);
+            _healthBarController.SetSicknessLevel(Character.GetSicknessLevel());
         }
 
         public RectTransform ArmourRect() => _armourController.GetComponent<RectTransform>();

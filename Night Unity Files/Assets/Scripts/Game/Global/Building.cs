@@ -78,15 +78,13 @@ namespace Game.Global
         public override void Update()
         {
             string resource = EnvironmentManager.GetTemperature() <= 0 ? "Ice" : "Water";
-            if (WeatherManager.CurrentWeather().Name == "Drizzle") Inventory.IncrementResource(resource, 1);
-            else if (WeatherManager.CurrentWeather().Name == "Rain") Inventory.IncrementResource(resource, 1);
-            else if (WeatherManager.CurrentWeather().Name == "Downpour") Inventory.IncrementResource(resource, 1);
+            if (WeatherManager.CurrentWeather().Attributes.RainAmount > 0) Inventory.IncrementResource(resource, 1);
         }
     }
 
     public class Shelter : Building
     {
-        public Shelter() : base("Water Collector")
+        public Shelter() : base("Shelter")
         {
         }
 
@@ -99,7 +97,7 @@ namespace Game.Global
     {
         private int counter;
 
-        public Trap() : base("Water Collector")
+        public Trap() : base("Trap")
         {
             ResetCounter();
         }
@@ -126,8 +124,7 @@ namespace Game.Global
 
         public override void Update()
         {
-            if (WeatherManager.CurrentWeather().Name == "Mist") Inventory.IncrementResource("Water", 1);
-            if (WeatherManager.CurrentWeather().Name == "Fog") Inventory.IncrementResource("Water", 1);
+            if (WeatherManager.CurrentWeather().Attributes.FogAmount > 0) Inventory.IncrementResource("Water", 1);
         }
     }
 

@@ -68,6 +68,7 @@ namespace Game.Combat.Generation.Shrines
 
             waveDuration /= 10f;
             currentTime = waveDuration;
+            UpdateCountdown(currentTime, waveDuration, true);
             while (currentTime > 0f)
             {
                 if (!CombatManager.IsCombatActive()) yield return null;

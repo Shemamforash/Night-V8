@@ -15,6 +15,7 @@ public class SaltBehaviour : MonoBehaviour
     private const float Force = 0.4f;
     private const float PickupRadius = 2f;
     private Transform _tri1Transform, _tri2Transform;
+    private List<TutorialOverlay> _overlays;
 
     public void Awake()
     {
@@ -22,6 +23,11 @@ public class SaltBehaviour : MonoBehaviour
         _tri2Transform = gameObject.FindChildWithName("Triangle 2").transform;
         _tri1Transform.localScale = Vector2.one * 0.5f;
         _rigidBody = GetComponent<Rigidbody2D>();
+        _overlays = new List<TutorialOverlay>
+        {
+            new TutorialOverlay(transform, 2, 2),
+            new TutorialOverlay()
+        };
     }
 
     public static void Create(Vector2 position)
@@ -55,12 +61,7 @@ public class SaltBehaviour : MonoBehaviour
 
     private void TryShowTutorial()
     {
-        List<TutorialOverlay> overlays = new List<TutorialOverlay>
-        {
-            new TutorialOverlay(transform, 100, 100, GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-            new TutorialOverlay()
-        };
-        TutorialManager.TryOpenTutorial(8, overlays);
+        TutorialManager.TryOpenTutorial(8, _overlays);
     }
 
     private void OnCollisionEnter2D(Collision2D other)

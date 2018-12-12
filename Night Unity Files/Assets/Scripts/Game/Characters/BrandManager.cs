@@ -126,7 +126,7 @@ namespace Game.Characters
             return false;
         }
 
-        public void UpdateActiveBrands(Brand brand)
+        public void SetBrandInactive(Brand brand)
         {
             if (brand == _activeBrandOne) _activeBrandOne = null;
             else if (brand == _activeBrandTwo) _activeBrandTwo = null;

@@ -21,6 +21,7 @@ namespace Game.Combat.Misc
         private static float _cooldownRemaining;
         private static float _duration;
         private static RectTransform _skillBarRect;
+        private static List<TutorialOverlay> _overlays;
 
         public void Awake()
         {
@@ -37,6 +38,13 @@ namespace Game.Combat.Misc
             _skillsLocked = new List<int>();
             _skillsReady = false;
             _skillBarRect = GetComponent<RectTransform>();
+            _overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(_skillBarRect),
+                new TutorialOverlay(_skillBarRect),
+                new TutorialOverlay(_skillBarRect),
+                new TutorialOverlay(_skillBarRect)
+            };
         }
 
         private void UpdateCooldownControllers(float normalisedDuration)
@@ -130,14 +138,7 @@ namespace Game.Combat.Misc
             if (TryLockSkill(skillNo)) return;
             bool freeSkill = IsSkillFree();
             if (!_skills[skillNo].Activate(freeSkill || SkillsAreFree)) return;
-            List<TutorialOverlay> overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(_skillBarRect, GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                new TutorialOverlay(_skillBarRect, GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                new TutorialOverlay(_skillBarRect, GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                new TutorialOverlay(_skillBarRect, GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main)
-            };
-            TutorialManager.TryOpenTutorial(14, overlays);
+            TutorialManager.TryOpenTutorial(14, _overlays);
             if (freeSkill) return;
             StartCooldown(_skills[skillNo].AdrenalineCost());
         }

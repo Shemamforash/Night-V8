@@ -10,7 +10,7 @@ namespace Game.Exploration.Weather
     {
         private readonly int _temperature, _duration;
         private readonly float _visibility;
-        public readonly int Water, Fog, Ice, Thunder;
+        public readonly int Thunder;
         private int _timeRemaining;
         private readonly string _displayName;
         public readonly WeatherAttributes Attributes;
@@ -20,9 +20,6 @@ namespace Game.Exploration.Weather
             _displayName = weatherNode.StringFromNode("DisplayName");
             _temperature = weatherNode.IntFromNode("Temperature");
             _visibility = weatherNode.FloatFromNode("Visibility");
-            Water = weatherNode.IntFromNode("Water");
-            Fog = weatherNode.IntFromNode("Fog");
-            Ice = weatherNode.IntFromNode("Ice");
             Thunder = weatherNode.IntFromNode("Thunder");
             _duration = weatherNode.IntFromNode("Duration");
             Attributes = new WeatherAttributes(weatherNode);

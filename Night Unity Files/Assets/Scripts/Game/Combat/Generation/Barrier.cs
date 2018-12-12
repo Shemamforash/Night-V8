@@ -41,6 +41,13 @@ namespace Game.Combat.Generation
             _barrierObject.GetComponent<Renderer>().material = material;
             Collider = _barrierObject.GetComponent<PolygonCollider2D>();
             Vector3[] meshVerts = CreateMesh();
+            if (meshVerts == null)
+            {
+                PathingGrid.RemoveBarrier(this);
+                GameObject.Destroy(_barrierObject);
+                return;
+            }
+
             AddCollider(meshVerts);
         }
 
@@ -72,7 +79,7 @@ namespace Game.Combat.Generation
             }
             catch
             {
-                
+                return null;
             }
 
             Vector3[] normals = new Vector3[meshVerts.Length];

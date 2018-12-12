@@ -161,6 +161,7 @@ public class WeaponDetailController : MonoBehaviour
 
     public RectTransform DurabilityRect()
     {
+        if (_durabilityBar == null) _durabilityBar = gameObject.FindChildWithName<DurabilityBarController>("Durability Bar");
         return _durabilityBar.GetComponent<RectTransform>();
     }
 }

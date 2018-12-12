@@ -19,8 +19,11 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
     private SpriteRenderer _countdown;
     private Brand _brand;
     public static ShrineBehaviour ActiveShrine;
-
     private static GameObject _bossPrefab, _firePrefab, _wavePrefab, _chasePrefab;
+    private static List<GameObject> _prefabs = new List<GameObject>();
+    private float _nextTickTime = -1;
+    private AudioSource _audioSource;
+    private AudioHighPassFilter _hpfFilter;
 
     public void Awake()
     {
@@ -36,6 +39,8 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
         _countdownMask = gameObject.FindChildWithName<SpriteMask>("Countdown Mask");
         _flash.color = UiAppearanceController.InvisibleColour;
         _countdownMask.alphaCutoff = 1f;
+        _audioSource = GetComponent<AudioSource>();
+        _hpfFilter = GetComponent<AudioHighPassFilter>();
     }
 
     public static void Generate(Brand brand)
@@ -46,30 +51,13 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
             _firePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Fire Shrine");
             _wavePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Wave Shrine");
             _chasePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Chase Shrine");
+            _prefabs.Add(_bossPrefab);
+            _prefabs.Add(_firePrefab);
+            _prefabs.Add(_wavePrefab);
+            _prefabs.Add(_chasePrefab);
         }
 
-        List<ShrineType> shrineTypes = new List<ShrineType>();
-        foreach (ShrineType shrineType in Enum.GetValues(typeof(ShrineType)))
-        {
-            shrineTypes.Add(shrineType);
-        }
-        GameObject shrine = null;
-        switch (Helper.RandomElement(shrineTypes))
-        {
-            case ShrineType.Wave:
-                shrine = Instantiate(_wavePrefab);
-                break;
-            case ShrineType.Fire:
-                shrine = Instantiate(_firePrefab);
-                break;
-            case ShrineType.Chase:
-                shrine = Instantiate(_chasePrefab);
-                break;
-            case ShrineType.Boss:
-                shrine = Instantiate(_bossPrefab);
-                break;
-        }
-
+        GameObject shrine = Instantiate(_firePrefab);//_prefabs.RandomElement());
         shrine.transform.position = Vector2.zero;
         shrine.transform.localScale = Vector2.one;
         shrine.GetComponent<ShrineBehaviour>()._brand = brand;
@@ -141,9 +129,23 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
         Destroy(this);
     }
 
-    protected void UpdateCountdown(float currentTime, float maxTime)
+    protected void UpdateCountdown(float currentTime, float maxTime, bool reset = false)
     {
         float normalisedTime = currentTime / maxTime;
+        if (_nextTickTime < 0 || reset) _nextTickTime = currentTime - 1f;
+        if (currentTime < _nextTickTime)
+        {
+            _nextTickTime = currentTime - 1f;
+            if (_nextTickTime > 0f)
+            {
+                float volume = Mathf.Lerp(0.5f, 0f, normalisedTime);
+                float hpfValue = Mathf.Lerp(10000, 100, normalisedTime);
+                _hpfFilter.cutoffFrequency = hpfValue;
+                _audioSource.volume = volume;
+                _audioSource.Play();
+            }
+        }
+
         _countdownMask.alphaCutoff = 1 - normalisedTime;
         _countdown.color = new Color(1, normalisedTime, normalisedTime, _countdown.color.a);
     }
@@ -178,7 +180,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
     protected abstract void StartChallenge();
 
     protected abstract string GetInstructionText();
-    
+
     private void ShowShrineInstructions()
     {
         Sequence sequence = DOTween.Sequence();
@@ -193,7 +195,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
 
     protected virtual void EndChallenge()
     {
-        RiteStarter.Generate(null, true);
+        RiteStarter.Generate(null);
         End();
     }
 }

@@ -4,6 +4,7 @@ using Game.Characters;
 using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
+using UnityEngine;
 
 namespace Game.Gear.Armour
 {
@@ -68,8 +69,8 @@ namespace Game.Gear.Armour
             float plateProtection = plate.GetCurrentProtection();
             float totalProtection = GetCurrentProtection();
             float proportion = plateProtection / totalProtection;
-            if (!plate.TakeDamage(proportion * damage)) return;
             _justTookDamage = true;
+            if (!plate.TakeDamage(proportion * damage)) return;
             plate = null;
         }
 
@@ -98,7 +99,7 @@ namespace Game.Gear.Armour
         private void SetChestArmour(Armour chest)
         {
             _chest?.UnEquip();
-            if (_character != null) _chest?.Equip(_character);
+            if (_character != null) chest?.Equip(_character);
             _chest = chest;
             UpdateArmourView();
         }

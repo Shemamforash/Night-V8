@@ -21,6 +21,7 @@ namespace Game.Characters
         private UIConditionController _thirstController, _hungerController;
         private CanvasGroup _viewCanvas;
         private UIActionListController _actionList;
+        private List<TutorialOverlay> _overlays;
 
         public void SetPlayer(Player player)
         {
@@ -44,6 +45,15 @@ namespace Game.Characters
             _hungerController = gameObject.FindChildWithName<UIConditionController>("Hunger");
 
             _actionList.SetPlayer(_player);
+
+            _overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(_attributeController.GetComponent<RectTransform>()),
+                new TutorialOverlay(_attributeController.GetComponent<RectTransform>()),
+                new TutorialOverlay(_attributeController.GetComponent<RectTransform>()),
+                new TutorialOverlay(_actionList.SleepRect()),
+                new TutorialOverlay(gameObject.FindChildWithName("Conditions").GetComponent<RectTransform>())
+            };
         }
 
         public void Update()
@@ -105,20 +115,13 @@ namespace Game.Characters
         {
             BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
             _actionProgress.UpdateCurrentAction(currentState);
-            _actionList.UpdateList();
+            bool selectWeapon = _actionList.UpdateList();
+            if (selectWeapon) WeaponController.EnhancedButton.Select();
         }
 
         public void ShowTutorial()
         {
-            List<TutorialOverlay> overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(_attributeController.GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                new TutorialOverlay(_attributeController.GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                new TutorialOverlay(_attributeController.GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                new TutorialOverlay(_actionList.SleepRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                new TutorialOverlay(gameObject.FindChildWithName("Conditions").GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main)
-            };
-            TutorialManager.TryOpenTutorial(9, overlays);
+            TutorialManager.TryOpenTutorial(9, _overlays);
         }
     }
 }

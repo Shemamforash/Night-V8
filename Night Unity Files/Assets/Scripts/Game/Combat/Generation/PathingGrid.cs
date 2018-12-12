@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using EpPathFinding.cs;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Debug = UnityEngine.Debug;
@@ -57,6 +58,18 @@ namespace Game.Combat.Generation
 
             foreach (Cell cell in intersectingCells) _invalidCells.Add(cell);
             return true;
+        }
+
+        public static void RemoveBarrier(Polygon barrier)
+        {
+            HashSet<Cell> intersectingCells = GetIntersectingGridCells(barrier);
+
+            intersectingCells.ForEach(c =>
+            {
+                if (c.OutOfRange) _outOfRangeList.Add(c);
+                if (c.IsEdgeCell) _edgePositionList.Add(c);
+                _invalidCells.Remove(c);
+            });
         }
 
         private static List<Vector2> _blockingVerts = new List<Vector2>();

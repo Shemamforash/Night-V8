@@ -24,6 +24,7 @@ namespace Facilitating.UIControllers
         private Armour _currentSelectedArmour;
         private bool _upgradingAllowed;
         private static bool _unlocked;
+        private List<TutorialOverlay> _overlays;
 
         public static void Load(XmlNode root)
         {
@@ -40,7 +41,19 @@ namespace Facilitating.UIControllers
             if (!_unlocked) _unlocked = Inventory.GetAvailableArmour().Count != 0;
             return _unlocked;
         }
-        
+
+        public override void Awake()
+        {
+            base.Awake();
+            _overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(GetComponent<RectTransform>()),
+                new TutorialOverlay(),
+                new TutorialOverlay(),
+                new TutorialOverlay()
+            };
+        }
+
         protected override void CacheElements()
         {
             _plateOneUi = new ArmourPlateUi(gameObject.FindChildWithName("Left Plate"), Armour.ArmourType.Chest);
@@ -60,14 +73,7 @@ namespace Facilitating.UIControllers
             UpdatePlates();
             InputHandler.RegisterInputListener(this);
             SetPlateListActive(_plateOneUi);
-            List<TutorialOverlay> overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                new TutorialOverlay(),
-                new TutorialOverlay(), 
-                new TutorialOverlay()
-            };
-            TutorialManager.TryOpenTutorial(12, overlays);
+            TutorialManager.TryOpenTutorial(12, _overlays);
         }
 
         private void UpdateArmourDescriptions()
@@ -91,12 +97,7 @@ namespace Facilitating.UIControllers
         private static List<object> GetAvailableArmour(Armour.ArmourType armourType)
         {
             List<object> armourList = Inventory.GetAvailableArmour().ToObjectList();
-            armourList.RemoveAll(a =>
-            {
-                bool isNotCorrectType = ((Armour) a).GetArmourType() != armourType;
-                return isNotCorrectType;
-            });
-            return armourList;
+            return armourList.FindAll(a => ((Armour) a).GetArmourType() == armourType);
         }
 
         private void EquipPlateOne(object armourObject)

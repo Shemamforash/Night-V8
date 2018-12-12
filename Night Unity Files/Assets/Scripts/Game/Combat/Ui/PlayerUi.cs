@@ -10,11 +10,22 @@ namespace Game.Combat.Ui
     public class PlayerUi : CharacterUi
     {
         public static PlayerUi Instance;
+        private List<TutorialOverlay> _overlays;
 
         public override void Awake()
         {
             base.Awake();
             Instance = this;
+        }
+
+        public void Start()
+        {
+            _overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(EnemyUi.Instance.GetComponent<RectTransform>()),
+                new TutorialOverlay(EnemyUi.Instance.UiHitController.GetComponent<RectTransform>()),
+                new TutorialOverlay()
+            };
         }
 
         public void Update()
@@ -36,13 +47,7 @@ namespace Game.Combat.Ui
 
             PlayerCombat.Instance.SetTarget(nearestCharacter);
             if (nearestCharacter == null) return;
-            List<TutorialOverlay> overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(EnemyUi.Instance.GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                new TutorialOverlay(EnemyUi.Instance.UiHitController.GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                new TutorialOverlay()
-            };
-            TutorialManager.TryOpenTutorial(7, overlays);
+            TutorialManager.TryOpenTutorial(7, _overlays);
         }
 
         protected override void LateUpdate()

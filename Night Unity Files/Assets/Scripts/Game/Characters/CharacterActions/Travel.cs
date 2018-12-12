@@ -84,6 +84,7 @@ namespace Game.Characters.CharacterActions
 
         protected override void OnClick()
         {
+            Debug.Log("Pressed");
             MenuStateMachine.ShowMenu("Map Menu");
         }
 

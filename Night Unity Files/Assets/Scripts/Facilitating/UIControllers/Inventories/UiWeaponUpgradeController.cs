@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using DefaultNamespace;
@@ -22,8 +23,7 @@ namespace Facilitating.UIControllers
 {
     public class UiWeaponUpgradeController : UiInventoryMenuController, IInputListener
     {
-        private EnhancedButton _inscribeButton, _infuseButton, _swapButton;
-        private TextMeshProUGUI _infuseText, _inscribeText, _swapText;
+        private EnhancedButton _infuseButton, _channelButton, _swapButton;
         private ListController _weaponList;
         private ListController _inscriptionList;
         private bool _upgradingAllowed;
@@ -31,6 +31,8 @@ namespace Facilitating.UIControllers
         private GameObject _infoGameObject;
         private Weapon _equippedWeapon;
         private static bool _unlocked;
+        private List<TutorialOverlay> _startingOverlays, _channelOverlays, _infuseOverlays;
+
 
         public static void Load(XmlNode root)
         {
@@ -41,7 +43,7 @@ namespace Facilitating.UIControllers
         {
             root.CreateChild(nameof(GetType), _unlocked);
         }
-        
+
         public override bool Unlocked()
         {
             if (!_unlocked) _unlocked = Inventory.GetAvailableWeapons().Count != 0 || Inventory.Inscriptions.Count != 0;
@@ -53,13 +55,25 @@ namespace Facilitating.UIControllers
             _weaponList = gameObject.FindChildWithName<ListController>("Weapon List");
             _inscriptionList = gameObject.FindChildWithName<ListController>("Inscription List");
             _weaponDetail = gameObject.FindChildWithName<WeaponDetailController>("Stats");
-            _inscribeButton = gameObject.FindChildWithName<EnhancedButton>("Inscribe");
-            _inscribeText = _inscribeButton.gameObject.FindChildWithName<TextMeshProUGUI>("Text");
+            _infuseButton = gameObject.FindChildWithName<EnhancedButton>("Inscribe");
             _swapButton = gameObject.FindChildWithName<EnhancedButton>("Swap");
-            _swapText = _swapButton.gameObject.FindChildWithName<TextMeshProUGUI>("Text");
-            _infuseButton = gameObject.FindChildWithName<EnhancedButton>("Infuse");
-            _infuseText = _infuseButton.gameObject.FindChildWithName<TextMeshProUGUI>("Text");
+            _channelButton = gameObject.FindChildWithName<EnhancedButton>("Infuse");
             _infoGameObject = gameObject.FindChildWithName("Info");
+
+            _startingOverlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(GetComponent<RectTransform>()),
+                new TutorialOverlay(_weaponDetail.DurabilityRect()),
+                new TutorialOverlay(_weaponDetail.DurabilityRect())
+            };
+            _channelOverlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(_channelButton.GetComponent<RectTransform>())
+            };
+            _infuseOverlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(_infuseButton.GetComponent<RectTransform>())
+            };
 
             List<ItemQuality> qualities = new List<ItemQuality>();
 #if UNITY_EDITOR
@@ -87,7 +101,7 @@ namespace Facilitating.UIControllers
                 InputHandler.UnregisterInputListener(this);
                 _infoGameObject.SetActive(false);
             });
-            _inscribeButton.AddOnClick(() =>
+            _infuseButton.AddOnClick(() =>
             {
                 if (!InscriptionsAreAvailable()) return;
                 UiGearMenuController.SetCloseButtonAction(Show);
@@ -95,8 +109,8 @@ namespace Facilitating.UIControllers
                 InputHandler.UnregisterInputListener(this);
                 _infoGameObject.SetActive(false);
             });
-            _infuseButton.AddOnClick(Infuse);
-            _infuseButton.AddOnHold(Infuse, 0.5f);
+            _channelButton.AddOnClick(Infuse);
+            _channelButton.AddOnHold(Infuse, 0.5f);
         }
 
         protected override void Initialise()
@@ -142,7 +156,7 @@ namespace Facilitating.UIControllers
             CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.IncreaseDurability(durabilityGain);
             _weaponDetail.UpdateWeaponInfo();
             UpdateWeaponActions();
-            SelectButton(_infuseButton);
+            SelectButton(_channelButton);
         }
 
         protected override void OnShow()
@@ -151,21 +165,36 @@ namespace Facilitating.UIControllers
             _infoGameObject.SetActive(true);
             _weaponList.Hide();
             _inscriptionList.Hide();
-            _swapButton.SetEnabled(WeaponsAreAvailable());
-            _swapText.color = _swapButton.enabled ? Color.white : UiAppearanceController.FadedColour;
+            _swapButton.gameObject.SetActive(WeaponsAreAvailable());
             SelectButton(_swapButton);
 
             InputHandler.RegisterInputListener(this);
             SetWeapon();
-            List<TutorialOverlay> overlays = new List<TutorialOverlay>
+            StartCoroutine(TryShowWeaponTutorial());
+        }
+
+        private IEnumerator TryShowWeaponTutorial()
+        {
+            if (TutorialManager.TryOpenTutorial(11, _startingOverlays))
             {
-                new TutorialOverlay(GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                new TutorialOverlay(_weaponDetail.DurabilityRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                new TutorialOverlay(_weaponDetail.DurabilityRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                new TutorialOverlay(_infuseButton.GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                new TutorialOverlay(_inscribeButton.GetComponent<RectTransform>(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-            };
-            TutorialManager.TryOpenTutorial(11, overlays);
+                while (TutorialManager.IsTutorialVisible()) yield return null;
+            }
+
+            if (_channelButton.gameObject.activeInHierarchy)
+            {
+                if (TutorialManager.TryOpenTutorial(16, _channelOverlays))
+                {
+                    while (TutorialManager.IsTutorialVisible()) yield return null;
+                }
+            }
+
+            if (_infuseButton.gameObject.activeInHierarchy)
+            {
+                if (TutorialManager.TryOpenTutorial(17, _infuseOverlays))
+                {
+                    while (TutorialManager.IsTutorialVisible()) yield return null;
+                }
+            }
         }
 
         protected override void OnHide()
@@ -191,7 +220,7 @@ namespace Facilitating.UIControllers
             if (PlayerCombat.Instance == null) return;
             PlayerCombat.Instance.EquipInscription();
             UpdateWeaponActions();
-            SelectButton(_inscribeButton);
+            SelectButton(_infuseButton);
         }
 
         private void SetWeapon()
@@ -200,25 +229,23 @@ namespace Facilitating.UIControllers
             _weaponDetail.SetWeapon(_equippedWeapon);
             if (_equippedWeapon == null)
             {
-                _inscribeButton.SetEnabled(false);
-                _inscribeText.color = UiAppearanceController.FadedColour;
-                _infuseButton.SetEnabled(false);
-                _infuseText.color = UiAppearanceController.FadedColour;
+                _infuseButton.gameObject.SetActive(false);
+                _channelButton.gameObject.SetActive(false);
             }
             else UpdateWeaponActions();
         }
 
         private void SelectButton(EnhancedButton from)
         {
-            if (from.IsEnabled())
+            if (from.gameObject.activeInHierarchy)
             {
                 from.Select();
                 return;
             }
 
-            if (_swapButton.IsEnabled()) _swapButton.Select();
-            else if (_infuseButton.IsEnabled()) _infuseButton.Select();
-            else if (_inscribeButton.isActiveAndEnabled) _inscribeButton.Select();
+            if (_swapButton.gameObject.activeInHierarchy) _swapButton.Select();
+            else if (_channelButton.gameObject.activeInHierarchy) _channelButton.Select();
+            else if (_infuseButton.gameObject.activeInHierarchy) _infuseButton.Select();
         }
 
         private void UpdateWeaponActions()
@@ -226,10 +253,8 @@ namespace Facilitating.UIControllers
             WeaponAttributes attr = _equippedWeapon.WeaponAttributes;
             bool reachedMaxDurability = attr.GetDurability().ReachedMax() || Inventory.GetResourceQuantity("Essence") == 0;
             bool inscriptionsAvailable = InscriptionsAreAvailable();
-            _infuseButton.SetEnabled(!reachedMaxDurability);
-            _infuseText.color = !reachedMaxDurability ? Color.white : UiAppearanceController.FadedColour;
-            _inscribeButton.SetEnabled(inscriptionsAvailable);
-            _inscribeText.color = inscriptionsAvailable ? Color.white : UiAppearanceController.FadedColour;
+            _channelButton.gameObject.SetActive(!reachedMaxDurability);
+            _infuseButton.gameObject.SetActive(inscriptionsAvailable);
         }
 
         private static bool WeaponsAreAvailable() => GetAvailableWeapons().Count != 0;

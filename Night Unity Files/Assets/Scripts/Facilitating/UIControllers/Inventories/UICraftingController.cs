@@ -21,6 +21,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
     private EnhancedText _currentCraftingName;
     private ColourPulse _glow;
     private static bool _unlocked;
+    private List<TutorialOverlay> _overlays;
 
     public static void Load(XmlNode root)
     {
@@ -37,7 +38,16 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         if (!_unlocked) _unlocked = Recipe.RecipesAvailable();
         return _unlocked;
     }
-    
+
+    public void Start()
+    {
+        _overlays = new List<TutorialOverlay>
+        {
+            new TutorialOverlay(ResourcesUiController.ResourceRect()),
+            new TutorialOverlay(),
+        };
+    }
+
     protected override void CacheElements()
     {
         _craftingList = gameObject.FindChildWithName<ListController>("List");
@@ -60,12 +70,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         InputHandler.RegisterInputListener(this);
         if (CharacterManager.SelectedCharacter.CraftAction.IsCurrentState()) ShowCurrentlyCrafting();
         else ShowCraftingList();
-        List<TutorialOverlay> overlays = new List<TutorialOverlay>
-        {
-            new TutorialOverlay(ResourcesUiController.ResourceRect(), GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-            new TutorialOverlay(),
-        };
-        TutorialManager.TryOpenTutorial(10, overlays);
+        TutorialManager.TryOpenTutorial(10, _overlays, false);
     }
 
     private void ShowCurrentlyCrafting()

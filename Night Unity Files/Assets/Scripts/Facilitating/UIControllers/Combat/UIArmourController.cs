@@ -46,7 +46,7 @@ namespace Facilitating.UIControllers
                 ArmourChunk chunk = _armourChunks[i];
                 if (i < slotsAvailable)
                     if (i < slotsUsed)
-                        chunk.Activate(i == slotsUsed - 1 && damageWasTaken);
+                        chunk.Activate(damageWasTaken);
                     else
                         chunk.Deactivate();
                 else
@@ -61,6 +61,7 @@ namespace Facilitating.UIControllers
         {
             private readonly CanvasGroup _armourCanvasGroup, _activeCanvasGroup;
             private readonly Image _brokenImage, _completeImage, _leftBar, _rightBar, _inactive;
+            private Tweener _flashTweener;
 
             public ArmourChunk(GameObject armourObject)
             {
@@ -75,12 +76,15 @@ namespace Facilitating.UIControllers
 
             private void FlashImage(Image image)
             {
+                _flashTweener?.Kill();
                 image.color = Color.red;
-                image.DOColor(Color.white, 0.25f).SetUpdate(UpdateType.Normal, true);
+                _flashTweener = image.DOColor(Color.white, 0.25f);
             }
 
             public void Activate(bool damageWasTaken)
             {
+                Debug.Log(damageWasTaken);
+                
                 _armourCanvasGroup.alpha = 1f;
                 _activeCanvasGroup.alpha = 1f;
                 _inactive.SetAlpha(0f);
@@ -95,6 +99,7 @@ namespace Facilitating.UIControllers
                 }
                 else
                 {
+                    if (_flashTweener != null && !_flashTweener.IsComplete()) return;
                     _completeImage.color = Color.white;
                     _leftBar.color = Color.white;
                     _rightBar.color = Color.white;

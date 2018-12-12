@@ -32,6 +32,11 @@ namespace Game.Combat.Generation.Shrines
             _audioSource = GetComponent<AudioSource>();
         }
 
+        private void OnDestroy()
+        {
+            _instance = null;
+        }
+
         public static FountainBehaviour Instance()
         {
             return _instance;

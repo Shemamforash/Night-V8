@@ -145,7 +145,7 @@
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>9</SectionNumber>
-		<PartNumber>5</PartNumber>
+		<PartNumber>4</PartNumber>
 		<Title>Sleeping</Title>
 		<MinOffset>860,650</MinOffset>
 		<MaxOffset>860,330</MaxOffset>
@@ -153,7 +153,7 @@
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>9</SectionNumber>
-		<PartNumber>8</PartNumber>
+		<PartNumber>5</PartNumber>
 		<Title>Hunger and Thirst</Title>
 		<MinOffset>645,385</MinOffset>
 		<MaxOffset>645,600</MaxOffset>
@@ -200,16 +200,16 @@
 		<Text>Higher quality weapons have higher maximum Power- represented by the width of the power bar. Weapons of equal Power will have similar damage outputs, regardless of their quality.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>11</SectionNumber>
-		<PartNumber>4</PartNumber>
+		<SectionNumber>16</SectionNumber>
+		<PartNumber>1</PartNumber>
 		<Title>Chanelling</Title>
 		<MinOffset>1190,680</MinOffset>
 		<MaxOffset>570,285</MaxOffset>
 		<Text>Weapon power is drained through use, decreasing the damage you deal in combat. If you have essence available, it can be channelled into the weapon to restore its power.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>11</SectionNumber>
-		<PartNumber>5</PartNumber>
+		<SectionNumber>17</SectionNumber>
+		<PartNumber>1</PartNumber>
 		<Title>Infusions</Title>
 		<MinOffset>570,680</MinOffset>
 		<MaxOffset>1190,285</MaxOffset>

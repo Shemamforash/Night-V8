@@ -18,6 +18,16 @@ namespace Facilitating.UIControllers
         private ListController _accessoryList;
         private EnhancedText _name, _bonus, _description;
         private static bool _unlocked;
+        private List<TutorialOverlay> _overlays;
+
+        public void Start()
+        {
+            _overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay()
+            };
+        }
+        
         protected override void CacheElements()
         {
             _accessoryList = gameObject.FindChildWithName<ListController>("List");
@@ -95,11 +105,7 @@ namespace Facilitating.UIControllers
         {
             UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
             _accessoryList.Show();
-            List<TutorialOverlay> overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay()
-            };
-            TutorialManager.TryOpenTutorial(13, overlays);
+            TutorialManager.TryOpenTutorial(13, _overlays);
             UpdateEquipped();
         }
 

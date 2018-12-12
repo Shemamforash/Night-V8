@@ -20,15 +20,26 @@ namespace Game.Combat.Generation.Shrines
         private int _targetBrand = -1;
         private RiteColliderBehaviour _targetRiteCollider;
         private static RiteShrineBehaviour _instance;
+        private List<TutorialOverlay> _overlays;
 
         public void Awake()
         {
             _instance = this;
+            _overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(transform, 4, 4),
+                new TutorialOverlay()
+            };
         }
 
         public static RiteShrineBehaviour Instance()
         {
             return _instance;
+        }
+
+        private void OnDestroy()
+        {
+            _instance = null;
         }
 
         public static void Generate(Region region)
@@ -119,12 +130,7 @@ namespace Game.Combat.Generation.Shrines
         {
             if (_targetBrand != -1)
             {
-                List<TutorialOverlay> overlays = new List<TutorialOverlay>
-                {
-                    new TutorialOverlay(transform, 400, 400, GameObject.Find("Canvas").GetComponent<Canvas>(), Camera.main),
-                    new TutorialOverlay()
-                };
-                TutorialManager.TryOpenTutorial(15, overlays);
+                TutorialManager.TryOpenTutorial(15, _overlays);
             }
             return _targetBrand;
         }

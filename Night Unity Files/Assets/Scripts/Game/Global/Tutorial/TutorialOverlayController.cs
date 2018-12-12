@@ -1,15 +1,17 @@
-﻿using Game.Global.Tutorial;
+﻿using System;
+using Game.Global.Tutorial;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.UI;
 
-[ExecuteInEditMode]
 public class TutorialOverlayController : MonoBehaviour
 {
     private RectTransform _top, _bottom, _left, _right, _topLeft, _topRight, _bottomLeft, _bottomRight, _centre;
-    private RectTransform _instructionsTop, _rectTransform;
+    private RectTransform _instructionsTop;
     private CanvasGroup _centreCanvas, _blankCanvas;
     private VerticalLayoutGroup _verticalGroup;
+    private TutorialOverlay _overlay;
+    private Canvas _canvas;
     private const int TutorialHeight = 250;
     private const int TutorialYOffset = 10;
 
@@ -31,32 +33,15 @@ public class TutorialOverlayController : MonoBehaviour
         _centreCanvas = _centre.gameObject.FindChildWithName<CanvasGroup>("Window");
         _blankCanvas = _centre.gameObject.FindChildWithName<CanvasGroup>("Blank");
 
-        _rectTransform = GetComponent<RectTransform>();
-    }
-
-    public void SetTutorialArea(Vector2 minOffset, Vector2 maxOffset)
-    {
-        bool centred = minOffset == Vector2.zero && maxOffset == Vector2.zero;
-        float centreAlpha = centred ? 0f : 1f;
-        _centreCanvas.alpha = centreAlpha;
-        _blankCanvas.alpha = 1f - centreAlpha;
-        if (centred)
-        {
-            minOffset = new Vector2(815, 510);
-            maxOffset = new Vector2(815, 410);
-        }
-
-        _centre.offsetMin = new Vector2(minOffset.x, maxOffset.y);
-        _centre.offsetMax = new Vector2(-maxOffset.x, -minOffset.y);
+        _canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
     }
 
     public void SetTutorialArea(TutorialOverlay overlay)
     {
+        _overlay = overlay;
         float centreAlpha = overlay.Centred() ? 0f : 1f;
         _centreCanvas.alpha = centreAlpha;
         _blankCanvas.alpha = 1f - centreAlpha;
-        _centre.offsetMin = overlay.OffsetMin();
-        _centre.offsetMax = overlay.OffsetMax(_rectTransform);
     }
 
     private void SetOffset(RectTransform rectTransform, float top, float bottom, float left, float right)
@@ -67,6 +52,12 @@ public class TutorialOverlayController : MonoBehaviour
 
     public void Update()
     {
+        if(_overlay == null) return;
+        Tuple<Vector2, Vector2> minMaxOffset = _overlay.GetMinMaxOffset(_canvas);
+
+        _centre.offsetMin = minMaxOffset.Item1;
+        _centre.offsetMax = minMaxOffset.Item2;
+        
         float _leftOffset = _centre.offsetMin.x;
         float _rightOffset = -_centre.offsetMax.x;
         float _topOffset = _centre.offsetMax.y;

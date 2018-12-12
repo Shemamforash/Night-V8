@@ -1768,7 +1768,6 @@
           </e>
         </e>
         <e p="TrailFireBehaviour.cs" t="Include" />
-        <e p="WorldToCanvasSpace.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

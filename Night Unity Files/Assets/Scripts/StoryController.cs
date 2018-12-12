@@ -43,7 +43,6 @@ public class StoryController : Menu
 
     public override void Enter()
     {
-        _closeButton.Enable();
         StartCoroutine(DisplayParagraph());
     }
 
@@ -81,6 +80,7 @@ public class StoryController : Menu
 
             skipTween?.Kill();
             skipTween = _skipCanvas.DOFade(0.5f, 1f);
+            _closeButton.Enable();
             _canSkip = true;
             _skipCanvas.alpha = 1f;
             //read
@@ -93,6 +93,7 @@ public class StoryController : Menu
 
             _canSkip = false;
             _skipParagraph = false;
+            _closeButton.Disable();
             skipTween?.Kill();
             skipTween = _skipCanvas.DOFade(0, 1f);
 
