@@ -55,8 +55,8 @@ public class GameController : MonoBehaviour
 
     public void EnableTutorial()
     {
-        ClearSaveAndLoad();
         TutorialManager.SetTutorialActive(true);
+        ClearSaveAndLoad();
     }
 
     public void DisableTutorial()

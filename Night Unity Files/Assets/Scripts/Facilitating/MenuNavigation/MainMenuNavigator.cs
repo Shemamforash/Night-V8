@@ -38,6 +38,8 @@ namespace Facilitating.MenuNavigation
 
         private void CreateFadeInSequence()
         {
+            _menuCanvasGroup.interactable = false;
+            _menuCanvasGroup.blocksRaycasts = false;
             TextMeshProUGUI latinText = _latin.GetComponent<TextMeshProUGUI>();
             float finalLatinTextSize = 90;
             latinText.fontSize = finalLatinTextSize - 5f;
@@ -80,7 +82,12 @@ namespace Facilitating.MenuNavigation
             while (!AudioClips.Loaded()) yield return null;
             Sequence sequence = DOTween.Sequence();
             sequence.Append(_menuCanvasGroup.DOFade(1, 2f));
-            sequence.AppendCallback(() => MenuStateMachine.ShowMenu("Main Menu"));
+            sequence.AppendCallback(() =>
+            {
+                _menuCanvasGroup.interactable = true;
+                _menuCanvasGroup.blocksRaycasts = true;
+                MenuStateMachine.ShowMenu("Main Menu");
+            });
         }
 
         public void Awake()

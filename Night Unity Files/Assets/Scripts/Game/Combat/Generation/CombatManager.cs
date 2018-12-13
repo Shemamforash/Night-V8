@@ -89,6 +89,7 @@ namespace Game.Combat.Generation
                 sequence.AppendInterval(2f);
                 sequence.AppendCallback(() =>
                 {
+                    if (TutorialManager.SeenControlsGuide() || !TutorialManager.Active()) return;
                     TutorialManager.TryOpenTutorial(6, _uiOverviewOverlays);
                 });
                 _hudTween = sequence;
@@ -134,12 +135,13 @@ namespace Game.Combat.Generation
             sequence.AppendInterval(3f);
             sequence.AppendCallback(() =>
             {
+                if (!TutorialManager.SeenControlsGuide() || !TutorialManager.Active()) return;
                 if (PlayerCombat.Instance == null) return;
                 List<TutorialOverlay> overlays = new List<TutorialOverlay>
                 {
                     new TutorialOverlay(UiCompassPulseController.CompassRect())
                 };
-                TutorialManager.TryOpenTutorial(4, overlays);
+                if (TutorialManager.TryOpenTutorial(4, overlays)) return;
                 if (PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Grit) != 0) return;
                 overlays = new List<TutorialOverlay>
                 {
@@ -252,6 +254,7 @@ namespace Game.Combat.Generation
             _inactiveEnemies = _currentRegion.GetEnemies();
             _maxSize = WorldState.Difficulty() / 10 + 2;
             PlaceAnimals();
+            _currentRegion.CheckForRegionExplored();
         }
 
         public static void OverrideMaxSize(int maxSize, List<Enemy> inactiveEnemies = null)

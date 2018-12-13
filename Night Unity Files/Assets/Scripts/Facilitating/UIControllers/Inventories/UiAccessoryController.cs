@@ -20,14 +20,15 @@ namespace Facilitating.UIControllers
         private static bool _unlocked;
         private List<TutorialOverlay> _overlays;
 
-        public void Start()
+        public override void Awake()
         {
+            base.Awake();
             _overlays = new List<TutorialOverlay>
             {
                 new TutorialOverlay()
             };
         }
-        
+
         protected override void CacheElements()
         {
             _accessoryList = gameObject.FindChildWithName<ListController>("List");
@@ -61,17 +62,17 @@ namespace Facilitating.UIControllers
 
         public static void Load(XmlNode root)
         {
-            _unlocked = root.BoolFromNode(nameof(GetType));
+            _unlocked = root.BoolFromNode("Accessories");
         }
 
         public static void Save(XmlNode root)
         {
-            root.CreateChild(nameof(GetType), _unlocked);
+            root.CreateChild("Accessories", _unlocked);
         }
 
         public override bool Unlocked()
         {
-            if(!_unlocked) _unlocked = Inventory.GetAvailableAccessories().Count != 0;
+            if (!_unlocked) _unlocked = Inventory.GetAvailableAccessories().Count != 0;
             return _unlocked;
         }
 

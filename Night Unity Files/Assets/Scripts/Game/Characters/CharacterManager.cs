@@ -122,9 +122,9 @@ namespace Game.Characters
             AddCharacter(Wanderer);
 
             CharacterAttributes attributes = Wanderer.Attributes;
-            attributes.Get(AttributeType.Grit).SetCurrentValue(2);
-            attributes.Get(AttributeType.Fettle).SetCurrentValue(3);
-            attributes.Get(AttributeType.Focus).SetCurrentValue(3);
+            attributes.Get(AttributeType.Grit).SetCurrentValue(3);
+            attributes.Get(AttributeType.Fettle).SetCurrentValue(2);
+            attributes.Get(AttributeType.Focus).SetCurrentValue(4);
             attributes.Get(AttributeType.Will).SetCurrentValue(2);
         }
 

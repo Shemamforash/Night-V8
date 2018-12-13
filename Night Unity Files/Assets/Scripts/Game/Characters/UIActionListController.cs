@@ -2,6 +2,8 @@
 using System.Linq;
 using Game.Characters;
 using Game.Characters.CharacterActions;
+using Game.Exploration.Environment;
+using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -71,6 +73,7 @@ public class UIActionListController : MonoBehaviour
                            && !_player.Attributes.Get(AttributeType.Fettle).ReachedMax()
                            && !_player.Attributes.Get(AttributeType.Grit).ReachedMax()
                            && !_player.Attributes.Get(AttributeType.Focus).ReachedMax();
+        if (TutorialManager.Active() && MapGenerator.DiscoveredRegions().Count == 1) _meditateEnabled = false;
         _meditateButton.gameObject.SetActive(_meditateEnabled);
     }
 
@@ -79,6 +82,7 @@ public class UIActionListController : MonoBehaviour
         _sleepEnabled = false;
         _sleepEnabled |= _player.CanSleep() && _atHome && _resting;
         _sleepEnabled |= _player.States.GetCurrentState() == _player.SleepAction;
+        if (TutorialManager.Active() && MapGenerator.DiscoveredRegions().Count == 1) _sleepEnabled = false;
         _sleepButton.gameObject.SetActive(_sleepEnabled);
     }
 

@@ -20,12 +20,12 @@ public class UiConsumableController : UiInventoryMenuController
 
     public static void Load(XmlNode root)
     {
-        _unlocked = root.BoolFromNode(nameof(GetType));
+        _unlocked = root.BoolFromNode("Consumable");
     }
 
     public static void Save(XmlNode root)
     {
-        root.CreateChild(nameof(GetType), _unlocked);
+        root.CreateChild("Consumable", _unlocked);
     }
 
     public override bool Unlocked()

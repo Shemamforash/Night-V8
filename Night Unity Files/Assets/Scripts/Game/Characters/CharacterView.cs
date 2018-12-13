@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
+using Game.Exploration.Regions;
 using Game.Global.Tutorial;
 using SamsHelper.Libraries;
 using TMPro;
@@ -22,6 +23,7 @@ namespace Game.Characters
         private CanvasGroup _viewCanvas;
         private UIActionListController _actionList;
         private List<TutorialOverlay> _overlays;
+        private List<TutorialOverlay> _sleepingOverlays;
 
         public void SetPlayer(Player player)
         {
@@ -46,13 +48,20 @@ namespace Game.Characters
 
             _actionList.SetPlayer(_player);
 
+            RectTransform physical = _attributeController.FindChildWithName<RectTransform>("Physical");
+            RectTransform mental = _attributeController.FindChildWithName<RectTransform>("Mental");
+
+            _sleepingOverlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(_actionList.SleepRect()),
+                new TutorialOverlay(gameObject.FindChildWithName("Conditions").GetComponent<RectTransform>())
+            };
+            
             _overlays = new List<TutorialOverlay>
             {
                 new TutorialOverlay(_attributeController.GetComponent<RectTransform>()),
-                new TutorialOverlay(_attributeController.GetComponent<RectTransform>()),
-                new TutorialOverlay(_attributeController.GetComponent<RectTransform>()),
-                new TutorialOverlay(_actionList.SleepRect()),
-                new TutorialOverlay(gameObject.FindChildWithName("Conditions").GetComponent<RectTransform>())
+                new TutorialOverlay(physical),
+                new TutorialOverlay(mental),
             };
         }
 
@@ -121,6 +130,8 @@ namespace Game.Characters
 
         public void ShowTutorial()
         {
+            TutorialManager.TryOpenTutorial(18, _sleepingOverlays);
+            if (Region.InTutorialPeriod()) return;
             TutorialManager.TryOpenTutorial(9, _overlays);
         }
     }

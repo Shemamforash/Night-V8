@@ -264,7 +264,12 @@ namespace Game.Combat.Player
         {
             _sequence?.Kill();
             LeaveFireTrail fireTrail = Player().GetComponent<LeaveFireTrail>();
-            if (fireTrail == null) fireTrail = Player().gameObject.AddComponent<LeaveFireTrail>();
+            if (fireTrail == null)
+            {
+                fireTrail = Player().gameObject.AddComponent<LeaveFireTrail>();
+                fireTrail.Initialise();
+            }
+
             _sequence = DOTween.Sequence();
             _sequence.AppendInterval(5f);
             _sequence.AppendCallback(() =>
@@ -375,7 +380,7 @@ namespace Game.Combat.Player
         {
             Vector3 playerPosition = PlayerPosition();
             Vector2 targetPosition = playerPosition + PlayerTransform().up;
-            Grenade.CreateDecay(playerPosition, targetPosition, false);
+            Grenade.CreateDecay(playerPosition, targetPosition, true);
         }
     }
 }

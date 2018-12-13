@@ -7,6 +7,7 @@ using Facilitating.UIControllers;
 using Fastlights;
 using Game.Characters;
 using Game.Combat.Enemies.Animals;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
@@ -18,6 +19,7 @@ using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
+using static Game.Combat.Player.PlayerCombat;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Player
@@ -97,6 +99,7 @@ namespace Game.Combat.Player
             Instance = this;
             _mainCamera = Camera.main;
         }
+
 
         protected override int GetBurnDamage()
         {
@@ -178,7 +181,7 @@ namespace Game.Combat.Player
                         _dashPressed = true;
                         break;
                     case InputAxis.Inventory:
-                        UiGearMenuController.ShowArmourMenu();
+                        UiGearMenuController.ShowInventories();
                         break;
                     case InputAxis.TakeItem:
                         EventTextController.Activate();
@@ -253,16 +256,29 @@ namespace Game.Combat.Player
             return "Leave region [T]";
         }
 
-        public override void Burn()
+        public override bool Burn()
         {
+            if (!base.Burn()) return false;
+            Player.BrandManager.IncreaseBurnCount(GetBurnDamage());
             _currentDeathReason = DeathReason.Fire;
-            base.Burn();
+            return true;
         }
 
-        public override void Sicken(int stacks = 1)
+        public override bool Sicken(int stacks = 1)
         {
+            if (!base.Sicken(stacks)) return false;
             _currentDeathReason = DeathReason.Sickness;
-            base.Sicken(stacks);
+            Instance.Player.BrandManager.IncreaseSickenCount();
+            return true;
+        }
+
+        public override void Decay()
+        {
+            int armourCountBefore = ArmourController.GetCurrentProtection();
+            base.Decay();
+            int armourCountAfter = ArmourController.GetCurrentProtection();
+            if (armourCountBefore - armourCountAfter == 0) return;
+            Instance.Player.BrandManager.IncreaseDecayCount();
         }
 
         public void Activate()

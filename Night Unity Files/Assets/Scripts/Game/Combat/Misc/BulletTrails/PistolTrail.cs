@@ -1,3 +1,4 @@
+using System.Collections;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
@@ -28,9 +29,15 @@ namespace Game.Combat.Misc
         public override void SetFinalPosition(Vector2 position)
         {
             base.SetFinalPosition(position);
-            _path.Stop();
+            StartCoroutine(WaitToStop());
+
+            IEnumerator WaitToStop()
+            {
+                yield return null;
+                _path.Stop();
+            }
         }
-        
+
         protected override ObjectPool<BulletTrail> GetObjectPool()
         {
             return _pool;

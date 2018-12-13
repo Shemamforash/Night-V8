@@ -105,7 +105,7 @@ namespace Game.Exploration.Weather
             float max = stringLength;
             for (int i = 0; i < 5; ++i)
             {
-                stringLength = (int)max;
+                stringLength = (int) max;
                 Debug.Log(EnvironmentManager.CurrentEnvironment.EnvironmentType);
                 GoToWeather();
                 Dictionary<string, int> _weatherOccurrences = new Dictionary<string, int>();

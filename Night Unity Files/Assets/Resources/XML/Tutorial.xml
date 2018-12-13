@@ -144,16 +144,16 @@
 		<Text>Focus increases the rate you gain adrenaline, and the number of compass charges available. Will decreases the recharge time of your skills, and can be used to restore other attributes.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>9</SectionNumber>
-		<PartNumber>4</PartNumber>
+		<SectionNumber>18</SectionNumber>
+		<PartNumber>1</PartNumber>
 		<Title>Sleeping</Title>
 		<MinOffset>860,650</MinOffset>
 		<MaxOffset>860,330</MaxOffset>
 		<Text>Sleeping slowly restores your characters attributes over time.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>9</SectionNumber>
-		<PartNumber>5</PartNumber>
+		<SectionNumber>18</SectionNumber>
+		<PartNumber>2</PartNumber>
 		<Title>Hunger and Thirst</Title>
 		<MinOffset>645,385</MinOffset>
 		<MaxOffset>645,600</MaxOffset>

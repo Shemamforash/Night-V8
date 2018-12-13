@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using EZCameraShake;
 using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -9,6 +10,7 @@ using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class StoryController : Menu
 {
@@ -23,6 +25,9 @@ public class StoryController : Menu
     private CloseButtonController _closeButton;
     private AudioSource _audioSource;
     private bool _canSkip;
+    private ParticleSystem _lightningSystem;
+    private CameraShaker _shaker;
+    private float _waitTime;
 
     public override void Awake()
     {
@@ -39,6 +44,25 @@ public class StoryController : Menu
         _audioSource.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
         _skipCanvas.alpha = MinAlpha;
         _paused = false;
+        if (!_goToCredits) return;
+        _waitTime = Random.Range(2f, 4f);
+        _lightningSystem = GameObject.Find("Lightning").GetComponent<ParticleSystem>();
+        _shaker = GameObject.Find("Shaker").GetComponent<CameraShaker>();
+        _lightningSystem.Play();
+    }
+
+    public void Update()
+    {
+        if (!_goToCredits) return;
+        _waitTime -= Time.deltaTime;
+        if (_waitTime > 0f) return;
+        float magnitude = Random.Range(5, 10);
+        float roughness = Random.Range(5, 10);
+        float inDuration = Random.Range(0.5f, 2f);
+        float outDuration = Random.Range(0.5f, 2f);
+        _shaker.ShakeOnce(magnitude, roughness, inDuration, outDuration);
+        float totalDuration = inDuration + outDuration;
+        _waitTime = Random.Range(totalDuration * 2f, totalDuration * 4f);
     }
 
     public override void Enter()

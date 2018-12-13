@@ -47,6 +47,7 @@ namespace Game.Exploration.Regions
         public bool TempleCleansed;
         public bool FountainVisited;
         private bool _isDynamicRegion;
+        private bool _justDiscovered;
 
         public Region() : base(Vector2.zero)
         {
@@ -63,6 +64,12 @@ namespace Game.Exploration.Regions
             int timeRemainingInHours = Mathf.CeilToInt(timeRemaining / 24f);
             string hourString = timeRemainingInHours == 1 ? "hr" : "hrs";
             return " +" + _claimQuantity + " " + _claimBenefit + " in " + timeRemainingInHours + hourString;
+        }
+
+        public void CheckForRegionExplored()
+        {
+            if (!_justDiscovered) return;
+            PlayerCombat.Instance.Player.BrandManager.IncreaseRegionsExplored();
         }
 
         public void Claim(Vector2 position)
@@ -149,6 +156,7 @@ namespace Game.Exploration.Regions
             region._discovered = doc.BoolFromNode("Discovered");
             region._seen = doc.BoolFromNode("Seen");
             region._size = doc.IntFromNode("Size");
+            region._justDiscovered = doc.BoolFromNode("JustDiscovered");
             region.TempleCleansed = doc.BoolFromNode("TempleCleansed");
             string radianceStoneString = doc.StringFromNode("RadianceStonePosition");
             if (radianceStoneString != "") region.RadianceStonePosition = radianceStoneString.ToVector2();
@@ -176,6 +184,7 @@ namespace Game.Exploration.Regions
                 neighborNode.CreateChild("ID", ((Region) n).RegionID);
             regionNode.CreateChild("Type", (int) _regionType);
             regionNode.CreateChild("Discovered", _discovered);
+            regionNode.CreateChild("JustDiscovered", _justDiscovered);
             regionNode.CreateChild("Seen", _seen);
             regionNode.CreateChild("Size", _size);
             regionNode.CreateChild("TempleCleansed", TempleCleansed);
@@ -263,7 +272,7 @@ namespace Game.Exploration.Regions
         {
             _isDynamicRegion = _regionType != RegionType.Gate && _regionType != RegionType.Rite && _regionType != RegionType.Tomb && _regionType != RegionType.Temple;
         }
-        
+
         public void SetRegionType(RegionType regionType)
         {
             _regionType = regionType;
@@ -283,7 +292,13 @@ namespace Game.Exploration.Regions
 
         public bool Discover()
         {
-            if (_discovered) return false;
+            if (_discovered)
+            {
+                _justDiscovered = false;
+                return false;
+            }
+
+            _justDiscovered = true;
             SetRegionType(MapGenerator.GetNewRegionType());
             _discovered = true;
             _seen = true;
@@ -299,7 +314,7 @@ namespace Game.Exploration.Regions
 
         public static bool InTutorialPeriod()
         {
-            return EnvironmentManager.CurrentEnvironment.EnvironmentType == EnvironmentType.Desert && MapGenerator.DiscoveredRegions().Count <= 3;
+            return TutorialManager.Active() && EnvironmentManager.CurrentEnvironment.EnvironmentType == EnvironmentType.Desert && MapGenerator.DiscoveredRegions().Count <= 4;
         }
 
         public List<Enemy> GetEnemies()

@@ -91,27 +91,6 @@ namespace Game.Combat.Enemies
             Sprite.sprite = spriteImage;
         }
 
-        public override void Decay()
-        {
-            int armourCountBefore = ArmourController.GetCurrentProtection();
-            base.Decay();
-            int armourCountAfter = ArmourController.GetCurrentProtection();
-            if (armourCountBefore - armourCountAfter == 0) return;
-            PlayerCombat.Instance.Player.BrandManager.IncreaseDecayCount();
-        }
-
-        public override void Burn()
-        {
-            base.Burn();
-            PlayerCombat.Instance.Player.BrandManager.IncreaseBurnCount(GetBurnDamage());
-        }
-
-        public override void Sicken(int stacks = 1)
-        {
-            if (SicknessStacks >= GetSicknessTargetTicks())
-                PlayerCombat.Instance.Player.BrandManager.IncreaseSickenCount();
-            base.Sicken(stacks);
-        }
 
         public override void TakeShotDamage(Shot shot)
         {

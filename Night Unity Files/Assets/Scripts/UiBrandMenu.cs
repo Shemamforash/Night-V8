@@ -36,7 +36,6 @@ public class UiBrandMenu : Menu
     private void Show()
     {
         Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
-        sequence.AppendInterval(0.5f);
         sequence.AppendCallback(_closeButton.Enable);
         _lastMenu = MenuStateMachine.CurrentMenu();
         MenuStateMachine.ShowMenu("Brand Menu");

@@ -28,12 +28,12 @@ namespace Facilitating.UIControllers
 
         public static void Load(XmlNode root)
         {
-            _unlocked = root.BoolFromNode(nameof(GetType));
+            _unlocked = root.BoolFromNode("Armour");
         }
 
         public static void Save(XmlNode root)
         {
-            root.CreateChild(nameof(GetType), _unlocked);
+            root.CreateChild("Armour", _unlocked);
         }
 
         public override bool Unlocked()

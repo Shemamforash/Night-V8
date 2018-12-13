@@ -27,22 +27,19 @@ public class TombPortalBehaviour : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (_triggered) return;
-        switch (EnvironmentManager.CurrentEnvironment.LevelNo)
+        switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
         {
-            case 0:
+            case EnvironmentType.Desert:
                 SerpentBehaviour.Create();
                 break;
-            case 1:
+            case EnvironmentType.Mountains:
                 StarfishBehaviour.Create();
                 break;
-            case 2:
+            case EnvironmentType.Sea:
                 SwarmBehaviour.Create();
                 break;
-            case 3:
+            case EnvironmentType.Ruins:
                 OvaBehaviour.Create();
-                break;
-            case 4:
-                WormBehaviour.Create();
                 break;
         }
 

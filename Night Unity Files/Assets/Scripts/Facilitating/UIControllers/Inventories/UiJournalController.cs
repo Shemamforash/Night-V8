@@ -18,12 +18,12 @@ public class UiJournalController : UiInventoryMenuController
 
     public static void Load(XmlNode root)
     {
-        _unlocked = root.BoolFromNode(nameof(GetType));
+        _unlocked = root.BoolFromNode("Journal");
     }
 
     public static void Save(XmlNode root)
     {
-        root.CreateChild(nameof(GetType), _unlocked);
+        root.CreateChild("Journal", _unlocked);
     }
     
     public override bool Unlocked()

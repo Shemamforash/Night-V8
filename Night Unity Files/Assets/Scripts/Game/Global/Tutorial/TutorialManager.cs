@@ -33,6 +33,7 @@ public class TutorialManager : MonoBehaviour
     private static bool _seenControlsGuide;
     private static List<TutorialOverlay> _overlays;
     private static bool _hideResouces;
+    private static GraphicRaycaster _mainCanvasRaycaster;
 
     public void Awake()
     {
@@ -44,6 +45,7 @@ public class TutorialManager : MonoBehaviour
         _closeButton.UseFireInput();
         _tutorialCanvas = GetComponent<CanvasGroup>();
         _tutorialCanvas.alpha = 0f;
+        _mainCanvasRaycaster = GameObject.Find("Canvas").GetComponent<GraphicRaycaster>();
     }
 
     public void Start()
@@ -101,6 +103,7 @@ public class TutorialManager : MonoBehaviour
 
     private static void Enter()
     {
+        _mainCanvasRaycaster.enabled = false;
         _tutorialCanvas.blocksRaycasts = true;
         _tutorialCanvas.interactable = true;
         _alreadyHidden = ResourcesUiController.Hidden();
@@ -121,6 +124,7 @@ public class TutorialManager : MonoBehaviour
     private static void Close()
     {
         if (!_alreadyHidden) ResourcesUiController.Show();
+        _mainCanvasRaycaster.enabled = true;
         _tutorialCanvas.blocksRaycasts = false;
         _tutorialCanvas.interactable = false;
         _closeButton.SetCallback(null);
@@ -213,35 +217,32 @@ public class TutorialManager : MonoBehaviour
         _tutorialActive = tutorialActive;
     }
 
+    public static bool SeenControlsGuide() => _seenControlsGuide;
+
     private IEnumerator ShowControlsTutorial()
     {
         if (!_tutorialActive || _seenControlsGuide || PlayerCombat.Instance == null) yield break;
         EventTextController.SetOverrideText("Move using [WASD]");
-        yield return new WaitForSeconds(1);
         while (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) yield return null;
         EventTextController.CloseOverrideText();
         yield return new WaitForSeconds(3);
 
         EventTextController.SetOverrideText("Rotate using [J] and [L]");
-        yield return new WaitForSeconds(1);
         while (Input.GetAxis("SwitchTab") == 0) yield return null;
         EventTextController.CloseOverrideText();
         yield return new WaitForSeconds(3);
 
         EventTextController.SetOverrideText("Press [K], or [LMB] to Fire");
-        yield return new WaitForSeconds(1);
-        while (Input.GetAxis("Fire") == 0) yield return null;
+        while (Input.GetAxis("Fire") == 0 && Input.GetAxis("Mouse") == 0) yield return null;
         EventTextController.CloseOverrideText();
         yield return new WaitForSeconds(3);
 
         EventTextController.SetOverrideText("Reload with [R]");
-        yield return new WaitForSeconds(1);
         while (Input.GetAxis("Reload") == 0) yield return null;
         EventTextController.CloseOverrideText();
         yield return new WaitForSeconds(3);
 
         EventTextController.SetOverrideText("Use your compass with [E]");
-        yield return new WaitForSeconds(1);
         while (Input.GetAxis("Compass") == 0) yield return null;
         EventTextController.CloseOverrideText();
         _seenControlsGuide = true;
@@ -249,5 +250,10 @@ public class TutorialManager : MonoBehaviour
         EventTextController.SetOverrideText("When you are ready to leave, go to the edge of the region and press [T]");
         yield return new WaitForSeconds(2);
         EventTextController.CloseOverrideText();
+    }
+
+    public static bool Active()
+    {
+        return _tutorialActive;
     }
 }

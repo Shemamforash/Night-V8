@@ -157,8 +157,8 @@
 	</Divining>
 	<Fire>
 		<Description>No other beast feeds off the life of another as fire</Description>
-		<Requirement>Set num enemies on fire</Requirement>
-		<TargetValue>100</TargetValue>
+		<Requirement>Take num burn damage</Requirement>
+		<TargetValue>1000</TargetValue>
 		<SuccessName>The Inferno</SuccessName>
 		<SuccessEffect>Occasionally explode with fire on taking damage</SuccessEffect>
 		<SuccessValue>0.02</SuccessValue>
@@ -170,8 +170,8 @@
 	</Fire>
 	<Shattering>
 		<Description>All armour is only as strong as it's weakest part</Description>
-		<Requirement>Shatter on num pieces of armour</Requirement>
-		<TargetValue>100</TargetValue>
+		<Requirement>Lose num points of armour</Requirement>
+		<TargetValue>10</TargetValue>
 		<SuccessName>The Void</SuccessName>
 		<SuccessEffect>Occasionally explode with decay on taking damage</SuccessEffect>
 		<SuccessValue>0.02</SuccessValue>
@@ -183,8 +183,8 @@
 	</Shattering>
 	<Sickness>
 		<Description>1</Description>
-		<Requirement>Cause num enemies to become sick</Requirement>
-		<TargetValue>100</TargetValue>
+		<Requirement>Take sickness damage num times</Requirement>
+		<TargetValue>10</TargetValue>
 		<SuccessName>The Pit</SuccessName>
 		<SuccessEffect>Killing sick enemies spreads it to nearby enemies</SuccessEffect>
 		<SuccessValue>0.02</SuccessValue>

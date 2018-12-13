@@ -56,6 +56,7 @@ namespace Game.Exploration.Environment
 
         public static void Load(XmlNode doc)
         {
+            GenerateNames();
             _regions.Clear();
             XmlNode regionsNode = doc.SelectSingleNode("Regions");
             foreach (XmlNode regionNode in regionsNode.SelectNodes("Region"))
@@ -85,7 +86,7 @@ namespace Game.Exploration.Environment
             SetRegionTypes();
             initialNode.Discover();
 #if UNITY_EDITOR
-            _regions.ForEach(r => r.Discover());
+//            _regions.ForEach(r => r.Discover());
 #endif
         }
 
@@ -232,6 +233,7 @@ namespace Game.Exploration.Environment
                     break;
             }
 
+            Debug.Log(type + " " + _regionNames.Keys.Count);
             return _regionNames[type].RemoveRandom();
         }
 
@@ -351,10 +353,9 @@ namespace Game.Exploration.Environment
                 return RegionType.Gate;
             }
 
-//            return RegionType.Temple;
             UpdateAvailableRegionTypes();
             ++_regionsDiscovered;
-            if (!Region.InTutorialPeriod()) return _regionTypeBag.RemoveRandom();
+            if (TutorialManager.Active() && !Region.InTutorialPeriod()) return _regionTypeBag.RemoveRandom();
             _regionTypeBag.Remove(RegionType.Danger);
             return RegionType.Danger;
         }

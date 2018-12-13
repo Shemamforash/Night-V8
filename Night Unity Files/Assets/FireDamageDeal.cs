@@ -20,7 +20,7 @@ public class FireDamageDeal : MonoBehaviour
     {
         _ignoreTargets.Clear();
     }
-    
+
     public void AddIgnoreTarget(CanTakeDamage _ignoreTarget)
     {
         _ignoreTargets.Add(_ignoreTarget);

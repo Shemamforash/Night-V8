@@ -12,7 +12,6 @@ namespace Game.Combat.Misc
     {
         private const int NoSlots = 4;
         private static Skill[] _skills;
-        private static List<int> _skillsLocked;
         private static List<CooldownController> CooldownControllers;
         private static List<UISkillCostController> CostControllers;
         private static float _cooldownModifier;
@@ -35,7 +34,6 @@ namespace Game.Combat.Misc
             }
 
             _skills = new Skill[NoSlots];
-            _skillsLocked = new List<int>();
             _skillsReady = false;
             _skillBarRect = GetComponent<RectTransform>();
             _overlays = new List<TutorialOverlay>
@@ -117,12 +115,10 @@ namespace Game.Combat.Misc
             CostControllers[slot].SetCost(skill.AdrenalineCost());
         }
 
-        private static bool TryLockSkill(int skillNo)
+        private static bool FailToCastSkill()
         {
-            float noSkillChance = PlayerCombat.Instance.Player.Attributes.SkillDisableChance;
-            if (Random.Range(0f, 1f) > noSkillChance) return false;
-            _skillsLocked.Add(skillNo);
-            return true;
+            float failChance = PlayerCombat.Instance.Player.Attributes.SkillDisableChance;
+            return !(Random.Range(0f, 1f) > failChance);
         }
 
         private static bool IsSkillFree()
@@ -133,13 +129,15 @@ namespace Game.Combat.Misc
 
         public static void ActivateSkill(int skillNo)
         {
-            if (_skillsLocked.Contains(skillNo)) return;
             if (!_skillsReady) return;
-            if (TryLockSkill(skillNo)) return;
-            bool freeSkill = IsSkillFree();
-            if (!_skills[skillNo].Activate(freeSkill || SkillsAreFree)) return;
-            TutorialManager.TryOpenTutorial(14, _overlays);
-            if (freeSkill) return;
+            if (!FailToCastSkill())
+            {
+                bool freeSkill = IsSkillFree();
+                if (!_skills[skillNo].Activate(freeSkill || SkillsAreFree)) return;
+                TutorialManager.TryOpenTutorial(14, _overlays);
+                if (freeSkill) return;
+            }
+
             StartCooldown(_skills[skillNo].AdrenalineCost());
         }
 

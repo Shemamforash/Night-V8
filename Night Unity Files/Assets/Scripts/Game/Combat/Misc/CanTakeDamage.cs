@@ -46,12 +46,13 @@ namespace Game.Combat.Misc
 
         public abstract string GetDisplayName();
 
-        public virtual void Burn()
+        public virtual bool Burn()
         {
-            if (_timeSinceLastBurn < 1f) return;
+            if (_timeSinceLastBurn < 0.5f) return false;
             _timeSinceLastBurn = 0f;
             _spriteFlash.FlashSprite();
             HealthController.TakeDamage(GetBurnDamage());
+            return true;
         }
 
         public virtual void Decay()
@@ -59,8 +60,9 @@ namespace Game.Combat.Misc
             TakeArmourDamage(GetDecayDamage());
         }
 
-        public virtual void Sicken(int stacks = 1)
+        public virtual bool Sicken(int stacks = 1)
         {
+            bool tookDamage = false;
             SicknessStacks += stacks;
             if (SicknessStacks >= GetSicknessTargetTicks())
             {
@@ -68,9 +70,11 @@ namespace Game.Combat.Misc
                 float damage = (WorldState.Difficulty() / 25f + 1f) * 50f;
                 HealthController.TakeDamage(damage);
                 SicknessStacks = 0;
+                tookDamage = true;
             }
 
             _sicknessDuration = 0;
+            return tookDamage;
         }
 
         public bool IsSick() => SicknessStacks > 0;

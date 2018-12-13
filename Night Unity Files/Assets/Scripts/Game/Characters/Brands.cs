@@ -238,7 +238,7 @@ namespace Game.Characters.Brands
 
         protected override string GetProgressSubstring()
         {
-            return "Ignited " + Progress() + " enemies";
+            return "Taken " + Progress() + " fire damage";
         }
     }
 
@@ -260,7 +260,7 @@ namespace Game.Characters.Brands
 
         protected override string GetProgressSubstring()
         {
-            return "Decayed " + Progress() + " enemies";
+            return "Taken " + Progress() + " shatter damage";
         }
     }
 
@@ -282,7 +282,7 @@ namespace Game.Characters.Brands
 
         protected override string GetProgressSubstring()
         {
-            return "Sickened " + Progress() + " enemies";
+            return "Taken sickness damage " + Progress() + " times";
         }
     }
 

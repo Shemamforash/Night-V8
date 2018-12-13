@@ -138,7 +138,9 @@ namespace Game.Characters
             _activeBrandOne?.SetStatus(BrandStatus.Locked);
             _activeBrandOne = brand;
             brand.SetStatus(BrandStatus.Active);
+#if UNITY_EDITOR
             brand.UpdateValue(5000);
+#endif
         }
 
         public void SetActiveBrandTwo(Brand brand)
@@ -146,7 +148,9 @@ namespace Game.Characters
             _activeBrandTwo?.SetStatus(BrandStatus.Locked);
             _activeBrandTwo = brand;
             brand.SetStatus(BrandStatus.Active);
+#if UNITY_EDITOR
             brand.UpdateValue(5000);
+#endif
         }
 
         public void SetActiveBrandThree(Brand brand)
@@ -154,7 +158,9 @@ namespace Game.Characters
             _activeBrandThree?.SetStatus(BrandStatus.Locked);
             _activeBrandThree = brand;
             brand.SetStatus(BrandStatus.Active);
+#if UNITY_EDITOR
             brand.UpdateValue(5000);
+#endif
         }
 
         public void Initialise(Player player)

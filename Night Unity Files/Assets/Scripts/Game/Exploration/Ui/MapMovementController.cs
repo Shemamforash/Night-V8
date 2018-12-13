@@ -207,9 +207,9 @@ public class MapMovementController : MonoBehaviour, IInputListener
     {
         if (_nearestRegion == null) return;
         if (!CanAffordToTravel()) return;
+        if (TutorialManager.IsTutorialVisible()) return;
         Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
         travelAction.TravelTo(_nearestRegion, _nearestRegion.MapNode().GetGritCost());
-//        if (_currentRegion == _nearestRegion) return;
         MapMenuController.IsReturningFromCombat = false;
         ReturnToGame();
     }

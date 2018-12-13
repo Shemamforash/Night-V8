@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using DG.Tweening;
 using Facilitating.Persistence;
@@ -208,6 +209,17 @@ namespace Facilitating.UIControllers
             _instance._tabs[tabNumber].Select();
         }
 
+        public static void ShowInventories()
+        {
+            for (int i = 0; i < _instance._tabs.Count; i++)
+            {
+                InventoryTab tab = _instance._tabs[i];
+                if (!tab.Active()) continue;
+                SelectTab(i);
+                break;
+            }
+        }
+        
         public static void ShowArmourMenu() => SelectTab(0);
 
         public static void ShowAccessoryMenu() => SelectTab(1);

@@ -25,27 +25,18 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
 
     public static void Load(XmlNode root)
     {
-        _unlocked = root.BoolFromNode(nameof(GetType));
+        _unlocked = root.BoolFromNode("Crafting");
     }
 
     public static void Save(XmlNode root)
     {
-        root.CreateChild(nameof(GetType), _unlocked);
+        root.CreateChild("Crafting", _unlocked);
     }
 
     public override bool Unlocked()
     {
         if (!_unlocked) _unlocked = Recipe.RecipesAvailable();
         return _unlocked;
-    }
-
-    public void Start()
-    {
-        _overlays = new List<TutorialOverlay>
-        {
-            new TutorialOverlay(ResourcesUiController.ResourceRect()),
-            new TutorialOverlay(),
-        };
     }
 
     protected override void CacheElements()
@@ -70,6 +61,15 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         InputHandler.RegisterInputListener(this);
         if (CharacterManager.SelectedCharacter.CraftAction.IsCurrentState()) ShowCurrentlyCrafting();
         else ShowCraftingList();
+        if (_overlays == null)
+        {
+            _overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(ResourcesUiController.ResourceRect()),
+                new TutorialOverlay()
+            };
+        }
+
         TutorialManager.TryOpenTutorial(10, _overlays, false);
     }
 
