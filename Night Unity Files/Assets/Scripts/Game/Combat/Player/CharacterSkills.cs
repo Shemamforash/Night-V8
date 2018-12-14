@@ -95,11 +95,10 @@ namespace Game.Combat.Player
         {
             PlayerCombat player = Player();
             List<CanTakeDamage> sickened = SickenBehaviour.Create(player.transform.position, new List<CanTakeDamage> {player}, 5);
-            int explosionDamage = (int) (10 + WorldState.Difficulty() / 2.5f);
             sickened.ForEach(e =>
             {
                 if (e.HealthController.GetHealth().CurrentValue() != 0) return;
-                Explosion explosion = Explosion.CreateExplosion(e.transform.position, explosionDamage, 0.5f);
+                Explosion explosion = Explosion.CreateExplosion(e.transform.position, 0.5f);
                 explosion.AddIgnoreTarget(player);
                 explosion.InstantDetonate();
             });
@@ -163,7 +162,7 @@ namespace Game.Combat.Player
             s.Attributes().AddOnHit(() =>
             {
                 int damageDealt = s.Attributes().DamageDealt();
-                damageDealt = (int) (damageDealt / 4f);
+                damageDealt = (int) (damageDealt / 10f);
                 if (damageDealt <= 0) damageDealt = 1;
                 Player().HealthController.Heal(damageDealt);
             });
@@ -221,9 +220,9 @@ namespace Game.Combat.Player
         {
         }
 
-        private void CreateExplosion(Vector2 position, int damage, float radius)
+        private void CreateExplosion(Vector2 position, float radius)
         {
-            Explosion e = Explosion.CreateExplosion(position, damage, radius);
+            Explosion e = Explosion.CreateExplosion(position, radius);
             e.AddIgnoreTarget(Player());
             e.InstantDetonate();
         }
@@ -244,7 +243,7 @@ namespace Game.Combat.Player
                     if (cell == null || !cell.Reachable) continue;
                     Sequence subSequence = DOTween.Sequence();
                     subSequence.AppendInterval(Random.Range(0.1f, 0.2f));
-                    subSequence.AppendCallback(() => CreateExplosion(pos, 25, 0.5f));
+                    subSequence.AppendCallback(() => CreateExplosion(pos, 0.5f));
                 }
             });
         }

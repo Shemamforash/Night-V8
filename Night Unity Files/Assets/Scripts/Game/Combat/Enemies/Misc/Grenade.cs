@@ -23,6 +23,16 @@ namespace Game.Combat.Enemies.Misc
         private bool _isPlayerGrenade;
         private readonly Collider2D[] _colliders = new Collider2D[50];
 
+        public static List<Grenade> Grenades()
+        {
+            return _grenadePool.Active();
+        }
+
+        public Rigidbody2D RigidBody2D()
+        {
+            return _rb2d;
+        }
+        
         public void Awake()
         {
             _rb2d = GetComponent<Rigidbody2D>();
@@ -96,8 +106,7 @@ namespace Game.Combat.Enemies.Misc
 
         private void Detonate()
         {
-            int damage = Mathf.CeilToInt(Damage + WorldState.NormalisedDifficulty() * Damage);
-            Explosion explosion = Explosion.CreateExplosion(transform.position, damage, _radius);
+            Explosion explosion = Explosion.CreateExplosion(transform.position, _radius);
             explosion.AddOnDetonate(OnDetonate);
             if (_incendiary) explosion.SetBurn();
             if (_decaying) explosion.SetDecay();

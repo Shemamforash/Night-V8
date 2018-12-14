@@ -19,7 +19,7 @@ namespace Game.Combat.Misc
         protected SpriteRenderer Sprite;
         private CanTakeDamage _target;
         public MovementController MovementController;
-        private const float ExplosionForceModifier = 20;
+        private const float ExplosionForceModifier = 10;
 
         protected float DistanceToTarget()
         {

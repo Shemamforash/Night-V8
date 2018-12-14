@@ -59,13 +59,13 @@ namespace Game.Combat.Enemies.Bosses
             if (!(_damageTakenSinceLastSpawn > SpermSpawnThreshold)) return;
             _damageTakenSinceLastSpawn -= SpermSpawnThreshold;
             SpermBehaviour.Create();
-            ArmourController.Repair(600);
+            for (int i = 0; i < 2; ++i)
+                ArmourController.Repair();
         }
 
         public override void MyUpdate()
         {
             base.MyUpdate();
-            RepairArmour();
             TrySpawnEnemy();
             TryPushBackPlayer();
         }
@@ -103,11 +103,6 @@ namespace Game.Combat.Enemies.Bosses
             Transform beam = gameObject.FindChildWithName("Beams").transform;
             for (int i = 0; i < beam.childCount; ++i)
                 beam.GetChild(i).gameObject.AddComponent<Beam>().Initialise(5f, 5f);
-        }
-
-        private void RepairArmour()
-        {
-            ArmourController.Repair(5 * Time.deltaTime);
         }
 
         public override string GetDisplayName()

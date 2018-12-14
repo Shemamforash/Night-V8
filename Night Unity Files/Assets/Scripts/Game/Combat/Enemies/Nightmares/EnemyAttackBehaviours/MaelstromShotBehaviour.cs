@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Game.Combat.Player;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using TMPro;
@@ -17,7 +18,8 @@ public class MaelstromShotBehaviour : MonoBehaviour
     private MaelstromShotTrail _trail;
     private float _angleModifier;
     private const float AngleDecay = 0.97f;
-
+    private const int ShotDamage = 10;
+    
     public static void Create(Vector3 direction, Vector3 position, float speed, bool follow = true)
     {
         MaelstromShotBehaviour shot = _shotPool.Create();
@@ -69,7 +71,8 @@ public class MaelstromShotBehaviour : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         PlayerCombat player = other.gameObject.GetComponent<PlayerCombat>();
-        player.TakeRawDamage(10, _rigidBody.velocity.normalized);
+        int damage = WorldState.ScaleDamage(ShotDamage);
+        player.TakeRawDamage(damage, _rigidBody.velocity.normalized);
         player.MovementController.AddForce(_rigidBody.velocity.normalized * 20f);
         Explode();
     }

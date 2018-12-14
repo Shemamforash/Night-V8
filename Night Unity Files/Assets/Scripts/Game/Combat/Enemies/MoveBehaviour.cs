@@ -33,7 +33,7 @@ namespace Game.Combat.Enemies
 
         private void UpdateCurrentCell()
         {
-            _currentCell = PathingGrid.WorldToCellPosition(transform.position);
+            _currentCell = PathingGrid.WorldToCellPosition(transform.position, false);
             if (_currentCell == null || _targetCell == null) return;
             _outOfSight = Physics2D.Linecast(transform.position, _targetCell.Position, 1 << 8).collider != null;
             Vector2 difference = _targetCell.Position - _currentCell.Position;

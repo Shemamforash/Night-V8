@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -22,6 +23,16 @@ namespace Game.Combat.Misc
         public CharacterCombat _origin;
         private Vector2 _direction, _originPosition, _lastPosition;
         private ShotAttributes _shotAttributes;
+
+        public static List<Shot> Shots()
+        {
+            return _shotPool.Active();
+        }
+
+        public Rigidbody2D RigidBody2D()
+        {
+            return _rigidBody;
+        }
 
         public void Awake()
         {

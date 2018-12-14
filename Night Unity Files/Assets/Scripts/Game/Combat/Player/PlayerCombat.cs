@@ -62,6 +62,7 @@ namespace Game.Combat.Player
         private bool _useKeyboardMovement = true;
         private Vector2? _lastMousePosition;
         private Camera _mainCamera;
+        private const float EnemyDamageModifier = 0.2f;
 
 
         public bool ConsumeAdrenaline(int amount)
@@ -111,7 +112,7 @@ namespace Game.Combat.Player
         protected override int GetDecayDamage()
         {
             int decayDamage = base.GetDecayDamage();
-            decayDamage = (int) (decayDamage * (Player.Attributes.DecayDamageModifier + 1f));
+            if (Player.Attributes.TakeDoubleDecayDamage && Helper.RollDie(0, 4)) decayDamage *= 2;
             return decayDamage;
         }
 
@@ -351,7 +352,6 @@ namespace Game.Combat.Player
             _currentDeathReason = DeathReason.Standard;
             base.TakeShotDamage(shot);
             UpdateSkillActions.Clear();
-            Player.BrandManager.IncreaseDamageTaken(shot.Attributes().DamageDealt());
         }
 
         public override void TakeExplosionDamage(int damage, Vector2 direction, float radius)
@@ -363,6 +363,9 @@ namespace Game.Combat.Player
 
         protected override void TakeDamage(int damage, Vector2 direction)
         {
+            damage = (int) (damage * EnemyDamageModifier);
+            if (damage < 1) damage = 1;
+            Player.BrandManager.IncreaseDamageTaken(damage);
             base.TakeDamage(damage, direction);
             TryExplode();
             Player.Attributes.CalculateNewFettle(HealthController.GetCurrentHealth());

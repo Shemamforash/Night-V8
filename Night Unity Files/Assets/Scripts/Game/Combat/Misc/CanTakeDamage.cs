@@ -21,9 +21,10 @@ namespace Game.Combat.Misc
         private float _sicknessDuration;
         public bool IsPlayer;
 
-        public void TakeArmourDamage(float damage)
+        private void TakeArmourDamage(int count)
         {
-            ArmourController?.TakeDamage(Mathf.CeilToInt(damage));
+            for (int i = 0; i < count; ++i)
+                ArmourController?.TakeDamage();
         }
 
         protected virtual void Awake()
@@ -67,7 +68,7 @@ namespace Game.Combat.Misc
             if (SicknessStacks >= GetSicknessTargetTicks())
             {
                 _spriteFlash.FlashSprite();
-                float damage = (WorldState.Difficulty() / 25f + 1f) * 50f;
+                float damage = HealthController.GetMaxHealth() / 10f;
                 HealthController.TakeDamage(damage);
                 SicknessStacks = 0;
                 tookDamage = true;
@@ -88,9 +89,7 @@ namespace Game.Combat.Misc
 
         protected virtual int GetDecayDamage()
         {
-            int decayDamage = Mathf.FloorToInt(Armour.ArmourHealthUnit * 0.5f);
-            if (decayDamage < 1) decayDamage = 1;
-            return decayDamage;
+            return 1;
         }
 
         protected virtual int GetSicknessTargetTicks()

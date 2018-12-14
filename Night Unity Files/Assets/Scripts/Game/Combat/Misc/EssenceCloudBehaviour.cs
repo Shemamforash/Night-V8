@@ -9,14 +9,16 @@ using UnityEngine;
 
 public class EssenceCloudBehaviour : MonoBehaviour
 {
-    private ParticleSystem _essenceParticles;
+    private ParticleSystem _essenceCloud, _essenceRing;
     private ParticleSystem _essencePuff;
     private float _currentTime;
     private static readonly ObjectPool<EssenceCloudBehaviour> _essenceCloudPool = new ObjectPool<EssenceCloudBehaviour>("Essence Clouds", "Prefabs/Combat/Visuals/Essence Cloud");
+    private bool _triggered;
 
     public void Awake()
     {
-        _essenceParticles = gameObject.FindChildWithName<ParticleSystem>("Cloud");
+        _essenceCloud = gameObject.FindChildWithName<ParticleSystem>("Cloud");
+        _essenceRing = gameObject.FindChildWithName<ParticleSystem>("Ring");
         _essencePuff = gameObject.FindChildWithName<ParticleSystem>("Essence Puff");
         Initialise(transform.position);
     }
@@ -30,16 +32,16 @@ public class EssenceCloudBehaviour : MonoBehaviour
     private void Initialise(Vector2 position)
     {
         transform.position = position;
-        SetEmissionRate();
+        _triggered = false;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (_triggered) return;
         if (!other.gameObject.CompareTag("Player")) return;
-        _essencePuff.Emit(20);
-        _essenceCloudPool.Return(this);
+        _triggered = true;
         Inventory.IncrementResource("Essence", 1);
-//        StartCoroutine(Fade());
+        StartCoroutine(Fade());
     }
 
     public void OnDestroy()
@@ -49,14 +51,10 @@ public class EssenceCloudBehaviour : MonoBehaviour
 
     private IEnumerator Fade()
     {
-        _essenceParticles.Stop();
-        while (_essenceParticles.particleCount > 0) yield return null;
+        _essenceCloud.Stop();
+        _essenceRing.Stop();
+        _essencePuff.Emit(30);
+        while (_essenceCloud.particleCount > 0 || _essencePuff.particleCount > 0 || _essenceRing.particleCount > 0) yield return null;
         _essenceCloudPool.Return(this);
-    }
-
-    private void SetEmissionRate()
-    {
-        ParticleSystem.EmissionModule emission = _essenceParticles.emission;
-        emission.rateOverTime = 20;
     }
 }

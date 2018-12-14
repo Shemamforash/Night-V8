@@ -149,7 +149,9 @@ namespace Game.Combat.Generation
             }
             catch (IndexOutOfRangeException)
             {
+#if UNITY_EDITOR
                 if (print) Debug.Log("Invalid cell position: (" + x + " ," + y + ")");
+#endif
                 return null;
             }
         }
@@ -476,7 +478,6 @@ namespace Game.Combat.Generation
 
 //            _playerStartPosition = _edgePositionList.RandomElement().Position;
 //            AddBlockingArea(_playerStartPosition, 1f);
-
         }
 
         private class CellComparer : IEqualityComparer<Cell>

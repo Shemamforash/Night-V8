@@ -22,7 +22,6 @@ namespace Game.Combat.Misc
         private const float FadeTime = 0.5f;
 
         private float _age;
-        private int _damage;
         private float _explosionRadius = 1f;
         private SpriteRenderer _explosionSprite;
 
@@ -35,6 +34,8 @@ namespace Game.Combat.Misc
 
         private bool _decay, _incendiary, _sicken;
         private List<CanTakeDamage> _targetsToIgnore;
+        private int BaseDamage = 25;
+        private static Collider2D[] _colliders = new Collider2D[200]; 
 
         public void Awake()
         {
@@ -55,10 +56,10 @@ namespace Game.Combat.Misc
             _explosionPool.Dispose(this);
         }
 
-        public static Explosion CreateExplosion(Vector2 position, int damage, float radius = 1)
+        public static Explosion CreateExplosion(Vector2 position, float radius = 1)
         {
             Explosion explosion = _explosionPool.Create();
-            explosion.Initialise(position, damage, radius);
+            explosion.Initialise(position, radius);
             return explosion;
         }
 
@@ -82,12 +83,11 @@ namespace Game.Combat.Misc
             _targetsToIgnore.AddRange(ignoreTargets);
         }
 
-        private void Initialise(Vector2 position, int damage, float radius = 1)
+        private void Initialise(Vector2 position, float radius = 1)
         {
             transform.position = position;
             _spriteObject.transform.localScale = Vector2.one * radius;
             _explosionRadius = radius;
-            _damage = damage;
             _incendiary = false;
             _decay = false;
             _targetsToIgnore = new List<CanTakeDamage>();
@@ -107,14 +107,18 @@ namespace Game.Combat.Misc
 
         private void DealDamage()
         {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _explosionRadius);
+            int overlappedColliders = Physics2D.OverlapCircleNonAlloc(transform.position, _explosionRadius, _colliders);
             List<EnemyBehaviour> enemiesHit = new List<EnemyBehaviour>();
-            foreach (Collider2D col in colliders)
+            int damage = (int) (BaseDamage * _explosionRadius);
+            if (damage < 1) damage = 1;
+            damage = WorldState.ScaleDamage(damage);
+            for (int index = 0; index < overlappedColliders; index++)
             {
+                Collider2D col = _colliders[index];
                 CanTakeDamage i = col.GetComponent<CanTakeDamage>();
                 if (i == null) continue;
                 if (_targetsToIgnore.Contains(i)) return;
-                i.TakeExplosionDamage(_damage, transform.position, _explosionRadius);
+                i.TakeExplosionDamage(damage, transform.position, _explosionRadius);
                 EnemyBehaviour behaviour = i as EnemyBehaviour;
                 if (behaviour != null) enemiesHit.Add(behaviour);
             }
@@ -203,11 +207,9 @@ namespace Game.Combat.Misc
 
         private void AddConditions()
         {
-            Sequence sequence = DOTween.Sequence();
-            sequence.AppendInterval(0.2f);
-            if (_incendiary) sequence.AppendCallback(() => FireBurstBehaviour.Create(transform.position).AddIgnoreTargets(_targetsToIgnore));
-            if (_decay) sequence.AppendCallback(() => DecayBehaviour.Create(transform.position).AddIgnoreTargets(_targetsToIgnore));
-            if (_sicken) sequence.AppendCallback(() => SickenBehaviour.Create(transform.position, _targetsToIgnore));
+            if (_incendiary) FireBurstBehaviour.Create(transform.position).AddIgnoreTargets(_targetsToIgnore);
+            if (_decay) DecayBehaviour.Create(transform.position).AddIgnoreTargets(_targetsToIgnore);
+            if (_sicken) SickenBehaviour.Create(transform.position, _targetsToIgnore);
         }
 
         public void AddOnDetonate(Action<List<EnemyBehaviour>> action)

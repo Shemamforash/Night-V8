@@ -34,8 +34,7 @@ namespace Game.Combat.Enemies.Nightmares
                 if (r == null) return;
                 r.HealthController.SetInitialHealth(newHealth, r);
             });
-            int explosionDamage = (int) (WorldState.Difficulty() / 5f);
-            Explosion explosion = Explosion.CreateExplosion(transform.position, explosionDamage, 0.5f);
+            Explosion explosion = Explosion.CreateExplosion(transform.position, 0.5f);
             explosion.AddIgnoreTargets(new List<CanTakeDamage>(_split.LastSplitEnemies()));
             explosion.InstantDetonate();
 

@@ -35,7 +35,7 @@ namespace Game.Gear.Armour
         {
             return _template.Description;
         }
-        
+
         public override string GetSummary()
         {
             return _summary;
@@ -70,9 +70,14 @@ namespace Game.Gear.Armour
 
         public static Accessory Generate()
         {
+            ItemQuality quality = WorldState.GenerateGearLevel();
+            return Generate(quality);
+        }
+
+        public static Accessory Generate(ItemQuality quality)
+        {
             ReadTemplates();
             AccessoryTemplate randomTemplate = _accessoryTemplates[Random.Range(0, _accessoryTemplates.Count)];
-            ItemQuality quality = WorldState.GenerateGearLevel();
             return new Accessory(randomTemplate, quality);
         }
 

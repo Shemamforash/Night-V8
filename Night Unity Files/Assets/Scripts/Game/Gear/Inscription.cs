@@ -54,8 +54,13 @@ namespace Game.Gear
 
         public static Inscription Generate()
         {
-            ReadTemplates();
             ItemQuality tier = WorldState.GenerateGearLevel();
+            return Generate(tier);
+        }
+
+        public static Inscription Generate(ItemQuality tier)
+        {
+            ReadTemplates();
             InscriptionTemplate randomTemplate = _inscriptionTemplates.RandomElement();
             return new Inscription(randomTemplate, tier);
         }

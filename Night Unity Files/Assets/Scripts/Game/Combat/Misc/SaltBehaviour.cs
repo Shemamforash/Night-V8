@@ -25,7 +25,7 @@ public class SaltBehaviour : MonoBehaviour
         _rigidBody = GetComponent<Rigidbody2D>();
         _overlays = new List<TutorialOverlay>
         {
-            new TutorialOverlay(transform, 2, 2),
+            new TutorialOverlay(),
             new TutorialOverlay()
         };
     }
@@ -39,8 +39,8 @@ public class SaltBehaviour : MonoBehaviour
 
     public void Update()
     {
-        if (!CombatManager.IsCombatActive()) return;
         Pulse();
+        if (!CombatManager.IsCombatActive()) return;
         Vector2 directionToPlayer = PlayerCombat.Instance.transform.position - transform.position;
         float distanceToPlayer = directionToPlayer.magnitude;
         if (distanceToPlayer > PickupRadius) return;

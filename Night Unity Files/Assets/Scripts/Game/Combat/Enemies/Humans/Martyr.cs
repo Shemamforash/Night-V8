@@ -6,7 +6,7 @@ namespace Game.Combat.Enemies.Humans
 {
     public class Martyr : UnarmedBehaviour
     {
-        private const float ExplosionDamage = 50;       
+        private const float ExplosionDamage = 50;
         private bool _detonated, _dontKill;
         private const float MinExplodeDistance = 0.5f;
 
@@ -31,7 +31,7 @@ namespace Game.Combat.Enemies.Humans
             Vector2 currentPosition = transform.position;
             SkillAnimationController.Create(transform, "Martyr", 0.5f, () =>
             {
-                Explosion.CreateExplosion(currentPosition, 50, 2).InstantDetonate();
+                Explosion.CreateExplosion(currentPosition, 2).InstantDetonate();
                 _dontKill = false;
                 Kill();
             });
@@ -50,7 +50,7 @@ namespace Game.Combat.Enemies.Humans
             _detonated = true;
             Vector2 currentPosition = transform.position;
             int damage = Mathf.CeilToInt(ExplosionDamage + WorldState.NormalisedDifficulty() * ExplosionDamage);
-            Explosion.CreateExplosion(currentPosition, damage, 2).InstantDetonate();
+            Explosion.CreateExplosion(currentPosition, 2).InstantDetonate();
         }
     }
 }

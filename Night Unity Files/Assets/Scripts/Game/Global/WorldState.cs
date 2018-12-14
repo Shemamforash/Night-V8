@@ -39,7 +39,7 @@ namespace Game.Global
 
         private static readonly List<EnemyTemplate> _allowedHumanEnemies = new List<EnemyTemplate>();
         private static readonly List<EnemyTemplate> _allowedNightmareEnemies = new List<EnemyTemplate>();
-        private static bool _needsTransit; // = true;
+        private static bool _needsTransit;// = true;
 
         private static int MinutesPassed;
         private static float _currentTime;
@@ -124,7 +124,7 @@ namespace Game.Global
             _isPaused = false;
             Seed = Random.Range(0, int.MaxValue);
 #if UNITY_EDITOR
-//            _difficulty = 30;
+            _difficulty = 40;
 #endif
             Random.InitState(Seed);
             EnvironmentManager.Reset(!clearSave);
@@ -142,8 +142,8 @@ namespace Game.Global
             List<TutorialOverlay> overlays = new List<TutorialOverlay>
             {
                 new TutorialOverlay(),
-                new TutorialOverlay(WorldView.GetEnvironmentRect()), 
-                new TutorialOverlay() 
+                new TutorialOverlay(WorldView.GetEnvironmentRect()),
+                new TutorialOverlay()
             };
             TutorialManager.TryOpenTutorial(1, overlays);
         }
@@ -200,7 +200,7 @@ namespace Game.Global
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel(false, false);
             CharacterManager.Characters.ForEach(c => { c.TravelAction.ReturnToHomeInstant(); });
-            StoryController.ShowText(JournalEntry.GetStoryText(_currentLevel - 1), _currentLevel == 6);
+            StoryController.ShowText(JournalEntry.GetStoryText(_currentLevel), _currentLevel == 6);
         }
 
         public static void Pause()
@@ -354,6 +354,11 @@ namespace Game.Global
         public static bool Paused()
         {
             return _isPaused;
+        }
+
+        public static int ScaleDamage(int damage)
+        {
+            return (int)(damage + damage * _difficulty / 50f);
         }
     }
 }

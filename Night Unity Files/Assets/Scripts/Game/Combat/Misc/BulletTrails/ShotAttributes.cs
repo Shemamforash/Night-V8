@@ -14,7 +14,6 @@ namespace Game.Combat.Misc
     public class ShotAttributes
     {
         private const float MaxAge = 3f;
-        private const float EnemyDamageModifier = 0.2f;
         private const float SeekDecay = 0.95f;
 
         private readonly CharacterCombat _origin;
@@ -121,9 +120,7 @@ namespace Game.Combat.Misc
 
         public int DamageDealt()
         {
-            int damageDealt = _damageDealt;
-            if (_origin is EnemyBehaviour) damageDealt = Mathf.CeilToInt(EnemyDamageModifier * _damageDealt);
-            return damageDealt;
+            return _damageDealt;
         }
 
         public void ApplyConditions(Vector2 position)

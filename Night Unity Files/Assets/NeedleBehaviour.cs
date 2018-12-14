@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -14,23 +16,30 @@ public class NeedleBehaviour : MonoBehaviour
     private bool _isPlayerNeedle;
     private int _damage;
     private bool _firing;
+    private Action<Vector2> _onHit;
 
-    public static void Create(Vector2 origin, Vector2 target, int damage, bool isPlayerNeedle = false)
+    public static void Create(Vector2 origin, Vector2 target, bool isPlayerNeedle = false)
     {
-        _needlePool.Create().Initialise(origin, target, damage, isPlayerNeedle);
+        _needlePool.Create().Initialise(origin, target, isPlayerNeedle, null);
     }
 
-    private void Initialise(Vector2 origin, Vector2 target, int damage, bool isPlayerNeedle)
+    public static void Create(Vector2 origin, Vector2 target, Action<Vector2> onHit, bool isPlayerNeedle = false)
+    {
+        _needlePool.Create().Initialise(origin, target, isPlayerNeedle, onHit);
+    }
+
+    private void Initialise(Vector2 origin, Vector2 target, bool isPlayerNeedle, Action<Vector2> onHit)
     {
         _time = 0f;
         _isPlayerNeedle = isPlayerNeedle;
         gameObject.layer = isPlayerNeedle ? 16 : 15;
-        _damage = damage;
+        _damage = WorldState.ScaleDamage(20);
         transform.position = origin;
         _trailParticles.Clear();
         float rotation = AdvancedMaths.AngleFromUp(origin, target);
         transform.rotation = Quaternion.Euler(0f, 0f, rotation);
         _firing = true;
+        _onHit = onHit;
     }
 
     public void OnDestroy()
@@ -50,6 +59,7 @@ public class NeedleBehaviour : MonoBehaviour
 
         _burstParticles.Emit(50);
         _trailParticles.Stop();
+        _onHit?.Invoke(transform.position);
         transform.position = new Vector2(100, 100);
         _rigidBody2D.velocity = Vector2.zero;
         StartCoroutine(WaitAndDie());

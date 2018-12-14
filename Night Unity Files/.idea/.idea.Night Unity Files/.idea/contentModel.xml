@@ -1412,7 +1412,6 @@
                 <e p="ShelterCharacterBehaviour.cs" t="Include" />
                 <e p="SickenBehaviour.cs" t="Include" />
                 <e p="SkillBar.cs" t="Include" />
-                <e p="TargetBehaviour.cs" t="Include" />
                 <e p="TempleBehaviour.cs" t="Include" />
                 <e p="UiCombatRingBoundDrawer.cs" t="Include" />
                 <e p="UiCompassPulseController.cs" t="Include" />

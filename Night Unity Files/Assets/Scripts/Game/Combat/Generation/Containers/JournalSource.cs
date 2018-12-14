@@ -7,6 +7,7 @@ public class JournalSource : ContainerController
 {
     private JournalEntry _journalEntry;
     private CanvasGroup _journalIndicator;
+    private bool _read;
 
     public JournalSource(Vector2 position) : base(position)
     {
@@ -20,14 +21,17 @@ public class JournalSource : ContainerController
 
     public override String GetContents()
     {
-        return _journalEntry.Title;
+        return _journalEntry == null ? "Placeholder book" : _journalEntry.Title;
     }
 
     public override void Take()
     {
         base.Take();
+        _read = true;
         _journalEntry.Unlock();
         CombatJournalController.ShowJournal(_journalEntry);
         CombatManager.GetCurrentRegion().ReadJournal = true;
     }
+
+    public bool Read() => _read;
 }

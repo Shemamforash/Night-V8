@@ -43,13 +43,13 @@ namespace Game.Characters
         public float FireExplodeChance;
         public float FireDamageModifier;
         public float DecayExplodeChance;
-        public float DecayDamageModifier;
         public float SicknessStackModifier;
         public float FreeSkillChance;
         public float SkillDisableChance;
         public bool ReloadOnEmptyMag;
         public bool ReloadOnFatalShot;
         public bool SpreadSickness;
+        public bool TakeDoubleDecayDamage;
 
         public CharacterAttributes(Player player)
         {

@@ -101,6 +101,11 @@ namespace Game.Global
             }
         }
 
+        public static JournalEntry GetEntry(int part)
+        {
+            return LockedEntries[part][0];
+        }
+        
         public static JournalEntry GetEntry()
         {
             ReadJournals();

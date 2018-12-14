@@ -78,7 +78,7 @@ namespace Game.Combat.Generation
             ScreenFaderController.ShowText(_currentRegion.Name);
         }
 
-        
+
         private void UpdateHud()
         {
             if (!ClearOfEnemies() && !_hudShown)
@@ -394,7 +394,7 @@ namespace Game.Combat.Generation
             Instance()._enemies.Add(enemy);
         }
 
-        
+
         public static EnemyBehaviour QueueEnemyToAdd(EnemyTemplate template)
         {
             Enemy e = template.Create();

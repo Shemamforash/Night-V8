@@ -268,7 +268,7 @@ namespace Game.Combat.Enemies
 
         public int GetHealth()
         {
-            return Template.Health + Template.Health / WorldState.MaxDifficulty * WorldState.Difficulty();
+            return (int) (Template.Health + Template.Health * WorldState.Difficulty() / 20f);
         }
     }
 }

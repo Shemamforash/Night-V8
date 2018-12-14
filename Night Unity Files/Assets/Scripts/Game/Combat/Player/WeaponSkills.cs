@@ -71,7 +71,7 @@ namespace Game.Combat.Player
         {
             Shot s = Shot.Create(PlayerCombat.Instance);
             s.Attributes().AddOnHit(() => { VortexBehaviour.Create(s.transform.position, 
-                () => Explosion.CreateExplosion(s.transform.position, 25, 0.5f).InstantDetonate()); });
+                () => Explosion.CreateExplosion(s.transform.position, 0.5f).InstantDetonate()); });
             s.Fire();
         }
     }
@@ -138,7 +138,7 @@ namespace Game.Combat.Player
         {
             s.Attributes().AddOnHit(() =>
             {
-                Explosion e = Explosion.CreateExplosion(s.transform.position, s.Attributes().DamageDealt(), 0.25f);
+                Explosion e = Explosion.CreateExplosion(s.transform.position, 0.25f);
                 e.InstantDetonate();
             });
         }
@@ -154,20 +154,19 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            int damage = ((int) PlayerCombat.Instance.Weapon().Quality() + 1) * 10;
             Transform playerTransform = PlayerCombat.Instance.transform;
 
             Vector2 startPos = playerTransform.position + playerTransform.up * 0.5f;
             Vector2 targetPos = playerTransform.position + playerTransform.up * 1f;
-            NeedleBehaviour.Create(startPos, targetPos, damage, true);
+            NeedleBehaviour.Create(startPos, targetPos, true);
 
-            Vector2 leftStartPos = startPos + (Vector2) playerTransform.right * 0.25f;
-            Vector2 leftEndPos = targetPos + (Vector2) playerTransform.right * 0.4f;
-            NeedleBehaviour.Create(leftStartPos, leftEndPos, damage, true);
+            Vector2 leftStartPos = startPos + (Vector2) playerTransform.right * 0.15f;
+            Vector2 leftEndPos = targetPos + (Vector2) playerTransform.right * 0.25f;
+            NeedleBehaviour.Create(leftStartPos, leftEndPos, true);
 
-            Vector2 rightStartPos = startPos + (Vector2) playerTransform.right * -0.25f;
-            Vector2 rightEndPos = targetPos + (Vector2) playerTransform.right * -0.4f;
-            NeedleBehaviour.Create(rightStartPos, rightEndPos, damage, true);
+            Vector2 rightStartPos = startPos + (Vector2) playerTransform.right * -0.15f;
+            Vector2 rightEndPos = targetPos + (Vector2) playerTransform.right * -0.25f;
+            NeedleBehaviour.Create(rightStartPos, rightEndPos, true);
         }
     }
 

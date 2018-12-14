@@ -1,5 +1,5 @@
-﻿using DG.Tweening;
-using Game.Characters;
+﻿using Game.Characters;
+using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
 using SamsHelper.Libraries;
@@ -31,14 +31,15 @@ public class UiBrandMenu : Menu
     {
         _closeButton.Disable();
         MenuStateMachine.ShowMenu(_lastMenu.name);
+        CombatManager.Resume();
     }
 
     private void Show()
     {
-        Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
-        sequence.AppendCallback(_closeButton.Enable);
+        _closeButton.Enable();
         _lastMenu = MenuStateMachine.CurrentMenu();
         MenuStateMachine.ShowMenu("Brand Menu");
+        CombatManager.Pause();
     }
 
     public static void ShowBrand(Brand brand)
@@ -85,16 +86,16 @@ public class UiBrandMenu : Menu
 
     private void ShowWeaponSkill(WeaponType weaponType, Skill weaponSkill)
     {
-        string titleString = CharacterManager.SelectedCharacter.Name + "'s proficiency with " + weaponType + "s grows";
-        ShowSkill(titleString, weaponSkill);
+        string effectString = CharacterManager.SelectedCharacter.Name + "'s proficiency with " + weaponType + "s grows";
+        ShowSkill(effectString, weaponSkill);
     }
 
-    private void ShowSkill(string titleString, Skill skill)
+    private void ShowSkill(string effectString, Skill skill)
     {
-        string benefitString = skill.Name + " has been unlocked";
+        string titleString = skill.Name + " has been unlocked";
         _titleText.SetText(titleString);
-        _benefitText.SetText(benefitString);
-        _effectText.SetText(skill.Description());
+        _benefitText.SetText(skill.Description());
+        _effectText.SetText(effectString);
         gameObject.SetActive(true);
         _instance.Show();
     }

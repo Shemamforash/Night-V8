@@ -56,6 +56,7 @@ namespace Game.Global
                 DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 0f, DefaultFadeTime).SetUpdate(UpdateType.Normal, true);
             }
 
+            Time.timeScale = 1f;
             yield return new WaitForSeconds(DefaultFadeTime);
             StartCoroutine(LoadNextScene());
         }

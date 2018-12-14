@@ -255,7 +255,7 @@ namespace Game.Characters.Brands
 
         protected override void OnFail()
         {
-            Player.Attributes.DecayDamageModifier += FailModifier;
+            Player.Attributes.TakeDoubleDecayDamage = true;
         }
 
         protected override string GetProgressSubstring()

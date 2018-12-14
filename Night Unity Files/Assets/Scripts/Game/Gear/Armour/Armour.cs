@@ -12,10 +12,9 @@ namespace Game.Gear.Armour
 {
     public class Armour : GearItem
     {
-        public const float ArmourHealthUnit = 200;
-        private readonly Number _armourHealth = new Number();
         private readonly ArmourType _armourType;
         private readonly int _maxProtection;
+        private int _currentProtection;
 
         public enum ArmourType
         {
@@ -27,16 +26,15 @@ namespace Game.Gear.Armour
         {
             root = root.CreateChild("Armour");
             base.Save(root);
-            root.CreateChild("Health", _armourHealth.CurrentValue());
-            root.CreateChild("Type", (int)_armourType);
+            root.CreateChild("CurrentProtection", _currentProtection);
+            root.CreateChild("Type", (int) _armourType);
             return root;
         }
 
         private Armour(ItemQuality quality, ArmourType armourType) : base(QualityToName(quality, armourType), quality)
         {
             _maxProtection = (int) quality + 1;
-            _armourHealth.Max = _maxProtection * ArmourHealthUnit;
-            _armourHealth.SetCurrentValue(_armourHealth.Max);
+            _currentProtection = _maxProtection;
             _armourType = armourType;
         }
 
@@ -116,28 +114,29 @@ namespace Game.Gear.Armour
 
         public override string GetSummary() => "+" + _maxProtection + " Armour";
 
-        public bool TakeDamage(float amount)
+        public bool TakeDamage()
         {
-            _armourHealth.Decrement(amount);
-            if (!_armourHealth.ReachedMin()) return false;
+            --_currentProtection;
+            if (_currentProtection > 0) return false;
             PlayerCombat.Instance.WeaponAudio.BreakArmour();
             UnEquip();
             Inventory.Destroy(this);
             return true;
         }
 
-        public float Repair(float amount)
+        public bool CanRepair()
         {
-            float difference = _armourHealth.Max - _armourHealth.CurrentValue();
-            _armourHealth.Increment(amount);
-            amount -= difference;
-            if (amount < 0) amount = 0;
-            return amount;
+            return _currentProtection < _maxProtection;
         }
-        
+
+        public void Repair()
+        {
+            ++_currentProtection;
+        }
+
         public ArmourType GetArmourType() => _armourType;
-        public int GetMaxProtection() => (int) Quality() + 1;
-        public int GetCurrentProtection() => Mathf.CeilToInt(_armourHealth.CurrentValue() / ArmourHealthUnit);
+        public int GetMaxProtection() => _maxProtection;
+        public int GetCurrentProtection() => _currentProtection;
 
         public static Armour LoadArmour(XmlNode root)
         {
@@ -145,7 +144,7 @@ namespace Game.Gear.Armour
             ArmourType type = (ArmourType) root.IntFromNode("Type");
             Armour plate = Create(quality, type);
             plate.Load(root);
-            plate._armourHealth.SetCurrentValue(root.FloatFromNode("Health"));
+            plate._currentProtection = root.IntFromNode("CurrentProtection");
             return plate;
         }
     }

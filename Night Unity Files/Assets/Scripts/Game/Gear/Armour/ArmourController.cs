@@ -13,6 +13,7 @@ namespace Game.Gear.Armour
         private readonly Character _character;
         private Armour _chest, _head;
         private bool _justTookDamage;
+        private const float MaxDamageModifier = 0.5f;
 
         public ArmourController(Character character)
         {
@@ -44,16 +45,23 @@ namespace Game.Gear.Armour
             if (_head != null) doc.CreateChild("Head", _head.ID());
         }
 
-        public void TakeDamage(float amount)
+        public void TakeDamage()
         {
-            DivideDamage(amount);
+            int chestDeficit = _chest == null ? -1 : _chest.GetMaxProtection() - _chest.GetCurrentProtection();
+            int headDeficit = _head == null ? -1 : _head.GetMaxProtection() - _head.GetCurrentProtection();
+
+            if (chestDeficit >= headDeficit && chestDeficit != -1) _chest.TakeDamage();
+            else if (headDeficit > chestDeficit && headDeficit != -1) _head.TakeDamage();
+            if (_chest != null && _chest.GetCurrentProtection() == 0) _chest = null;
+            if (_chest != null && _chest.GetCurrentProtection() == 0) _head = null;
         }
 
-        public void Repair(float amount)
+        public void Repair()
         {
-            float remaining = amount;
-            if (_chest != null) remaining = _chest.Repair(amount);
-            _head?.Repair(remaining);
+            int chestDeficit = _chest == null || !_chest.CanRepair() ? -1 : _chest.GetMaxProtection() - _chest.GetCurrentProtection();
+            int headDeficit = _head == null || !_head.CanRepair() ? -1 : _head.GetMaxProtection() - _head.GetCurrentProtection();
+            if (chestDeficit <= headDeficit && chestDeficit != -1) _chest.Repair();
+            else if (headDeficit < chestDeficit && headDeficit != -1) _head.Repair();
         }
 
         public bool DidJustTakeDamage()
@@ -61,23 +69,6 @@ namespace Game.Gear.Armour
             bool didTakeDamage = _justTookDamage;
             _justTookDamage = false;
             return didTakeDamage;
-        }
-
-        private void TakePlateDamage(ref Armour plate, float damage)
-        {
-            if (plate == null) return;
-            float plateProtection = plate.GetCurrentProtection();
-            float totalProtection = GetCurrentProtection();
-            float proportion = plateProtection / totalProtection;
-            _justTookDamage = true;
-            if (!plate.TakeDamage(proportion * damage)) return;
-            plate = null;
-        }
-
-        private void DivideDamage(float amount)
-        {
-            TakePlateDamage(ref _chest, amount);
-            TakePlateDamage(ref _head, amount);
         }
 
         public void SetArmour(Armour armour)
@@ -91,9 +82,7 @@ namespace Game.Gear.Armour
 
         public float CalculateDamageModifier()
         {
-            float currentProtection = GetCurrentProtection();
-            currentProtection /= 20f;
-            return 1 - currentProtection;
+            return 1 - MaxDamageModifier / 10f * GetCurrentProtection();
         }
 
         private void SetChestArmour(Armour chest)

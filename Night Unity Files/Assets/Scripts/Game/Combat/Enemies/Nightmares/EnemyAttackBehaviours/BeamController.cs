@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Player;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -138,12 +139,12 @@ public class BeamController : MonoBehaviour
         cf.layerMask = (1 << 17) | (1 << 8) | (1 << 14);
         Collider2D[] hits = new Collider2D[100];
         int count = gameObject.GetComponent<BoxCollider2D>().OverlapCollider(cf, hits);
+        int damage = WorldState.ScaleDamage(BeamDamage);
         for (int i = 0; i < count; ++i)
         {
             Collider2D hit = hits[i];
             if (!hit.gameObject.CompareTag("Player")) continue;
             Vector2 dir = transform.up;
-            int damage = Mathf.CeilToInt(BeamDamage + WorldState.NormalisedDifficulty() * BeamDamage);
             PlayerCombat.Instance.TakeRawDamage(damage, dir);
             PlayerCombat.Instance.MovementController.KnockBack(dir, 15f);
             break;

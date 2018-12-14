@@ -61,7 +61,7 @@ namespace Facilitating.UIControllers
         {
             private readonly CanvasGroup _armourCanvasGroup, _activeCanvasGroup;
             private readonly Image _brokenImage, _completeImage, _leftBar, _rightBar, _inactive;
-            private Tweener _flashTweener;
+            private Sequence _flashSequence;
 
             public ArmourChunk(GameObject armourObject)
             {
@@ -74,32 +74,30 @@ namespace Facilitating.UIControllers
                 _rightBar = armourObject.FindChildWithName<Image>("Right Bar");
             }
 
-            private void FlashImage(Image image)
+            private void Flash()
             {
-                _flashTweener?.Kill();
-                image.color = Color.red;
-                _flashTweener = image.DOColor(Color.white, 0.25f);
+                _flashSequence?.Kill();
+                _leftBar.color = Color.red;
+                _rightBar.color = Color.red;
+                _completeImage.color = Color.red;
+                _flashSequence = DOTween.Sequence();
+                _flashSequence.Append(_leftBar.DOColor(Color.white, 0.25f));
+                _flashSequence.Insert(0, _rightBar.DOColor(Color.white, 0.25f));
+                _flashSequence.Insert(0, _completeImage.DOColor(Color.white, 0.25f));
             }
 
             public void Activate(bool damageWasTaken)
             {
-                Debug.Log(damageWasTaken);
-                
                 _armourCanvasGroup.alpha = 1f;
                 _activeCanvasGroup.alpha = 1f;
                 _inactive.SetAlpha(0f);
                 _completeImage.SetAlpha(1f);
                 _brokenImage.SetAlpha(0f);
 
-                if (damageWasTaken)
-                {
-                    FlashImage(_completeImage);
-                    FlashImage(_leftBar);
-                    FlashImage(_rightBar);
-                }
+                if (damageWasTaken) Flash();
                 else
                 {
-                    if (_flashTweener != null && !_flashTweener.IsComplete()) return;
+                    if (_flashSequence != null && !_flashSequence.IsComplete()) return;
                     _completeImage.color = Color.white;
                     _leftBar.color = Color.white;
                     _rightBar.color = Color.white;
