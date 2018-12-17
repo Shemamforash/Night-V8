@@ -99,7 +99,6 @@ namespace Facilitating.UIControllers
             root = root.CreateChild("Inventories");
             UiAccessoryController.Save(root);
             UiArmourUpgradeController.Save(root);
-            UiWeaponUpgradeController.Save(root);
             UICraftingController.Save(root);
             UiConsumableController.Save(root);
             UiJournalController.Save(root);
@@ -110,7 +109,6 @@ namespace Facilitating.UIControllers
             root = root.SelectSingleNode("Inventories");
             UiAccessoryController.Load(root);
             UiArmourUpgradeController.Load(root);
-            UiWeaponUpgradeController.Load(root);
             UICraftingController.Load(root);
             UiConsumableController.Load(root);
             UiJournalController.Load(root);

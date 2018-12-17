@@ -19,15 +19,24 @@ namespace Facilitating.UIControllers
         private EnhancedText _name, _bonus, _description;
         private static bool _unlocked;
         private List<TutorialOverlay> _overlays;
+        private static UiAccessoryController _instance;
 
         public override void Awake()
         {
             base.Awake();
+            _instance = this;
             _overlays = new List<TutorialOverlay>
             {
                 new TutorialOverlay()
             };
         }
+
+        private void OnDestroy()
+        {
+            _instance = null;
+        }
+
+        public static UiAccessoryController Instance() => _instance;
 
         protected override void CacheElements()
         {
@@ -70,11 +79,9 @@ namespace Facilitating.UIControllers
             root.CreateChild("Accessories", _unlocked);
         }
 
-        public override bool Unlocked()
-        {
-            if (!_unlocked) _unlocked = Inventory.GetAvailableAccessories().Count != 0;
-            return _unlocked;
-        }
+        public static void Unlock() => _unlocked = true;
+
+        public override bool Unlocked() => _unlocked;
 
         private void Equip(object accessoryObject)
         {

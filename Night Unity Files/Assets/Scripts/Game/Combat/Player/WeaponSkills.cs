@@ -160,12 +160,12 @@ namespace Game.Combat.Player
             Vector2 targetPos = playerTransform.position + playerTransform.up * 1f;
             NeedleBehaviour.Create(startPos, targetPos, true);
 
-            Vector2 leftStartPos = startPos + (Vector2) playerTransform.right * 0.15f;
-            Vector2 leftEndPos = targetPos + (Vector2) playerTransform.right * 0.25f;
+            Vector2 leftStartPos = startPos + (Vector2) playerTransform.right * 0.1f;
+            Vector2 leftEndPos = targetPos + (Vector2) playerTransform.right * 0.15f;
             NeedleBehaviour.Create(leftStartPos, leftEndPos, true);
 
-            Vector2 rightStartPos = startPos + (Vector2) playerTransform.right * -0.15f;
-            Vector2 rightEndPos = targetPos + (Vector2) playerTransform.right * -0.25f;
+            Vector2 rightStartPos = startPos + (Vector2) playerTransform.right * -0.1f;
+            Vector2 rightEndPos = targetPos + (Vector2) playerTransform.right * -0.15f;
             NeedleBehaviour.Create(rightStartPos, rightEndPos, true);
         }
     }

@@ -25,7 +25,21 @@ namespace Facilitating.UIControllers
         private bool _upgradingAllowed;
         private static bool _unlocked;
         private List<TutorialOverlay> _overlays;
+        private static UiArmourUpgradeController _instance;
 
+        public override void Awake()
+        {
+            base.Awake();
+            _instance = this;
+            _overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(GetComponent<RectTransform>()),
+                new TutorialOverlay(),
+                new TutorialOverlay(),
+                new TutorialOverlay()
+            };
+        }
+        
         public static void Load(XmlNode root)
         {
             _unlocked = root.BoolFromNode("Armour");
@@ -36,23 +50,17 @@ namespace Facilitating.UIControllers
             root.CreateChild("Armour", _unlocked);
         }
 
-        public override bool Unlocked()
+        private void OnDestroy()
         {
-            if (!_unlocked) _unlocked = Inventory.GetAvailableArmour().Count != 0;
-            return _unlocked;
+            _instance = null;
         }
 
-        public override void Awake()
-        {
-            base.Awake();
-            _overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(GetComponent<RectTransform>()),
-                new TutorialOverlay(),
-                new TutorialOverlay(),
-                new TutorialOverlay()
-            };
-        }
+        public static UiArmourUpgradeController Instance() => _instance;
+        
+        public static void Unlock() => _unlocked = true;
+
+        public override bool Unlocked() => _unlocked;
+
 
         protected override void CacheElements()
         {
@@ -82,7 +90,7 @@ namespace Facilitating.UIControllers
             _plateOneUi.UpdateDescription(armourController.GetChestArmour());
             _plateTwoUi.UpdateDescription(armourController.GetHeadArmour());
         }
-        
+
         protected override void OnHide()
         {
             InputHandler.UnregisterInputListener(this);
@@ -156,7 +164,7 @@ namespace Facilitating.UIControllers
             string armourString = armour.Name + " - " + current + "/" + max + " Armour";
             return armourString;
         }
-        
+
         private class ArmourPlateUi
         {
             private readonly EnhancedText _description;
@@ -176,7 +184,7 @@ namespace Facilitating.UIControllers
                 if (armour != null) descriptionString = GetArmourProtection(armour);
                 _description.SetText(descriptionString);
             }
-            
+
             public void SetPlate()
             {
                 PlateList.Show();

@@ -30,25 +30,9 @@ namespace Facilitating.UIControllers
         private WeaponDetailController _weaponDetail;
         private GameObject _infoGameObject;
         private Weapon _equippedWeapon;
-        private static bool _unlocked;
         private List<TutorialOverlay> _startingOverlays, _channelOverlays, _infuseOverlays;
 
-
-        public static void Load(XmlNode root)
-        {
-            _unlocked = root.BoolFromNode("Weapons");
-        }
-
-        public static void Save(XmlNode root)
-        {
-            root.CreateChild("Weapons", _unlocked);
-        }
-
-        public override bool Unlocked()
-        {
-            if (!_unlocked) _unlocked = Inventory.GetAvailableWeapons().Count != 0 || Inventory.Inscriptions.Count != 0;
-            return _unlocked;
-        }
+        public override bool Unlocked() => true;
 
         protected override void CacheElements()
         {
@@ -78,7 +62,7 @@ namespace Facilitating.UIControllers
             List<ItemQuality> qualities = new List<ItemQuality>();
 #if UNITY_EDITOR
             foreach (ItemQuality value in Enum.GetValues(typeof(ItemQuality))) qualities.Add(value);
-            for (int i = 0; i < 3; ++i)
+            for (int i = 0; i < 0; ++i)
             {
                 Weapon weapon = WeaponGenerator.GenerateWeapon();
                 Inventory.Move(weapon);

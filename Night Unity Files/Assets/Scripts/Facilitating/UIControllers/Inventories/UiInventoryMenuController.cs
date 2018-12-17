@@ -41,8 +41,6 @@ namespace Facilitating.UIControllers.Inventories
         protected abstract void CacheElements();
         protected abstract void Initialise();
 
-        public abstract bool Unlocked();
-
         protected abstract class BasicListElement : ListElement
         {
             protected EnhancedText CentreText;
@@ -70,5 +68,7 @@ namespace Facilitating.UIControllers.Inventories
                 RightText.SetColor(c);
             }
         }
+
+        public abstract bool Unlocked();
     }
 }

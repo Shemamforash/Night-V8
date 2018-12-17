@@ -39,6 +39,7 @@ public class GateTransitController : Menu
 
     private IEnumerator Transit()
     {
+        ResourcesUiController.Hide();
         WorldState.Pause();
         _streakParticles.Stop();
         _streakParticles.Play();

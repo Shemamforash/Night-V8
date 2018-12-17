@@ -72,7 +72,7 @@ namespace Game.Combat.Enemies
                     break;
             }
 
-            Weapon weapon = WeaponGenerator.GenerateWeapon();//possibleTypes.RandomElement());
+            Weapon weapon = WeaponGenerator.GenerateWeapon(); //possibleTypes.RandomElement());
             EquipWeapon(weapon);
             if (Helper.RollDie(0, 5)) weapon.SetInscription(Inscription.Generate());
         }
@@ -241,11 +241,8 @@ namespace Game.Combat.Enemies
 
         private Loot DropAnimalLoot(Vector2 position)
         {
-            ResourceItem item = null;
-            if (Random.Range(0f, 1f) < Template.DropRate)
-                item = Helper.RollDie(0, 3) ? ResourceTemplate.GetMeat() : ResourceTemplate.Create("Skin");
-
-            if (item == null) return null;
+            ResourceItem item = Helper.RollDie(0, 3) ? ResourceTemplate.GetMeat() : ResourceTemplate.Create("Skin");
+            item.Increment((int) (Template.DropRate - 1));
             Loot loot = new Loot(position);
             loot.SetResource(item);
             return loot;

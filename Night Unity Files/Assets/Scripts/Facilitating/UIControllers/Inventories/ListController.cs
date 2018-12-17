@@ -66,7 +66,6 @@ public class ListController : MonoBehaviour, IInputListener
         _centreButton.AddOnSelectEvent(() => { InputHandler.SetCurrentListener(this); });
         _centreButton.AddOnClick(() =>
         {
-            Debug.Log("Clicked");
             if (_listObjects.Count == 0) return;
             if (_selectedItemIndex == _listObjects.Count) --_selectedItemIndex;
             onButtonDown?.Invoke(_listObjects[_selectedItemIndex]);

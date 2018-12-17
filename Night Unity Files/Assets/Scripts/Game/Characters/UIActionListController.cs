@@ -14,8 +14,8 @@ using UnityEngine.EventSystems;
 
 public class UIActionListController : MonoBehaviour
 {
-    private bool _exploreEnabled, _craftEnabled, _consumeEnabled, _meditateEnabled, _sleepEnabled;
-    private EnhancedButton _exploreButton, _craftButton, _consumeButton, _meditateButton, _sleepButton;
+    private bool _exploreEnabled, _craftEnabled, _consumeEnabled, _meditateEnabled, _sleepEnabled, _enterGateEnabled;
+    private EnhancedButton _exploreButton, _craftButton, _consumeButton, _meditateButton, _sleepButton, _enterGateButton;
     private List<EnhancedButton> _buttons;
     private Player _player;
     private bool _atHome;
@@ -28,6 +28,7 @@ public class UIActionListController : MonoBehaviour
         _consumeButton = gameObject.FindChildWithName<EnhancedButton>("Consume");
         _meditateButton = gameObject.FindChildWithName<EnhancedButton>("Meditate");
         _sleepButton = gameObject.FindChildWithName<EnhancedButton>("Sleep");
+        _enterGateButton = gameObject.FindChildWithName<EnhancedButton>("Enter Gate");
         _buttons = new List<EnhancedButton> {_exploreButton, _craftButton, _consumeButton, _meditateButton, _sleepButton};
     }
 
@@ -39,6 +40,7 @@ public class UIActionListController : MonoBehaviour
         _player.ConsumeAction.SetButton(_consumeButton);
         _player.MeditateAction.SetButton(_meditateButton);
         _player.SleepAction.SetButton(_sleepButton);
+        _enterGateButton.AddOnClick(GateTransitController.StartTransit);
     }
 
     public List<EnhancedButton> Buttons()
@@ -77,6 +79,15 @@ public class UIActionListController : MonoBehaviour
         _meditateButton.gameObject.SetActive(_meditateEnabled);
     }
 
+    private void UpdateEnterGateAction()
+    {
+        _enterGateEnabled = _resting
+                            && _atHome
+                            && _player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer
+                            && WorldState.AllTemplesActivate();
+        _enterGateButton.gameObject.SetActive(_enterGateEnabled);
+    }
+
     private void UpdateSleepButton()
     {
         _sleepEnabled = false;
@@ -95,6 +106,7 @@ public class UIActionListController : MonoBehaviour
         UpdateConsumeButton();
         UpdateMeditateButton();
         UpdateSleepButton();
+        UpdateEnterGateAction();
         return CheckIfButtonNeedsSelecting();
     }
 

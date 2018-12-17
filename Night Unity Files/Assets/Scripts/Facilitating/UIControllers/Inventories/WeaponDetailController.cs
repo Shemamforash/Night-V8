@@ -9,6 +9,7 @@ public class WeaponDetailController : MonoBehaviour
 {
     private EnhancedText _nameText, _inscriptionNameText, _inscriptionEffectText, _typeText;
     private EnhancedText _damageText, _fireRateText, _reloadSpeedText, _accuracyText, _handlingText, _dpsText, _capacityText, _shatterText, _burnText, _sicknessText;
+    private GameObject _shatterObject, _burnObject, _sicknessObject;
 
     private Weapon _weapon;
     private DurabilityBarController _durabilityBar;
@@ -31,9 +32,15 @@ public class WeaponDetailController : MonoBehaviour
         _durabilityBar = gameObject.FindChildWithName<DurabilityBarController>("Durability Bar");
         if (!IsDetailed) return;
         GameObject conditionObject = gameObject.FindChildWithName("Conditions");
-        _shatterText = conditionObject.FindChildWithName<EnhancedText>("Shatter");
-        _burnText = conditionObject.FindChildWithName<EnhancedText>("Burn");
-        _sicknessText = conditionObject.FindChildWithName<EnhancedText>("Sickness");
+
+        _shatterObject = conditionObject.FindChildWithName("Shatter");
+        _shatterText = _shatterObject.FindChildWithName<EnhancedText>("Text");
+
+        _burnObject = conditionObject.FindChildWithName("Burn");
+        _burnText = _burnObject.FindChildWithName<EnhancedText>("Text");
+
+        _sicknessObject = conditionObject.FindChildWithName("Sickness");
+        _sicknessText = _sicknessObject.FindChildWithName<EnhancedText>("Text");
     }
 
     public void SetWeapon(Weapon weapon)
@@ -85,6 +92,10 @@ public class WeaponDetailController : MonoBehaviour
         float decayChance = attributes?.Val(AttributeType.DecayChance) * 100 ?? 0;
         float burnChance = attributes?.Val(AttributeType.BurnChance) * 100 ?? 0;
         float sicknessChance = attributes?.Val(AttributeType.SicknessChance) * 100 ?? 0;
+
+        _shatterObject.SetActive(decayChance != 0);
+        _burnObject.SetActive(burnChance != 0);
+        _sicknessObject.SetActive(sicknessChance != 0);
         _shatterText.SetText(decayChance == 0 ? "" : "+" + decayChance + "% Shatter");
         _burnText.SetText(burnChance == 0 ? "" : "+" + burnChance + "% Burn");
         _sicknessText.SetText(sicknessChance == 0 ? "" : "+" + sicknessChance + "% Sickness");

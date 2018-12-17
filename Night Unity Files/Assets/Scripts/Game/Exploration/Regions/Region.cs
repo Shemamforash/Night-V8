@@ -290,12 +290,12 @@ namespace Game.Exploration.Regions
             _neighborIds.ForEach(i => AddNeighbor(MapGenerator.GetRegionById(i)));
         }
 
-        public bool Discover()
+        public void Discover()
         {
             if (_discovered)
             {
                 _justDiscovered = false;
-                return false;
+                return;
             }
 
             _justDiscovered = true;
@@ -304,7 +304,6 @@ namespace Game.Exploration.Regions
             _seen = true;
             foreach (Node neighbor in Neighbors())
                 ((Region) neighbor)._seen = true;
-            return true;
         }
 
         public bool Discovered()

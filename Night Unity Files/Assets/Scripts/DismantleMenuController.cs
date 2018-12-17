@@ -45,7 +45,7 @@ public class DismantleMenuController : Menu
     private static void CalculateDismantleRewards(GearItem gear)
     {
         _dismantleRewards.Clear();
-        int quality = (int) gear.Quality();
+        int quality = (int) gear.Quality() + 1;
         if (gear is Inscription) CalculateInscriptionReward(quality);
         else if (gear is Weapon) CalculateWeaponReward(quality);
         else if (gear is Armour) CalculateArmourReward(quality);

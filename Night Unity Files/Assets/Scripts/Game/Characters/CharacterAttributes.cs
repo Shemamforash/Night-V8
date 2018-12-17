@@ -15,10 +15,10 @@ namespace Game.Characters
     public class CharacterAttributes : DesolationAttributes
     {
         public const int PlayerHealthChunkSize = 100;
-        private readonly string[] _dehydrationLevels = {"Slaked", "Quenched", "Thirsty", "Aching", "Parched"};
+        private readonly string[] _dehydrationLevels = {"Slaked", "Thirsty", "Parched"};
         private readonly Player _player;
-        private readonly string[] _starvationLevels = {"Full", "Sated", "Hungry", "Ravenous", "Starving"};
-        private readonly float[] _toleranceThresholds = {0, 0.1f, 0.25f, 0.5f, 0.75f};
+        private readonly string[] _starvationLevels = {"Sated", "Hungry", "Starved"};
+        private readonly float[] _toleranceThresholds = {0, 0.6f, 0.3f};
 
         public readonly HashSet<WeaponType> WeaponSkillOneUnlocks = new HashSet<WeaponType>();
         public readonly HashSet<WeaponType> WeaponSkillTwoUnlocks = new HashSet<WeaponType>();
@@ -124,7 +124,7 @@ namespace Game.Characters
             return (0.1f * Val(AttributeType.Focus) + 1) * Val(AttributeType.AdrenalineRechargeBonus);
         }
 
-        public float CalculateSpeed() => 5f + Val(AttributeType.Grit) * 0.25f;
+        public float CalculateSpeed() => 5f + Max(AttributeType.Grit) * 0.25f;
 
         public float CalculateSkillCooldownModifier()
         {

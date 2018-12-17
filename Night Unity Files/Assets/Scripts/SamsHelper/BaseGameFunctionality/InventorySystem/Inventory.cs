@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
+using Facilitating.UIControllers;
 using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
@@ -187,8 +189,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             switch (buildingName)
             {
-                case "Shelter":
-                    return _buildings.Count(b => b is Shelter);
                 case "Trap":
                     return _buildings.Count(b => b is Trap);
                 case "Water Collector":
@@ -243,19 +243,21 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             {
                 int ret = b.Quality().CompareTo(a.Quality());
                 if (ret == 0) ret = a.WeaponType().CompareTo(b.WeaponType());
-                if (ret == 0) ret = b.Name.CompareTo(a.Name);
+                if (ret == 0) ret = String.Compare(b.Name, a.Name, StringComparison.InvariantCulture);
                 return ret;
             });
         }
 
         public static void Move(Armour armour)
         {
+            UiArmourUpgradeController.Unlock();
             _armour.Add(armour);
             SortItem(_armour);
         }
 
         public static void Move(Accessory accessory)
         {
+            UiAccessoryController.Unlock();
             _accessories.Add(accessory);
             SortItem(_accessories);
         }

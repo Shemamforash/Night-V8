@@ -75,9 +75,12 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
 
     private void ShowCurrentlyCrafting()
     {
-        _listCanvas.alpha = 0;
+        _currentCraftingCanvas.gameObject.SetActive(true);
+        _listCanvas.gameObject.SetActive(false);
+
         _currentCraftingCanvas.alpha = 0;
         _currentCraftingCanvas.DOFade(1, 0.5f).SetUpdate(UpdateType.Normal, true);
+
         _currentCraftingName.SetText(CharacterManager.SelectedCharacter.CraftAction.GetRecipeName());
         _glow.SetAlphaMultiplier(0.5f);
         _acceptButton.Select();
@@ -85,7 +88,12 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
 
     private void ShowCraftingList()
     {
-        _listCanvas.alpha = 1;
+        _currentCraftingCanvas.gameObject.SetActive(false);
+        _listCanvas.gameObject.SetActive(true);
+
+        _listCanvas.alpha = 0;
+        _listCanvas.DOFade(1, 0.5f).SetUpdate(UpdateType.Normal, true);
+
         _currentCraftingCanvas.alpha = 0;
         _craftingList.Show();
     }
@@ -133,11 +141,11 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
             else if (!canAfford) affordString += "Insufficient Resources";
             CentreText.SetText(affordString);
 
-            string ingredient1String = recipe.Ingredient1Quantity > 1 ? recipe.Ingredient1 + " x" + recipe.Ingredient1Quantity : recipe.Ingredient1;
+            string ingredient1String = recipe.Ingredient1 + " x" + recipe.Ingredient1Quantity;
             if (recipe.Ingredient1 == "None") ingredient1String = "";
-            string ingredient2String = recipe.Ingredient2Quantity > 1 ? recipe.Ingredient2 + " x" + recipe.Ingredient2Quantity : recipe.Ingredient2;
+            string ingredient2String = ", " + recipe.Ingredient2 + " x" + recipe.Ingredient2Quantity;
             if (recipe.Ingredient2 == "None") ingredient2String = "";
-            RightText.SetText(ingredient1String + " " + ingredient2String);
+            RightText.SetText(ingredient1String + ingredient2String);
         }
     }
 

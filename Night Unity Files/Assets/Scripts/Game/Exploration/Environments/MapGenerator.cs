@@ -6,6 +6,7 @@ using System.Xml;
 using Facilitating.Persistence;
 using Game.Exploration.Regions;
 using SamsHelper.Libraries;
+using TriangleNet.Voronoi.Legacy;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Edge = SamsHelper.Libraries.Edge;
@@ -86,7 +87,7 @@ namespace Game.Exploration.Environment
             SetRegionTypes();
             initialNode.Discover();
 #if UNITY_EDITOR
-//            _regions.ForEach(r => r.Discover());
+            _regions.ForEach(r => r.Discover());
 #endif
         }
 
@@ -233,7 +234,6 @@ namespace Game.Exploration.Environment
                     break;
             }
 
-            Debug.Log(type + " " + _regionNames.Keys.Count);
             return _regionNames[type].RemoveRandom();
         }
 
@@ -355,7 +355,7 @@ namespace Game.Exploration.Environment
 
             UpdateAvailableRegionTypes();
             ++_regionsDiscovered;
-            if (TutorialManager.Active() && !Region.InTutorialPeriod()) return _regionTypeBag.RemoveRandom();
+            if (!TutorialManager.Active() || !Region.InTutorialPeriod()) return _regionTypeBag.RemoveRandom();
             _regionTypeBag.Remove(RegionType.Danger);
             return RegionType.Danger;
         }

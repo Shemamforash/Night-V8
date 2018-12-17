@@ -1,11 +1,12 @@
 ﻿using System;
 using Game.Characters;
-using Game.Combat.Player;
 using Game.Gear;
 using Game.Gear.Weapons;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Facilitating.UIControllers
 {
@@ -27,6 +28,10 @@ namespace Facilitating.UIControllers
             EnhancedButton.AddOnClick(glow.Select);
             EnhancedButton.AddOnDeselectEvent(glow.Deselect);
             EnhancedButton.AddOnSelectEvent(glow.Highlight);
+#if UNITY_EDITOR
+            ResourceTemplate.AllResources.ForEach(r => { Inventory.IncrementResource(r.Name, Random.Range(5, 20)); });
+            Inventory.IncrementResource("Essence", 38);
+#endif
         }
 
         public void SetWeapon(Action selectAction, Player player)

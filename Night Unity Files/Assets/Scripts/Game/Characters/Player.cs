@@ -243,9 +243,9 @@ namespace Game.Characters
 
         private void TryUnlockWeaponSkills(WeaponType weaponType, bool showScreen)
         {
-            if (_weaponKills[weaponType] >= 50)
-                Attributes.UnlockWeaponSkillOne(weaponType, showScreen);
             if (_weaponKills[weaponType] >= 100)
+                Attributes.UnlockWeaponSkillOne(weaponType, showScreen);
+            if (_weaponKills[weaponType] >= 300)
                 Attributes.UnlockWeaponSkillTwo(weaponType, showScreen);
         }
 

@@ -33,9 +33,6 @@ namespace Game.Global
                 string name = buildingNode.StringFromNode("Name");
                 switch (name)
                 {
-                    case "Shelter":
-                        Inventory.AddBuilding(new Shelter());
-                        break;
                     case "Trap":
                         Inventory.AddBuilding(new Trap());
                         break;
@@ -82,16 +79,6 @@ namespace Game.Global
         }
     }
 
-    public class Shelter : Building
-    {
-        public Shelter() : base("Shelter")
-        {
-        }
-
-        public override void Update()
-        {
-        }
-    }
 
     public class Trap : Building
     {

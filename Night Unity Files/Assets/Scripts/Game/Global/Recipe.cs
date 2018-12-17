@@ -82,9 +82,6 @@ namespace Game.Global
         {
             switch (Name)
             {
-                case "Shelter":
-                    Inventory.AddBuilding(new Shelter());
-                    break;
                 case "Trap":
                     Inventory.AddBuilding(new Trap());
                     break;
@@ -108,6 +105,7 @@ namespace Game.Global
 
         private void CraftArmour()
         {
+            Debug.Log(Name);
             switch (Name)
             {
                 case "Dark Hide":

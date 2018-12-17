@@ -775,7 +775,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224158599429968996}
   - component: {fileID: 222623273282051554}
-  - component: {fileID: 114597817434266058}
+  - component: {fileID: 1124389116572819021}
   m_Layer: 5
   m_Name: Border
   m_TagString: Untagged
@@ -811,7 +811,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1390397155394628}
   m_CullTransparentMesh: 0
---- !u!114 &114597817434266058
+--- !u!114 &1124389116572819021
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -825,7 +825,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3463,7 +3463,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UseUppercase: 0
   CustomFontSize: 0
-  FontSize: 0
+  FontSize: 1
 --- !u!1 &5908407406934662360
 GameObject:
   m_ObjectHideFlags: 0

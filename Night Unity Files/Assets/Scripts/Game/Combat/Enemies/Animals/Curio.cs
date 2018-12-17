@@ -17,15 +17,15 @@ namespace Game.Combat.Enemies.Animals
 
         public override void Alert(bool alertOthers)
         {
-            Debug.Log("curio alerted");
             Move();
         }
 
         private void Move()
         {
             Vector2 dir = (transform.position - PlayerCombat.Instance.transform.position).normalized;
-            List<Cell> possibleCells = PathingGrid.GetCellsInFrontOfMe(CurrentCell(), dir, 0.5f);
-            Cell target = possibleCells.Count == 0 ? PathingGrid.GetCellNearMe(CurrentCell(), 1f, 0.5f) : possibleCells.RandomElement();
+            float distance = Random.Range(0.5f, 3f);
+            List<Cell> possibleCells = PathingGrid.GetCellsInFrontOfMe(CurrentCell(), dir, distance);
+            Cell target = possibleCells.Count == 0 ? PathingGrid.GetCellNearMe(CurrentCell(), distance * 1.5f, distance) : possibleCells.RandomElement();
             MoveBehaviour.GoToCell(target);
         }
 

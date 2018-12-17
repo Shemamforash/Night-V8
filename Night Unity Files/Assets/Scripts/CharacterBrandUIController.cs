@@ -8,50 +8,31 @@ using UnityEngine.UI;
 
 public class CharacterBrandUIController : MonoBehaviour
 {
-    private BrandUI _brand1, _brand2, _brand3;
+    private TextMeshProUGUI _brand1, _brand2, _brand3;
 
     public void Awake()
     {
-        _brand1 = new BrandUI(gameObject.FindChildWithName("Brand 1"));
-        _brand2 = new BrandUI(gameObject.FindChildWithName("Brand 2"));
-        _brand3 = new BrandUI(gameObject.FindChildWithName("Brand 3"));
+        _brand1 = gameObject.FindChildWithName("Brand 1").FindChildWithName<TextMeshProUGUI>("Text");
+        _brand2 = gameObject.FindChildWithName("Brand 2").FindChildWithName<TextMeshProUGUI>("Text");
+        _brand3 = gameObject.FindChildWithName("Brand 3").FindChildWithName<TextMeshProUGUI>("Text");
     }
 
     public void UpdateBrands(BrandManager brandManager)
     {
         List<Brand> activeBrands = brandManager.GetActiveBrands();
-        _brand1.SetBrand(activeBrands[0]);
-        _brand2.SetBrand(activeBrands[1]);
-        _brand3.SetBrand(activeBrands[2]);
+        UpdateBrand(activeBrands[0], _brand1);
+        UpdateBrand(activeBrands[1], _brand2);
+        UpdateBrand(activeBrands[2], _brand3);
     }
 
-    private class BrandUI
+    private void UpdateBrand(Brand brand, TextMeshProUGUI text)
     {
-        private readonly TextMeshProUGUI _text;
-        private readonly Image _left, _right;
-
-        public BrandUI(GameObject parent)
+        if (brand == null)
         {
-            _text = parent.FindChildWithName<TextMeshProUGUI>("Text");
-            _left = parent.FindChildWithName<Image>("Left");
-            _right = parent.FindChildWithName<Image>("Right");
+            text.text = "";
+            return;
         }
 
-        public void SetBrand(Brand brand)
-        {
-            if (brand == null)
-            {
-                _left.color = UiAppearanceController.InvisibleColour;
-                _right.color = UiAppearanceController.InvisibleColour;
-                _text.color = UiAppearanceController.FadedColour;
-                _text.text = "No Brand";
-                return;
-            }
-
-            _left.color = Color.white;
-            _right.color = Color.white;
-            _text.color = Color.white;
-            _text.text = brand.GetProgressString();
-        }
+        text.text = brand.GetProgressString();
     }
 }

@@ -18,7 +18,6 @@ public class EventTextController : MonoBehaviour
     private bool _overridingText;
     private static EventTextController _instance;
     private Sequence _revealSequence;
-    private bool _seenRegionClearText;
 
     private void Awake()
     {
@@ -39,24 +38,10 @@ public class EventTextController : MonoBehaviour
         _player = PlayerCombat.Instance;
     }
 
-    private bool CheckRegionClear()
-    {
-        if (_seenRegionClearText) return false;
-        if (!CombatManager.GetCurrentRegion().IsDynamic()) return false;
-        if (ContainerController.Containers.Count > 0) return false;
-        if (!CombatManager.ClearOfEnemies()) return false;
-        Sequence sequence = DOTween.Sequence();
-        sequence.AppendInterval(3f);
-        sequence.AppendCallback(HideOverride);
-        _seenRegionClearText = true;
-        SetOverrideText("Region cleared");
-        return true;
-    }
-
     private bool CheckForNearbyContainer()
     {
         List<ContainerBehaviour> containers = ContainerController.Containers;
-        if (CheckRegionClear()) return true;
+        if (RegionClearController.Cleared()) return false;
         ContainerBehaviour nearestContainer = null;
         float nearestContainerDistance = 10000;
         containers.ForEach(c =>

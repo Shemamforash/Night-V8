@@ -64,10 +64,6 @@ public class UiConsumableController : UiInventoryMenuController
     {
         UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
         UpdateConditions();
-#if UNITY_EDITOR
-        ResourceTemplate.AllResources.ForEach(r => { Inventory.IncrementResource(r.Name, Random.Range(5, 20)); });
-        Inventory.IncrementResource("Essence", 38);
-#endif
         _consumableList.Show();
     }
 
@@ -101,9 +97,10 @@ public class UiConsumableController : UiInventoryMenuController
         return Inventory.Consumables().ToObjectList();
     }
 
-    public void Consume(object consumableObject)
+    private void Consume(object consumableObject)
     {
         Consumable consumable = (Consumable) consumableObject;
+        if (!consumable.CanConsume()) return;
         consumable.Consume();
         switch (consumable.Template.ResourceType)
         {

@@ -71,6 +71,8 @@ namespace Game.Characters
             UpdateAttributes();
             _brandUi.UpdateBrands(_player.BrandManager);
             UpdateCurrentAction();
+            ArmourController.gameObject.SetActive(UiArmourUpgradeController.Instance().Unlocked());
+            AccessoryController.gameObject.SetActive(UiAccessoryController.Instance().Unlocked());
         }
 
         private void UpdateAttributes()

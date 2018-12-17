@@ -39,7 +39,7 @@ namespace Game.Global
 
         private static readonly List<EnemyTemplate> _allowedHumanEnemies = new List<EnemyTemplate>();
         private static readonly List<EnemyTemplate> _allowedNightmareEnemies = new List<EnemyTemplate>();
-        private static bool _needsTransit;// = true;
+        private static bool _gateActive;
 
         private static int MinutesPassed;
         private static float _currentTime;
@@ -124,7 +124,7 @@ namespace Game.Global
             _isPaused = false;
             Seed = Random.Range(0, int.MaxValue);
 #if UNITY_EDITOR
-            _difficulty = 40;
+//            _difficulty = 40;
 #endif
             Random.InitState(Seed);
             EnvironmentManager.Reset(!clearSave);
@@ -152,9 +152,14 @@ namespace Game.Global
         {
             ++_templesActivated;
             bool complete = _templesActivated == EnvironmentManager.CurrentEnvironment.Temples;
-            if (complete) _needsTransit = true;
+            if (complete) _gateActive = true;
         }
 
+        public static bool AllTemplesActivate()
+        {
+            return _gateActive;
+        }
+        
         private void IncrementDaysSpentHere()
         {
             ++DaysSpentHere;
@@ -197,6 +202,7 @@ namespace Game.Global
         {
             ++_currentLevel;
             _templesActivated = 0;
+            _gateActive = false;
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel(false, false);
             CharacterManager.Characters.ForEach(c => { c.TravelAction.ReturnToHomeInstant(); });
@@ -285,15 +291,6 @@ namespace Game.Global
             UpdateScenery();
             if (_isPaused) return;
             IncrementWorldTime();
-            CheckNeedsTransit();
-        }
-
-        private void CheckNeedsTransit()
-        {
-            if (!_needsTransit) return;
-            if (!CharacterManager.Wanderer.TravelAction.AtHome()) return;
-            GateTransitController.StartTransit();
-            _needsTransit = false;
         }
 
         private static void UpdateScenery()

@@ -33,7 +33,7 @@ public class NeedleBehaviour : MonoBehaviour
         _time = 0f;
         _isPlayerNeedle = isPlayerNeedle;
         gameObject.layer = isPlayerNeedle ? 16 : 15;
-        _damage = WorldState.ScaleDamage(20);
+        _damage = WorldState.ScaleDamage(30);
         transform.position = origin;
         _trailParticles.Clear();
         float rotation = AdvancedMaths.AngleFromUp(origin, target);

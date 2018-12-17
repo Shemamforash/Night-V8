@@ -16,7 +16,7 @@ public class TempleBehaviour : BasicShrineBehaviour
     private ParticleSystem _vortex, _explosion, _altar, _flames, _dust;
     private SpriteRenderer _glow;
     private AudioSource _audioSource;
-    [SerializeField] private AudioClip _fireIgniteAudioClip, _templateActivateAudioClip;
+    [SerializeField] private AudioClip _templateActivateAudioClip;
 
     private int _bossCount;
 
@@ -68,7 +68,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         _altar.Stop();
         _explosion.Emit(200);
 
-        StartCoroutine(StartSpawningEnemies());
+        yield return StartCoroutine(StartSpawningEnemies());
 
         float glowTimeMax = 1f;
         float currentTime = glowTimeMax;
@@ -146,7 +146,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         while (!CombatManager.ClearOfEnemies()) yield return null;
         End();
         WorldState.ActivateTemple();
-        CombatManager.ExitCombat();
+        CombatManager.GetCurrentRegion().TempleCleansed = true;
     }
 
     private void StartLights()

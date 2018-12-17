@@ -17,10 +17,9 @@ namespace Game.Exploration.WorldEvents
             UpdateEvent(doc.StringFromNode("WorldEvent"));
         }
 
-        public static XmlNode Save(XmlNode doc)
+        public static void Save(XmlNode doc)
         {
             doc.CreateChild("WorldEvent", _eventLog);
-            return doc;
         }
 
         public void Awake()

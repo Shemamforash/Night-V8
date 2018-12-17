@@ -1109,6 +1109,7 @@
             <e p="readme.txt" t="Include" />
           </e>
         </e>
+        <e p="RegionClearController.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="XML" t="Include">
             <e p="Brands.xml" t="Include" />
@@ -1176,7 +1177,6 @@
                 <e p="HeartBeatController.cs" t="Include" />
                 <e p="UIArmourController.cs" t="Include" />
                 <e p="UiCompassController.cs" t="Include" />
-                <e p="UISkillCostController.cs" t="Include" />
               </e>
               <e p="DeathReason.cs" t="Include" />
               <e p="DetailedViewGear" t="Include">

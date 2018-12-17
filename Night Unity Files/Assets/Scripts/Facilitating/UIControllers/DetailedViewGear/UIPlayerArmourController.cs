@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.Characters;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;

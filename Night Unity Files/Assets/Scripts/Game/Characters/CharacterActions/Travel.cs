@@ -76,7 +76,7 @@ namespace Game.Characters.CharacterActions
 
         private void EnterRegion()
         {
-            if (CurrentRegion.Discover()) 
+            CurrentRegion.Discover(); 
             CombatManager.SetCurrentRegion(CurrentRegion);
             CharacterManager.SelectedCharacter = PlayerCharacter;
             SceneChanger.GoToCombatScene();

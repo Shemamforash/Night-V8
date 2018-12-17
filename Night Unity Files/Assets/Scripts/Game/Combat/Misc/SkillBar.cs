@@ -1,19 +1,18 @@
-﻿using System.Collections.Generic;
-using Facilitating.UIControllers;
+﻿using System;
+using System.Collections.Generic;
 using Game.Combat.Player;
 using Game.Global.Tutorial;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Libraries;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Misc
 {
     public class SkillBar : MonoBehaviour
     {
         private const int NoSlots = 4;
-        private static Skill[] _skills;
-        private static List<CooldownController> CooldownControllers;
-        private static List<UISkillCostController> CostControllers;
+        private static List<CooldownController> _skillControllers;
         private static float _cooldownModifier;
         private static bool SkillsAreFree;
         private static bool _skillsReady;
@@ -21,19 +20,15 @@ namespace Game.Combat.Misc
         private static float _duration;
         private static RectTransform _skillBarRect;
         private static List<TutorialOverlay> _overlays;
+        private static Characters.Player _player;
 
         public void Awake()
         {
-            CooldownControllers = new List<CooldownController>();
-            CostControllers = new List<UISkillCostController>();
+            _skillControllers = new List<CooldownController>();
 
             for (int i = 0; i < NoSlots; ++i)
-            {
-                CooldownControllers.Add(gameObject.FindChildWithName<CooldownController>("Skill " + (i + 1)));
-                CostControllers.Add(CooldownControllers[i].gameObject.FindChildWithName<UISkillCostController>("Cost"));
-            }
+                _skillControllers.Add(gameObject.FindChildWithName<CooldownController>("Skill " + (i + 1)));
 
-            _skills = new Skill[NoSlots];
             _skillsReady = false;
             _skillBarRect = GetComponent<RectTransform>();
             _overlays = new List<TutorialOverlay>
@@ -47,7 +42,7 @@ namespace Game.Combat.Misc
 
         private void UpdateCooldownControllers(float normalisedDuration)
         {
-            CooldownControllers.ForEach(c => c.UpdateCooldownFill(normalisedDuration));
+            _skillControllers.ForEach(c => c.UpdateCooldownFill(normalisedDuration));
         }
 
         public void Update()
@@ -66,53 +61,33 @@ namespace Game.Combat.Misc
             UpdateCooldownControllers(normalisedTime);
         }
 
+        private static bool IsCharacterSkillOneUnlocked() => _player.Attributes.SkillOneUnlocked;
+        private static bool IsCharacterSkillTwoUnlocked() => _player.Attributes.SkillTwoUnlocked;
+        private static bool IsWeaponSkillOneUnlocked() => _player.Attributes.WeaponSkillOneUnlocks.Contains(_player.EquippedWeapon.WeaponType());
+        private static bool IsWeaponSkillTwoUnlocked() => _player.Attributes.WeaponSkillTwoUnlocks.Contains(_player.EquippedWeapon.WeaponType());
+
         public static void BindSkills(Characters.Player player, float skillCooldownModifier)
         {
+            _player = player;
             _cooldownModifier = skillCooldownModifier;
-            Skill characterSkillOne = null;
-            Skill characterSkillTwo = null;
-            Skill weaponSkillOne = null;
-            Skill weaponSkillTwo = null;
-
-            if (player.Attributes.SkillOneUnlocked)
-                characterSkillOne = player.CharacterSkillOne;
-
-            if (player.Attributes.SkillTwoUnlocked)
-                characterSkillTwo = player.CharacterSkillTwo;
-
-            if (player.EquippedWeapon != null)
-            {
-                if (player.Attributes.WeaponSkillOneUnlocks.Contains(player.EquippedWeapon.WeaponType()))
-                    weaponSkillOne = player.EquippedWeapon.WeaponSkillOne;
-
-                if (player.Attributes.WeaponSkillTwoUnlocks.Contains(player.EquippedWeapon.WeaponType()))
-                    weaponSkillTwo = player.EquippedWeapon.WeaponSkillTwo;
-            }
+            Skill characterSkillOne = player.CharacterSkillOne;
+            Skill characterSkillTwo = player.CharacterSkillTwo;
+            Skill weaponSkillOne = player.EquippedWeapon.WeaponSkillOne;
+            Skill weaponSkillTwo = player.EquippedWeapon.WeaponSkillTwo;
 
 #if UNITY_EDITOR
             SkillsAreFree = true;
-            characterSkillOne = player.CharacterSkillOne;
-            characterSkillTwo = player.CharacterSkillTwo;
-
-            if (player.EquippedWeapon != null)
-            {
-                weaponSkillOne = player.EquippedWeapon.WeaponSkillOne;
-                weaponSkillTwo = player.EquippedWeapon.WeaponSkillTwo;
-            }
 #endif
 
-            BindSkill(0, characterSkillOne);
-            BindSkill(1, characterSkillTwo);
-            BindSkill(2, weaponSkillOne);
-            BindSkill(3, weaponSkillTwo);
+            BindSkill(0, characterSkillOne, IsCharacterSkillOneUnlocked);
+            BindSkill(1, characterSkillTwo, IsCharacterSkillTwoUnlocked);
+            BindSkill(2, weaponSkillOne, IsWeaponSkillOneUnlocked);
+            BindSkill(3, weaponSkillTwo, IsWeaponSkillTwoUnlocked);
         }
 
-        private static void BindSkill(int slot, Skill skill)
+        private static void BindSkill(int slot, Skill skill, Func<bool> isSkillUnlocked)
         {
-            _skills[slot] = skill;
-            CooldownControllers[slot].SetSkill(skill);
-            if (skill == null) return;
-            CostControllers[slot].SetCost(skill.AdrenalineCost());
+            _skillControllers[slot].SetSkill(skill, isSkillUnlocked);
         }
 
         private static bool FailToCastSkill()
@@ -130,15 +105,16 @@ namespace Game.Combat.Misc
         public static void ActivateSkill(int skillNo)
         {
             if (!_skillsReady) return;
+            Skill skill = _skillControllers[skillNo].Skill();
             if (!FailToCastSkill())
             {
                 bool freeSkill = IsSkillFree();
-                if (!_skills[skillNo].Activate(freeSkill || SkillsAreFree)) return;
+                if (!skill.Activate(freeSkill || SkillsAreFree)) return;
                 TutorialManager.TryOpenTutorial(14, _overlays);
                 if (freeSkill) return;
             }
 
-            StartCooldown(_skills[skillNo].AdrenalineCost());
+            StartCooldown(skill.AdrenalineCost());
         }
 
         private static void StartCooldown(int duration)
