@@ -165,7 +165,7 @@
 		<Title>Crafting</Title>
 		<MinOffset>20,10</MinOffset>
 		<MaxOffset>20,970</MaxOffset>
-		<Text>Resources found in the world can be used to craft a variety of different items. Recipes are unlocked as you pass through the world. Crafting is performed via the crafting action, and only when at camp.</Text>
+		<Text>Resources found in the world can be used to craft a variety of different items.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>10</SectionNumber>
@@ -173,7 +173,7 @@
 		<Title>Resources</Title>
 		<MinOffset>0,0</MinOffset>
 		<MaxOffset>0,0</MaxOffset>
-		<Text>Some resources are dropped by enemies, some can be found scattered throughout the world, and some can only be crafted.</Text>
+		<Text>Crafting recipes are unlocked over time. You can view and craft recipes through the Craft action.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>11</SectionNumber>

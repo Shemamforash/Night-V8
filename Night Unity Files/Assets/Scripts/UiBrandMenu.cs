@@ -9,22 +9,24 @@ using UnityEngine;
 
 public class UiBrandMenu : Menu
 {
-    private EnhancedText _titleText, _benefitText, _effectText;
+    private EnhancedText _titleText, _benefitText, _effectText, _overviewText;
+    private CanvasGroup _detailCanvas, _overviewCanvas;
     private static UiBrandMenu _instance;
     private CloseButtonController _closeButton;
     private Menu _lastMenu;
+    private static string _titleString, _benefitString, _effectString, _overviewString;
 
     public override void Awake()
     {
         base.Awake();
+        _detailCanvas = gameObject.FindChildWithName<CanvasGroup>("Detail");
+        _overviewCanvas = gameObject.FindChildWithName<CanvasGroup>("Overview");
+        _overviewText = _overviewCanvas.GetComponent<EnhancedText>();
         _titleText = gameObject.FindChildWithName<EnhancedText>("Title");
         _benefitText = gameObject.FindChildWithName<EnhancedText>("Benefit");
         _effectText = gameObject.FindChildWithName<EnhancedText>("Effect");
         _instance = this;
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
-        _closeButton.SetCallback(Hide);
-        _closeButton.SetOnClick(Hide);
-        _closeButton.UseFireInput();
     }
 
     private void Hide()
@@ -36,67 +38,83 @@ public class UiBrandMenu : Menu
 
     private void Show()
     {
-        _closeButton.Enable();
         _lastMenu = MenuStateMachine.CurrentMenu();
+        UiSkillUpgradeEffectController.Activate();
         MenuStateMachine.ShowMenu("Brand Menu");
         CombatManager.Pause();
+        ShowOverview();
+    }
+
+    private void ShowOverview()
+    {
+        _overviewText.SetText(_overviewString);
+        _overviewCanvas.alpha = 1;
+        _detailCanvas.alpha = 0;
+        _closeButton.UseFireInput();
+        _closeButton.Enable();
+        _closeButton.SetOnClick(ShowDetail);
+        _closeButton.SetCallback(ShowDetail);
+    }
+
+    private void ShowDetail()
+    {
+        _titleText.SetText(_titleString);
+        _benefitText.SetText(_benefitString);
+        _effectText.SetText(_effectString);
+        _overviewCanvas.alpha = 0;
+        _detailCanvas.alpha = 1;
+        _closeButton.UseDefaultInput();
+        _closeButton.SetOnClick(Hide);
+        _closeButton.SetCallback(Hide);
     }
 
     public static void ShowBrand(Brand brand)
     {
-        string titleString = "";
-        string benefitString = "";
+        _overviewString = "Brand Complete";
+        _titleString = "";
+        _benefitString = "";
         switch (brand.Status)
         {
             case BrandStatus.Failed:
                 Debug.Log("failed " + brand.GetFailName());
-                titleString = "Failed";
-                benefitString = "A curse of " + brand.GetFailName() + " has been cast upon " + CharacterManager.SelectedCharacter.Name;
+                _titleString = "Failed";
+                _benefitString = "A curse of " + brand.GetFailName() + " has been cast upon " + CharacterManager.SelectedCharacter.Name;
                 break;
             case BrandStatus.Succeeded:
                 Debug.Log("passed " + brand.GetSuccessName());
-                titleString = "Passed";
-                benefitString = "A boon of " + brand.GetSuccessName() + " has been granted upon " + CharacterManager.SelectedCharacter.Name;
+                _titleString = "Passed";
+                _benefitString = "A boon of " + brand.GetSuccessName() + " has been granted upon " + CharacterManager.SelectedCharacter.Name;
                 break;
         }
 
-        titleString = titleString + " " + brand.GetName();
-        _instance._titleText.SetText(titleString);
+        _titleString = _titleString + " " + brand.GetName();
         string descriptionString = "\n<i><size=20>" + brand.Description() + "</size></i>";
-        _instance._benefitText.SetText(benefitString + descriptionString);
-        _instance._effectText.SetText(brand.GetEffectString());
+        _benefitString += descriptionString;
         _instance.Show();
     }
 
-    public static void ShowWeaponSkillUnlock(WeaponType weaponType, Skill weaponSkill)
-    {
-        _instance.ShowWeaponSkill(weaponType, weaponSkill);
-    }
+    public static void ShowWeaponSkillUnlock(WeaponType weaponType, Skill weaponSkill) => _instance.ShowWeaponSkill(weaponType, weaponSkill);
 
-    public static void ShowCharacterSkillUnlock(Skill characterSkill)
-    {
-        _instance.ShowCharacterSkill(characterSkill);
-    }
+    public static void ShowCharacterSkillUnlock(Skill characterSkill) => _instance.ShowCharacterSkill(characterSkill);
 
     private void ShowCharacterSkill(Skill characterSkill)
     {
-        string titleString = CharacterManager.SelectedCharacter.Name + " has grown with the passing of time";
-        ShowSkill(titleString, characterSkill);
+        _overviewString = "Skill Unlocked";
+        _effectString = CharacterManager.SelectedCharacter.Name + " has grown with the passing of time";
+        ShowSkill(characterSkill);
     }
 
     private void ShowWeaponSkill(WeaponType weaponType, Skill weaponSkill)
     {
-        string effectString = CharacterManager.SelectedCharacter.Name + "'s proficiency with " + weaponType + "s grows";
-        ShowSkill(effectString, weaponSkill);
+        _overviewString = "Skill Unlocked";
+        _effectString = CharacterManager.SelectedCharacter.Name + "'s proficiency with " + weaponType + "s grows";
+        ShowSkill(weaponSkill);
     }
 
-    private void ShowSkill(string effectString, Skill skill)
+    private void ShowSkill(Skill skill)
     {
-        string titleString = skill.Name + " has been unlocked";
-        _titleText.SetText(titleString);
-        _benefitText.SetText(skill.Description());
-        _effectText.SetText(effectString);
-        gameObject.SetActive(true);
+        _titleString = "The Skill '" + skill.Name + "' has been unlocked";
+        _benefitString = skill.Description();
         _instance.Show();
     }
 }

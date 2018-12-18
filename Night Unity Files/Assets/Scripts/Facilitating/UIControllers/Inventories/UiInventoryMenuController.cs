@@ -18,14 +18,14 @@ namespace Facilitating.UIControllers.Inventories
         public void Show()
         {
             gameObject.SetActive(true);
-            AudioController.FadeInMuffle();
+            AudioController.FadeInMusicMuffle();
             OnShow();
         }
 
         public void Hide()
         {
             gameObject.SetActive(false);
-            AudioController.FadeOutMuffle();
+            AudioController.FadeOutMusicMuffle();
             OnHide();
         }
 

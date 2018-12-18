@@ -125,10 +125,12 @@ public class TempleBehaviour : BasicShrineBehaviour
         yield return new WaitForSeconds(2f);
         Queue<EnemyTemplate> enemyTypesToSpawn = GetEnemyTypesToSpawn();
 
+        Debug.Log(enemyTypesToSpawn);
         while (!enemyTypesToSpawn.NotEmpty())
         {
             EnemyTemplate nextEnemy = enemyTypesToSpawn.Dequeue();
             float nextEnemyArrivalTime = nextEnemy.Value;
+            Debug.Log(nextEnemyArrivalTime + " " + CombatManager.IsCombatActive());
             while (nextEnemyArrivalTime > 0f)
             {
                 if (CombatManager.IsCombatActive()) nextEnemyArrivalTime -= Time.deltaTime;
@@ -174,7 +176,7 @@ public class TempleBehaviour : BasicShrineBehaviour
     private IEnumerator LightFires(int startAngle)
     {
         float timeToLight = 0.5f;
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < 3; ++i)
         {
             float current = timeToLight;
             while (current > 0f)
@@ -184,8 +186,8 @@ public class TempleBehaviour : BasicShrineBehaviour
                 yield return null;
             }
 
-            float angleA = startAngle + 10 * (i + 1);
-            float angleB = startAngle - 10 * (i + 1);
+            float angleA = startAngle + 15 * (i + 1);
+            float angleB = startAngle - 15 * (i + 1);
             Vector2 positionA = AdvancedMaths.CalculatePointOnCircle(angleA, 4f, transform.position);
             Vector2 positionB = AdvancedMaths.CalculatePointOnCircle(angleB, 4f, transform.position);
             FireBehaviour.Create(positionA);

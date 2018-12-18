@@ -151,4 +151,9 @@ public class WeaponAudioController : MonoBehaviour
     {
         _audioPool.Create().Play(AudioClips.TakeItem, Random.Range(0.5f, 0.6f), Random.Range(0.9f, 1f), Random.Range(800, 1200));
     }
+
+    public void PlayNeedleFire()
+    {
+        _audioPool.Create().Play(AudioClips.NeedleFire, Random.Range(0.9f, 1f), Random.Range(0.9f, 1f));
+    }
 }

@@ -79,15 +79,15 @@ namespace Game.Combat.Misc
             SkillsAreFree = true;
 #endif
 
-            BindSkill(0, characterSkillOne, IsCharacterSkillOneUnlocked);
-            BindSkill(1, characterSkillTwo, IsCharacterSkillTwoUnlocked);
-            BindSkill(2, weaponSkillOne, IsWeaponSkillOneUnlocked);
-            BindSkill(3, weaponSkillTwo, IsWeaponSkillTwoUnlocked);
+            BindSkill(0, characterSkillOne, IsCharacterSkillOneUnlocked, player.GetCharacterSkillOneProgress);
+            BindSkill(1, characterSkillTwo, IsCharacterSkillTwoUnlocked, player.GetCharacterSkillTwoProgress);
+            BindSkill(2, weaponSkillOne, IsWeaponSkillOneUnlocked, player.GetWeaponSkillOneProgress);
+            BindSkill(3, weaponSkillTwo, IsWeaponSkillTwoUnlocked, player.GetWeaponSkillTwoProgress);
         }
 
-        private static void BindSkill(int slot, Skill skill, Func<bool> isSkillUnlocked)
+        private static void BindSkill(int slot, Skill skill, Func<bool> isSkillUnlocked, Func<Tuple<string, float>> getProgress)
         {
-            _skillControllers[slot].SetSkill(skill, isSkillUnlocked);
+            _skillControllers[slot].SetSkill(skill, isSkillUnlocked, getProgress);
         }
 
         private static bool FailToCastSkill()

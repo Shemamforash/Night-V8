@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat.Misc;
@@ -21,6 +22,7 @@ namespace Game.Combat.Generation.Shrines
         private RiteColliderBehaviour _targetRiteCollider;
         private static RiteShrineBehaviour _instance;
         private List<TutorialOverlay> _overlays;
+        private Region _region;
 
         public void Awake()
         {
@@ -46,18 +48,19 @@ namespace Game.Combat.Generation.Shrines
         {
             if (_riteShrinePrefab == null) _riteShrinePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Rite Shrine");
             GameObject riteShrineObject = Instantiate(_riteShrinePrefab);
-            riteShrineObject.GetComponent<RiteShrineBehaviour>().SetRites(region.RitesRemaining);
+            riteShrineObject.GetComponent<RiteShrineBehaviour>().SetRites(region);
             riteShrineObject.transform.position = Vector2.zero;
             PathingGrid.AddBlockingArea(Vector2.zero, 1.5f);
         }
 
-        private void SetRites(int ritesRemaining)
+        private void SetRites(Region region)
         {
+            _region = region;
+            int ritesRemaining = region.RitesRemaining;
             _collider1 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 1");
             _collider2 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 2");
             _collider3 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 3");
             _brandChoice = CharacterManager.SelectedCharacter.BrandManager.GetBrandChoice(ritesRemaining);
-            Debug.Log(_brandChoice.Count);
             if (_brandChoice.Count < 3)
             {
                 StopCandles(_collider3.transform);
@@ -74,7 +77,6 @@ namespace Game.Combat.Generation.Shrines
             GetComponent<CompassItem>().Die();
             StopCandles(_collider1.transform);
             Destroy(_collider1);
-            Debug.Log("Destroyed");
             Destroy(this);
         }
 
@@ -132,6 +134,7 @@ namespace Game.Combat.Generation.Shrines
             {
                 TutorialManager.TryOpenTutorial(15, _overlays);
             }
+
             return _targetBrand;
         }
 
@@ -160,6 +163,7 @@ namespace Game.Combat.Generation.Shrines
             Triggered = true;
             FadeCandles(_targetRiteCollider.transform);
             Destroy(_targetRiteCollider);
+            --_region.RitesRemaining;
             _brandChoice[_targetBrand] = null;
             _targetBrand = -1;
             if (_brandChoice.TrueForAll(b => b == null)) GetComponent<CompassItem>().Die();

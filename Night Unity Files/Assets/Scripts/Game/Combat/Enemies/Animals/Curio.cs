@@ -15,7 +15,7 @@ namespace Game.Combat.Enemies.Animals
             CurrentAction = WaitForPlayer;
         }
 
-        public override void Alert(bool alertOthers)
+        public override void Alert()
         {
             Move();
         }

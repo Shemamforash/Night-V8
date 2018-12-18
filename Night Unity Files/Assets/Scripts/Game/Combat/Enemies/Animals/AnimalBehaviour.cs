@@ -12,7 +12,7 @@ namespace Game.Combat.Enemies.Nightmares
 {
     public abstract class AnimalBehaviour : UnarmedBehaviour
     {
-        protected bool Alerted;
+        public bool Alerted;
         private bool Fleeing;
         protected const float DetectionRange = 6f;
         private const float WanderDistance = 3;
@@ -79,12 +79,12 @@ namespace Game.Combat.Enemies.Nightmares
             StartCoroutine(FadeOut());
         }
 
-        public abstract void Alert(bool alertOthers);
+        public abstract void Alert();
 
         protected override void TakeDamage(int damage, Vector2 direction)
         {
             base.TakeDamage(damage, direction);
-            Alert(true);
+            Alert();
         }
 
         protected override void UpdateTargetCell()

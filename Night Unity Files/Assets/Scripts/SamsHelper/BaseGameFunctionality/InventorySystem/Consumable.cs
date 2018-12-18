@@ -32,6 +32,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             if (!Template.HasEffect) return;
             if (Template.IsEffectPermanent) ApplyPermanentEffect();
             else ApplyImpermanentEffect();
+
+            if (Template.AttributeType == AttributeType.Fettle && PlayerCombat.Instance != null) PlayerCombat.Instance.RecalculateHealth();
+            if (Template.AttributeType == AttributeType.Focus && PlayerCombat.Instance != null) PlayerCombat.Instance.ResetCompass();
         }
 
         private void ApplyPermanentEffect()

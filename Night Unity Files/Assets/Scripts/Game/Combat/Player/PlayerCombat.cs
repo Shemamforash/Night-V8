@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using EZCameraShake;
 using Facilitating;
 using Facilitating.UIControllers;
@@ -9,6 +10,7 @@ using Game.Characters;
 using Game.Combat.Enemies.Animals;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
+using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
 using Game.Exploration.Regions;
@@ -100,7 +102,6 @@ namespace Game.Combat.Player
             Instance = this;
             _mainCamera = Camera.main;
         }
-
 
         protected override int GetBurnDamage()
         {
@@ -323,6 +324,16 @@ namespace Game.Combat.Player
             UpdateSkillActions.ForEach(a => a());
             UpdateMuzzleFlash();
             UpdateRotation();
+            CheckBrandUnlock();
+        }
+
+        private void CheckBrandUnlock()
+        {
+            if (!RiteStarter.Available()) return;
+            if(!CombatManager.GetCurrentRegion().IsDynamic()) return;
+            Brand unlocked = Player.BrandManager.GetActiveBrands().FirstOrDefault(b => b != null && b.Ready());
+            if (unlocked == null) return;
+            RiteStarter.Generate(unlocked);
         }
 
         public override string GetDisplayName()
@@ -545,6 +556,8 @@ namespace Game.Combat.Player
 
             StopReloading();
         }
+
+      
 
         public override void ApplyShotEffects(Shot s)
         {

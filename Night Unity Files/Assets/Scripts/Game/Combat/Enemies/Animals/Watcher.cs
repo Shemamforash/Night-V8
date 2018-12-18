@@ -15,21 +15,25 @@ namespace Game.Combat.Enemies.Animals
             if (outOfSight) return;
             bool outOfRange = PlayerCombat.Instance.transform.Distance(transform.position) < DetectionRange;
             if (outOfRange) return;
-            Alert(true);
+            Alert();
         }
 
-        public override void Alert(bool alertOthers)
+        public override void Alert()
         {
-            if (Alerted) return;
+            if (!Alerted)
+            {
+                Cell target = PathingGrid.GetCellOutOfRange(transform.position);
+                MoveBehaviour.GoToCell(target);
+            }
+
             Alerted = true;
-            if (!alertOthers) return;
             CombatManager.Enemies().ForEach(e =>
             {
-                Grazer enemy = e as Grazer;
-                if (enemy == this || enemy == null) return;
+                if (!(e is Grazer enemy)) return;
+                if (enemy.Alerted) return;
                 float distance = TargetTransform().Distance(enemy.transform);
                 if (distance > DetectionRange) return;
-                enemy.Alert(false);
+                enemy.Alert();
             });
         }
     }

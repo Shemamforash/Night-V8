@@ -23,6 +23,7 @@ namespace Game.Characters
         public BrandStatus Status = BrandStatus.Locked;
         private bool _requiresSkillUnlock;
         private int _minLevel;
+        private bool _ready;
 
         protected Brand(Player player, string riteName)
         {
@@ -72,11 +73,14 @@ namespace Game.Characters
 
         public void UpdateValue(int amount)
         {
+            if (_ready) return;
             if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Rite) return;
             _counter += amount;
             if (_counter < _counterTarget) return;
-            RiteStarter.Generate(this);
+            _ready = true;
         }
+
+        public bool Ready() => _ready;
 
         public void Succeed()
         {
@@ -84,6 +88,7 @@ namespace Game.Characters
             SetStatus(BrandStatus.Succeeded);
             UiBrandMenu.ShowBrand(this);
             OnSucceed();
+            _ready = false;
         }
 
         public void Fail()
@@ -92,6 +97,7 @@ namespace Game.Characters
             SetStatus(BrandStatus.Failed);
             UiBrandMenu.ShowBrand(this);
             OnFail();
+            _ready = false;
         }
 
         protected abstract void OnSucceed();

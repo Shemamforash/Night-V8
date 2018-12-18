@@ -54,7 +54,7 @@ namespace Game.Exploration.Environment
             _rings.ForEach(r => r.TweenColour(UiAppearanceController.InvisibleColour, Color.white, 0.5f));
             MapGenerator.Regions().ForEach(n => { n.ShowNode(); });
             MapMovementController.Enter(CharacterManager.SelectedCharacter);
-            AudioController.FadeInMuffle();
+            AudioController.FadeInMusicMuffle();
             List<TutorialOverlay> overlays = new List<TutorialOverlay>
             {
                 new TutorialOverlay(MapGenerator.GetInitialNode().MapNode().transform, 3, 3)
@@ -70,7 +70,7 @@ namespace Game.Exploration.Environment
             MapGenerator.Regions().ForEach(n => n.HideNode());
             MapMovementController.Exit();
             FadeAndDieTrailRenderer.ForceFadeAll();
-            AudioController.FadeOutMuffle();
+            AudioController.FadeOutMusicMuffle();
         }
 
         private void CreateRouteLinks()

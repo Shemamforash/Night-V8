@@ -78,7 +78,6 @@ namespace Game.Combat.Generation
             ScreenFaderController.ShowText(_currentRegion.Name);
         }
 
-
         private void UpdateHud()
         {
             if (!ClearOfEnemies() && !_hudShown)
@@ -167,7 +166,7 @@ namespace Game.Combat.Generation
 
         public static bool IsPlayerInCombat()
         {
-            return Instance() != null && _inCombat;
+            return Instance() != null && _inCombat && PlayerCombat.Instance != null;
         }
 
         public static bool IsCombatActive()

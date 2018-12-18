@@ -5,6 +5,7 @@ using Game.Combat.Enemies.Nightmares;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using Game.Exploration.Regions;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -17,7 +18,7 @@ namespace Game.Global
         private static float _ambientVolume;
         private static AudioController _instance;
         private static AudioMixer _audioMixer;
-        private static float _fogMuffle, _startTime;
+        private static float _fogMuffle;
         private float _combatTargetVolume;
         private const float ThresholdCombatMusicDistance = 10f;
         private const float MusicFadeDuration = 5f;
@@ -26,7 +27,7 @@ namespace Game.Global
         [SerializeField] private AudioSource _windLight, _windMedium, _windHeavy;
         [SerializeField] private AudioSource _rainLight, _rainMedium, _rainHeavy;
         [SerializeField] private AudioSource _ambient;
-        [SerializeField] private AudioSource _layer1, _layer2, _layer3, _layer4;
+        [SerializeField] private AudioSource _layer1, _layer2;
         [SerializeField] private AudioSource _night;
 
         public void Awake()
@@ -58,24 +59,21 @@ namespace Game.Global
             _night.clip = AudioClips.Night;
             _night.Play();
 
-            _startTime = Random.Range(0f, AudioClips.SimmavA.length);
-            _layer1.clip = AudioClips.SimmavA;
-            _layer2.clip = AudioClips.SimmavB;
-            _layer3.clip = AudioClips.SimmavC;
-            _layer4.clip = AudioClips.SimmavD;
+            float layer1StartTime = Random.Range(0f, AudioClips.AbandonedLands.length);
+            float layer2StartTime = Random.Range(0f, AudioClips.GodsAreDead.length);
+            _layer1.clip = AudioClips.AbandonedLands;
+            _layer2.clip = AudioClips.GodsAreDead;
 
-            SetInitialVolume(_layer1, 0);
-            SetInitialVolume(_layer2, 0);
-            SetInitialVolume(_layer3, 0);
-            SetInitialVolume(_layer4, 0);
+            SetInitialVolume(_layer1, 0, layer1StartTime);
+            SetInitialVolume(_layer2, 0, layer2StartTime);
 
             DontDestroyOnLoad(this);
         }
 
-        private void SetInitialVolume(AudioSource source, float volume)
+        private void SetInitialVolume(AudioSource source, float volume, float startTime)
         {
             source.volume = volume;
-            source.time = _startTime;
+            source.time = startTime;
             source.Play();
         }
 
@@ -98,30 +96,63 @@ namespace Game.Global
             _timeNearEnemies = Mathf.Clamp(_timeNearEnemies + timeChange, 0, 5);
         }
 
+
+        private float _minAmbientVolume, _maxCombatVolume;
+        private bool _useAlternateCombatMusic;
+
+        private void UpdateMinMaxVolumes(bool isCombatScene)
+        {
+            if (isCombatScene)
+            {
+                Region currentRegion = CombatManager.GetCurrentRegion();
+                if (currentRegion.IsDynamic())
+                {
+                    _minAmbientVolume = 0.25f;
+                    _maxCombatVolume = 0.75f;
+                }
+                else
+                {
+                    _minAmbientVolume = 0f;
+                    _maxCombatVolume = 1f;
+                }
+
+                _useAlternateCombatMusic = currentRegion.GetRegionType() == RegionType.Tomb;
+            }
+        }
+
+        private void UpdateInGameVolumes()
+        {
+            float ambientVolumeModifier = 1 - _combatTargetVolume;
+            if (ambientVolumeModifier < _minAmbientVolume) ambientVolumeModifier = _minAmbientVolume;
+            _ambient.volume = _ambientVolume * ambientVolumeModifier;
+            if (_combatTargetVolume > _maxCombatVolume) _combatTargetVolume = _maxCombatVolume;
+        }
+
+        private void UpdateOutOfGameVolumes()
+        {
+            _combatTargetVolume = 0;
+            _ambientVolume -= Time.deltaTime;
+            if (_ambientVolume < 0) _ambientVolume = 0f;
+            _ambient.volume = _ambientVolume;
+        }
+
         public void Update()
         {
+            string currentScene = SceneManager.GetActiveScene().name;
+            bool isGameScene = currentScene == "Game";
+            bool isCombatScene = currentScene == "Combat";
+            UpdateMinMaxVolumes(isCombatScene);
             UpdateTimeNearEnemies();
+
             _combatTargetVolume = _timeNearEnemies / 5f;
 
-            string currentScene = SceneManager.GetActiveScene().name; 
-            if (currentScene != "Game" && currentScene != "Combat")
-            {
-                _combatTargetVolume = 0;
-                _ambientVolume -= Time.deltaTime;
-                if (_ambientVolume < 0) _ambientVolume = 0f;
-                _ambient.volume = _ambientVolume;
-            }
-            else
-            {
-                float ambientVolumeModifier = 1 - _combatTargetVolume;
-                if (ambientVolumeModifier < 0.2f) ambientVolumeModifier = 0.2f;
-                _ambient.volume = _ambientVolume * ambientVolumeModifier;
-            }
+            if (!isGameScene && !isCombatScene) UpdateOutOfGameVolumes();
+            else UpdateInGameVolumes();
 
-            UpdateLayerVolume(_combatTargetVolume, _layer1);
-            UpdateLayerVolume(_combatTargetVolume, _layer2);
-            UpdateLayerVolume(_combatTargetVolume, _layer3);
-            UpdateLayerVolume(_combatTargetVolume, _layer4);
+            float layer1TargetVolume = _useAlternateCombatMusic ? 0f : _combatTargetVolume;
+            float layer2TargetVolume = _useAlternateCombatMusic ? _combatTargetVolume : 0f;
+            UpdateLayerVolume(layer1TargetVolume, _layer1);
+            UpdateLayerVolume(layer2TargetVolume, _layer2);
         }
 
         private void UpdateLayerVolume(float targetVolume, AudioSource layer)
@@ -158,13 +189,13 @@ namespace Game.Global
             _audioMixer.DOSetFloat("WeatherCutoffFreq", 22000 - to * 20000f, duration).SetUpdate(UpdateType.Normal, true);
         }
 
-        public static void FadeInMuffle()
+        public static void FadeInMusicMuffle()
         {
             if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
             _audioMixer.DOSetFloat("MusicLowPassCutoff", 750, 0.5f).SetUpdate(UpdateType.Normal, true);
         }
 
-        public static void FadeOutMuffle()
+        public static void FadeOutMusicMuffle()
         {
             if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
             _audioMixer.DOSetFloat("MusicLowPassCutoff", 22000, 0.5f).SetUpdate(UpdateType.Normal, true);
@@ -180,6 +211,12 @@ namespace Game.Global
         {
             if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
             _audioMixer.SetFloat("Modified", NormalisedVolumeToAttenuation(volume));
+        }
+
+        public static void SetGlobalMuffle(float value)
+        {
+            if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
+            _audioMixer.SetFloat("Muffle", value);
         }
 
         private static float NormalisedVolumeToAttenuation(float volume)

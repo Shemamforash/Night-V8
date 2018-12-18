@@ -19,6 +19,7 @@ namespace Game.Combat.Player
         private SkillValue _skillValue;
         private PlayerCombat _player;
         private Transform _playerTransform;
+        
 
         protected Skill(string name)
         {

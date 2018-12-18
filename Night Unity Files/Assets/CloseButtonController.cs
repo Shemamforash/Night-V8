@@ -41,6 +41,13 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
         _button.FindChildWithName<TextMeshProUGUI>("Close Text").SetText("K");
     }
 
+    public void UseDefaultInput()
+    {
+        _targetAxis = InputAxis.Menu;
+        if (_button == null) _button = GetComponent<Button>();
+        _button.FindChildWithName<TextMeshProUGUI>("Close Text").SetText("X");
+    }
+
     public void Enable()
     {
         InputHandler.RegisterInputListener(this);

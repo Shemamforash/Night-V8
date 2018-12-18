@@ -245,6 +245,12 @@ public class TutorialManager : MonoBehaviour
         EventTextController.SetOverrideText("Use your compass with [E]");
         while (Input.GetAxis("Compass") == 0) yield return null;
         EventTextController.CloseOverrideText();
+        
+        PlayerCombat.Instance.UpdateAdrenaline(10000);
+        EventTextController.SetOverrideText("Dash with [SPACE], this consumes some adrenaline");
+        while (Input.GetAxis("Sprint") == 0) yield return null;
+        EventTextController.CloseOverrideText();
+        
         _seenControlsGuide = true;
         yield return new WaitForSeconds(10);
         EventTextController.SetOverrideText("When you are ready to leave, go to the edge of the region and press [T]");

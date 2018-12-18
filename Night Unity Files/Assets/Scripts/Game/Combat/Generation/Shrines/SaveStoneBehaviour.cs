@@ -42,7 +42,7 @@ public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
 
     public string GetEventText()
     {
-        return "Make an offering upon the alter";
+        return "Make an offering upon the alter [T]";
     }
 
     public void Activate()

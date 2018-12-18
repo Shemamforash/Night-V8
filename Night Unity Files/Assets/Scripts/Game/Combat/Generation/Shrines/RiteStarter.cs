@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
+using Game.Characters.CharacterActions;
 using Game.Combat.Player;
 using Game.Exploration.Regions;
 using Game.Global;
@@ -12,6 +13,22 @@ namespace Game.Combat.Generation.Shrines
     {
         private Brand _brand;
         private static GameObject _prefab;
+        private static RiteStarter _instance;
+
+        public void Awake()
+        {
+            _instance = this;
+        }
+
+        private void OnDestroy()
+        {
+            _instance = null;
+        }
+
+        public static bool Available()
+        {
+            return _instance == null;
+        }
 
         public static void Generate(Brand brand)
         {
@@ -48,7 +65,7 @@ namespace Game.Combat.Generation.Shrines
         {
             if (!other.CompareTag("Player")) return;
             if (_brand == null)
-                ReturnHome();
+                Return();
             else
                 GoToRite();
             Destroy(this);
@@ -65,11 +82,11 @@ namespace Game.Combat.Generation.Shrines
             CombatManager.SetInCombat(false);
         }
 
-        private void ReturnHome()
+        private void Return()
         {
             CombatManager.ExitCombat();
-            CharacterManager.SelectedCharacter.TravelAction.ReturnToHomeInstant();
-            SceneChanger.GoToGameScene();
+            Travel travel = CharacterManager.SelectedCharacter.TravelAction;
+            travel.TravelToInstant(travel.GetCurrentRegion());
         }
     }
 }

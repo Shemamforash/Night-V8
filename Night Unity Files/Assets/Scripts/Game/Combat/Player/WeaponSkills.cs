@@ -154,6 +154,7 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
+            PlayerCombat.Instance.WeaponAudio.PlayNeedleFire();
             Transform playerTransform = PlayerCombat.Instance.transform;
 
             Vector2 startPos = playerTransform.position + playerTransform.up * 0.5f;

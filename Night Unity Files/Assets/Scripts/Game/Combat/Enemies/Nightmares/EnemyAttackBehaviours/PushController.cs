@@ -5,6 +5,7 @@ using UnityEngine;
 public class PushController : MonoBehaviour
 {
     private ParticleSystem _pushParticles;
+    private AudioSource _audioSource;
     private static readonly ObjectPool<PushController> _pushPool = new ObjectPool<PushController>("Pushes", "Prefabs/Combat/Visuals/Push Burst");
 
     public static void Create(Vector2 position, float rotation, bool player, float arcSize = 20f)
@@ -27,12 +28,14 @@ public class PushController : MonoBehaviour
         int mask = player ? 1 << 10 : 1 << 17;
         collision.collidesWith = mask;
         _pushParticles.Emit(emitCount);
+        _audioSource.volume = Random.Range(0.7f, 0.8f);
+        _audioSource.Play();
         StartCoroutine(WaitAndDie());
     }
 
     private IEnumerator WaitAndDie()
     {
-        while (_pushParticles.particleCount > 0) yield return null;
+        while (_pushParticles.particleCount > 0 && _audioSource.isPlaying) yield return null;
         _pushPool.Return(this);
     }
 

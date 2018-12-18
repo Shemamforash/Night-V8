@@ -14,22 +14,26 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
         private readonly Color _cooldownNotReadyColor = UiAppearanceController.FadedColour;
         private readonly List<GameObject> _skillCostBlips = new List<GameObject>();
         private Transform _costTransform;
-        private Image _cooldownFill;
-        private EnhancedText _cooldownText;
-        private CanvasGroup _canvasGroup;
+        private Image _cooldownFill, _progressImage;
+        private EnhancedText _cooldownText, _progressText;
+        private CanvasGroup _unlockedCanvas, _lockedCanvas;
         private ParticleSystem _readyParticles;
         private Skill _skill;
-        private bool _ready;
         private Func<bool> _isSkillUnlocked;
-        private bool _unlocked;
+        private bool _unlocked, _ready;
+        private Func<Tuple<string, float>> _getProgress;
 
         private void Awake()
         {
-            _cooldownFill = gameObject.FindChildWithName<Image>("Fill");
-            _cooldownText = gameObject.FindChildWithName<EnhancedText>("Text");
-            _costTransform = gameObject.FindChildWithName("Cost").transform;
-            _canvasGroup = GetComponent<CanvasGroup>();
-            _readyParticles = gameObject.FindChildWithName<ParticleSystem>("Ready");
+            _lockedCanvas = gameObject.FindChildWithName<CanvasGroup>("Locked");
+            _progressImage = _lockedCanvas.gameObject.FindChildWithName<Image>("Progress");
+            _progressText = _lockedCanvas.gameObject.FindChildWithName<EnhancedText>("Text");
+
+            _unlockedCanvas = gameObject.FindChildWithName<CanvasGroup>("Unlocked");
+            _cooldownFill = _unlockedCanvas.gameObject.FindChildWithName<Image>("Fill");
+            _cooldownText = _unlockedCanvas.gameObject.FindChildWithName<EnhancedText>("Text");
+            _costTransform = _unlockedCanvas.gameObject.FindChildWithName("Cost").transform;
+            _readyParticles = _unlockedCanvas.gameObject.FindChildWithName<ParticleSystem>("Ready");
             _cooldownFill.fillAmount = 1;
             Reset();
         }
@@ -54,10 +58,11 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 
         public Skill Skill() => _skill;
 
-        public void SetSkill(Skill skill, Func<bool> isSkillUnlocked)
+        public void SetSkill(Skill skill, Func<bool> isSkillUnlocked, Func<Tuple<string, float>> getProgress)
         {
             _isSkillUnlocked = isSkillUnlocked;
             _skill = skill;
+            _getProgress = getProgress;
             UpdateUI();
         }
 
@@ -65,9 +70,19 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
         {
             if (_unlocked) return;
             _unlocked = _isSkillUnlocked();
-            _canvasGroup.alpha = _unlocked ? 1 : 0;
-            _cooldownText.SetText(_unlocked ? _skill.Name : "");
-            SetCost(_unlocked ? _skill.AdrenalineCost() : 0);
+            _lockedCanvas.alpha = _unlocked ? 0 : 1;
+            _unlockedCanvas.alpha = _unlocked ? 1 : 0;
+            if (_unlocked)
+            {
+                _cooldownText.SetText(_skill.Name);
+                SetCost(_unlocked ? _skill.AdrenalineCost() : 0);
+            }
+            else
+            {
+                Tuple<string, float> progress = _getProgress();
+                _progressText.SetText(progress.Item1);
+                _progressImage.fillAmount = progress.Item2;
+            }
         }
 
         public void Reset()

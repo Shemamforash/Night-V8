@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
 using Facilitating.UIControllers;
@@ -162,12 +163,44 @@ namespace Game.Characters
             TryUnlockCharacterSkill(true);
         }
 
+        private const int CharacterSkillOneTarget = 5, CharacterSkillTwoTarget = 10, WeaponSkillOneTarget = 5, WeaponSkillTwoTarget = 300;
+
         private void TryUnlockCharacterSkill(bool showScreen)
         {
-            if (_daysSurvived >= 7)
+            if (_daysSurvived >= CharacterSkillOneTarget)
                 Attributes.UnlockCharacterSkillOne(showScreen);
-            if (_daysSurvived >= 14)
+            if (_daysSurvived >= CharacterSkillTwoTarget)
                 Attributes.UnlockCharacterSkillTwo(showScreen);
+        }
+
+        public Tuple<string, float> GetCharacterSkillOneProgress()
+        {
+            string progress = "Survive " + (CharacterSkillOneTarget - _daysSurvived) + " days";
+            float normalisedProgress = (float) _daysSurvived / CharacterSkillOneTarget;
+            return Tuple.Create(progress, normalisedProgress);
+        }
+
+        public Tuple<string, float> GetCharacterSkillTwoProgress()
+        {
+            string progress = "Survive " + (CharacterSkillTwoTarget - _daysSurvived) + " days";
+            float normalisedProgress = (float) _daysSurvived / CharacterSkillTwoTarget;
+            return Tuple.Create(progress, normalisedProgress);
+        }
+
+        public Tuple<string, float> GetWeaponSkillOneProgress()
+        {
+            WeaponType weaponType = EquippedWeapon.WeaponType();
+            string progress = "Kill " + (WeaponSkillOneTarget - _weaponKills[weaponType]) + " enemies";
+            float normalisedProgress = (float) _weaponKills[weaponType] / WeaponSkillOneTarget;
+            return Tuple.Create(progress, normalisedProgress);
+        }
+
+        public Tuple<string, float> GetWeaponSkillTwoProgress()
+        {
+            WeaponType weaponType = EquippedWeapon.WeaponType();
+            string progress = "Kill " + (WeaponSkillTwoTarget - _weaponKills[weaponType]) + " enemies";
+            float normalisedProgress = (float) _weaponKills[weaponType] / WeaponSkillTwoTarget;
+            return Tuple.Create(progress, normalisedProgress);
         }
 
         public void SetCharacterView(CharacterView characterView)
@@ -243,9 +276,9 @@ namespace Game.Characters
 
         private void TryUnlockWeaponSkills(WeaponType weaponType, bool showScreen)
         {
-            if (_weaponKills[weaponType] >= 100)
+            if (_weaponKills[weaponType] >= WeaponSkillOneTarget)
                 Attributes.UnlockWeaponSkillOne(weaponType, showScreen);
-            if (_weaponKills[weaponType] >= 300)
+            if (_weaponKills[weaponType] >= WeaponSkillTwoTarget)
                 Attributes.UnlockWeaponSkillTwo(weaponType, showScreen);
         }
 

@@ -60,8 +60,8 @@ public class UiWillController : UiInventoryMenuController, IInputListener
         will.Decrement();
         targetAttribute.Increment();
         UpdateValues();
-        if (attributeType != AttributeType.Fettle || PlayerCombat.Instance == null) return;
-        PlayerCombat.Instance.RecalculateHealth();
+        if (attributeType == AttributeType.Fettle && PlayerCombat.Instance != null) PlayerCombat.Instance.RecalculateHealth();
+        if (attributeType == AttributeType.Focus && PlayerCombat.Instance != null) PlayerCombat.Instance.ResetCompass();
     }
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)

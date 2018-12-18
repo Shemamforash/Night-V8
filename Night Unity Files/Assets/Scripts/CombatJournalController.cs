@@ -40,7 +40,7 @@ public class CombatJournalController : Menu, IInputListener
         CombatManager.Pause();
         _audioSource.clip = AudioClips.OpenJournal;
         _audioSource.Play();
-        AudioController.FadeInMuffle();
+        AudioController.FadeInMusicMuffle();
         _closeButton.Enable();
     }
 
@@ -51,7 +51,7 @@ public class CombatJournalController : Menu, IInputListener
         _closeButton.Flash();
         CombatManager.Resume();
         MenuStateMachine.ReturnToDefault();
-        AudioController.FadeOutMuffle();
+        AudioController.FadeOutMusicMuffle();
         _audioSource.Stop();
         _audioSource.clip = AudioClips.CloseJournal;
         _audioSource.Play();
