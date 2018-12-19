@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
+using Game.Combat.Generation;
 using Game.Gear.Armour;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Facilitating.UIControllers
@@ -46,9 +48,9 @@ namespace Facilitating.UIControllers
                 ArmourChunk chunk = _armourChunks[i];
                 if (i < slotsAvailable)
                     if (i < slotsUsed)
-                        chunk.Activate(damageWasTaken);
+                        chunk.Activate();
                     else
-                        chunk.Deactivate();
+                        chunk.Deactivate(damageWasTaken);
                 else
                     chunk.SetUnused();
             }
@@ -61,7 +63,7 @@ namespace Facilitating.UIControllers
         {
             private readonly CanvasGroup _armourCanvasGroup, _activeCanvasGroup;
             private readonly Image _brokenImage, _completeImage, _leftBar, _rightBar, _inactive;
-            private Sequence _flashSequence;
+            private readonly ParticleSystem _shatterSystem;
 
             public ArmourChunk(GameObject armourObject)
             {
@@ -72,40 +74,25 @@ namespace Facilitating.UIControllers
                 _completeImage = armourObject.FindChildWithName<Image>("Complete");
                 _leftBar = armourObject.FindChildWithName<Image>("Left Bar");
                 _rightBar = armourObject.FindChildWithName<Image>("Right Bar");
+                if (SceneManager.GetActiveScene().name != "Combat") return;
+                _shatterSystem = armourObject.FindChildWithName<ParticleSystem>("Shatter");
             }
 
-            private void Flash()
-            {
-                _flashSequence?.Kill();
-                _leftBar.color = Color.red;
-                _rightBar.color = Color.red;
-                _completeImage.color = Color.red;
-                _flashSequence = DOTween.Sequence();
-                _flashSequence.Append(_leftBar.DOColor(Color.white, 0.25f));
-                _flashSequence.Insert(0, _rightBar.DOColor(Color.white, 0.25f));
-                _flashSequence.Insert(0, _completeImage.DOColor(Color.white, 0.25f));
-            }
-
-            public void Activate(bool damageWasTaken)
+            public void Activate()
             {
                 _armourCanvasGroup.alpha = 1f;
                 _activeCanvasGroup.alpha = 1f;
                 _inactive.SetAlpha(0f);
                 _completeImage.SetAlpha(1f);
                 _brokenImage.SetAlpha(0f);
-
-                if (damageWasTaken) Flash();
-                else
-                {
-                    if (_flashSequence != null && !_flashSequence.IsComplete()) return;
-                    _completeImage.color = Color.white;
-                    _leftBar.color = Color.white;
-                    _rightBar.color = Color.white;
-                }
+                _completeImage.color = Color.white;
+                _leftBar.color = Color.white;
+                _rightBar.color = Color.white;
             }
 
-            public void Deactivate()
+            public void Deactivate(bool damageWasTaken)
             {
+                if (damageWasTaken) _shatterSystem.Emit(30);
                 _armourCanvasGroup.alpha = 1f;
                 _activeCanvasGroup.alpha = 1f;
                 _inactive.SetAlpha(0f);

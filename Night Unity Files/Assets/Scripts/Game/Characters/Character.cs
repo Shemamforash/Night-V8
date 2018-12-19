@@ -31,6 +31,8 @@ namespace Game.Characters
             return doc;
         }
 
+
+
         public virtual void Load(XmlNode root)
         {
             Name = root.StringFromNode("Name");

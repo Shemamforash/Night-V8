@@ -2,6 +2,7 @@
 using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Player;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -115,6 +116,18 @@ namespace Game.Gear.Armour
             int plateOneCurrent = _head?.GetCurrentProtection() ?? 0;
             int plateTwoCurrent = _chest?.GetCurrentProtection() ?? 0;
             return plateOneCurrent + plateTwoCurrent;
+        }
+
+        public void AutoGenerateArmour()
+        {
+            int difficulty = Mathf.FloorToInt(WorldState.Difficulty() / 5f);
+            int armourMin = difficulty - 2;
+            if (armourMin < 0) armourMin = 0;
+            else if (armourMin > 10) armourMin = 10;
+            int armourMax = difficulty + 2;
+            if (armourMax < 0) armourMax = 0;
+            else if (armourMax > 10) armourMax = 10;
+            AutoFillSlots(Random.Range(armourMin, armourMax));
         }
 
         public void AutoFillSlots(int range)

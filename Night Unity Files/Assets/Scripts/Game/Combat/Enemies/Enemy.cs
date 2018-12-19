@@ -72,21 +72,14 @@ namespace Game.Combat.Enemies
                     break;
             }
 
-            Weapon weapon = WeaponGenerator.GenerateWeapon(); //possibleTypes.RandomElement());
+            Weapon weapon = WeaponGenerator.GenerateWeapon(possibleTypes.RandomElement());
             EquipWeapon(weapon);
             if (Helper.RollDie(0, 5)) weapon.SetInscription(Inscription.Generate());
         }
 
         private void GenerateArmour()
         {
-            int difficulty = Mathf.FloorToInt(WorldState.Difficulty() / 5f);
-            int armourMin = difficulty - 2;
-            if (armourMin < 0) armourMin = 0;
-            else if (armourMin > 10) armourMin = 10;
-            int armourMax = difficulty + 2;
-            if (armourMax < 0) armourMax = 0;
-            else if (armourMax > 10) armourMax = 10;
-            ArmourController.AutoFillSlots(Random.Range(armourMin, armourMax));
+            ArmourController.AutoGenerateArmour();
         }
 
         private void AssignSprite(GameObject enemyObject)
@@ -207,8 +200,8 @@ namespace Game.Combat.Enemies
         private Loot DropHumanLoot(Vector2 position)
         {
             if (Random.Range(0f, 1f) < Template.DropRate) SaltBehaviour.Create(position);
-            bool dropWeapon = Random.Range(0, 30) == 0 && EquippedWeapon != null;
-            bool dropAccessory = Random.Range(0, 50) == 0;
+            bool dropWeapon = Helper.RollDie(0, 25) && EquippedWeapon != null;
+            bool dropAccessory = Helper.RollDie(0, 25);
             if (dropWeapon && dropAccessory)
             {
                 if (Random.Range(0, 2) == 0) dropWeapon = false;

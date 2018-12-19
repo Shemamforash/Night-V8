@@ -57,7 +57,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
             _prefabs.Add(_chasePrefab);
         }
 
-        GameObject shrine = Instantiate(_firePrefab);//_prefabs.RandomElement());
+        GameObject shrine = Instantiate(_prefabs.RandomElement());
         shrine.transform.position = Vector2.zero;
         shrine.transform.localScale = Vector2.one;
         shrine.GetComponent<ShrineBehaviour>()._brand = brand;

@@ -22,13 +22,11 @@ public class SteppedProgressBar : MonoBehaviour
         _slider.fillAmount = 1;
     }
 
-    public void SetValue(float newValue)
+    public void SetValue(float newValue, bool useFade = true)
     {
         float oldValue = _slider.fillAmount;
         if (oldValue == newValue) return;
         _slider.fillAmount = newValue;
-        Fader fader = CreateNewFadeBlock();
-        RectTransform faderTransform = fader.GetComponent<RectTransform>();
         if (_slider.fillOrigin == (int) Image.OriginHorizontal.Right)
         {
             float temp = oldValue;
@@ -36,11 +34,16 @@ public class SteppedProgressBar : MonoBehaviour
             newValue = 1 - temp;
         }
 
-        faderTransform.anchorMin = new Vector2(newValue, 0);
-        faderTransform.anchorMax = new Vector2(oldValue, 1);
-        faderTransform.offsetMin = Vector2.zero;
-        faderTransform.offsetMax = Vector2.zero;
-        fader.Restart();
+        if (useFade)
+        {
+            Fader fader = CreateNewFadeBlock();
+            RectTransform faderTransform = fader.GetComponent<RectTransform>();
+            faderTransform.anchorMin = new Vector2(newValue, 0);
+            faderTransform.anchorMax = new Vector2(oldValue, 1);
+            faderTransform.offsetMin = Vector2.zero;
+            faderTransform.offsetMax = Vector2.zero;
+            fader.Restart();
+        }
     }
 
     private Fader CreateNewFadeBlock()

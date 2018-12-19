@@ -84,7 +84,7 @@ namespace Game.Combat.Generation.Shrines
 
         private void Return()
         {
-            CombatManager.ExitCombat();
+            CombatManager.ExitCombat(false);
             Travel travel = CharacterManager.SelectedCharacter.TravelAction;
             travel.TravelToInstant(travel.GetCurrentRegion());
         }

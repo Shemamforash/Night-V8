@@ -262,6 +262,7 @@
           </e>
           <e p="readme_DOTweenPro.txt" t="Include" />
         </e>
+        <e p="EndGameAudioController.cs" t="Include" />
         <e p="EZ Camera Shake" t="Include">
           <e p="Scripts" t="Include">
             <e p="CameraShakeInstance.cs" t="Include" />

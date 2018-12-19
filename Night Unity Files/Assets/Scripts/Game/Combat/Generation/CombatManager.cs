@@ -188,14 +188,14 @@ namespace Game.Combat.Generation
         {
             ParticleSystem _nightmareParticles = GameObject.Find("Nightmare Particles").GetComponent<ParticleSystem>();
             ParticleSystem.ShapeModule shape = _nightmareParticles.shape;
-            shape.radius = PathingGrid.CombatAreaWidth / 2f + 4;
+            shape.radius = PathingGrid.CombatAreaWidth / 2f + 6f;
             _nightmareParticles.Play();
         }
 
         private void SetUpDynamicRegion()
         {
             GameObject worldObject = GameObject.Find("World");
-            switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
+            switch (EnvironmentManager.CurrentEnvironmentType())
             {
                 case EnvironmentType.Desert:
                     worldObject.AddComponent<Desert>().Initialise(_currentRegion);
@@ -218,7 +218,6 @@ namespace Game.Combat.Generation
         private void SetUpNonDynamicRegion()
         {
             GameObject worldObject = GameObject.Find("World");
-            PlayNightmareParticles();
             switch (_currentRegion.GetRegionType())
             {
                 case RegionType.Tomb:
@@ -232,6 +231,7 @@ namespace Game.Combat.Generation
                     break;
             }
 
+            PlayNightmareParticles();
             _visibilityRange = 10f;
         }
 

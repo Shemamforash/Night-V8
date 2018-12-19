@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
+using Game.Exploration.Environment;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -47,7 +48,7 @@ namespace Game.Global
                 LockedWandererEntries.Remove(_journalGroup);
                 return;
             }
-            
+
             if (_characterClass == CharacterClass.None)
             {
                 LockedEntries[_journalGroup].Remove(this);
@@ -105,7 +106,7 @@ namespace Game.Global
         {
             return LockedEntries[part][0];
         }
-        
+
         public static JournalEntry GetEntry()
         {
             ReadJournals();
@@ -114,7 +115,7 @@ namespace Game.Global
             {
                 List<JournalEntry> journalGroup;
                 if (player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer)
-                    journalGroup = LockedWandererEntries[WorldState.CurrentLevel()];
+                    journalGroup = LockedWandererEntries[(int) EnvironmentManager.CurrentEnvironmentType()];
                 else
                     journalGroup = LockedCharacterEntries[player.CharacterTemplate.CharacterClass];
 
@@ -190,8 +191,9 @@ namespace Game.Global
             return inputString.Replace("[br]", "\n");
         }
 
-        public static string GetStoryText(int currentLevel)
+        public static string GetStoryText()
         {
+            int currentLevel = (int) EnvironmentManager.CurrentEnvironmentType();
             ReadJournals();
             return !_mainStoryText.ContainsKey(currentLevel) ? "" : _mainStoryText[currentLevel];
         }

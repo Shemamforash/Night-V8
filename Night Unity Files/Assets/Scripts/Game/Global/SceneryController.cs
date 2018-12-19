@@ -55,6 +55,6 @@ public class SceneryController : MonoBehaviour
         Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
         if (currentEnvironment == null) return;
         _environment.sprite = Resources.Load<Sprite>("Images/Backgrounds/" + currentEnvironment.EnvironmentType + "/Environment");
-        _gateShadow.sprite = Resources.Load<Sprite>("Images/Backgrounds/" + EnvironmentManager.CurrentEnvironment.EnvironmentType + "/Shadow");
+        _gateShadow.sprite = Resources.Load<Sprite>("Images/Backgrounds/" + EnvironmentManager.CurrentEnvironmentType() + "/Shadow");
     }
 }

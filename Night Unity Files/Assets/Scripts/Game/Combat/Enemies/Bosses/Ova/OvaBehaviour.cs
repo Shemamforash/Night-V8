@@ -24,7 +24,7 @@ namespace Game.Combat.Enemies.Bosses
             _boss = GetComponent<Boss>();
             HealthController.SetInitialHealth(StartingHealth, this);
             ArmourController = new ArmourController(null);
-            ArmourController.AutoFillSlots(10);
+            ArmourController.AutoGenerateArmour();
             TryAddBeamAttack();
             SpermBehaviour.Create();
         }

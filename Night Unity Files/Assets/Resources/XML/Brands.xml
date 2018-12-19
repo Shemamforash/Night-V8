@@ -10,12 +10,12 @@
 		<FailEffect>-1 Maximum Fettle</FailEffect>
 		<FailValue>-1</FailValue>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>1</MinLevel>
+		<MinLevel>0</MinLevel>
 	</Power>
 	<Vigilance>
 		<Description>Our world is dictated by what our mind will allow us to see</Description>
 		<Requirement>Find num items</Requirement>
-		<TargetValue>25</TargetValue>
+		<TargetValue>10</TargetValue>
 		<SuccessName>Vigilance</SuccessName>
 		<SuccessEffect>+1 Maximum Focus</SuccessEffect>
 		<SuccessValue>1</SuccessValue>
@@ -23,7 +23,7 @@
 		<FailEffect>-1 Maximum Focus</FailEffect>
 		<FailValue>-1</FailValue>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>1</MinLevel>
+		<MinLevel>0</MinLevel>
 	</Vigilance>
 	<Resolution>
 		<Description>The only being to which we must prove our abilities is ourselves</Description>
@@ -36,7 +36,7 @@
 		<FailEffect>-1 Maximum Will</FailEffect>
 		<FailValue>-1</FailValue>
 		<RequiresSkill>TRUE</RequiresSkill>
-		<MinLevel>2</MinLevel>
+		<MinLevel>1</MinLevel>
 	</Resolution>
 	<Stamina>
 		<Description>It is not enough to will it, our bodies must be capable of doing to succeed</Description>
@@ -49,12 +49,12 @@
 		<FailEffect>-1 Maximum Grit</FailEffect>
 		<FailValue>-1</FailValue>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>1</MinLevel>
+		<MinLevel>0</MinLevel>
 	</Stamina>
 	<Insight>
 		<Description>Knowledge itself is useless without the insight to apply it</Description>
 		<Requirement>Gain num essence</Requirement>
-		<TargetValue>400</TargetValue>
+		<TargetValue>200</TargetValue>
 		<SuccessName>Insight</SuccessName>
 		<SuccessEffect>Essence recovers more durability on weapons</SuccessEffect>
 		<SuccessValue>1</SuccessValue>
@@ -62,12 +62,12 @@
 		<FailEffect>Weapons lose durability faster</FailEffect>
 		<FailValue>0.25</FailValue>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>2</MinLevel>
+		<MinLevel>1</MinLevel>
 	</Insight>
 	<Revival>
 		<Description>Know what it is like to look death in the eyes and command him to back down</Description>
 		<Requirement>Take num damage</Requirement>
-		<TargetValue>5000</TargetValue>
+		<TargetValue>2500</TargetValue>
 		<SuccessName>Immortality</SuccessName>
 		<SuccessEffect>When taking fatal damage, rally with a small amount of health</SuccessEffect>
 		<SuccessValue>0.25</SuccessValue>
@@ -75,12 +75,12 @@
 		<FailEffect>Start combat with less health</FailEffect>
 		<FailValue>0.1</FailValue>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>1</MinLevel>
+		<MinLevel>2</MinLevel>
 	</Revival>
 	<Apathy>
 		<Description>When your life depends on the loss of another, you can begin to relish death</Description>
 		<Requirement>Kill num enemies</Requirement>
-		<TargetValue>50</TargetValue>
+		<TargetValue>100</TargetValue>
 		<SuccessName>Barbarity</SuccessName>
 		<SuccessEffect>Gain willpower when claiming a region</SuccessEffect>
 		<SuccessValue>1</SuccessValue>
@@ -88,12 +88,12 @@
 		<FailEffect>Killing enemies causes you damage</FailEffect>
 		<FailValue>0.02</FailValue>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>2</MinLevel>
+		<MinLevel>1</MinLevel>
 	</Apathy>
 	<Finesse>
 		<Description>Mastering your tools is to take control of your fate</Description>
 		<Requirement>Reload only when magazine empty num times</Requirement>
-		<TargetValue>50</TargetValue>
+		<TargetValue>25</TargetValue>
 		<SuccessName>Finesse</SuccessName>
 		<SuccessEffect>Automatically reload when magazine is exhausted</SuccessEffect>
 		<SuccessValue>0</SuccessValue>
@@ -101,12 +101,12 @@
 		<FailEffect>Small chance reloading fails</FailEffect>
 		<FailValue>0.05</FailValue>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>3</MinLevel>
+		<MinLevel>2</MinLevel>
 	</Finesse>
 	<Ingenuity>
 		<Description>1</Description>
 		<Requirement>Kill num enemy with last round</Requirement>
-		<TargetValue>50</TargetValue>
+		<TargetValue>25</TargetValue>
 		<SuccessName>Deviousness</SuccessName>
 		<SuccessEffect>Instantly reload if the last round kills an enemy</SuccessEffect>
 		<SuccessValue>0</SuccessValue>
@@ -114,7 +114,7 @@
 		<FailEffect>Small chance reloading fails</FailEffect>
 		<FailValue>0.05</FailValue>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>3</MinLevel>
+		<MinLevel>2</MinLevel>
 	</Ingenuity>
 	<Scavenging>
 		<Description>No land is barren to the eyes of the scavenger</Description>
@@ -127,7 +127,7 @@
 		<FailEffect>-1 Resource on finding resource</FailEffect>
 		<FailValue>-1</FailValue>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>2</MinLevel>
+		<MinLevel>1</MinLevel>
 	</Scavenging>
 	<Hunting>
 		<Description>The greatest prey wait only for the worthy hunters</Description>
@@ -140,7 +140,7 @@
 		<FailEffect>Water causes you to become hungry</FailEffect>
 		<FailValue>1</FailValue>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>2</MinLevel>
+		<MinLevel>1</MinLevel>
 	</Hunting>
 	<Divining>
 		<Description>To the diviners, the earth herself offers up her blood</Description>
@@ -153,7 +153,7 @@
 		<FailEffect>Food causes you to become thirsty</FailEffect>
 		<FailValue>1</FailValue>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>2</MinLevel>
+		<MinLevel>1</MinLevel>
 	</Divining>
 	<Fire>
 		<Description>No other beast feeds off the life of another as fire</Description>
@@ -205,6 +205,6 @@
 		<FailEffect>Small chance skill becomes disabled in combat</FailEffect>
 		<FailValue>0.05</FailValue>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>3</MinLevel>
+		<MinLevel>2</MinLevel>
 	</Mastery>
 </Brands>

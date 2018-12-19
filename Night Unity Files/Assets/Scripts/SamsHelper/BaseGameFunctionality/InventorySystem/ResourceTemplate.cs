@@ -114,7 +114,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public static ResourceItem GetMeat()
         {
             float rand = Random.Range(0f, 1f);
-            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironment.EnvironmentType;
+            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
             foreach (ResourceTemplate meatTemplate in Meat)
             {
                 if (!meatTemplate._dropRates[currentEnvironment].ValueWithinRange(rand)) continue;
@@ -127,7 +127,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public static ResourceTemplate GetResource()
         {
             float rand = Random.Range(0f, 1f);
-            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironment.EnvironmentType;
+            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
             foreach (ResourceTemplate resourceTemplate in Resources)
             {
                 if (!resourceTemplate._dropRates[currentEnvironment].ValueWithinRange(rand)) continue;
@@ -140,7 +140,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public static ResourceTemplate GetWater()
         {
             float rand = Random.Range(0f, 1f);
-            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironment.EnvironmentType;
+            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
             foreach (ResourceTemplate waterTemplate in Water)
             {
                 if (!waterTemplate._dropRates[currentEnvironment].ValueWithinRange(rand)) continue;
@@ -153,7 +153,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public static ResourceTemplate GetPlant()
         {
             float rand = Random.Range(0f, 1f);
-            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironment.EnvironmentType;
+            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
             if (Region.InTutorialPeriod())
             {
                 return Plant.FindAll(r => r.AttributeType != AttributeType.Grit && r._dropRates[currentEnvironment].CanDrop).RandomElement();

@@ -67,7 +67,7 @@ public class GateTransitController : Menu
         Region r = new Region();
         r.SetRegionType(RegionType.Tomb);
         CharacterManager.SelectedCharacter = CharacterManager.Wanderer;
-        ScreenFaderController.FlashWhite(3f);
+        ScreenFaderController.FlashWhite(3f, Color.black);
         yield return new WaitForSeconds(3f);
         CombatManager.SetCurrentRegion(r);
         SceneChanger.GoToCombatScene();

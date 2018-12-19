@@ -100,7 +100,7 @@ namespace Game.Exploration.Environment
             int numberOfRegions = 1; //initial gate
             numberOfRegions += baseRegionCount * (templeCount + 1);
             numberOfRegions += templeCount;
-            if (EnvironmentManager.CurrentEnvironment.EnvironmentType != EnvironmentType.Desert) ++numberOfRegions; //shelters
+            if (EnvironmentManager.CurrentEnvironmentType() != EnvironmentType.Desert) ++numberOfRegions; //shelters
             while (numberOfRegions > 0)
             {
                 _regions.Add(new Region());
@@ -199,7 +199,7 @@ namespace Game.Exploration.Environment
             switch (type)
             {
                 case RegionType.Tomb:
-                    switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
+                    switch (EnvironmentManager.CurrentEnvironmentType())
                     {
                         case EnvironmentType.Desert:
                             return "Eo's Tomb";
@@ -217,7 +217,7 @@ namespace Game.Exploration.Environment
                 case RegionType.Rite:
                     return "Chamber of Rites";
                 case RegionType.Gate:
-                    switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
+                    switch (EnvironmentManager.CurrentEnvironmentType())
                     {
                         case EnvironmentType.Desert:
                             return "Eo's Gate";

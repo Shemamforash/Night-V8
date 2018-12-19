@@ -20,7 +20,7 @@ public class SpermBehaviour : CanTakeDamage
         Speed = Random.Range(2f, 4f);
         HealthController.SetInitialHealth(150, this);
         ArmourController = new ArmourController(null);
-        ArmourController.AutoFillSlots(10);
+        ArmourController.AutoGenerateArmour();
         _heavyShot = GetComponent<Heavyshot>();
         _rigidbody = GetComponent<Rigidbody2D>();
         _heavyShot.Initialise(1f, 0.4f, 5, 0.5f);

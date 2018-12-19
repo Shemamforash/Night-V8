@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using EZCameraShake;
+using Game.Exploration.Environment;
 using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -70,10 +71,10 @@ public class StoryController : Menu
         StartCoroutine(DisplayParagraph());
     }
 
-    public static void ShowText(string text, bool goToCredits)
+    public static void ShowText(string text)
     {
         _text = text;
-        _goToCredits = goToCredits;
+        _goToCredits = EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.End;
         SceneChanger.GoToStoryScene();
     }
 

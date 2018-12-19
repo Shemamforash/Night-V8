@@ -1,10 +1,14 @@
-﻿using DG.Tweening;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Player;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
+using Sirenix.Utilities;
 using UnityEngine;
 
 public class BeamController : MonoBehaviour
@@ -14,31 +18,32 @@ public class BeamController : MonoBehaviour
     private LineRenderer _glowLine, _beamLine, _leadLine;
     private const float LeadDuration = 1f;
     private const float BeamDuration = 3f;
-    private ParticleSystem _burst, _charge, _energy, _spray, _spray1, _spray2;
     private Transform _origin;
     private Vector3 _targetPosition;
     private bool _firing;
     private const int BeamDamage = 5;
     private float _lastBeamDamage;
 
+    private ParticleSystem[] _blastParticles, _chargeParticles;
+    private GameObject _blastObject, _lineObject;
+
+    public void Awake()
+    {
+        _blastObject = gameObject.FindChildWithName("Blast");
+        _blastParticles = _blastObject.GetComponentsInChildren<ParticleSystem>();
+        _chargeParticles = gameObject.FindChildWithName("Charge Up").GetComponentsInChildren<ParticleSystem>();
+
+        _lineObject = gameObject.FindChildWithName("Lines");
+        _glowLine = gameObject.FindChildWithName<LineRenderer>("Glow");
+        _beamLine = gameObject.FindChildWithName<LineRenderer>("Beam");
+        _leadLine = gameObject.FindChildWithName<LineRenderer>("Lead");
+    }
+
     public static BeamController Create(Transform origin)
     {
         BeamController beamController = _beamPool.Create();
         beamController.Initialise(origin);
         return beamController;
-    }
-
-    public void Awake()
-    {
-        _burst = gameObject.FindChildWithName<ParticleSystem>("Burst");
-        _charge = gameObject.FindChildWithName<ParticleSystem>("Charge");
-        _energy = gameObject.FindChildWithName<ParticleSystem>("Energy");
-        _spray = gameObject.FindChildWithName<ParticleSystem>("Spray");
-        _spray1 = gameObject.FindChildWithName<ParticleSystem>("Spray 1");
-        _spray2 = gameObject.FindChildWithName<ParticleSystem>("Spray 2");
-        _glowLine = gameObject.FindChildWithName<LineRenderer>("Glow");
-        _beamLine = gameObject.FindChildWithName<LineRenderer>("Beam");
-        _leadLine = gameObject.FindChildWithName<LineRenderer>("Lead");
     }
 
     private void LateUpdate()
@@ -59,66 +64,56 @@ public class BeamController : MonoBehaviour
     {
         _origin = origin;
         transform.position = _origin.position;
-        ShowLine();
+        StartCoroutine(WarmUp());
     }
 
-    private void SetLeadLineActive()
+    private IEnumerator WarmUp()
     {
+        _chargeParticles.ForEach(p => p.Play());
+        _lineObject.SetActive(true);
         _leadLine.enabled = true;
         _glowLine.enabled = false;
         _beamLine.enabled = false;
-    }
-
-    private void SetBeamLineActive()
-    {
-        _leadLine.enabled = false;
-        _glowLine.enabled = true;
-        _beamLine.enabled = true;
-    }
-
-    private void SetNoLineActive()
-    {
-        _leadLine.enabled = false;
-        _glowLine.enabled = false;
-        _beamLine.enabled = false;
-        _burst.Stop();
-        _spray.Stop();
-        _spray1.Stop();
-        _spray2.Stop();
-        _firing = false;
-    }
-
-    private void ShowLine()
-    {
-        _charge.Play();
-        _energy.Play();
-        Sequence sequence = DOTween.Sequence();
-        sequence.AppendCallback(SetLeadLineActive);
         Color startColor = UiAppearanceController.InvisibleColour;
         Color endColor = new Color(1f, 1f, 1f, 0.5f);
-        sequence.Append(_leadLine.DOColor(new Color2(startColor, startColor), new Color2(endColor, endColor), LeadDuration));
-        sequence.AppendCallback(() =>
+        _leadLine.DOColor(new Color2(startColor, startColor), new Color2(endColor, endColor), LeadDuration);
+        yield return DOTween.To(() => _leadLine.startWidth, f =>
         {
-            _firing = true;
-            SetBeamLineActive();
-            _burst.Clear();
-            _spray.Clear();
-            _spray1.Clear();
-            _spray2.Clear();
-            _burst.Play();
-            _spray.Play();
-            _spray1.Play();
-            _spray2.Play();
-        });
+            _leadLine.startWidth = f;
+            _leadLine.endWidth = f;
+        }, 0.05f, LeadDuration).WaitForCompletion();
+        yield return StartCoroutine(FireBeam());
+    }
 
-        sequence.AppendInterval(0.1f);
-        startColor = Color.white;
-        endColor = UiAppearanceController.InvisibleColour;
-        sequence.Append(_beamLine.DOColor(new Color2(startColor, startColor), new Color2(endColor, endColor), BeamDuration).SetEase(Ease.OutExpo));
-        sequence.Insert(LeadDuration + 0.5f, _glowLine.DOColor(new Color2(startColor, startColor), new Color2(endColor, endColor), BeamDuration).SetEase(Ease.OutExpo));
-        sequence.AppendCallback(SetNoLineActive);
-        sequence.AppendInterval(1f);
-        sequence.AppendCallback(() => _beamPool.Return(this));
+    private IEnumerator FireBeam()
+    {
+        _firing = true;
+        _blastObject.SetActive(true);
+        _chargeParticles.ForEach(p => p.Stop());
+        _blastParticles.ForEach(b => b.Play());
+        _beamLine.enabled = true;
+        _glowLine.enabled = true;
+        _leadLine.enabled = false;
+        float remainingTime = BeamDuration;
+        while (remainingTime > 0f)
+        {
+            float noise = Mathf.PerlinNoise(Time.timeSinceLevelLoad, 0f) / 2f + 0.5f;
+            float glowWidth = 0.5f * noise;
+            float beamWidth = 0.1f * noise;
+            _glowLine.startWidth = glowWidth;
+            _glowLine.endWidth = glowWidth;
+            _beamLine.startWidth = beamWidth;
+            _beamLine.endWidth = beamWidth;
+            remainingTime -= Time.deltaTime;
+            yield return null;
+        }
+
+        _lineObject.SetActive(false);
+        _blastParticles.ForEach(p => p.Stop());
+        _firing = false;
+        while (_blastParticles.Any(p => p.particleCount > 0)) yield return null;
+        _blastObject.SetActive(false);
+        _beamPool.Return(this);
     }
 
     private void OnDestroy()

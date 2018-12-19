@@ -47,5 +47,6 @@ public class PushController : MonoBehaviour
     public void Awake()
     {
         _pushParticles = GetComponent<ParticleSystem>();
+        _audioSource = GetComponent<AudioSource>();
     }
 }

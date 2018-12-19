@@ -6,6 +6,7 @@
         Mountains,
         Sea,
         Ruins,
-        Wasteland
+        Wasteland,
+        End
     }
 }

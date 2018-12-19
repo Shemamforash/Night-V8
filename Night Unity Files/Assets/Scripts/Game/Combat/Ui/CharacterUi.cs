@@ -12,6 +12,7 @@ namespace Game.Combat.Ui
         private UIHealthBarController _healthBarController;
         private CanvasGroup CanvasGroup;
         protected CanTakeDamage Character;
+        private CanTakeDamage _lastCharacter;
 
         public virtual void Awake()
         {
@@ -34,9 +35,10 @@ namespace Game.Combat.Ui
             }
 
             SetAlpha(1);
-            _healthBarController.SetValue(Character.HealthController.GetHealth());
+            _healthBarController.SetValue(Character.HealthController.GetHealth(), Character == _lastCharacter);
             _armourController.UpdateArmour(Character.ArmourController);
             _healthBarController.SetSicknessLevel(Character.GetSicknessLevel());
+            _lastCharacter = Character;
         }
 
         public RectTransform ArmourRect() => _armourController.GetComponent<RectTransform>();

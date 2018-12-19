@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
     {
         _starting = true;
         InputHandler.SetCurrentListener(null);
-        if (newGame) StoryController.ShowText(JournalEntry.GetStoryText(1), false);
+        if (newGame) StoryController.ShowText(JournalEntry.GetStoryText());
         else
         {
             SceneChanger.GoToGameScene();

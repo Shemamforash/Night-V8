@@ -11,8 +11,7 @@ public class WingHealthScript : BossSectionHealthController
     protected override void Awake()
     {
         base.Awake();
-        ArmourController.SetArmour(Armour.Create(ItemQuality.Shining, Armour.ArmourType.Chest));
-        ArmourController.SetArmour(Armour.Create(ItemQuality.Shining, Armour.ArmourType.Head));
+        ArmourController.AutoGenerateArmour();
     }
 
     protected override int GetInitialHealth()

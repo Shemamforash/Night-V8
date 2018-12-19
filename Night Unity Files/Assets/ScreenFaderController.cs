@@ -36,19 +36,24 @@ public class ScreenFaderController : MonoBehaviour
         _text.text = "";
         _textCanvas.alpha = 0;
     }
-    
+
     public static void FadeIn(float duration)
     {
-        if (_faderCanvas == null) Initialise();
-       ClearText();
-        _tweener?.Kill();
+        ResetFader();
         _tweener = _faderCanvas.DOFade(1, duration).SetUpdate(UpdateType.Normal, true);
+    }
+
+    private static void ResetFader()
+    {
+        if (_faderCanvas == null) Initialise();
+        ClearText();
+        _tweener?.Kill();
+        _faderImage.color = Color.black;
     }
 
     public static void FadeOut(float duration)
     {
-        if (_faderCanvas == null) Initialise();
-        _tweener?.Kill();
+        ResetFader();
         _tweener = _faderCanvas.DOFade(0, duration).SetUpdate(UpdateType.Normal, true);
     }
 
@@ -58,12 +63,12 @@ public class ScreenFaderController : MonoBehaviour
         _faderCanvas.alpha = alpha;
     }
 
-    public static void FlashWhite(float duration)
+    public static void FlashWhite(float duration, Color to)
     {
         if (_faderImage == null) Initialise();
         ClearText();
         _faderImage.color = Color.white;
         _faderCanvas.alpha = 1;
-        _faderImage.DOColor(Color.black, duration).SetUpdate(UpdateType.Normal, true);
+        _faderImage.DOColor(to, duration).SetUpdate(UpdateType.Normal, true);
     }
 }

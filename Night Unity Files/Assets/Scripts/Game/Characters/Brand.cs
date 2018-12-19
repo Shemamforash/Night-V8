@@ -5,6 +5,7 @@ using SamsHelper.Libraries;
 using UnityEngine;
 using Game.Characters.Brands;
 using Game.Combat.Generation;
+using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
 
@@ -35,7 +36,7 @@ namespace Game.Characters
         public bool PlayerRequirementsMet(Player player)
         {
             if (_requiresSkillUnlock && player.CharacterSkillOne != null) return false;
-            return _minLevel <= WorldState.CurrentLevel();
+            return _minLevel <= (int) EnvironmentManager.CurrentEnvironmentType();
         }
 
         public void ReadData(XmlNode root)

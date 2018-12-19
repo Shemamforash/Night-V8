@@ -39,7 +39,7 @@ public class UiBrandMenu : Menu
     private void Show()
     {
         _lastMenu = MenuStateMachine.CurrentMenu();
-        UiSkillUpgradeEffectController.Activate();
+        ScreenFaderController.FlashWhite(1f, new Color(1, 1, 1, 0f));
         MenuStateMachine.ShowMenu("Brand Menu");
         CombatManager.Pause();
         ShowOverview();

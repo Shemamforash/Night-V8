@@ -313,7 +313,7 @@ namespace Game.Exploration.Regions
 
         public static bool InTutorialPeriod()
         {
-            return TutorialManager.Active() && EnvironmentManager.CurrentEnvironment.EnvironmentType == EnvironmentType.Desert && MapGenerator.DiscoveredRegions().Count <= 4;
+            return TutorialManager.Active() && EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.Desert && MapGenerator.DiscoveredRegions().Count <= 4;
         }
 
         public List<Enemy> GetEnemies()

@@ -35,7 +35,7 @@ namespace Game.Combat.Generation
 
         protected override void Generate()
         {
-            if (EnvironmentManager.CurrentEnvironment.EnvironmentType == EnvironmentType.Wasteland)
+            if (EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.Wasteland)
             {
                 for (int angle = 0; angle < 360; angle += 120)
                 {
@@ -129,9 +129,9 @@ namespace Game.Combat.Generation
 
             CombatManager.SetInCombat(false);
             float flashDuration = 3f;
-            ScreenFaderController.FlashWhite(flashDuration);
+            ScreenFaderController.FlashWhite(flashDuration, Color.black);
             yield return new WaitForSeconds(flashDuration);
-            StoryController.ShowText(JournalEntry.GetStoryText(6), true);
+            StoryController.ShowText(JournalEntry.GetStoryText());
         }
 
         private void CheckToShakeCamera()

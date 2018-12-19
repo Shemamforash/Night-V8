@@ -47,7 +47,7 @@ namespace Game.Combat.Misc
             MovementController.SetSpeed(1);
             ArmourController = new ArmourController(null);
             ArmourController.AutoFillSlots(10);
-            _maxEncounterSize = WorldState._currentLevel * 5;
+            _maxEncounterSize = (int) (WorldState.Difficulty() / 10f * 5);
         }
 
         public override Weapon Weapon()

@@ -35,7 +35,6 @@ namespace Game.Global
         private const int MinuteInterval = 60 / MinutesPerHour;
 
         private static int DaysSpentHere;
-        public static int _currentLevel = 1;
 
         private static readonly List<EnemyTemplate> _allowedHumanEnemies = new List<EnemyTemplate>();
         private static readonly List<EnemyTemplate> _allowedNightmareEnemies = new List<EnemyTemplate>();
@@ -67,7 +66,6 @@ namespace Game.Global
             XmlNode worldStateValues = doc.GetNode("WorldState");
             Seed = worldStateValues.IntFromNode("Seed");
             DaysSpentHere = worldStateValues.IntFromNode("DaysSpentHere");
-            _currentLevel = worldStateValues.IntFromNode("CurrentLevel");
             Days = worldStateValues.IntFromNode("Days");
             Hours = worldStateValues.IntFromNode("Hours");
             Minutes = worldStateValues.IntFromNode("Minutes");
@@ -91,7 +89,6 @@ namespace Game.Global
             XmlNode worldStateValues = doc.CreateChild("WorldState");
             worldStateValues.CreateChild("Seed", Seed);
             worldStateValues.CreateChild("DaysSpentHere", DaysSpentHere);
-            worldStateValues.CreateChild("CurrentLevel", _currentLevel);
             worldStateValues.CreateChild("Days", Days);
             worldStateValues.CreateChild("Hours", Hours);
             worldStateValues.CreateChild("Minutes", Minutes);
@@ -115,7 +112,6 @@ namespace Game.Global
             Inventory.Reset();
             CharacterManager.Reset(clearSave);
             DaysSpentHere = 0;
-            _currentLevel = currentLevel;
             Days = 0;
             Hours = 6;
             Minutes = 0;
@@ -196,17 +192,16 @@ namespace Game.Global
 
         public static int GetDaysSpentHere() => DaysSpentHere;
 
-        public static int CurrentLevel() => _currentLevel;
+//        public static int CurrentLevel() => _currentLevel;
 
         public static void TravelToNextEnvironment()
         {
-            ++_currentLevel;
             _templesActivated = 0;
             _gateActive = false;
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel(false, false);
             CharacterManager.Characters.ForEach(c => { c.TravelAction.ReturnToHomeInstant(); });
-            StoryController.ShowText(JournalEntry.GetStoryText(_currentLevel), _currentLevel == 6);
+            StoryController.ShowText(JournalEntry.GetStoryText());
         }
 
         public static void Pause()

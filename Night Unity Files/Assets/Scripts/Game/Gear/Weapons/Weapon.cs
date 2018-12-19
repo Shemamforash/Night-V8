@@ -13,7 +13,7 @@ namespace Game.Gear.Weapons
     public class Weapon : GearItem
     {
         public const float MaxAccuracyOffsetInDegrees = 25f;
-        private const float RangeMin = 1f;
+        private const float RangeMin = 1.5f;
         private const float RangeMax = 5.5f;
         public readonly WeaponAttributes WeaponAttributes;
         public readonly Skill WeaponSkillOne, WeaponSkillTwo;
@@ -123,8 +123,6 @@ namespace Game.Gear.Weapons
         public WeaponType WeaponType() => WeaponAttributes.WeaponType;
 
         public float GetAttributeValue(AttributeType attributeType) => WeaponAttributes.Get(attributeType).CurrentValue();
-
-        public string GetWeaponType() => WeaponAttributes.WeaponType.ToString();
 
         public override string GetSummary() => WeaponAttributes.DPS().Round(1) + "DPS";
 

@@ -14,11 +14,13 @@ public class TempleBehaviour : BasicShrineBehaviour
 {
     private ColourPulse ringPulse1, ringPulse2;
     private ParticleSystem _vortex, _explosion, _altar, _flames, _dust;
+    private GameObject _cleansedObject;
     private SpriteRenderer _glow;
     private AudioSource _audioSource;
     [SerializeField] private AudioClip _templateActivateAudioClip;
 
     private int _bossCount;
+    private List<FireBehaviour> _fires = new List<FireBehaviour>();
 
     public void Awake()
     {
@@ -36,6 +38,8 @@ public class TempleBehaviour : BasicShrineBehaviour
         _glow = gameObject.FindChildWithName<SpriteRenderer>("Glow");
         _flames = gameObject.FindChildWithName<ParticleSystem>("Flames");
         _dust = gameObject.FindChildWithName<ParticleSystem>("Dust");
+        _cleansedObject = gameObject.FindChildWithName("Temple Cleansed");
+        _cleansedObject.SetActive(false);
         _glow.color = UiAppearanceController.InvisibleColour;
         _audioSource = GetComponent<AudioSource>();
     }
@@ -96,6 +100,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         List<EnemyTemplate> enemyTypesToSpawn = new List<EnemyTemplate>();
         List<EnemyTemplate> allowedTypes = WorldState.GetAllowedNightmareEnemyTypes();
         int size = (Mathf.FloorToInt(WorldState.Difficulty() / 10f) + 1) * 20;
+        Debug.Log(size);
         while (size > 0)
         {
             foreach (EnemyTemplate e in allowedTypes)
@@ -125,12 +130,11 @@ public class TempleBehaviour : BasicShrineBehaviour
         yield return new WaitForSeconds(2f);
         Queue<EnemyTemplate> enemyTypesToSpawn = GetEnemyTypesToSpawn();
 
-        Debug.Log(enemyTypesToSpawn);
-        while (!enemyTypesToSpawn.NotEmpty())
+        Debug.Log(enemyTypesToSpawn.Count);
+        while (enemyTypesToSpawn.NotEmpty())
         {
             EnemyTemplate nextEnemy = enemyTypesToSpawn.Dequeue();
             float nextEnemyArrivalTime = nextEnemy.Value;
-            Debug.Log(nextEnemyArrivalTime + " " + CombatManager.IsCombatActive());
             while (nextEnemyArrivalTime > 0f)
             {
                 if (CombatManager.IsCombatActive()) nextEnemyArrivalTime -= Time.deltaTime;
@@ -147,6 +151,10 @@ public class TempleBehaviour : BasicShrineBehaviour
     {
         while (!CombatManager.ClearOfEnemies()) yield return null;
         End();
+        _fires.ForEach(f => f.LetDie());
+        _cleansedObject.SetActive(true);
+        _explosion.Play();
+        _flames.Stop();
         WorldState.ActivateTemple();
         CombatManager.GetCurrentRegion().TempleCleansed = true;
     }
@@ -190,8 +198,8 @@ public class TempleBehaviour : BasicShrineBehaviour
             float angleB = startAngle - 15 * (i + 1);
             Vector2 positionA = AdvancedMaths.CalculatePointOnCircle(angleA, 4f, transform.position);
             Vector2 positionB = AdvancedMaths.CalculatePointOnCircle(angleB, 4f, transform.position);
-            FireBehaviour.Create(positionA);
-            FireBehaviour.Create(positionB);
+            _fires.Add(FireBehaviour.Create(positionA));
+            _fires.Add(FireBehaviour.Create(positionB));
         }
     }
 }

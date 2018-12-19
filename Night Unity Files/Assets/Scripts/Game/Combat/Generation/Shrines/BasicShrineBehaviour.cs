@@ -8,28 +8,15 @@ namespace Game.Combat.Generation.Shrines
     public abstract class BasicShrineBehaviour : MonoBehaviour
     {
         protected bool Triggered;
-//        private readonly List<EnemyBehaviour> _enemiesAlive = new List<EnemyBehaviour>();
         private static GameObject _disappearPrefab;
         protected bool IsInRange;
-        
-//        public void AddEnemy(EnemyBehaviour b)
-//        {
-//            _enemiesAlive.Add(b);
-//        }
-
-//        protected bool EnemiesDead()
-//        {
-//            List<EnemyBehaviour> enemies = _enemiesAlive.FindAll(e => e == null);
-//            enemies.ForEach(e => _enemiesAlive.Remove(e));
-//            return _enemiesAlive.Count == 0;
-//        }
 
         public void OnTriggerEnter2D(Collider2D other)
         {
             if (Triggered) return;
             if (!other.gameObject.CompareTag("Player")) return;
             IsInRange = true;
-            StartShrine();;
+            StartShrine();
         }
 
         public void OnTriggerExit2D(Collider2D other)

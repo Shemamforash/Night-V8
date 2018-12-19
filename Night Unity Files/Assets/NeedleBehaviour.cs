@@ -89,7 +89,7 @@ public class NeedleBehaviour : MonoBehaviour
         _sprite.SetAlpha(0f);
         _rigidBody2D.velocity = Vector2.zero;
         _firing = false;
-r        StartCoroutine(WaitAndDie());
+        StartCoroutine(WaitAndDie());
     }
 
     private IEnumerator WaitAndDie()

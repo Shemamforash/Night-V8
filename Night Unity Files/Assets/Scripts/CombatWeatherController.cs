@@ -25,7 +25,6 @@ public class CombatWeatherController : MonoBehaviour
         _sun = gameObject.FindChildWithName<ParticleSystem>("Sun");
         _dust = gameObject.FindChildWithName<ParticleSystem>("Dust");
         _fog = gameObject.FindChildWithName<ParticleSystem>("Fog");
-        Debug.Log(_weatherAttributes.RainAmount);
 
         SetParticleSystemEmissionRate(_hail, _weatherAttributes.HailAmount, HailMax);
         SetParticleSystemEmissionRate(_rain, _weatherAttributes.RainAmount, RainMax);

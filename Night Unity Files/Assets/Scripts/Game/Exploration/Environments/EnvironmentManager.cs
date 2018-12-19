@@ -1,18 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Exploration.Weather;
 using Game.Global;
-using NUnit.Framework;
 using SamsHelper.Libraries;
-using UnityEngine;
 
 namespace Game.Exploration.Environment
 {
     public static class EnvironmentManager
     {
         private static bool _loaded;
-        private static readonly Dictionary<int, Environment> _environments = new Dictionary<int, Environment>();
+        private static readonly Dictionary<EnvironmentType, Environment> _environments = new Dictionary<EnvironmentType, Environment>();
         private static Environment _currentEnvironment;
         private static TemperatureCategory _temperatureCategory;
 
@@ -33,16 +32,35 @@ namespace Game.Exploration.Environment
         public static void NextLevel(bool reset, bool isLoading)
         {
             LoadEnvironments();
-            if (reset) _currentEnvironment = _environments[WorldState._currentLevel - 1];
+            if (reset) _currentEnvironment = _environments[EnvironmentType.Desert];
             else
             {
-                int nextEnvironmentIndex = _currentEnvironment.LevelNo + 1;
-                Assert.IsTrue(_environments.ContainsKey(nextEnvironmentIndex));
-                _currentEnvironment = _environments[nextEnvironmentIndex];
+                switch (_currentEnvironment.EnvironmentType)
+                {
+                    case EnvironmentType.Desert:
+                        _currentEnvironment = _environments[EnvironmentType.Mountains];
+                        break;
+                    case EnvironmentType.Mountains:
+                        _currentEnvironment = _environments[EnvironmentType.Sea];
+                        break;
+                    case EnvironmentType.Sea:
+                        _currentEnvironment = _environments[EnvironmentType.Ruins];
+                        break;
+                    case EnvironmentType.Ruins:
+                        _currentEnvironment = _environments[EnvironmentType.Wasteland];
+                        break;
+                    case EnvironmentType.Wasteland:
+                        _currentEnvironment = null;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
 
-            if (!isLoading) MapGenerator.Generate();
+            if (!isLoading && _currentEnvironment != null) MapGenerator.Generate();
         }
+
+        public static EnvironmentType CurrentEnvironmentType() => _currentEnvironment.EnvironmentType;
 
         private static void LoadEnvironments()
         {
@@ -51,7 +69,7 @@ namespace Game.Exploration.Environment
             foreach (XmlNode environmentNode in root.ChildNodes)
             {
                 Environment environment = new Environment(environmentNode);
-                _environments.Add(environment.LevelNo, environment);
+                _environments.Add(environment.EnvironmentType, environment);
             }
 
             _loaded = true;
@@ -99,10 +117,11 @@ namespace Game.Exploration.Environment
 
         public static void Load(XmlNode doc)
         {
+            LoadEnvironments();
             string currentEnvironmentText = doc.StringFromNode("CurrentEnvironment");
-            foreach (KeyValuePair<int, Environment> environment in _environments)
+            foreach (KeyValuePair<EnvironmentType, Environment> environment in _environments)
             {
-                if (environment.Value.ToString() != currentEnvironmentText) continue;
+                if (environment.Key.ToString() != currentEnvironmentText) continue;
                 _currentEnvironment = environment.Value;
                 return;
             }

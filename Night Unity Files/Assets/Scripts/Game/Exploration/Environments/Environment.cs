@@ -10,20 +10,17 @@ namespace Game.Exploration.Environment
 {
     public class Environment
     {
+        private static List<EnvironmentType> _environmentTypes;
         private readonly float minTemp, maxTemp;
         private readonly List<float> _temperatureArray = new List<float>();
-        public readonly int LevelNo, Temples, Monuments, Shrines, Fountains, Shelters, Animals, Dangers;
+        private readonly int Monuments, Shrines, Fountains, Shelters, Animals, Dangers, RegionCount;
         public readonly EnvironmentType EnvironmentType;
-        private static List<EnvironmentType> _environmentTypes;
         private readonly List<string> _environmentNames = new List<string>();
-        public readonly int WaterSources;
-        public readonly int FoodSources;
-        public readonly int ResourceSources;
+        public readonly int ResourceSources,FoodSources,WaterSources, Temples;
 
         public Environment(XmlNode environmentNode)
         {
             EnvironmentType = StringToEnvironmentType(environmentNode.Name);
-            LevelNo = environmentNode.IntFromNode("Level");
             int temperature = environmentNode.IntFromNode("Temperature");
             maxTemp = temperature * 10;
             minTemp = maxTemp - 20;
@@ -51,8 +48,6 @@ namespace Game.Exploration.Environment
                 _environmentNames.Add(name);
             }
         }
-
-        public readonly int RegionCount;
 
         private static EnvironmentType StringToEnvironmentType(string environmentString)
         {

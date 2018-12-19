@@ -15,10 +15,10 @@ using UnityEngine;
 
 public class DismantleMenuController : Menu
 {
-    private ListController _dismantleList;
+    private static ListController _dismantleList;
     private static readonly Dictionary<string, int> _dismantleRewards = new Dictionary<string, int>();
     private CloseButtonController _closeButton;
-    private GameObject _dismantledScreen;
+    private static GameObject _dismantledScreen;
     private EnhancedText _receivedText;
 
     public override void Awake()
@@ -61,6 +61,7 @@ public class DismantleMenuController : Menu
             int quantity = _dismantleRewards[reward];
             dismantleText += quantity + "x " + reward + "\n";
         }
+
         return dismantleText;
     }
 
@@ -200,11 +201,8 @@ public class DismantleMenuController : Menu
         _receivedText.SetText(GetDismantleText(gear));
     }
 
-    public override void Enter()
+    private static void ShowDismantleList()
     {
-        base.Enter();
-        CombatManager.Pause();
-        DOTween.defaultTimeScaleIndependent = true;
         _dismantledScreen.SetActive(false);
         _dismantleList.gameObject.SetActive(true);
         _dismantleList.Show();
@@ -213,6 +211,9 @@ public class DismantleMenuController : Menu
     public static void Show()
     {
         MenuStateMachine.ShowMenu("Dismantle Menu");
+        CombatManager.Pause();
+        DOTween.defaultTimeScaleIndependent = true;
+        ShowDismantleList();
     }
 
     public void Close()

@@ -24,7 +24,6 @@ namespace Game.Combat.Generation.Shrines
         private ParticleSystem[] _particleSystems;
         private AudioSource _audioSource;
 
-
         public void Awake()
         {
             _instance = this;

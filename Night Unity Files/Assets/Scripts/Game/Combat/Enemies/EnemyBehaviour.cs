@@ -91,7 +91,6 @@ namespace Game.Combat.Enemies
             Sprite.sprite = spriteImage;
         }
 
-
         public override void TakeShotDamage(Shot shot)
         {
             float healthBefore = HealthController.GetCurrentHealth();

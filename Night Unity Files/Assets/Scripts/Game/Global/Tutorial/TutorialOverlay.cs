@@ -33,11 +33,28 @@ namespace Game.Global.Tutorial
 
         private void CalculateWorldCornersForTransform()
         {
-            Vector2 position = _targetTransform.position;
-            float x = position.x;
-            float y = position.y;
+            Vector2 origin = _targetTransform.position;
             float halfWidth = _width / 2f;
             float halfHeight = _height / 2f;
+            if (PlayerCombat.Instance != null) CalculateWorldCornersRelativeToPlayer(origin, halfWidth, halfHeight);
+            else CalculateWorldCornersFromPoint(origin, halfWidth, halfHeight);
+        }
+
+        private void CalculateWorldCornersRelativeToPlayer(Vector2 origin, float halfWidth, float halfHeight)
+        {
+            Transform playerTransform = PlayerCombat.Instance.transform;
+            Vector2 right = playerTransform.right;
+            Vector2 up = playerTransform.forward;
+            _worldCorners[0] = origin - right * halfWidth - up * halfHeight;
+            _worldCorners[1] = origin - right * halfWidth + up * halfHeight;
+            _worldCorners[2] = origin + right * halfWidth + up * halfHeight;
+            _worldCorners[3] = origin + right * halfWidth - up * halfHeight;
+        }
+
+        private void CalculateWorldCornersFromPoint(Vector2 origin, float halfWidth, float halfHeight)
+        {
+            float x = origin.x;
+            float y = origin.y;
             _worldCorners[0] = new Vector2(x - halfWidth, y - halfHeight);
             _worldCorners[1] = new Vector2(x - halfWidth, y + halfWidth);
             _worldCorners[2] = new Vector2(x + halfWidth, y + halfWidth);
@@ -46,15 +63,11 @@ namespace Game.Global.Tutorial
 
         private void CalculateNullWorldCorners()
         {
-            Vector2 origin = Vector2.zero;
-            if (PlayerCombat.Instance != null)
-            {
-                origin = PlayerCombat.Instance.transform.position;
-            }
-            _worldCorners[0] = new Vector2(-0.2f, -0.2f) + origin;
-            _worldCorners[1] = new Vector2(-0.2f, 0.2f) + origin;
-            _worldCorners[2] = new Vector2(0.2f, 0.2f) + origin;
-            _worldCorners[3] = new Vector2(0.2f, -0.2f) + origin;
+            Vector2 origin = PlayerCombat.Instance != null ? (Vector2) PlayerCombat.Instance.transform.position : Vector2.zero;
+            float halfWidth = 0.2f;
+            float halfHeight = 0.2f;
+            if (PlayerCombat.Instance != null) CalculateWorldCornersRelativeToPlayer(origin, halfWidth, halfHeight);
+            else CalculateWorldCornersFromPoint(origin, halfWidth, halfHeight);
         }
 
         private void CalculateWorldCornersForRectTransform(RectTransform rectTransform)

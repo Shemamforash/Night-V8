@@ -55,6 +55,7 @@ class RecipeImporter(XMLWriter):
         write_single_value(self, "ProductQuantity", get_value(self, "F", row, "0"))
         write_single_value(self, "RecipeType", get_value(self, "G", row))
         write_single_value(self, "LevelNo", get_value(self, "H", row))
+        write_single_value(self, "Description", get_value(self, "I", row))
 
     def read_recipes(self):
         for row_no in range(4, 32):
@@ -180,7 +181,6 @@ class EnvironmentImporter(XMLWriter):
             write_tag(self, get_value(self, "A", row), self.read_single_environment, [row])
 
     def read_single_environment(self, row):
-        write_single_value(self, "Level", get_value(self, "B", row))
         write_single_value(self, "Temperature", get_value(self, "C", row))
         write_single_value(self, "Temples", get_value(self, "D", row))
         write_single_value(self, "Monuments", get_value(self, "E", row))
@@ -411,11 +411,11 @@ def write_single_value(xml_writer, stat_name, value):
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
-RecipeImporter()
+# RecipeImporter()
 # ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()
 # EnvironmentImporter()
 # BrandImporter()
-# StoryImporter()
+StoryImporter()
 # TutorialImporter()

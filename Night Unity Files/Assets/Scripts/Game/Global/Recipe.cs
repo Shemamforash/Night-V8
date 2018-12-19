@@ -168,7 +168,7 @@ namespace Game.Global
         private bool Available()
         {
             if (_unlocked) return true;
-            _unlocked = _levelNo <= EnvironmentManager.CurrentEnvironment.LevelNo;
+            _unlocked = _levelNo <= (int) EnvironmentManager.CurrentEnvironmentType();
             return _unlocked;
         }
 

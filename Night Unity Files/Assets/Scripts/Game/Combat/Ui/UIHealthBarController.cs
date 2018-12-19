@@ -19,9 +19,9 @@ namespace Game.Combat.Ui
             _sicknessImage = gameObject.FindChildWithName<Image>("Sickness");
         }
 
-        public void SetValue(Number health)
+        public void SetValue(Number health, bool doFade)
         {
-            _healthBar.SetValue(health.Normalised());
+            _healthBar.SetValue(health.Normalised(), doFade);
         }
 
         public void SetSicknessLevel(float normalisedValue)

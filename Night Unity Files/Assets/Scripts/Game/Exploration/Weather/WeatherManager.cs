@@ -64,7 +64,7 @@ namespace Game.Exploration.Weather
 
         public static void GoToWeather()
         {
-            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironment.EnvironmentType;
+            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
             string currentWeather = _weatherStates.GetCurrentState()?.Name ?? "";
             string nextWeatherName = _regionWeatherProbabilities[currentEnvironment].NextWeather(currentWeather);
             _weatherStates.GetState(nextWeatherName).Enter();
@@ -106,7 +106,7 @@ namespace Game.Exploration.Weather
             for (int i = 0; i < 5; ++i)
             {
                 stringLength = (int) max;
-                Debug.Log(EnvironmentManager.CurrentEnvironment.EnvironmentType);
+                Debug.Log(EnvironmentManager.CurrentEnvironmentType());
                 GoToWeather();
                 Dictionary<string, int> _weatherOccurrences = new Dictionary<string, int>();
                 string weatherString = "";

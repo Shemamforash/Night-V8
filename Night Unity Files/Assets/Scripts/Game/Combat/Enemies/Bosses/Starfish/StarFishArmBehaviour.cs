@@ -18,7 +18,7 @@ public class StarFishArmBehaviour : BossSectionHealthController
     public void Start()
     {
         SetBoss(StarfishBehaviour.Instance());
-        ArmourController.AutoFillSlots((int) ((20 - _distance) / 2f));
+        ArmourController.AutoGenerateArmour();
     }
 
     protected override int GetInitialHealth()

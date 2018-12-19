@@ -11,7 +11,7 @@ public class SerpentBehaviour : Boss
 {
     private static GameObject _serpentPrefab;
     private static SerpentBehaviour _instance;
-    private static float Speed = 3f;
+    private static float Speed = 5f;
 
     private TailFollowBehaviour _head;
     private SerpentBombAttack _bombAttack;

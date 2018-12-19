@@ -21,7 +21,7 @@ public class SerpentBombAttack : MonoBehaviour
         if (_timeToNextBomb > 0) return;
         _timeToNextBomb = Random.Range(_minTimeToBomb, _minTimeToBomb * 2f);
         Vector2 randomPosition = AdvancedMaths.RandomVectorWithinRange(transform.position, 7.5f);
-        Explosion explosion = Explosion.CreateExplosion(randomPosition, 20);
+        Explosion explosion = Explosion.CreateExplosion(randomPosition, Random.Range(0.5f, 1f));
         SerpentBehaviour.Instance().GetSections().ForEach(s => { explosion.AddIgnoreTarget(s); });
         explosion.Detonate();
     }
