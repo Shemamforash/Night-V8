@@ -11,7 +11,7 @@ public class SerpentBehaviour : Boss
 {
     private static GameObject _serpentPrefab;
     private static SerpentBehaviour _instance;
-    private static float Speed = 5f;
+    private static float Speed = 10f;
 
     private TailFollowBehaviour _head;
     private SerpentBombAttack _bombAttack;
@@ -105,7 +105,7 @@ public class SerpentBehaviour : Boss
         base.UnregisterSection(section);
         int currentWingCount = SectionCount();
 
-        if (prevWingCount > 40 && currentWingCount <= 40)
+        if (prevWingCount > 30 && currentWingCount <= 30)
         {
             GameObject tailEnd = transform.FindChildWithName("Tail End").gameObject;
             tailEnd.AddComponent<LeaveFireTrail>().Initialise();
@@ -113,7 +113,7 @@ public class SerpentBehaviour : Boss
         else if (prevWingCount > 20 && currentWingCount <= 20)
             _canPush = true;
 
-        if (currentWingCount > 30) return;
+        if (currentWingCount > 20) return;
         float timeToBomb = currentWingCount / 40f + 0.25f;
         _bombAttack.SetMinTimeToBomb(timeToBomb);
     }
@@ -122,7 +122,6 @@ public class SerpentBehaviour : Boss
     {
         if (!CombatManager.IsCombatActive()) return;
         UpdateBeamTimer();
-        UpdateTargetPosition();
         UpdatePush();
     }
 
@@ -158,8 +157,9 @@ public class SerpentBehaviour : Boss
         _targetPosition = dir * Random.Range(5f, 7.5f);
     }
 
-    private void UpdateTargetPosition()
+    public void FixedUpdate()
     {
+        if (!CombatManager.IsCombatActive()) return;
         if (!_gettingInPosition)
         {
             if (_firing) _targetPosition = PlayerCombat.Instance.transform.position;

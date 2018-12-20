@@ -153,9 +153,12 @@ namespace Game.Global
 
         public static bool AllTemplesActivate()
         {
+#if UNITY_EDITOR
+            return true;
+#endif
             return _gateActive;
         }
-        
+
         private void IncrementDaysSpentHere()
         {
             ++DaysSpentHere;
@@ -350,7 +353,7 @@ namespace Game.Global
 
         public static int ScaleDamage(int damage)
         {
-            return (int)(damage + damage * _difficulty / 50f);
+            return (int) (damage + damage * _difficulty / 50f);
         }
     }
 }

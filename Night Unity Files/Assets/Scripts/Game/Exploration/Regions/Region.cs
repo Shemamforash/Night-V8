@@ -44,7 +44,7 @@ namespace Game.Exploration.Regions
         public Player CharacterHere;
         public Vector2 CharacterPosition;
         public Vector2? RadianceStonePosition;
-        public bool TempleCleansed;
+        private bool _templeCleansed;
         public bool FountainVisited;
         private bool _isDynamicRegion;
         private bool _justDiscovered;
@@ -53,6 +53,12 @@ namespace Game.Exploration.Regions
         {
             RegionID = _currentId;
             ++_currentId;
+        }
+
+        public void SetTempleCleansed()
+        {
+            _templeCleansed = true;
+            Name = "Cleansed Temple";
         }
 
         public string ClaimBenefitString()
@@ -157,7 +163,7 @@ namespace Game.Exploration.Regions
             region._seen = doc.BoolFromNode("Seen");
             region._size = doc.IntFromNode("Size");
             region._justDiscovered = doc.BoolFromNode("JustDiscovered");
-            region.TempleCleansed = doc.BoolFromNode("TempleCleansed");
+            region._templeCleansed = doc.BoolFromNode("TempleCleansed");
             string radianceStoneString = doc.StringFromNode("RadianceStonePosition");
             if (radianceStoneString != "") region.RadianceStonePosition = radianceStoneString.ToVector2();
             region.WaterSourceCount = doc.IntFromNode("WaterSourceCount");
@@ -187,7 +193,7 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("JustDiscovered", _justDiscovered);
             regionNode.CreateChild("Seen", _seen);
             regionNode.CreateChild("Size", _size);
-            regionNode.CreateChild("TempleCleansed", TempleCleansed);
+            regionNode.CreateChild("TempleCleansed", _templeCleansed);
             regionNode.CreateChild("RadianceStonePosition", RadianceStonePosition == null ? RadianceStonePosition.ToString() : "");
             regionNode.CreateChild("WaterSourceCount", WaterSourceCount);
             regionNode.CreateChild("FoodSourceCount", FoodSourceCount);
@@ -359,5 +365,10 @@ namespace Game.Exploration.Regions
         public RegionType GetRegionType() => _regionType;
 
         public void RestoreSize(int size) => _size += size;
+
+        public bool IsTempleCleansed()
+        {
+            return _templeCleansed;
+        }
     }
 }

@@ -28,7 +28,7 @@ public class PushController : MonoBehaviour
         int mask = player ? 1 << 10 : 1 << 17;
         collision.collidesWith = mask;
         _pushParticles.Emit(emitCount);
-        _audioSource.volume = Random.Range(0.7f, 0.8f);
+        _audioSource.volume = Random.Range(0.8f, 0.9f);
         _audioSource.Play();
         StartCoroutine(WaitAndDie());
     }

@@ -25,13 +25,18 @@ public class BeamController : MonoBehaviour
     private float _lastBeamDamage;
 
     private ParticleSystem[] _blastParticles, _chargeParticles;
+    private AudioSource[] _audioSources;
     private GameObject _blastObject, _lineObject;
+    private AudioSource _chargeAudio;
 
     public void Awake()
     {
         _blastObject = gameObject.FindChildWithName("Blast");
         _blastParticles = _blastObject.GetComponentsInChildren<ParticleSystem>();
         _chargeParticles = gameObject.FindChildWithName("Charge Up").GetComponentsInChildren<ParticleSystem>();
+        _chargeAudio = gameObject.FindChildWithName<AudioSource>("Audio");
+        _audioSources = _chargeAudio.gameObject.GetComponentsInChildren<AudioSource>();
+
 
         _lineObject = gameObject.FindChildWithName("Lines");
         _glowLine = gameObject.FindChildWithName<LineRenderer>("Glow");
@@ -69,6 +74,7 @@ public class BeamController : MonoBehaviour
 
     private IEnumerator WarmUp()
     {
+        _chargeAudio.Play();
         _chargeParticles.ForEach(p => p.Play());
         _lineObject.SetActive(true);
         _leadLine.enabled = true;
@@ -87,6 +93,11 @@ public class BeamController : MonoBehaviour
 
     private IEnumerator FireBeam()
     {
+        _audioSources.ForEach(s =>
+        {
+            s.volume = 0.5f;
+            s.Play();
+        });
         _firing = true;
         _blastObject.SetActive(true);
         _chargeParticles.ForEach(p => p.Stop());
@@ -108,6 +119,7 @@ public class BeamController : MonoBehaviour
             yield return null;
         }
 
+        _audioSources.ForEach(s => s.DOFade(0f, 0.5f));
         _lineObject.SetActive(false);
         _blastParticles.ForEach(p => p.Stop());
         _firing = false;

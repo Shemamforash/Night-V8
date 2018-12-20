@@ -10,12 +10,13 @@ namespace Game.Combat.Misc
     {
         private static readonly ObjectPool<SickenBehaviour> _sicknessPool = new ObjectPool<SickenBehaviour>("Sicken Effects", "Prefabs/Combat/Visuals/Sicken Effect");
         private ParticleSystem[] _particleSystems;
-
         private List<CanTakeDamage> _ignoreTargets;
+        private AudioSource _audioSource;
 
         public void Awake()
         {
             _particleSystems = transform.GetComponentsInChildren<ParticleSystem>();
+            _audioSource = GetComponent<AudioSource>();
         }
 
         public static List<CanTakeDamage> Create(Vector2 position, List<CanTakeDamage> ignoreTargets, int stacks = 1)
@@ -45,6 +46,8 @@ namespace Game.Combat.Misc
 
         private IEnumerator Sicken(Vector2 position)
         {
+            _audioSource.pitch = Random.Range(0.9f, 1.1f);
+            _audioSource.Play();
             transform.position = position;
             foreach (ParticleSystem system in _particleSystems) system.Play();
             yield return new WaitForSeconds(2f);

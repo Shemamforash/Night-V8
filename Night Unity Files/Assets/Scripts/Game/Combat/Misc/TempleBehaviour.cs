@@ -16,8 +16,7 @@ public class TempleBehaviour : BasicShrineBehaviour
     private ParticleSystem _vortex, _explosion, _altar, _flames, _dust;
     private GameObject _cleansedObject;
     private SpriteRenderer _glow;
-    private AudioSource _audioSource;
-    [SerializeField] private AudioClip _templateActivateAudioClip;
+    private AudioSource _audioSource, _cleansedAudio;
 
     private int _bossCount;
     private List<FireBehaviour> _fires = new List<FireBehaviour>();
@@ -42,11 +41,16 @@ public class TempleBehaviour : BasicShrineBehaviour
         _cleansedObject.SetActive(false);
         _glow.color = UiAppearanceController.InvisibleColour;
         _audioSource = GetComponent<AudioSource>();
+        _cleansedAudio = _cleansedObject.GetComponent<AudioSource>();
     }
 
     protected override void StartShrine()
     {
-        if (CombatManager.GetCurrentRegion().TempleCleansed) return;
+        if (CombatManager.GetCurrentRegion().IsTempleCleansed())
+        {
+            Succeed();
+            return;
+        }
         Triggered = true;
         _flames.Play();
         _dust.Play();
@@ -60,7 +64,7 @@ public class TempleBehaviour : BasicShrineBehaviour
     {
         _vortex.Play();
         float vortexTime = _vortex.main.duration + 0.5f;
-        _audioSource.PlayOneShot(_templateActivateAudioClip);
+        _audioSource.Play();
         while (vortexTime > 0f)
         {
             if (!CombatManager.IsCombatActive()) yield return null;
@@ -147,16 +151,23 @@ public class TempleBehaviour : BasicShrineBehaviour
         StartCoroutine(CheckAllEnemiesDead());
     }
 
+
+    protected override void Succeed()
+    {
+        _fires.ForEach(f => f.LetDie());
+        _cleansedObject.SetActive(true);
+        _cleansedAudio.Play();
+        _explosion.Play();
+        _flames.Stop();
+    }
+    
     private IEnumerator CheckAllEnemiesDead()
     {
         while (!CombatManager.ClearOfEnemies()) yield return null;
         End();
-        _fires.ForEach(f => f.LetDie());
-        _cleansedObject.SetActive(true);
-        _explosion.Play();
-        _flames.Stop();
+      Succeed();
         WorldState.ActivateTemple();
-        CombatManager.GetCurrentRegion().TempleCleansed = true;
+        CombatManager.GetCurrentRegion().SetTempleCleansed();
     }
 
     private void StartLights()
