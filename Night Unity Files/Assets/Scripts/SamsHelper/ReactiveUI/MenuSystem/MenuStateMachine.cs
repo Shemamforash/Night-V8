@@ -70,6 +70,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             {
                 currentState?.SetActive(false);
                 nextState.SetActive(true);
+                nextState.Menu.PreEnter();
             });
             sequence.Append(DOTween.To(nextState.Menu.GetAlpha, nextState.Menu.SetAlpha, 1f, MenuFadeTime));
             sequence.AppendCallback(() =>

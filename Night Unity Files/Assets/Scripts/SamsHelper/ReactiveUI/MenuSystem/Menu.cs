@@ -21,6 +21,11 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             if (_canvasGroup == null) Debug.Log(gameObject.name);
         }
 
+        public virtual void PreEnter()
+        {
+            
+        }
+        
         public virtual void Enter()
         {
             _canvasGroup.alpha = 1;

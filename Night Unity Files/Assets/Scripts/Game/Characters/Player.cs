@@ -246,20 +246,6 @@ namespace Game.Characters
             PlayerCombat.Instance.EquipWeapon(weapon);
         }
 
-        public void EquipChestArmour(Armour plate)
-        {
-            ArmourController.SetArmour(plate);
-            if (PlayerCombat.Instance == null) return;
-            PlayerCombat.Instance.EquipArmour();
-        }
-
-        public void EquipHeadArmour(Armour plate)
-        {
-            ArmourController.SetArmour(plate);
-            if (PlayerCombat.Instance == null) return;
-            PlayerCombat.Instance.EquipArmour();
-        }
-
         public override void EquipAccessory(Accessory accessory)
         {
             base.EquipAccessory(accessory);

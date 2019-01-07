@@ -76,7 +76,7 @@ public abstract class ContainerController
             }
         }
 
-        Inventory.Move((ResourceItem) Item);
+        Inventory.IncrementResource(resourceItem.Name, resourceItem.Quantity());
     }
 
     private void TakeItem(Player player)
@@ -87,9 +87,6 @@ public abstract class ContainerController
         {
             case Weapon weapon:
                 Inventory.Move(weapon);
-                break;
-            case Armour armour:
-                Inventory.Move(armour);
                 break;
             case Accessory accessory:
                 Inventory.Move(accessory);

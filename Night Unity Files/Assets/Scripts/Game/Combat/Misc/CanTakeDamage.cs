@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Game.Characters;
-using Game.Combat.Generation;
+﻿using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Gear.Armour;
 using Game.Global;
@@ -12,8 +10,8 @@ namespace Game.Combat.Misc
     {
         private DamageSpriteFlash _spriteFlash;
         private BloodSpatter _bloodSpatter;
-        public ArmourController ArmourController;
-        public HealthController HealthController = new HealthController();
+        public ArmourController ArmourController = new ArmourController();
+        public readonly HealthController HealthController = new HealthController();
         private const float SicknessDurationMax = 5f;
         private const int SicknessTargetTicks = 10;
         private float _timeSinceLastBurn;
@@ -21,10 +19,10 @@ namespace Game.Combat.Misc
         private float _sicknessDuration;
         public bool IsPlayer;
 
-        private void TakeArmourDamage(int count)
+        private void TakeArmourDamage(int damage)
         {
-            for (int i = 0; i < count; ++i)
-                ArmourController?.TakeDamage();
+            if (ArmourController.Recharging()) return;
+            ArmourController.TakeDamage(damage);
         }
 
         protected virtual void Awake()
@@ -43,6 +41,7 @@ namespace Game.Combat.Misc
         public virtual void MyUpdate()
         {
             UpdateConditions();
+            ArmourController.Update();
         }
 
         public abstract string GetDisplayName();
@@ -141,13 +140,14 @@ namespace Game.Combat.Misc
             if (SceneChanger.ChangingScene()) return;
             if (!IsPlayer && MarkController.InMarkArea(transform.position)) damage *= 2;
             _spriteFlash.FlashSprite();
-            float armourModifier = 1;
-            if (ArmourController != null) armourModifier = ArmourController.CalculateDamageModifier();
-            int healthDamage = Mathf.CeilToInt(damage * armourModifier);
-            HealthController.TakeDamage(healthDamage);
-            if (_bloodSpatter != null) _bloodSpatter.Spray(direction, healthDamage);
-            if (HealthController.GetCurrentHealth() != 0) return;
-            LeafBehaviour.CreateLeaves(direction, transform.position);
+            if (ArmourController.Recharging())
+            {
+                HealthController.TakeDamage(damage);
+                if (_bloodSpatter != null) _bloodSpatter.Spray(direction, damage);
+                if (HealthController.GetCurrentHealth() != 0) return;
+                LeafBehaviour.CreateLeaves(direction, transform.position);
+            }
+            else ArmourController.TakeDamage(damage);
         }
 
         public virtual void TakeRawDamage(int damage, Vector2 direction)

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Xml;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
+using Game.Gear.Armour;
 using InventorySystem;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
@@ -24,7 +26,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private static readonly List<ResourceTemplate> Meat = new List<ResourceTemplate>();
         private static readonly List<ResourceTemplate> Water = new List<ResourceTemplate>();
         private static readonly List<ResourceTemplate> Plant = new List<ResourceTemplate>();
-        private static readonly List<ResourceTemplate> Resources = new List<ResourceTemplate>();
+        public static readonly List<ResourceTemplate> Resources = new List<ResourceTemplate>();
         public static readonly List<ResourceTemplate> AllResources = new List<ResourceTemplate>();
         private static float DesertDRCur, MountainsDRCur, RuinsDRCur, SeaDRCur, WastelandDRCur;
         private readonly Dictionary<EnvironmentType, DropRate> _dropRates = new Dictionary<EnvironmentType, DropRate>();
@@ -80,6 +82,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                     break;
                 case "Potion":
                     ResourceType = ResourceType.Potion;
+                    break;
+                case "Armour":
+                    ResourceType = ResourceType.Armour;
+                    Consumable = false;
                     break;
             }
 
@@ -158,18 +164,22 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             {
                 return Plant.FindAll(r => r.AttributeType != AttributeType.Grit && r._dropRates[currentEnvironment].CanDrop).RandomElement();
             }
+
             foreach (ResourceTemplate plantTemplate in Plant)
             {
                 if (!plantTemplate._dropRates[currentEnvironment].ValueWithinRange(rand)) continue;
                 return plantTemplate;
             }
-            
+
             throw new Exception("Can't have invalid Plant!");
         }
 
         public ResourceItem Create()
         {
-            ResourceItem item = Consumable ? new Consumable(this) : new ResourceItem(this);
+            ResourceItem item;
+            if (ResourceType == ResourceType.Armour) item = new Armour(this);
+            else if (Consumable) item = new Consumable(this);
+            else item = new ResourceItem(this);
             return item;
         }
 

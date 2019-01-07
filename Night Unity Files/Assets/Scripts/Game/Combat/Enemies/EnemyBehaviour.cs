@@ -69,6 +69,7 @@ namespace Game.Combat.Enemies
         private void InitialiseAttributes()
         {
             ArmourController = Enemy.ArmourController;
+            ArmourController.Reset();
             float speed = Enemy.Template.Speed;
             speed = Random.Range(speed * 0.8f, speed * 1.2f);
             MovementController.SetSpeed(speed);

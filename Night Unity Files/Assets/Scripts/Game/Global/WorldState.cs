@@ -94,6 +94,7 @@ namespace Game.Global
             worldStateValues.CreateChild("Minutes", Minutes);
             worldStateValues.CreateChild("MinutesPassed", MinutesPassed);
             worldStateValues.CreateChild("Difficulty", _difficulty);
+            worldStateValues.CreateChild("RealTime", System.DateTime.Now.ToString("MMMM dd '-' hh:mm tt"));
             Inventory.Save(doc);
             CharacterManager.Save(doc);
             MapGenerator.Save(doc);
@@ -133,7 +134,7 @@ namespace Game.Global
             CharacterManager.Start();
             EnvironmentManager.Start();
             WeatherManager.Start();
-            WorldView.Update(Hours);
+            WorldView.MyUpdate(Hours);
             CharacterManager.Update();
             List<TutorialOverlay> overlays = new List<TutorialOverlay>
             {
@@ -151,10 +152,10 @@ namespace Game.Global
             if (complete) _gateActive = true;
         }
 
-        public static bool AllTemplesActivate()
+        public static bool AllTemplesActive()
         {
 #if UNITY_EDITOR
-            return true;
+//            return true;
 #endif
             return _gateActive;
         }
@@ -223,7 +224,7 @@ namespace Game.Global
             if (_currentTime < MinuteInSeconds) return;
             _currentTime = _currentTime - MinuteInSeconds;
             IncrementMinutes();
-            WorldView.Update(Hours);
+            WorldView.MyUpdate(Hours);
         }
 
         private void IncrementMinutes()
@@ -254,7 +255,9 @@ namespace Game.Global
             Inventory.UpdateBuildings();
             ++_timeAtLastSave;
             if (_timeAtLastSave % 12 == 0) WorldEventManager.SuggestSave();
-            if (Hours == 12 || Hours == 24) ++_difficulty;
+            if (Hours != 12 && Hours != 24) return;
+            ++_difficulty;
+            SaveIconController.AutoSave();
         }
 
         private void IncrementHours()

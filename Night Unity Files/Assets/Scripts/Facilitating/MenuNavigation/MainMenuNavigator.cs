@@ -19,13 +19,11 @@ namespace Facilitating.MenuNavigation
         private static bool _shownSplashScreen;
         private CanvasGroup _logo, _latin, _english;
         private static bool _seenIntro;
-        private GameController _gameController;
         private bool _skipping;
         private Sequence _fadeInSequence;
 
         private void CacheGameObjects()
         {
-            _gameController = gameObject.GetComponent<GameController>();
             _menuCanvasGroup = gameObject.FindChildWithName<CanvasGroup>("Menu Canvas Group");
             _menuCanvasGroup.alpha = 0f;
             _latin = gameObject.FindChildWithName<CanvasGroup>("Latin");
@@ -124,8 +122,8 @@ namespace Facilitating.MenuNavigation
             WorldState.ResetWorld(true, num, (num - 1) * 10);
             if (num > 2) CharacterManager.AddCharacter(CharacterManager.GenerateRandomCharacter(CharacterClass.Protector));
             if (num > 4) CharacterManager.AddCharacter(CharacterManager.GenerateRandomCharacter());
-            SaveController.SaveGame();
-            _gameController.StartGame(true);
+            SaveController.ManualSave();
+            GameController.StartGame(true);
             _skipping = true;
         }
 

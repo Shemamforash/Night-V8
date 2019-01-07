@@ -3,6 +3,7 @@ using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Gear.Armour;
+using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -23,7 +24,6 @@ namespace Game.Combat.Enemies.Bosses
             base.Awake();
             _boss = GetComponent<Boss>();
             HealthController.SetInitialHealth(StartingHealth, this);
-            ArmourController = new ArmourController(null);
             ArmourController.AutoGenerateArmour();
             TryAddBeamAttack();
             SpermBehaviour.Create();
@@ -59,8 +59,7 @@ namespace Game.Combat.Enemies.Bosses
             if (!(_damageTakenSinceLastSpawn > SpermSpawnThreshold)) return;
             _damageTakenSinceLastSpawn -= SpermSpawnThreshold;
             SpermBehaviour.Create();
-            for (int i = 0; i < 2; ++i)
-                ArmourController.Repair();
+            ArmourController.Repair(WorldState.ScaleDamage(5000));
         }
 
         public override void MyUpdate()

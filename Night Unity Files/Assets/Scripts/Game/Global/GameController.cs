@@ -7,14 +7,19 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    private bool _starting;
+    private static bool _starting;
 
     public void Awake()
     {
         _starting = false;
     }
 
-    public void StartGame(bool newGame)
+    private void OnDestroy()
+    {
+        _starting = false;
+    }
+
+    public static void StartGame(bool newGame)
     {
         _starting = true;
         InputHandler.SetCurrentListener(null);
@@ -29,8 +34,7 @@ public class GameController : MonoBehaviour
     public void ContinueGame()
     {
         if (_starting) return;
-        SaveController.LoadGame();
-        StartGame(false);
+        MenuStateMachine.ShowMenu("Load Save Menu");
     }
 
     public void QuitToDesktop()
@@ -49,7 +53,7 @@ public class GameController : MonoBehaviour
         _starting = true;
         SaveController.ClearSave();
         WorldState.ResetWorld();
-        SaveController.SaveGame();
+        SaveController.ManualSave();
         StartGame(true);
     }
 

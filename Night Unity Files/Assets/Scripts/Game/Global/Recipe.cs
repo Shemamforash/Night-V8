@@ -46,9 +46,6 @@ namespace Game.Global
                 case "OTHER":
                     RecipeType = RecipeType.Other;
                     break;
-                case "ITEM":
-                    RecipeType = RecipeType.Item;
-                    break;
                 case "RESOURCE":
                     RecipeType = RecipeType.Resource;
                     break;
@@ -103,44 +100,6 @@ namespace Game.Global
             }
         }
 
-        private void CraftArmour()
-        {
-            Debug.Log(Name);
-            switch (Name)
-            {
-                case "Dark Hide":
-                    Inventory.Move(Armour.Create(ItemQuality.Dark, Armour.ArmourType.Chest));
-                    break;
-                case "Dark Veil":
-                    Inventory.Move(Armour.Create(ItemQuality.Dark, Armour.ArmourType.Head));
-                    break;
-                case "Dull Weave":
-                    Inventory.Move(Armour.Create(ItemQuality.Dull, Armour.ArmourType.Chest));
-                    break;
-                case "Dull Mask":
-                    Inventory.Move(Armour.Create(ItemQuality.Dull, Armour.ArmourType.Head));
-                    break;
-                case "Glowing Plate":
-                    Inventory.Move(Armour.Create(ItemQuality.Glowing, Armour.ArmourType.Chest));
-                    break;
-                case "Glowing Visor":
-                    Inventory.Move(Armour.Create(ItemQuality.Glowing, Armour.ArmourType.Head));
-                    break;
-                case "Shining Scale":
-                    Inventory.Move(Armour.Create(ItemQuality.Shining, Armour.ArmourType.Chest));
-                    break;
-                case "Shining Crown":
-                    Inventory.Move(Armour.Create(ItemQuality.Shining, Armour.ArmourType.Head));
-                    break;
-                case "Radiant Aegis":
-                    Inventory.Move(Armour.Create(ItemQuality.Radiant, Armour.ArmourType.Chest));
-                    break;
-                case "Radiant Halo":
-                    Inventory.Move(Armour.Create(ItemQuality.Radiant, Armour.ArmourType.Head));
-                    break;
-            }
-        }
-
         private void CraftOther()
         {
             Assert.IsTrue(Name == "Fire");
@@ -155,9 +114,6 @@ namespace Game.Global
                     break;
                 case RecipeType.Resource:
                     Inventory.IncrementResource(Name, ProductQuantity);
-                    break;
-                case RecipeType.Item:
-                    CraftArmour();
                     break;
                 case RecipeType.Other:
                     CraftOther();

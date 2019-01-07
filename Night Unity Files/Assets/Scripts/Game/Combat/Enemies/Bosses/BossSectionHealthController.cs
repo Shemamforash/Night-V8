@@ -12,7 +12,6 @@ namespace Game.Combat.Enemies.Bosses
         {
             base.Awake();
             gameObject.layer = 24;
-            ArmourController = new ArmourController(null);
             UpdateInitialHealth();
         }
 

@@ -178,19 +178,33 @@ public class DismantleMenuController : Menu
 
     private void Dismantle(object o)
     {
-        GearItem gear = (GearItem) o;
         foreach (string reward in _dismantleRewards.Keys)
         {
             int quantity = _dismantleRewards[reward];
             Inventory.IncrementResource(reward, quantity);
         }
 
-        gear.UnEquip();
+        if (o is Armour armour) Inventory.DecrementResource(armour.Name, 1);
+        else
+        {
+            GearItem gear = (GearItem) o;
+            gear.UnEquip();
+            switch (gear)
+            {
+                case Weapon weapon:
+                    Inventory.Destroy(weapon);
+                    break;
+                case Accessory accessory:
+                    Inventory.Destroy(accessory);
+                    break;
+                case Inscription inscription:
+                    Inventory.Destroy(inscription);
+                    break;
+            }
+        }
+
         ShowDismantledScreen(o);
-        if (gear is Weapon) Inventory.Destroy((Weapon) gear);
-        else if (gear is Accessory) Inventory.Destroy((Accessory) gear);
-        else if (gear is Armour) Inventory.Destroy((Armour) gear);
-        else if (gear is Inscription) Inventory.Destroy((Inscription) gear);
+
     }
 
     private void ShowDismantledScreen(object o)

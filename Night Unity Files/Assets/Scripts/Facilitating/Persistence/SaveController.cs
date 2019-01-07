@@ -10,27 +10,30 @@ namespace Facilitating.Persistence
     public static class SaveController
     {
         private static readonly string SaveDirectory = Application.persistentDataPath + "/Saves";
-        private static readonly string GameSaveLocation = SaveDirectory + "/FullSave.xml";
+        private static readonly string ManualSaveLocation = SaveDirectory + "/ManualSave.xml";
+        private static readonly string AutoSaveLocation = SaveDirectory + "/AutoSave.xml";
         private static readonly string SettingsSaveLocation = SaveDirectory + "/GameSettings.xml";
         private static XmlDocument _saveDoc;
 
+        public static void ManualSave() => SaveGame(ManualSaveLocation);
 
-        public static void SaveGame()
+        public static void AutoSave() => SaveGame(AutoSaveLocation);
+
+        private static void SaveGame(string directory)
         {
             TryCreateDirectory();
             _saveDoc = new XmlDocument();
             XmlNode root = _saveDoc.CreateChild("BTVSave");
             WorldState.Save(root);
-            _saveDoc.Save(GameSaveLocation);
-            Debug.Log(GameSaveLocation);
+            _saveDoc.Save(directory);
+            Debug.Log(directory);
         }
 
         public static void ClearSave()
         {
             TryCreateDirectory();
-            _saveDoc = new XmlDocument();
-            _saveDoc.CreateChild("Game");
-            _saveDoc.Save(GameSaveLocation);
+            if (File.Exists(ManualSaveLocation)) File.Delete(ManualSaveLocation);
+            if (File.Exists(AutoSaveLocation)) File.Delete(AutoSaveLocation);
         }
 
 //        public static bool SaveSettings()
@@ -38,26 +41,13 @@ namespace Facilitating.Persistence
 //            return Save(SettingsSaveLocation, PersistenceType.Settings);
 //        }
 
-        private static string GetMostRecentSaveLocation()
-        {
-            bool isPermanentSave = File.Exists(GameSaveLocation);
-            return !isPermanentSave ? null : GameSaveLocation;
-        }
+        public static Save LoadAutoSave() => new Save(AutoSaveLocation);
 
-        public static bool LoadGame()
-        {
-            string saveLocation = GetMostRecentSaveLocation();
-            if (saveLocation == null) return false;
-            _saveDoc = new XmlDocument();
-            _saveDoc.Load(saveLocation);
-            XmlNode root = _saveDoc.GetNode("BTVSave");
-            WorldState.Load(root);
-            return true;
-        }
+        public static Save LoadManualSave() => new Save(ManualSaveLocation);
 
         public static bool SaveExists()
         {
-            return File.Exists(GameSaveLocation);
+            return File.Exists(ManualSaveLocation);
         }
 
         //Node creation
@@ -80,7 +70,6 @@ namespace Facilitating.Persistence
         {
             XmlNode newNode = parent.CreateChild(tagName);
             newNode.InnerText = value == null ? "" : value.ToString();
-            return;
         }
 
         private static void TryCreateDirectory()

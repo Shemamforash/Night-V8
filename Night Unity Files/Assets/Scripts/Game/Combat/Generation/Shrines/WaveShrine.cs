@@ -57,7 +57,7 @@ namespace Game.Combat.Generation.Shrines
                     if (!CombatManager.IsCombatActive()) yield return null;
                     Vector2 ghoulPos = AdvancedMaths.CalculatePointOnCircle(currentAngle, SpawnRadius, transform.position);
                     EnemyBehaviour enemy = CombatManager.SpawnEnemy(EnemyType.Ghoul, ghoulPos);
-                    waveDuration += enemy.HealthController.GetMaxHealth() * Mathf.Sqrt(enemy.Enemy.ArmourController.GetCurrentProtection() + 1);
+                    waveDuration += enemy.Enemy.Template.Value / 2f;
                     currentTime += SpawnDelay;
                     yield return null;
                 }

@@ -43,7 +43,7 @@ public class ResourcesUiController : MonoBehaviour
         return _hidden;
     }
 
-    public void UpdateResource(string resourceName, int quantity)
+    private void UpdateResource(string resourceName, int quantity)
     {
         _resourceTabs[resourceName].UpdateTab(resourceName, quantity);
     }
@@ -90,7 +90,7 @@ public class ResourcesUiController : MonoBehaviour
     {
         UpdateFood();
         UpdateWater();
-        foreach (ResourceTemplate resourceTemplate in ResourceTemplate.AllResources)
+        foreach (ResourceTemplate resourceTemplate in ResourceTemplate.Resources)
         {
             if (resourceTemplate.ResourceType != ResourceType.Resource) continue;
             int quantity = Mathf.FloorToInt(Inventory.GetResourceQuantity(resourceTemplate.Name));

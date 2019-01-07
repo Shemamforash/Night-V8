@@ -84,7 +84,7 @@ public class UIActionListController : MonoBehaviour
         _enterGateEnabled = _resting
                             && _atHome
                             && _player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer
-                            && WorldState.AllTemplesActivate();
+                            && WorldState.AllTemplesActive();
         _enterGateButton.gameObject.SetActive(_enterGateEnabled);
     }
 

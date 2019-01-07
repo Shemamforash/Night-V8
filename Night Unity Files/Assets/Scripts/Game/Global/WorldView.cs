@@ -34,7 +34,7 @@ namespace Game.Global
             _weatherString = text;
         }
 
-        public static void Update(int hours)
+        public static void MyUpdate(int hours)
         {
             _timeString = TimeToName(hours);
             UpdateDescription();
@@ -59,7 +59,6 @@ namespace Game.Global
 
             _environmentText.text = _timeString + " in the " + _environmentString + ". It is " + _temperatureString + " and " + _weatherString + ". " + templeString;
         }
-
 
         public override void Awake()
         {

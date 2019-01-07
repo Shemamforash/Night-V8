@@ -7,6 +7,7 @@ namespace InventorySystem
     Meat,
     Plant,
     Resource,
-    Potion
+    Potion,
+    Armour
   }
 }

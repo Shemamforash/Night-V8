@@ -276,11 +276,8 @@ namespace Game.Combat.Player
 
         public override void Decay()
         {
-            int armourCountBefore = ArmourController.GetCurrentProtection();
             base.Decay();
-            int armourCountAfter = ArmourController.GetCurrentProtection();
-            if (armourCountBefore - armourCountAfter == 0) return;
-            Instance.Player.BrandManager.IncreaseDecayCount();
+            if (ArmourController.Level() != 0 && !ArmourController.Recharging()) Instance.Player.BrandManager.IncreaseDecayCount();
         }
 
         public void Activate()
@@ -422,9 +419,10 @@ namespace Game.Combat.Player
             _adrenalineRecoveryRate = Player.Attributes.CalculateAdrenalineRecoveryRate();
         }
 
-        public void EquipArmour()
+        private void EquipArmour()
         {
             ArmourController = Player.ArmourController;
+            ArmourController.Reset();
         }
 
         public void ResetCompass()

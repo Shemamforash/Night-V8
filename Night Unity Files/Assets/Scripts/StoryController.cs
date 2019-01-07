@@ -43,7 +43,7 @@ public class StoryController : Menu
         _audioSource = Camera.main.GetComponent<AudioSource>();
         _audioSource.volume = 0f;
         _audioSource.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
-        _skipCanvas.alpha = MinAlpha;
+        _skipCanvas.alpha = 0f;
         _paused = false;
         if (!_goToCredits) return;
         _waitTime = Random.Range(2f, 4f);

@@ -59,19 +59,13 @@ namespace Facilitating.UIControllers
                 new TutorialOverlay(_infuseButton.GetComponent<RectTransform>())
             };
 
-            List<ItemQuality> qualities = new List<ItemQuality>();
 #if UNITY_EDITOR
-            foreach (ItemQuality value in Enum.GetValues(typeof(ItemQuality))) qualities.Add(value);
             for (int i = 0; i < 0; ++i)
             {
                 Weapon weapon = WeaponGenerator.GenerateWeapon();
                 Inventory.Move(weapon);
                 Inscription inscription = Inscription.Generate();
                 Inventory.Move(inscription);
-                Armour plate = Armour.Create(qualities.RandomElement(), Armour.ArmourType.Chest);
-                Inventory.Move(plate);
-                Armour head = Armour.Create(qualities.RandomElement(), Armour.ArmourType.Head);
-                Inventory.Move(head);
                 Accessory accessory = Accessory.Generate();
                 Inventory.Move(accessory);
             }

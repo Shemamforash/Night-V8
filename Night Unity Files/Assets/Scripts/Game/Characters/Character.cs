@@ -9,7 +9,7 @@ namespace Game.Characters
 {
     public abstract class Character
     {
-        public readonly ArmourController ArmourController;
+        public readonly ArmourController ArmourController= new ArmourController();
         public Accessory EquippedAccessory;
         public Weapon EquippedWeapon;
         public string Name;
@@ -17,7 +17,6 @@ namespace Game.Characters
         protected Character(string name)
         {
             Name = name;
-            ArmourController = new ArmourController(this);
         }
 
         public virtual XmlNode Save(XmlNode doc)
@@ -30,8 +29,6 @@ namespace Game.Characters
             ArmourController.Save(equipped);
             return doc;
         }
-
-
 
         public virtual void Load(XmlNode root)
         {

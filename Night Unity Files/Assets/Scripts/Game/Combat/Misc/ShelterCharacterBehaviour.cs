@@ -45,7 +45,6 @@ namespace Game.Combat.Misc
             transform.SetParent(GameObject.Find("World").transform);
             _moveBehaviour = GetComponent<MoveBehaviour>();
             MovementController.SetSpeed(1);
-            ArmourController = new ArmourController(null);
             ArmourController.AutoFillSlots(10);
             _maxEncounterSize = (int) (WorldState.Difficulty() / 10f * 5);
         }

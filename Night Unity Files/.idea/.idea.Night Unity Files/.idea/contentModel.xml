@@ -761,6 +761,7 @@
           </e>
         </e>
         <e p="KeyboardInputModule.cs" t="Include" />
+        <e p="LoadSaveMenu.cs" t="Include" />
         <e p="MarkController.cs" t="Include" />
         <e p="NeedleBehaviour.cs" t="Include" />
         <e p="Plugins" t="Include">
@@ -1161,6 +1162,7 @@
               <e p="MainMenuNavigator.cs" t="Include" />
             </e>
             <e p="Persistence" t="Include">
+              <e p="Save.cs" t="Include" />
               <e p="SaveController.cs" t="Include" />
             </e>
             <e p="RageBarController.cs" t="Include" />
@@ -1201,6 +1203,7 @@
                 <e p="UiWillController.cs" t="Include" />
                 <e p="WeaponDetailController.cs" t="Include" />
               </e>
+              <e p="SaveUiController.cs" t="Include" />
               <e p="UIAttributeController.cs" t="Include" />
               <e p="UIAttributeMarkerController.cs" t="Include" />
               <e p="UIConditionController.cs" t="Include" />
@@ -1734,6 +1737,7 @@
         <e p="Shaders" t="Include">
           <e p="Combat Vignette Shader.shader" t="Include" />
           <e p="CombatShader.shader" t="Include" />
+          <e p="FloorShader.shader" t="Include" />
           <e p="MapBackgroundShader.shader" t="Include" />
           <e p="MapBackgroundShader2.shader" t="Include" />
           <e p="MenuGradientShader.shader" t="Include" />
