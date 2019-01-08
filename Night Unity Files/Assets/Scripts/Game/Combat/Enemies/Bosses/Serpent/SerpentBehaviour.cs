@@ -41,11 +41,12 @@ public class SerpentBehaviour : Boss
             yield return null;
         }
 
-        BeamController.Create(transform);
-        time = 3f;
+        BeamController beam = BeamController.Create(transform);
+        time = 5f;
         while (time > 0f)
         {
             if (!CombatManager.IsCombatActive()) yield return null;
+            if (Vector2.Distance(transform.position, _targetPosition) < 0.5f) beam.StopFiring();
             time -= Time.deltaTime;
             yield return null;
         }
@@ -71,8 +72,8 @@ public class SerpentBehaviour : Boss
     {
         if (!_gettingInPosition)
         {
-            _targetPosition = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized * 10;
-            _targetPosition += PlayerCombat.Instance.transform.position;
+            _targetPosition = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized * 8;
+            _targetPosition += PlayerCombat.Position();
             Speed = 5;
             _gettingInPosition = true;
         }
@@ -105,15 +106,17 @@ public class SerpentBehaviour : Boss
         base.UnregisterSection(section);
         int currentWingCount = SectionCount();
 
-        if (prevWingCount > 30 && currentWingCount <= 30)
+        if (prevWingCount > 35 && currentWingCount <= 35)
         {
             GameObject tailEnd = transform.FindChildWithName("Tail End").gameObject;
-            tailEnd.AddComponent<LeaveFireTrail>().Initialise();
+            LeaveFireTrail fireTrail = tailEnd.AddComponent<LeaveFireTrail>();
+            fireTrail.Initialise();
+            fireTrail.AddIgnoreTargets(Sections);
         }
-        else if (prevWingCount > 20 && currentWingCount <= 20)
+        else if (prevWingCount > 30 && currentWingCount <= 30)
             _canPush = true;
 
-        if (currentWingCount > 20) return;
+        if (currentWingCount > 25) return;
         float timeToBomb = currentWingCount / 40f + 0.25f;
         _bombAttack.SetMinTimeToBomb(timeToBomb);
     }
@@ -154,7 +157,7 @@ public class SerpentBehaviour : Boss
     private void GetNewTargetPosition()
     {
         Vector2 dir = AdvancedMaths.RandomDirection();
-        _targetPosition = dir * Random.Range(5f, 7.5f);
+        _targetPosition = dir * Random.Range(5f, 7.5f) + (Vector2) PlayerCombat.Position();
     }
 
     public void FixedUpdate()
@@ -162,7 +165,7 @@ public class SerpentBehaviour : Boss
         if (!CombatManager.IsCombatActive()) return;
         if (!_gettingInPosition)
         {
-            if (_firing) _targetPosition = PlayerCombat.Instance.transform.position;
+            if (_firing) _targetPosition = PlayerCombat.Position();
             else if (Vector2.Distance(transform.position, _targetPosition) < 1f) GetNewTargetPosition();
         }
 
