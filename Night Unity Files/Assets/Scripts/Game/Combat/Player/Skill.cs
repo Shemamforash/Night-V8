@@ -70,7 +70,7 @@ namespace Game.Combat.Player
 
         protected List<CanTakeDamage> KnockbackInRange(float range, float force)
         {
-            Vector2 position = PlayerCombat.Instance.transform.position;
+            Vector2 position = PlayerCombat.Position();
             List<CanTakeDamage> enemiesInRange = CombatManager.GetEnemiesInRange(position, range);
             enemiesInRange.ForEach(e => { KnockbackSingleTarget(position, e, force); });
             return enemiesInRange;

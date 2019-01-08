@@ -16,18 +16,19 @@ public class BeamController : MonoBehaviour
     private static readonly ObjectPool<BeamController> _beamPool = new ObjectPool<BeamController>("Beams", "Prefabs/Combat/Enemies/Beam");
     private static GameObject _prefab;
     private LineRenderer _glowLine, _beamLine, _leadLine;
-    private const float LeadDuration = 1f;
-    private const float BeamDuration = 3f;
+    private const float LeadDuration = 0.5f;
+    private const float BeamDuration = 2f;
     private Transform _origin;
     private Vector3 _targetPosition;
     private bool _firing;
-    private const int BeamDamage = 5;
+    private const int BeamDamage = 20;
     private float _lastBeamDamage;
 
     private ParticleSystem[] _blastParticles, _chargeParticles;
     private AudioSource[] _audioSources;
     private GameObject _blastObject, _lineObject;
     private AudioSource _chargeAudio;
+    private bool _stopFiring;
 
     public void Awake()
     {
@@ -108,6 +109,7 @@ public class BeamController : MonoBehaviour
         float remainingTime = BeamDuration;
         while (remainingTime > 0f)
         {
+            if (_stopFiring) break;
             float noise = Mathf.PerlinNoise(Time.timeSinceLevelLoad, 0f) / 2f + 0.5f;
             float glowWidth = 0.5f * noise;
             float beamWidth = 0.1f * noise;
@@ -119,6 +121,7 @@ public class BeamController : MonoBehaviour
             yield return null;
         }
 
+        _stopFiring = false;
         _audioSources.ForEach(s => s.DOFade(0f, 0.5f));
         _lineObject.SetActive(false);
         _blastParticles.ForEach(p => p.Stop());
@@ -141,20 +144,25 @@ public class BeamController : MonoBehaviour
             return;
         }
 
-        _lastBeamDamage = 0.2f;
         ContactFilter2D cf = new ContactFilter2D();
         cf.layerMask = (1 << 17) | (1 << 8) | (1 << 14);
         Collider2D[] hits = new Collider2D[100];
         int count = gameObject.GetComponent<BoxCollider2D>().OverlapCollider(cf, hits);
-        int damage = WorldState.ScaleDamage(BeamDamage);
+        int damage = WorldState.ScaleValue(BeamDamage);
         for (int i = 0; i < count; ++i)
         {
             Collider2D hit = hits[i];
             if (!hit.gameObject.CompareTag("Player")) continue;
             Vector2 dir = transform.up;
             PlayerCombat.Instance.TakeRawDamage(damage, dir);
+            _lastBeamDamage = 0.2f;
             PlayerCombat.Instance.MovementController.KnockBack(dir, 15f);
             break;
         }
+    }
+
+    public void StopFiring()
+    {
+        _stopFiring = true;
     }
 }

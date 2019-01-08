@@ -34,6 +34,7 @@ namespace Facilitating.UIControllers
 
         public void UpdateArmour()
         {
+            if (_armourName == null) return;
             _armourName.SetText(_player.ArmourController.GetName());
             _armourBonus.SetText(_player.ArmourController.GetBonus());
         }

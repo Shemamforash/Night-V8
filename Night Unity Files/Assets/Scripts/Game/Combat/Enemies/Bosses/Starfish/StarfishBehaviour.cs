@@ -107,7 +107,6 @@ public class StarfishBehaviour : Boss
         if (_timeToContract > 0f) _timeToContract -= Time.deltaTime;
         _contracting = true;
         Sequence sequence = DOTween.Sequence();
-//        DOTween.Init(true, true, LogBehaviour.Verbose);
         sequence.Append(DOTween.To(GetRadiusModifier, SetRadiusModifier, 1.2f, 1f).SetEase(Ease.OutExpo));
         sequence.Append(DOTween.To(GetRadiusModifier, SetRadiusModifier, 0.4f, 0.2f).SetEase(Ease.InBack));
         sequence.AppendCallback(PushPulse);

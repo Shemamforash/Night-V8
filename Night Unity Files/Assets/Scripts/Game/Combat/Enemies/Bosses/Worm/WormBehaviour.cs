@@ -42,7 +42,7 @@ public class WormBehaviour : Boss
     {
         _timeToNextWorm -= Time.deltaTime;
         if (_timeToNextWorm > 0f) return;
-        Vector2 wormPosition = PlayerCombat.Instance.transform.position;
+        Vector2 wormPosition = PlayerCombat.Position();
         if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Worm/Worm Body");
         WormBodyBehaviour newWorm = Instantiate(_prefab).GetComponent<WormBodyBehaviour>();
         newWorm.Initialise(wormPosition);

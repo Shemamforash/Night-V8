@@ -92,7 +92,7 @@ namespace Game.Combat.Generation
         {
             if (PlayerCombat.Instance == null) return -1;
             if (_fading) return -1;
-            float distanceToPlayer = transform.position.Distance(PlayerCombat.Instance.transform.position);
+            float distanceToPlayer = transform.position.Distance(PlayerCombat.Position());
             if (distanceToPlayer > MinDistanceToReveal)
             {
                 _targetAlpha = 0f;

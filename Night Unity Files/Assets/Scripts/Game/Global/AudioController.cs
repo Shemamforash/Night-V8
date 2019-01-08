@@ -80,7 +80,7 @@ namespace Game.Global
         private int GetEnemiesInRange()
         {
             if (PlayerCombat.Instance == null) return -1;
-            Vector2 playerPosition = PlayerCombat.Instance.transform.position;
+            Vector2 playerPosition = PlayerCombat.Position();
             List<CanTakeDamage> enemies = CombatManager.Enemies();
             if (enemies.Count == 0) return -1;
             int enemiesInRange = enemies.Count(e => e.transform.Distance(playerPosition) <= ThresholdCombatMusicDistance && !(e is AnimalBehaviour));

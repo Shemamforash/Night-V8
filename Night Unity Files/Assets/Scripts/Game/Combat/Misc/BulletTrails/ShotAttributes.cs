@@ -120,7 +120,7 @@ namespace Game.Combat.Misc
 
         public int DamageDealt()
         {
-            return _damageDealt;
+            return (int) (_damageDealt * _finalDamageModifier);
         }
 
         public void ApplyConditions(Vector2 position)
@@ -153,7 +153,6 @@ namespace Game.Combat.Misc
         public void DealDamage(GameObject other, Shot shot)
         {
             _damageDealt = _damage;
-            _damageDealt = (int) (_damageDealt * _finalDamageModifier);
             OnHitAction?.Invoke();
             CanTakeDamage hit = other.GetComponent<CanTakeDamage>();
             if (hit == null) return;

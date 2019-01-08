@@ -13,7 +13,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
         protected override void Attack()
         {
-            Vector2 randomPositionNearPlayer = AdvancedMaths.RandomPointInCircle(5f) + (Vector2) PlayerCombat.Instance.transform.position;
+            Vector2 randomPositionNearPlayer = AdvancedMaths.RandomPointInCircle(5f) + (Vector2) PlayerCombat.Position();
             Vector2 directionToPoint = randomPositionNearPlayer - (Vector2) transform.position;
             directionToPoint.Normalize();
             Enemy.MovementController.AddForce(directionToPoint * Enemy.Enemy.Template.Speed * 50);

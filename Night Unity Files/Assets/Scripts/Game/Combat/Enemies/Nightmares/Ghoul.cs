@@ -16,7 +16,7 @@ namespace Game.Combat.Enemies.Nightmares
 
         private void SeekPlayer()
         {
-            Vector2 direction = PlayerCombat.Instance.transform.position - transform.position;
+            Vector2 direction = PlayerCombat.Position() - transform.position;
             MovementController.Move(direction.normalized);
         }
 

@@ -3,6 +3,7 @@ using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Player;
 using Game.Global;
+using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
@@ -14,7 +15,7 @@ namespace Game.Gear.Armour
     {
         private int _currentLevel;
         private const int MaxLevel = 10;
-        private const int ProtectionPerLevel = 10;
+        private const int ProtectionPerLevel = 25;
         private const float BaseRechargeTime = 5f;
         private float _rechargeModifier = 1f;
         private float _currentRechargeTime;
@@ -50,7 +51,7 @@ namespace Game.Gear.Armour
 
         public void TakeDamage(int damage)
         {
-            if (_currentLevel == 0) return;
+            Assert.IsFalse(_currentLevel == 0);
             _currentHealth.Decrement(damage);
             if (!_currentHealth.ReachedMin()) return;
             _recharging = true;
@@ -61,9 +62,14 @@ namespace Game.Gear.Armour
             _currentHealth.Increment(amount);
         }
 
-        public float GetRechargeTime()
+        private float GetRechargeTime()
         {
             return _rechargeModifier * BaseRechargeTime;
+        }
+
+        public bool CanAbsorbDamage()
+        {
+            return !_recharging && _currentLevel > 0;
         }
 
         public bool Recharging()
@@ -81,7 +87,6 @@ namespace Game.Gear.Armour
         public bool CanUpgrade()
         {
             if (_currentLevel == 10) return false;
-            Debug.Log(_targetQuality);
             return Inventory.GetResourceQuantity(Armour.QualityToName(_targetQuality)) > 0;
         }
 
@@ -125,15 +130,11 @@ namespace Game.Gear.Armour
             {
                 normalisedTime = 1;
                 _recharging = false;
+                _currentRechargeTime = 0f;
             }
 
             float newHealth = _currentLevel * ProtectionPerLevel * normalisedTime;
             _currentHealth.SetCurrentValue(newHealth);
-        }
-
-        public int Level()
-        {
-            return _currentLevel;
         }
 
         public float GetCurrentFill()
@@ -176,6 +177,16 @@ namespace Game.Gear.Armour
         {
             CalculateMaxHealth();
             _recharging = false;
+        }
+
+        public int GetCurrentLevel()
+        {
+            return _currentLevel;
+        }
+
+        public void SetRechargeModifier(float modifier)
+        {
+            _rechargeModifier = modifier;
         }
     }
 }

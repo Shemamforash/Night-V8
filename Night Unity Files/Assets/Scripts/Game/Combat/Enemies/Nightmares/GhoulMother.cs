@@ -32,7 +32,7 @@ namespace Game.Combat.Enemies.Nightmares
                 return;
             }
 
-            if (transform.position.Distance(PlayerCombat.Instance.transform.position) > 1.5f) return;
+            if (transform.position.Distance(PlayerCombat.Position()) > 1.5f) return;
             _pushCooldown = 1f;
             PushController.Create(transform.position, 0f, false, 360f);
         }

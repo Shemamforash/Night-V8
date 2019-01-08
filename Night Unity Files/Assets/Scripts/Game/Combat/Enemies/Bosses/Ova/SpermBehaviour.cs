@@ -40,20 +40,20 @@ public class SpermBehaviour : CanTakeDamage
     public override void MyUpdate()
     {
         base.MyUpdate();
-        float distanceToTarget = transform.Distance(PlayerCombat.Instance.transform.position);
+        float distanceToTarget = transform.Distance(PlayerCombat.Position());
         if (_followPlayer)
         {
             if (distanceToTarget < 1f)
             {
                 SetFollowing(false);
-                Vector3 dirToPlayer = PlayerCombat.Instance.transform.position - transform.position;
+                Vector3 dirToPlayer = PlayerCombat.Position() - transform.position;
                 dirToPlayer.Normalize();
                 Vector2 locationBeyondPlayer = transform.position + dirToPlayer * Random.Range(4f, 6f);
                 _targetPosition = AdvancedMaths.RandomVectorWithinRange(locationBeyondPlayer, 1f);
                 return;
             }
 
-            _targetPosition = PlayerCombat.Instance.transform.position;
+            _targetPosition = PlayerCombat.Position();
             return;
         }
 

@@ -374,7 +374,7 @@ namespace Game.Combat.Generation
         public static List<CanTakeDamage> GetCharactersInRange(Vector2 position, float range)
         {
             List<CanTakeDamage> charactersInRange = GetEnemiesInRange(position, range);
-            if (Vector2.Distance(PlayerCombat.Instance.transform.position, position) <= range) charactersInRange.Add(PlayerCombat.Instance);
+            if (Vector2.Distance(PlayerCombat.Position(), position) <= range) charactersInRange.Add(PlayerCombat.Instance);
             return charactersInRange;
         }
 
@@ -431,7 +431,7 @@ namespace Game.Combat.Generation
         public static CanTakeDamage NearestCharacter(Vector2 position)
         {
             CanTakeDamage nearestEnemy = NearestEnemy(position);
-            float playerDistance = Vector2.Distance(position, PlayerCombat.Instance.transform.position);
+            float playerDistance = Vector2.Distance(position, PlayerCombat.Position());
             float enemyDistance = Vector2.Distance(position, nearestEnemy.transform.position);
             return playerDistance < enemyDistance ? PlayerCombat.Instance : nearestEnemy;
         }

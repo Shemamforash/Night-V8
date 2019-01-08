@@ -221,7 +221,7 @@
 		<Title>Armour</Title>
 		<MinOffset>460,300</MinOffset>
 		<MaxOffset>460,615</MaxOffset>
-		<Text>Armour can be equipped to reduce incoming damage. All characters have two armour slots for Chest and Head armour respectively.</Text>
+		<Text>Armour absorbs damage in place of your health. When depleted, it must recharge. Shatter damage forces armour to deplete.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>12</SectionNumber>
@@ -229,23 +229,7 @@
 		<Title>Protection</Title>
 		<MinOffset>0,0</MinOffset>
 		<MaxOffset>0,0</MaxOffset>
-		<Text>Armour offers varying levels of protection, with higher quality armour offering more protection. Each point of protection offers a 5% reduction in damage, up to a maximum of 50%.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>12</SectionNumber>
-		<PartNumber>3</PartNumber>
-		<Title>Damage</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
-		<Text>Shatter causes damage to armour. When enough Shatter damage is taken, armour will lose a point of protection. If a piece of armour loses all it�s protection, it will break, and be lost.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>12</SectionNumber>
-		<PartNumber>4</PartNumber>
-		<Title>Sources</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
-		<Text>Armour cannot be repaired, and so must be replaced, either through crafting, or found as loot. Instead of a permanent health boost, it is best to think of armour as an expendable source of extra protection.</Text>
+		<Text>Armour can be upgraded to absorb more damage.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>13</SectionNumber>

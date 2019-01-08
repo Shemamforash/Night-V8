@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Game.Characters;
@@ -195,6 +194,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
 
     protected virtual void EndChallenge()
     {
+        ScreenFaderController.FlashWhite(1f, new Color(1, 1, 1, 0f));
         RiteStarter.Generate(null);
         End();
     }

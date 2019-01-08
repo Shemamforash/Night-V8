@@ -36,7 +36,6 @@ namespace Game.Gear.Armour
 
         public static string QualityToName(ItemQuality quality)
         {
-            Debug.Log(_upgradeRequirements.Keys.Count + " " + quality);
             return _upgradeRequirements[quality];
         }
     }

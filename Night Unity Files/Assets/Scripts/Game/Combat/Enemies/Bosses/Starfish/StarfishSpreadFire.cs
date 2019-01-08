@@ -60,7 +60,7 @@ namespace Game.Combat.Enemies.Bosses.Starfish
         private IEnumerator DoBurstAttack()
         {
             _attacking = true;
-            int count = 50;
+            int count = 30;
             float angleInterval = 360f / count;
             float startAngle = 0f;
 
@@ -104,7 +104,7 @@ namespace Game.Combat.Enemies.Bosses.Starfish
                 yield return new WaitForSeconds(0.15f);
             }
 
-            _spinAttackCooldown = Random.Range(5f, 7.5f);
+            _spinAttackCooldown = Random.Range(7.5f, 15f);
             _attacking = false;
         }
 

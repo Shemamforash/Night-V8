@@ -16,7 +16,7 @@ public class ContainerTextBehaviour : MonoBehaviour
 
     public void Update()
     {
-        float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
+        float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Position());
         _text.color = UiAppearanceController.InvisibleColour;
         transform.rotation = PlayerCombat.Instance.transform.rotation;
         if (distanceToPlayer > MaxShowInventoryDistance) return;

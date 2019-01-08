@@ -56,7 +56,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
                 yield return null;
             }
 
-            Vector2 position = (Vector2)PlayerCombat.Instance.transform.position + AdvancedMaths.RandomDirection() * Random.Range(2f, 6f);
+            Vector2 position = (Vector2)PlayerCombat.Position() + AdvancedMaths.RandomDirection() * Random.Range(2f, 6f);
             transform.position = position;
             _trail.Clear();
             

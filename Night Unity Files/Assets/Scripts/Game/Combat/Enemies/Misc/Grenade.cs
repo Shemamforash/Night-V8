@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
-using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -15,7 +12,6 @@ namespace Game.Combat.Enemies.Misc
     {
         private static readonly float ThrowForce = 300f;
         private static readonly ObjectPool<Grenade> _grenadePool = new ObjectPool<Grenade>("Grenades", "Prefabs/Combat/Enemies/Grenade");
-        private const int Damage = 20;
         private Action<List<EnemyBehaviour>> OnDetonate;
         private bool _incendiary, _decaying, _sickening;
         private float _radius = 1;

@@ -18,7 +18,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
         public override void Update()
         {
-            _distanceToPlayer = transform.position.Distance(PlayerCombat.Instance.transform.position);
+            _distanceToPlayer = transform.position.Distance(PlayerCombat.Position());
             if (_distanceToPlayer > MinDistanceToAttack) return;
             if (_attacking) return;
             base.Update();
@@ -28,7 +28,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         {
             float maxSpeed = _distanceToPlayer;
             float minSpeed = _distanceToPlayer / 2f;
-            float rotation = AdvancedMaths.AngleFromUp(PlayerCombat.Instance.transform.position, transform.position);
+            float rotation = AdvancedMaths.AngleFromUp(PlayerCombat.Position(), transform.position);
             rotation += 90;
             _feedParticles.transform.rotation = Quaternion.Euler(0, 0, rotation);
             ParticleSystem.MainModule main = _feedParticles.main;
@@ -47,7 +47,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         private void LateUpdate()
         {
             if (_feedParticles == null) return;
-            _feedParticles.transform.position = PlayerCombat.Instance.transform.position;
+            _feedParticles.transform.position = PlayerCombat.Position();
         }
 
         private IEnumerator DoFeed()

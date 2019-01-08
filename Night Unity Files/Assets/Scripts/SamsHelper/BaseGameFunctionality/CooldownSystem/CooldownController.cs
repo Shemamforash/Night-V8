@@ -49,9 +49,10 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
         public void Update()
         {
             UpdateUI();
-            bool shouldPlay = _ready && _skill != null && _skill.CanAfford();
-            bool shouldStop = !shouldPlay && _readyParticles.isPlaying;
-            shouldPlay = shouldPlay && !_readyParticles.isPlaying;
+            bool isPlaying = _readyParticles.isPlaying;
+            bool shouldPlay = _ready && _skill != null && _skill.CanAfford() && _unlocked;
+            bool shouldStop = !shouldPlay && isPlaying;
+            shouldPlay = shouldPlay && !isPlaying;
             if (shouldPlay) _readyParticles.Play();
             else if (shouldStop) _readyParticles.Stop();
         }
@@ -90,7 +91,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
             UpdateCooldownFill(1);
         }
 
-        public void SetCost(int cost)
+        private void SetCost(int cost)
         {
             _skillCostBlips.ForEach(s => Destroy(s));
             for (int i = 0; i < cost; ++i)

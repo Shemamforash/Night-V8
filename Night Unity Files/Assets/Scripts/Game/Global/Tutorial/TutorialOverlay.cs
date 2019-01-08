@@ -63,7 +63,7 @@ namespace Game.Global.Tutorial
 
         private void CalculateNullWorldCorners()
         {
-            Vector2 origin = PlayerCombat.Instance != null ? (Vector2) PlayerCombat.Instance.transform.position : Vector2.zero;
+            Vector2 origin = PlayerCombat.Instance != null ? (Vector2) PlayerCombat.Position() : Vector2.zero;
             float halfWidth = 0.2f;
             float halfHeight = 0.2f;
             if (PlayerCombat.Instance != null) CalculateWorldCornersRelativeToPlayer(origin, halfWidth, halfHeight);

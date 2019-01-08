@@ -16,7 +16,7 @@ namespace Game.Combat.Generation.Shrines
         private float waveDuration, currentAngle;
         private static GameObject _filledIndicatorPrefab;
 
-        public void Initialise(int shrineLevel)
+        private void Initialise(int shrineLevel)
         {
             _shrineLevelMax = shrineLevel;
             DangerIndicator.sprite = Resources.Load<Sprite>("Images/Danger Indicators/Evil Circle " + _shrineLevelMax);
@@ -47,27 +47,21 @@ namespace Game.Combat.Generation.Shrines
             float angleInterval = 360f / spawnCount;
             currentAngle = Random.Range(0, 360);
             waveDuration = 0f;
-            float currentTime;
 
             for (int i = 0; i < spawnCount; ++i)
             {
-                currentTime = 0f;
-                while (currentTime < SpawnDelay)
-                {
-                    if (!CombatManager.IsCombatActive()) yield return null;
-                    Vector2 ghoulPos = AdvancedMaths.CalculatePointOnCircle(currentAngle, SpawnRadius, transform.position);
-                    EnemyBehaviour enemy = CombatManager.SpawnEnemy(EnemyType.Ghoul, ghoulPos);
-                    waveDuration += enemy.Enemy.Template.Value / 2f;
-                    currentTime += SpawnDelay;
-                    yield return null;
-                }
-
+                if (!CombatManager.IsCombatActive()) yield return null;
+                Vector2 ghoulPos = AdvancedMaths.CalculatePointOnCircle(currentAngle, SpawnRadius, transform.position);
+                EnemyType enemyType = WorldState.GetAllowedNightmareEnemyTypes().RandomElement().EnemyType;
+                EnemyBehaviour enemy = CombatManager.SpawnEnemy(enemyType, ghoulPos);
+                waveDuration += enemy.Enemy.Template.Value;
+                yield return new WaitForSeconds(SpawnDelay);
                 currentAngle += angleInterval;
                 if (currentAngle > 360f) currentAngle -= 360f;
             }
 
-            waveDuration /= 10f;
-            currentTime = waveDuration;
+            waveDuration *= 5f;
+            float currentTime = waveDuration;
             UpdateCountdown(currentTime, waveDuration, true);
             while (currentTime > 0f)
             {

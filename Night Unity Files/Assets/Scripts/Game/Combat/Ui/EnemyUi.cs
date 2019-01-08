@@ -1,8 +1,6 @@
-﻿using Game.Combat.Misc;
-using Game.Combat.Player;
+﻿using Game.Combat.Player;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
-using TMPro;
 
 namespace Game.Combat.Ui
 {
@@ -26,12 +24,6 @@ namespace Game.Combat.Ui
             base.LateUpdate();
             if (Character == null) return;
             NameText.SetText(Character.GetDisplayName());
-        }
-
-        public void RegisterHit(CanTakeDamage enemy)
-        {
-            if (enemy != Character) return;
-            UiHitController.RegisterShot();
         }
     }
 }

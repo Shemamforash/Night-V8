@@ -86,7 +86,7 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            PushController.Create(PlayerCombat.Instance.transform.position, 0, true, 360f);
+            PushController.Create(PlayerCombat.Position(), 0, true, 360f);
         }
     }
 

@@ -2,6 +2,7 @@
 using Game.Combat.Enemies.Bosses;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -15,6 +16,7 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
     private float _followSpeed;
     private const float SeekSpeed = 4f;
     private float _seekLifeTime = 5f;
+    private float _rotateSpeed;
 
     private enum SwarmState
     {
@@ -36,6 +38,10 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
         _rOffset = Random.Range(0f, 360f);
         _force = Random.Range(0.7f, 1.3f);
         _followSpeed = Random.Range(5f, 10f);
+        _rotateSpeed = Random.Range(360f, 720f);
+        if (Helper.RollDie(0, 2)) _rotateSpeed = -_rotateSpeed;
+        ArmourController.AutoGenerateArmour();
+        SpriteFlash = gameObject.FindChildWithName<DamageSpriteFlash>("Sprite");
     }
 
     public override string GetDisplayName()
@@ -51,11 +57,12 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
 
     protected override int GetInitialHealth()
     {
-        return 10;
+        return WorldState.ScaleValue(Random.Range(10, 20));
     }
 
     protected void FixedUpdate()
     {
+        SpriteFlash.transform.Rotate(0, 0, _rotateSpeed * Time.fixedDeltaTime);
         if (_currentState == SwarmState.Seeking) _rigidBody.AddForce(dir);
         else _rigidBody.velocity = dir;
     }
@@ -73,16 +80,23 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
         }
     }
 
+    public override void TakeExplosionDamage(int damage, Vector2 direction, float radius)
+    {
+        damage /= 10;
+        if (damage < 1) damage = 1;
+        base.TakeExplosionDamage(damage, direction, radius);
+    }
+
     private void Seek()
     {
         _seekLifeTime -= Time.deltaTime;
-        Vector3 playerPosition = PlayerCombat.Instance.transform.position;
+        Vector3 playerPosition = PlayerCombat.Position();
         Vector2 desiredVelocity = playerPosition - transform.position;
         desiredVelocity.Normalize();
         desiredVelocity *= SeekSpeed;
         dir = desiredVelocity - _rigidBody.velocity;
         if (_seekLifeTime > 0f && playerPosition.Distance(transform.position) > 0.5f) return;
-        Explosion explosion = Explosion.CreateExplosion(transform.position, 10);
+        Explosion explosion = Explosion.CreateExplosion(transform.position);
         explosion.AddIgnoreTargets(SwarmBehaviour.GetAllSegments());
         switch (Random.Range(0, 4))
         {
@@ -142,13 +156,14 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
     {
         if (_currentState != SwarmState.Following) return;
         _currentState = SwarmState.Bursting;
-        Vector2 targetPosition = AdvancedMaths.RandomPointInCircle(14f);
+        Vector2 targetPosition = AdvancedMaths.RandomPointInCircle(5f) + (Vector2) Parent.transform.position;
         Vector2 origin = transform.position;
         Sequence sequence = DOTween.Sequence();
+        sequence.AppendInterval(Random.Range(0.5f, 1f));
         sequence.Append(_rigidBody.DOMove(targetPosition, Random.Range(1f, 2f)).SetEase(Ease.InExpo));
         sequence.AppendCallback(() =>
         {
-            Explosion explosion = Explosion.CreateExplosion(transform.position, 20);
+            Explosion explosion = Explosion.CreateExplosion(transform.position, Random.Range(0.5f, 1f));
             explosion.AddIgnoreTargets(SwarmBehaviour.GetAllSegments());
             explosion.Detonate();
         });

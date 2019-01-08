@@ -23,6 +23,7 @@ namespace Game.Combat.Generation.Shrines
         private static RiteShrineBehaviour _instance;
         private List<TutorialOverlay> _overlays;
         private Region _region;
+        private List<RiteColliderBehaviour> _riteColliders = new List<RiteColliderBehaviour>();
 
         public void Awake()
         {
@@ -82,6 +83,7 @@ namespace Game.Combat.Generation.Shrines
 
         private void StopCandles(Transform candleParent)
         {
+            candleParent.GetComponent<ParticleSystem>().Stop();
             foreach (ParticleSystem candle in candleParent.Find("Candles").GetComponentsInChildren<ParticleSystem>())
             {
                 candle.Stop();
@@ -107,6 +109,7 @@ namespace Game.Combat.Generation.Shrines
 
         private void FadeCandles(Transform riteTransform)
         {
+            riteTransform.GetComponent<ParticleSystem>().Stop();
             foreach (ParticleSystem candle in riteTransform.Find("Candles").GetComponentsInChildren<ParticleSystem>())
                 StartCoroutine(FadeCandle(candle));
         }

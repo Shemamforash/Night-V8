@@ -13,7 +13,7 @@ using UnityEngine.UI;
 
 public class GateTransitController : Menu
 {
-    private ParticleSystem _streakParticles;
+    private ParticleSystem _streakParticles, _flashParticles;
     private SpriteRenderer _glow;
     private static GateTransitController _instance;
 
@@ -22,6 +22,7 @@ public class GateTransitController : Menu
         base.Awake();
         _instance = this;
         _streakParticles = gameObject.FindChildWithName<ParticleSystem>("Streaks");
+        _flashParticles = gameObject.FindChildWithName<ParticleSystem>("Flashes");
         _glow = gameObject.FindChildWithName<SpriteRenderer>("Light");
         _glow.color = UiAppearanceController.InvisibleColour;
     }
@@ -43,6 +44,8 @@ public class GateTransitController : Menu
         WorldState.Pause();
         _streakParticles.Stop();
         _streakParticles.Play();
+        _flashParticles.Stop();
+        _flashParticles.Play();
 
         float maxTime = _streakParticles.main.duration;
         float currentTime = 0f;
@@ -54,7 +57,7 @@ public class GateTransitController : Menu
             currentTime += Time.deltaTime;
             float normalisedTime = currentTime / maxTime;
             _glow.color = Color.Lerp(from, to, normalisedTime);
-            _glow.transform.localScale = Vector2.Lerp(Vector2.one * 4, Vector2.one * 16, normalisedTime);
+            _glow.transform.localScale = Vector2.Lerp(Vector2.one * 400, Vector2.one * 1600, normalisedTime);
             yield return null;
         }
 

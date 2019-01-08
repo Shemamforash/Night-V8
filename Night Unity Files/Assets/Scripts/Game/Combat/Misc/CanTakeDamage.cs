@@ -8,7 +8,7 @@ namespace Game.Combat.Misc
 {
     public abstract class CanTakeDamage : MonoBehaviour
     {
-        private DamageSpriteFlash _spriteFlash;
+        protected DamageSpriteFlash SpriteFlash;
         private BloodSpatter _bloodSpatter;
         public ArmourController ArmourController = new ArmourController();
         public readonly HealthController HealthController = new HealthController();
@@ -21,13 +21,13 @@ namespace Game.Combat.Misc
 
         private void TakeArmourDamage(int damage)
         {
-            if (ArmourController.Recharging()) return;
+            if (!ArmourController.CanAbsorbDamage()) return;
             ArmourController.TakeDamage(damage);
         }
 
         protected virtual void Awake()
         {
-            _spriteFlash = GetComponent<DamageSpriteFlash>();
+            SpriteFlash = GetComponent<DamageSpriteFlash>();
             _bloodSpatter = GetComponent<BloodSpatter>();
             if (!IsPlayer) CombatManager.AddEnemy(this);
         }
@@ -50,14 +50,14 @@ namespace Game.Combat.Misc
         {
             if (_timeSinceLastBurn < 0.5f) return false;
             _timeSinceLastBurn = 0f;
-            _spriteFlash.FlashSprite();
+            SpriteFlash.FlashSprite();
             HealthController.TakeDamage(GetBurnDamage());
             return true;
         }
 
         public virtual void Decay()
         {
-            TakeArmourDamage(GetDecayDamage());
+            TakeArmourDamage(10000);
         }
 
         public virtual bool Sicken(int stacks = 1)
@@ -66,7 +66,7 @@ namespace Game.Combat.Misc
             SicknessStacks += stacks;
             if (SicknessStacks >= GetSicknessTargetTicks())
             {
-                _spriteFlash.FlashSprite();
+                SpriteFlash.FlashSprite();
                 float damage = HealthController.GetMaxHealth() / 10f;
                 HealthController.TakeDamage(damage);
                 SicknessStacks = 0;
@@ -84,11 +84,6 @@ namespace Game.Combat.Misc
             int burnDamage = Mathf.FloorToInt(HealthController.GetMaxHealth() * 0.01f);
             if (burnDamage < 1) burnDamage = 1;
             return burnDamage;
-        }
-
-        protected virtual int GetDecayDamage()
-        {
-            return 1;
         }
 
         protected virtual int GetSicknessTargetTicks()
@@ -139,8 +134,8 @@ namespace Game.Combat.Misc
         {
             if (SceneChanger.ChangingScene()) return;
             if (!IsPlayer && MarkController.InMarkArea(transform.position)) damage *= 2;
-            _spriteFlash.FlashSprite();
-            if (ArmourController.Recharging())
+            SpriteFlash.FlashSprite();
+            if (!ArmourController.CanAbsorbDamage())
             {
                 HealthController.TakeDamage(damage);
                 if (_bloodSpatter != null) _bloodSpatter.Spray(direction, damage);

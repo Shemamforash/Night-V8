@@ -1,4 +1,5 @@
-﻿using Game.Combat.Misc;
+﻿using System.Collections.Generic;
+using Game.Combat.Misc;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -10,14 +11,14 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         private const float Interval = 0.75f;
         private const float FirePauseTime = 0.1f;
         private float _currentTime;
-        private CanTakeDamage _canTakeDamage;
         private bool _initialised;
+        private readonly List<CanTakeDamage> _ignoreTargets = new List<CanTakeDamage>();
 
         public void Initialise()
         {
             _initialised = true;
             _lastPosition = transform.position;
-            _canTakeDamage = GetComponent<CanTakeDamage>();
+            _ignoreTargets.Add(GetComponent<CanTakeDamage>());
         }
 
         public void Update()
@@ -34,10 +35,16 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             {
                 float lerpVal = i / distance;
                 tempPos = Vector2.Lerp(_lastPosition, currentPosition, lerpVal);
-                TrailFireBehaviour.Create(tempPos).AddIgnoreTarget(_canTakeDamage);
+                _ignoreTargets.RemoveAll(c => c == null || c.HealthController.GetCurrentHealth() == 0);
+                TrailFireBehaviour.Create(tempPos).AddIgnoreTargets(_ignoreTargets);
             }
 
             _lastPosition = tempPos;
+        }
+
+        public void AddIgnoreTargets<T>(List<T> ignoreTargets) where T : CanTakeDamage
+        {
+            _ignoreTargets.AddRange(ignoreTargets);
         }
     }
 }

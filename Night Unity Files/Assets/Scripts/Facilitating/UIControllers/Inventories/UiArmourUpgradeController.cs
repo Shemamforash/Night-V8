@@ -27,13 +27,6 @@ namespace Facilitating.UIControllers
         {
             base.Awake();
             _instance = this;
-            _overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(GetComponent<RectTransform>()),
-                new TutorialOverlay(),
-                new TutorialOverlay(),
-                new TutorialOverlay()
-            };
         }
 
         public static void Load(XmlNode root)
@@ -70,6 +63,11 @@ namespace Facilitating.UIControllers
             _upgradeButton.AddOnClick(Upgrade);
             _acceptButton = _upgradeObject.gameObject.FindChildWithName<EnhancedButton>("Accept");
             _acceptButton.AddOnClick(OnShow);
+            _overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(_armourObject.GetComponent<RectTransform>()),
+                new TutorialOverlay(_upgradeButton.GetComponent<RectTransform>())
+            };
         }
 
         protected override void Initialise()

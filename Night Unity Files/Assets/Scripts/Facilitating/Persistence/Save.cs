@@ -29,6 +29,8 @@ namespace Facilitating.Persistence
             GameLocation = _root.StringFromNode("CurrentEnvironment");
         }
 
+        public bool Valid() => _valid;
+        
         public string GetRealTime()
         {
             if (!_valid) return "-";

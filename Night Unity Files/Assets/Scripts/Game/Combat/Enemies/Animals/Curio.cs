@@ -22,7 +22,7 @@ namespace Game.Combat.Enemies.Animals
 
         private void Move()
         {
-            Vector2 dir = (transform.position - PlayerCombat.Instance.transform.position).normalized;
+            Vector2 dir = (transform.position - PlayerCombat.Position()).normalized;
             float distance = Random.Range(0.5f, 3f);
             List<Cell> possibleCells = PathingGrid.GetCellsInFrontOfMe(CurrentCell(), dir, distance);
             Cell target = possibleCells.Count == 0 ? PathingGrid.GetCellNearMe(CurrentCell(), distance * 1.5f, distance) : possibleCells.RandomElement();
@@ -31,7 +31,7 @@ namespace Game.Combat.Enemies.Animals
 
         private void WaitForPlayer()
         {
-            if (Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position) > 2) return;
+            if (Vector2.Distance(transform.position, PlayerCombat.Position()) > 2) return;
             Move();
             CurrentAction = WaitForPlayer;
         }

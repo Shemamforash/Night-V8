@@ -70,7 +70,7 @@ public class UiBrandMenu : Menu
 
     public static void ShowBrand(Brand brand)
     {
-        _overviewString = "Brand Complete";
+        _overviewString = "Rite Complete";
         _titleString = "";
         _benefitString = "";
         switch (brand.Status)

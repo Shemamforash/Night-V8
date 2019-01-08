@@ -67,6 +67,11 @@ namespace Game.Combat.Player
         private const float EnemyDamageModifier = 0.2f;
 
 
+        public static Vector3 Position()
+        {
+            return Instance.transform.position;
+        }
+        
         public bool ConsumeAdrenaline(int amount)
         {
             if (!CanAffordSkill(amount)) return false;
@@ -108,13 +113,6 @@ namespace Game.Combat.Player
             int burnDamage = base.GetBurnDamage();
             burnDamage = (int) (burnDamage * (Player.Attributes.FireDamageModifier + 1f));
             return burnDamage;
-        }
-
-        protected override int GetDecayDamage()
-        {
-            int decayDamage = base.GetDecayDamage();
-            if (Player.Attributes.TakeDoubleDecayDamage && Helper.RollDie(0, 4)) decayDamage *= 2;
-            return decayDamage;
         }
 
         protected override int GetSicknessTargetTicks()
@@ -277,7 +275,7 @@ namespace Game.Combat.Player
         public override void Decay()
         {
             base.Decay();
-            if (ArmourController.Level() != 0 && !ArmourController.Recharging()) Instance.Player.BrandManager.IncreaseDecayCount();
+            if (ArmourController.CanAbsorbDamage()) Instance.Player.BrandManager.IncreaseDecayCount();
         }
 
         public void Activate()
@@ -327,7 +325,7 @@ namespace Game.Combat.Player
         private void CheckBrandUnlock()
         {
             if (!RiteStarter.Available()) return;
-            if(!CombatManager.GetCurrentRegion().IsDynamic()) return;
+            if (!CombatManager.GetCurrentRegion().IsDynamic()) return;
             Brand unlocked = Player.BrandManager.GetActiveBrands().FirstOrDefault(b => b != null && b.Ready());
             if (unlocked == null) return;
             RiteStarter.Generate(unlocked);
@@ -358,6 +356,7 @@ namespace Game.Combat.Player
         public override void TakeShotDamage(Shot shot)
         {
             _currentDeathReason = DeathReason.Standard;
+            shot.Attributes().SetDamageModifier(EnemyDamageModifier);
             base.TakeShotDamage(shot);
             UpdateSkillActions.Clear();
         }
@@ -371,7 +370,6 @@ namespace Game.Combat.Player
 
         protected override void TakeDamage(int damage, Vector2 direction)
         {
-            damage = (int) (damage * EnemyDamageModifier);
             if (damage < 1) damage = 1;
             Player.BrandManager.IncreaseDamageTaken(damage);
             base.TakeDamage(damage, direction);
@@ -555,7 +553,6 @@ namespace Game.Combat.Player
             StopReloading();
         }
 
-      
 
         public override void ApplyShotEffects(Shot s)
         {

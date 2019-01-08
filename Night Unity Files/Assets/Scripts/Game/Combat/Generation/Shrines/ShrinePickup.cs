@@ -53,12 +53,12 @@ namespace Game.Combat.Generation.Shrines
             if (_attractedToShrine) return;
             if (_followPlayer == false)
             {
-                if (Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position) > 0.25f) return;
+                if (Vector2.Distance(transform.position, PlayerCombat.Position()) > 0.25f) return;
                 _followPlayer = true;
                 _targetShrine.StartDropMarker();
             }
 
-            Vector2 dir = PlayerCombat.Instance.transform.position - transform.position;
+            Vector2 dir = PlayerCombat.Position() - transform.position;
             _forceToAdd = dir * 10f;
         }
 

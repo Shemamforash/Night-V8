@@ -23,7 +23,7 @@ namespace Game.Combat.Enemies.Nightmares
         {
             float distanceToTarget = transform.position.Distance(GetTarget().transform.position);
             if (distanceToTarget <= _distanceToTarget) return;
-            Vector2 direction = PlayerCombat.Instance.transform.position - transform.position;
+            Vector2 direction = PlayerCombat.Position() - transform.position;
             MovementController.Move(direction.normalized);
         }
     }

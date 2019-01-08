@@ -17,7 +17,7 @@ namespace Game.Combat.Enemies.Bosses
         private IEnumerator DoExplosion()
         {
             Paused = true;
-            float radius = PlayerCombat.Instance.transform.position.magnitude;
+            float radius = PlayerCombat.Position().magnitude;
             float explosionCount = radius * 4;
             float angleInterval = 360f / explosionCount;
             for (int i = 0; i < explosionCount; ++i)

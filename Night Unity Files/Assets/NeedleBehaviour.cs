@@ -49,7 +49,7 @@ public class NeedleBehaviour : MonoBehaviour
         _time = 0f;
         _isPlayerNeedle = isPlayerNeedle;
         gameObject.layer = isPlayerNeedle ? 16 : 15;
-        _damage = WorldState.ScaleDamage(30);
+        _damage = WorldState.ScaleValue(30);
         transform.position = origin;
         _sprite.SetAlpha(1f);
         _trailParticles.Clear();

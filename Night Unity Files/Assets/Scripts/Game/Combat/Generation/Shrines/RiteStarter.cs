@@ -51,7 +51,8 @@ namespace Game.Combat.Generation.Shrines
             foreach (Vector2 p in points)
             {
                 if (p.magnitude > PathingGrid.CombatMovementDistance - 1) continue;
-                Vector2 newPoint = p + (Vector2) PlayerCombat.Instance.transform.position;
+                if (p.Distance(PlayerCombat.Position()) < 1) continue;
+                Vector2 newPoint = p + (Vector2) PlayerCombat.Position();
                 Vector2 topLeft = new Vector2(newPoint.x - 0.25f, newPoint.y + 0.25f);
                 Vector2 bottomRight = new Vector2(newPoint.x + 0.25f, newPoint.y - 0.25f);
                 if (!PathingGrid.IsSpaceAvailable(topLeft, bottomRight)) continue;

@@ -28,7 +28,7 @@ namespace Game.Combat.Enemies.Nightmares
             _rigidbody2D = GetComponent<Rigidbody2D>();
             direction.Normalize();
             _direction = direction;
-            targetPosition = AdvancedMaths.RandomVectorWithinRange(PlayerCombat.Instance.transform.position, 1f);
+            targetPosition = AdvancedMaths.RandomVectorWithinRange(PlayerCombat.Position(), 1f);
             Vector3 startingVelocity = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 2f);
             _rigidbody2D.velocity = startingVelocity;
             _duration = Random.Range(10f, 12f);

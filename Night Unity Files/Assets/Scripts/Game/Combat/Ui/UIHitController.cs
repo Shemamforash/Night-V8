@@ -27,10 +27,5 @@ namespace Game.Combat.Ui
             _outerImage.color = new Color(1, rValue, rValue, 1);
             _currentShotTime -= Time.deltaTime;
         }
-
-        public void RegisterShot()
-        {
-            _currentShotTime = FadeTime;
-        }
     }
 }

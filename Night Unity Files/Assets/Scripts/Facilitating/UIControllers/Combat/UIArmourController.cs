@@ -26,6 +26,7 @@ namespace Facilitating.UIControllers
             _armourRect.anchorMin = new Vector2(leftOffset, 0f);
             _fillBar.fillAmount = controller.GetCurrentFill();
             _working.SetAlpha(controller.Recharging() ? 0f : 1f);
+            _working.transform.parent.gameObject.SetActive(controller.GetCurrentLevel() != 0);
             if (!controller.DidJustTakeDamage()) return;
             _fillBar.color = Color.red;
             _fadeTween?.Complete();

@@ -49,7 +49,6 @@ namespace Game.Characters
         public bool ReloadOnEmptyMag;
         public bool ReloadOnFatalShot;
         public bool SpreadSickness;
-        public bool TakeDoubleDecayDamage;
 
         public CharacterAttributes(Player player)
         {

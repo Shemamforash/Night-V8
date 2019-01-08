@@ -11,7 +11,7 @@ namespace Game.Combat.Enemies.Animals
         protected override void UpdateDistanceToTarget()
         {
             base.UpdateDistanceToTarget();
-            bool outOfSight = Physics2D.Linecast(transform.position, PlayerCombat.Instance.transform.position, 1 << 8).collider != null;
+            bool outOfSight = Physics2D.Linecast(transform.position, PlayerCombat.Position(), 1 << 8).collider != null;
             if (outOfSight) return;
             bool outOfRange = PlayerCombat.Instance.transform.Distance(transform.position) < DetectionRange;
             if (outOfRange) return;

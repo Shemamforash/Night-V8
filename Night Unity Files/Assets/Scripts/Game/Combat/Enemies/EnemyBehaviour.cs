@@ -80,8 +80,8 @@ namespace Game.Combat.Enemies
         private void SetPosition()
         {
             transform.SetParent(GameObject.Find("World").transform);
-            Cell c = PathingGrid.GetCellNearMe(PlayerCombat.Instance.transform.position, 10f, 7f);
-            if (c == null) c = PathingGrid.GetCellNearMe(PlayerCombat.Instance.transform.position, 20f, 7f);
+            Cell c = PathingGrid.GetCellNearMe(PlayerCombat.Position(), 10f, 7f);
+            if (c == null) c = PathingGrid.GetCellNearMe(PlayerCombat.Position(), 20f, 7f);
             transform.position = c.Position;
         }
 

@@ -90,6 +90,7 @@ namespace Game.Combat.Misc
             _explosionRadius = radius;
             _incendiary = false;
             _decay = false;
+            _sicken = false;
             _targetsToIgnore = new List<CanTakeDamage>();
         }
 
@@ -111,7 +112,7 @@ namespace Game.Combat.Misc
             List<EnemyBehaviour> enemiesHit = new List<EnemyBehaviour>();
             int damage = (int) (BaseDamage * _explosionRadius);
             if (damage < 1) damage = 1;
-            damage = WorldState.ScaleDamage(damage);
+            damage = WorldState.ScaleValue(damage);
             for (int index = 0; index < overlappedColliders; index++)
             {
                 Collider2D col = _colliders[index];

@@ -150,7 +150,7 @@ namespace Game.Combat.Generation
             if (_timeToNextEnemy > 0 || CombatManager.Enemies().Count >= _maxEnemies) return;
             _timeToNextEnemy = Random.Range(1f, 2f);
             EnemyType enemyType = _allowedEnemyTypes.RandomElement();
-            Vector2 position = AdvancedMaths.RandomDirection() * Random.Range(2f, 6f) + (Vector2) PlayerCombat.Instance.transform.position;
+            Vector2 position = AdvancedMaths.RandomDirection() * Random.Range(2f, 6f) + (Vector2) PlayerCombat.Position();
             CombatManager.SpawnEnemy(enemyType, position);
         }
     }

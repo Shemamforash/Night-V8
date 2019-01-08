@@ -10,14 +10,13 @@ namespace Game.Combat.Enemies.Bosses.Starfish
     public class StarfishGhoulSpawn : MonoBehaviour
     {
         private readonly List<CanTakeDamage> _ghouls = new List<CanTakeDamage>();
-        private const int MaxGhouls = 15;
-        private float _ghoulSpawnRate;
+        private const float GhoulSpawnRate = 2f;
         private float _timeToNextGhoul;
+        private float _timeAlive;
 
         public void UpdateGhoulSpawn(int armCount)
         {
-            _ghoulSpawnRate = -2f * armCount / 55f + 2f;
-            if (_ghoulSpawnRate < 0) _ghoulSpawnRate = 0;
+            _timeAlive += Time.deltaTime;
             UpdateAliveGhouls();
             UpdateSpawn();
         }
@@ -31,14 +30,21 @@ namespace Game.Combat.Enemies.Bosses.Starfish
 
         private void UpdateSpawn()
         {
+            int MaxGhouls = (int) (_timeAlive / 6f);
+            if (MaxGhouls > 10) MaxGhouls = 10;
             if (_ghouls.Count == MaxGhouls) return;
-            if (_ghoulSpawnRate == 0) return;
             _timeToNextGhoul -= Time.deltaTime;
             if (_timeToNextGhoul > 0f) return;
             EnemyBehaviour enemy = CombatManager.SpawnEnemy(EnemyType.Ghoul, AdvancedMaths.RandomDirection() * 9);
             _ghouls.Add(enemy);
-            enemy.gameObject.AddComponent<LeaveFireTrail>().Initialise();
-            _timeToNextGhoul = Random.Range(_ghoulSpawnRate, _ghoulSpawnRate * 2f);
+            if (_timeAlive > 60 && Helper.RollDie(0, 3))
+            {
+                LeaveFireTrail fireTrail = enemy.gameObject.AddComponent<LeaveFireTrail>();
+                fireTrail.Initialise();
+                fireTrail.AddIgnoreTargets(StarfishBehaviour.Instance().Sections);
+            }
+
+            _timeToNextGhoul = Random.Range(GhoulSpawnRate, GhoulSpawnRate * 2f);
         }
     }
 }

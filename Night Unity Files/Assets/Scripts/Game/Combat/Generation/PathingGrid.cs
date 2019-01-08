@@ -248,7 +248,7 @@ namespace Game.Combat.Generation
 
         public static bool IsCellHidden(Cell c)
         {
-            Vector2 currentPlayerPosition = PlayerCombat.Instance.transform.position;
+            Vector2 currentPlayerPosition = PlayerCombat.Position();
             if (_lastPlayerPosition != currentPlayerPosition) _hiddenCells.Clear();
 
             _lastPlayerPosition = currentPlayerPosition;

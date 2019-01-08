@@ -51,7 +51,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
     {
         if (_dying || !_follow) return;
         Vector2 dir = new Vector2(-_rigidBody.velocity.y, _rigidBody.velocity.x).normalized;
-        float angle = Vector2.Angle(dir, PlayerCombat.Instance.transform.position - transform.position);
+        float angle = Vector2.Angle(dir, PlayerCombat.Position() - transform.position);
         _angleModifier *= AngleDecay;
         float force = 1000;
         if (angle > 90) force = -force;
@@ -71,7 +71,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         PlayerCombat player = other.gameObject.GetComponent<PlayerCombat>();
-        int damage = WorldState.ScaleDamage(ShotDamage);
+        int damage = WorldState.ScaleValue(ShotDamage);
         player.TakeRawDamage(damage, _rigidBody.velocity.normalized);
         player.MovementController.AddForce(_rigidBody.velocity.normalized * 20f);
         Explode();

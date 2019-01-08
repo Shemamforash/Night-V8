@@ -59,7 +59,7 @@ namespace Game.Combat.Enemies.Bosses
             if (!(_damageTakenSinceLastSpawn > SpermSpawnThreshold)) return;
             _damageTakenSinceLastSpawn -= SpermSpawnThreshold;
             SpermBehaviour.Create();
-            ArmourController.Repair(WorldState.ScaleDamage(5000));
+            ArmourController.Repair(WorldState.ScaleValue(5000));
         }
 
         public override void MyUpdate()
@@ -78,7 +78,7 @@ namespace Game.Combat.Enemies.Bosses
             }
 
             if (PlayerCombat.Instance.transform.Distance(transform) > 1.5f) return;
-            float rotation = AdvancedMaths.AngleFromUp(transform.position, PlayerCombat.Instance.transform.position);
+            float rotation = AdvancedMaths.AngleFromUp(transform.position, PlayerCombat.Position());
             PushController.Create(transform.position, rotation, false, 360);
             _pushTimer = 0.5f;
         }

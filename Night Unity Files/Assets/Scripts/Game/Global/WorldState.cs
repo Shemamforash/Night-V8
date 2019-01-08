@@ -155,7 +155,7 @@ namespace Game.Global
         public static bool AllTemplesActive()
         {
 #if UNITY_EDITOR
-//            return true;
+            return true;
 #endif
             return _gateActive;
         }
@@ -354,7 +354,7 @@ namespace Game.Global
             return _isPaused;
         }
 
-        public static int ScaleDamage(int damage)
+        public static int ScaleValue(int damage)
         {
             return (int) (damage + damage * _difficulty / 50f);
         }
