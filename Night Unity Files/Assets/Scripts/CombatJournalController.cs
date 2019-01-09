@@ -37,7 +37,7 @@ public class CombatJournalController : Menu, IInputListener
     public override void Enter()
     {
         InputHandler.SetCurrentListener(this);
-        CombatManager.Pause();
+        WorldState.Pause();
         _audioSource.clip = AudioClips.OpenJournal;
         _audioSource.Play();
         AudioController.FadeInMusicMuffle();
@@ -49,7 +49,7 @@ public class CombatJournalController : Menu, IInputListener
         if (_closing) return;
         _closing = true;
         _closeButton.Flash();
-        CombatManager.Resume();
+        WorldState.Resume();
         MenuStateMachine.ReturnToDefault();
         AudioController.FadeOutMusicMuffle();
         _audioSource.Stop();

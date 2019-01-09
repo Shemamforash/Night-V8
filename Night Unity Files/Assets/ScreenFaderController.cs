@@ -48,7 +48,9 @@ public class ScreenFaderController : MonoBehaviour
         if (_faderCanvas == null) Initialise();
         ClearText();
         _tweener?.Kill();
-        _faderImage.color = Color.black;
+        Color resetColor = Color.black;
+        resetColor.a = _faderImage.color.a;
+        _faderImage.color = resetColor;
     }
 
     public static void FadeOut(float duration)

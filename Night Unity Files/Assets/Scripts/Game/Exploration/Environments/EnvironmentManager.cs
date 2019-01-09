@@ -18,7 +18,7 @@ namespace Game.Exploration.Environment
         public static void Start()
         {
             UpdateTemperature();
-            WorldView.SetEnvironmentText(_currentEnvironment.EnvironmentType.ToString());
+            WorldView.SetEnvironmentText(Environment.EnvironmentTypeToName(_currentEnvironment.EnvironmentType));
             SceneryController.UpdateEnvironmentBackground();
         }
 

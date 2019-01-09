@@ -202,13 +202,13 @@ namespace Game.Exploration.Environment
                     switch (EnvironmentManager.CurrentEnvironmentType())
                     {
                         case EnvironmentType.Desert:
-                            return "Eo's Tomb";
+                            return "The Grave of Eo";
                         case EnvironmentType.Mountains:
-                            return "The Garden of Hythinea";
+                            return "The Mausoleum of Hythinea";
                         case EnvironmentType.Ruins:
-                            return "Rhallos' Armory";
+                            return "The Barrow of Rha";
                         case EnvironmentType.Sea:
-                            return "Chambers of Ahna";
+                            return "The Tomb of Ahna";
                         case EnvironmentType.Wasteland:
                             return "The Throne of Corypthos";
                     }

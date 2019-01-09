@@ -82,6 +82,6 @@ public class StarFishArmBehaviour : BossSectionHealthController
 
     public override string GetDisplayName()
     {
-        return "Hythinea, The Cruelty";
+        return "Hythinea's Cruelty";
     }
 }

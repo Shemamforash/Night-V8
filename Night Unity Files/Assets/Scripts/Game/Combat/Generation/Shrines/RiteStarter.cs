@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using DG.Tweening;
+using DG.Tweening.Core.Easing;
 using Game.Characters;
 using Game.Characters.CharacterActions;
 using Game.Combat.Player;
@@ -14,10 +16,14 @@ namespace Game.Combat.Generation.Shrines
         private Brand _brand;
         private static GameObject _prefab;
         private static RiteStarter _instance;
+        private bool _goToNextRegion;
+        private SpriteRenderer _flashSprite, _dullFlashSprite;
 
         public void Awake()
         {
             _instance = this;
+            _flashSprite = gameObject.FindChildWithName<SpriteRenderer>("Flash");
+            _dullFlashSprite = gameObject.FindChildWithName<SpriteRenderer>("Dull Flash");
         }
 
         private void OnDestroy()
@@ -38,6 +44,15 @@ namespace Game.Combat.Generation.Shrines
             RiteStarter riteStarter = riteObject.GetComponent<RiteStarter>();
             riteStarter.Initialise(brand);
             riteObject.transform.position = position;
+        }
+
+        public static void GenerateNextEnvironmentPortal()
+        {
+            if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Rite Starter");
+            GameObject riteObject = Instantiate(_prefab);
+            riteObject.transform.position = Vector2.zero;
+            RiteStarter riteStarter = riteObject.GetComponent<RiteStarter>();
+            riteStarter._goToNextRegion = true;
         }
 
         private void Initialise(Brand brand)
@@ -69,7 +84,16 @@ namespace Game.Combat.Generation.Shrines
                 Return();
             else
                 GoToRite();
+            Flash();
             Destroy(this);
+        }
+
+        private void Flash()
+        {
+            _dullFlashSprite.SetAlpha(1);
+            _flashSprite.SetAlpha(1);
+            _dullFlashSprite.DOFade(0f, 2f).SetEase(Ease.OutQuad);
+            _flashSprite.DOFade(0f, 2f).SetEase(Ease.OutQuad);
         }
 
         private void GoToRite()
@@ -86,6 +110,12 @@ namespace Game.Combat.Generation.Shrines
         private void Return()
         {
             CombatManager.ExitCombat(false);
+            if (_goToNextRegion)
+            {
+                WorldState.TravelToNextEnvironment();
+                return;
+            }
+
             Travel travel = CharacterManager.SelectedCharacter.TravelAction;
             travel.TravelToInstant(travel.GetCurrentRegion());
         }

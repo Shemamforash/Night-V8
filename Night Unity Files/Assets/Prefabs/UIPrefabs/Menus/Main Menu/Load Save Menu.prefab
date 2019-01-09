@@ -721,6 +721,8 @@ GameObject:
   - component: {fileID: 1004912764197580447}
   - component: {fileID: 1004912764197580432}
   - component: {fileID: 1004912764197580433}
+  - component: {fileID: 8113348014239391252}
+  - component: {fileID: 939617461945445858}
   m_Layer: 5
   m_Name: Auto Slot
   m_TagString: Untagged
@@ -842,6 +844,30 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!114 &8113348014239391252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1004912764197580435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60eba22bb1354bc5bba11566338ec14d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!225 &939617461945445858
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1004912764197580435}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &1004912765092833680
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,6 +1058,8 @@ GameObject:
   - component: {fileID: 1004912765273256823}
   - component: {fileID: 1004912765273256808}
   - component: {fileID: 1004912765273256809}
+  - component: {fileID: 2679060147995264589}
+  - component: {fileID: 4329117412992579787}
   m_Layer: 5
   m_Name: Manual Slot
   m_TagString: Untagged
@@ -1153,6 +1181,30 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!114 &2679060147995264589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1004912765273256811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60eba22bb1354bc5bba11566338ec14d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!225 &4329117412992579787
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1004912765273256811}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1004912765347800974
 GameObject:
   m_ObjectHideFlags: 0

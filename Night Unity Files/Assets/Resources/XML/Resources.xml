@@ -271,7 +271,7 @@
 		<Description></Description>
 	</Resource>
 	<Resource>
-		<Name>Scrap</Name>
+		<Name>Rusty Scrap</Name>
 		<Type>Resource</Type>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
@@ -282,23 +282,12 @@
 		<Description></Description>
 	</Resource>
 	<Resource>
-		<Name>Skin</Name>
+		<Name>Grisly Remains</Name>
 		<Type>Resource</Type>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0.2</MountainsDropRate>
 		<SeaDropRate>0.2</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
-		<WastelandDropRate>0.125</WastelandDropRate>
-		<Description></Description>
-	</Resource>
-	<Resource>
-		<Name>Leather</Name>
-		<Type>Resource</Type>
-		<Permanent>False</Permanent>
-		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.1</MountainsDropRate>
-		<SeaDropRate>0.15</SeaDropRate>
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.125</WastelandDropRate>
 		<Description></Description>
@@ -315,7 +304,7 @@
 		<Description></Description>
 	</Resource>
 	<Resource>
-		<Name>Metal</Name>
+		<Name>Metal Shards</Name>
 		<Type>Resource</Type>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
@@ -326,7 +315,7 @@
 		<Description></Description>
 	</Resource>
 	<Resource>
-		<Name>Meteor</Name>
+		<Name>Ancient Relics</Name>
 		<Type>Resource</Type>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
@@ -337,7 +326,7 @@
 		<Description></Description>
 	</Resource>
 	<Resource>
-		<Name>Alloy</Name>
+		<Name>Celestial Fragments</Name>
 		<Type>Resource</Type>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>

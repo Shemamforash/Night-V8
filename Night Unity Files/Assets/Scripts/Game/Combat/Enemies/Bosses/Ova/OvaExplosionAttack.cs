@@ -24,7 +24,7 @@ namespace Game.Combat.Enemies.Bosses
             {
                 float angle = i * angleInterval;
                 Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, radius, Vector2.zero);
-                Explosion.CreateExplosion(position, 20).Detonate();
+                Explosion.CreateExplosion(position).Detonate();
                 yield return new WaitForSeconds(0.25f);
             }
             Paused = false;

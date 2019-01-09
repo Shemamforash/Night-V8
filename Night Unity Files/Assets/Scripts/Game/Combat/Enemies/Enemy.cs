@@ -234,7 +234,7 @@ namespace Game.Combat.Enemies
 
         private Loot DropAnimalLoot(Vector2 position)
         {
-            ResourceItem item = Helper.RollDie(0, 3) ? ResourceTemplate.GetMeat() : ResourceTemplate.Create("Skin");
+            ResourceItem item = Helper.RollDie(0, 3) ? ResourceTemplate.GetMeat() : ResourceTemplate.Create("Grisly Remains");
             item.Increment((int) (Template.DropRate - 1));
             Loot loot = new Loot(position);
             loot.SetResource(item);

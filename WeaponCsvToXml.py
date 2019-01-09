@@ -58,7 +58,7 @@ class RecipeImporter(XMLWriter):
         write_single_value(self, "Description", get_value(self, "I", row))
 
     def read_recipes(self):
-        for row_no in range(4, 27):
+        for row_no in range(4, 24):
             write_tag(self, "Recipe", self.read_recipe, [row_no])
 
 
@@ -102,7 +102,7 @@ class ResourceImporter(XMLWriter):
         write_single_value(self, "Description", get_value(self, "K", row, ""))
 
     def read_resources(self):
-        for row_no in range(3, 44):
+        for row_no in range(3, 43):
             if get_value(self, "B", row_no) == "Resource":
                 write_tag(self, "Resource", self.read_resource, [row_no, False])
             else:

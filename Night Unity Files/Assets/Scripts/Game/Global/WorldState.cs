@@ -57,7 +57,7 @@ namespace Game.Global
 
         public void Awake()
         {
-            UnPause();
+            Resume();
         }
 
         public static void Load(XmlNode doc)
@@ -211,11 +211,13 @@ namespace Game.Global
         public static void Pause()
         {
             _isPaused = true;
+            PauseMenuController.Pause();
         }
 
-        public static void UnPause()
+        public static void Resume()
         {
             _isPaused = false;
+            PauseMenuController.Resume();
         }
 
         private void IncrementWorldTime()

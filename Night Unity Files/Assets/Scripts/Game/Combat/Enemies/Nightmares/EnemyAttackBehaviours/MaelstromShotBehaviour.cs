@@ -19,12 +19,21 @@ public class MaelstromShotBehaviour : MonoBehaviour
     private float _angleModifier;
     private const float AngleDecay = 0.97f;
     private const int ShotDamage = 10;
-    
+
     public static void Create(Vector3 direction, Vector3 position, float speed, bool follow = true)
     {
         MaelstromShotBehaviour shot = _shotPool.Create();
         shot.transform.position = position;
         shot.ResetShot(direction, speed, follow);
+    }
+
+    public static void CreateBurst(int angleInterval, Vector3 position, float speed, int startRotation = 0)
+    {
+        for (int i = 0; i < 360; i += angleInterval)
+        {
+            Vector2 direction = AdvancedMaths.CalculatePointOnCircle(i + startRotation, 1, Vector2.zero);
+            Create(direction, (Vector2) position + direction / 2f, speed, false);
+        }
     }
 
     private void ResetShot(Vector2 direction, float speed, bool follow)

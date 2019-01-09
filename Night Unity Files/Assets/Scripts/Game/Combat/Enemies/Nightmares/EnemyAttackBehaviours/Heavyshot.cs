@@ -22,8 +22,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         {
             base.Awake();
             if (_particlesPrefab == null) _particlesPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Shot Charge Particles");
-            GameObject shotParticles = Instantiate(_particlesPrefab);
-            shotParticles.transform.SetParent(transform);
+            GameObject shotParticles = Instantiate(_particlesPrefab, transform, true);
             shotParticles.transform.localPosition = Vector3.zero;
             _particles = shotParticles.GetComponent<ParticleSystem>();
         }
@@ -41,6 +40,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
         private IEnumerator FireMaelstromShot()
         {
+            if (_particles == null) yield break;
             PauseOthers();
             _particles.Play();
             float shotTime = _particles.main.duration + 0.5f;

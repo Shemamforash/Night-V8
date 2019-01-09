@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Combat.Generation;
+using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using Game.Global;
 using UnityEngine;
@@ -31,9 +32,11 @@ namespace Game.Combat.Enemies.Bosses
 
         public void Kill()
         {
+            ScreenFaderController.FlashWhite(1f, new Color(1, 1, 1, 0f));
+            List<CanTakeDamage> enemies = CombatManager.Enemies();
+            for (int i = enemies.Count - 1; i >= 0; --i) enemies[i].Kill();
             Destroy(gameObject);
-            CombatManager.ExitCombat(false);
-            WorldState.TravelToNextEnvironment();
+            RiteStarter.GenerateNextEnvironmentPortal();
         }
 
         protected int SectionCount()

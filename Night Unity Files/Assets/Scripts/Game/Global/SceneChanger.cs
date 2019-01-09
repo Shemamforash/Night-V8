@@ -32,7 +32,7 @@ namespace Game.Global
                 _fadeInAudio = false;
             }
 
-            if (SceneManager.GetActiveScene().name == "Game") WorldState.UnPause();
+            if (SceneManager.GetActiveScene().name == "Game") WorldState.Resume();
         }
 
         private IEnumerator LoadNextScene()

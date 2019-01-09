@@ -22,6 +22,7 @@ namespace Facilitating.UIControllers
             _save = save;
             if (!_save.Valid())
             {
+                GetComponent<CanvasGroup>().alpha = 0.3f;
                 EnhancedButton enhancedButton = GetComponent<EnhancedButton>();
                 Button button = enhancedButton.Button();
                 Destroy(enhancedButton);

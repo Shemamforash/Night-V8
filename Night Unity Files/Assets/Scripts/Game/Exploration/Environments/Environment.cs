@@ -16,7 +16,7 @@ namespace Game.Exploration.Environment
         private readonly int Monuments, Shrines, Fountains, Shelters, Animals, Dangers, RegionCount;
         public readonly EnvironmentType EnvironmentType;
         private readonly List<string> _environmentNames = new List<string>();
-        public readonly int ResourceSources,FoodSources,WaterSources, Temples;
+        public readonly int ResourceSources, FoodSources, WaterSources, Temples;
 
         public Environment(XmlNode environmentNode)
         {
@@ -74,6 +74,30 @@ namespace Game.Exploration.Environment
                 tempAtTime += minTemp;
                 _temperatureArray.Add(tempAtTime);
                 // temperature equation = 6.5(x^3-2x^2+x)
+            }
+        }
+
+        public static string EnvironmentTypeToName(string environmentName)
+        {
+            return EnvironmentTypeToName(StringToEnvironmentType(environmentName));
+        }
+
+        public static string EnvironmentTypeToName(EnvironmentType environmentType)
+        {
+            switch (environmentType)
+            {
+                case EnvironmentType.Desert:
+                    return "The Desert of Whispers";
+                case EnvironmentType.Mountains:
+                    return "The Shattered Peaks";
+                case EnvironmentType.Sea:
+                    return "The Sea of Salt";
+                case EnvironmentType.Ruins:
+                    return "The Ruined City";
+                case EnvironmentType.Wasteland:
+                    return "The Eternal Wasteland";
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 

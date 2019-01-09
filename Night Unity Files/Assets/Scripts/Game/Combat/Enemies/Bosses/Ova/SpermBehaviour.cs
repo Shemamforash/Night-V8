@@ -1,9 +1,14 @@
-﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+﻿using System.Collections;
+using Game.Combat.Enemies.Bosses;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Gear.Armour;
+using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityScript.Steps;
 
 public class SpermBehaviour : CanTakeDamage
 {
@@ -18,7 +23,7 @@ public class SpermBehaviour : CanTakeDamage
     {
         base.Awake();
         Speed = Random.Range(2f, 4f);
-        HealthController.SetInitialHealth(150, this);
+        HealthController.SetInitialHealth(WorldState.ScaleValue(400), this);
         ArmourController.AutoGenerateArmour();
         _heavyShot = GetComponent<Heavyshot>();
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -69,7 +74,43 @@ public class SpermBehaviour : CanTakeDamage
 
     public void FixedUpdate()
     {
+        if (HealthController.GetCurrentHealth() == 0) return;
         Vector3 dir = (_targetPosition - transform.position).normalized * Speed;
         _rigidbody.AddForce(dir);
+    }
+
+    public override void Kill()
+    {
+        CombatManager.RemoveEnemy(this);
+        Destroy(GetComponent<CircleCollider2D>());
+        StartCoroutine(Explode());
+    }
+
+    private IEnumerator Explode()
+    {
+        int childCount = transform.childCount - 1;
+        for (int i = 0; i < childCount; ++i)
+        {
+            Destroy(transform.GetChild(i).GetComponent<TailFollowBehaviour>());
+        }
+
+        while (childCount >= 0)
+        {
+            if (!CombatManager.IsCombatActive()) yield return null;
+            Transform child = transform.GetChild(childCount);
+            Vector3 childPosition = child.transform.position;
+            LeafBehaviour.CreateLeaves(childPosition);
+            MaelstromShotBehaviour.CreateBurst(60, childPosition, 1f, Random.Range(0, 360));
+            Explosion.CreateExplosion(childPosition, 0.5f).InstantDetonate();
+            Destroy(child.gameObject);
+            --childCount;
+            yield return new WaitForSeconds(0.25f);
+        }
+
+        Vector3 position = transform.position;
+        LeafBehaviour.CreateLeaves(position);
+        MaelstromShotBehaviour.CreateBurst(30, position, 1f, Random.Range(0, 360));
+        Explosion.CreateExplosion(position);
+        Destroy(gameObject);
     }
 }

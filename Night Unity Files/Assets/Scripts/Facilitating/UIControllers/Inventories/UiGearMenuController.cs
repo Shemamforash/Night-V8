@@ -173,7 +173,7 @@ namespace Facilitating.UIControllers
             InputHandler.UnregisterInputListener(_instance);
             MenuStateMachine.ReturnToDefault();
             _instance._open = false;
-            CombatManager.Resume();
+            WorldState.Resume();
             DOTween.defaultTimeScaleIndependent = false;
         }
 
@@ -182,7 +182,7 @@ namespace Facilitating.UIControllers
             base.Enter();
             InputHandler.RegisterInputListener(this);
             DOTween.defaultTimeScaleIndependent = true;
-            CombatManager.Pause();
+            WorldState.Pause();
         }
 
         public static void OpenInventoryMenu(UiInventoryMenuController menu)

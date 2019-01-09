@@ -21,7 +21,6 @@ namespace Game.Combat.Enemies
         public override void MyUpdate()
         {
             base.MyUpdate();
-            PushAwayFromNeighbors();
             UpdateRotation();
             CurrentAction?.Invoke();
         }
@@ -29,24 +28,6 @@ namespace Game.Combat.Enemies
         public override string GetDisplayName()
         {
             return Enemy.Name;
-        }
-
-        private void PushAwayFromNeighbors()
-        {
-            return;
-            List<CanTakeDamage> chars = CombatManager.GetCharactersInRange(transform.position, 2f);
-            Vector2 forceDir = Vector2.zero;
-            chars.ForEach(c =>
-            {
-                EnemyBehaviour enemy = c as EnemyBehaviour;
-                if (enemy == null || enemy == this) return;
-                Vector2 dir = enemy.transform.position - transform.position;
-                if (dir == Vector2.zero) dir = AdvancedMaths.RandomVectorWithinRange(transform.position, 1).normalized;
-                float force = 20f / dir.magnitude;
-                if (force > 50) force = 50;
-                forceDir += -dir * force;
-            });
-            MovementController.AddForce(forceDir);
         }
 
         protected virtual void UpdateRotation()

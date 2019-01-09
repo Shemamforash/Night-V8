@@ -2,6 +2,7 @@
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
+using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -33,7 +34,7 @@ public class UiBrandMenu : Menu
     {
         _closeButton.Disable();
         MenuStateMachine.ShowMenu(_lastMenu.name);
-        CombatManager.Resume();
+        WorldState.Resume();
     }
 
     private void Show()
@@ -41,7 +42,7 @@ public class UiBrandMenu : Menu
         _lastMenu = MenuStateMachine.CurrentMenu();
         ScreenFaderController.FlashWhite(1f, new Color(1, 1, 1, 0f));
         MenuStateMachine.ShowMenu("Brand Menu");
-        CombatManager.Pause();
+        WorldState.Pause();
         ShowOverview();
     }
 

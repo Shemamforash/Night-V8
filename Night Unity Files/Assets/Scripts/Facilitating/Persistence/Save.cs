@@ -1,5 +1,6 @@
 using System.IO;
 using System.Xml;
+using Game.Exploration.Environment;
 using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -40,7 +41,7 @@ namespace Facilitating.Persistence
         public string GetGameInfo()
         {
             if (!_valid) return "-";
-            return GameLocation + " - " + GameTime;
+            return Environment.EnvironmentTypeToName(GameLocation) + " - " + GameTime;
         }
 
         public void LoadFromSave()

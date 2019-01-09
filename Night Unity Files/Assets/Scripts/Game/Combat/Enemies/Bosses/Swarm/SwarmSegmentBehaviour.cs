@@ -46,7 +46,7 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
 
     public override string GetDisplayName()
     {
-        return "Swarm";
+        return "Rha's Hatred";
     }
 
     public void SetSwarmParent(SwarmBehaviour swarmParent)

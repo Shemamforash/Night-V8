@@ -31,8 +31,7 @@ public class TombPortalBehaviour : MonoBehaviour
         switch (EnvironmentManager.CurrentEnvironmentType())
         {
             case EnvironmentType.Desert:
-                SwarmBehaviour.Create();
-//                SerpentBehaviour.Create();
+                SerpentBehaviour.Create();
                 break;
             case EnvironmentType.Mountains:
                 StarfishBehaviour.Create();

@@ -51,7 +51,7 @@ namespace Facilitating.UI
         {
             _menuScreen.alpha = 1;
             _thisCanvasGroup.alpha = 0;
-            WorldState.UnPause();
+            WorldState.Resume();
             _menuScreen.interactable = true;
             _thisCanvasGroup.interactable = false;
         }

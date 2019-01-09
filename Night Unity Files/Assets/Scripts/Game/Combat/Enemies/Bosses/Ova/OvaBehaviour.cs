@@ -17,13 +17,14 @@ namespace Game.Combat.Enemies.Bosses
         private Boss _boss;
         private float _beamTimer;
         private float _pushTimer;
-        private const int StartingHealth = 2000;
+        private int _startingHealth = 1000;
 
         protected override void Awake()
         {
             base.Awake();
             _boss = GetComponent<Boss>();
-            HealthController.SetInitialHealth(StartingHealth, this);
+            _startingHealth = WorldState.ScaleValue(1000);
+            HealthController.SetInitialHealth(_startingHealth, this);
             ArmourController.AutoGenerateArmour();
             TryAddBeamAttack();
             SpermBehaviour.Create();
@@ -42,6 +43,7 @@ namespace Game.Combat.Enemies.Bosses
             int healthAfter = (int) HealthController.GetCurrentHealth();
             int damageTaken = healthBefore - healthAfter;
             CheckAddExplosion(healthBefore, healthAfter);
+            CheckAddBurst(healthBefore, healthAfter);
             TrySpawnSperm(damageTaken);
             if (HealthController.GetCurrentHealth() != 0) return;
             _boss.Kill();
@@ -49,8 +51,16 @@ namespace Game.Combat.Enemies.Bosses
 
         private void CheckAddExplosion(int healthBefore, int healthAfter)
         {
-            if (healthBefore <= StartingHealth / 2 || healthAfter > StartingHealth / 2f) return;
-            gameObject.AddComponent<OvaExplosionAttack>().Initialise(2f, 4f);
+            float threshold = _startingHealth * 0.4f;
+            if (healthBefore <= threshold || healthAfter > threshold) return;
+            gameObject.AddComponent<OvaExplosionAttack>().Initialise(2f, 7f);
+        }
+
+        private void CheckAddBurst(int healthBefore, int healthAfter)
+        {
+            float threshold = _startingHealth * 0.75f;
+            if (healthBefore <= threshold || healthAfter > threshold) return;
+            gameObject.AddComponent<OvaBurstAttack>().Initialise(3f, 6f);
         }
 
         private void TrySpawnSperm(int damage)
@@ -101,12 +111,12 @@ namespace Game.Combat.Enemies.Bosses
         {
             Transform beam = gameObject.FindChildWithName("Beams").transform;
             for (int i = 0; i < beam.childCount; ++i)
-                beam.GetChild(i).gameObject.AddComponent<Beam>().Initialise(5f, 5f);
+                beam.GetChild(i).gameObject.AddComponent<Beam>().Initialise(10f, 5f);
         }
 
         public override string GetDisplayName()
         {
-            return "Ahna, The Dead One";
+            return "Ahna's Despair";
         }
     }
 }

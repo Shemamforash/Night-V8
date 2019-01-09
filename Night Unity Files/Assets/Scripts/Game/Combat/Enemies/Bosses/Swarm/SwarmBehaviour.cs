@@ -118,9 +118,7 @@ public class SwarmBehaviour : Boss
             float angleInterval = 360 / 3f;
             for (float angle = 0f; angle < 360f; angle += angleInterval)
             {
-                Vector3 direction = new Vector2();
-                direction.x = Mathf.Cos(angle);
-                direction.y = Mathf.Sin(angle);
+                Vector3 direction = AdvancedMaths.CalculatePointOnCircle(angle, 1, Vector2.zero);
                 MaelstromShotBehaviour.Create(direction, transform.position + direction * 0.5f, 3f);
             }
 

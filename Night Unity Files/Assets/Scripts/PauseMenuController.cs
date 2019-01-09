@@ -84,7 +84,7 @@ public class PauseMenuController : MonoBehaviour
         });
     }
 
-    private void Pause()
+    public static void Pause()
     {
         switch (SceneManager.GetActiveScene().name)
         {
@@ -100,7 +100,7 @@ public class PauseMenuController : MonoBehaviour
         }
     }
 
-    private void Resume()
+    public static void Resume()
     {
         switch (SceneManager.GetActiveScene().name)
         {

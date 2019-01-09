@@ -35,30 +35,31 @@ namespace Game.Combat.Generation
 
         protected override void Generate()
         {
-            if (EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.Wasteland)
-            {
-                for (int angle = 0; angle < 360; angle += 120)
-                {
 #if UNITY_EDITOR
-                    Inventory.IncrementResource("Essence", 200);
-                    Inventory.Move(WeaponGenerator.GenerateWeapon(ItemQuality.Radiant));
-                    Inventory.Move(Accessory.Generate(ItemQuality.Radiant));
-                    Inventory.Move(Inscription.Generate(ItemQuality.Radiant));
+            Inventory.IncrementResource("Essence", 200);
+            Inventory.Move(WeaponGenerator.GenerateWeapon(ItemQuality.Shining));
+            Inventory.Move(Accessory.Generate(ItemQuality.Shining));
+            Inventory.Move(Inscription.Generate(ItemQuality.Shining));
 #endif
-                    Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, 2f, Vector2.zero);
-                    JournalSource journalSource = new JournalSource(position);
-                    journalSource.SetEntry(JournalEntry.GetEntry(17));
-                    _journals.Add(journalSource);
-                    journalSource.CreateObject(true);
-                }
 
-                StartCoroutine(WaitToReadJournals());
-
-                return;
-            }
-
+            GenerateJournals();
             if (_tombPrefab == null) _tombPrefab = Resources.Load<GameObject>("Prefabs/Combat/Tomb Portal");
             Instantiate(_tombPrefab).transform.position = Vector2.zero;
+        }
+
+        private void GenerateJournals()
+        {
+            if (EnvironmentManager.CurrentEnvironmentType() != EnvironmentType.Wasteland) return;
+            for (int angle = 0; angle < 360; angle += 120)
+            {
+                Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, 2f, Vector2.zero);
+                JournalSource journalSource = new JournalSource(position);
+                journalSource.SetEntry(JournalEntry.GetEntry(17));
+                _journals.Add(journalSource);
+                journalSource.CreateObject(true);
+            }
+
+            StartCoroutine(WaitToReadJournals());
         }
 
         private IEnumerator WaitToReadJournals()

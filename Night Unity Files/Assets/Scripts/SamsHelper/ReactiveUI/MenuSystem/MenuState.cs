@@ -28,7 +28,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
         public override void Exit()
         {
-            if (Menu.PauseOnOpen) WorldState.UnPause();
+            if (Menu.PauseOnOpen) WorldState.Resume();
             if (Menu == null) return;
             Menu.Exit();
         }

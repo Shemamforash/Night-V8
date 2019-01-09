@@ -26,7 +26,7 @@ public class WingHealthScript : BossSectionHealthController
 
     public override string GetDisplayName()
     {
-        return "Eo, The Great Despair";
+        return "Eo's Despair";
     }
 
     public override void Kill()

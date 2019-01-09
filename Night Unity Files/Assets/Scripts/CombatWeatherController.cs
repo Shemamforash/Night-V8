@@ -38,7 +38,7 @@ public class CombatWeatherController : MonoBehaviour
     private static void SetParticleSystemEmissionRate(ParticleSystem ps, float amount, float max)
     {
         float emissionRate = amount * max;
-        if (CombatManager.Region().GetRegionType() == RegionType.Rite) emissionRate = 0f;
+        if (!CombatManager.Region().IsDynamic()) emissionRate = 0f;
         ParticleSystem.EmissionModule emission = ps.emission;
         emission.rateOverTime = emissionRate;
         ps.Play();

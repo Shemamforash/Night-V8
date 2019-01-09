@@ -71,6 +71,7 @@ namespace Game.Combat.Generation
         public override void Awake()
         {
             base.Awake();
+            PauseOnOpen = false;
             _hudCanvas = gameObject.FindChildWithName<CanvasGroup>("Combat");
             _hudCanvas.alpha = 0f;
             _instance = this;
@@ -245,7 +246,6 @@ namespace Game.Combat.Generation
         private void EnterCombat()
         {
             _inCombat = true;
-            WorldState.Pause();
             CalculateVisibility();
             if (_currentRegion.IsDynamic()) SetUpDynamicRegion();
             else SetUpNonDynamicRegion();

@@ -10,6 +10,7 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Misc
 {
@@ -170,6 +171,8 @@ namespace Game.Combat.Misc
                 {
                     if (!emitted)
                     {
+                        _audioSource.volume = Random.Range(0.5f, 0.6f);
+                        _audioSource.pitch = Random.Range(0.9f, 1.1f);
                         _audioSource.Play();
                         AddConditions();
                         DealDamage();

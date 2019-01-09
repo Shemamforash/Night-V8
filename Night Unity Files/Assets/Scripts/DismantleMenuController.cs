@@ -6,6 +6,7 @@ using Game.Combat.Generation;
 using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -46,10 +47,18 @@ public class DismantleMenuController : Menu
     {
         _dismantleRewards.Clear();
         int quality = (int) gear.Quality() + 1;
-        if (gear is Inscription) CalculateInscriptionReward(quality);
-        else if (gear is Weapon) CalculateWeaponReward(quality);
-        else if (gear is Armour) CalculateArmourReward(quality);
-        else if (gear is Accessory) CalculateAccessoryReward(quality);
+        switch (gear)
+        {
+            case Inscription _:
+                CalculateInscriptionReward(quality);
+                break;
+            case Weapon _:
+                CalculateWeaponReward(quality);
+                break;
+            case Accessory _:
+                CalculateAccessoryReward(quality);
+                break;
+        }
     }
 
     private static string GetDismantleText(GearItem gear)
@@ -77,10 +86,10 @@ public class DismantleMenuController : Menu
         List<string> possibleRewards = new List<string>();
         for (int i = 0; i < quality; ++i)
         {
-            if (i > 0) possibleRewards.Add("Scrap");
-            if (i > 1) possibleRewards.Add("Metal");
-            if (i > 2) possibleRewards.Add("Meteor");
-            if (i > 3) possibleRewards.Add("Alloy");
+            if (i > 0) possibleRewards.Add("Rusty Scrap");
+            if (i > 1) possibleRewards.Add("Metal Shards");
+            if (i > 2) possibleRewards.Add("Ancient Relics");
+            if (i > 3) possibleRewards.Add("Celestial Fragments");
         }
 
         if (possibleRewards.Count == 0) return;
@@ -94,11 +103,11 @@ public class DismantleMenuController : Menu
         List<string> possibleRewards = new List<string>();
         for (int i = 0; i < quality; ++i)
         {
-            if (i > 0) possibleRewards.Add("Scrap");
-            if (i > 1) possibleRewards.Add("Skin");
-            if (i > 2) possibleRewards.Add("Leather");
-            if (i > 3) possibleRewards.Add("Meteor");
-            if (i > 4) possibleRewards.Add("Alloy");
+            if (i > 0) possibleRewards.Add("Grisly Remains");
+            if (i > 1) possibleRewards.Add("Rusty Scrap");
+            if (i > 2) possibleRewards.Add("Metal Shards");
+            if (i > 3) possibleRewards.Add("Ancient Relics");
+            if (i > 4) possibleRewards.Add("Celestial Fragments");
         }
 
         AddReward(possibleRewards.RandomElement(), 1);
@@ -112,23 +121,10 @@ public class DismantleMenuController : Menu
         List<string> possibleRewards = new List<string>();
         for (int i = 0; i < quality; ++i)
         {
-            if (i > 0) possibleRewards.Add("Scrap");
-            if (i > 1)
-            {
-                possibleRewards.Add("Skin");
-                possibleRewards.Add("Metal");
-            }
-
-            if (i > 2)
-            {
-                possibleRewards.Add("Leather");
-                possibleRewards.Add("Meteor");
-            }
-
-            if (i > 3)
-            {
-                possibleRewards.Add("Alloy");
-            }
+            if (i > 0) possibleRewards.Add("Rusty Scrap");
+            if (i > 1) possibleRewards.Add("Metal Shards");
+            if (i > 2) possibleRewards.Add("Ancient Relics");
+            if (i > 3) possibleRewards.Add("Celestial Shards");
         }
 
         AddReward(possibleRewards.RandomElement(), 1);
@@ -204,7 +200,6 @@ public class DismantleMenuController : Menu
         }
 
         ShowDismantledScreen(o);
-
     }
 
     private void ShowDismantledScreen(object o)
@@ -225,7 +220,7 @@ public class DismantleMenuController : Menu
     public static void Show()
     {
         MenuStateMachine.ShowMenu("Dismantle Menu");
-        CombatManager.Pause();
+        WorldState.Pause();
         DOTween.defaultTimeScaleIndependent = true;
         ShowDismantleList();
     }
@@ -234,7 +229,7 @@ public class DismantleMenuController : Menu
     {
         _closeButton.Flash();
         _dismantleList.Hide();
-        CombatManager.Resume();
+        WorldState.Resume();
         MenuStateMachine.ReturnToDefault();
     }
 }
