@@ -6,72 +6,60 @@ using Facilitating.Persistence;
 using Game.Characters;
 using Game.Exploration.Environment;
 using SamsHelper.Libraries;
-using UnityEngine;
 
 namespace Game.Global
 {
     public class JournalEntry
     {
-        public readonly string Title;
-        public readonly string Contents;
-        private readonly int _journalGroup;
-        private readonly int _numberInGroup;
-        private CharacterClass _characterClass = CharacterClass.None;
-        private static readonly Dictionary<CharacterClass, List<JournalEntry>> LockedCharacterEntries = new Dictionary<CharacterClass, List<JournalEntry>>();
-        private static readonly Dictionary<int, List<JournalEntry>> LockedWandererEntries = new Dictionary<int, List<JournalEntry>>();
-        private static readonly Dictionary<int, List<JournalEntry>> LockedEntries = new Dictionary<int, List<JournalEntry>>();
-        private static readonly Dictionary<int, string> _mainStoryText = new Dictionary<int, string>();
+        private static readonly Dictionary<CharacterClass, List<JournalEntry>> CharacterStories = new Dictionary<CharacterClass, List<JournalEntry>>();
+        private static readonly Dictionary<EnvironmentType, List<JournalEntry>> WandererStories = new Dictionary<EnvironmentType, List<JournalEntry>>();
+        private static readonly Dictionary<EnvironmentType, List<JournalEntry>> NecromancerStories = new Dictionary<EnvironmentType, List<JournalEntry>>();
+        private static readonly Dictionary<EnvironmentType, List<JournalEntry>> DreamStories = new Dictionary<EnvironmentType, List<JournalEntry>>();
+        private static readonly Dictionary<int, List<JournalEntry>> LoreStories = new Dictionary<int, List<JournalEntry>>();
+        private static readonly List<JournalEntry> AllEntries = new List<JournalEntry>();
         private static readonly List<JournalEntry> UnlockedEntries = new List<JournalEntry>();
+        private static readonly string[] TitleNumbers = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
         private static bool _loaded;
-        private readonly bool _isWanderer;
+
+        private readonly int _partNumber;
+        public readonly string Title;
+        public readonly string Text;
+        private CharacterClass _characterClass = CharacterClass.None;
+        private int _groupNumber;
+        private bool _locked = true;
 
 
-        private JournalEntry(XmlNode journalNode)
+        private JournalEntry(string title, string text, int partNumber, int groupNumber, bool titleNeedsConversion = true)
         {
-            Title = journalNode.StringFromNode("Title");
-            Contents = FormatString(journalNode.StringFromNode("Text"));
-            _journalGroup = journalNode.IntFromNode("Group");
-            _numberInGroup = journalNode.IntFromNode("Part");
-            _isWanderer = journalNode.BoolFromNode("IsWanderer");
+            if (titleNeedsConversion) title = ConvertTitle(title, partNumber);
+            Title = title;
+            Text = FormatString(text);
+            _partNumber = partNumber;
+            _groupNumber = groupNumber;
+            AllEntries.Add(this);
+        }
+
+        private string ConvertTitle(string title, int partNumber)
+        {
+            return title + " " + TitleNumbers[partNumber - 1];
         }
 
         public void Unlock()
         {
             ReadJournals();
+            _locked = false;
             UnlockedEntries.Add(this);
-
-            if (_isWanderer)
-            {
-                if (!LockedWandererEntries.ContainsKey(_journalGroup)) Debug.Log(_journalGroup + " " + _numberInGroup + " " + Title);
-                LockedWandererEntries[_journalGroup].Remove(this);
-                if (LockedWandererEntries[_journalGroup].Count != 0) return;
-                LockedWandererEntries.Remove(_journalGroup);
-                return;
-            }
-
-            if (_characterClass == CharacterClass.None)
-            {
-                LockedEntries[_journalGroup].Remove(this);
-                if (LockedEntries[_journalGroup].Count != 0) return;
-                LockedEntries.Remove(_journalGroup);
-                return;
-            }
-
-            LockedCharacterEntries[_characterClass].Remove(this);
-            if (LockedCharacterEntries[_characterClass].Count != 0) return;
-            LockedCharacterEntries.Remove(_characterClass);
         }
 
         public static void Save(XmlNode root)
         {
             root = root.CreateChild("Journals");
-            foreach (JournalEntry entry in UnlockedEntries)
+            foreach (JournalEntry entry in AllEntries)
             {
                 XmlNode entryNode = root.CreateChild("Entry");
-                entryNode.CreateChild("Group", entry._journalGroup);
-                entryNode.CreateChild("Number", entry._numberInGroup);
-                entryNode.CreateChild("CharacterClass", (int) entry._characterClass);
-                entryNode.CreateChild("IsWanderer", entry._isWanderer);
+                entryNode.CreateChild("GroupNumber", entry._groupNumber);
+                entryNode.CreateChild("PartNumber", entry._partNumber);
+                entryNode.CreateChild("Locked", entry._locked);
             }
         }
 
@@ -81,51 +69,51 @@ namespace Game.Global
             XmlNode journalNode = root.SelectSingleNode("Journals");
             foreach (XmlNode entryNode in journalNode.SelectNodes("Entry"))
             {
-                int group = entryNode.IntFromNode("Group");
-                int number = entryNode.IntFromNode("Number");
-                int characterClassIndex = entryNode.IntFromNode("CharacterClass");
-                bool isWanderer = entryNode.BoolFromNode("IsWanderer");
-
-                if (isWanderer)
-                {
-                    LockedWandererEntries[group][number].Unlock();
-                    continue;
-                }
-
-                if (characterClassIndex == 0)
-                {
-                    LockedEntries[group][number].Unlock();
-                    continue;
-                }
-
-                LockedCharacterEntries[(CharacterClass) characterClassIndex][number].Unlock();
+                int groupNumber = entryNode.IntFromNode("GroupNumber");
+                int partNumber = entryNode.IntFromNode("PartNumber");
+                bool locked = entryNode.BoolFromNode("Locked");
+                if (locked) continue;
+                JournalEntry entry = AllEntries.Find(j => j._groupNumber == groupNumber && j._partNumber == partNumber);
+                entry.Unlock();
             }
         }
 
-        public static JournalEntry GetEntry(int part)
+        public static List<JournalEntry> GetCorypthosLore()
         {
-            return LockedEntries[part][0];
+            ReadJournals();
+            return LoreStories[17];
         }
 
         public static JournalEntry GetEntry()
         {
             ReadJournals();
-            Player player = CharacterManager.SelectedCharacter;
-            if (player.CanShowJournal())
+            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
+            List<JournalEntry> characterEntries = new List<JournalEntry>();
+            CharacterManager.Characters.ForEach(c =>
             {
-                List<JournalEntry> journalGroup;
-                if (player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer)
-                    journalGroup = LockedWandererEntries[(int) EnvironmentManager.CurrentEnvironmentType()];
-                else
-                    journalGroup = LockedCharacterEntries[player.CharacterTemplate.CharacterClass];
+                CharacterClass characterClass = c.CharacterTemplate.CharacterClass;
+                if (characterClass == CharacterClass.Wanderer) return;
+                characterEntries.AddRange(CharacterStories[characterClass]);
+            });
 
-                if (journalGroup.Count > 0) return journalGroup[0];
+            List<JournalEntry> wandererEntries = WandererStories[currentEnvironment];
+            List<JournalEntry> dreamEntries = DreamStories[currentEnvironment];
+            List<JournalEntry> validEntries = new List<JournalEntry>();
+            validEntries.AddRange(characterEntries);
+            validEntries.AddRange(wandererEntries);
+            validEntries.AddRange(dreamEntries);
+            validEntries.RemoveAll(j => !j._locked);
+            if (validEntries.Count == 0)
+            {
+                List<int> keys = LoreStories.Keys.ToList();
+                keys.ForEach(k => validEntries.AddRange(LoreStories[k]));
             }
 
-            int[] keys = LockedEntries.Keys.ToArray();
-            if (keys.Length == 0) return null;
-            List<JournalEntry> randomGroup = LockedEntries[keys.RandomElement()];
-            return randomGroup[0];
+            validEntries.RemoveAll(j => !j._locked);
+            if (validEntries.Count == 0) return null;
+            validEntries.Shuffle();
+            validEntries.Sort((a, b) => a._partNumber.CompareTo(b._partNumber));
+            return validEntries[0];
         }
 
         public static List<JournalEntry> GetUnlockedEntries()
@@ -133,8 +121,8 @@ namespace Game.Global
             ReadJournals();
             UnlockedEntries.Sort((a, b) =>
             {
-                int ret = a._journalGroup.CompareTo(b._journalGroup);
-                if (ret == 0) ret = a._numberInGroup.CompareTo(b._numberInGroup);
+                int ret = a._groupNumber.CompareTo(b._groupNumber);
+                if (ret == 0) ret = a._partNumber.CompareTo(b._partNumber);
                 return ret;
             });
             return UnlockedEntries;
@@ -143,44 +131,95 @@ namespace Game.Global
         private static void ReadJournals()
         {
             if (_loaded) return;
-            XmlNode root = Helper.OpenRootNode("Story", "Story");
-            foreach (XmlNode journalNode in Helper.GetNodesWithName(root, "JournalEntry"))
-            {
-                JournalEntry entry = new JournalEntry(journalNode);
-                if (!LockedEntries.ContainsKey(entry._journalGroup)) LockedEntries.Add(entry._journalGroup, new List<JournalEntry>());
-                LockedEntries[entry._journalGroup].Add(entry);
-                LockedEntries[entry._journalGroup].Sort((a, b) => a._numberInGroup.CompareTo(b._numberInGroup));
-            }
-
-            foreach (XmlNode storyNode in Helper.GetNodesWithName(root, "StoryPart"))
-            {
-                int partNo = storyNode.IntFromNode("Number");
-                string storyString = FormatString(storyNode.StringFromNode("Text"));
-                _mainStoryText.Add(partNo, storyString);
-            }
-
-            foreach (XmlNode characterNode in Helper.GetNodesWithName(root, "CharacterPart"))
-            {
-                JournalEntry entry = new JournalEntry(characterNode);
-                string characterName = entry.Title;
-                string[] words = characterName.Split(' ');
-                characterName = words[1];
-                CharacterClass characterClass = CharacterTemplate.StringToClass(characterName);
-                entry._characterClass = characterClass;
-                if (!LockedCharacterEntries.ContainsKey(characterClass)) LockedCharacterEntries.Add(characterClass, new List<JournalEntry>());
-                LockedCharacterEntries[characterClass].Add(entry);
-                LockedCharacterEntries[characterClass].Sort((a, b) => a._numberInGroup.CompareTo(b._numberInGroup));
-            }
-
-            foreach (XmlNode wandererNode in Helper.GetNodesWithName(root, "WandererPart"))
-            {
-                JournalEntry entry = new JournalEntry(wandererNode);
-                if (!LockedWandererEntries.ContainsKey(entry._journalGroup)) LockedWandererEntries.Add(entry._journalGroup, new List<JournalEntry>());
-                LockedWandererEntries[entry._journalGroup].Add(entry);
-                LockedWandererEntries[entry._journalGroup].Sort((a, b) => a._numberInGroup.CompareTo(b._numberInGroup));
-            }
-
+            LoadCharacterEntries();
+            LoadWandererEntries();
+            LoadNecromancerEntries();
+            LoadDreamEntries();
+            LoadLoreEntries();
             _loaded = true;
+        }
+
+        private static void LoadCharacterEntries()
+        {
+            XmlNode root = Helper.OpenRootNode("Characters", "Characters");
+            foreach (XmlNode characterNode in root.GetNodesWithName("StoryPart"))
+            {
+                string title = characterNode.StringFromNode("Title");
+                string characterString = characterNode.StringFromNode("Character");
+                CharacterClass characterClass = CharacterTemplate.StringToClass(characterString);
+                int partNumber = characterNode.IntFromNode("PartNumber");
+                string text = characterNode.StringFromNode("Text");
+                JournalEntry entry = new JournalEntry(title, text, partNumber, (int) characterClass);
+                if (!CharacterStories.ContainsKey(characterClass)) CharacterStories.Add(characterClass, new List<JournalEntry>());
+                CharacterStories[characterClass].Add(entry);
+                CharacterStories[characterClass].Sort((a, b) => a._partNumber.CompareTo(b._partNumber));
+            }
+        }
+
+        private static void LoadWandererEntries()
+        {
+            XmlNode root = Helper.OpenRootNode("Wanderer", "Wanderer");
+            foreach (XmlNode wandererNode in root.GetNodesWithName("StoryPart"))
+            {
+                string title = wandererNode.StringFromNode("Title");
+                string environmentString = wandererNode.StringFromNode("Environment");
+                EnvironmentType environmentType = Environment.StringToEnvironmentType(environmentString);
+                int partNumber = wandererNode.IntFromNode("PartNumber");
+                string text = wandererNode.StringFromNode("Text");
+                JournalEntry entry = new JournalEntry(title, text, partNumber, (int) environmentType);
+                if (!WandererStories.ContainsKey(environmentType)) WandererStories.Add(environmentType, new List<JournalEntry>());
+                WandererStories[environmentType].Add(entry);
+                WandererStories[environmentType].Sort((a, b) => a._partNumber.CompareTo(b._partNumber));
+            }
+        }
+
+        private static void LoadNecromancerEntries()
+        {
+            XmlNode root = Helper.OpenRootNode("Necromancer", "Necromancer");
+            foreach (XmlNode necromancerNode in root.GetNodesWithName("StoryPart"))
+            {
+                string title = necromancerNode.StringFromNode("Title");
+                EnvironmentType environmentType = Environment.StringToEnvironmentType(title);
+                int partNumber = necromancerNode.IntFromNode("PartNumber");
+                string text = necromancerNode.StringFromNode("Text");
+                JournalEntry entry = new JournalEntry(title, text, partNumber, (int) environmentType);
+                if (!NecromancerStories.ContainsKey(environmentType)) NecromancerStories.Add(environmentType, new List<JournalEntry>());
+                NecromancerStories[environmentType].Add(entry);
+                NecromancerStories[environmentType].Sort((a, b) => a._partNumber.CompareTo(b._partNumber));
+            }
+        }
+
+        private static void LoadDreamEntries()
+        {
+            XmlNode root = Helper.OpenRootNode("Dreams", "Dreams");
+            foreach (XmlNode dreamNode in root.GetNodesWithName("StoryPart"))
+            {
+                string title = dreamNode.StringFromNode("Title");
+                string environmentString = dreamNode.StringFromNode("Environment");
+                EnvironmentType environmentType = Environment.StringToEnvironmentType(environmentString);
+                int partNumber = dreamNode.IntFromNode("PartNumber");
+                string text = dreamNode.StringFromNode("Text");
+                JournalEntry entry = new JournalEntry(title, text, partNumber, (int) environmentType);
+                if (!DreamStories.ContainsKey(environmentType)) DreamStories.Add(environmentType, new List<JournalEntry>());
+                DreamStories[environmentType].Add(entry);
+                DreamStories[environmentType].Sort((a, b) => a._partNumber.CompareTo(b._partNumber));
+            }
+        }
+
+        private static void LoadLoreEntries()
+        {
+            XmlNode root = Helper.OpenRootNode("Lore", "Lore");
+            foreach (XmlNode dreamNode in root.GetNodesWithName("StoryPart"))
+            {
+                string title = dreamNode.StringFromNode("Title");
+                int group = dreamNode.IntFromNode("Group");
+                int partNumber = dreamNode.IntFromNode("PartNumber");
+                string text = dreamNode.StringFromNode("Text");
+                JournalEntry entry = new JournalEntry(title, text, partNumber, group, false);
+                if (!LoreStories.ContainsKey(group)) LoreStories.Add(group, new List<JournalEntry>());
+                LoreStories[group].Add(entry);
+                LoreStories[group].Sort((a, b) => a._partNumber.CompareTo(b._partNumber));
+            }
         }
 
         private static string FormatString(string inputString)
@@ -191,11 +230,11 @@ namespace Game.Global
             return inputString.Replace("[br]", "\n");
         }
 
-        public static string GetStoryText()
+        public static List<JournalEntry> GetStoryText()
         {
-            int currentLevel = (int) EnvironmentManager.CurrentEnvironmentType();
             ReadJournals();
-            return !_mainStoryText.ContainsKey(currentLevel) ? "" : _mainStoryText[currentLevel];
+            EnvironmentType currentLevel = EnvironmentManager.CurrentEnvironmentType();
+            return NecromancerStories[currentLevel];
         }
     }
 }

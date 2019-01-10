@@ -205,7 +205,7 @@ namespace Game.Global
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel(false, false);
             CharacterManager.Characters.ForEach(c => { c.TravelAction.ReturnToHomeInstant(); });
-            StoryController.ShowText(JournalEntry.GetStoryText());
+            StoryController.Show();
         }
 
         public static void Pause()

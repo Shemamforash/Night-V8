@@ -282,11 +282,11 @@ namespace SamsHelper.Libraries
             for (int i = 0; i < 4; ++i)
             {
                 Vector2 fromCamera = cameraVerts[i];
-                Vector2 toCamera = Helper.NextElement(i, cameraVerts);
+                Vector2 toCamera = cameraVerts.NextElement(i);
                 for (int j = 0; j < 4; ++j)
                 {
                     Vector2 fromRect = rectVerts[j];
-                    Vector2 toRect = Helper.NextElement(j, rectVerts);
+                    Vector2 toRect = rectVerts.NextElement(j);
                     if (LineSegmentIntersection(fromCamera, toCamera, fromRect, toRect) != null) return true;
                 }
             }

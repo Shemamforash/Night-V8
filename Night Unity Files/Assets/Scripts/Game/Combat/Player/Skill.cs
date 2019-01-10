@@ -46,7 +46,7 @@ namespace Game.Combat.Player
         {
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Skills");
-            foreach (XmlNode skillNode in Helper.GetNodesWithName(root, "Skill"))
+            foreach (XmlNode skillNode in root.GetNodesWithName("Skill"))
                 new SkillValue(skillNode);
 
             _loaded = true;

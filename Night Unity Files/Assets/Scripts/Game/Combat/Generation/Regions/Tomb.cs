@@ -50,11 +50,14 @@ namespace Game.Combat.Generation
         private void GenerateJournals()
         {
             if (EnvironmentManager.CurrentEnvironmentType() != EnvironmentType.Wasteland) return;
+            List<JournalEntry> journals = JournalEntry.GetCorypthosLore();
+            int entryNo = 0;
             for (int angle = 0; angle < 360; angle += 120)
             {
                 Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, 2f, Vector2.zero);
                 JournalSource journalSource = new JournalSource(position);
-                journalSource.SetEntry(JournalEntry.GetEntry(17));
+                journalSource.SetEntry(journals[entryNo]);
+                ++entryNo;
                 _journals.Add(journalSource);
                 journalSource.CreateObject(true);
             }
@@ -132,7 +135,7 @@ namespace Game.Combat.Generation
             float flashDuration = 3f;
             ScreenFaderController.FlashWhite(flashDuration, Color.black);
             yield return new WaitForSeconds(flashDuration);
-            StoryController.ShowText(JournalEntry.GetStoryText());
+            StoryController.Show();
         }
 
         private void CheckToShakeCamera()

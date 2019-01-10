@@ -36,7 +36,7 @@ namespace Game.Characters
             LoadTemplates(true);
             Reset(false);
             XmlNode characterManagerNode = doc.GetNode("Characters");
-            foreach (XmlNode characterNode in Helper.GetNodesWithName(characterManagerNode, "Character"))
+            foreach (XmlNode characterNode in characterManagerNode.GetNodesWithName("Character"))
             {
                 string className = characterNode.StringFromNode("CharacterClass");
                 CharacterTemplate template = FindClass(className);
@@ -91,7 +91,7 @@ namespace Game.Characters
             if (!force && _loaded) return;
             Templates.Clear();
             XmlNode root = Helper.OpenRootNode("Classes");
-            foreach (XmlNode classNode in Helper.GetNodesWithName(root, "Class"))
+            foreach (XmlNode classNode in root.GetNodesWithName("Class"))
                 new CharacterTemplate(classNode, Templates);
             _loaded = true;
         }

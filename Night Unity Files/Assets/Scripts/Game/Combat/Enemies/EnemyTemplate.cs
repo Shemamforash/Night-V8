@@ -55,7 +55,7 @@ namespace Game.Combat.Enemies
         {
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Enemies", "Enemies");
-            foreach (XmlNode enemyNode in Helper.GetNodesWithName(root,"Enemy"))
+            foreach (XmlNode enemyNode in root.GetNodesWithName("Enemy"))
                 new EnemyTemplate(enemyNode);
             _loaded = true;
         }

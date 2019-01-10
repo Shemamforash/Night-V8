@@ -63,7 +63,7 @@ namespace Game.Gear.Armour
         {
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Gear", "GearList");
-            foreach (XmlNode accessoryNode in Helper.GetNodesWithName(root, "Gear"))
+            foreach (XmlNode accessoryNode in root.GetNodesWithName("Gear"))
                 new AccessoryTemplate(accessoryNode);
             _loaded = true;
         }

@@ -82,10 +82,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Resources");
 
-            foreach (XmlNode resourceNode in Helper.GetNodesWithName(root, "Consumable"))
+            foreach (XmlNode resourceNode in root.GetNodesWithName("Consumable"))
                 new ResourceTemplate(resourceNode);
 
-            foreach (XmlNode resourceNode in Helper.GetNodesWithName(root, "Resource"))
+            foreach (XmlNode resourceNode in root.GetNodesWithName("Resource"))
                 new ResourceTemplate(resourceNode);
 
             _loaded = true;

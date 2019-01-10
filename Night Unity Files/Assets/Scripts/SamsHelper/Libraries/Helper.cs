@@ -38,7 +38,7 @@ namespace SamsHelper.Libraries
 
             return attributeString;
         }
-        
+
         public static bool Empty<T>(this Queue<T> queue) => queue.Count == 0;
 
         public static bool Empty<T>(this List<T> list) => list.Count == 0;
@@ -110,36 +110,6 @@ namespace SamsHelper.Libraries
             return mousePos;
         }
 
-        private static List<AssetBundle> _loadedAssetBundles = new List<AssetBundle>();
-
-        public static AssetBundleRequest LoadAllFilesFromAssetBundle<T>(string bundleName) where T : Object
-        {
-            AssetBundle myLoadedAssetBundle = LoadAssetBundle(bundleName);
-            return myLoadedAssetBundle.LoadAllAssetsAsync<T>();
-        }
-
-        private static AssetBundle LoadAssetBundle(string bundleName)
-        {
-            AssetBundle myLoadedAssetBundle = _loadedAssetBundles.FirstOrDefault(b => b.name == bundleName);
-            if (myLoadedAssetBundle != null) return myLoadedAssetBundle;
-            myLoadedAssetBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, bundleName));
-            _loadedAssetBundles.Add(myLoadedAssetBundle);
-            return myLoadedAssetBundle;
-        }
-
-        public static AssetBundleRequest LoadFileFromAssetBundle<T>(string bundleName, string assetName) where T : Object
-        {
-            AssetBundle myLoadedAssetBundle = LoadAssetBundle(bundleName);
-            return myLoadedAssetBundle.LoadAssetAsync<T>(assetName);
-        }
-
-        public static float StartingTime => _startingTime;
-
-        public static bool OnScreen(this GameObject gameObject)
-        {
-            return InCameraView(gameObject.transform.position);
-        }
-
         public static int IntFromNode(this XmlNode root, string nodeName)
         {
             return int.Parse(StringFromNode(root, nodeName), CultureInfo.InvariantCulture.NumberFormat);
@@ -176,7 +146,7 @@ namespace SamsHelper.Libraries
 
         private static Camera mainCamera;
 
-        public static bool InCameraView(this Vector3 position, Camera camera = null)
+        private static bool InCameraView(this Vector3 position, Camera camera = null)
         {
             if (camera == null)
             {
@@ -217,74 +187,6 @@ namespace SamsHelper.Libraries
             return objectList;
         }
 
-        private class MinSearchList<T>
-        {
-            private readonly List<T> _list;
-            private readonly Func<T, float> _compare;
-            private int indexPosition;
-
-            public MinSearchList(List<T> list, Func<T, float> compare)
-            {
-                _list = list;
-                _compare = compare;
-            }
-
-            public bool HasNext() => indexPosition != _list.Count;
-
-            public T Next()
-            {
-                float smallestValue = float.MaxValue;
-                int smallestElementIndex = -1;
-
-                for (int i = indexPosition; i < _list.Count; ++i)
-                {
-                    T element = _list[i];
-                    float candidateValue = _compare(element);
-                    if (candidateValue >= smallestValue) continue;
-                    smallestElementIndex = i;
-                    smallestValue = candidateValue;
-                }
-
-                T smallestElement = _list[smallestElementIndex];
-                _list[smallestElementIndex] = _list[indexPosition];
-                _list[indexPosition] = smallestElement;
-                ++indexPosition;
-                return smallestElement;
-            }
-        }
-
-        public static List<string> ReadLinesFromFile(string fileName)
-        {
-            TextAsset file = Resources.Load(fileName) as TextAsset;
-            string contents = file.text;
-            string[] tempLines = Regex.Split(contents, "\r\n|\r|\n");
-            List<string> lines = new List<string>();
-            foreach (string line in tempLines)
-            {
-                if (line != "")
-                {
-                    lines.Add(line);
-                }
-            }
-
-            return lines;
-        }
-
-        public static string[] SplitAndRemoveWhiteSpace(string line)
-        {
-            return line.Split(',').Where(str => str != "").ToArray();
-        }
-
-        public static void ConstructObjectsFromCsv(string fileName, Action<string[]> constructionMethod)
-        {
-            List<string> lines = ReadLinesFromFile(fileName);
-            foreach (string line in lines)
-            {
-                string[] attributes = line.Split(',');
-                constructionMethod(attributes);
-            }
-        }
-
         public static void Shuffle<T>(this List<T> list)
         {
             List<T> randomList = new List<T>();
@@ -310,12 +212,12 @@ namespace SamsHelper.Libraries
             }
         }
 
-        public static List<T> FindAllComponentsInChildren<T>(Transform t)
+        public static List<T> FindAllComponentsInChildren<T>(this Transform t)
         {
             return FindAllChildren(t).Select(child => child.GetComponent<T>()).Where(component => component != null).ToList();
         }
 
-        public static List<Transform> FindAllChildren(Transform t)
+        public static List<Transform> FindAllChildren(this Transform t)
         {
             List<Transform> children = new List<Transform>();
             int noChildren = t.childCount;
@@ -395,13 +297,6 @@ namespace SamsHelper.Libraries
             new List<T>(arr).Print();
         }
 
-        public static GameObject InstantiateUiObject<T>(string prefabLocation, Transform parent) where T : Component
-        {
-            GameObject newUiObject = InstantiateUiObject(prefabLocation, parent);
-            newUiObject.AddComponent<T>();
-            return newUiObject;
-        }
-
         public static GameObject InstantiateUiObject(string prefabLocation, Transform parent) => InstantiateUiObject(Resources.Load(prefabLocation) as GameObject, parent);
 
         public static GameObject InstantiateUiObject(GameObject prefab, Transform parent)
@@ -412,91 +307,6 @@ namespace SamsHelper.Libraries
             return newUiObject;
         }
 
-        public static void SetNavigation(EnhancedButton origin, EnhancedButton target, Direction d)
-        {
-            SetNavigation(origin.Button(), target.Button(), d);
-        }
-
-        public static void SetNavigation(Button origin, EnhancedButton target, Direction d)
-        {
-            SetNavigation(origin, target.Button(), d);
-        }
-
-        public static void SetNavigation(EnhancedButton origin, Button target, Direction d)
-        {
-            SetNavigation(origin.Button(), target, d);
-        }
-
-        public static void SetNavigation(Button origin, Button target, Direction d)
-        {
-            if (origin == null || target == null) return;
-            Navigation originButtonNavigation = origin.navigation;
-            switch (d)
-            {
-                case Direction.Up:
-                    originButtonNavigation.selectOnUp = target;
-                    break;
-                case Direction.Down:
-                    originButtonNavigation.selectOnDown = target;
-                    break;
-                case Direction.Left:
-                    originButtonNavigation.selectOnLeft = target;
-                    break;
-                case Direction.Right:
-                    originButtonNavigation.selectOnRight = target;
-                    break;
-            }
-
-            origin.navigation = originButtonNavigation;
-        }
-
-        public static void SetReciprocalNavigation(EnhancedButton origin, EnhancedButton target, Direction direction = Direction.Down)
-        {
-            SetReciprocalNavigation(origin.Button(), target.Button(), direction);
-        }
-
-        public static void SetReciprocalNavigation(EnhancedButton origin, Button target, Direction direction = Direction.Down)
-        {
-            SetReciprocalNavigation(origin.Button(), target, direction);
-        }
-
-        public static void SetReciprocalNavigation(Button origin, EnhancedButton target, Direction direction = Direction.Down)
-        {
-            SetReciprocalNavigation(origin, target.Button(), direction);
-        }
-
-        public static void SetReciprocalNavigation(Button origin, Button target, Direction direction = Direction.Down)
-        {
-            if (direction == Direction.Down)
-            {
-                SetNavigation(origin, target, Direction.Down);
-                SetNavigation(target, origin, Direction.Up);
-                return;
-            }
-
-            SetNavigation(origin, target, Direction.Left);
-            SetNavigation(target, origin, Direction.Right);
-        }
-
-        public static Direction OppositeDirection(Direction inventoryDirection)
-        {
-            switch (inventoryDirection)
-            {
-                case Direction.Up:
-                    return Direction.Down;
-                case Direction.Down:
-                    return Direction.Up;
-                case Direction.Left:
-                    return Direction.Right;
-                case Direction.Right:
-                    return Direction.Left;
-                case Direction.None:
-                    return Direction.None;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(inventoryDirection), inventoryDirection, null);
-            }
-        }
-
         private static float _startingTime = -1;
 
         public static float TimeInSeconds()
@@ -505,7 +315,7 @@ namespace SamsHelper.Libraries
             return Time.timeSinceLevelLoad;
         }
 
-        public static bool ValuesHaveSameSign(float a, float b)
+        public static bool HasSameSignAs(this float a, float b)
         {
             if (a > 0 && b <= 0 || a < 0 && b >= 0) return false;
             return true;
@@ -526,19 +336,6 @@ namespace SamsHelper.Libraries
             return "+" + value;
         }
 
-        public static void AddDelineator(Transform parent)
-        {
-            GameObject delineator = new GameObject();
-            delineator.AddComponent<RectTransform>();
-            Image i = delineator.AddComponent<Image>();
-            i.color = UiAppearanceController.FadedColour;
-            LayoutElement layout = delineator.AddComponent<LayoutElement>();
-            layout.minHeight = 2;
-            layout.preferredWidth = 2000;
-            delineator.transform.SetParent(parent);
-            delineator.transform.localScale = new Vector3(1, 1, 1);
-        }
-
         public static float Polarity(this float direction)
         {
             if (direction < 0) return -1;
@@ -546,20 +343,20 @@ namespace SamsHelper.Libraries
             return 0;
         }
 
-        public static T NextElement<T>(int iterator, List<T> list) => list[NextIndex(iterator, list)];
+        public static T NextElement<T>(this List<T> list, int iterator) => list[list.NextIndex(iterator)];
 
-        public static T PrevElement<T>(int iterator, List<T> list) => list[PrevIndex(iterator, list)];
+        public static T PrevElement<T>(this List<T> list, int iterator) => list[list.PrevIndex(iterator)];
 
-        public static int NextIndex<T>(int iteratorPosition, List<T> list)
+        public static int NextIndex<T>(this List<T> list, int iterator)
         {
-            if (iteratorPosition + 1 == list.Count) return 0;
-            return iteratorPosition + 1;
+            if (iterator + 1 == list.Count) return 0;
+            return iterator + 1;
         }
 
-        public static int PrevIndex<T>(int iteratorPosition, List<T> list)
+        public static int PrevIndex<T>(this List<T> list, int iterator)
         {
-            if (iteratorPosition - 1 == -1) return list.Count - 1;
-            return iteratorPosition - 1;
+            if (iterator - 1 == -1) return list.Count - 1;
+            return iterator - 1;
         }
 
         public static T RemoveLast<T>(this List<T> list)
@@ -588,7 +385,7 @@ namespace SamsHelper.Libraries
             return c;
         }
 
-        public static string PrintHierarchy(GameObject parent)
+        public static string PrintHierarchy(this GameObject parent)
         {
             string hierarchy = "";
             Transform t = parent.transform;
@@ -617,21 +414,7 @@ namespace SamsHelper.Libraries
             return xml.SelectSingleNode("//" + rootNodeName);
         }
 
-        public static void ChangeImageAlpha(Image image, float newAlpha)
-        {
-            Color c = image.color;
-            c.a = newAlpha;
-            image.color = c;
-        }
-
-        public static void ChangeSpriteAlpha(SpriteRenderer sprite, float newAlpha)
-        {
-            Color c = sprite.color;
-            c.a = newAlpha;
-            sprite.color = c;
-        }
-
-        public static XmlNodeList GetNodesWithName(XmlNode root, string subNodeName)
+        public static XmlNodeList GetNodesWithName(this XmlNode root, string subNodeName)
         {
             XmlNodeList nodes = root.SelectNodes(subNodeName);
             if (nodes == null) throw new Exceptions.NoNodesWithNameException(subNodeName);

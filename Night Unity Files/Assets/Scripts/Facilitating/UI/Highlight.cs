@@ -37,7 +37,7 @@ namespace Facilitating.UI
 
         public virtual void Awake()
         {
-            List<Transform> children = Helper.FindAllChildren(transform);
+            List<Transform> children = transform.FindAllChildren();
             foreach (Transform t in children)
             {
                 TextMeshProUGUI text = t.GetComponent<TextMeshProUGUI>();

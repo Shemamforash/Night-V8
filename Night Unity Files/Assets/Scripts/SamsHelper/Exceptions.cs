@@ -243,7 +243,7 @@ namespace SamsHelper
                 _target = target;
             }
 
-            public override string Message => "Could not find child '" + _target + "' under '" + Helper.PrintHierarchy(_parent) + "'.";
+            public override string Message => "Could not find child '" + _target + "' under '" + _parent.PrintHierarchy() + "'.";
         }
 
         public class ComponentNotFoundException : Exception

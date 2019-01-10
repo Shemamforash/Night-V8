@@ -359,7 +359,7 @@ namespace Game.Combat.Generation
             for (int i = 0; i < _finalShape.Count; ++i)
             {
                 Vector2 current = _finalShape[i];
-                Vector2 next = Helper.NextElement(i, _finalShape);
+                Vector2 next = _finalShape.NextElement(i);
                 //1 points per unit
                 float distance = Vector2.Distance(current, next);
                 int noPoints = Mathf.CeilToInt(distance);
@@ -387,14 +387,14 @@ namespace Game.Combat.Generation
             centre /= _finalShape.Count;
             for (int i = 0; i < _finalShape.Count; ++i) _finalShape[i] -= centre;
 
-            Barrier b = new Barrier(_finalShape, "Wall " + GetObjectNumber(), centre, barriers);
+            new Barrier(_finalShape, "Wall " + GetObjectNumber(), centre, barriers);
         }
 
         private void DrawShape()
         {
             for (int i = 0; i < _finalShape.Count; ++i)
             {
-                int next = Helper.NextIndex(i, _finalShape);
+                int next = _finalShape.NextIndex(i);
                 float lerpVal = (float) i / _finalShape.Count;
                 Debug.DrawLine(_finalShape[i], _finalShape[next], Color.Lerp(Color.green, Color.red, lerpVal), 10f);
             }

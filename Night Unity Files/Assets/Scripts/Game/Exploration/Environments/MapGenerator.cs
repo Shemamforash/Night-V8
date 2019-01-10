@@ -319,6 +319,7 @@ namespace Game.Exploration.Environment
             _templesAdded = 0;
             _regionTypeBag.Clear();
             AddBaseRegionTypes();
+            SetJournalQuantities();
             SetWaterQuantities();
             SetFoodQuantities();
             SetResourceQuantities();
@@ -366,6 +367,17 @@ namespace Game.Exploration.Environment
             SetItemQuantities(waterSources, r => r.WaterSourceCount, r => ++r.WaterSourceCount);
         }
 
+        private static void SetJournalQuantities()
+        {
+            int journalCount = 15 + (int) EnvironmentManager.CurrentEnvironment.EnvironmentType * 4;
+            _regions.Shuffle();
+            for (int i = 0; i < journalCount; ++i)
+            {
+                if (_regions[i] == initialNode) continue;
+                _regions[i].ReadJournal = false;
+            }
+        }
+
         private static void SetItemQuantities(int total, Func<Region, float> getCount, Action<Region> increment)
         {
             while (total > 0)
@@ -374,6 +386,7 @@ namespace Game.Exploration.Environment
                 bool added = false;
                 foreach (Region r in _regions)
                 {
+                    if (r == initialNode) continue;
                     if (total == 0) break;
                     if (getCount(r) > 2) continue;
                     added = true;

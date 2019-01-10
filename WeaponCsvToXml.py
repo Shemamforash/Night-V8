@@ -1,13 +1,17 @@
 from openpyxl import load_workbook
 import string
 
-workbook = load_workbook('Desolation Balance Files.xlsx', data_only=True)
+balance_book = load_workbook('Desolation Balance Files.xlsx', data_only=True)
+story_book = load_workbook('Beyond The Veil - Story.xlsx', data_only=True)
 num2alpha = dict(zip(range(1, 27), string.ascii_lowercase))
 
 
 class XMLWriter:
-    def __init__(self, sheet_name, output_filename):
-        self.sheet = workbook[sheet_name]
+    def __init__(self, sheet_name, output_filename, use_story_book=False):
+        if use_story_book:
+            self.sheet=story_book[sheet_name]
+        else:
+            self.sheet = balance_book[sheet_name]
         self.output_file = open('Night Unity Files/Assets/Resources/XML/' + output_filename + ".xml", 'w')
 
     def __del__(self):
@@ -304,31 +308,83 @@ class BrandImporter(XMLWriter):
         write_single_value(self, "MinLevel", get_value(self, "L", row))
 
 
-class StoryImporter(XMLWriter):
+class WandererImporter(XMLWriter):
     def __init__(self):
-        super(StoryImporter, self).__init__("Story", "Story")
-        write_tag(self, "Story", self.read_brands)
+        super(WandererImporter, self).__init__("Wanderer", "Wanderer", True)
+        write_tag(self, "Wanderer", self.read_story)
 
-    def read_brands(self):
+    def read_story(self):
         for row in range(2, 27):
-            write_tag(self, "JournalEntry", self.read_journal_entry, [row, False])
-        for row in range(29, 32):
             write_tag(self, "StoryPart", self.read_story_part, [row])
-        for row in range(36, 54):
-            write_tag(self, "CharacterPart", self.read_journal_entry, [row, False])
-        for row in range(56, 65):
-            write_tag(self, "WandererPart", self.read_journal_entry, [row, True])
 
     def read_story_part(self, row):
-        write_single_value(self, "Number", get_value(self, "A", row))
-        write_single_value(self, "Text", get_value(self, "B", row))
+        write_single_value(self, "Title", get_value(self, "A", row))
+        write_single_value(self, "Environment", get_value(self, "B", row))
+        write_single_value(self, "PartNumber", get_value(self, "C", row))
+        write_single_value(self, "Text", get_value(self, "D", row))
 
-    def read_journal_entry(self, row, is_wanderer):
+
+class NecromancerImporter(XMLWriter):
+    def __init__(self):
+        super(NecromancerImporter, self).__init__("Necromancer", "Necromancer", True)
+        write_tag(self, "Necromancer", self.read_story)
+
+    def read_story(self):
+        for row in range(2, 25):
+            write_tag(self, "StoryPart", self.read_story_part, [row])
+
+    def read_story_part(self, row):
+        write_single_value(self, "Title", get_value(self, "A", row))
+        write_single_value(self, "PartNumber", get_value(self, "B", row))
+        write_single_value(self, "Text", get_value(self, "C", row))
+
+
+class CharacterStoryImporter(XMLWriter):
+    def __init__(self):
+        super(CharacterStoryImporter, self).__init__("Characters", "Characters", True)
+        write_tag(self, "Characters", self.read_story)
+
+    def read_story(self):
+        for row in range(2, 22):
+            write_tag(self, "StoryPart", self.read_story_part, [row])
+
+    def read_story_part(self, row):
+        write_single_value(self, "Title", get_value(self, "A", row))
+        write_single_value(self, "Character", get_value(self, "B", row))
+        write_single_value(self, "PartNumber", get_value(self, "C", row))
+        write_single_value(self, "Text", get_value(self, "D", row))
+
+
+class DreamsImporter(XMLWriter):
+    def __init__(self):
+        super(DreamsImporter, self).__init__("Dreams", "Dreams", True)
+        write_tag(self, "Dreams", self.read_story)
+
+    def read_story(self):
+        for row in range(2, 18):
+            write_tag(self, "StoryPart", self.read_story_part, [row])
+
+    def read_story_part(self, row):
+        write_single_value(self, "Title", get_value(self, "A", row))
+        write_single_value(self, "Environment", get_value(self, "B", row))
+        write_single_value(self, "PartNumber", get_value(self, "C", row))
+        write_single_value(self, "Text", get_value(self, "D", row))
+
+
+class LoreImporter(XMLWriter):
+    def __init__(self):
+        super(LoreImporter, self).__init__("Lore", "Lore", True)
+        write_tag(self, "Lore", self.read_story)
+
+    def read_story(self):
+        for row in range(2, 30):
+            write_tag(self, "StoryPart", self.read_story_part, [row])
+
+    def read_story_part(self, row):
         write_single_value(self, "Title", get_value(self, "A", row))
         write_single_value(self, "Group", get_value(self, "B", row))
-        write_single_value(self, "Part", get_value(self, "C", row))
+        write_single_value(self, "PartNumber", get_value(self, "C", row))
         write_single_value(self, "Text", get_value(self, "D", row))
-        write_single_value(self, "IsWanderer", str(is_wanderer))
 
 
 class SkillImporter(XMLWriter):
@@ -411,11 +467,15 @@ def write_single_value(xml_writer, stat_name, value):
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
-RecipeImporter()
-ResourceImporter()
+# RecipeImporter()
+# ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()
 # EnvironmentImporter()
 # BrandImporter()
-# StoryImporter()
+# WandererImporter()
+# NecromancerImporter()
+# CharacterStoryImporter()
+# DreamsImporter()
+LoreImporter()
 # TutorialImporter()

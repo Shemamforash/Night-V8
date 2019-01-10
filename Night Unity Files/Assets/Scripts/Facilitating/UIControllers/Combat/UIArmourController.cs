@@ -25,6 +25,7 @@ namespace Facilitating.UIControllers
             float leftOffset = 1 - controller.GetTotalProtection();
             _armourRect.anchorMin = new Vector2(leftOffset, 0f);
             _fillBar.fillAmount = controller.GetCurrentFill();
+            _fillBar.SetAlpha(controller.Recharging() ? 0.5f : 1f);
             _working.SetAlpha(controller.Recharging() ? 0f : 1f);
             _working.transform.parent.gameObject.SetActive(controller.GetCurrentLevel() != 0);
             if (!controller.DidJustTakeDamage()) return;

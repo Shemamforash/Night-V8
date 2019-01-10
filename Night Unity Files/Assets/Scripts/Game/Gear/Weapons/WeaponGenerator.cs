@@ -46,7 +46,7 @@ namespace Game.Gear.Weapons
                 _weaponTypes.Add(type);
                 WeaponClasses[type] = new List<WeaponClass>();
                 XmlNode classNode = classesNode.GetNode("Class[@name='" + type + "']");
-                foreach (XmlNode subtypeNode in Helper.GetNodesWithName(classNode, "Subtype"))
+                foreach (XmlNode subtypeNode in classNode.GetNodesWithName("Subtype"))
                     WeaponClasses[type].Add(new WeaponClass(subtypeNode, type));
             }
 

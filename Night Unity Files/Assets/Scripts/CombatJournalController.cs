@@ -31,7 +31,7 @@ public class CombatJournalController : Menu, IInputListener
         _closing = false;
         MenuStateMachine.ShowMenu("Journal");
         _title.text = journal.Title;
-        _body.text = journal.Contents;
+        _body.text = journal.Text;
     }
 
     public override void Enter()

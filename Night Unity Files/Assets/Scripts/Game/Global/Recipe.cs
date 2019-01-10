@@ -151,7 +151,7 @@ namespace Game.Global
         {
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Recipes");
-            foreach (XmlNode recipeNode in Helper.GetNodesWithName(root, "Recipe"))
+            foreach (XmlNode recipeNode in root.GetNodesWithName("Recipe"))
             {
                 Recipe recipe = new Recipe(recipeNode);
                 _recipes.Add(recipe);

@@ -89,7 +89,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
             float lerpVal = 1 - glowTime / glowTimeMax;
             Color c = Color.Lerp(startingColour, UiAppearanceController.InvisibleColour, lerpVal);
             DangerIndicator.color = c;
-            Helper.FindAllComponentsInChildren<SpriteRenderer>(DangerIndicator.transform).ForEach(s => { s.color = c; });
+            DangerIndicator.transform.FindAllComponentsInChildren<SpriteRenderer>().ForEach(s => { s.color = c; });
             _countdown.color = Color.Lerp(timerStartColor, UiAppearanceController.InvisibleColour, lerpVal);
             glowTime -= Time.deltaTime;
             yield return null;
@@ -116,7 +116,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
             Color c = Color.Lerp(Color.white, UiAppearanceController.InvisibleColour, lerpVal);
             DangerIndicator.color = c;
             _glow.color = c;
-            Helper.FindAllComponentsInChildren<SpriteRenderer>(DangerIndicator.transform).ForEach(s => { s.color = c; });
+            DangerIndicator.transform.FindAllComponentsInChildren<SpriteRenderer>().ForEach(s => { s.color = c; });
             _countdown.color = c;
             glowTime -= Time.deltaTime;
             yield return null;

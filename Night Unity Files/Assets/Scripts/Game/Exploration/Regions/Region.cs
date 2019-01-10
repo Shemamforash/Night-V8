@@ -40,7 +40,7 @@ namespace Game.Exploration.Regions
         public List<Barrier> Barriers = new List<Barrier>();
         public string Name;
         public int RegionID, WaterSourceCount, FoodSourceCount, ResourceSourceCount, ClaimRemaining, RitesRemaining = 3;
-        public bool ReadJournal;
+        public bool ReadJournal = true;
         public Player CharacterHere;
         public Vector2 CharacterPosition;
         public Vector2? RadianceStonePosition;

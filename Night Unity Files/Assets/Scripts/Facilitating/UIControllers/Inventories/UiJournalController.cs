@@ -59,7 +59,7 @@ public class UiJournalController : UiInventoryMenuController
         JournalEntry entry = (JournalEntry) obj;
         _noJournalGroup.alpha = 0;
         _journalTitle.SetText(entry.Title);
-        _journalDescription.SetText(entry.Contents);
+        _journalDescription.SetText(entry.Text);
     }
 
     protected override void OnShow()

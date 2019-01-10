@@ -49,7 +49,7 @@ namespace Game.Exploration.Environment
             }
         }
 
-        private static EnvironmentType StringToEnvironmentType(string environmentString)
+        public static EnvironmentType StringToEnvironmentType(string environmentString)
         {
             if (_environmentTypes == null)
             {

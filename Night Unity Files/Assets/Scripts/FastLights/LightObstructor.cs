@@ -19,6 +19,12 @@ namespace FastLights
         private Vector3 scale;
         private float rotation;
         private Polygon _polygon;
+        private readonly List<Vector2> _verts2d = new List<Vector2>();
+        private readonly List<FLEdge> _visibleEdges = new List<FLEdge>();
+        private float _sqrRadius, _radius;
+        private Vector2 _origin;
+        private readonly List<List<FLEdge>> _edgeSegments = new List<List<FLEdge>>();
+        private Transform _obstructorTransform;
 
         public void Awake()
         {
@@ -32,13 +38,14 @@ namespace FastLights
             else
             {
                 _mesh = GetComponent<MeshFilter>().mesh;
-                if (_mesh == null) throw new UnnassignedMeshException();
+                if (_mesh == null) throw new UnassignedMeshException();
             }
 
             FastLight.RegisterObstacle(this);
-            position = transform.position;
-            scale = transform.localScale;
-            rotation = transform.rotation.eulerAngles.z;
+            _obstructorTransform = transform;
+            position = _obstructorTransform.position;
+            scale = _obstructorTransform.localScale;
+            rotation = _obstructorTransform.rotation.eulerAngles.z;
             UpdateMesh();
         }
 
@@ -56,30 +63,34 @@ namespace FastLights
                 _vertices = _mesh.vertices.ToList();
                 return;
             }
+
             _vertices.Clear();
-            if (_collider is PolygonCollider2D)
+            switch (_collider)
             {
-                PolygonCollider2D polygon = (PolygonCollider2D) _collider;
-                _vertices.AddRange(polygon.points.Select(polygonPoint => (Vector3) polygonPoint));
-            }
-            else if (_collider is BoxCollider2D)
-            {
-                BoxCollider2D box = (BoxCollider2D) _collider;
-                _vertices.Add(new Vector2(-box.size.x / 2, box.size.y / 2));
-                _vertices.Add(new Vector2(box.size.x / 2, box.size.y / 2));
-                _vertices.Add(new Vector2(box.size.x / 2, -box.size.y / 2));
-                _vertices.Add(new Vector2(-box.size.x / 2, -box.size.y / 2));
-            }
-            else if (_collider is CircleCollider2D)
-            {
-                CircleCollider2D circle = (CircleCollider2D) _collider;
-                float radius = circle.radius;
-                float angleInterval = 5 / radius;
-                for (float angle = 0; angle < 360; angle += angleInterval)
+                case PolygonCollider2D polygon:
+                    _vertices.AddRange(polygon.points.Select(polygonPoint => (Vector3) polygonPoint));
+                    break;
+                case BoxCollider2D box:
                 {
-                    float x = Mathf.Cos(angle * Mathf.Deg2Rad) * radius;
-                    float y = Mathf.Sin(angle * Mathf.Deg2Rad) * radius;
-                    _vertices.Add(new Vector2(x, y));
+                    Vector2 size = box.size;
+                    _vertices.Add(new Vector2(-size.x / 2, size.y / 2));
+                    _vertices.Add(new Vector2(box.size.x / 2, size.y / 2));
+                    _vertices.Add(new Vector2(box.size.x / 2, -size.y / 2));
+                    _vertices.Add(new Vector2(-box.size.x / 2, -size.y / 2));
+                    break;
+                }
+                case CircleCollider2D circle:
+                {
+                    float radius = circle.radius;
+                    float angleInterval = 5 / radius;
+                    for (float angle = 0; angle < 360; angle += angleInterval)
+                    {
+                        float x = Mathf.Cos(angle * Mathf.Deg2Rad) * radius;
+                        float y = Mathf.Sin(angle * Mathf.Deg2Rad) * radius;
+                        _vertices.Add(new Vector2(x, y));
+                    }
+
+                    break;
                 }
             }
         }
@@ -89,12 +100,11 @@ namespace FastLights
             if (transform.position == position && transform.localScale == scale && transform.rotation.eulerAngles.z == rotation) return;
             UpdateMesh();
             FastLight.UpdateLights();
-            position = transform.position;
-            scale = transform.localScale;
-            rotation = transform.rotation.eulerAngles.z;
+            position = _obstructorTransform.position;
+            scale = _obstructorTransform.localScale;
+            rotation = _obstructorTransform.rotation.eulerAngles.z;
         }
 
-        private List<Vector2> _verts2d = new List<Vector2>();
 
         public void UpdateMesh()
         {
@@ -115,8 +125,8 @@ namespace FastLights
 
             for (int i = 0; i < vertexCount; ++i)
             {
-                int prevIndex = Helper.PrevIndex(i, _worldVerts);
-                int nextIndex = Helper.NextIndex(i, _worldVerts);
+                int prevIndex = _worldVerts.PrevIndex(i);
+                int nextIndex = _worldVerts.NextIndex(i);
                 _worldVerts[i].PreviousFlVertex = _worldVerts[prevIndex];
                 _worldVerts[i].NextFlVertex = _worldVerts[nextIndex];
                 FLEdge edge = new FLEdge(_worldVerts[prevIndex], _worldVerts[i]);
@@ -129,7 +139,6 @@ namespace FastLights
             FastLight.UnregisterObstacle(this);
         }
 
-        private List<FLEdge> _visibleEdges = new List<FLEdge>();
 
         private void GetVisibleEdges()
         {
@@ -171,10 +180,6 @@ namespace FastLights
             }
         }
 
-        private float _sqrRadius, _radius;
-        private Vector2 _origin;
-        private List<List<FLEdge>> _edgeSegments = new List<List<FLEdge>>();
-
         public List<List<FLEdge>> GetVisibleVertices(Vector3 origin, float sqrRadius, float radius)
         {
             _sqrRadius = sqrRadius;
@@ -199,7 +204,7 @@ namespace FastLights
             bool completedSegment = true;
             for (int i = 0; i < edgeCount; ++i)
             {
-                FLEdge next = _visibleEdges[Helper.NextIndex(i, _visibleEdges)];
+                FLEdge next = _visibleEdges[_visibleEdges.NextIndex(i)];
                 FLEdge current = _visibleEdges[i];
                 if (next.From != current.To)
                 {
@@ -232,12 +237,11 @@ namespace FastLights
 
         public bool Visible()
         {
-//            if(_polygon.IsVisible()) _polygon.DrawBounds(0.01f);
             return _polygon.IsVisible();
         }
     }
 
-    public class UnnassignedMeshException : Exception
+    public class UnassignedMeshException : Exception
     {
         public override string Message => "No mesh assigned, a mesh is required for FastLight to work";
     }

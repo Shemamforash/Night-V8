@@ -15,9 +15,7 @@ using Random = UnityEngine.Random;
 
 public class StoryController : Menu
 {
-    private static string _text;
     private const float _timePerWord = 0.3f, MinAlpha = 0.25f;
-    private List<string> _paragraphs;
     private TextMeshProUGUI _storyText;
     private static bool _goToCredits;
     private static bool _paused;
@@ -29,6 +27,7 @@ public class StoryController : Menu
     private ParticleSystem _lightningSystem;
     private CameraShaker _shaker;
     private float _waitTime;
+    private static List<JournalEntry> _journalEntries;
 
     public override void Awake()
     {
@@ -71,9 +70,9 @@ public class StoryController : Menu
         StartCoroutine(DisplayParagraph());
     }
 
-    public static void ShowText(string text)
+    public static void Show()
     {
-        _text = text;
+        _journalEntries = JournalEntry.GetStoryText();
         _goToCredits = EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.End;
         SceneChanger.GoToStoryScene();
     }
@@ -85,21 +84,13 @@ public class StoryController : Menu
         return timeToRead;
     }
 
-    private void SplitParagraphs()
-    {
-        _paragraphs = new List<string>();
-        foreach (string paragraph in _text.Split(new[] {"\n"}, StringSplitOptions.None))
-            _paragraphs.Add(paragraph);
-    }
-
     private IEnumerator DisplayParagraph()
     {
-        SplitParagraphs();
         Tweener skipTween = null;
-        foreach (string paragraph in _paragraphs)
+        foreach (JournalEntry entry in _journalEntries)
         {
             //fade in
-            _storyText.text = paragraph + "\n\n    - <i>The Necromancer</i>";
+            _storyText.text = entry.Text + "\n\n    - <i>The Necromancer</i>";
             _storyText.color = UiAppearanceController.InvisibleColour;
             yield return _storyText.DOFade(1f, 1f).WaitForCompletion();
 
@@ -109,7 +100,7 @@ public class StoryController : Menu
             _canSkip = true;
             _skipCanvas.alpha = 1f;
             //read
-            float timeToRead = GetTimeToRead(paragraph);
+            float timeToRead = GetTimeToRead(entry.Text);
             while (timeToRead > 0 && !_skipParagraph)
             {
                 if (!_paused) timeToRead -= Time.deltaTime;

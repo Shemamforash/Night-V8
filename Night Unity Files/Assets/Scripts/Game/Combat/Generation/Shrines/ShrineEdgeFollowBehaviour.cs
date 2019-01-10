@@ -23,7 +23,7 @@ public class ShrineEdgeFollowBehaviour : MonoBehaviour
 
 	private IEnumerator FollowPoly()
 	{
-		int nextVertexIndex = Helper.NextIndex(StartVertex, _vertices);
+		int nextVertexIndex = _vertices.NextIndex(StartVertex);
 		Vector2 nextVertex = _vertices[nextVertexIndex];
 		float distance = Vector2.Distance(_vertices[StartVertex], nextVertex);
 		float time = distance / Speed;

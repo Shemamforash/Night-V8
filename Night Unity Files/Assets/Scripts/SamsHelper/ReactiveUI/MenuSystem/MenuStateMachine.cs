@@ -26,7 +26,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             if (SceneManager.GetActiveScene().name != "Menu") InputHandler.RegisterInputListener(this);
             States = new StateMachine();
             _instance = this;
-            foreach (Menu t in Helper.FindAllComponentsInChildren<Menu>(transform))
+            foreach (Menu t in transform.FindAllComponentsInChildren<Menu>())
             {
                 RegisterMenu(t);
             }

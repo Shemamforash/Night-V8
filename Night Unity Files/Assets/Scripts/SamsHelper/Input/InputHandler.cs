@@ -125,7 +125,7 @@ namespace SamsHelper.Input
             {
                 float currentTime = Helper.TimeInSeconds();
                 float timeBetweenClicks = currentTime - _timeAtLastPress;
-                if (timeBetweenClicks < DoubleTapDuration && Helper.ValuesHaveSameSign(_directionAtLastPress, _currentInputValue))
+                if (timeBetweenClicks < DoubleTapDuration && _directionAtLastPress.HasSameSignAs(_currentInputValue))
                 {
                     BroadCastDoubleTap(_axis, _directionAtLastPress);
                     currentTime = 0;
@@ -142,7 +142,7 @@ namespace SamsHelper.Input
                 bool isPressed = _currentInputValue != 0f;
                 if (isPressed)
                 {
-                    _held = Helper.ValuesHaveSameSign(_currentInputValue, _lastInputValue);
+                    _held = _currentInputValue.HasSameSignAs(_lastInputValue);
                     BroadcastInputDown(_axis, _held, _currentInputValue.Polarity());
                     if (!_held) CheckDoubleTap();
                 }

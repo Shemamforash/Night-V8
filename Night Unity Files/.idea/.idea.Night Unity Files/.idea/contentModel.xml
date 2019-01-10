@@ -1236,17 +1236,21 @@
         <e p="Resources" t="Include">
           <e p="XML" t="Include">
             <e p="Brands.xml" t="Include" />
+            <e p="Characters.xml" t="Include" />
             <e p="Classes.xml" t="Include" />
+            <e p="Dreams.xml" t="Include" />
             <e p="Enemies.xml" t="Include" />
             <e p="Environments.xml" t="Include" />
             <e p="Gear.xml" t="Include" />
             <e p="Inscriptions.xml" t="Include" />
+            <e p="Lore.xml" t="Include" />
+            <e p="Necromancer.xml" t="Include" />
             <e p="Recipes.xml" t="Include" />
             <e p="Regions.xml" t="Include" />
             <e p="Resources.xml" t="Include" />
             <e p="Skills.xml" t="Include" />
-            <e p="Story.xml" t="Include" />
             <e p="Tutorial.xml" t="Include" />
+            <e p="Wanderer.xml" t="Include" />
             <e p="WeaponClasses.xml" t="Include" />
             <e p="Weather.xml" t="Include" />
             <e p="WeatherProbabilities.xml" t="Include" />

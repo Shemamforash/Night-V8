@@ -69,7 +69,7 @@ namespace Game.Gear
         {
             if (_readTemplates) return;
             XmlNode inscriptions = Helper.OpenRootNode("Inscriptions");
-            foreach (XmlNode inscriptionNode in Helper.GetNodesWithName(inscriptions, "Inscription"))
+            foreach (XmlNode inscriptionNode in inscriptions.GetNodesWithName("Inscription"))
                 new InscriptionTemplate(inscriptionNode);
 
             _readTemplates = true;

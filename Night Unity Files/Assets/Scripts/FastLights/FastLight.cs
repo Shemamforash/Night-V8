@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using FastLights;
 using SamsHelper.Libraries;
@@ -32,6 +31,23 @@ namespace Fastlights
         public Material LightMaterial;
         public GameObject Target;
 
+        private List<List<FLEdge>> _visibleEdges;
+        private Tuple<bool, Vector2, float> _intersection;
+        private readonly List<Vector2> meshVertices = new List<Vector2>();
+        private Vector2 dirToVertex, lineSegmentEnd, intersectPoint;
+        private float nearestDistance;
+        private bool didIntersect;
+        private int edgeCount;
+        private bool _hasUpdated;
+        private Transform _lightTransform;
+        private bool _intersectionExists;
+        private Vector2 _intersectionPoint;
+        private List<List<FLEdge>> _edgeSegments = new List<List<FLEdge>>();
+        private readonly List<FLEdge> _edges = new List<FLEdge>();
+        private readonly List<FLVertex> _verts = new List<FLVertex>();
+        private List<FLEdge> _segments = new List<FLEdge>();
+        private ConcurrentQueue<List<FLEdge>> _edgeSegmentQueue;
+
         public static void UpdateLights()
         {
             _lights.ForEach(l => l._needsUpdate = true);
@@ -46,8 +62,9 @@ namespace Fastlights
             _meshRenderer = GetComponent<MeshRenderer>();
             _meshFilter = GetComponent<MeshFilter>();
             _meshRenderer.material = LightMaterial;
-            Vector3 position = transform.position;
-            transform.position = position;
+            _lightTransform = transform;
+            Vector3 position = _lightTransform.position;
+            _lightTransform.position = position;
             _meshFilters.Add(_meshFilter);
         }
 
@@ -67,15 +84,6 @@ namespace Fastlights
         {
             _allObstructors.Remove(lightObstructor);
         }
-
-        private List<List<FLEdge>> _visibleEdges;
-        private Tuple<bool, Vector2, float> _intersection;
-
-        private readonly List<Vector2> meshVertices = new List<Vector2>();
-        private Vector2 dirToVertex, lineSegmentEnd, intersectPoint;
-        private float nearestDistance;
-        private bool didIntersect;
-        private int edgeCount;
 
         private void CalculateNearestIntersection(FLVertex target, List<FLEdge> edges)
         {
@@ -123,14 +131,6 @@ namespace Fastlights
             _intersectionPoint = intersectPoint;
         }
 
-        private bool _intersectionExists;
-        private Vector2 _intersectionPoint;
-        private List<List<FLEdge>> _edgeSegments = new List<List<FLEdge>>();
-        private List<FLEdge> _edges = new List<FLEdge>();
-        private List<FLVertex> _verts = new List<FLVertex>();
-        private List<FLEdge> _segments = new List<FLEdge>();
-
-        private ConcurrentQueue<List<FLEdge>> _edgeSegmentQueue;
 
         private void DrawLight()
         {
@@ -296,7 +296,6 @@ namespace Fastlights
             mesh.vertices = verts;
         }
 
-        private bool _hasUpdated;
 
         private void UpdateLight(Vector2 newPosition)
         {
@@ -331,7 +330,8 @@ namespace Fastlights
         public void Update()
         {
             FollowTarget();
-            Vector2 newPosition = new Vector2(transform.position.x, transform.position.y);
+            Vector3 position = _lightTransform.position;
+            Vector2 newPosition = new Vector2(position.x, position.y);
             Stopwatch watch = Stopwatch.StartNew();
             UpdateLight(newPosition);
             watch.Restart();
