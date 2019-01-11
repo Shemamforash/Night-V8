@@ -1,3 +1,5 @@
+using SamsHelper.BaseGameFunctionality.Basic;
+
 namespace Game.Characters.Brands
 {
     public class FettleBrand : Brand
@@ -13,7 +15,6 @@ namespace Game.Characters.Brands
 
         protected override void OnFail()
         {
-            Player.Attributes.ChangeFettleMax(-1);
         }
 
         protected override string GetProgressSubstring()
@@ -35,7 +36,6 @@ namespace Game.Characters.Brands
 
         protected override void OnFail()
         {
-            Player.Attributes.ChangeGritMax(-1);
         }
 
         protected override string GetProgressSubstring()
@@ -57,7 +57,6 @@ namespace Game.Characters.Brands
 
         protected override void OnFail()
         {
-            Player.Attributes.ChangeFocusMax(-1);
         }
 
         protected override string GetProgressSubstring()
@@ -79,7 +78,6 @@ namespace Game.Characters.Brands
 
         protected override void OnFail()
         {
-            Player.Attributes.ChangeWillMax(-1);
         }
 
         protected override string GetProgressSubstring()

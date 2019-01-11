@@ -13,6 +13,8 @@ namespace Facilitating.Persistence
         private readonly XmlNode _root;
         private readonly bool _valid;
         private bool _loading;
+        public readonly int TotalTime;
+        private bool _mostRecent;
 
         public Save(string location)
         {
@@ -23,25 +25,39 @@ namespace Facilitating.Persistence
             _root = xmlDoc.GetNode("BTVSave");
             XmlNode worldValues = _root.GetNode("WorldState");
             RealTime = worldValues.StringFromNode("RealTime");
-            GameTime = "Day " + worldValues.IntFromNode("Days") + " - ";
+            int days = worldValues.IntFromNode("Days");
             int hours = worldValues.IntFromNode("Hours");
-            int minutes = worldValues.IntFromNode("Minutes");
-            GameTime += hours.ToString("D2") + ":" + minutes.ToString("D2");
+            int minutes = worldValues.IntFromNode("Hours");
+            TotalTime = days * 24 * 60 + hours * 60 + minutes;
+            GameTime = "Day " + days + " - ";
+            string hourTime = WorldView.TimeToName(hours);
+            GameTime += hourTime;
             GameLocation = _root.StringFromNode("CurrentEnvironment");
         }
 
         public bool Valid() => _valid;
-        
+
         public string GetRealTime()
         {
-            if (!_valid) return "-";
-            return "Created on " + RealTime;
+            string createdOn = "-";
+            if (_valid)
+            {
+                createdOn = "Created on " + RealTime;
+                if (_mostRecent) createdOn += " (More Recent)";
+            }
+            return createdOn;
+        }
+
+        public void SetMostRecent()
+        {
+            _mostRecent = true;
         }
 
         public string GetGameInfo()
         {
             if (!_valid) return "-";
-            return Environment.EnvironmentTypeToName(GameLocation) + " - " + GameTime;
+            string gameInfo = Environment.EnvironmentTypeToName(GameLocation) + " - " + GameTime;
+            return gameInfo;
         }
 
         public void LoadFromSave()

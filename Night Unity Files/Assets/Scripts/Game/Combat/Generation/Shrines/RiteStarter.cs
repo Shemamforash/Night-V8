@@ -115,7 +115,6 @@ namespace Game.Combat.Generation.Shrines
                 WorldState.TravelToNextEnvironment();
                 return;
             }
-
             Travel travel = CharacterManager.SelectedCharacter.TravelAction;
             travel.TravelToInstant(travel.GetCurrentRegion());
         }

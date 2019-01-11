@@ -13,6 +13,8 @@ namespace Game.Combat.Misc
 {
     public class ShotAttributes
     {
+        private const float MinimumAccuracyOffsetInDegrees = 20f;
+        private const float MaximumAccuracyOffsetInDegrees = 40f;
         private const float MaxAge = 3f;
         private const float SeekDecay = 0.95f;
 
@@ -67,7 +69,7 @@ namespace Game.Combat.Misc
         {
             WeaponAttributes attributes = _weapon.WeaponAttributes;
             _damage = (int) attributes.Val(AttributeType.Damage);
-            _accuracy = _weapon.CalculateBaseAccuracy();
+            _accuracy = 1 - attributes.Val(AttributeType.Accuracy);
             _decayChance = attributes.Val(AttributeType.DecayChance);
             _burnChance = attributes.Val(AttributeType.BurnChance);
             _sicknessChance = attributes.Val(AttributeType.SicknessChance);
@@ -80,9 +82,11 @@ namespace Game.Combat.Misc
         public float CalculateAccuracy()
         {
             if (_origin == null) return 0;
-            float accuracyDifference = Weapon.MaxAccuracyOffsetInDegrees - _accuracy;
-            _accuracy += accuracyDifference * _origin.GetAccuracyModifier();
-            return _accuracy;
+            float minAccuracy = MinimumAccuracyOffsetInDegrees * _accuracy;
+            float maxAccuracy = MaximumAccuracyOffsetInDegrees * _accuracy;
+            float recoilModifier = _origin.GetRecoilModifier();
+            float currentAccuracy = Mathf.Lerp(minAccuracy, maxAccuracy, recoilModifier);
+            return currentAccuracy;
         }
 
         public float GetSpeed()

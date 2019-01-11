@@ -21,8 +21,18 @@ public class LoadSaveMenu : Menu
         base.Enter();
         _autoSave = SaveController.LoadAutoSave();
         _manualSave = SaveController.LoadManualSave();
+        SetMostRecentSave();
         _autoSaveUi.SetSave(_autoSave);
         _manualSaveUi.SetSave(_manualSave);
+    }
+
+    private void SetMostRecentSave()
+    {
+        if (!_autoSave.Valid()) return;
+        if (_autoSave.TotalTime > _manualSave.TotalTime)
+            _autoSave.SetMostRecent();
+        else
+            _manualSave.SetMostRecent();
     }
 
     public void LoadAutoSave()

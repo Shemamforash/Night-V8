@@ -12,7 +12,6 @@ namespace Game.Gear.Weapons
 {
     public class Weapon : GearItem
     {
-        public const float MaxAccuracyOffsetInDegrees = 25f;
         private const float RangeMin = 1.5f;
         private const float RangeMax = 5.5f;
         public readonly WeaponAttributes WeaponAttributes;
@@ -113,12 +112,6 @@ namespace Game.Gear.Weapons
             WeaponAttributes.RecalculateAttributeValues();
         }
 
-        public float CalculateBaseAccuracy()
-        {
-            float accuracy = 1f - WeaponAttributes.Val(AttributeType.Accuracy);
-            accuracy *= MaxAccuracyOffsetInDegrees;
-            return accuracy;
-        }
 
         public WeaponType WeaponType() => WeaponAttributes.WeaponType;
 

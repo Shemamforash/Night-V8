@@ -8,6 +8,7 @@ using Game.Combat.Generation;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
+using SamsHelper.BaseGameFunctionality.Basic;
 
 namespace Game.Characters
 {
@@ -97,8 +98,21 @@ namespace Game.Characters
             Player.BrandManager.SetBrandInactive(this);
             SetStatus(BrandStatus.Failed);
             UiBrandMenu.ShowBrand(this);
+            if (this is FettleBrand || this is GritBrand || this is FocusBrand || this is WillBrand) LoseAttributes();
             OnFail();
             _ready = false;
+        }
+
+        private void LoseAttributes()
+        {
+            CharacterAttribute fettle = Player.Attributes.Get(AttributeType.Fettle);
+            CharacterAttribute grit = Player.Attributes.Get(AttributeType.Grit);
+            CharacterAttribute will = Player.Attributes.Get(AttributeType.Will);
+            CharacterAttribute focus = Player.Attributes.Get(AttributeType.Focus);
+            if (fettle.CurrentValue() > 1) fettle.SetCurrentValue(1);
+            if (grit.CurrentValue() > 1) grit.SetCurrentValue(1);
+            if (will.CurrentValue() > 1) will.SetCurrentValue(1);
+            if (focus.CurrentValue() > 1) focus.SetCurrentValue(1);
         }
 
         protected abstract void OnSucceed();

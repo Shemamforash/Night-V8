@@ -19,6 +19,7 @@ namespace Game.Combat.Misc
         protected SpriteRenderer Sprite;
         private CanTakeDamage _target;
         public MovementController MovementController;
+        private float _timeToRecoilRecovery;
         private const float ExplosionForceModifier = 10;
 
         protected float DistanceToTarget()
@@ -82,19 +83,25 @@ namespace Game.Combat.Misc
         {
             base.MyUpdate();
             if (GetTarget() != null) _distanceToTarget = Vector2.Distance(transform.position, TargetPosition());
+            if (_timeToRecoilRecovery > 0)
+            {
+                _timeToRecoilRecovery -= Time.deltaTime;
+                return;
+            }
+
             Recoil.Decrement(RecoilRecoveryRate * Time.deltaTime);
         }
 
         public void IncreaseRecoil()
         {
             float recoilLoss = Weapon().GetAttributeValue(AttributeType.Handling);
-            recoilLoss = 100 - recoilLoss;
-            recoilLoss /= 100;
-            recoilLoss *= MovementController.Moving() ? 2 : 1;
+            recoilLoss = 100f - recoilLoss;
+            recoilLoss /= 100f;
             Recoil.Increment(recoilLoss);
+            _timeToRecoilRecovery = 0.5f;
         }
 
-        public virtual float GetAccuracyModifier() => Recoil.CurrentValue();
+        public virtual float GetRecoilModifier() => Recoil.CurrentValue();
 
         public void SetTarget(CanTakeDamage target)
         {

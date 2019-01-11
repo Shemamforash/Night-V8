@@ -460,7 +460,7 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-# WeaponImporter()
+WeaponImporter()
 # GearImporter()
 # WeatherImporter()
 # WeatherProbabilityImporter();
@@ -477,5 +477,5 @@ def write_single_value(xml_writer, stat_name, value):
 # NecromancerImporter()
 # CharacterStoryImporter()
 # DreamsImporter()
-LoreImporter()
+# LoreImporter()
 # TutorialImporter()

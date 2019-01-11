@@ -92,6 +92,7 @@ namespace Game.Combat.Misc
             {
                 RaycastHit2D hit = _collisions[i];
                 _shotAttributes.DealDamage(hit.collider.gameObject, this);
+                _shotAttributes.ApplyConditions(transform.position);
             }
 
             _lastPosition = newPosition;
@@ -138,6 +139,7 @@ namespace Game.Combat.Misc
         {
             _bulletTrail.StartFade(0.2f);
             _shotPool.Return(this);
+            _bulletTrail.SetFinalPosition(_lastPosition);
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -149,6 +151,7 @@ namespace Game.Combat.Misc
         private void Hit(Collision2D collision)
         {
             if (_shotAttributes.HasHit) return;
+            if (_shotAttributes.Piercing) return;
             _shotAttributes.HasHit = true;
             GameObject other = collision.gameObject;
             if (collision.contacts.Length > 0)
@@ -156,9 +159,8 @@ namespace Game.Combat.Misc
                 Vector2 collisionPosition = collision.contacts[0].point;
                 float angle = AdvancedMaths.AngleFromUp(Vector2.zero, _direction) + 180 + Random.Range(-10f, 10f);
                 BulletImpactBehaviour.Create(collisionPosition, angle);
-                _bulletTrail.SetFinalPosition(collisionPosition);
+                _lastPosition = collisionPosition;
             }
-
             _shotAttributes.DealDamage(other, this);
             _shotAttributes.ApplyConditions(transform.position);
             DeactivateShot();

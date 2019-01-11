@@ -71,7 +71,7 @@ namespace Game.Combat.Player
         {
             return Instance.transform.position;
         }
-        
+
         public bool ConsumeAdrenaline(int amount)
         {
             if (!CanAffordSkill(amount)) return false;
@@ -474,9 +474,9 @@ namespace Game.Combat.Player
             transform.rotation = Quaternion.Euler(0f, 0f, zRot);
         }
 
-        public override float GetAccuracyModifier()
+        public override float GetRecoilModifier()
         {
-            return _weaponBehaviour is AccuracyGainer ? Mathf.Sqrt(1 - base.GetAccuracyModifier()) : base.GetAccuracyModifier();
+            return _weaponBehaviour is AccuracyGainer ? 1 - base.GetRecoilModifier() : base.GetRecoilModifier();
         }
 
         public void Shake(float dps)

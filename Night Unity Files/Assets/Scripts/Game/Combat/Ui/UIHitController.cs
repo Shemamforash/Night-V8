@@ -19,7 +19,7 @@ namespace Game.Combat.Ui
 
         public void Update()
         {
-            float newHeight = 1f - PlayerCombat.Instance.GetAccuracyModifier();
+            float newHeight = 1f - PlayerCombat.Instance.GetRecoilModifier();
             _innerImage.fillAmount = newHeight;
             if (_currentShotTime <= 0) return;
             float rValue = 1 - _currentShotTime / FadeTime;

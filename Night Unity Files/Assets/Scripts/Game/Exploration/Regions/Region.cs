@@ -90,7 +90,7 @@ namespace Game.Exploration.Regions
                     break;
                 case RegionType.Temple:
                     _claimBenefit = "Essence";
-                    _claimQuantity = 5;
+                    _claimQuantity = 2;
                     break;
                 case RegionType.Animal:
                     _claimBenefit = "Meat";
@@ -103,7 +103,6 @@ namespace Game.Exploration.Regions
                         _claimQuantity = 1;
                         break;
                     }
-
                     _claimBenefit = "Meat";
                     _claimQuantity = 1;
                     break;
@@ -194,7 +193,7 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("Seen", _seen);
             regionNode.CreateChild("Size", _size);
             regionNode.CreateChild("TempleCleansed", _templeCleansed);
-            regionNode.CreateChild("RadianceStonePosition", RadianceStonePosition == null ? RadianceStonePosition.ToString() : "");
+            regionNode.CreateChild("RadianceStonePosition", RadianceStonePosition == null ? "" : RadianceStonePosition.Value.ToString());
             regionNode.CreateChild("WaterSourceCount", WaterSourceCount);
             regionNode.CreateChild("FoodSourceCount", FoodSourceCount);
             regionNode.CreateChild("ResourceSourceCount", ResourceSourceCount);

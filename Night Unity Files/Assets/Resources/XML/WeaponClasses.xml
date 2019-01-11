@@ -57,7 +57,7 @@
 			<FireRate>4</FireRate>
 			<ReloadSpeed>2.1</ReloadSpeed>
 			<Accuracy>20</Accuracy>
-			<Handling>35</Handling>
+			<Handling>25</Handling>
 			<Capacity>6</Capacity>
 		</Subtype>
 		<Subtype name="Bonebreaker" automatic="False">
@@ -65,15 +65,15 @@
 			<FireRate>1.5</FireRate>
 			<ReloadSpeed>3.3</ReloadSpeed>
 			<Accuracy>20</Accuracy>
-			<Handling>35</Handling>
+			<Handling>25</Handling>
 			<Capacity>10</Capacity>
 		</Subtype>
 		<Subtype name="Skullcrusher" automatic="False">
 			<Damage>8</Damage>
 			<FireRate>6</FireRate>
 			<ReloadSpeed>2.85</ReloadSpeed>
-			<Accuracy>20</Accuracy>
-			<Handling>35</Handling>
+			<Accuracy>40</Accuracy>
+			<Handling>50</Handling>
 			<Capacity>2</Capacity>
 		</Subtype>
 	</Class>
@@ -83,7 +83,7 @@
 			<FireRate>12</FireRate>
 			<ReloadSpeed>1.1</ReloadSpeed>
 			<Accuracy>30</Accuracy>
-			<Handling>98</Handling>
+			<Handling>95</Handling>
 			<Capacity>30</Capacity>
 		</Subtype>
 		<Subtype name="Annihilator" automatic="True">
@@ -91,7 +91,7 @@
 			<FireRate>9</FireRate>
 			<ReloadSpeed>1.4</ReloadSpeed>
 			<Accuracy>30</Accuracy>
-			<Handling>95</Handling>
+			<Handling>90</Handling>
 			<Capacity>50</Capacity>
 		</Subtype>
 		<Subtype name="Gouger" automatic="True">
@@ -99,7 +99,7 @@
 			<FireRate>6</FireRate>
 			<ReloadSpeed>0.8</ReloadSpeed>
 			<Accuracy>30</Accuracy>
-			<Handling>98</Handling>
+			<Handling>95</Handling>
 			<Capacity>25</Capacity>
 		</Subtype>
 	</Class>

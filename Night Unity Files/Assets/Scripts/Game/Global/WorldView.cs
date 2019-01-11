@@ -83,13 +83,18 @@ namespace Game.Global
             _lastSelectedButton = selectedObject.GetComponent<Selectable>();
         }
 
-        private static string TimeToName(int hours)
+        public static string TimeToName(int hours)
         {
+            if (hours >= 3 && hours <= 5) return "Predawn";
             if (hours >= 5 && hours <= 7) return "Dawn";
-            if (hours > 7 && hours <= 11) return "Morning";
+            if (hours > 7 && hours <= 9) return "Early Morning";
+            if (hours > 9 && hours <= 11) return "Morning";
             if (hours > 11 && hours <= 13) return "Noon";
-            if (hours > 13 && hours <= 17) return "Afternoon";
-            if (hours > 17 && hours < 20) return "Evening";
+            if (hours > 13 && hours <= 15) return "Early Afternoon";
+            if (hours > 15 && hours <= 17) return "Afternoon";
+            if (hours > 17 && hours <= 19) return "Dusk";
+            if (hours > 19 && hours < 21) return "Evening";
+            if (hours > 23 || hours < 1) return "Midnight";
             return "Night";
         }
     }

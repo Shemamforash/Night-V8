@@ -42,14 +42,14 @@ namespace Game.Combat.Generation
             Inventory.Move(Inscription.Generate(ItemQuality.Shining));
 #endif
 
-            GenerateJournals();
+            if (GenerateJournals()) return;
             if (_tombPrefab == null) _tombPrefab = Resources.Load<GameObject>("Prefabs/Combat/Tomb Portal");
             Instantiate(_tombPrefab).transform.position = Vector2.zero;
         }
 
-        private void GenerateJournals()
+        private bool GenerateJournals()
         {
-            if (EnvironmentManager.CurrentEnvironmentType() != EnvironmentType.Wasteland) return;
+//            if (EnvironmentManager.CurrentEnvironmentType() != EnvironmentType.Wasteland) return false;
             List<JournalEntry> journals = JournalEntry.GetCorypthosLore();
             int entryNo = 0;
             for (int angle = 0; angle < 360; angle += 120)
@@ -63,6 +63,7 @@ namespace Game.Combat.Generation
             }
 
             StartCoroutine(WaitToReadJournals());
+            return true;
         }
 
         private IEnumerator WaitToReadJournals()
@@ -96,7 +97,7 @@ namespace Game.Combat.Generation
 
         private void AddNextEnemyType()
         {
-            _timeToNextEnemyType = 25f;
+            _timeToNextEnemyType = 20f;
             if (TryAddEnemyType(EnemyType.Ghoul)) return;
             if (TryAddEnemyType(EnemyType.Brawler)) return;
             if (TryAddEnemyType(EnemyType.Ghast)) return;
@@ -134,6 +135,7 @@ namespace Game.Combat.Generation
             CombatManager.SetInCombat(false);
             float flashDuration = 3f;
             ScreenFaderController.FlashWhite(flashDuration, Color.black);
+            CombatManager.ExitCombat(false);
             yield return new WaitForSeconds(flashDuration);
             StoryController.Show();
         }

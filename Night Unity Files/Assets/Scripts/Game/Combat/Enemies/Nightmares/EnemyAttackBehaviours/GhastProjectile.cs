@@ -14,7 +14,13 @@ namespace Game.Combat.Enemies.Nightmares
         private const float MaxVelocity = 10f;
         private Rigidbody2D _rigidbody2D;
         private float _duration;
-        
+        private AudioSource _audioSource;
+
+        private void Awake()
+        {
+            _audioSource = GetComponent<AudioSource>();
+        }
+
         public static void Create(Vector3 position, Vector3 direction)
         {
             if (_projectilePrefab == null) _projectilePrefab = Resources.Load<GameObject>("Prefabs/Combat/Enemies/Ghast Projectile");
@@ -32,6 +38,7 @@ namespace Game.Combat.Enemies.Nightmares
             Vector3 startingVelocity = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 2f);
             _rigidbody2D.velocity = startingVelocity;
             _duration = Random.Range(10f, 12f);
+            _audioSource.pitch = Random.Range(0.9f, 1.1f);
             StartCoroutine(Steer());
         }
 
@@ -42,7 +49,7 @@ namespace Game.Combat.Enemies.Nightmares
                 Vector2 desiredVelocity = (targetPosition - transform.position).normalized * MaxVelocity;
                 Vector2 steeringForce = desiredVelocity - _rigidbody2D.velocity;
                 float angle = AdvancedMaths.AngleFromUp(Vector3.zero, _direction);
-                transform.rotation = Quaternion.Euler(new Vector3(0,0, angle));
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
                 _rigidbody2D.AddForce(steeringForce);
                 _rigidbody2D.velocity = Vector2.ClampMagnitude(_rigidbody2D.velocity, MaxVelocity);
                 _duration -= Time.deltaTime;
