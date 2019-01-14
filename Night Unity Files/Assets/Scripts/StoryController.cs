@@ -35,7 +35,7 @@ public class StoryController : Menu
         _storyText = GetComponent<TextMeshProUGUI>();
         _storyText.color = UiAppearanceController.InvisibleColour;
         _skipCanvas = GameObject.Find("Skip").GetComponent<CanvasGroup>();
-        _closeButton = _skipCanvas.gameObject.FindChildWithName<CloseButtonController>("Close Button");
+        _closeButton = _skipCanvas.GetComponent<CloseButtonController>();
         _closeButton.SetCallback(Skip);
         _closeButton.SetOnClick(Skip);
         _closeButton.UseFireInput();

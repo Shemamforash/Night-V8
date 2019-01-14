@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using EZCameraShake;
 using Facilitating;
 using Facilitating.UIControllers;
@@ -60,12 +61,11 @@ namespace Game.Combat.Player
         public BaseWeaponBehaviour _weaponBehaviour;
         private FastLight _muzzleFlash;
         private DeathReason _currentDeathReason;
-
         private bool _useKeyboardMovement = true;
         private Vector2? _lastMousePosition;
         private Camera _mainCamera;
-        private const float EnemyDamageModifier = 0.2f;
-
+        private bool _swivelling;
+        private float _swivelAmount;
 
         public static Vector3 Position()
         {
@@ -189,6 +189,9 @@ namespace Game.Combat.Player
                     case InputAxis.Compass:
                         TryEmitPulse();
                         break;
+                    case InputAxis.Swivel:
+                        _swivelling = true;
+                        break;
                 }
             }
         }
@@ -218,6 +221,9 @@ namespace Game.Combat.Player
                 case InputAxis.Sprint:
                     _dashPressed = false;
                     break;
+                case InputAxis.Swivel:
+                    _swivelling = false;
+                    break;
             }
         }
 
@@ -236,7 +242,7 @@ namespace Game.Combat.Player
         private void UpdateRotation()
         {
             Vector2 mouseScreenPosition = Input.mousePosition;
-            bool ignoreMouseRotation = _lastMousePosition == null || _useKeyboardMovement && mouseScreenPosition == _lastMousePosition.Value;
+            bool ignoreMouseRotation = _lastMousePosition == null || _useKeyboardMovement && mouseScreenPosition == _lastMousePosition.Value || _swivelling;
             _lastMousePosition = mouseScreenPosition;
             if (ignoreMouseRotation) return;
             _useKeyboardMovement = false;
@@ -318,8 +324,21 @@ namespace Game.Combat.Player
             base.MyUpdate();
             UpdateSkillActions.ForEach(a => a());
             UpdateMuzzleFlash();
+            TrySwivel();
             UpdateRotation();
             CheckBrandUnlock();
+        }
+
+        private void TrySwivel()
+        {
+            if (!_swivelling) return;
+            if (_lastMousePosition == null) return;
+            _swivelAmount = _lastMousePosition.Value.x - Input.mousePosition.x;
+            if (_swivelAmount == 0) return;
+            _swivelAmount *= 0.2f;
+            float maxAngle = 20;
+            _swivelAmount = Mathf.Clamp(_swivelAmount, -maxAngle, maxAngle);
+            transform.Rotate(Vector3.forward, _swivelAmount);
         }
 
         private void CheckBrandUnlock()
@@ -356,7 +375,7 @@ namespace Game.Combat.Player
         public override void TakeShotDamage(Shot shot)
         {
             _currentDeathReason = DeathReason.Standard;
-            shot.Attributes().SetDamageModifier(EnemyDamageModifier);
+            shot.Attributes().SetDamageModifier(WorldState.GetEnemyDamageModifier());
             base.TakeShotDamage(shot);
             UpdateSkillActions.Clear();
         }
@@ -614,6 +633,6 @@ namespace Game.Combat.Player
             _adrenalineLevel.Decrement(amount);
         }
 
-        public bool IsKeyboardBeingUsed() => _useKeyboardMovement;
+        public bool IsKeyboardBeingUsed() => _useKeyboardMovement || (_swivelling && _swivelAmount != 0);
     }
 }

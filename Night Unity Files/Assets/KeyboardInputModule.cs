@@ -21,7 +21,8 @@ namespace UnityEngine.EventSystems
         public void Update()
         {
             Vector2 currentMousePosition = Input.mousePosition;
-            if (currentMousePosition == _lastMousePosition)
+            bool mousePressed = Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1) || Input.GetKeyDown(KeyCode.Mouse2);
+            if (currentMousePosition == _lastMousePosition && !mousePressed)
             {
                 if (_timeSinceLastInput >= StopMouseInputTimeMax)
                 {
@@ -37,9 +38,10 @@ namespace UnityEngine.EventSystems
             _lastMousePosition = currentMousePosition;
             _isMouseInputAccepted = true;
         }
-        
+
         protected KeyboardInputModule()
-        {}
+        {
+        }
 
         [Obsolete("Mode is no longer needed on input module as it handles both mouse and keyboard simultaneously.", false)]
         public enum InputMode
@@ -51,35 +53,28 @@ namespace UnityEngine.EventSystems
         [Obsolete("Mode is no longer needed on input module as it handles both mouse and keyboard simultaneously.", false)]
         public InputMode inputMode => InputMode.Mouse;
 
-        [SerializeField]
-        private string m_HorizontalAxis = "Horizontal";
+        [SerializeField] private string m_HorizontalAxis = "Horizontal";
 
         /// <summary>
         /// Name of the vertical axis for movement (if axis events are used).
         /// </summary>
-        [SerializeField]
-        private string m_VerticalAxis = "Vertical";
+        [SerializeField] private string m_VerticalAxis = "Vertical";
 
         /// <summary>
         /// Name of the submit button.
         /// </summary>
-        [SerializeField]
-        private string m_SubmitButton = "Submit";
+        [SerializeField] private string m_SubmitButton = "Submit";
 
         /// <summary>
         /// Name of the submit button.
         /// </summary>
-        [SerializeField]
-        private string m_CancelButton = "Cancel";
+        [SerializeField] private string m_CancelButton = "Cancel";
 
-        [SerializeField]
-        private float m_InputActionsPerSecond = 10;
+        [SerializeField] private float m_InputActionsPerSecond = 10;
 
-        [SerializeField]
-        private float m_RepeatDelay = 0.5f;
+        [SerializeField] private float m_RepeatDelay = 0.5f;
 
-        [SerializeField]
-        [FormerlySerializedAs("m_AllowActivationOnMobileDevice")]
+        [SerializeField] [FormerlySerializedAs("m_AllowActivationOnMobileDevice")]
         private bool m_ForceModuleActive;
 
         [Obsolete("allowActivationOnMobileDevice has been deprecated. Use forceModuleActive instead (UnityUpgradable) -> forceModuleActive")]
@@ -200,7 +195,6 @@ namespace UnityEngine.EventSystems
 
             ProcessMouseEvent();
             Cursor.visible = _isMouseInputAccepted;
-
         }
 
         /// <summary>
@@ -233,6 +227,7 @@ namespace UnityEngine.EventSystems
                 if (move.x > 0)
                     move.x = 1f;
             }
+
             if (Input.GetButtonDown(m_VerticalAxis))
             {
                 if (move.y < 0)
@@ -240,6 +235,7 @@ namespace UnityEngine.EventSystems
                 if (move.y > 0)
                     move.y = 1f;
             }
+
             return move;
         }
 
@@ -270,6 +266,7 @@ namespace UnityEngine.EventSystems
                 else
                     allow = (time > m_PrevActionTime + 1f / m_InputActionsPerSecond);
             }
+
             if (!allow)
                 return false;
 

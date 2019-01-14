@@ -101,6 +101,7 @@ namespace Game.Combat.Misc
         private void FixedUpdate()
         {
             if (!_shotAttributes.Fired) return;
+            _lastPosition = transform.position;
             SeekTarget();
             CheckForPierce();
         }
@@ -161,6 +162,7 @@ namespace Game.Combat.Misc
                 BulletImpactBehaviour.Create(collisionPosition, angle);
                 _lastPosition = collisionPosition;
             }
+
             _shotAttributes.DealDamage(other, this);
             _shotAttributes.ApplyConditions(transform.position);
             DeactivateShot();

@@ -20,6 +20,7 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
     {
         _glowImage = gameObject.FindChildWithName<Image>("Glow");
         _button = GetComponent<Button>();
+        UseDefaultInput();
     }
 
     public void SetOnClick(UnityAction a)
@@ -36,16 +37,16 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
 
     public void UseFireInput()
     {
-        _targetAxis = InputAxis.Fire;
+        _targetAxis = InputAxis.Sprint;
         if(_button == null) _button = GetComponent<Button>();
-        _button.FindChildWithName<TextMeshProUGUI>("Close Text").SetText("K");
+        _button.FindChildWithName<TextMeshProUGUI>("Close Text").SetText("SPC");
     }
 
     public void UseDefaultInput()
     {
         _targetAxis = InputAxis.Menu;
         if (_button == null) _button = GetComponent<Button>();
-        _button.FindChildWithName<TextMeshProUGUI>("Close Text").SetText("X");
+        _button.FindChildWithName<TextMeshProUGUI>("Close Text").SetText("ESC");
     }
 
     public void Enable()

@@ -7,7 +7,6 @@
         Vertical,
         Menu,
         SwitchTab,
-        Cover,
         Fire,
         Reload,
         Sprint,
@@ -17,6 +16,7 @@
         SkillFour,
         Inventory,
         Compass,
-        TakeItem
+        TakeItem,
+        Swivel
     }
 }

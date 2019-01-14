@@ -1,5 +1,6 @@
 ﻿using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
+using Game.Combat.Player;
 using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -65,7 +66,19 @@ public class GameController : MonoBehaviour
 
     public void DisableTutorial()
     {
-        ClearSaveAndLoad();
         TutorialManager.SetTutorialActive(false);
+        ClearSaveAndLoad();
+    }
+
+    public void SetDifficultyEasy()
+    {
+        WorldState.SetDifficultyEasy();
+        MenuStateMachine.ShowMenu( "Tutorial Choice");
+    }
+
+    public void SetDifficultyHard()
+    {
+        WorldState.SetDifficultyHard();
+        MenuStateMachine.ShowMenu( "Tutorial Choice");
     }
 }

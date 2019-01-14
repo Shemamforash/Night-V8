@@ -62,7 +62,7 @@ namespace Game.Combat.Generation
             return templates;
         }
 
-        public static bool AllEnemiesDead() => Instance()._enemies.Count == 0;
+        public static bool AllEnemiesDead() => Instance()._enemies.Count == 0 && _inactiveEnemies.Count == 0;
 
         public static float VisibilityRange() => Instance()._visibilityRange;
 

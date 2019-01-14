@@ -5478,6 +5478,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 100.43232
       objectReference: {fileID: 0}
+    - target: {fileID: 225887079187452636, guid: b3eae0f9d0f47c140868cc9aba3d3fec,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 114890658197481628, guid: b3eae0f9d0f47c140868cc9aba3d3fec,
         type: 3}
       propertyPath: m_havePropertiesChanged
@@ -5487,11 +5492,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_isInputParsingRequired
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 225887079187452636, guid: b3eae0f9d0f47c140868cc9aba3d3fec,
-        type: 3}
-      propertyPath: m_Alpha
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3eae0f9d0f47c140868cc9aba3d3fec, type: 3}
@@ -11115,7 +11115,7 @@ MonoBehaviour:
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Fire
-  m_CancelButton: Cover
+  m_CancelButton: Reload
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
   m_ForceModuleActive: 0
@@ -11625,11 +11625,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 224772561730326138, guid: 4fe5ba7b3b82b48459f07afec379ddf6,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -9.999939
-      objectReference: {fileID: 0}
     - target: {fileID: 224170475393205020, guid: 4fe5ba7b3b82b48459f07afec379ddf6,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -11704,6 +11699,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_isInputParsingRequired
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224772561730326138, guid: 4fe5ba7b3b82b48459f07afec379ddf6,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -9.999939
       objectReference: {fileID: 0}
     - target: {fileID: 114855332433875076, guid: 4fe5ba7b3b82b48459f07afec379ddf6,
         type: 3}

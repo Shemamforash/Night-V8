@@ -130,7 +130,7 @@ namespace Facilitating.MenuNavigation
         public void StartNewGame()
         {
             _fadeInSequence.Complete();
-            MenuStateMachine.ShowMenu(SaveController.SaveExists() ? "Overwrite Save Warning" : "Tutorial Choice");
+            MenuStateMachine.ShowMenu(SaveController.SaveExists() ? "Overwrite Save Warning" : "Difficulty");
         }
 
         public void ShowMenu(Menu menu)

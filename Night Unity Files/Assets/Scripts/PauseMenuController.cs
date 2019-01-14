@@ -84,6 +84,11 @@ public class PauseMenuController : MonoBehaviour
         });
     }
 
+    private void OnDestroy()
+    {
+        _instance = null;
+    }
+
     public static void Pause()
     {
         switch (SceneManager.GetActiveScene().name)

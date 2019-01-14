@@ -30,7 +30,7 @@ namespace Game.Global
     {
         public const int MinutesPerHour = 12;
         private const int IntervalSize = 60 / MinutesPerHour;
-        public const float MinuteInSeconds = 1f;
+        private const float MinuteInSeconds = 1f;
         private const float DayLengthInSeconds = 24f * MinutesPerHour * MinuteInSeconds;
         private const int MinuteInterval = 60 / MinutesPerHour;
 
@@ -48,7 +48,44 @@ namespace Game.Global
         public static int Seed = -1;
         private static int _templesActivated;
         private static int _timeAtLastSave;
-        public const int MaxDifficulty = 50;
+        private const int MaxDifficulty = 50;
+
+        private enum DifficultySetting
+        {
+            Easy,
+            Hard
+        }
+
+        private static DifficultySetting _difficultySetting;
+        private static float EnemyDamageModifier, EnemyHealthModifier;
+
+        public static float GetEnemyDamageModifier() => EnemyDamageModifier;
+        public static float GetEnemyHealthModifier() => EnemyHealthModifier;
+        
+        public static void SetDifficultyEasy()
+        {
+            _difficultySetting = DifficultySetting.Easy;
+            SetDifficultyModifiers();
+        }
+
+        public static void SetDifficultyHard()
+        {
+            _difficultySetting = DifficultySetting.Easy;
+            SetDifficultyModifiers();
+        }
+
+        private static void SetDifficultyModifiers()
+        {
+            if (_difficultySetting == DifficultySetting.Easy)
+            {
+                EnemyDamageModifier = 0.15f;
+                EnemyHealthModifier = 0.8f;
+                return;
+            }
+
+            EnemyDamageModifier = 0.2f;
+            EnemyHealthModifier = 1f;
+        }
 
         public static int GetRemainingTemples()
         {
@@ -71,6 +108,8 @@ namespace Game.Global
             Minutes = worldStateValues.IntFromNode("Minutes");
             MinutesPassed = worldStateValues.IntFromNode("MinutesPassed");
             _difficulty = worldStateValues.IntFromNode("Difficulty");
+            _difficultySetting = (DifficultySetting) worldStateValues.IntFromNode("DifficultySetting");
+            SetDifficultyModifiers();
             Inventory.Load(doc);
             MapGenerator.Load(doc);
             CharacterManager.Load(doc);
@@ -95,6 +134,7 @@ namespace Game.Global
             worldStateValues.CreateChild("MinutesPassed", MinutesPassed);
             worldStateValues.CreateChild("Difficulty", _difficulty);
             worldStateValues.CreateChild("RealTime", System.DateTime.Now.ToString("MMMM dd '-' hh:mm tt"));
+            worldStateValues.CreateChild("DifficultySetting", (int) _difficultySetting);
             Inventory.Save(doc);
             CharacterManager.Save(doc);
             MapGenerator.Save(doc);
