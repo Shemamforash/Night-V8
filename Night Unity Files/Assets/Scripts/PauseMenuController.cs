@@ -135,6 +135,13 @@ public class PauseMenuController : MonoBehaviour
         MenuStateMachine.ShowMenu("Controls");
     }
 
+    public void ShowHelp()
+    {
+        _pauseShown = false;
+        _title.text = "Help";
+        MenuStateMachine.ShowMenu("Help");
+    }
+
     public void ShowPauseMenu()
     {
         _pauseShown = true;

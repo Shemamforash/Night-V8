@@ -85,6 +85,12 @@ public class TutorialManager : MonoBehaviour
         selectedObject.GetComponent<Selectable>().enabled = active;
     }
 
+    public static Dictionary<int, List<TutorialPart>> GetTutorialParts()
+    {
+        ReadTutorialParts();
+        return _tutorialParts;
+    }
+
     private static void ShowTutorialPart()
     {
         string title = _currentTutorialPart.Title;
@@ -192,11 +198,12 @@ public class TutorialManager : MonoBehaviour
                 if (i + 1 == parts.Count) break;
                 parts[i].SetNextPart(parts[i + 1]);
             }
+            
         }
 
         _loaded = true;
     }
-
+    
     public static bool IsTutorialVisible()
     {
         return _showingTutorial;

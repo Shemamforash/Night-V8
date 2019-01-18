@@ -7,17 +7,15 @@ namespace Game.Global.Tutorial
 {
     public class TutorialPart
     {
-        public readonly Vector2 MinOffset, MaxOffset;
-        public readonly string Title, Content;
+        public readonly string Title, Content, SectionName;
         public readonly int SectionNumber, PartNumber;
         private bool _completed;
         private TutorialPart _nextPart;
 
         public TutorialPart(XmlNode node)
         {
-            MinOffset = node.StringFromNode("MinOffset").ToVector2();
-            MaxOffset = node.StringFromNode("MaxOffset").ToVector2();
             Title = node.StringFromNode("Title");
+            SectionName = node.StringFromNode("SectionName");
             Content = node.StringFromNode("Text");
             Content = Content.Replace("\n", "");
             Content = Content.Replace(". ", ".\n");
@@ -42,5 +40,7 @@ namespace Game.Global.Tutorial
         public void MarkComplete() => _completed = true;
 
         public bool IsComplete() => _completed;
+
+        public bool IsViewable() => _completed || !TutorialManager.Active();
     }
 }

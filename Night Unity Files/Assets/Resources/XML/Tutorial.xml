@@ -1,290 +1,254 @@
 <Tutorial>
 	<TutorialPart>
 		<SectionNumber>1</SectionNumber>
+		<SectionName>Exploration</SectionName>
 		<PartNumber>1</PartNumber>
 		<Title>Exploration</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
 		<Text>Exploration is the key to survival in Beyond The Veil. By exploring you can discover numerous regions, each with their own obstacles.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>1</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
 		<Title>Temples</Title>
-		<MinOffset>520,145</MinOffset>
-		<MaxOffset>520,865</MaxOffset>
 		<Text>All Temple regions must be visited and cleansed before the Gate will open, and allow you to travel into The Veil.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>1</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>3</PartNumber>
 		<Title>Saving Progress</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
 		<Text>Progress must be saved manually. Be warned- Beyond the Veil uses only a single save slot.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>2</SectionNumber>
+		<SectionName>The Map</SectionName>
 		<PartNumber>1</PartNumber>
 		<Title>The Map</Title>
-		<MinOffset>780,425</MinOffset>
-		<MaxOffset>780,360</MaxOffset>
-		<Text>The Map allows you to discover and revisit regions. Travelling requires grit, shown below the region name. However, returning to the gate is always free.</Text>
+		<Text>The Map allows you to discover and revisit regions. The grit required to travel to a region is shown below it's name. Returning to the gate is always free.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>4</SectionNumber>
+		<SectionName>The Compass</SectionName>
 		<PartNumber>1</PartNumber>
 		<Title>The Compass</Title>
-		<MinOffset>1010,1025</MinOffset>
-		<MaxOffset>750,10</MaxOffset>
 		<Text>Your compass reveals interesting points on the map. Each use of the compass consumes 1 focus.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>5</SectionNumber>
+		<SectionName>Meditation and Grit</SectionName>
 		<PartNumber>1</PartNumber>
 		<Title>Meditating</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
-		<Text>Meditating consumes Will to restore other attributes. It can be done at any time, and is a good way to avoid needing to return to the gate.</Text>
+		<Text>Meditating consumes Will to restore other attributes. It can be done at any time, and is a good way to avoid returning to the gate to recover.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>5</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
 		<Title>Restore Grit</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
-		<Text>Meditate now to restore some Grit. Press [I] to open the inventory and navigate to the Meditate tab.</Text>
+		<Text>Meditate by pressing [I] to open the inventory and navigate to the Meditate tab.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>6</SectionNumber>
+		<SectionName>Combat</SectionName>
 		<PartNumber>1</PartNumber>
 		<Title>Health</Title>
-		<MinOffset>1020,950</MinOffset>
-		<MaxOffset>10,35</MaxOffset>
-		<Text>When your health bar reaches zero, you die. If the Wanderer dies your journey is over.</Text>
+		<Text>When a characters health reaches zero in combat, they die. If the Wanderer dies, your journey is over.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>6</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
 		<Title>Armour</Title>
-		<MinOffset>10,950</MinOffset>
-		<MaxOffset>1020,35</MaxOffset>
-		<Text>Your armour bar shows your current armour protection level. Each piece of armour decreases incoming damage by 5%.</Text>
+		<Text>Your armour bar shows how much damage your armour can absorb.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>6</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>3</PartNumber>
 		<Title>Adrenaline</Title>
-		<MinOffset>895,935</MinOffset>
-		<MaxOffset>895,20</MaxOffset>
-		<Text>Dealing damage to enemies builds up your adrenaline. Adrenaline can be used to dash, or to activate skills.</Text>
+		<Text>Adrenaline is gained by dealing damage to enemies. It can be used to dash or activate skills.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>7</SectionNumber>
+		<SectionName>Enemies</SectionName>
 		<PartNumber>1</PartNumber>
 		<Title>Enemies</Title>
-		<MinOffset>530,10</MinOffset>
-		<MaxOffset>530,960</MaxOffset>
-		<Text>Enemy health and armour is shown here. Enemy difficulty increases as time goes on, but so does the quality of their loot.</Text>
+		<Text>Enemy health and armour is shown at the top of the screen. Enemy difficulty increases as time goes on, but so does the quality of their loot.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>7</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
 		<Title>Accuracy</Title>
-		<MinOffset>890,45</MinOffset>
-		<MaxOffset>890,915</MaxOffset>
-		<Text>Your weapon accuracy is shown here. Continuous fire decreases your accuracy, so fire in short bursts for maximum effectiveness.</Text>
+		<Text>Your current accuracy is also shown at the top of the screen. Continuous fire decreases your accuracy, so fire in short bursts for maximum effectiveness.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>7</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>3</PartNumber>
 		<Title>Damage</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
-		<Text>Other than the basic damage dealt by weapons, there are 3 types of alternate damage. Shatter causes high damage to armour. Fire causes small amounts of direct damage over time. Void builds up over time, causing massive damage when reaching a critical level.</Text>
+		<Text>Other than the basic damage dealt by weapons, there are 3 types of alternate damage. Shatter depletes armour. Fire causes damage over time. Void stacks to a critical level, and deals massive damage.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>8</SectionNumber>
+		<SectionName>Salt and Radiance</SectionName>
 		<PartNumber>1</PartNumber>
 		<Title>Salt</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
 		<Text>Human enemies have a chance to drop Salt. Unlike other loot, Salt will automatically be collected when you are near to it.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>8</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
 		<Title>Radiance</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
 		<Text>Salt can be used to craft Radiance. Radiance can be used to claim regions. Over time, these regions add either food, water, or resources to your supply.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>9</SectionNumber>
+		<SectionName>Attributes</SectionName>
 		<PartNumber>1</PartNumber>
 		<Title>Attributes</Title>
-		<MinOffset>650,315</MinOffset>
-		<MaxOffset>650,640</MaxOffset>
 		<Text>Characters have 4 attributes- 2 Physical, and 2 Mental:</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>9</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
 		<Title>Physical</Title>
-		<MinOffset>650,315</MinOffset>
-		<MaxOffset>960,640</MaxOffset>
 		<Text>Fettle increases your maximum health in combat. Grit increases movement speed and map travel distance.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>9</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>3</PartNumber>
 		<Title>Mental</Title>
-		<MinOffset>960,315</MinOffset>
-		<MaxOffset>650,640</MaxOffset>
 		<Text>Focus increases the rate you gain adrenaline, and the number of compass charges available. Will decreases the recharge time of your skills, and can be used to restore other attributes.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>18</SectionNumber>
-		<PartNumber>1</PartNumber>
-		<Title>Sleeping</Title>
-		<MinOffset>860,650</MinOffset>
-		<MaxOffset>860,330</MaxOffset>
-		<Text>Sleeping slowly restores your characters attributes over time.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>18</SectionNumber>
-		<PartNumber>2</PartNumber>
-		<Title>Hunger and Thirst</Title>
-		<MinOffset>645,385</MinOffset>
-		<MaxOffset>645,600</MaxOffset>
-		<Text>If your Hunger or Thirst level reaches 0, you die. Eat food and drink water to prevent this.</Text>
-	</TutorialPart>
-	<TutorialPart>
 		<SectionNumber>10</SectionNumber>
+		<SectionName>Crafting</SectionName>
 		<PartNumber>1</PartNumber>
 		<Title>Crafting</Title>
-		<MinOffset>20,10</MinOffset>
-		<MaxOffset>20,970</MaxOffset>
 		<Text>Resources found in the world can be used to craft a variety of different items.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>10</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
 		<Title>Resources</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
 		<Text>Crafting recipes are unlocked over time. You can view and craft recipes through the Craft action.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>11</SectionNumber>
+		<SectionName>Weapons</SectionName>
 		<PartNumber>1</PartNumber>
 		<Title>Weapons</Title>
-		<MinOffset>650,305</MinOffset>
-		<MaxOffset>650,620</MaxOffset>
 		<Text>Weapons come in a number of different varieties, all of which with unique firing behaviours.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>11</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
 		<Title>Power</Title>
-		<MinOffset>825,390</MinOffset>
-		<MaxOffset>825,590</MaxOffset>
-		<Text>Weapon Power affects the damage output of a weapon. Lower power reduces the effectiveness of your weapons, whilst higher power increases it. The current weapon Power is shown on this bar.</Text>
+		<Text>Weapon Power affects the damage output of a weapon. Lower power reduces the effectiveness of your weapons, whilst higher power increases it.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>11</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>3</PartNumber>
 		<Title>Quality</Title>
-		<MinOffset>825,390</MinOffset>
-		<MaxOffset>825,590</MaxOffset>
 		<Text>Higher quality weapons have higher maximum Power- represented by the width of the power bar. Weapons of equal Power will have similar damage outputs, regardless of their quality.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>16</SectionNumber>
-		<PartNumber>1</PartNumber>
-		<Title>Chanelling</Title>
-		<MinOffset>1190,680</MinOffset>
-		<MaxOffset>570,285</MaxOffset>
-		<Text>Weapon power is drained through use, decreasing the damage you deal in combat. If you have essence available, it can be channelled into the weapon to restore its power.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>17</SectionNumber>
-		<PartNumber>1</PartNumber>
-		<Title>Infusions</Title>
-		<MinOffset>570,680</MinOffset>
-		<MaxOffset>1190,285</MaxOffset>
-		<Text>Infusions can be used to grant large, passive bonuses to weapons. Applying Infusions requires Essence, and replaces any Infusions already applied.</Text>
-	</TutorialPart>
-	<TutorialPart>
 		<SectionNumber>12</SectionNumber>
+		<SectionName>Armour</SectionName>
 		<PartNumber>1</PartNumber>
 		<Title>Armour</Title>
-		<MinOffset>460,300</MinOffset>
-		<MaxOffset>460,615</MaxOffset>
 		<Text>Armour absorbs damage in place of your health. When depleted, it must recharge. Shatter damage forces armour to deplete.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>12</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
-		<Title>Protection</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
+		<Title>Upgrade</Title>
 		<Text>Armour can be upgraded to absorb more damage.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>13</SectionNumber>
+		<SectionName>Accessories</SectionName>
 		<PartNumber>1</PartNumber>
 		<Title>Accessories</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
 		<Text>Accessories are small trinkets that can further modify the power of your weapon. Only one accessory can be equipped at a time.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>14</SectionNumber>
+		<SectionName>Skills</SectionName>
 		<PartNumber>1</PartNumber>
 		<Title>Skills</Title>
-		<MinOffset>525,900</MinOffset>
-		<MaxOffset>525,55</MaxOffset>
 		<Text>In total there are 4 skill slots available during combat.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>14</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
 		<Title>Character Skills</Title>
-		<MinOffset>570,900</MinOffset>
-		<MaxOffset>1020,55</MaxOffset>
 		<Text>The first 2 skills are linked to the character. These skills are unlocked over time.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>14</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>3</PartNumber>
 		<Title>Weapon Skills</Title>
-		<MinOffset>1020,900</MinOffset>
-		<MaxOffset>570,55</MaxOffset>
 		<Text>The last 2 skills are linked to your weapon. Using weapons of each type will unlock their skills.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>14</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>4</PartNumber>
 		<Title>Cost</Title>
-		<MinOffset>585,900</MinOffset>
-		<MaxOffset>1195,110</MaxOffset>
-		<Text>The dots above a skill signify its adrenaline cost to activate.</Text>
+		<Text>The dots above a skill indicate the adrenaline required to use them.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>15</SectionNumber>
+		<SectionName>Shrines and Trials</SectionName>
 		<PartNumber>1</PartNumber>
 		<Title>Shrines</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
 		<Text>Some areas contain shrines where you can show your devotion to the gods. To do so you can accept Rites, each of which have different requirements to complete.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>15</SectionNumber>
+		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
 		<Title>Trials</Title>
-		<MinOffset>0,0</MinOffset>
-		<MaxOffset>0,0</MaxOffset>
 		<Text>When the requirements are met, you must partake in a final trial, the outcome of which will either provide you with a blessing or a curse.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>16</SectionNumber>
+		<SectionName>Chanelling</SectionName>
+		<PartNumber>1</PartNumber>
+		<Title>Chanelling</Title>
+		<Text>Weapon power is drained through use, decreasing the damage you deal in combat. If you have essence available, it can be channelled into the weapon to restore its power.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>17</SectionNumber>
+		<SectionName>Infusions</SectionName>
+		<PartNumber>2</PartNumber>
+		<Title>Infusions</Title>
+		<Text>Infusions can be used to grant large, passive bonuses to weapons. Applying Infusions requires Essence, and replaces any Infusions already applied.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>18</SectionNumber>
+		<SectionName>Recovery</SectionName>
+		<PartNumber>1</PartNumber>
+		<Title>Sleeping</Title>
+		<Text>Sleeping slowly restores your characters attributes over time.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>18</SectionNumber>
+		<SectionName>1</SectionName>
+		<PartNumber>2</PartNumber>
+		<Title>Hunger and Thirst</Title>
+		<Text>If your Hunger or Thirst level reaches 0, you die. Eat food and drink water to prevent this.</Text>
 	</TutorialPart>
 </Tutorial>

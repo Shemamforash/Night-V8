@@ -26,13 +26,38 @@ namespace Facilitating.UIControllers.Inventories
             return _currentTab;
         }
 
-        public void Hover()
+        private void Hover()
         {
             _highlightImage.DOFade(0.5f, 0.5f).SetUpdate(UpdateType.Normal, true);
         }
 
+        private bool TabIsNext()
+        {
+            InventoryTab next = _nextTab;
+            while (next != null)
+            {
+                if (_currentTab == next) return true;
+                next = next._nextTab;
+            }
+
+            return false;
+        }
+
+        private bool TabIsPrevious()
+        {
+            InventoryTab prev = _prevTab;
+            while (prev != null)
+            {
+                if (_currentTab == prev) return true;
+                prev = prev._prevTab;
+            }
+
+            return false;
+        }
+
         public void Select()
         {
+            Debug.Log(_currentTab + " " + _prevTab + " " + _nextTab);
             if (_currentTab == null)
             {
                 if (_prevTab == null) UiGearMenuController.LeftTab().InstantFade();
@@ -41,13 +66,13 @@ namespace Facilitating.UIControllers.Inventories
             else
             {
                 UiGearMenuController.PlayTabAudio();
-                if (_currentTab == _nextTab)
+                if (TabIsNext())
                 {
                     if (_prevTab == null) UiGearMenuController.LeftTab().FlashAndFade();
                     else UiGearMenuController.LeftTab().Flash();
                     UiGearMenuController.RightTab().FadeIn();
                 }
-                else if (_currentTab == _prevTab)
+                else if (TabIsPrevious())
                 {
                     if (_nextTab == null) UiGearMenuController.RightTab().FlashAndFade();
                     else UiGearMenuController.RightTab().Flash();
@@ -62,7 +87,7 @@ namespace Facilitating.UIControllers.Inventories
             UiGearMenuController.OpenInventoryMenu(_menu);
         }
 
-        public void Deselect()
+        private void Deselect()
         {
             _highlightImage.DOFade(0f, 0.5f).SetUpdate(UpdateType.Normal, true);
         }

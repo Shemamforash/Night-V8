@@ -275,6 +275,7 @@
         </e>
         <e p="FireBurstBehaviour.cs" t="Include" />
         <e p="FireDamageDeal.cs" t="Include" />
+        <e p="HelpMenuController.cs" t="Include" />
         <e p="Images" t="Include">
           <e p="Shaders" t="Include">
             <e p="Impact Shader.shader" t="Include" />
