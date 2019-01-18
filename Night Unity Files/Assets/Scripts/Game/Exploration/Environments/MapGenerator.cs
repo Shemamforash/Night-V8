@@ -328,22 +328,32 @@ namespace Game.Exploration.Environment
         private static void AddBaseRegionTypes()
         {
             Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
-            for (int i = 0; i < 1; ++i) _regionTypeBag.Add(RegionType.Monument);
             for (int i = 0; i < ShrineQuantityModifier; ++i) _regionTypeBag.Add(RegionType.Shrine);
-            for (int i = 0; i < 1; ++i) _regionTypeBag.Add(RegionType.Fountain);
             for (int i = 0; i < AnimalQuantityModifier; ++i) _regionTypeBag.Add(RegionType.Animal);
             for (int i = 0; i < DangerQuantityModifier; ++i) _regionTypeBag.Add(RegionType.Danger);
-            if (currentEnvironment.EnvironmentType != EnvironmentType.Desert && !_regionTypeBag.Contains(RegionType.Shelter)) _regionTypeBag.Add(RegionType.Shelter);
+            if (currentEnvironment.EnvironmentType == EnvironmentType.Desert)
+            {
+                if (_regionsDiscovered < 5) return;
+                _regionTypeBag.Add(RegionType.Monument);
+                _regionTypeBag.Add(RegionType.Fountain);
+                return;
+            }
+
+            if (!_regionTypeBag.Contains(RegionType.Shelter)) _regionTypeBag.Add(RegionType.Shelter);
+            _regionTypeBag.Add(RegionType.Monument);
+            _regionTypeBag.Add(RegionType.Fountain);
         }
 
         private static void UpdateAvailableRegionTypes()
         {
             Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
-            if (_templesAdded == currentEnvironment.Temples) return;
-            if (_regionsDiscovered % 8 != 0 || _regionsDiscovered <= 0) return;
-            AddBaseRegionTypes();
-            _regionTypeBag.Add(RegionType.Temple);
-            ++_templesAdded;
+            bool needsMoreRegions = !(_regionsDiscovered % 8 != 0 || _regionsDiscovered <= 0);
+            if (needsMoreRegions || _regionTypeBag.Count == 0) AddBaseRegionTypes();
+            if (needsMoreRegions && _templesAdded < currentEnvironment.Temples)
+            {
+                _regionTypeBag.Add(RegionType.Temple);
+                ++_templesAdded;
+            }
         }
 
         public static RegionType GetNewRegionType()

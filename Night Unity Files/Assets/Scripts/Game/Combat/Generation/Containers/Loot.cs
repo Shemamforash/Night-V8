@@ -1,4 +1,7 @@
-﻿using InventorySystem;
+﻿using Game.Gear;
+using Game.Gear.Armour;
+using Game.Gear.Weapons;
+using InventorySystem;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
@@ -19,6 +22,21 @@ namespace Game.Combat.Generation
         public void SetItem(GearItem item)
         {
             Item = item;
+        }
+
+        protected override string GetLogText()
+        {
+            switch (Item)
+            {
+                case Weapon _:
+                    return "Found a weapon";
+                case Accessory _:
+                    return "Found an accessory";
+                case Inscription _:
+                    return "Found an accessory";
+            }
+
+            return "";
         }
     }
 }

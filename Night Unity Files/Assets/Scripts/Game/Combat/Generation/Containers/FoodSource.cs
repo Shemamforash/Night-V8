@@ -25,5 +25,7 @@ namespace Game.Combat.Generation
             container.SetInsect(insect.GetComponent<InsectBehaviour>());
             return container;
         }
+
+        protected override string GetLogText() => "Found some food";
     }
 }

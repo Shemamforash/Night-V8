@@ -17,5 +17,7 @@ namespace Game.Combat.Generation
             PrefabLocation = "Puddle";
             ImageLocation = "Water";
         }
+
+        protected override string GetLogText() => "Found some water";
     }
 }

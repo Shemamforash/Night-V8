@@ -33,6 +33,7 @@ namespace Game.Combat.Generation.Shrines
 
         private void OnDestroy()
         {
+            Debug.Log("destroyed fountain");
             _instance = null;
         }
 
@@ -91,6 +92,8 @@ namespace Game.Combat.Generation.Shrines
             CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Hunger).Decrement(10);
             PlayerCombat.Instance.HealthController.Heal(1000000);
             PlayerCombat.Instance.ResetCompass();
+            CombatLogController.PostLog("Health recovered");
+            CombatLogController.PostLog("Hunger and Thirst restored");
             foreach (ParticleSystem system in _particleSystems) system.Stop();
             _audioSource.DOFade(0f, 2f);
         }
@@ -106,7 +109,7 @@ namespace Game.Combat.Generation.Shrines
 
         public string GetEventText()
         {
-            return Triggered ? "The blessed water quenches your thirst and sates your hunger" : "Drink from the fountain... [T]";
+            return Triggered ? "You feel refreshed and restored" : "Drink from the fountain... [T]";
         }
 
         public void Activate()

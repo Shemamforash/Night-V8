@@ -105,7 +105,7 @@ namespace Game.Gear.Weapons
 
         public void DecreaseDurability(float modifier)
         {
-            float durabilityLoss = 0.05f / Val(AttributeType.Pellets);
+            float durabilityLoss = 0.025f / Val(AttributeType.Pellets);
             durabilityLoss += durabilityLoss * modifier;
             _durability.Decrement(durabilityLoss);
             RecalculateAttributeValues();

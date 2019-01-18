@@ -11,7 +11,7 @@ namespace Game.Combat.Enemies.Nightmares
         private static GameObject _projectilePrefab;
         private Vector3 targetPosition;
         private Vector3 _direction;
-        private const float MaxVelocity = 10f;
+        private const float MaxVelocity = 7f;
         private Rigidbody2D _rigidbody2D;
         private float _duration;
         private AudioSource _audioSource;
@@ -37,7 +37,7 @@ namespace Game.Combat.Enemies.Nightmares
             targetPosition = AdvancedMaths.RandomVectorWithinRange(PlayerCombat.Position(), 1f);
             Vector3 startingVelocity = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 2f);
             _rigidbody2D.velocity = startingVelocity;
-            _duration = Random.Range(10f, 12f);
+            _duration = Random.Range(2f, 4f);
             _audioSource.pitch = Random.Range(0.9f, 1.1f);
             StartCoroutine(Steer());
         }
@@ -53,7 +53,7 @@ namespace Game.Combat.Enemies.Nightmares
                 _rigidbody2D.AddForce(steeringForce);
                 _rigidbody2D.velocity = Vector2.ClampMagnitude(_rigidbody2D.velocity, MaxVelocity);
                 _duration -= Time.deltaTime;
-                if (Vector2.Distance(transform.position, targetPosition) < 0.5f) break;
+                if (Vector2.Distance(transform.position, targetPosition) < 0.3f) break;
                 yield return null;
             }
 

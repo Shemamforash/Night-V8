@@ -189,16 +189,36 @@ namespace Game.Global
             _audioMixer.DOSetFloat("WeatherCutoffFreq", 22000 - to * 20000f, duration).SetUpdate(UpdateType.Normal, true);
         }
 
+        private static Tweener _weatherTween;
+
+        public static void FadeWeatherOut()
+        {
+            if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
+            _weatherTween?.Kill();
+            _weatherTween = _audioMixer.DOSetFloat("WeatherVolume", -80, 1).SetUpdate(UpdateType.Normal, true);
+        }
+
+        public static void FadeWeatherIn()
+        {
+            if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
+            _weatherTween?.Kill();
+            _weatherTween = _audioMixer.DOSetFloat("WeatherVolume", 0, 1).SetUpdate(UpdateType.Normal, true);
+        }
+
+        private static Tweener _musicTween;
+        
         public static void FadeInMusicMuffle()
         {
             if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
-            _audioMixer.DOSetFloat("MusicLowPassCutoff", 750, 0.5f).SetUpdate(UpdateType.Normal, true);
+            _musicTween?.Kill();
+            _musicTween = _audioMixer.DOSetFloat("MusicLowPassCutoff", 750, 0.5f).SetUpdate(UpdateType.Normal, true);
         }
 
         public static void FadeOutMusicMuffle()
         {
             if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
-            _audioMixer.DOSetFloat("MusicLowPassCutoff", 22000, 0.5f).SetUpdate(UpdateType.Normal, true);
+            _musicTween?.Kill();
+            _musicTween = _audioMixer.DOSetFloat("MusicLowPassCutoff", 22000, 0.5f).SetUpdate(UpdateType.Normal, true);
         }
 
         public static void SetMasterVolume(float volume)
@@ -213,6 +233,24 @@ namespace Game.Global
             _audioMixer.SetFloat("Modified", NormalisedVolumeToAttenuation(volume));
         }
 
+        private static Tweener _muffleTween;
+        private static float _lastMuffleValue;
+
+        public static void FadeInGlobalMuffle()
+        {
+            if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
+            _audioMixer.GetFloat("Muffle", out _lastMuffleValue);
+            _muffleTween?.Kill();
+            _muffleTween = _audioMixer.DOSetFloat("Muffle", 750, 1f).SetUpdate(UpdateType.Normal, true);
+        }
+
+        public static void FadeOutGlobalMuffle()
+        {
+            if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
+            _muffleTween?.Kill();
+            _muffleTween = _audioMixer.DOSetFloat("Muffle", _lastMuffleValue, 1f).SetUpdate(UpdateType.Normal, true);
+        }
+        
         public static void SetGlobalMuffle(float value)
         {
             if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");

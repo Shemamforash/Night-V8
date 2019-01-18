@@ -45,7 +45,7 @@ namespace Game.Combat.Generation.Shrines
         {
             CreateFires();
 
-            int numberOfEnemies = (int) (WorldState.Difficulty() / 5f + 10);
+            int numberOfEnemies = WorldState.ScaleValue(6);
             _maxEnemies = numberOfEnemies / 3;
 
             List<Enemy> inactiveEnemies = new List<Enemy>();

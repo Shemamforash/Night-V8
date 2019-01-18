@@ -35,6 +35,7 @@ namespace Game.Exploration.Ui
 
         private bool _hidden;
         private bool _canAfford;
+        private int _distance;
 
         public void Awake()
         {
@@ -68,7 +69,8 @@ namespace Game.Exploration.Ui
             string gritString;
             if (_region.GetRegionType() == RegionType.Gate) gritString = "Return home";
             else if (!_canAfford) gritString = "Not Enough Grit";
-            else if (_gritCost == 0) gritString = "Current Location";
+            else if (_distance == 0) gritString = "Current Location";
+            else if (_gritCost == 0) gritString = "Travel to Temple";
             else gritString = _gritCost + " Grit";
             _costText.text = gritString;
         }
@@ -76,8 +78,10 @@ namespace Game.Exploration.Ui
         public void Show()
         {
             _hidden = false;
-            _gritCost = RoutePlotter.RouteBetween(_region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion()).Count - 1;
-            _canAfford = CharacterManager.SelectedCharacter.CanAffordTravel(_gritCost) || _region.GetRegionType() == RegionType.Gate;
+            _distance = RoutePlotter.RouteBetween(_region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion()).Count - 1;
+            _gritCost = _distance;
+            if (_region.GetRegionType() == RegionType.Gate || (_region.GetRegionType() == RegionType.Temple && _region.IsTempleCleansed())) _gritCost = 0;
+            _canAfford = CharacterManager.SelectedCharacter.CanAffordTravel(_gritCost);
             SetGritText();
             _targetCentreAlpha = 0.6f;
             _targetNodeAlpha = _canAfford ? 1f : 0.5f;
@@ -173,10 +177,9 @@ namespace Game.Exploration.Ui
             }
         }
 
-        public int GetGritCost()
-        {
-            return _gritCost;
-        }
+        public int GetGritCost() => _gritCost;
+
+        public int GetDistance() => _distance;
 
         private IEnumerator FadeInLetters()
         {

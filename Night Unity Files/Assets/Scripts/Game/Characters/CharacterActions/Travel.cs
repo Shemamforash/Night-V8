@@ -90,7 +90,7 @@ namespace Game.Characters.CharacterActions
             return CurrentRegion ?? (CurrentRegion = MapGenerator.GetInitialNode());
         }
 
-        public void TravelTo(Region target, int gritCost)
+        public void TravelTo(Region target, int distance)
         {
             target.ShouldGenerateEncounter = target != CurrentRegion;
             if (target == CurrentRegion && CurrentRegion.GetRegionType() != RegionType.Gate)
@@ -102,7 +102,7 @@ namespace Game.Characters.CharacterActions
             _travelTime = 0;
             _inTransit = true;
             _target = target;
-            SetDuration(gritCost * MinutesPerGritPoint);
+            SetDuration(distance * MinutesPerGritPoint);
         }
 
         public void TravelToInstant(Region target)

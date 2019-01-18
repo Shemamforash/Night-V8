@@ -33,5 +33,7 @@ public class JournalSource : ContainerController
         CombatManager.GetCurrentRegion().ReadJournal = true;
     }
 
+    protected override string GetLogText() => null;
+
     public bool Read() => _read;
 }

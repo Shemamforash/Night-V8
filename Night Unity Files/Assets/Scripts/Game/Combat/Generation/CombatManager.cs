@@ -43,7 +43,9 @@ namespace Game.Combat.Generation
         private CanvasGroup _hudCanvas;
         private bool _hudShown;
         private Sequence _hudTween;
-
+        private float _timeSinceLastSpawn;
+        private List<TutorialOverlay> _uiOverviewOverlays;
+        
         public static List<EnemyTemplate> GenerateEnemies(int size, List<EnemyTemplate> allowedTypes)
         {
             List<EnemyTemplate> templates = new List<EnemyTemplate>();
@@ -232,6 +234,7 @@ namespace Game.Combat.Generation
                     break;
             }
 
+            AudioController.FadeWeatherOut();
             PlayNightmareParticles();
             _visibilityRange = 10f;
         }
@@ -256,21 +259,39 @@ namespace Game.Combat.Generation
             _currentRegion.CheckForRegionExplored();
         }
 
+        public static void ExitCombat(bool returnToMap = true)
+        {
+            Debug.Log("exiting");
+            Assert.IsTrue(_inCombat);
+
+            if (_currentRegion.IsDynamic())
+            {
+                _inactiveEnemies.ForEach(e => _currentRegion.RestoreSize(e.Template.Value));
+                _instance._enemies.ForEach(e => _currentRegion.RestoreSize(((EnemyBehaviour) e).Enemy.Template.Value));
+            }
+            else
+            {
+                AudioController.FadeWeatherIn();
+            }
+
+            _inCombat = false;
+            PlayerCombat.Instance.ExitCombat();
+            ChangeScene(returnToMap);
+            _instance = null;
+        }
+        
         public static void OverrideMaxSize(int maxSize, List<Enemy> inactiveEnemies = null)
         {
             _maxSize = maxSize;
             if (_inactiveEnemies != null) _inactiveEnemies = inactiveEnemies;
         }
 
-        private float _timeSinceLastSpawn;
-        private List<TutorialOverlay> _uiOverviewOverlays;
-
         private void TrySpawnNewEnemy()
         {
             if (_inactiveEnemies.Empty()) return;
             if (_enemies.Count >= _maxSize) return;
             _timeSinceLastSpawn -= Time.deltaTime;
-            if (_timeSinceLastSpawn > 0) return;
+            if (_timeSinceLastSpawn > 0 && _enemies.Count > 0) return;
             _timeSinceLastSpawn = Random.Range(1f, 3f);
             Enemy e = _inactiveEnemies.RemoveLast();
             e.GetEnemyBehaviour();
@@ -336,22 +357,6 @@ namespace Game.Combat.Generation
             PathingGrid._edgePositionList.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
         }
 
-        public static void ExitCombat(bool returnToMap = true)
-        {
-            Debug.Log("exiting");
-            Assert.IsTrue(_inCombat);
-
-            if (_currentRegion.IsDynamic())
-            {
-                _inactiveEnemies.ForEach(e => _currentRegion.RestoreSize(e.Template.Value));
-                _instance._enemies.ForEach(e => _currentRegion.RestoreSize(((EnemyBehaviour) e).Enemy.Template.Value));
-            }
-
-            _inCombat = false;
-            PlayerCombat.Instance.ExitCombat();
-            ChangeScene(returnToMap);
-            _instance = null;
-        }
 
         private static void ChangeScene(bool returnToMap)
         {

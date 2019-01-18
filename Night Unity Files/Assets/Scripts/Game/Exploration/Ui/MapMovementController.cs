@@ -101,11 +101,11 @@ public class MapMovementController : MonoBehaviour, IInputListener
         if (nearestDistance > 1f) newNearestRegion = null;
         return newNearestRegion;
     }
-    
+
     public void Update()
     {
         if (!_visible || _player == null) return;
-        if (Cursor.visible)
+        if (Cursor.visible && !_pressed)
         {
             MoveWithMouse();
             Vector2 mouseWorldPosition = MapCamera.ScreenToWorldPoint(Input.mousePosition);
@@ -119,9 +119,9 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     public void FixedUpdate()
     {
-        if (InputHandler.GetCurrentListener() != this) return;
         if (!_visible) return;
         if (_player == null) return;
+        if ((MapMovementController) InputHandler.GetCurrentListener() != this) return;
         if (!_pressed && _nearestRegion != null) LocateToNearestRegion();
         _direction.Normalize();
         _direction *= CurrentSpeed;
@@ -209,7 +209,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         if (!CanAffordToTravel()) return;
         if (TutorialManager.IsTutorialVisible()) return;
         Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
-        travelAction.TravelTo(_nearestRegion, _nearestRegion.MapNode().GetGritCost());
+        travelAction.TravelTo(_nearestRegion, _nearestRegion.MapNode().GetDistance());
         MapMenuController.IsReturningFromCombat = false;
         ReturnToGame();
     }

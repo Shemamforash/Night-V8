@@ -78,7 +78,13 @@ namespace Game.Characters
             if (_ready) return;
             if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Rite) return;
             _counter += amount;
-            if (_counter < _counterTarget) return;
+            if (_counter < _counterTarget)
+            {
+                CombatLogController.PostLog(_riteName + " - " + GetProgressString());
+                return;
+            }
+
+            CombatLogController.PostLog(_riteName + " Completed");
             _ready = true;
         }
 

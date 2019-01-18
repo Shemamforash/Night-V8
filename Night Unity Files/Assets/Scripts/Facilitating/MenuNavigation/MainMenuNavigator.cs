@@ -90,6 +90,7 @@ namespace Facilitating.MenuNavigation
 
         public void Awake()
         {
+            Application.targetFrameRate = 60;
             _skipping = false;
             SaveController.LoadSettings();
             CacheGameObjects();

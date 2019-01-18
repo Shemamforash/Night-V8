@@ -30,7 +30,7 @@ namespace Game.Combat.Enemies.Nightmares
 
             _shot = gameObject.AddComponent<Heavyshot>();
             _shot.Initialise(ShotTimeMax, ShotTimeMin, 10, 0.2f);
-            gameObject.AddComponent<Orbit>().Initialise(PlayerCombat.Instance.transform, v => MovementController.AddForce(v), 10, 2f, Random.Range(2.5f, 4f));
+            gameObject.AddComponent<Orbit>().Initialise(PlayerCombat.Instance.transform, v => MovementController.AddForce(v), 4, 2f, Random.Range(2.5f, 4f));
         }
 
         public override void Kill()

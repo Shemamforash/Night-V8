@@ -13,8 +13,9 @@ namespace Game.Combat.Enemies.Nightmares
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
-            if(WorldState.Difficulty() > 15) gameObject.AddComponent<Teleport>().Initialise(5);
-            gameObject.AddComponent<Bombardment>().Initialise(7, 3, 4);
+            if (WorldState.Difficulty() > 15) gameObject.AddComponent<Teleport>().Initialise(5);
+            int projectiles = (int) (WorldState.Difficulty() / 5f + 2);
+            gameObject.AddComponent<Bombardment>().Initialise(projectiles, 4, 3);
             _distanceToTarget = Random.Range(2f, 5f);
             CurrentAction = Attack;
         }

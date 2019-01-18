@@ -110,7 +110,11 @@ public abstract class ContainerController
                 TakeItem(player);
                 break;
         }
+
+        CombatLogController.PostLog(GetLogText());
     }
+
+    protected abstract string GetLogText();
 
     public virtual string GetContents()
     {

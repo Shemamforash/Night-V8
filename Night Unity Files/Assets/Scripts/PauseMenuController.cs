@@ -42,7 +42,7 @@ public class PauseMenuController : MonoBehaviour
     private void Show()
     {
         _background.blocksRaycasts = true;
-        AudioController.FadeInMusicMuffle();
+        AudioController.FadeInGlobalMuffle();
         _lastMenu = MenuStateMachine.CurrentMenu().gameObject.name;
         _instance.ShowPauseMenu();
         _fading = true;
@@ -71,7 +71,7 @@ public class PauseMenuController : MonoBehaviour
     {
         _background.blocksRaycasts = false;
         _closeButton.Disable();
-        AudioController.FadeOutMusicMuffle();
+        AudioController.FadeOutGlobalMuffle();
         MenuStateMachine.ShowMenu(_lastMenu);
         _fading = true;
         Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);

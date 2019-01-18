@@ -16,6 +16,12 @@ public class CombatWeatherController : MonoBehaviour
 
     public void Awake()
     {
+        if (!CombatManager.Region().IsDynamic())
+        {
+            Destroy(this);
+            return;
+        }
+
         Weather currentWeather = WeatherManager.CurrentWeather();
         _weatherAttributes = currentWeather.Attributes;
         _hail = gameObject.FindChildWithName<ParticleSystem>("Hail");
@@ -38,7 +44,6 @@ public class CombatWeatherController : MonoBehaviour
     private static void SetParticleSystemEmissionRate(ParticleSystem ps, float amount, float max)
     {
         float emissionRate = amount * max;
-        if (!CombatManager.Region().IsDynamic()) emissionRate = 0f;
         ParticleSystem.EmissionModule emission = ps.emission;
         emission.rateOverTime = emissionRate;
         ps.Play();

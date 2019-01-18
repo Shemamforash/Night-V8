@@ -25,7 +25,7 @@ namespace Game.Combat.Generation
             _region = region;
             Random.InitState(region.RegionID + WorldState.Seed);
             SetRegionWidth();
-            PathingGrid.InitialiseGrid(_region.GetRegionType() != RegionType.Rite);
+            PathingGrid.InitialiseGrid(_region.IsDynamic());
             GenerateFreshEnvironment();
             GenerateObjects();
             GenerateEdges();

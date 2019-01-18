@@ -15,7 +15,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         
         public void SetTarget(Transform targetTransform)
         {
-            gameObject.AddComponent<Orbit>().Initialise(targetTransform, v => MovementController.AddForce(v), 10, 0.5f, 1.5f);
+            gameObject.AddComponent<Orbit>().Initialise(targetTransform, v => MovementController.AddForce(v), 2, 0.5f, 1.5f);
             gameObject.AddComponent<Bombardment>().Initialise(1, 2f, 0.5f);
         }
     }

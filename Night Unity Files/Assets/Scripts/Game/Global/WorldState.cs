@@ -398,7 +398,7 @@ namespace Game.Global
 
         public static int ScaleValue(int damage)
         {
-            return (int) (damage + damage * _difficulty / 50f);
+            return (int) (damage + damage * _difficulty / 25f);
         }
     }
 }
