@@ -18,10 +18,12 @@ namespace Game.Combat.Generation.Shrines
         private static RiteStarter _instance;
         private bool _goToNextRegion;
         private SpriteRenderer _flashSprite, _dullFlashSprite;
+        private AudioSource _audioSource;
 
         public void Awake()
         {
             _instance = this;
+            _audioSource = GetComponent<AudioSource>();
             _flashSprite = gameObject.FindChildWithName<SpriteRenderer>("Flash");
             _dullFlashSprite = gameObject.FindChildWithName<SpriteRenderer>("Dull Flash");
         }
@@ -90,6 +92,7 @@ namespace Game.Combat.Generation.Shrines
 
         private void Flash()
         {
+            _audioSource.Play();
             _dullFlashSprite.SetAlpha(1);
             _flashSprite.SetAlpha(1);
             _dullFlashSprite.DOFade(0f, 2f).SetEase(Ease.OutQuad);

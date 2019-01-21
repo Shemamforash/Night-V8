@@ -18,7 +18,7 @@ public class DismantleMenuController : Menu
 {
     private static ListController _dismantleList;
     private static readonly Dictionary<string, int> _dismantleRewards = new Dictionary<string, int>();
-    private CloseButtonController _closeButton;
+    private static CloseButtonController _closeButton;
     private static GameObject _dismantledScreen;
     private EnhancedText _receivedText;
 
@@ -97,23 +97,6 @@ public class DismantleMenuController : Menu
         AddReward(possibleRewards.RandomElement(), 1);
     }
 
-    private static void CalculateArmourReward(int quality)
-    {
-        AddReward("Salt", quality);
-        List<string> possibleRewards = new List<string>();
-        for (int i = 0; i < quality; ++i)
-        {
-            if (i > 0) possibleRewards.Add("Grisly Remains");
-            if (i > 1) possibleRewards.Add("Rusty Scrap");
-            if (i > 2) possibleRewards.Add("Metal Shards");
-            if (i > 3) possibleRewards.Add("Ancient Relics");
-            if (i > 4) possibleRewards.Add("Celestial Fragments");
-        }
-
-        AddReward(possibleRewards.RandomElement(), 1);
-        AddReward(possibleRewards.RandomElement(), 1);
-    }
-
     private static void CalculateAccessoryReward(int quality)
     {
         AddReward("Salt", quality);
@@ -139,6 +122,7 @@ public class DismantleMenuController : Menu
         protected override void UpdateCentreItemEmpty()
         {
             _text.SetText("No Items found to sacrifice");
+            _text.FindChildWithName<CanvasGroup>("Button").alpha = 0;
         }
 
         public override void SetColour(Color colour)
@@ -160,13 +144,13 @@ public class DismantleMenuController : Menu
         {
             GearItem item = (GearItem) o;
             _text.SetText(item.Name);
+            if (isCentreItem) _text.FindChildWithName<CanvasGroup>("Button").alpha = 1;
         }
     }
 
     private static List<object> GetDismantleItems()
     {
         List<object> items = Inventory.GetAvailableWeapons().ToObjectList();
-        items.AddRange(Inventory.GetAvailableArmour().ToObjectList());
         items.AddRange(Inventory.GetAvailableAccessories().ToObjectList());
         items.AddRange(Inventory.Inscriptions.ToObjectList());
         return items;
@@ -222,11 +206,13 @@ public class DismantleMenuController : Menu
         MenuStateMachine.ShowMenu("Dismantle Menu");
         WorldState.Pause();
         DOTween.defaultTimeScaleIndependent = true;
+        _closeButton.Enable();
         ShowDismantleList();
     }
 
     public void Close()
     {
+        _closeButton.Disable();
         _closeButton.Flash();
         _dismantleList.Hide();
         WorldState.Resume();

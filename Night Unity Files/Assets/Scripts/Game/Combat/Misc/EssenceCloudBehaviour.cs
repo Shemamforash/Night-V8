@@ -52,9 +52,11 @@ public class EssenceCloudBehaviour : MonoBehaviour
     private IEnumerator Fade()
     {
         _essenceCloud.Stop();
+        _essenceCloud.Clear();
         _essenceRing.Stop();
+        _essenceRing.Clear();
         _essencePuff.Emit(30);
-        while (_essenceCloud.particleCount > 0 || _essencePuff.particleCount > 0 || _essenceRing.particleCount > 0) yield return null;
+        while (_essencePuff.particleCount > 0) yield return null;
         _essenceCloudPool.Return(this);
     }
 }

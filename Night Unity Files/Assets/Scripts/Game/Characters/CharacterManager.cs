@@ -116,7 +116,7 @@ namespace Game.Characters
         {
             Wanderer = GenerateCharacter(CharacterClass.Wanderer);
             Templates.Remove(Wanderer.CharacterTemplate);
-            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Dark, WeaponType.SMG);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Dark, WeaponType.Pistol);
             Inventory.Move(weapon);
             Wanderer.EquipWeapon(weapon);
             AddCharacter(Wanderer);

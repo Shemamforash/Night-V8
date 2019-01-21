@@ -33,7 +33,7 @@ namespace Game.Combat.Generation
                 case Accessory _:
                     return "Found an accessory";
                 case Inscription _:
-                    return "Found an accessory";
+                    return "Found an inscription";
             }
 
             return "";

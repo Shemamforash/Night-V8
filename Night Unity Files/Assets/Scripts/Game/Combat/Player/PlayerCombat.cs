@@ -336,7 +336,7 @@ namespace Game.Combat.Player
             _swivelAmount = _lastMousePosition.Value.x - Input.mousePosition.x;
             if (_swivelAmount == 0) return;
             _swivelAmount *= 0.2f;
-            float maxAngle = 20;
+            float maxAngle = 10;
             _swivelAmount = Mathf.Clamp(_swivelAmount, -maxAngle, maxAngle);
             transform.Rotate(Vector3.forward, _swivelAmount);
         }
@@ -391,6 +391,8 @@ namespace Game.Combat.Player
         {
             if (damage < 1) damage = 1;
             Player.BrandManager.IncreaseDamageTaken(damage);
+            if (ArmourController.CanAbsorbDamage()) WeaponAudio.PlayShieldHit();
+            else WeaponAudio.PlayBodyHit();
             base.TakeDamage(damage, direction);
             TryExplode();
             Player.Attributes.CalculateNewFettle(HealthController.GetCurrentHealth());
@@ -610,6 +612,7 @@ namespace Game.Combat.Player
         {
             bool enemyDead = hit.HealthController.GetCurrentHealth() == 0;
             bool magazineEmpty = _weaponBehaviour.Empty();
+            WeaponAudio.PlayBulletHit();
             if (!enemyDead || !magazineEmpty) return;
             Player.BrandManager.IncreaseLastRoundKills();
             if (Player.Attributes.ReloadOnFatalShot) InstantReload();

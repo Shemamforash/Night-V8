@@ -53,7 +53,6 @@ public class RiteColliderBehaviour : MonoBehaviour
             nearest = riteCollider;
         }
 
-        Debug.Log(nearest + " " + distanceToPlayer + " " + this);
         Color particleColour = _invisibleColor;
         Color candleColour = _candleMin;
         if (nearest == this)

@@ -87,7 +87,7 @@ namespace Game.Combat.Enemies.Misc
             if (_rb2d.velocity.magnitude > 0.5f)
             {
                 int layerMask = _isPlayerGrenade ? 1 << 24 | 1 << 10 : 1 << 17;
-                int hits = Physics2D.OverlapCircleNonAlloc(transform.position, _radius / 2f, _colliders, layerMask);
+                int hits = Physics2D.OverlapCircleNonAlloc(transform.position, 0.5f, _colliders, layerMask);
                 if (hits == 0) return;
                 if (_isPlayerGrenade && transform.Distance(PlayerCombat.Instance.transform) < 1) return;
             }

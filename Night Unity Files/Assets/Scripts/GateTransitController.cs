@@ -15,12 +15,14 @@ public class GateTransitController : Menu
 {
     private ParticleSystem _streakParticles, _flashParticles;
     private SpriteRenderer _glow;
+    private AudioSource _audioSource;
     private static GateTransitController _instance;
 
     public override void Awake()
     {
         base.Awake();
         _instance = this;
+        _audioSource = GetComponent<AudioSource>();
         _streakParticles = gameObject.FindChildWithName<ParticleSystem>("Streaks");
         _flashParticles = gameObject.FindChildWithName<ParticleSystem>("Flashes");
         _glow = gameObject.FindChildWithName<SpriteRenderer>("Light");
@@ -47,6 +49,7 @@ public class GateTransitController : Menu
         _flashParticles.Stop();
         _flashParticles.Play();
 
+        _audioSource.Play();
         float maxTime = _streakParticles.main.duration;
         float currentTime = 0f;
         Color from = new Color(1f, 1f, 1f, 0f);

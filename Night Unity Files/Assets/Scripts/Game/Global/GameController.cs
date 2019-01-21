@@ -1,6 +1,5 @@
-﻿using Facilitating.Persistence;
-using Game.Characters.CharacterActions;
-using Game.Combat.Player;
+﻿using DG.Tweening;
+using Facilitating.Persistence;
 using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -30,6 +29,8 @@ public class GameController : MonoBehaviour
             SceneChanger.GoToGameScene();
             SceneChanger.FadeInAudio();
         }
+
+        GameObject.Find("Music Audio").GetComponent<AudioSource>().DOFade(0f, 0.5f);
     }
 
     public void ContinueGame()

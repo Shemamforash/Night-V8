@@ -295,6 +295,7 @@ namespace Game.Combat.Generation
             for (int y = startY; y < endY; ++y)
             {
                 Cell current = Grid[x][y];
+                if (current.OutOfRange) continue;
                 if (!current.Reachable) continue;
                 float distance = current.SqrDistance(origin);
                 if (distance < minRange || distance > maxRange) continue;

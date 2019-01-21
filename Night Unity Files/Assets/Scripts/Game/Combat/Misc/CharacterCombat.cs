@@ -13,7 +13,7 @@ namespace Game.Combat.Misc
     public abstract class CharacterCombat : CanTakeDamage
     {
         public WeaponAudioController WeaponAudio;
-        private const float RecoilRecoveryRate = 0.5f;
+        private const float RecoilRecoveryRate = 1f;
         private readonly Number Recoil = new Number(0, 0, 1f);
         private float _distanceToTarget = -1;
         protected SpriteRenderer Sprite;

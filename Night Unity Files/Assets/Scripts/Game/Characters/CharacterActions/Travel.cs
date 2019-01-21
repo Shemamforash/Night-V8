@@ -118,6 +118,7 @@ namespace Game.Characters.CharacterActions
             CurrentRegion = MapGenerator.GetRegionById(doc.IntFromNode("CurrentRegion"));
             _inTransit = true;
             _travelTime = doc.IntFromNode("TravelTime");
+            _target.ShouldGenerateEncounter = _target != CurrentRegion;
             return doc;
         }
 

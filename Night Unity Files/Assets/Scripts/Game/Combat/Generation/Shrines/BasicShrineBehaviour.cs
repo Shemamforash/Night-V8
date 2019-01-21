@@ -13,9 +13,9 @@ namespace Game.Combat.Generation.Shrines
 
         public void OnTriggerEnter2D(Collider2D other)
         {
-            if (Triggered) return;
             if (!other.gameObject.CompareTag("Player")) return;
             IsInRange = true;
+            if (Triggered) return;
             StartShrine();
         }
 
@@ -23,17 +23,6 @@ namespace Game.Combat.Generation.Shrines
         {
             if (!other.gameObject.CompareTag("Player")) return;
             IsInRange = false;
-        }
-
-        public void Update()
-        {
-            if (!Triggered) return;
-            if (CombatManager.ClearOfEnemies()) OnEnemiesDead();
-        }
-
-        protected virtual void OnEnemiesDead()
-        {
-            
         }
 
         protected virtual void Succeed()

@@ -23,6 +23,7 @@ namespace Game.Combat.Generation.Shrines
         private Region _region;
         private ParticleSystem[] _particleSystems;
         private AudioSource _audioSource;
+        private bool _allEnemiesDead;
 
         public void Awake()
         {
@@ -33,7 +34,6 @@ namespace Game.Combat.Generation.Shrines
 
         private void OnDestroy()
         {
-            Debug.Log("destroyed fountain");
             _instance = null;
         }
 
@@ -81,9 +81,12 @@ namespace Game.Combat.Generation.Shrines
             }
         }
 
-        protected override void OnEnemiesDead()
+        public void Update()
         {
+            if (!Triggered || _allEnemiesDead) return;
+            if (!CombatManager.ClearOfEnemies()) return;
             Succeed();
+            _allEnemiesDead = true;
         }
 
         protected override void Succeed()
@@ -98,18 +101,19 @@ namespace Game.Combat.Generation.Shrines
             _audioSource.DOFade(0f, 2f);
         }
 
+
         protected override void StartShrine()
         {
         }
 
         public float InRange()
         {
-            return IsInRange ? 1 : -1;
+            return (IsInRange && !Triggered) ? 1 : -1;
         }
 
         public string GetEventText()
         {
-            return Triggered ? "You feel refreshed and restored" : "Drink from the fountain... [T]";
+            return "Drink from the fountain... [T]";
         }
 
         public void Activate()

@@ -415,7 +415,6 @@ class WeatherProbabilityImporter(XMLWriter):
 
     def read_weathers(self, row_from, row_to):
         difference = row_to - row_from
-
         types = ""
         for column in range(2, difference + 1):
             types += get_value(self, num2alpha[column], row_from) + ","
@@ -460,7 +459,7 @@ def write_single_value(xml_writer, stat_name, value):
 # WeaponImporter()
 # GearImporter()
 # WeatherImporter()
-# WeatherProbabilityImporter();
+WeatherProbabilityImporter();
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
@@ -475,4 +474,4 @@ def write_single_value(xml_writer, stat_name, value):
 # CharacterStoryImporter()
 # DreamsImporter()
 # LoreImporter()
-TutorialImporter()
+# TutorialImporter()

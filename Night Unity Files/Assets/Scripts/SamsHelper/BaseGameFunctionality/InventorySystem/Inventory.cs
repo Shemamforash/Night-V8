@@ -21,7 +21,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private static readonly List<Consumable> _consumables = new List<Consumable>();
         private static readonly List<Weapon> _weapons = new List<Weapon>();
         private static readonly List<Accessory> _accessories = new List<Accessory>();
-        private static readonly List<Armour> _armour = new List<Armour>();
         public static readonly List<Inscription> Inscriptions = new List<Inscription>();
         private static bool _loaded;
         private static List<AttributeType> _attributeTypes;
@@ -42,7 +41,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             LoadResources();
             _resources.Clear();
             _consumables.Clear();
-            _armour.Clear();
             _weapons.Clear();
             _accessories.Clear();
             Inscriptions.Clear();
@@ -70,11 +68,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public static List<Consumable> Consumables()
         {
             return _consumables.Where(c => c.Quantity() != 0).ToList();
-        }
-
-        public static List<Armour> GetAvailableArmour()
-        {
-            return _armour.Where(c => c.Quantity() != 0).ToList();
         }
 
         private static void LoadResources()
@@ -132,16 +125,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private static ResourceItem AddResource(string name)
         {
             ResourceItem newResourceItem = ResourceTemplate.Create(name);
-            switch (newResourceItem)
-            {
-                case Consumable consumable:
-                    _consumables.Add(consumable);
-                    break;
-                case Armour armour:
-                    _armour.Add(armour);
-                    break;
-            }
-
+            if (newResourceItem is Consumable consumable) _consumables.Add(consumable);
             _resources.Add(name, newResourceItem);
             return newResourceItem;
         }
