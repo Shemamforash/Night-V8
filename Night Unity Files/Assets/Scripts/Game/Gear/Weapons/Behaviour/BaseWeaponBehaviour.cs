@@ -77,7 +77,7 @@ namespace Game.Gear.Weapons
                 shot.Fire();
             }
 
-            if(Origin is PlayerCombat) PlayerCombat.Instance.Shake(Weapon.WeaponAttributes.DPS());
+            if (Origin is PlayerCombat) PlayerCombat.Instance.Shake(Weapon.WeaponAttributes.DPS());
             Origin.WeaponAudio.Fire(Weapon);
             ConsumeAmmo(1);
             if (!(Origin is PlayerCombat)) return;
@@ -87,15 +87,11 @@ namespace Game.Gear.Weapons
 
         public void ConsumeAmmo(int amount = -1)
         {
-            float durabilityModifier = 0;
+            float durabilityModifier = 1;
             if (amount < 0) amount = AmmoInMagazine;
             PlayerCombat player = Origin as PlayerCombat;
-            if (player != null)
-            {
-                durabilityModifier = player.Player.Attributes.DurabilityLossModifier + 1;
-            }
-
-            WeaponAttributes.DecreaseDurability(durabilityModifier * amount);
+            if (player != null) durabilityModifier += player.Player.Attributes.DurabilityLossModifier;
+            WeaponAttributes.DecreaseDurability(amount, durabilityModifier);
             AmmoInMagazine -= amount;
             if (AmmoInMagazine < 0) throw new Exceptions.MoreAmmoConsumedThanAvailableException();
         }

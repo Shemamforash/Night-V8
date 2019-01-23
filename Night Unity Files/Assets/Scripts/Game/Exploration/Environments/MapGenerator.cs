@@ -6,6 +6,7 @@ using System.Xml;
 using Facilitating.Persistence;
 using Game.Exploration.Regions;
 using SamsHelper.Libraries;
+using Sirenix.Utilities;
 using TriangleNet.Voronoi.Legacy;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -26,18 +27,21 @@ namespace Game.Exploration.Environment
 
         private static readonly List<RegionType> _regionTypeBag = new List<RegionType>();
         private static int _regionsDiscovered;
-        private static int _templesAdded;
-
-        private const int ShrineQuantityModifier = 2;
-        private const int AnimalQuantityModifier = 2;
-        private const int DangerQuantityModifier = 5;
 
         private static bool _loaded;
 
-        public static void Save(XmlNode doc)
+        public static void Save(XmlNode root)
         {
-            XmlNode regionNode = doc.CreateChild("Regions");
+            XmlNode regionNode = root.CreateChild("Regions");
             foreach (Region region in _regions) region.Save(regionNode);
+            string regionTypesRemaining = "";
+            _regionTypeBag.Print();
+            for (int i = 0; i < _regionTypeBag.Count; i++)
+            {
+                regionTypesRemaining += (int)_regionTypeBag[i];
+                if(i != _regionTypeBag.Count - 1) regionTypesRemaining += ",";
+            }
+            regionNode.CreateChild("RegionTypes", regionTypesRemaining);
         }
 
         public static Region GetRegionById(int id)
@@ -68,6 +72,8 @@ namespace Game.Exploration.Environment
             }
 
             _regions.ForEach(r => r.ConnectNeighbors());
+            string[] regionTypesRemaining = regionsNode.StringFromNode("RegionTypes").Split(',');
+            regionTypesRemaining.ForEach(r => _regionTypeBag.Add((RegionType) int.Parse(r)));
         }
 
         public static List<Region> Regions()
@@ -87,20 +93,19 @@ namespace Game.Exploration.Environment
             SetRegionTypes();
             initialNode.Discover();
 #if UNITY_EDITOR
-            _regions.ForEach(r => r.Discover());
+//            _regions.ForEach(r => r.Discover());
 #endif
         }
 
+        private const int BaseRegionCount = 1 + 12;
+        
         private static void GenerateRegions()
         {
             GenerateNames();
             _regions.Clear();
-            int templeCount = EnvironmentManager.CurrentEnvironment.Temples;
-            int baseRegionCount = 1 + 1 + ShrineQuantityModifier + AnimalQuantityModifier + DangerQuantityModifier; //monument  + fountain + shrine + animal + danger
-            int numberOfRegions = 1; //initial gate
-            numberOfRegions += baseRegionCount * (templeCount + 1);
-            numberOfRegions += templeCount;
-            if (EnvironmentManager.CurrentEnvironmentType() != EnvironmentType.Desert) ++numberOfRegions; //shelters
+            
+            int additionalRegionCount = (1 + (int) EnvironmentManager.CurrentEnvironmentType()) * 12;
+            int numberOfRegions = BaseRegionCount + additionalRegionCount;
             while (numberOfRegions > 0)
             {
                 _regions.Add(new Region());
@@ -316,44 +321,50 @@ namespace Game.Exploration.Environment
         private static void SetRegionTypes()
         {
             _regionsDiscovered = -1;
-            _templesAdded = 0;
             _regionTypeBag.Clear();
-            AddBaseRegionTypes();
+            _addedShelter = false;
+            AddBaseRegionTypes(false);
             SetJournalQuantities();
             SetWaterQuantities();
             SetFoodQuantities();
             SetResourceQuantities();
         }
 
-        private static void AddBaseRegionTypes()
+        private static bool _addedShelter;
+
+        private static void AddBaseRegionTypes(bool includeTemple)
         {
+            _regionTypeBag.Add(RegionType.Shrine);
+            for (int i = 0; i < 2; ++i) _regionTypeBag.Add(RegionType.Animal);
+            for (int i = 0; i < 8; ++i) _regionTypeBag.Add(RegionType.Danger);
+
             Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
-            for (int i = 0; i < ShrineQuantityModifier; ++i) _regionTypeBag.Add(RegionType.Shrine);
-            for (int i = 0; i < AnimalQuantityModifier; ++i) _regionTypeBag.Add(RegionType.Animal);
-            for (int i = 0; i < DangerQuantityModifier; ++i) _regionTypeBag.Add(RegionType.Danger);
-            if (currentEnvironment.EnvironmentType == EnvironmentType.Desert)
+            bool isDesert = currentEnvironment.EnvironmentType == EnvironmentType.Desert;
+            bool includeBonusRegions = isDesert && includeTemple || !isDesert;
+            if (includeBonusRegions)
             {
-                if (_regionsDiscovered < 5) return;
                 _regionTypeBag.Add(RegionType.Monument);
                 _regionTypeBag.Add(RegionType.Fountain);
-                return;
+            }
+            else
+            {
+                _regionTypeBag.Add(RegionType.Danger);
+                _regionTypeBag.Add(RegionType.Danger);
             }
 
-            if (!_regionTypeBag.Contains(RegionType.Shelter)) _regionTypeBag.Add(RegionType.Shelter);
-            _regionTypeBag.Add(RegionType.Monument);
-            _regionTypeBag.Add(RegionType.Fountain);
+            if (!includeTemple) return;
+            _regionTypeBag.Remove(RegionType.Danger);
+            _regionTypeBag.Add(RegionType.Temple);
+            if (_addedShelter || isDesert) return;
+            _addedShelter = true;
+            _regionTypeBag.Remove(RegionType.Danger);
+            _regionTypeBag.Add(RegionType.Shelter);
         }
 
         private static void UpdateAvailableRegionTypes()
         {
-            Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
-            bool needsMoreRegions = !(_regionsDiscovered % 8 != 0 || _regionsDiscovered <= 0);
-            if (needsMoreRegions || _regionTypeBag.Count == 0) AddBaseRegionTypes();
-            if (needsMoreRegions && _templesAdded < currentEnvironment.Temples)
-            {
-                _regionTypeBag.Add(RegionType.Temple);
-                ++_templesAdded;
-            }
+            if (_regionTypeBag.Count > 0) return;
+            AddBaseRegionTypes(true);
         }
 
         public static RegionType GetNewRegionType()
@@ -364,7 +375,9 @@ namespace Game.Exploration.Environment
                 return RegionType.Gate;
             }
 
+            return RegionType.Monument;
             UpdateAvailableRegionTypes();
+            _regionTypeBag.Print();
             ++_regionsDiscovered;
             if (!TutorialManager.Active() || !Region.InTutorialPeriod()) return _regionTypeBag.RemoveRandom();
             _regionTypeBag.Remove(RegionType.Danger);

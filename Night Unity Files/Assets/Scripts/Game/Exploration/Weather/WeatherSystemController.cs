@@ -20,6 +20,7 @@ namespace Game.Exploration.Weather
         [SerializeField] [Range(0, 1)] private float _sunMinBrightness, _sunMaxBrightness;
         private float _time;
         private static Weather _currentWeather;
+        private static float _sunLevel;
 
         public void Awake()
         {
@@ -57,14 +58,16 @@ namespace Game.Exploration.Weather
             _time += WorldState.Minutes / 5f / WorldState.MinutesPerHour;
         }
 
+        public static float SunLevel() => _sunLevel;
+        
         private void UpdateSun()
         {
-            float sunLevel = (float) (-0.014f * Math.Pow(_time - 12, 2) + 1f);
-            sunLevel = Mathf.Clamp(sunLevel, 0, 1);
-            float ambientVolume = _time < 6 || _time > 18 ? 0.5f : sunLevel;
+            _sunLevel = (float) (-0.014f * Math.Pow(_time - 12, 2) + 1f);
+            _sunLevel = Mathf.Clamp(_sunLevel, 0, 1);
+            float ambientVolume = _time < 6 || _time > 18 ? 0.5f : _sunLevel;
             AudioController.SetAmbientVolume(ambientVolume);
-            float minBrightness = _sunMinBrightness * sunLevel;
-            float maxBrightness = _sunMaxBrightness * sunLevel;
+            float minBrightness = _sunMinBrightness * _sunLevel;
+            float maxBrightness = _sunMaxBrightness * _sunLevel;
             ParticleSystem.MainModule sunMain = _sun.GetComponent<ParticleSystem>().main;
             sunMain.startColor = new ParticleSystem.MinMaxGradient(new Color(1, 1, 1, maxBrightness), new Color(1, 1, 1, minBrightness));
         }

@@ -227,8 +227,11 @@ namespace Game.Combat.Generation
             return GetCellNearMe(WorldToCellPosition(position), distanceMax, distanceMin);
         }
 
-        public static Cell GetCellNearMe(Cell current, float distanceMax, float distanceMin = 0) =>
-            CellsInRange(current, WorldToGridDistance(distanceMax), WorldToGridDistance(distanceMin)).RandomElement();
+        public static Cell GetCellNearMe(Cell current, float distanceMax, float distanceMin = 0)
+        {
+            List<Cell> cells = CellsInRange(current, WorldToGridDistance(distanceMax), WorldToGridDistance(distanceMin));
+            return cells.Count == 0 ? null : cells.RandomElement();
+        }
 
         public static List<Cell> GetCellsNearMe(Vector2 position, int noCells, float distanceMax, float distanceMin = 0) =>
             GetCellsNearMe(WorldToCellPosition(position), noCells, distanceMax, distanceMin);

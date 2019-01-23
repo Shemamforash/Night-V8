@@ -28,7 +28,7 @@ class WeaponImporter(XMLWriter):
         write_single_value(self, "FireRate", get_value(self, "E", row))
         write_single_value(self, "ReloadSpeed", get_value(self, "F", row))
         write_single_value(self, "Accuracy", get_value(self, "G", row))
-        write_single_value(self, "Handling", get_value(self, "H", row))
+        write_single_value(self, "Recoil", get_value(self, "H", row))
         write_single_value(self, "Capacity", get_value(self, "I", row))
 
     def read_weapon_subtypes(self, subtype_row):
@@ -62,7 +62,7 @@ class RecipeImporter(XMLWriter):
         write_single_value(self, "Description", get_value(self, "I", row))
 
     def read_recipes(self):
-        for row_no in range(4, 24):
+        for row_no in range(4, 25):
             write_tag(self, "Recipe", self.read_recipe, [row_no])
 
 
@@ -88,26 +88,25 @@ class ResourceImporter(XMLWriter):
         super(ResourceImporter, self).__init__("Resources", "Resources")
         write_tag(self, "Resources", self.read_resources)
 
-    def read_resource(self, row, consumable):
+    def read_resource(self, row):
         write_single_value(self, "Name", get_value(self, "A", row, ""))
         write_single_value(self, "Type", get_value(self, "B", row, ""))
-        if consumable:
-            write_single_value(self, "Attribute", get_value(self, "C", row, ""))
-            write_single_value(self, "Modifier", get_value(self, "D", row, ""))
-        write_single_value(self, "Permanent", get_value(self, "E", row, ""))
-        write_single_value(self, "DesertDropRate", get_value(self, "F", row, ""))
-        write_single_value(self, "MountainsDropRate", get_value(self, "G", row, ""))
-        write_single_value(self, "SeaDropRate", get_value(self, "H", row, ""))
-        write_single_value(self, "RuinsDropRate", get_value(self, "I", row, ""))
-        write_single_value(self, "WastelandDropRate", get_value(self, "J", row, ""))
-        write_single_value(self, "Description", get_value(self, "K", row, ""))
+        consumable = get_value(self, "C", row, "")
+        write_single_value(self, "Consumable", consumable)
+        if consumable == "TRUE":
+            write_single_value(self, "Attribute", get_value(self, "D", row, ""))
+            write_single_value(self, "Modifier", get_value(self, "E", row, ""))
+        write_single_value(self, "Permanent", get_value(self, "F", row, ""))
+        write_single_value(self, "DesertDropRate", get_value(self, "G", row, ""))
+        write_single_value(self, "MountainsDropRate", get_value(self, "H", row, ""))
+        write_single_value(self, "SeaDropRate", get_value(self, "I", row, ""))
+        write_single_value(self, "RuinsDropRate", get_value(self, "J", row, ""))
+        write_single_value(self, "WastelandDropRate", get_value(self, "K", row, ""))
+        write_single_value(self, "Description", get_value(self, "L", row, ""))
 
     def read_resources(self):
-        for row_no in range(3, 43):
-            if get_value(self, "B", row_no) == "Resource":
-                write_tag(self, "Resource", self.read_resource, [row_no, False])
-            else:
-                write_tag(self, "Consumable", self.read_resource, [row_no, True])
+        for row_no in range(3, 44):
+            write_tag(self, "Resource", self.read_resource, [row_no])
 
 
 class InscriptionImporter(XMLWriter):
@@ -275,11 +274,12 @@ class EnemyImporter(XMLWriter):
         write_single_value(self, "Health", get_value(self, "B", row))
         write_single_value(self, "Speed", get_value(self, "D", row))
         write_single_value(self, "Value", get_value(self, "E", row))
-        write_single_value(self, "DropRate", get_value(self, "F", row))
-        write_single_value(self, "Drops", get_value(self, "G", row, ""))
-        write_single_value(self, "HasWeapon", get_value(self, "H", row))
-        write_single_value(self, "HasGear", get_value(self, "I", row))
-        write_single_value(self, "Species", get_value(self, "J", row))
+        write_single_value(self, "Difficulty", get_value(self, "F", row))
+        write_single_value(self, "DropRate", get_value(self, "G", row))
+        write_single_value(self, "Drops", get_value(self, "H", row, ""))
+        write_single_value(self, "HasWeapon", get_value(self, "I", row))
+        write_single_value(self, "HasGear", get_value(self, "J", row))
+        write_single_value(self, "Species", get_value(self, "K", row))
 
 
 class BrandImporter(XMLWriter):
@@ -456,16 +456,16 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-# WeaponImporter()
-# GearImporter()
+WeaponImporter()
+GearImporter()
 # WeatherImporter()
-WeatherProbabilityImporter();
+# WeatherProbabilityImporter();
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
-# RecipeImporter()
-# ResourceImporter()
-# InscriptionImporter()
+RecipeImporter()
+ResourceImporter()
+InscriptionImporter()
 # SkillImporter()
 # EnvironmentImporter()
 # BrandImporter()

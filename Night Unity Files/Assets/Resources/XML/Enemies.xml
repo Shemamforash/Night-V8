@@ -4,6 +4,7 @@
 		<Health>200</Health>
 		<Speed>7</Speed>
 		<Value>2</Value>
+		<Difficulty>8</Difficulty>
 		<DropRate>0.5</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -15,6 +16,7 @@
 		<Health>75</Health>
 		<Speed>8</Speed>
 		<Value>1</Value>
+		<Difficulty>0</Difficulty>
 		<DropRate>0.25</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -26,6 +28,7 @@
 		<Health>250</Health>
 		<Speed>5</Speed>
 		<Value>3</Value>
+		<Difficulty>12</Difficulty>
 		<DropRate>0.75</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -37,6 +40,7 @@
 		<Health>150</Health>
 		<Speed>6</Speed>
 		<Value>1</Value>
+		<Difficulty>0</Difficulty>
 		<DropRate>0.25</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -48,6 +52,7 @@
 		<Health>300</Health>
 		<Speed>5</Speed>
 		<Value>4</Value>
+		<Difficulty>16</Difficulty>
 		<DropRate>1</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -59,6 +64,7 @@
 		<Health>400</Health>
 		<Speed>4</Speed>
 		<Value>4</Value>
+		<Difficulty>24</Difficulty>
 		<DropRate>1</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -70,6 +76,7 @@
 		<Health>30</Health>
 		<Speed>10</Speed>
 		<Value>2</Value>
+		<Difficulty>4</Difficulty>
 		<DropRate>0.5</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -81,6 +88,7 @@
 		<Health>200</Health>
 		<Speed>7</Speed>
 		<Value>3</Value>
+		<Difficulty>20</Difficulty>
 		<DropRate>0.75</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -92,6 +100,7 @@
 		<Health>25</Health>
 		<Speed>6</Speed>
 		<Value>1</Value>
+		<Difficulty>0</Difficulty>
 		<DropRate>0.25</DropRate>
 		<Drops>Essence</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -103,6 +112,7 @@
 		<Health>250</Health>
 		<Speed>3</Speed>
 		<Value>2</Value>
+		<Difficulty>12</Difficulty>
 		<DropRate>0.5</DropRate>
 		<Drops>Essence</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -114,6 +124,7 @@
 		<Health>200</Health>
 		<Speed>5</Speed>
 		<Value>3</Value>
+		<Difficulty>4</Difficulty>
 		<DropRate>0.75</DropRate>
 		<Drops>Essence</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -125,6 +136,7 @@
 		<Health>150</Health>
 		<Speed>5</Speed>
 		<Value>1</Value>
+		<Difficulty>0</Difficulty>
 		<DropRate>0.25</DropRate>
 		<Drops>Essence</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -136,6 +148,7 @@
 		<Health>125</Health>
 		<Speed>5</Speed>
 		<Value>3</Value>
+		<Difficulty>16</Difficulty>
 		<DropRate>0.75</DropRate>
 		<Drops>Essence</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -147,6 +160,7 @@
 		<Health>400</Health>
 		<Speed>5</Speed>
 		<Value>4</Value>
+		<Difficulty>20</Difficulty>
 		<DropRate>1</DropRate>
 		<Drops>Essence</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -158,6 +172,7 @@
 		<Health>100</Health>
 		<Speed>5</Speed>
 		<Value>2</Value>
+		<Difficulty>8</Difficulty>
 		<DropRate>0.5</DropRate>
 		<Drops>Essence</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -169,6 +184,7 @@
 		<Health>1</Health>
 		<Speed>0</Speed>
 		<Value>0</Value>
+		<Difficulty>1000</Difficulty>
 		<DropRate>0</DropRate>
 		<Drops></Drops>
 		<HasWeapon>False</HasWeapon>
@@ -180,6 +196,7 @@
 		<Health>50</Health>
 		<Speed>0</Speed>
 		<Value>0</Value>
+		<Difficulty>1000</Difficulty>
 		<DropRate>0</DropRate>
 		<Drops></Drops>
 		<HasWeapon>False</HasWeapon>
@@ -191,7 +208,8 @@
 		<Health>100</Health>
 		<Speed>3</Speed>
 		<Value>3</Value>
-		<DropRate>0.5</DropRate>
+		<Difficulty>0</Difficulty>
+		<DropRate>2</DropRate>
 		<Drops>Meat</Drops>
 		<HasWeapon>False</HasWeapon>
 		<HasGear>False</HasGear>
@@ -202,7 +220,8 @@
 		<Health>200</Health>
 		<Speed>7</Speed>
 		<Value>4</Value>
-		<DropRate>1</DropRate>
+		<Difficulty>0</Difficulty>
+		<DropRate>3</DropRate>
 		<Drops>Meat</Drops>
 		<HasWeapon>False</HasWeapon>
 		<HasGear>False</HasGear>
@@ -213,7 +232,8 @@
 		<Health>50</Health>
 		<Speed>10</Speed>
 		<Value>1</Value>
-		<DropRate>0.1</DropRate>
+		<Difficulty>0</Difficulty>
+		<DropRate>1</DropRate>
 		<Drops>Meat</Drops>
 		<HasWeapon>False</HasWeapon>
 		<HasGear>False</HasGear>

@@ -175,6 +175,7 @@ namespace Facilitating.UIControllers
             _instance._open = false;
             WorldState.Resume();
             DOTween.defaultTimeScaleIndependent = false;
+            ButtonClickListener.SuppressClick();
         }
 
         public override void Enter()
@@ -183,6 +184,7 @@ namespace Facilitating.UIControllers
             InputHandler.RegisterInputListener(this);
             DOTween.defaultTimeScaleIndependent = true;
             WorldState.Pause();
+            ButtonClickListener.SuppressClick();
         }
 
         public static void OpenInventoryMenu(UiInventoryMenuController menu)
@@ -217,7 +219,7 @@ namespace Facilitating.UIControllers
                 break;
             }
         }
-        
+
         public static void ShowArmourMenu() => SelectTab(0);
 
         public static void ShowAccessoryMenu() => SelectTab(1);
@@ -242,12 +244,7 @@ namespace Facilitating.UIControllers
 
         public static void PlayAudio(AudioClip clip)
         {
-            _instance._audioPool.Create().Play(clip, Random.Range(0.9f, 1f), Random.Range(0.8f, 1f));
-        }
-
-        public static void PlayTabAudio()
-        {
-            _instance._audioPool.Create().Play(AudioClips.TabChange, Random.Range(0.9f, 1f), Random.Range(0.9f, 1f));
+            _instance._audioPool.Create(false).Play(clip, Random.Range(0.9f, 1f), Random.Range(0.8f, 1f));
         }
 
         public static void ShowMeditateMenu()

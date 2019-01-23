@@ -25,27 +25,43 @@ namespace Game.Combat.Generation.Shrines
 
         protected override void StartChallenge()
         {
-            StartCoroutine(SpawnChasers());
+            StartCoroutine(StartSpawning());
         }
 
         protected override string GetInstructionText() => "Return pure essence to the shrine before the timer ends";
 
-        private IEnumerator SpawnChasers()
+        private void SpawnPickup()
+        {
+            if (_shrinePickupPrefab == null) _shrinePickupPrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Shrine Pickup");
+            _currentPickup = Instantiate(_shrinePickupPrefab);
+            _currentPickup.transform.position = PathingGrid.GetCellNearMe(PathingGrid.WorldToCellPosition(Vector2.zero), 6f, 4f).Position;
+            _currentPickup.GetComponent<ShrinePickup>().SetShrine(this);
+        }
+
+        private void SpawnChaser()
+        {
+            CombatManager.SpawnEnemy(EnemyType.Shadow, PathingGrid.GetCellNearMe(PathingGrid.WorldToCellPosition(transform.position), 5f, 2f).Position);
+        }
+
+        private IEnumerator StartSpawning()
         {
             _pickupsLeft = (int) (WorldState.Difficulty() / 10f + 3);
             float shrineTimeMax = 15f * _pickupsLeft;
             float currentTime = shrineTimeMax;
+            float difficulty = 1 - WorldState.Difficulty() / 50f;
+            difficulty = difficulty * 0.75f + 0.25f;
+            float spawnChaserTimeMax = 5f * difficulty;
+            float spawnChaserTime = 0f;
             while (_pickupsLeft > 0 && currentTime > 0f)
             {
                 if (!CombatManager.IsCombatActive()) yield return null;
                 EventTextController.SetOverrideText(_pickupsLeft + " pure essence remains");
-                if (_currentPickup == null)
+                if (_currentPickup == null) SpawnPickup();
+                spawnChaserTime -= Time.deltaTime;
+                if (spawnChaserTime < 0f)
                 {
-                    if (_shrinePickupPrefab == null) _shrinePickupPrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Shrine Pickup");
-                    _currentPickup = Instantiate(_shrinePickupPrefab);
-                    _currentPickup.transform.position = PathingGrid.GetCellNearMe(PathingGrid.WorldToCellPosition(transform.position), 6f, 4f).Position;
-                    _currentPickup.GetComponent<ShrinePickup>().SetShrine(this);
-                    CombatManager.SpawnEnemy(EnemyType.Shadow, PathingGrid.GetCellNearMe(PathingGrid.WorldToCellPosition(transform.position), 5f, 2f).Position);
+                    SpawnChaser();
+                    spawnChaserTime = spawnChaserTimeMax;
                 }
 
                 currentTime -= Time.deltaTime;

@@ -1,41 +1,34 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using QuickEngine.Extensions;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Gear.Armour
 {
     public class Armour : ResourceItem
     {
-        public readonly ItemQuality Quality;
-        private static Dictionary<ItemQuality, string> _upgradeRequirements = new Dictionary<ItemQuality, string>();
+        private static Dictionary<ItemQuality, string> _upgradeRequirements;
 
         public Armour(ResourceTemplate template) : base(template)
         {
-            switch (template.Name)
-            {
-                case "Leather Square":
-                    Quality = ItemQuality.Dark;
-                    break;
-                case "Makeshift Plate":
-                    Quality = ItemQuality.Dull;
-                    break;
-                case "Metal Plate":
-                    Quality = ItemQuality.Glowing;
-                    break;
-                case "Iridescent Scale":
-                    Quality = ItemQuality.Shining;
-                    break;
-                case "Celestial Scale":
-                    Quality = ItemQuality.Radiant;
-                    break;
-            }
+        }
 
-            _upgradeRequirements.AddOrUpdate(Quality, template.Name);
+        private static void CreateUpgradeRequirements()
+        {
+            if (_upgradeRequirements != null) return;
+            _upgradeRequirements = new Dictionary<ItemQuality, string>();
+            _upgradeRequirements.Add(ItemQuality.Dark, "Leather Square");
+            _upgradeRequirements.Add(ItemQuality.Dull, "Makeshift Plate");
+            _upgradeRequirements.Add(ItemQuality.Glowing, "Metal Plate");
+            _upgradeRequirements.Add(ItemQuality.Shining, "Iridescent Scale");
+            _upgradeRequirements.Add(ItemQuality.Radiant, "Celestial Scale");
         }
 
         public static string QualityToName(ItemQuality quality)
         {
+            CreateUpgradeRequirements();
             return _upgradeRequirements[quality];
         }
     }

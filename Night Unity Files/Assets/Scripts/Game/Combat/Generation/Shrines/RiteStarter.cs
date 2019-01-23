@@ -64,17 +64,17 @@ namespace Game.Combat.Generation.Shrines
 
         private static Vector2 GetPosition()
         {
-            List<Vector2> points = AdvancedMaths.GetPoissonDiscDistribution(100, 5);
-            foreach (Vector2 p in points)
-            {
-                if (p.magnitude > PathingGrid.CombatMovementDistance - 1) continue;
-                if (p.Distance(PlayerCombat.Position()) < 1) continue;
-                Vector2 newPoint = p + (Vector2) PlayerCombat.Position();
-                Vector2 topLeft = new Vector2(newPoint.x - 0.25f, newPoint.y + 0.25f);
-                Vector2 bottomRight = new Vector2(newPoint.x + 0.25f, newPoint.y - 0.25f);
-                if (!PathingGrid.IsSpaceAvailable(topLeft, bottomRight)) continue;
-                return newPoint;
-            }
+//            List<Vector2> points = AdvancedMaths.GetPoissonDiscDistribution(100, 5);
+//            foreach (Vector2 p in points)
+//            {
+//                if (p.magnitude > PathingGrid.CombatMovementDistance - 1) continue;
+//                if (p.Distance(PlayerCombat.Position()) < 1) continue;
+//                Vector2 newPoint = p + (Vector2) PlayerCombat.Position();
+//                Vector2 topLeft = new Vector2(newPoint.x - 0.25f, newPoint.y + 0.25f);
+//                Vector2 bottomRight = new Vector2(newPoint.x + 0.25f, newPoint.y - 0.25f);
+//                if (!PathingGrid.IsSpaceAvailable(topLeft, bottomRight)) continue;
+//                return newPoint;
+//            }
 
             return PathingGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 5, 1).Position;
         }
@@ -118,8 +118,9 @@ namespace Game.Combat.Generation.Shrines
                 WorldState.TravelToNextEnvironment();
                 return;
             }
+
             Travel travel = CharacterManager.SelectedCharacter.TravelAction;
-            travel.TravelToInstant(travel.GetCurrentRegion());
+            SceneChanger.GoToCombatScene(() => CombatManager.SetCurrentRegion(travel.GetCurrentRegion()));
         }
     }
 }

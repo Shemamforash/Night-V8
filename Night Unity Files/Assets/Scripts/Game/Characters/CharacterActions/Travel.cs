@@ -54,6 +54,8 @@ namespace Game.Characters.CharacterActions
             CurrentRegion = MapGenerator.GetInitialNode();
             _inTransit = false;
             PlayerCharacter.RestAction.Enter();
+            CombatManager.ExitCombat(false);
+            SceneChanger.GoToGameScene();
         }
 
         private void ReachTarget()
@@ -81,7 +83,6 @@ namespace Game.Characters.CharacterActions
 
         protected override void OnClick()
         {
-            Debug.Log("Pressed");
             MenuStateMachine.ShowMenu("Map Menu");
         }
 

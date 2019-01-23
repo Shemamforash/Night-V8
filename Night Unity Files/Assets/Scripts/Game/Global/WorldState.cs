@@ -70,7 +70,7 @@ namespace Game.Global
 
         public static void SetDifficultyHard()
         {
-            _difficultySetting = DifficultySetting.Easy;
+            _difficultySetting = DifficultySetting.Hard;
             SetDifficultyModifiers();
         }
 
@@ -78,12 +78,12 @@ namespace Game.Global
         {
             if (_difficultySetting == DifficultySetting.Easy)
             {
-                EnemyDamageModifier = 0.15f;
+                EnemyDamageModifier = 0.2f;
                 EnemyHealthModifier = 0.8f;
                 return;
             }
 
-            EnemyDamageModifier = 0.2f;
+            EnemyDamageModifier = 0.3f;
             EnemyHealthModifier = 1f;
         }
 
@@ -361,8 +361,7 @@ namespace Game.Global
             List<EnemyTemplate> enemyTypes = EnemyTemplate.GetEnemyTypes();
             enemyTypes.ForEach(e =>
             {
-                if (e.Value == 0) return;
-                if (e.Value > difficulty) return;
+                if (e.Difficulty >= difficulty) return;
                 switch (e.Species)
                 {
                     case "Animal":

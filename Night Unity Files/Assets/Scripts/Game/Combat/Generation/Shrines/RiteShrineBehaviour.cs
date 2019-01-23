@@ -23,7 +23,6 @@ namespace Game.Combat.Generation.Shrines
         private static RiteShrineBehaviour _instance;
         private List<TutorialOverlay> _overlays;
         private Region _region;
-        private List<RiteColliderBehaviour> _riteColliders = new List<RiteColliderBehaviour>();
 
         public void Awake()
         {
@@ -144,7 +143,7 @@ namespace Game.Combat.Generation.Shrines
         public string GetEventText()
         {
             Brand brand = _brandChoice[_targetBrand];
-            return "Accept the " + brand.GetName() + " [T]\n<size=30>" + brand.GetRequirementText() + "</size>";
+            return "Accept the " + brand.GetDisplayName() + " [T]\n<size=30>" + brand.GetRequirementText() + "</size>";
         }
 
         public void Activate()
@@ -167,6 +166,7 @@ namespace Game.Combat.Generation.Shrines
             FadeCandles(_targetRiteCollider.transform);
             Destroy(_targetRiteCollider);
             --_region.RitesRemaining;
+            CombatLogController.PostLog("Accepted the " + _brandChoice[_targetBrand].GetDisplayName());
             _brandChoice[_targetBrand] = null;
             _targetBrand = -1;
             if (_brandChoice.TrueForAll(b => b == null)) GetComponent<CompassItem>().Die();

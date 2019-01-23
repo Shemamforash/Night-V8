@@ -23,7 +23,7 @@ namespace Game.Combat.Misc
         private Weapon _weapon;
         private event Action OnHitAction;
 
-        private float _speed, _burnChance, _decayChance, _sicknessChance, _accuracy, _knockBackForce, _knockBackModifier, _age, _seekModifier = 1;
+        private float _speed, _burnChance, _shatterChance, _sicknessChance, _accuracy, _knockBackForce, _knockBackModifier, _age, _seekModifier = 1;
         private float _finalDamageModifier = 1f;
         private bool _seekTarget;
         private int _damage, _damageDealt;
@@ -70,13 +70,13 @@ namespace Game.Combat.Misc
             WeaponAttributes attributes = _weapon.WeaponAttributes;
             _damage = (int) attributes.Val(AttributeType.Damage);
             _accuracy = 1 - attributes.Val(AttributeType.Accuracy);
-            _decayChance = attributes.Val(AttributeType.DecayChance);
-            _burnChance = attributes.Val(AttributeType.BurnChance);
-            _sicknessChance = attributes.Val(AttributeType.SicknessChance);
+            _shatterChance = attributes.Val(AttributeType.Shatter);
+            _burnChance = attributes.Val(AttributeType.Burn);
+            _sicknessChance = attributes.Val(AttributeType.Sickness);
             if (!(_origin is PlayerCombat)) return;
-            _decayChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.DecayChance);
-            _burnChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.BurnChance);
-            _sicknessChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.SicknessChance);
+            _shatterChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Shatter);
+            _burnChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Burn);
+            _sicknessChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Sickness);
         }
 
         public float CalculateAccuracy()
@@ -131,7 +131,7 @@ namespace Game.Combat.Misc
         {
             float random = Random.Range(0f, 1f);
             float conditionModifier = _weapon.GetAttributeValue(AttributeType.Pellets) * _weapon.GetAttributeValue(AttributeType.Capacity);
-            bool canDecay = random < _decayChance / conditionModifier;
+            bool canDecay = random < _shatterChance / conditionModifier;
             bool canBurn = random < _burnChance / conditionModifier;
             bool canSicken = random < _sicknessChance / conditionModifier;
             List<int> conditions = new List<int>();

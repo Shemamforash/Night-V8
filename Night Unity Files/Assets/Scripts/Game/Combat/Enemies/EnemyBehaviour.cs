@@ -62,7 +62,7 @@ namespace Game.Combat.Enemies
         {
             transform.SetParent(GameObject.Find("World").transform);
             Cell c = PathingGrid.GetCellNearMe(PlayerCombat.Position(), 10f, 7f);
-            if (c == null) c = PathingGrid.GetCellNearMe(PlayerCombat.Position(), 20f, 7f);
+            if (c == null) c = PathingGrid.GetCellNearMe(PlayerCombat.Position(), 20f, 5f);
             transform.position = c.Position;
         }
 

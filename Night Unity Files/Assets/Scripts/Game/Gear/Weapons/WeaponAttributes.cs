@@ -57,7 +57,7 @@ namespace Game.Gear.Weapons
             SetVal(AttributeType.FireRate, weaponClass.FireRate);
             SetVal(AttributeType.ReloadSpeed, weaponClass.ReloadSpeed);
             SetVal(AttributeType.Damage, weaponClass.Damage);
-            SetVal(AttributeType.Handling, weaponClass.Handling);
+            SetVal(AttributeType.Recoil, weaponClass.Recoil);
             SetVal(AttributeType.Capacity, weaponClass.Capacity);
             SetVal(AttributeType.Pellets, weaponClass.Pellets);
             SetVal(AttributeType.Accuracy, weaponClass.Accuracy);
@@ -72,7 +72,7 @@ namespace Game.Gear.Weapons
         public void RecalculateAttributeValues()
         {
             float damageModifier = 0.08f * _durability.CurrentValue();
-            float fireRateModifier = 0.02f * _durability.CurrentValue();
+            float fireRateModifier = 0.015f * _durability.CurrentValue();
             float reloadModifier = -0.01f * _durability.CurrentValue();
             float accuracyModifier = 0.01f * _durability.CurrentValue();
             _damageDurabilityModifier.SetFinalBonus(damageModifier);
@@ -103,10 +103,10 @@ namespace Game.Gear.Weapons
                                            + "\nReload:     " + Val(AttributeType.ReloadSpeed)
                                            + "\nAccuracy: " + Val(AttributeType.Accuracy);
 
-        public void DecreaseDurability(float modifier)
+        public void DecreaseDurability(float shots, float durabilityModifier)
         {
-            float durabilityLoss = 0.025f / Val(AttributeType.Pellets);
-            durabilityLoss += durabilityLoss * modifier;
+            float durabilityLossPerShot = 0.02f / Val(AttributeType.Pellets);
+            float durabilityLoss = durabilityLossPerShot * shots * durabilityModifier;
             _durability.Decrement(durabilityLoss);
             RecalculateAttributeValues();
         }

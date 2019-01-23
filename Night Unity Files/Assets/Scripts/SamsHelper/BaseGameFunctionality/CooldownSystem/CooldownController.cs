@@ -69,7 +69,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 
         private void UpdateUI()
         {
-            if (_unlocked) return;
+            if (_unlocked || _isSkillUnlocked == null) return;
             _unlocked = _isSkillUnlocked();
             _lockedCanvas.alpha = _unlocked ? 0 : 1;
             _unlockedCanvas.alpha = _unlocked ? 1 : 0;

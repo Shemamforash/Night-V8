@@ -34,6 +34,17 @@
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Salt</Ingredient1Name>
+		<Ingredient1Quantity>5</Ingredient1Quantity>
+		<Ingredient2Name>None</Ingredient2Name>
+		<Ingredient2Quantity>0</Ingredient2Quantity>
+		<ProductName>Gate Stone</ProductName>
+		<ProductQuantity>1</ProductQuantity>
+		<RecipeType>RESOURCE</RecipeType>
+		<LevelNo>0</LevelNo>
+		<Description>A clear stone, intrinsically linked to the gate</Description>
+	</Recipe>
+	<Recipe>
+		<Ingredient1Name>Salt</Ingredient1Name>
 		<Ingredient1Quantity>10</Ingredient1Quantity>
 		<Ingredient2Name>None</Ingredient2Name>
 		<Ingredient2Quantity>0</Ingredient2Quantity>

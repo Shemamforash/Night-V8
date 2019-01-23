@@ -305,6 +305,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08af636b1126bea45b1e3d3f88f00ac6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _button: {fileID: 114416704111967932}
+  _buttonText: {fileID: 114318380651512038}
+  _glowImage: {fileID: 114345132232398880}
 --- !u!114 &114416704111967932
 MonoBehaviour:
   m_ObjectHideFlags: 0

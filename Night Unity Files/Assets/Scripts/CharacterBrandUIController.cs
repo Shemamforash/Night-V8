@@ -33,6 +33,8 @@ public class CharacterBrandUIController : MonoBehaviour
             return;
         }
 
+        float progress = brand.NormalisedProgress();
+        text.color = Color.Lerp(new Color(1, 1, 1, 0.4f), Color.white, progress);
         text.text = brand.GetProgressString();
     }
 }

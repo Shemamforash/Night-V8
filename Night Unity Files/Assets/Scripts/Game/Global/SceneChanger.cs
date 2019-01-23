@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
@@ -16,6 +17,7 @@ namespace Game.Global
         private static bool _fadeInAudio;
         private Tweener _volumeTweener;
         private static bool _changingScene;
+        private static Action _onSceneEnd;
         private const float DefaultFadeTime = 0.5f;
 
         public void Awake()
@@ -58,6 +60,8 @@ namespace Game.Global
 
             Time.timeScale = 1f;
             yield return new WaitForSeconds(DefaultFadeTime);
+            _onSceneEnd?.Invoke();
+            _onSceneEnd = null;
             StartCoroutine(LoadNextScene());
         }
 
@@ -74,8 +78,9 @@ namespace Game.Global
             ChangeScene("Story");
         }
 
-        public static void GoToCombatScene()
+        public static void GoToCombatScene(Action onSceneEnd = null)
         {
+            _onSceneEnd = onSceneEnd;
             ChangeScene("Combat");
         }
 

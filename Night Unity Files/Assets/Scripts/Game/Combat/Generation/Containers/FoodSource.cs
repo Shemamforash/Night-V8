@@ -15,17 +15,18 @@ namespace Game.Combat.Generation
             ImageLocation = "Plants/" + foodType;
         }
 
-        public override ContainerBehaviour CreateObject(bool autoreveal = false)
+        public override ContainerBehaviour CreateObject(bool autoReveal = false)
         {
-            ContainerBehaviour container = base.CreateObject(autoreveal);
+            ContainerBehaviour container = base.CreateObject(autoReveal);
             if (_insectPrefab == null) _insectPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Insect");
-            GameObject insect = GameObject.Instantiate(_insectPrefab);
-            insect.transform.SetParent(container.transform);
-            insect.transform.position = container.transform.position;
+            GameObject insect = GameObject.Instantiate(_insectPrefab, container.transform, true);
+            Transform containerTransform = container.transform;
+            insect.transform.parent = containerTransform;
+            insect.transform.position = containerTransform.position;
             container.SetInsect(insect.GetComponent<InsectBehaviour>());
             return container;
         }
 
-        protected override string GetLogText() => "Found some food";
+        protected override string GetLogText() => "Found a plant";
     }
 }

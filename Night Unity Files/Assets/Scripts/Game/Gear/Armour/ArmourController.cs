@@ -84,10 +84,16 @@ namespace Game.Gear.Armour
             return didTakeDamage;
         }
 
+        private int GetUpgradeQuantity()
+        {
+            return (_currentLevel + 1) % 2 == 0 ? 2 : 1;
+        }
+
+
         public bool CanUpgrade()
         {
             if (_currentLevel == 10) return false;
-            return Inventory.GetResourceQuantity(Armour.QualityToName(_targetQuality)) > 0;
+            return Inventory.GetResourceQuantity(Armour.QualityToName(_targetQuality)) >= GetUpgradeQuantity();
         }
 
         public void Upgrade()
@@ -142,9 +148,9 @@ namespace Game.Gear.Armour
             return _currentHealth.Normalised();
         }
 
-        private string[] _names =
+        private readonly string[] _names =
         {
-            "No Armour", "Makeshift Armour", "Makeshift Armour+", "Leather Armour", "Leather Armour+", "Metal Armour", "Metal Armour+", "Iridescent Armour",
+            "No Armour", "Leather Armour", "Leather Armour+", "Makeshift Armour", "Makeshift Armour+", "Metal Armour", "Metal Armour+", "Iridescent Armour",
             "Iridescent Armour+", "Celestial Armour", "Celestial Armour+"
         };
 
@@ -168,9 +174,10 @@ namespace Game.Gear.Armour
 
         public string GetUpgradeRequirements()
         {
-            if (_currentLevel == 10) return "-";
-            if (!CanUpgrade()) return "Need " + Armour.QualityToName(_targetQuality) + " to Upgrade";
-            return "Upgrade - 1 " + Armour.QualityToName(_targetQuality);
+            if (_currentLevel == 10) return "Fully Upgraded";
+            int quantity = GetUpgradeQuantity();
+            if (!CanUpgrade()) return "Need x" + quantity + " " + Armour.QualityToName(_targetQuality) + " to Upgrade";
+            return "Upgrade - x" + quantity + " " + Armour.QualityToName(_targetQuality);
         }
 
         public void Reset()

@@ -79,7 +79,7 @@ namespace Game.Global
 
         private int GetEnemiesInRange()
         {
-            if (PlayerCombat.Instance == null) return -1;
+            if (CombatManager.Instance() == null) return -1;
             Vector2 playerPosition = PlayerCombat.Position();
             List<CanTakeDamage> enemies = CombatManager.Enemies();
             if (enemies.Count == 0) return -1;
@@ -206,7 +206,7 @@ namespace Game.Global
         }
 
         private static Tweener _musicTween;
-        
+
         public static void FadeInMusicMuffle()
         {
             if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
@@ -234,12 +234,10 @@ namespace Game.Global
         }
 
         private static Tweener _muffleTween;
-        private static float _lastMuffleValue;
 
         public static void FadeInGlobalMuffle()
         {
             if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
-            _audioMixer.GetFloat("Muffle", out _lastMuffleValue);
             _muffleTween?.Kill();
             _muffleTween = _audioMixer.DOSetFloat("Muffle", 750, 1f).SetUpdate(UpdateType.Normal, true);
         }
@@ -248,13 +246,13 @@ namespace Game.Global
         {
             if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
             _muffleTween?.Kill();
-            _muffleTween = _audioMixer.DOSetFloat("Muffle", _lastMuffleValue, 1f).SetUpdate(UpdateType.Normal, true);
+            _muffleTween = _audioMixer.DOSetFloat("Muffle", 22000, 1f).SetUpdate(UpdateType.Normal, true);
         }
-        
+
         public static void SetGlobalMuffle(float value)
         {
             if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
-            _audioMixer.SetFloat("Muffle", value);
+            _audioMixer.SetFloat("SecondaryMuffle", value);
         }
 
         private static float NormalisedVolumeToAttenuation(float volume)

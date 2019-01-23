@@ -140,14 +140,15 @@ namespace Game.Gear
             public string GetSummary(ItemQuality quality)
             {
                 float scaledValue = _modifierValue * ((int) quality + 1);
-                if (!_additive || AttributeTarget == AttributeType.DecayChance ||
-                    AttributeTarget == AttributeType.BurnChance ||
-                    AttributeTarget == AttributeType.SicknessChance)
+                string attributeName = AttributeTarget.AttributeToDisplayString();
+                if (!_additive || AttributeTarget == AttributeType.Shatter ||
+                    AttributeTarget == AttributeType.Burn ||
+                    AttributeTarget == AttributeType.Sickness)
                 {
-                    return "+" + (int) (scaledValue * 100) + "% " + AttributeTarget;
+                    return "+" + (int) (scaledValue * 100) + "% " + attributeName;
                 }
 
-                return "+" + scaledValue + " " + AttributeTarget;
+                return "+" + scaledValue + " " + attributeName;
             }
         }
 

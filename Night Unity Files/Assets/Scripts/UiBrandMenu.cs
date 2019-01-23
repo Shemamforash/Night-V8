@@ -64,7 +64,6 @@ public class UiBrandMenu : Menu
         _effectText.SetText(_effectString);
         _overviewCanvas.alpha = 0;
         _detailCanvas.alpha = 1;
-        _closeButton.UseDefaultInput();
         _closeButton.SetOnClick(Hide);
         _closeButton.SetCallback(Hide);
     }
@@ -77,18 +76,16 @@ public class UiBrandMenu : Menu
         switch (brand.Status)
         {
             case BrandStatus.Failed:
-                Debug.Log("failed " + brand.GetFailName());
                 _titleString = "Failed";
                 _benefitString = "A curse of " + brand.GetFailName() + " has been cast upon " + CharacterManager.SelectedCharacter.Name;
                 break;
             case BrandStatus.Succeeded:
-                Debug.Log("passed " + brand.GetSuccessName());
                 _titleString = "Passed";
                 _benefitString = "A boon of " + brand.GetSuccessName() + " has been granted upon " + CharacterManager.SelectedCharacter.Name;
                 break;
         }
 
-        _titleString = _titleString + " " + brand.GetName();
+        _titleString = _titleString + " " + brand.GetDisplayName();
         string descriptionString = "\n<i><size=20>" + brand.Description() + "</size></i>";
         _benefitString += descriptionString;
         _instance.Show();

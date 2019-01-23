@@ -74,16 +74,11 @@ namespace Facilitating.UIControllers
         {
         }
 
-        private void UpdatePlates()
-        {
-            UpdateArmourDescriptions();
-        }
-
         protected override void OnShow()
         {
             _armourController = CharacterManager.SelectedCharacter.ArmourController;
             UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
-            UpdatePlates();
+            UpdateArmourDescriptions();
             InputHandler.RegisterInputListener(this);
             _armourObject.SetActive(true);
             _upgradeObject.SetActive(false);

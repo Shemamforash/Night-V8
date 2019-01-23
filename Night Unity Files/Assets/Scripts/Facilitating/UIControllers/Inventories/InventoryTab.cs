@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Game.Global;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -57,7 +58,6 @@ namespace Facilitating.UIControllers.Inventories
 
         public void Select()
         {
-            Debug.Log(_currentTab + " " + _prevTab + " " + _nextTab);
             if (_currentTab == null)
             {
                 if (_prevTab == null) UiGearMenuController.LeftTab().InstantFade();
@@ -65,7 +65,7 @@ namespace Facilitating.UIControllers.Inventories
             }
             else
             {
-                UiGearMenuController.PlayTabAudio();
+                UiGearMenuController.PlayAudio(AudioClips.TabChange);
                 if (TabIsNext())
                 {
                     if (_prevTab == null) UiGearMenuController.LeftTab().FlashAndFade();

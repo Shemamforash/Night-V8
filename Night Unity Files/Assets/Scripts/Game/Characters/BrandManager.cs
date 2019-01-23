@@ -29,11 +29,7 @@ namespace Game.Characters
         public void Load(XmlNode doc)
         {
             XmlNode brandsNode = doc.SelectSingleNode("Brands");
-            foreach (XmlNode brandNode in brandsNode.SelectNodes("Brand"))
-            {
-                LoadBrand(brandNode);
-            }
-
+            foreach (XmlNode brandNode in brandsNode.SelectNodes("Brand")) LoadBrand(brandNode);
             _activeBrandOne = LoadBrand(brandsNode.SelectSingleNode("Brand0"));
             _activeBrandTwo = LoadBrand(brandsNode.SelectSingleNode("Brand1"));
             _activeBrandThree = LoadBrand(brandsNode.SelectSingleNode("Brand2"));
@@ -139,7 +135,7 @@ namespace Game.Characters
             _activeBrandOne = brand;
             brand.SetStatus(BrandStatus.Active);
 #if UNITY_EDITOR
-            brand.UpdateValue(5000);
+//            brand.UpdateValue(5000);
 #endif
         }
 
@@ -149,7 +145,7 @@ namespace Game.Characters
             _activeBrandTwo = brand;
             brand.SetStatus(BrandStatus.Active);
 #if UNITY_EDITOR
-            brand.UpdateValue(5000);
+//            brand.UpdateValue(5000);
 #endif
         }
 
@@ -159,7 +155,7 @@ namespace Game.Characters
             _activeBrandThree = brand;
             brand.SetStatus(BrandStatus.Active);
 #if UNITY_EDITOR
-            brand.UpdateValue(5000);
+//            brand.UpdateValue(5000);
 #endif
         }
 

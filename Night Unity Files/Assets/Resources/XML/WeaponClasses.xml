@@ -5,7 +5,7 @@
 			<FireRate>3</FireRate>
 			<ReloadSpeed>0.85</ReloadSpeed>
 			<Accuracy>55</Accuracy>
-			<Handling>80</Handling>
+			<Recoil>20</Recoil>
 			<Capacity>10</Capacity>
 		</Subtype>
 		<Subtype name="Shortshooter" automatic="False">
@@ -13,7 +13,7 @@
 			<FireRate>5</FireRate>
 			<ReloadSpeed>0.7</ReloadSpeed>
 			<Accuracy>60</Accuracy>
-			<Handling>70</Handling>
+			<Recoil>20</Recoil>
 			<Capacity>12</Capacity>
 		</Subtype>
 		<Subtype name="Deepdriver" automatic="False">
@@ -21,7 +21,7 @@
 			<FireRate>6</FireRate>
 			<ReloadSpeed>2</ReloadSpeed>
 			<Accuracy>65</Accuracy>
-			<Handling>90</Handling>
+			<Recoil>40</Recoil>
 			<Capacity>6</Capacity>
 		</Subtype>
 	</Class>
@@ -31,7 +31,7 @@
 			<FireRate>1</FireRate>
 			<ReloadSpeed>3</ReloadSpeed>
 			<Accuracy>70</Accuracy>
-			<Handling>20</Handling>
+			<Recoil>80</Recoil>
 			<Capacity>6</Capacity>
 		</Subtype>
 		<Subtype name="Shoulderbreaker" automatic="True">
@@ -39,7 +39,7 @@
 			<FireRate>2</FireRate>
 			<ReloadSpeed>3</ReloadSpeed>
 			<Accuracy>70</Accuracy>
-			<Handling>0</Handling>
+			<Recoil>100</Recoil>
 			<Capacity>6</Capacity>
 		</Subtype>
 		<Subtype name="Voidwalker" automatic="False">
@@ -47,7 +47,7 @@
 			<FireRate>1</FireRate>
 			<ReloadSpeed>5</ReloadSpeed>
 			<Accuracy>70</Accuracy>
-			<Handling>20</Handling>
+			<Recoil>80</Recoil>
 			<Capacity>6</Capacity>
 		</Subtype>
 	</Class>
@@ -57,7 +57,7 @@
 			<FireRate>4</FireRate>
 			<ReloadSpeed>2.1</ReloadSpeed>
 			<Accuracy>20</Accuracy>
-			<Handling>25</Handling>
+			<Recoil>75</Recoil>
 			<Capacity>6</Capacity>
 		</Subtype>
 		<Subtype name="Bonebreaker" automatic="False">
@@ -65,7 +65,7 @@
 			<FireRate>1.5</FireRate>
 			<ReloadSpeed>3.3</ReloadSpeed>
 			<Accuracy>20</Accuracy>
-			<Handling>25</Handling>
+			<Recoil>75</Recoil>
 			<Capacity>10</Capacity>
 		</Subtype>
 		<Subtype name="Skullcrusher" automatic="False">
@@ -73,7 +73,7 @@
 			<FireRate>6</FireRate>
 			<ReloadSpeed>2.85</ReloadSpeed>
 			<Accuracy>40</Accuracy>
-			<Handling>50</Handling>
+			<Recoil>50</Recoil>
 			<Capacity>2</Capacity>
 		</Subtype>
 	</Class>
@@ -83,7 +83,7 @@
 			<FireRate>12</FireRate>
 			<ReloadSpeed>1.1</ReloadSpeed>
 			<Accuracy>30</Accuracy>
-			<Handling>95</Handling>
+			<Recoil>10</Recoil>
 			<Capacity>30</Capacity>
 		</Subtype>
 		<Subtype name="Annihilator" automatic="True">
@@ -91,7 +91,7 @@
 			<FireRate>9</FireRate>
 			<ReloadSpeed>1.4</ReloadSpeed>
 			<Accuracy>30</Accuracy>
-			<Handling>90</Handling>
+			<Recoil>10</Recoil>
 			<Capacity>50</Capacity>
 		</Subtype>
 		<Subtype name="Gouger" automatic="True">
@@ -99,7 +99,7 @@
 			<FireRate>6</FireRate>
 			<ReloadSpeed>0.8</ReloadSpeed>
 			<Accuracy>30</Accuracy>
-			<Handling>95</Handling>
+			<Recoil>10</Recoil>
 			<Capacity>25</Capacity>
 		</Subtype>
 	</Class>

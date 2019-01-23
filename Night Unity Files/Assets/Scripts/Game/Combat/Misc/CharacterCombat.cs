@@ -94,10 +94,8 @@ namespace Game.Combat.Misc
 
         public void IncreaseRecoil()
         {
-            float recoilLoss = Weapon().GetAttributeValue(AttributeType.Handling);
-            recoilLoss = 100f - recoilLoss;
-            recoilLoss /= 100f;
-            Recoil.Increment(recoilLoss);
+            float recoil = Weapon().GetAttributeValue(AttributeType.Recoil) / 100f;
+            Recoil.Increment(recoil);
             _timeToRecoilRecovery = 0.5f;
         }
 

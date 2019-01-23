@@ -44,6 +44,7 @@ namespace Game.Characters
             Attributes.Save(doc);
             BrandManager.Save(doc);
             doc.CreateChild("TimeAlive", _timeAlive);
+            doc.CreateChild("DaysSurvived", _daysSurvived);
             doc.CreateChild("CharacterClass", CharacterTemplate.CharacterClass.ToString());
             XmlNode weaponKillNode = doc.CreateChild("WeaponKills");
             foreach (KeyValuePair<WeaponType, int> weaponKills in _weaponKills)
@@ -59,6 +60,7 @@ namespace Game.Characters
             Attributes.Load(root);
             BrandManager.Load(root);
             _timeAlive = root.IntFromNode("TimeAlive");
+            _daysSurvived = root.IntFromNode("DaysSurvived");
 
             XmlNode weaponKillNode = root.SelectSingleNode("WeaponKills");
             List<WeaponType> weaponTypes = WeaponGenerator.GetWeaponTypes();

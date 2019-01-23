@@ -19,24 +19,7 @@ namespace SamsHelper.Libraries
     {
         public static string AttributeToDisplayString(this AttributeType attributeType)
         {
-            string attributeString = attributeType.ToString();
-            switch (attributeType)
-            {
-                case AttributeType.ReloadSpeed:
-                    attributeString = "Reload Speed";
-                    break;
-                case AttributeType.BurnChance:
-                    attributeString = "Burn Chance";
-                    break;
-                case AttributeType.DecayChance:
-                    attributeString = "Shatter Chance";
-                    break;
-                case AttributeType.SicknessChance:
-                    attributeString = "Sickness Chance";
-                    break;
-            }
-
-            return attributeString;
+            return string.Join(" ", attributeType.ToString().SplitOnCamelCase());
         }
 
         public static bool Empty<T>(this Queue<T> queue) => queue.Count == 0;
@@ -47,6 +30,11 @@ namespace SamsHelper.Libraries
 
         private static Transform _dynamicParent;
 
+        public static string[] SplitOnCamelCase(this string str)
+        {
+            return Regex.Split(str, @"(?<!^)(?=[A-Z])");
+        }
+        
         public static void SetAsDynamicChild(this Transform t)
         {
             if (_dynamicParent == null) _dynamicParent = GameObject.Find("Dynamic").transform;
@@ -292,7 +280,7 @@ namespace SamsHelper.Libraries
             Debug.Log(listString);
         }
 
-        public static void PrintList<T>(this T[] arr)
+        public static void Print<T>(this T[] arr)
         {
             new List<T>(arr).Print();
         }
@@ -423,7 +411,9 @@ namespace SamsHelper.Libraries
 
         public static void PrintTime(this Stopwatch stopWatch, string message)
         {
+#if UNITY_EDITOR
             Debug.Log(message + stopWatch.Elapsed.ToString("mm\\:ss\\.ffff"));
+#endif
         }
     }
 }

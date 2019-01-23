@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Characters;
 using Game.Combat.Player;
 using Game.Global.Tutorial;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
@@ -12,18 +13,21 @@ namespace Game.Combat.Misc
     public class SkillBar : MonoBehaviour
     {
         private const int NoSlots = 4;
-        private static List<CooldownController> _skillControllers;
-        private static float _cooldownModifier;
-        private static bool SkillsAreFree;
-        private static bool _skillsReady;
-        private static float _cooldownRemaining;
-        private static float _duration;
-        private static RectTransform _skillBarRect;
-        private static List<TutorialOverlay> _overlays;
-        private static Characters.Player _player;
+        private List<CooldownController> _skillControllers;
+        private float _cooldownModifier;
+        private bool SkillsAreFree;
+        private bool _skillsReady;
+        private float _cooldownRemaining;
+        private float _duration;
+        private RectTransform _skillBarRect;
+        private List<TutorialOverlay> _overlays;
+        private Characters.Player _player;
+        private static bool _needsUpdate;
+        private static SkillBar _instance;
 
         public void Awake()
         {
+            _instance = this;
             _skillControllers = new List<CooldownController>();
 
             for (int i = 0; i < NoSlots; ++i)
@@ -40,6 +44,11 @@ namespace Game.Combat.Misc
             };
         }
 
+        private void OnDestroy()
+        {
+            _instance = null;
+        }
+
         private void UpdateCooldownControllers(float normalisedDuration)
         {
             _skillControllers.ForEach(c => c.UpdateCooldownFill(normalisedDuration));
@@ -47,6 +56,7 @@ namespace Game.Combat.Misc
 
         public void Update()
         {
+            TryUpdateSkills();
             if (_skillsReady) return;
             _cooldownRemaining -= Time.deltaTime;
             if (_cooldownRemaining < 0)
@@ -61,48 +71,57 @@ namespace Game.Combat.Misc
             UpdateCooldownControllers(normalisedTime);
         }
 
-        private static bool IsCharacterSkillOneUnlocked() => _player.Attributes.SkillOneUnlocked;
-        private static bool IsCharacterSkillTwoUnlocked() => _player.Attributes.SkillTwoUnlocked;
-        private static bool IsWeaponSkillOneUnlocked() => _player.Attributes.WeaponSkillOneUnlocks.Contains(_player.EquippedWeapon.WeaponType());
-        private static bool IsWeaponSkillTwoUnlocked() => _player.Attributes.WeaponSkillTwoUnlocks.Contains(_player.EquippedWeapon.WeaponType());
+        private bool IsCharacterSkillOneUnlocked() => _player.Attributes.SkillOneUnlocked;
+        private bool IsCharacterSkillTwoUnlocked() => _player.Attributes.SkillTwoUnlocked;
+        private bool IsWeaponSkillOneUnlocked() => _player.Attributes.WeaponSkillOneUnlocks.Contains(_player.EquippedWeapon.WeaponType());
+        private bool IsWeaponSkillTwoUnlocked() => _player.Attributes.WeaponSkillTwoUnlocks.Contains(_player.EquippedWeapon.WeaponType());
 
-        public static void BindSkills(Characters.Player player, float skillCooldownModifier)
+        private void TryUpdateSkills()
         {
-            _player = player;
-            _cooldownModifier = skillCooldownModifier;
-            Skill characterSkillOne = player.CharacterSkillOne;
-            Skill characterSkillTwo = player.CharacterSkillTwo;
-            Skill weaponSkillOne = player.EquippedWeapon.WeaponSkillOne;
-            Skill weaponSkillTwo = player.EquippedWeapon.WeaponSkillTwo;
+            if (!_needsUpdate) return;
+            _needsUpdate = false;
+            _player = CharacterManager.SelectedCharacter;
+            _cooldownModifier = _player.Attributes.CalculateSkillCooldownModifier();
+            Skill characterSkillOne = _player.CharacterSkillOne;
+            Skill characterSkillTwo = _player.CharacterSkillTwo;
+            Skill weaponSkillOne = _player.EquippedWeapon.WeaponSkillOne;
+            Skill weaponSkillTwo = _player.EquippedWeapon.WeaponSkillTwo;
 
 #if UNITY_EDITOR
             SkillsAreFree = true;
 #endif
 
-            BindSkill(0, characterSkillOne, IsCharacterSkillOneUnlocked, player.GetCharacterSkillOneProgress);
-            BindSkill(1, characterSkillTwo, IsCharacterSkillTwoUnlocked, player.GetCharacterSkillTwoProgress);
-            BindSkill(2, weaponSkillOne, IsWeaponSkillOneUnlocked, player.GetWeaponSkillOneProgress);
-            BindSkill(3, weaponSkillTwo, IsWeaponSkillTwoUnlocked, player.GetWeaponSkillTwoProgress);
+            BindSkill(0, characterSkillOne, IsCharacterSkillOneUnlocked, _player.GetCharacterSkillOneProgress);
+            BindSkill(1, characterSkillTwo, IsCharacterSkillTwoUnlocked, _player.GetCharacterSkillTwoProgress);
+            BindSkill(2, weaponSkillOne, IsWeaponSkillOneUnlocked, _player.GetWeaponSkillOneProgress);
+            BindSkill(3, weaponSkillTwo, IsWeaponSkillTwoUnlocked, _player.GetWeaponSkillTwoProgress);
         }
 
-        private static void BindSkill(int slot, Skill skill, Func<bool> isSkillUnlocked, Func<Tuple<string, float>> getProgress)
+        public static void UpdateSkills()
+        {
+            _needsUpdate = true;
+        }
+
+        private void BindSkill(int slot, Skill skill, Func<bool> isSkillUnlocked, Func<Tuple<string, float>> getProgress)
         {
             _skillControllers[slot].SetSkill(skill, isSkillUnlocked, getProgress);
         }
 
-        private static bool FailToCastSkill()
+        private bool FailToCastSkill()
         {
             float failChance = PlayerCombat.Instance.Player.Attributes.SkillDisableChance;
             return !(Random.Range(0f, 1f) > failChance);
         }
 
-        private static bool IsSkillFree()
+        private bool IsSkillFree()
         {
             float freeSkillChance = PlayerCombat.Instance.Player.Attributes.FreeSkillChance;
             return Random.Range(0f, 1f) <= freeSkillChance;
         }
 
-        public static void ActivateSkill(int skillNo)
+        public static SkillBar Instance() => _instance;
+        
+        public void ActivateSkill(int skillNo)
         {
             if (!_skillsReady) return;
             Skill skill = _skillControllers[skillNo].Skill();
@@ -117,7 +136,7 @@ namespace Game.Combat.Misc
             StartCooldown(skill.AdrenalineCost());
         }
 
-        private static void StartCooldown(int duration)
+        private void StartCooldown(int duration)
         {
             _skillsReady = false;
             _duration = duration * _cooldownModifier;

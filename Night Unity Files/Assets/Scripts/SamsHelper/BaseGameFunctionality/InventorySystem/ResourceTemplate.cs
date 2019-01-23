@@ -60,7 +60,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public ResourceTemplate(XmlNode resourceNode)
         {
             Name = resourceNode.StringFromNode("Name");
-            Consumable = true;
+            Consumable = resourceNode.BoolFromNode("Consumable");
             switch (resourceNode.StringFromNode("Type"))
             {
                 case "Water":
@@ -74,7 +74,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 case "Resource":
                     ResourceType = ResourceType.Resource;
                     Resources.Add(this);
-                    Consumable = false;
                     break;
                 case "Plant":
                     ResourceType = ResourceType.Plant;
@@ -85,7 +84,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                     break;
                 case "Armour":
                     ResourceType = ResourceType.Armour;
-                    Consumable = false;
                     break;
             }
 

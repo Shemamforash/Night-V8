@@ -33,7 +33,6 @@ namespace Game.Combat.Player
         private float _dryFireTimer;
         private float _adrenalineRecoveryRate;
         private const float DryFireTimerMax = 0.3f;
-        private float _skillCooldownModifier;
         private readonly Number _adrenalineLevel = new Number(0, 0, 8);
         private Coroutine _dashCooldown;
         private Quaternion _lastTargetRotation;
@@ -166,16 +165,16 @@ namespace Game.Combat.Player
                         Reload();
                         break;
                     case InputAxis.SkillOne:
-                        SkillBar.ActivateSkill(0);
+                        SkillBar.Instance().ActivateSkill(0);
                         break;
                     case InputAxis.SkillTwo:
-                        SkillBar.ActivateSkill(1);
+                        SkillBar.Instance().ActivateSkill(1);
                         break;
                     case InputAxis.SkillThree:
-                        SkillBar.ActivateSkill(2);
+                        SkillBar.Instance().ActivateSkill(2);
                         break;
                     case InputAxis.SkillFour:
-                        SkillBar.ActivateSkill(3);
+                        SkillBar.Instance().ActivateSkill(3);
                         break;
                     case InputAxis.Sprint:
                         _dashPressed = true;
@@ -253,7 +252,7 @@ namespace Game.Combat.Player
 
         public float InRange()
         {
-            if (!CombatManager.GetCurrentRegion().IsDynamic()) return -1;
+            if (!CombatManager.GetCurrentRegion().IsDynamic() && CombatManager.GetCurrentRegion().GetRegionType() != RegionType.Temple) return -1;
             return CurrentCell().OutOfRange ? 1 : -1;
         }
 
@@ -433,8 +432,7 @@ namespace Game.Combat.Player
             if (HealthController.GetNormalisedHealthValue() == 1) currentHealth = maxHealth;
             HealthController.SetInitialHealth(currentHealth, this, maxHealth);
             MovementController.SetSpeed(Player.Attributes.CalculateSpeed());
-            _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
-            SkillBar.BindSkills(Player, _skillCooldownModifier);
+            SkillBar.UpdateSkills();
             _adrenalineRecoveryRate = Player.Attributes.CalculateAdrenalineRecoveryRate();
         }
 
@@ -474,6 +472,7 @@ namespace Game.Combat.Player
             HealthController.SetInitialHealth(Player.Attributes.CalculateInitialHealth(), this, Player.Attributes.CalculateMaxHealth());
         }
 
+        
         public void Initialise()
         {
             InputHandler.SetCurrentListener(this);
@@ -489,7 +488,7 @@ namespace Game.Combat.Player
             _playerLight = GameObject.Find("Player Light").GetComponent<FastLight>();
             _playerLight.Radius = CombatManager.VisibilityRange();
 
-            SkillBar.BindSkills(Player, _skillCooldownModifier);
+            SkillBar.UpdateSkills();
             transform.position = PathingGrid.PlayerStartPosition();
             float zRot = AdvancedMaths.AngleFromUp(transform.position, Vector2.zero);
             transform.rotation = Quaternion.Euler(0f, 0f, zRot);

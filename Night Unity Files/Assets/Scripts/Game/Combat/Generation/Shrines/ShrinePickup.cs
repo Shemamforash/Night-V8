@@ -50,6 +50,7 @@ namespace Game.Combat.Generation.Shrines
 
         private void TryFollowPlayer()
         {
+            if (_returning) return;
             if (_attractedToShrine) return;
             if (_followPlayer == false)
             {
@@ -67,7 +68,7 @@ namespace Game.Combat.Generation.Shrines
             if (!CombatManager.IsCombatActive()) return;
             TryFollowPlayer();
             TryAttractToShrine();
-            if (_particles.particleCount == 0) Destroy(gameObject);
+            if (_returning && _particles.particleCount == 0) Destroy(gameObject);
         }
     }
 }

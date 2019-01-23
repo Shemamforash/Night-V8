@@ -1,4 +1,5 @@
-﻿using Game.Combat.Misc;
+﻿using System.Collections;
+using Game.Combat.Misc;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -32,7 +33,14 @@ namespace Game.Combat.Enemies.Humans
             if (_powerShotCooldown > 0) return;
             CurrentAction = null;
             _firing = true;
-            SkillAnimationController.Create(transform, "Sniper", 1f, FirePowerShot);
+            SkillAnimationController.Create(transform, "Sniper", 1f, () => StartCoroutine(StartFireShot()));
+        }
+
+        private IEnumerator StartFireShot()
+        {
+            yield return new WaitForSeconds(0.5f);
+            if (gameObject == null) yield break;
+            FirePowerShot();
         }
     }
 }

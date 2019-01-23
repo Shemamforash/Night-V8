@@ -34,6 +34,8 @@ namespace Game.Combat.Generation
                     return "Found an accessory";
                 case Inscription _:
                     return "Found an inscription";
+                case ResourceItem item:
+                    return "Found " + item.Name;
             }
 
             return "";

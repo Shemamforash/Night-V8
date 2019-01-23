@@ -52,8 +52,12 @@ namespace Game.Gear.Armour
 
         public override void UnEquip()
         {
-            (EquippedCharacter as Player)?.RemoveModifier(_template.TargetAttribute, _modifier);
-            RemoveFromWeapon(EquippedCharacter.EquippedWeapon);
+            if (EquippedCharacter is Player player)
+            {
+                player.RemoveModifier(_template.TargetAttribute, _modifier);
+                RemoveFromWeapon(EquippedCharacter.EquippedWeapon);
+            }
+
             base.UnEquip();
             if (PlayerCombat.Instance == null) return;
             PlayerCombat.Instance.RecalculateAttributes();
@@ -102,9 +106,9 @@ namespace Game.Gear.Armour
                 TargetAttribute = Inventory.StringToAttributeType(accessoryNode.StringFromNode("Attribute"));
                 _modifierValue = accessoryNode.FloatFromNode("Bonus");
                 _accessoryTemplates.Add(this);
-                ModifiesCondition = TargetAttribute == AttributeType.DecayChance ||
-                                    TargetAttribute == AttributeType.SicknessChance ||
-                                    TargetAttribute == AttributeType.DecayChance;
+                ModifiesCondition = TargetAttribute == AttributeType.Shatter ||
+                                    TargetAttribute == AttributeType.Sickness ||
+                                    TargetAttribute == AttributeType.Shatter;
             }
 
             public AttributeModifier GetModifier(int qualityMultiplier)

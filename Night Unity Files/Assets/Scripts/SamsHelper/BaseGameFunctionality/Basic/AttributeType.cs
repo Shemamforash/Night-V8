@@ -17,12 +17,12 @@
         Accuracy,
         FireRate,
         ReloadSpeed,
-        Handling,
+        Recoil,
         Pellets,
         Capacity,
-        SicknessChance,
-        DecayChance,
-        BurnChance,
+        Sickness,
+        Shatter,
+        Burn,
         CompassBonus
     }
 }

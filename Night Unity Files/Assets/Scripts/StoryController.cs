@@ -15,7 +15,7 @@ using Random = UnityEngine.Random;
 
 public class StoryController : Menu
 {
-    private const float _timePerWord = 0.3f, MinAlpha = 0.25f;
+    private const float _timePerWord = 0.3f;
     private TextMeshProUGUI _storyText;
     private static bool _goToCredits;
     private static bool _paused;
@@ -38,6 +38,7 @@ public class StoryController : Menu
         _closeButton = _skipCanvas.GetComponent<CloseButtonController>();
         _closeButton.SetCallback(Skip);
         _closeButton.SetOnClick(Skip);
+        Debug.Log("using fire input");
         _closeButton.UseFireInput();
         _audioSource = Camera.main.GetComponent<AudioSource>();
         _audioSource.volume = 0f;

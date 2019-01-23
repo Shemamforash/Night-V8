@@ -67,9 +67,9 @@ namespace Game.Exploration.Ui
         private void SetGritText()
         {
             string gritString;
-            if (_region.GetRegionType() == RegionType.Gate) gritString = "Return home";
+            if (_distance == 0) gritString = "Current Location";
+            else if (_region.GetRegionType() == RegionType.Gate) gritString = "Return home";
             else if (!_canAfford) gritString = "Not Enough Grit";
-            else if (_distance == 0) gritString = "Current Location";
             else if (_gritCost == 0) gritString = "Travel to Temple";
             else gritString = _gritCost + " Grit";
             _costText.text = gritString;

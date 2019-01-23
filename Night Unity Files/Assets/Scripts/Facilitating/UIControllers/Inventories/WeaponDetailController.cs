@@ -8,7 +8,7 @@ using UnityEngine;
 public class WeaponDetailController : MonoBehaviour
 {
     private EnhancedText _nameText, _inscriptionNameText, _inscriptionEffectText, _typeText;
-    private EnhancedText _damageText, _fireRateText, _reloadSpeedText, _accuracyText, _handlingText, _dpsText, _capacityText, _shatterText, _burnText, _sicknessText;
+    private EnhancedText _damageText, _fireRateText, _reloadSpeedText, _accuracyText, _recoilText, _dpsText, _capacityText, _shatterText, _burnText, _sicknessText;
     private GameObject _shatterObject, _burnObject, _sicknessObject;
 
     private Weapon _weapon;
@@ -19,18 +19,19 @@ public class WeaponDetailController : MonoBehaviour
     {
         _nameText = gameObject.FindChildWithName<EnhancedText>("Name");
         _typeText = gameObject.FindChildWithName<EnhancedText>("Type");
+        _dpsText = gameObject.FindChildWithName<EnhancedText>("DPS");
+        _durabilityBar = gameObject.FindChildWithName<DurabilityBarController>("Durability Bar");
+
+        if (!IsDetailed) return;
         _damageText = gameObject.FindChildWithName<EnhancedText>("Damage");
         _fireRateText = gameObject.FindChildWithName<EnhancedText>("Fire Rate");
-        _dpsText = gameObject.FindChildWithName<EnhancedText>("DPS");
-        _capacityText = gameObject.FindChildWithName<EnhancedText>("Capacity");
-        _reloadSpeedText = gameObject.FindChildWithName<EnhancedText>("Reload Speed");
-        _accuracyText = gameObject.FindChildWithName<EnhancedText>("Critical Chance");
-        _handlingText = gameObject.FindChildWithName<EnhancedText>("Handling");
         GameObject inscriptionObject = gameObject.FindChildWithName("Inscription");
         _inscriptionNameText = inscriptionObject.FindChildWithName<EnhancedText>("Inscription Name");
         _inscriptionEffectText = inscriptionObject.FindChildWithName<EnhancedText>("Effect");
-        _durabilityBar = gameObject.FindChildWithName<DurabilityBarController>("Durability Bar");
-        if (!IsDetailed) return;
+        _capacityText = gameObject.FindChildWithName<EnhancedText>("Capacity");
+        _reloadSpeedText = gameObject.FindChildWithName<EnhancedText>("Reload Speed");
+        _accuracyText = gameObject.FindChildWithName<EnhancedText>("Critical Chance");
+        _recoilText = gameObject.FindChildWithName<EnhancedText>("Handling");
         GameObject conditionObject = gameObject.FindChildWithName("Conditions");
 
         _shatterObject = conditionObject.FindChildWithName("Shatter");
@@ -54,13 +55,25 @@ public class WeaponDetailController : MonoBehaviour
         WeaponAttributes attr = weapon.WeaponAttributes;
         _nameText.SetText(weapon.GetDisplayName());
         _dpsText.SetText(attr.DPS().Round(1).ToString());
-        Inscription inscription = weapon.GetInscription();
-        string inscriptionText = inscription == null ? "No Inscription" : inscription.Name;
-        _inscriptionNameText.SetText(inscriptionText);
-        _inscriptionEffectText.SetText(inscription == null ? "-" : inscription.GetSummary());
         _typeText.SetText(weapon.WeaponType().ToString());
+        SetInscriptionText(weapon);
         SetConditionText();
         SetAttibuteText(attr);
+    }
+
+    private void SetInscriptionText(Weapon weapon)
+    {
+        Inscription inscription = weapon.GetInscription();
+        string inscriptionText = inscription == null ? "No Inscription" : inscription.Name;
+        string inscriptionEffectText = inscription == null ? "" : inscription.GetSummary();
+        if (!IsDetailed)
+        {
+            _typeText.SetText(weapon.WeaponType() + " - " + inscriptionEffectText);
+            return;
+        }
+
+        _inscriptionNameText.SetText(inscriptionText);
+        _inscriptionEffectText.SetText(inscriptionEffectText == "" ? "-" : inscriptionEffectText);
     }
 
     private void SetAttibuteText(WeaponAttributes attr)
@@ -69,7 +82,7 @@ public class WeaponDetailController : MonoBehaviour
         _damageText.SetText(attr.Val(AttributeType.Damage).Round(1) + " Damage");
         _fireRateText.SetText(attr.Val(AttributeType.FireRate).Round(1) + " Rounds/Sec");
         _reloadSpeedText.SetText(attr.Val(AttributeType.ReloadSpeed).Round(1) + "s Reload");
-        _handlingText.SetText(attr.Val(AttributeType.Handling).Round(1) + "% Handling");
+        _recoilText.SetText(attr.Val(AttributeType.Recoil).Round(1) + "% Recoil");
         _capacityText.SetText(Mathf.FloorToInt(attr.Val(AttributeType.Capacity)) + " Capacity");
         _accuracyText.SetText((attr.Val(AttributeType.Accuracy) * 100).Round(1) + "% Accuracy");
     }
@@ -82,21 +95,21 @@ public class WeaponDetailController : MonoBehaviour
         _capacityText.SetText("");
         _reloadSpeedText.SetText("");
         _accuracyText.SetText("");
-        _handlingText.SetText("");
+        _recoilText.SetText("");
     }
 
     private void SetConditionText()
     {
         if (!IsDetailed) return;
         WeaponAttributes attributes = _weapon?.WeaponAttributes;
-        float decayChance = attributes?.Val(AttributeType.DecayChance) * 100 ?? 0;
-        float burnChance = attributes?.Val(AttributeType.BurnChance) * 100 ?? 0;
-        float sicknessChance = attributes?.Val(AttributeType.SicknessChance) * 100 ?? 0;
+        float shatterChance = attributes?.Val(AttributeType.Shatter) * 100 ?? 0;
+        float burnChance = attributes?.Val(AttributeType.Burn) * 100 ?? 0;
+        float sicknessChance = attributes?.Val(AttributeType.Sickness) * 100 ?? 0;
 
-        _shatterObject.SetActive(decayChance != 0);
+        _shatterObject.SetActive(shatterChance != 0);
         _burnObject.SetActive(burnChance != 0);
         _sicknessObject.SetActive(sicknessChance != 0);
-        _shatterText.SetText(decayChance == 0 ? "" : "+" + decayChance + "% Shatter");
+        _shatterText.SetText(shatterChance == 0 ? "" : "+" + shatterChance + "% Shatter");
         _burnText.SetText(burnChance == 0 ? "" : "+" + burnChance + "% Burn");
         _sicknessText.SetText(sicknessChance == 0 ? "" : "+" + sicknessChance + "% Sickness");
     }
@@ -136,7 +149,7 @@ public class WeaponDetailController : MonoBehaviour
         _fireRateText.SetText(GetAttributePrefix(weapon, AttributeType.FireRate, " Fire Rate"));
         _accuracyText.SetText(GetAttributePrefix(weapon, AttributeType.Accuracy, "% Accuracy"));
         _reloadSpeedText.SetText(GetAttributePrefix(weapon, AttributeType.ReloadSpeed, "s Reload "));
-        _handlingText.SetText(GetAttributePrefix(weapon, AttributeType.Handling, "% Handling"));
+        _recoilText.SetText(GetAttributePrefix(weapon, AttributeType.Recoil, "% Handling"));
         _capacityText.SetText(GetAttributePrefix(weapon, AttributeType.Capacity, " Capacity"));
     }
 

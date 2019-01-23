@@ -45,7 +45,7 @@ namespace Game.Combat.Generation
         private Sequence _hudTween;
         private float _timeSinceLastSpawn;
         private List<TutorialOverlay> _uiOverviewOverlays;
-        
+
         public static List<EnemyTemplate> GenerateEnemies(int size, List<EnemyTemplate> allowedTypes)
         {
             List<EnemyTemplate> templates = new List<EnemyTemplate>();
@@ -243,7 +243,7 @@ namespace Game.Combat.Generation
         {
             float visibilityModifier = 0.5f * Mathf.Sin((WorldState.Hours - 6) * Mathf.PI / 12f) + 0.5f;
             _visibilityRange *= WeatherManager.CurrentWeather().GetVisibility();
-            _visibilityRange = Mathf.Lerp(2f, 8f, visibilityModifier);
+            _visibilityRange = Mathf.Lerp(3f, 8f, visibilityModifier);
         }
 
         private void EnterCombat()
@@ -276,10 +276,10 @@ namespace Game.Combat.Generation
 
             _inCombat = false;
             PlayerCombat.Instance.ExitCombat();
-            ChangeScene(returnToMap);
+            if (returnToMap) ReturnToMap();
             _instance = null;
         }
-        
+
         public static void OverrideMaxSize(int maxSize, List<Enemy> inactiveEnemies = null)
         {
             _maxSize = maxSize;
@@ -358,9 +358,8 @@ namespace Game.Combat.Generation
         }
 
 
-        private static void ChangeScene(bool returnToMap)
+        private static void ReturnToMap()
         {
-            if (!returnToMap) return;
             if (CharacterManager.SelectedCharacter.CanAffordTravel())
             {
                 SceneChanger.GoToGameScene();

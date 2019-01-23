@@ -60,7 +60,7 @@ namespace Facilitating.UIControllers
             };
 
 #if UNITY_EDITOR
-            for (int i = 0; i < 0; ++i)
+            for (int i = 0; i < 10; ++i)
             {
                 Weapon weapon = WeaponGenerator.GenerateWeapon();
                 Inventory.Move(weapon);
@@ -68,6 +68,7 @@ namespace Facilitating.UIControllers
                 Inventory.Move(inscription);
                 Accessory accessory = Accessory.Generate();
                 Inventory.Move(accessory);
+                Inventory.IncrementResource("Gate Stone", 5);
             }
 #endif
 
@@ -295,7 +296,7 @@ namespace Facilitating.UIControllers
                 _detailController.SetWeapon(weapon);
                 Weapon equippedWeapon = CharacterManager.SelectedCharacter.EquippedWeapon;
                 if (equippedWeapon == null) return;
-                _detailController.CompareTo(equippedWeapon);
+//                _detailController.CompareTo(equippedWeapon);
             }
         }
 

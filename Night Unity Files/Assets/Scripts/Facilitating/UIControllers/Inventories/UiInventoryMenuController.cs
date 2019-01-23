@@ -19,6 +19,7 @@ namespace Facilitating.UIControllers.Inventories
         {
             gameObject.SetActive(true);
             AudioController.FadeInMusicMuffle();
+            ButtonClickListener.SuppressClick();
             OnShow();
         }
 
@@ -26,6 +27,7 @@ namespace Facilitating.UIControllers.Inventories
         {
             gameObject.SetActive(false);
             AudioController.FadeOutMusicMuffle();
+            ButtonClickListener.SuppressClick();
             OnHide();
         }
 

@@ -12,15 +12,19 @@ namespace Game.Combat.Ui
         private SteppedProgressBar _healthBar;
         private Image _sicknessImage;
         private bool _cached;
+        private RectTransform _rect;
 
         public void Awake()
         {
             _healthBar = gameObject.GetComponent<SteppedProgressBar>();
             _sicknessImage = gameObject.FindChildWithName<Image>("Sickness");
+            _rect = GetComponent<RectTransform>();
         }
 
         public void SetValue(Number health, bool doFade)
         {
+            float normalisedHealth = health.Max / 2000;
+            _rect.anchorMax = new Vector2(normalisedHealth, _rect.anchorMax.y);
             _healthBar.SetValue(health.Normalised(), doFade);
         }
 

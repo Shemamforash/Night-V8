@@ -70,11 +70,11 @@ public class UIActionListController : MonoBehaviour
 
     private void UpdateMeditateButton()
     {
-        _meditateEnabled = _resting
-                           && _player.Attributes.Val(AttributeType.Will) > 0
-                           && !_player.Attributes.Get(AttributeType.Fettle).ReachedMax()
-                           && !_player.Attributes.Get(AttributeType.Grit).ReachedMax()
-                           && !_player.Attributes.Get(AttributeType.Focus).ReachedMax();
+        bool hasWill = _player.Attributes.Val(AttributeType.Will) > 0;
+        bool canUseWill = !_player.Attributes.Get(AttributeType.Fettle).ReachedMax()
+                          || !_player.Attributes.Get(AttributeType.Grit).ReachedMax()
+                          || !_player.Attributes.Get(AttributeType.Focus).ReachedMax();
+        _meditateEnabled = _resting && hasWill && canUseWill;
         if (TutorialManager.Active() && MapGenerator.DiscoveredRegions().Count == 1) _meditateEnabled = false;
         _meditateButton.gameObject.SetActive(_meditateEnabled);
     }

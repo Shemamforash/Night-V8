@@ -11,21 +11,24 @@ using UnityEngine.UI;
 
 public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnterHandler, IPointerExitHandler
 {
-    private Image _glowImage;
-    private Action _callback;
+    [SerializeField]
     private Button _button;
+    [SerializeField] private TextMeshProUGUI _buttonText;
+    [SerializeField] private Image _glowImage;
+    
     private InputAxis _targetAxis = InputAxis.Menu;
+    private Action _callback;
+    private bool _usingFireInput;
 
     public void Awake()
     {
-        _glowImage = gameObject.FindChildWithName<Image>("Glow");
-        _button = GetComponent<Button>();
-        UseDefaultInput();
+        if (!_usingFireInput) UseDefaultInput();
+        else _targetAxis = InputAxis.Sprint;
     }
+
 
     public void SetOnClick(UnityAction a)
     {
-        if (_button == null) _button = GetComponent<Button>();
         _button.onClick.RemoveAllListeners();
         _button.onClick.AddListener(a);
     }
@@ -38,15 +41,16 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
     public void UseFireInput()
     {
         _targetAxis = InputAxis.Sprint;
-        if(_button == null) _button = GetComponent<Button>();
-        _button.FindChildWithName<TextMeshProUGUI>("Close Text").SetText("SPC");
+        _buttonText.SetText("SPC");
+        _usingFireInput = true;
     }
 
-    public void UseDefaultInput()
+    private void UseDefaultInput()
     {
         _targetAxis = InputAxis.Menu;
-        if (_button == null) _button = GetComponent<Button>();
-        _button.FindChildWithName<TextMeshProUGUI>("Close Text").SetText("ESC");
+        if (_buttonText == null) Debug.Log("null");
+        _buttonText.SetText("ESC");
+        _usingFireInput = false;
     }
 
     public void Enable()
@@ -59,7 +63,7 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
         InputHandler.UnregisterInputListener(this);
     }
 
-    public void Activate()
+    private void Activate()
     {
         Flash();
         _callback?.Invoke();

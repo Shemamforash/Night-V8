@@ -92,6 +92,7 @@ public class EventTextController : MonoBehaviour
     public void Update()
     {
         if (_overridingText) return;
+        if (CombatManager.Instance() == null) return;
         DoCheckForPointsOfInterest();
     }
 

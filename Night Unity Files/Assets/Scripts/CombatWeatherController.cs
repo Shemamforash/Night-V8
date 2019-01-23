@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Game.Combat.Enemies.Misc;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
@@ -36,7 +37,7 @@ public class CombatWeatherController : MonoBehaviour
         SetParticleSystemEmissionRate(_rain, _weatherAttributes.RainAmount, RainMax);
         SetParticleSystemEmissionRate(_wind, _weatherAttributes.WindAmount, WindMax);
         SetParticleSystemEmissionRate(_heavyWind, _weatherAttributes.WindAmount, WindMax / 2f);
-        SetParticleSystemEmissionRate(_sun, _weatherAttributes.SunAmount, SunMax);
+        SetParticleSystemEmissionRate(_sun, _weatherAttributes.SunAmount * WeatherSystemController.SunLevel(), SunMax);
         SetParticleSystemEmissionRate(_dust, _weatherAttributes.DustAmount, DustMax);
         SetParticleSystemEmissionRate(_fog, _weatherAttributes.FogAmount, FogMax);
     }

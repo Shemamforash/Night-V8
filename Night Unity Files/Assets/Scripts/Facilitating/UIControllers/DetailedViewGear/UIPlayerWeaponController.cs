@@ -29,7 +29,7 @@ namespace Facilitating.UIControllers
             EnhancedButton.AddOnDeselectEvent(glow.Deselect);
             EnhancedButton.AddOnSelectEvent(glow.Highlight);
 #if UNITY_EDITOR
-            ResourceTemplate.AllResources.ForEach(r => { Inventory.IncrementResource(r.Name, Random.Range(5, 20)); });
+//            ResourceTemplate.AllResources.ForEach(r => { Inventory.IncrementResource(r.Name, Random.Range(5, 20)); });
             Inventory.IncrementResource("Essence", 38);
 #endif
         }

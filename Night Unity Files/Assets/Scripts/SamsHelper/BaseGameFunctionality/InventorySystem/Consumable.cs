@@ -74,6 +74,13 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public void Consume()
         {
             if (!CanConsume()) return;
+            if (Template.Name == "Gate Stone")
+            {
+                Inventory.DecrementResource(Template.Name, 1);
+                _player.TravelAction.ReturnToHomeInstant();
+                return;
+            }
+
             ApplyEffect();
             Inventory.DecrementResource(Template.Name, 1);
             if (PlayerCombat.Instance == null) return;
@@ -83,6 +90,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public bool CanConsume()
         {
             _player = CharacterManager.SelectedCharacter;
+            if (Template.Name == "Gate Stone")
+            {
+                return !_player.TravelAction.AtHome();
+            }
             switch (Template.ResourceType)
             {
                 case ResourceType.Meat:

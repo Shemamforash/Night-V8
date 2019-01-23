@@ -86,6 +86,7 @@ public class PauseMenuController : MonoBehaviour
 
     private void OnDestroy()
     {
+        AudioController.FadeOutGlobalMuffle();
         _instance = null;
     }
 

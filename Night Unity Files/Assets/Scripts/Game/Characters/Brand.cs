@@ -68,10 +68,12 @@ namespace Game.Characters
             Player.BrandManager.UpdateBrandStatus(this);
         }
 
-        public string GetName()
+        public string GetDisplayName()
         {
             return "Rite of " + _riteName;
         }
+
+        public string GetName() => _riteName;
 
         public void UpdateValue(int amount)
         {
@@ -138,8 +140,9 @@ namespace Game.Characters
 
         public void Load(XmlNode doc)
         {
-            _counter = doc.IntFromNode("TimeRemaining");
+            _counter = doc.IntFromNode("Counter");
             Status = (BrandStatus) doc.IntFromNode("Status");
+            if (Status == BrandStatus.Active && _counter >= _counterTarget) _ready = true;
             if (this is FettleBrand || this is GritBrand || this is FocusBrand || this is WillBrand) return;
             if (Status == BrandStatus.Succeeded) OnSucceed();
             else if (Status == BrandStatus.Failed) OnFail();
@@ -148,7 +151,7 @@ namespace Game.Characters
         public void Save(XmlNode doc)
         {
             doc.CreateChild("Name", _riteName);
-            doc.CreateChild("TimeRemaining", _counter);
+            doc.CreateChild("Counter", _counter);
             doc.CreateChild("Status", (int) Status);
         }
 
@@ -175,6 +178,11 @@ namespace Game.Characters
         public string Description()
         {
             return _description;
+        }
+
+        public float NormalisedProgress()
+        {
+            return _counter / (float) _counterTarget;
         }
     }
 }

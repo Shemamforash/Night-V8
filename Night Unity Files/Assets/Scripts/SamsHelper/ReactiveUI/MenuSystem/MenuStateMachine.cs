@@ -53,6 +53,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         public static void ShowMenu(string menuName, Action onTransition = null)
         {
             if (States.GetCurrentState()?.Name == menuName) return;
+            ButtonClickListener.SuppressClick();
             OnTransition = onTransition;
             FadeMenu(menuName);
         }

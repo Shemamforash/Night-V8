@@ -20,6 +20,7 @@ namespace UnityEngine.EventSystems
 
         public void Update()
         {
+            Cursor.lockState = CursorLockMode.Confined;
             Vector2 currentMousePosition = Input.mousePosition;
             bool mousePressed = Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1) || Input.GetKeyDown(KeyCode.Mouse2);
             if (currentMousePosition == _lastMousePosition && !mousePressed)

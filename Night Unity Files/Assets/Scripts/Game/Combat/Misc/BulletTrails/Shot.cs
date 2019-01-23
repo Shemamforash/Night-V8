@@ -151,10 +151,16 @@ namespace Game.Combat.Misc
 
         private void Hit(Collision2D collision)
         {
-            if (_shotAttributes.HasHit) return;
-            if (_shotAttributes.Piercing) return;
-            _shotAttributes.HasHit = true;
             GameObject other = collision.gameObject;
+            if (_shotAttributes.HasHit) return;
+            if (_shotAttributes.Piercing)
+            {
+                CanTakeDamage hit = other.GetComponent<CanTakeDamage>();
+                if (hit == null) DeactivateShot();
+                return;
+            }
+
+            _shotAttributes.HasHit = true;
             if (collision.contacts.Length > 0)
             {
                 Vector2 collisionPosition = collision.contacts[0].point;

@@ -49,8 +49,8 @@ namespace Game.Exploration.Weather
                 }
 
                 Debug.Log(currentWeather);
-                pValues.ToArray().PrintList();
-                _types.ToArray().PrintList();
+                pValues.ToArray().Print();
+                _types.ToArray().Print();
                 throw new ArgumentOutOfRangeException();
             }
         }

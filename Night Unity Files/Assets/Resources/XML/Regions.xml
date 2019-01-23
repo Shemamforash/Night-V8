@@ -1,1 +1,39 @@
-<Names><RegionType><Danger><Prefixes>Savage,Execrator,Mortal,Cripple,Civilisation,Anger,Hatred,Betrayer,Maverick,Failure,Deceiver,Downfall,Hell,Vandal,Juggernaut,Leviathan,Carcass,Behemoth,Glutton,Hellion,Demon,Beast,Devil,Monstrosity,Titan,Carrion,Gargantua,Fiend,Demagogue,Dissident,Apostate</Prefixes><Suffixes>Burden,Cessation,Blight,Agony,Anguish,Bane,Curse,Woe,Grief,Affliction,Damnation,Agony,Anguish,Carcass,Remains,Loss,Decay,Hulk,Shell,Wreck,Waste,Failure,Collapse,Sorrow,Waste,Heartache,Pity,Heresy,Torment,Terminus,Dusk,Pit,Root,Ruin,End,Downfall</Suffixes></Danger><Animal><Prefixes>Pursuit,Chaser,Stalker,Huntress,Hunter,Pursuer,Trapper,Tracker,Prowler,Predator,Bounty,Haunt,Seeker</Prefixes><Suffixes>Sustenance,Fruit,Bloom,Blessing,Range,Wild,Dell,Dale,Vale,Remission,Restitution,Relief,Succour,Comfort</Suffixes></Animal><Temple><Prefixes>Prosperity,Victory,Triumph,Endurance,Devotion,Hope,Piety,Love,Beauty,Duty,Faith,Passion</Prefixes><Suffixes>Dream,Sleep,Slumber,Solace,Sunset,Rest,Torpor,Repose,Stupor,Coma,Languor,Lethargy,Latancy</Suffixes></Temple><Shelter><Prefixes>Drifter,Vagrant,Beggar,Destitute,Strider,Suppliant,Scavenger</Prefixes><Suffixes>Lenience,Quarter,Reprieve,Station,Post,Den,Abode</Suffixes></Shelter><Shrine><Prefixes>Struggle,Contest,Trial,Strife,Toil,Labour,Grind,Diligence,Endeavour,Ache</Prefixes><Suffixes>Bounty,Hoard,Triumph,Success,Temptation,Jewel,Advantage,Reward,Boon,Caritas,Prosperity,Promise</Suffixes></Shrine><Monument><Prefixes>Marker,Stele,Tablet,Plaque,Column,Monolith,Testament,Cenotaph,Obelisk,Chronicle,Record,Testimony</Prefixes><Suffixes>Memory,Legend,Deeds,Fables,Lore,Myth,Sagas,Acts,Crusades</Suffixes></Monument><Fountain><Prefixes>Faithful,Heavenly,Defending,Protecting,Salving,Delivering,Guarding,Exalting,Benevolent,Devoted,Appeasing,Elating</Prefixes><Suffixes>Escape,Rapture,Balm,Virtue,Grace,Ease,Promise,Kindness,Clemency,Pardon,Reverence,Benevolence,Resolution,Dignity,Rescue,Seraph,Angel,Paragon</Suffixes></Fountain></RegionType><EnvironmentSuffixes><Desert>Dune,Creek,Outcrop,Bank,Marsh,Cenote,Brook,Spring,Edge,Drink,Font,Flow</Desert><Mountains>Tor,Hillside,Slope,Ridge,Knoll,Bog,Hoarfrost,Taiga,Crag</Mountains><Sea>Cliff,Valley,Crest,Pinnacle,Precipice,Scar,Bluff,Escarpment,Talus,Gorge,Trench</Sea><Ruins>Vaults,Pillars,Rubble,Tower,Drome,Fragments,Citadel</Ruins><Wasteland>Gulch,Hamada,Erg,Dune,Menhir,Aquifer,Channel,Drift,Crater</Wasteland></EnvironmentSuffixes></Names>
+<Names>
+	<RegionType>
+		<Danger>
+			<Prefixes>Savage,Execrator,Mortal,Cripple,Civilisation,Anger,Hatred,Betrayer,Maverick,Failure,Deceiver,Downfall,Hell,Vandal,Juggernaut,Leviathan,Carcass,Behemoth,Glutton,Hellion,Demon,Beast,Devil,Monstrosity,Titan,Carrion,Gargantua,Fiend,Demagogue,Dissident,Apostate</Prefixes>
+			<Suffixes>Burden,Cessation,Blight,Agony,Anguish,Bane,Curse,Woe,Grief,Affliction,Damnation,Agony,Anguish,Carcass,Remains,Loss,Decay,Hulk,Shell,Wreck,Waste,Failure,Collapse,Sorrow,Waste,Heartache,Pity,Heresy,Torment,Terminus,Dusk,Pit,Root,Ruin,End,Downfall</Suffixes>
+		</Danger>
+		<Animal>
+			<Prefixes>Pursuit,Chaser,Stalker,Huntress,Hunter,Pursuer,Trapper,Tracker,Prowler,Predator,Bounty,Haunt,Seeker</Prefixes>
+			<Suffixes>Sustenance,Fruit,Bloom,Blessing,Range,Wild,Dell,Dale,Vale,Remission,Restitution,Relief,Succour,Comfort</Suffixes>
+		</Animal>
+		<Temple>
+			<Prefixes>Prosperity,Victory,Triumph,Endurance,Devotion,Hope,Piety,Love,Beauty,Duty,Faith,Passion</Prefixes>
+			<Suffixes>Dream,Sleep,Slumber,Solace,Sunset,Rest,Torpor,Repose,Stupor,Coma,Languor,Lethargy,Latancy</Suffixes>
+		</Temple>
+		<Shelter>
+			<Prefixes>Drifter,Vagrant,Beggar,Destitute,Strider,Suppliant,Scavenger</Prefixes>
+			<Suffixes>Lenience,Quarter,Reprieve,Station,Post,Den,Abode</Suffixes>
+		</Shelter>
+		<Shrine>
+			<Prefixes>Struggle,Contest,Trial,Strife,Toil,Labour,Grind,Diligence,Endeavour,Ache</Prefixes>
+			<Suffixes>Bounty,Hoard,Triumph,Success,Temptation,Jewel,Advantage,Reward,Boon,Caritas,Prosperity,Promise</Suffixes>
+		</Shrine>
+		<Monument>
+			<Prefixes>Marker,Stele,Tablet,Plaque,Column,Monolith,Testament,Cenotaph,Obelisk,Chronicle,Record,Testimony</Prefixes>
+			<Suffixes>Memory,Legend,Deeds,Fables,Lore,Myth,Sagas,Acts,Crusades</Suffixes>
+		</Monument>
+		<Fountain>
+			<Prefixes>Faithful,Heavenly,Defending,Protecting,Salving,Delivering,Guarding,Exalting,Benevolent,Devoted,Appeasing,Elating</Prefixes>
+			<Suffixes>Escape,Rapture,Balm,Virtue,Grace,Ease,Promise,Kindness,Clemency,Pardon,Reverence,Benevolence,Resolution,Dignity,Rescue,Seraph,Angel,Paragon</Suffixes>
+		</Fountain>
+	</RegionType>
+	<EnvironmentSuffixes>
+		<Desert>Dune,Creek,Outcrop,Bank,Marsh,Cenote,Brook,Spring,Edge,Drink,Font,Flow</Desert>
+		<Mountains>Tor,Hillside,Slope,Ridge,Knoll,Bog,Hoarfrost,Taiga,Crag</Mountains>
+		<Sea>Cliff,Valley,Crest,Pinnacle,Precipice,Scar,Bluff,Escarpment,Talus,Gorge,Trench</Sea>
+		<Ruins>Vaults,Pillars,Rubble,Tower,Drome,Fragments,Citadel</Ruins>
+		<Wasteland>Gulch,Hamada,Erg,Dune,Menhir,Aquifer,Channel,Drift,Crater</Wasteland>
+	</EnvironmentSuffixes>
+</Names>

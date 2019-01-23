@@ -18,6 +18,7 @@ public class DismantleMenuController : Menu
 {
     private static ListController _dismantleList;
     private static readonly Dictionary<string, int> _dismantleRewards = new Dictionary<string, int>();
+    private EnhancedButton _acceptButton;
     private static CloseButtonController _closeButton;
     private static GameObject _dismantledScreen;
     private EnhancedText _receivedText;
@@ -32,8 +33,9 @@ public class DismantleMenuController : Menu
         _closeButton.SetCallback(Close);
 
         _dismantledScreen = gameObject.FindChildWithName("Dismantled");
+        _acceptButton = _dismantledScreen.FindChildWithName<EnhancedButton>("Button");
+        _acceptButton.AddOnClick(Show);
         _receivedText = _dismantledScreen.FindChildWithName<EnhancedText>("Receive");
-        _dismantledScreen.FindChildWithName<EnhancedButton>("Button").AddOnClick(Show);
     }
 
     private static void AddReward(string reward, int quantity)
@@ -192,6 +194,7 @@ public class DismantleMenuController : Menu
         _dismantledScreen.SetActive(true);
         _dismantleList.gameObject.SetActive(false);
         _receivedText.SetText(GetDismantleText(gear));
+        _acceptButton.Select();
     }
 
     private static void ShowDismantleList()
@@ -201,12 +204,18 @@ public class DismantleMenuController : Menu
         _dismantleList.Show();
     }
 
-    public static void Show()
+    public override void Enter()
     {
-        MenuStateMachine.ShowMenu("Dismantle Menu");
+        base.Enter();
         WorldState.Pause();
         DOTween.defaultTimeScaleIndependent = true;
         _closeButton.Enable();
+        ShowDismantleList();
+    }
+
+    public static void Show()
+    {
+        MenuStateMachine.ShowMenu("Dismantle Menu");
         ShowDismantleList();
     }
 
