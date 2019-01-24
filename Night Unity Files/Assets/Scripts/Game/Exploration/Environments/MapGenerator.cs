@@ -38,9 +38,10 @@ namespace Game.Exploration.Environment
             _regionTypeBag.Print();
             for (int i = 0; i < _regionTypeBag.Count; i++)
             {
-                regionTypesRemaining += (int)_regionTypeBag[i];
-                if(i != _regionTypeBag.Count - 1) regionTypesRemaining += ",";
+                regionTypesRemaining += (int) _regionTypeBag[i];
+                if (i != _regionTypeBag.Count - 1) regionTypesRemaining += ",";
             }
+
             regionNode.CreateChild("RegionTypes", regionTypesRemaining);
         }
 
@@ -98,12 +99,12 @@ namespace Game.Exploration.Environment
         }
 
         private const int BaseRegionCount = 1 + 12;
-        
+
         private static void GenerateRegions()
         {
             GenerateNames();
             _regions.Clear();
-            
+
             int additionalRegionCount = (1 + (int) EnvironmentManager.CurrentEnvironmentType()) * 12;
             int numberOfRegions = BaseRegionCount + additionalRegionCount;
             while (numberOfRegions > 0)
@@ -203,6 +204,8 @@ namespace Game.Exploration.Environment
         {
             switch (type)
             {
+                case RegionType.Tutorial:
+                    return "";
                 case RegionType.Tomb:
                     switch (EnvironmentManager.CurrentEnvironmentType())
                     {
@@ -304,7 +307,7 @@ namespace Game.Exploration.Environment
             XmlNode root = Helper.OpenRootNode("Regions", "RegionType");
             foreach (RegionType type in Enum.GetValues(typeof(RegionType)))
             {
-                if (type == RegionType.None || type == RegionType.Gate || type == RegionType.Rite || type == RegionType.Tomb) continue;
+                if (type == RegionType.None || type == RegionType.Gate || type == RegionType.Rite || type == RegionType.Tomb || type == RegionType.Tutorial) continue;
                 _regionTypes.Add(type);
             }
 
@@ -375,7 +378,8 @@ namespace Game.Exploration.Environment
                 return RegionType.Gate;
             }
 
-            return RegionType.Monument;
+            return RegionType.Temple;
+
             UpdateAvailableRegionTypes();
             _regionTypeBag.Print();
             ++_regionsDiscovered;

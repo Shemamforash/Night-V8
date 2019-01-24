@@ -138,9 +138,9 @@ namespace Game.Combat.Misc
 
         private void DeactivateShot()
         {
-            _bulletTrail.StartFade(0.2f);
-            _shotPool.Return(this);
             _bulletTrail.SetFinalPosition(_lastPosition);
+            _bulletTrail.StartFade();
+            _shotPool.Return(this);
         }
 
         private void OnCollisionEnter2D(Collision2D collision)

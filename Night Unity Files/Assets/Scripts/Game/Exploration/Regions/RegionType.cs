@@ -7,6 +7,7 @@
         Gate,
         Tomb,
         Rite,
+        Tutorial,
         
         //Dynamic
         Shelter,

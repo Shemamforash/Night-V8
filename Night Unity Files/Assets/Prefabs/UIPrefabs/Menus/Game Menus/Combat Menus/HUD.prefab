@@ -28350,6 +28350,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8769862350580888101}
+  - component: {fileID: 2364665107339751686}
   m_Layer: 5
   m_Name: Skills Left
   m_TagString: Untagged
@@ -28378,6 +28379,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &2364665107339751686
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8839358702960762883}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &8839360872443501831
 GameObject:
   m_ObjectHideFlags: 0
@@ -34659,6 +34672,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8769827298147747097}
+  - component: {fileID: 8501694686424094477}
   m_Layer: 5
   m_Name: Skills Right
   m_TagString: Untagged
@@ -34687,6 +34701,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &8501694686424094477
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8839684822899615751}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &8839716006483377859
 GameObject:
   m_ObjectHideFlags: 0

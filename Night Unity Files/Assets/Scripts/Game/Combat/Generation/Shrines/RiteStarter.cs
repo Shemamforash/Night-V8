@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
 using DG.Tweening.Core.Easing;
+using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Characters.CharacterActions;
 using Game.Combat.Player;
+using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.Libraries;
@@ -19,6 +21,7 @@ namespace Game.Combat.Generation.Shrines
         private bool _goToNextRegion;
         private SpriteRenderer _flashSprite, _dullFlashSprite;
         private AudioSource _audioSource;
+        private bool _isTutorial;
 
         public void Awake()
         {
@@ -44,7 +47,7 @@ namespace Game.Combat.Generation.Shrines
             if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Rite Starter");
             GameObject riteObject = Instantiate(_prefab);
             RiteStarter riteStarter = riteObject.GetComponent<RiteStarter>();
-            riteStarter.Initialise(brand);
+            riteStarter._brand = brand;
             riteObject.transform.position = position;
         }
 
@@ -55,11 +58,6 @@ namespace Game.Combat.Generation.Shrines
             riteObject.transform.position = Vector2.zero;
             RiteStarter riteStarter = riteObject.GetComponent<RiteStarter>();
             riteStarter._goToNextRegion = true;
-        }
-
-        private void Initialise(Brand brand)
-        {
-            _brand = brand;
         }
 
         private static Vector2 GetPosition()
@@ -83,7 +81,16 @@ namespace Game.Combat.Generation.Shrines
         {
             if (!other.CompareTag("Player")) return;
             if (_brand == null)
-                Return();
+            {
+                if (_isTutorial)
+                {
+                    StoryController.Show();
+                    TutorialManager.FinishIntroTutorial();
+                    UiGearMenuController.SetOpenAllowed(true);
+                    Debug.Log(CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion().GetRegionType());
+                }
+                else Return();
+            }
             else
                 GoToRite();
             Flash();
@@ -121,6 +128,15 @@ namespace Game.Combat.Generation.Shrines
 
             Travel travel = CharacterManager.SelectedCharacter.TravelAction;
             SceneChanger.GoToCombatScene(() => CombatManager.SetCurrentRegion(travel.GetCurrentRegion()));
+        }
+
+        public static void GenerateTutorialStarter()
+        {
+            if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Rite Starter");
+            GameObject riteObject = Instantiate(_prefab);
+            riteObject.transform.position = Vector2.zero;
+            RiteStarter riteStarter = riteObject.GetComponent<RiteStarter>();
+            riteStarter._isTutorial = true;
         }
     }
 }

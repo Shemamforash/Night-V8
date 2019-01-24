@@ -1016,6 +1016,7 @@
                   <e p="Steppe.cs" t="Include" />
                   <e p="Temple.cs" t="Include" />
                   <e p="Tomb.cs" t="Include" />
+                  <e p="Tutorial.cs" t="Include" />
                 </e>
                 <e p="Shrines" t="Include">
                   <e p="BasicShrineBehaviour.cs" t="Include" />

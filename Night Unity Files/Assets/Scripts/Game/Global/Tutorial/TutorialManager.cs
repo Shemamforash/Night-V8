@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using DG.Tweening;
 using Facilitating.Persistence;
 using Game.Combat.Generation;
-using Game.Combat.Player;
+using Game.Exploration.Regions;
 using Game.Global;
 using Game.Global.Tutorial;
 using SamsHelper.Input;
@@ -30,9 +29,8 @@ public class TutorialManager : MonoBehaviour
     private static bool _alreadyPaused;
     private static bool _alreadyHidden;
 
-    private static bool _seenControlsGuide;
     private static List<TutorialOverlay> _overlays;
-    private static bool _hideResouces;
+    private static bool _hideResouces, _finishedIntroTutorial;
     private static GraphicRaycaster _mainCanvasRaycaster;
 
     public void Awake()
@@ -48,13 +46,9 @@ public class TutorialManager : MonoBehaviour
         _mainCanvasRaycaster = GameObject.Find("Canvas").GetComponent<GraphicRaycaster>();
     }
 
-    public void Start()
-    {
-        StartCoroutine(ShowControlsTutorial());
-    }
-
     public static bool TryOpenTutorial(int tutorialPart, List<TutorialOverlay> overlays, bool hideResources = true)
     {
+        if (CombatManager.Instance() != null && CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tutorial) return false;
         if (!_tutorialActive) return false;
         if (_showingTutorial) return false;
         _overlays = overlays;
@@ -148,7 +142,7 @@ public class TutorialManager : MonoBehaviour
         ReadTutorialParts(true);
         root = root.SelectSingleNode("Tutorial");
         _tutorialActive = root.BoolFromNode("TutorialActive");
-        _seenControlsGuide = root.BoolFromNode("SeenControls");
+        _finishedIntroTutorial = root.BoolFromNode("FinishedIntro");
         if (!_tutorialActive) return;
         foreach (XmlNode sectionNode in root.SelectSingleNode("TutorialParts").ChildNodes)
         {
@@ -167,7 +161,7 @@ public class TutorialManager : MonoBehaviour
     {
         root = root.CreateChild("Tutorial");
         root.CreateChild("TutorialActive", _tutorialActive);
-        root.CreateChild("SeenControls", _seenControlsGuide);
+        root.CreateChild("FinishedIntro", _finishedIntroTutorial);
         root = root.CreateChild("TutorialParts");
         foreach (int section in _tutorialParts.Keys)
         {
@@ -198,12 +192,11 @@ public class TutorialManager : MonoBehaviour
                 if (i + 1 == parts.Count) break;
                 parts[i].SetNextPart(parts[i + 1]);
             }
-            
         }
 
         _loaded = true;
     }
-    
+
     public static bool IsTutorialVisible()
     {
         return _showingTutorial;
@@ -214,49 +207,15 @@ public class TutorialManager : MonoBehaviour
         _tutorialActive = tutorialActive;
     }
 
-    public static bool SeenControlsGuide() => _seenControlsGuide;
-
-    private IEnumerator ShowControlsTutorial()
-    {
-        if (!_tutorialActive || _seenControlsGuide || PlayerCombat.Instance == null) yield break;
-        EventTextController.SetOverrideText("Move using [WASD]");
-        while (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) yield return null;
-        EventTextController.CloseOverrideText();
-        yield return new WaitForSeconds(3);
-
-        EventTextController.SetOverrideText("Rotate using [J] and [L]");
-        while (Input.GetAxis("SwitchTab") == 0) yield return null;
-        EventTextController.CloseOverrideText();
-        yield return new WaitForSeconds(3);
-
-        EventTextController.SetOverrideText("Press [K], or [LMB] to Fire");
-        while (Input.GetAxis("Fire") == 0 && Input.GetAxis("Mouse") == 0) yield return null;
-        EventTextController.CloseOverrideText();
-        yield return new WaitForSeconds(3);
-
-        EventTextController.SetOverrideText("Reload with [R]");
-        while (Input.GetAxis("Reload") == 0) yield return null;
-        EventTextController.CloseOverrideText();
-        yield return new WaitForSeconds(3);
-
-        EventTextController.SetOverrideText("Use your compass with [E]");
-        while (Input.GetAxis("Compass") == 0) yield return null;
-        EventTextController.CloseOverrideText();
-
-        PlayerCombat.Instance.UpdateAdrenaline(10000);
-        EventTextController.SetOverrideText("Dash with [SPACE], this consumes some adrenaline");
-        while (Input.GetAxis("Sprint") == 0) yield return null;
-        EventTextController.CloseOverrideText();
-
-        _seenControlsGuide = true;
-        yield return new WaitForSeconds(10);
-        EventTextController.SetOverrideText("When you are ready to leave, go to the edge of the region and press [T]");
-        yield return new WaitForSeconds(2);
-        EventTextController.CloseOverrideText();
-    }
+    public static bool FinishedIntroTutorial() => _finishedIntroTutorial;
 
     public static bool Active()
     {
         return _tutorialActive;
+    }
+
+    public static void FinishIntroTutorial()
+    {
+        _finishedIntroTutorial = true;
     }
 }

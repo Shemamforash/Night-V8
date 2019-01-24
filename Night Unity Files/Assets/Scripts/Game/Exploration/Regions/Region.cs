@@ -75,6 +75,7 @@ namespace Game.Exploration.Regions
         public void CheckForRegionExplored()
         {
             if (!_justDiscovered) return;
+            if (CombatManager.GetCurrentRegion().GetRegionType() != RegionType.Tutorial) return;
             PlayerCombat.Instance.Player.BrandManager.IncreaseRegionsExplored();
         }
 
@@ -103,6 +104,7 @@ namespace Game.Exploration.Regions
                         _claimQuantity = 1;
                         break;
                     }
+
                     _claimBenefit = "Meat";
                     _claimQuantity = 1;
                     break;
@@ -275,7 +277,11 @@ namespace Game.Exploration.Regions
 
         private void CheckIsDynamic()
         {
-            _isDynamicRegion = _regionType != RegionType.Gate && _regionType != RegionType.Rite && _regionType != RegionType.Tomb && _regionType != RegionType.Temple;
+            _isDynamicRegion = _regionType != RegionType.Gate
+                               && _regionType != RegionType.Rite
+                               && _regionType != RegionType.Tomb
+                               && _regionType != RegionType.Temple
+                               && _regionType != RegionType.Tutorial;
         }
 
         public void SetRegionType(RegionType regionType)

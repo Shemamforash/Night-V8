@@ -37,6 +37,7 @@ namespace Facilitating.UIControllers
         private readonly List<InventoryTab> _tabs = new List<InventoryTab>();
         private GameObject _tabParent;
         private AudioPoolController _audioPool;
+        private static bool _closeAllowed = true, _openAllowed = true;
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
@@ -166,6 +167,7 @@ namespace Facilitating.UIControllers
 
         public static void Close()
         {
+            if (!_closeAllowed) return;
             if (TutorialManager.IsTutorialVisible()) return;
             FlashCloseButton();
             InventoryTab.ClearActiveTab();
@@ -211,6 +213,7 @@ namespace Facilitating.UIControllers
 
         public static void ShowInventories()
         {
+            if (!_openAllowed) return;
             for (int i = 0; i < _instance._tabs.Count; i++)
             {
                 InventoryTab tab = _instance._tabs[i];
@@ -251,5 +254,10 @@ namespace Facilitating.UIControllers
         {
             SelectTab(6);
         }
+
+        public static bool IsOpen() => MenuStateMachine.CurrentMenu() == _instance;
+
+        public static void SetCloseAllowed(bool allowed) => _closeAllowed = allowed;
+        public static void SetOpenAllowed(bool allowed) => _openAllowed = allowed;
     }
 }

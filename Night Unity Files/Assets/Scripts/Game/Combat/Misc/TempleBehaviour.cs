@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
+using Game.Combat.Player;
 using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -17,6 +19,7 @@ public class TempleBehaviour : BasicShrineBehaviour
     private GameObject _cleansedObject;
     private SpriteRenderer _glow;
     private AudioSource _audioSource, _cleansedAudio;
+    private SpriteRenderer _templeSprite;
 
     private int _bossCount;
     private List<FireBehaviour> _fires = new List<FireBehaviour>();
@@ -38,6 +41,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         _flames = gameObject.FindChildWithName<ParticleSystem>("Flames");
         _dust = gameObject.FindChildWithName<ParticleSystem>("Dust");
         _cleansedObject = gameObject.FindChildWithName("Temple Cleansed");
+        _templeSprite = gameObject.FindChildWithName<SpriteRenderer>("Temple Image");
         _cleansedObject.SetActive(false);
         _glow.color = UiAppearanceController.InvisibleColour;
         _audioSource = GetComponent<AudioSource>();
@@ -51,6 +55,7 @@ public class TempleBehaviour : BasicShrineBehaviour
             Succeed();
             return;
         }
+
         Triggered = true;
         _flames.Play();
         _dust.Play();
@@ -58,6 +63,22 @@ public class TempleBehaviour : BasicShrineBehaviour
         StartCoroutine(FadeInRing(ringPulse1, 3f));
         StartCoroutine(FadeInRing(ringPulse2, 3f));
         StartCoroutine(Activate());
+    }
+
+    public void Update()
+    {
+        if (Triggered) return;
+        float distanceToPlayer = PlayerCombat.Position().magnitude;
+        float alpha = 0;
+        if (distanceToPlayer < 4) alpha = 0.3f;
+        if (distanceToPlayer < 8)
+        {
+            alpha = (distanceToPlayer - 4) / 4f;
+            alpha = 1 - alpha;
+            alpha *= 0.3f;
+        }
+
+        _templeSprite.SetAlpha(alpha);
     }
 
     private IEnumerator Activate()
@@ -72,12 +93,16 @@ public class TempleBehaviour : BasicShrineBehaviour
             yield return null;
         }
 
+        ringPulse1.SetAlphaMultiplier(0);
+        ringPulse2.SetAlphaMultiplier(0);
         _altar.Clear();
         _altar.Stop();
         _explosion.Emit(200);
+        _templeSprite.SetAlpha(0.75f);
+        _templeSprite.DOFade(0.4f, 2f);
 
         yield return StartCoroutine(StartSpawningEnemies());
-
+        
         float glowTimeMax = 1f;
         float currentTime = glowTimeMax;
         while (currentTime > 0f)
@@ -133,8 +158,6 @@ public class TempleBehaviour : BasicShrineBehaviour
         SpawnInitialEnemies();
         yield return new WaitForSeconds(2f);
         Queue<EnemyTemplate> enemyTypesToSpawn = GetEnemyTypesToSpawn();
-
-        Debug.Log(enemyTypesToSpawn.Count);
         while (enemyTypesToSpawn.NotEmpty())
         {
             EnemyTemplate nextEnemy = enemyTypesToSpawn.Dequeue();
@@ -154,28 +177,30 @@ public class TempleBehaviour : BasicShrineBehaviour
 
     protected override void Succeed()
     {
+        _templeSprite.DOFade(0f, 1f);
         _fires.ForEach(f => f.LetDie());
         _cleansedObject.SetActive(true);
         _cleansedAudio.Play();
         _explosion.Play();
         _flames.Stop();
     }
-    
+
     private IEnumerator CheckAllEnemiesDead()
     {
         while (!CombatManager.ClearOfEnemies()) yield return null;
         End();
-      Succeed();
+        Succeed();
         WorldState.ActivateTemple();
         CombatManager.GetCurrentRegion().SetTempleCleansed();
     }
 
     private void StartLights()
     {
-        StartCoroutine(LightFires(0));
-        StartCoroutine(LightFires(90));
-        StartCoroutine(LightFires(180));
-        StartCoroutine(LightFires(270));
+        LightFires(0);
+        LightFires(72);
+        LightFires(144);
+        LightFires(216);
+        LightFires(288);
     }
 
     private IEnumerator FadeInRing(ColourPulse ring, float duration)
@@ -192,25 +217,13 @@ public class TempleBehaviour : BasicShrineBehaviour
         ring.SetAlphaMultiplier(1);
     }
 
-    private IEnumerator LightFires(int startAngle)
+    private void LightFires(int startAngle)
     {
-        float timeToLight = 0.5f;
-        for (int i = 0; i < 3; ++i)
+        for (int i = -2; i <= 2; ++i)
         {
-            float current = timeToLight;
-            while (current > 0f)
-            {
-                if (!CombatManager.IsCombatActive()) yield return null;
-                current -= Time.deltaTime;
-                yield return null;
-            }
-
-            float angleA = startAngle + 15 * (i + 1);
-            float angleB = startAngle - 15 * (i + 1);
-            Vector2 positionA = AdvancedMaths.CalculatePointOnCircle(angleA, 4f, transform.position);
-            Vector2 positionB = AdvancedMaths.CalculatePointOnCircle(angleB, 4f, transform.position);
-            _fires.Add(FireBehaviour.Create(positionA));
-            _fires.Add(FireBehaviour.Create(positionB));
+            float angle = startAngle + 15 * (i + 1);
+            Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, 5.5f, transform.position);
+            _fires.Add(FireBehaviour.Create(position));
         }
     }
 }

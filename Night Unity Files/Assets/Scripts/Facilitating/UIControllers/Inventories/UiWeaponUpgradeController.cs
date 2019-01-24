@@ -62,13 +62,12 @@ namespace Facilitating.UIControllers
 #if UNITY_EDITOR
             for (int i = 0; i < 10; ++i)
             {
-                Weapon weapon = WeaponGenerator.GenerateWeapon();
-                Inventory.Move(weapon);
-                Inscription inscription = Inscription.Generate();
-                Inventory.Move(inscription);
-                Accessory accessory = Accessory.Generate();
-                Inventory.Move(accessory);
-                Inventory.IncrementResource("Gate Stone", 5);
+//                Weapon weapon = WeaponGenerator.GenerateWeapon();
+//                Inventory.Move(weapon);
+//                Inscription inscription = Inscription.Generate();
+//                Inventory.Move(inscription);
+//                Accessory accessory = Accessory.Generate();
+//                Inventory.Move(accessory);
             }
 #endif
 

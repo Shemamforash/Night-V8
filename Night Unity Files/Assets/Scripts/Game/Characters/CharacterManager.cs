@@ -28,7 +28,8 @@ namespace Game.Characters
             Characters.Clear();
             if (!includeDriver) return;
             LoadTemplates(true);
-            GenerateDriver();
+            GenerateWanderer();
+            SelectedCharacter = Wanderer;
         }
 
         public static void Load(XmlNode doc)
@@ -47,6 +48,9 @@ namespace Game.Characters
                 if (player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer) Wanderer = player;
             }
 
+            CharacterClass selectedCharacterClass = (CharacterClass) characterManagerNode.IntFromNode("SelectedCharacter");
+            SelectedCharacter = Characters.Find(c => c.CharacterTemplate.CharacterClass == selectedCharacterClass);
+
             Assert.IsFalse(Templates.Any(t => t.CharacterClass == CharacterClass.Wanderer));
         }
 
@@ -54,6 +58,7 @@ namespace Game.Characters
         {
             doc = doc.CreateChild("Characters");
             foreach (Player c in Characters) c.Save(doc);
+            doc.CreateChild("SelectedCharacter", (int) SelectedCharacter.CharacterTemplate.CharacterClass);
         }
 
         public static void Start()
@@ -77,7 +82,7 @@ namespace Game.Characters
 
         public static void RemoveCharacter(Player playerCharacter)
         {
-            if(playerCharacter.CharacterView() != null) playerCharacter.CharacterView().SetPlayer(null);
+            if (playerCharacter.CharacterView() != null) playerCharacter.CharacterView().SetPlayer(null);
             Characters.Remove(playerCharacter);
         }
 
@@ -112,7 +117,7 @@ namespace Game.Characters
             throw new Exceptions.UnknownCharacterClassException(characterClass);
         }
 
-        private static void GenerateDriver()
+        private static void GenerateWanderer()
         {
             Wanderer = GenerateCharacter(CharacterClass.Wanderer);
             Templates.Remove(Wanderer.CharacterTemplate);
@@ -120,12 +125,6 @@ namespace Game.Characters
             Inventory.Move(weapon);
             Wanderer.EquipWeapon(weapon);
             AddCharacter(Wanderer);
-
-            CharacterAttributes attributes = Wanderer.Attributes;
-            attributes.Get(AttributeType.Grit).SetCurrentValue(3);
-            attributes.Get(AttributeType.Fettle).SetCurrentValue(2);
-            attributes.Get(AttributeType.Focus).SetCurrentValue(4);
-            attributes.Get(AttributeType.Will).SetCurrentValue(2);
         }
 
         private static Player GenerateCharacter(CharacterClass characterClass)
@@ -164,10 +163,10 @@ namespace Game.Characters
             attributes.SetMax(AttributeType.Will, playerCharacter.CharacterTemplate.Will);
 
 #if UNITY_EDITOR
-            attributes.SetMax(AttributeType.Grit, Random.Range(6, 12));
-            attributes.SetMax(AttributeType.Fettle, Random.Range(6, 12));
-            attributes.SetMax(AttributeType.Focus, Random.Range(6, 12));
-            attributes.SetMax(AttributeType.Will, Random.Range(6, 12));
+//            attributes.SetMax(AttributeType.Grit, Random.Range(6, 12));
+//            attributes.SetMax(AttributeType.Fettle, Random.Range(6, 12));
+//            attributes.SetMax(AttributeType.Focus, Random.Range(6, 12));
+//            attributes.SetMax(AttributeType.Will, Random.Range(6, 12));
 #endif
 
             attributes.Get(AttributeType.Grit).SetToMax();

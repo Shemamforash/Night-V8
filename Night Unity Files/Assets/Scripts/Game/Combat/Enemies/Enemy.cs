@@ -243,6 +243,7 @@ namespace Game.Combat.Enemies
 
         public Loot DropLoot(Vector2 position)
         {
+            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tutorial) return null;
             switch (Template.DropResource)
             {
                 case "Salt":

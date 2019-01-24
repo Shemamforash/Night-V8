@@ -14,7 +14,10 @@ namespace Game.Combat.Generation
 {
     public abstract class RegionGenerator : MonoBehaviour
     {
-        private const float MinPolyWidth = 0.1f, SmallPolyWidth = 0.2f, MediumPolyWidth = 2f, LargePolyWidth = 3f;
+        protected const float MinPolyWidth = 0.1f;
+        protected const float SmallPolyWidth = 0.2f;
+        protected const float MediumPolyWidth = 2f;
+        protected const float LargePolyWidth = 3f;
         private Region _region;
         private List<Vector2> _availablePositions;
         private int _barrierNumber;
@@ -92,7 +95,7 @@ namespace Game.Combat.Generation
             _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(900, PathingGrid.CombatAreaWidth * 1.5f));
             Generate();
             _region.Barriers = barriers;
-            PathingGrid.InitialiseGrid(_region.GetRegionType() != RegionType.Rite);
+            PathingGrid.InitialiseGrid(_region.IsDynamic());
             _region.MarkGenerated();
         }
 
@@ -211,6 +214,12 @@ namespace Game.Combat.Generation
             _region.Fires.Add(new EnemyCampfire(position));
         }
 
+        public void GenerateOneRock(float minPolyWidth, float maxPolyWidth, float radiusVariation, float smoothness, Vector2 position)
+        {
+            float radius = Random.Range(minPolyWidth, maxPolyWidth);
+            GenerateGenericRock(radius, radiusVariation, smoothness, position);
+        }
+        
         private void GenerateRocks(int number, float minPolyWidth, float maxPolyWidth, float radiusVariation, float smoothness)
         {
             while (number > 0)

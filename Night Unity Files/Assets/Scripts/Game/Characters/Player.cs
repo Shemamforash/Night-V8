@@ -4,7 +4,9 @@ using System.Xml;
 using Facilitating.Persistence;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
+using Game.Combat.Generation;
 using Game.Combat.Player;
+using Game.Exploration.Regions;
 using Game.Exploration.WorldEvents;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
@@ -158,6 +160,7 @@ namespace Game.Characters
 
         private void IncreaseTimeSurvived()
         {
+            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tutorial) return;
             ++_daysSurvived;
             _showJournal = true;
             TryUnlockCharacterSkill(true);
@@ -254,6 +257,7 @@ namespace Game.Characters
 
         public void IncreaseKills()
         {
+            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tutorial) return;
             BrandManager.IncreaseEnemiesKilled();
             WeaponType weaponType = EquippedWeapon.WeaponType();
             _weaponKills[weaponType] = _weaponKills[weaponType] + 1;

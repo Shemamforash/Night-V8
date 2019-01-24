@@ -1,5 +1,7 @@
 ﻿using DG.Tweening;
 using Facilitating.Persistence;
+using Game.Combat.Generation;
+using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -23,6 +25,15 @@ public class GameController : MonoBehaviour
     {
         _starting = true;
         InputHandler.SetCurrentListener(null);
+        if (TutorialManager.Active() && !TutorialManager.FinishedIntroTutorial())
+        {
+            Region region = new Region();
+            region.SetRegionType(RegionType.Tutorial);
+            CombatManager.SetCurrentRegion(region);
+            SceneChanger.GoToCombatScene();
+            return;
+        }
+
         if (newGame) StoryController.Show();
         else
         {
@@ -30,7 +41,7 @@ public class GameController : MonoBehaviour
             SceneChanger.FadeInAudio();
         }
 
-        GameObject.Find("Music Audio").GetComponent<AudioSource>().DOFade(0f, 0.5f);
+        GameObject.Find("Music Audio").GetComponent<AudioSource>().DOFade(0f, 0.5f).SetUpdate(true);
     }
 
     public void ContinueGame()
@@ -74,12 +85,12 @@ public class GameController : MonoBehaviour
     public void SetDifficultyEasy()
     {
         WorldState.SetDifficultyEasy();
-        MenuStateMachine.ShowMenu( "Tutorial Choice");
+        MenuStateMachine.ShowMenu("Tutorial Choice");
     }
 
     public void SetDifficultyHard()
     {
         WorldState.SetDifficultyHard();
-        MenuStateMachine.ShowMenu( "Tutorial Choice");
+        MenuStateMachine.ShowMenu("Tutorial Choice");
     }
 }

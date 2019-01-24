@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Characters;
+using Game.Combat.Generation;
 using Game.Combat.Player;
+using Game.Exploration.Regions;
 using Game.Global.Tutorial;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Libraries;
@@ -42,6 +44,13 @@ namespace Game.Combat.Misc
                 new TutorialOverlay(_skillBarRect),
                 new TutorialOverlay(_skillBarRect)
             };
+        }
+
+        public void Start()
+        {
+            if (CombatManager.GetCurrentRegion().GetRegionType() != RegionType.Tutorial) return;
+            gameObject.FindChildWithName<CanvasGroup>("Skills Left").alpha = 0;
+            gameObject.FindChildWithName<CanvasGroup>("Skills Right").alpha = 0;
         }
 
         private void OnDestroy()

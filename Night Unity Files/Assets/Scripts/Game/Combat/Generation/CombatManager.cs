@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Facilitating;
@@ -19,11 +18,8 @@ using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
-using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
@@ -91,7 +87,7 @@ namespace Game.Combat.Generation
                 sequence.AppendInterval(2f);
                 sequence.AppendCallback(() =>
                 {
-                    if (TutorialManager.SeenControlsGuide() || !TutorialManager.Active()) return;
+                    if (TutorialManager.FinishedIntroTutorial() || !TutorialManager.Active()) return;
                     TutorialManager.TryOpenTutorial(6, _uiOverviewOverlays);
                 });
                 _hudTween = sequence;
@@ -137,7 +133,7 @@ namespace Game.Combat.Generation
             sequence.AppendInterval(3f);
             sequence.AppendCallback(() =>
             {
-                if (!TutorialManager.SeenControlsGuide() || !TutorialManager.Active()) return;
+                if (!TutorialManager.FinishedIntroTutorial() || !TutorialManager.Active()) return;
                 if (PlayerCombat.Instance == null) return;
                 List<TutorialOverlay> overlays = new List<TutorialOverlay>
                 {
@@ -204,13 +200,13 @@ namespace Game.Combat.Generation
                     worldObject.AddComponent<Desert>().Initialise(_currentRegion);
                     break;
                 case EnvironmentType.Mountains:
-                    worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
+                    worldObject.AddComponent<Labyrinth>().Initialise(_currentRegion);
                     break;
                 case EnvironmentType.Ruins:
                     worldObject.AddComponent<Ruins>().Initialise(_currentRegion);
                     break;
                 case EnvironmentType.Sea:
-                    worldObject.AddComponent<Labyrinth>().Initialise(_currentRegion);
+                    worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
                     break;
                 case EnvironmentType.Wasteland:
                     worldObject.AddComponent<Canyon>().Initialise(_currentRegion);
@@ -232,8 +228,10 @@ namespace Game.Combat.Generation
                 case RegionType.Temple:
                     worldObject.AddComponent<Temple>().Initialise(_currentRegion);
                     break;
+                case RegionType.Tutorial:
+                    worldObject.AddComponent<Tutorial>().Initialise(_currentRegion);
+                    break;
             }
-
             AudioController.FadeWeatherOut();
             PlayNightmareParticles();
             _visibilityRange = 10f;

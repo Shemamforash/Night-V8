@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EpPathFinding.cs;
 using Game.Combat.Player;
+using Game.Exploration.Regions;
 using SamsHelper.Libraries;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -451,7 +452,11 @@ namespace Game.Combat.Generation
         private static StaticGrid _searchGrid;
         private static Vector2 _playerStartPosition;
 
-        public static Vector2 PlayerStartPosition() => _edgePositionList.RandomElement().Position;
+        public static Vector2 PlayerStartPosition()
+        {
+            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tutorial) return Vector2.zero;
+            return _edgePositionList.RandomElement().Position;
+        }
 
         private static void GenerateBaseGrid()
         {

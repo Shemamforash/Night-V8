@@ -220,6 +220,18 @@ namespace Game.Characters
             return GetAttributeStatus(Get(AttributeType.Hunger), _starvationLevels);
         }
 
+        public void SetTutorialValues()
+        {
+            Get(AttributeType.Hunger).SetCurrentValue(1);
+            Get(AttributeType.Thirst).SetCurrentValue(1);
+        }
+
+        public void ResetValues()
+        {
+            Get(AttributeType.Hunger).SetCurrentValue(0);
+            Get(AttributeType.Thirst).SetCurrentValue(0);
+        }
+
         public string GetThirstStatus()
         {
             if (Val(AttributeType.Thirst) == 8)

@@ -17,7 +17,7 @@ namespace Game.Combat.Misc
             ClearTrails();
         }
 
-        public void StartFade(float duration)
+        public void StartFade()
         {
             StartCoroutine(Fade());
         }
@@ -25,6 +25,7 @@ namespace Game.Combat.Misc
         private IEnumerator Fade()
         {
             _followTransform = null;
+            yield return null;
             while (!Done()) yield return null;
             ClearTrails();
             GetObjectPool().Return(this);
