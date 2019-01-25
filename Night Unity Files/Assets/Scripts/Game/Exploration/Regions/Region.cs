@@ -322,15 +322,9 @@ namespace Game.Exploration.Regions
             return _discovered;
         }
 
-        public static bool InTutorialPeriod()
-        {
-            return TutorialManager.Active() && EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.Desert && MapGenerator.DiscoveredRegions().Count <= 4;
-        }
-
         public List<Enemy> GetEnemies()
         {
             List<Enemy> enemies = new List<Enemy>();
-            if (InTutorialPeriod()) return enemies;
             List<EnemyTemplate> templates;
             switch (_regionType)
             {

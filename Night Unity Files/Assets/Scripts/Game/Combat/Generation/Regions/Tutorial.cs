@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Facilitating;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Player;
+using Game.Combat.Ui;
+using Game.Global.Tutorial;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -22,7 +25,7 @@ namespace Game.Combat.Generation
             Instantiate(tutorialFloor, Vector3.zero, Quaternion.identity);
             CreateRocks();
             CharacterManager.SelectedCharacter.Attributes.SetTutorialValues();
-            StartCoroutine(ShowControlsTutorial());
+            StartCoroutine(ShowTutorial());
         }
 
         private void CreateRocks()
@@ -59,9 +62,8 @@ namespace Game.Combat.Generation
             loot.CreateObject();
         }
 
-        private IEnumerator ShowControlsTutorial()
+        private IEnumerator ShowBasicControls()
         {
-            UiGearMenuController.SetOpenAllowed(false);
             yield return new WaitForSeconds(2f);
             EventTextController.SetOverrideText("Move using [WASD]");
             while (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) yield return null;
@@ -87,8 +89,16 @@ namespace Game.Combat.Generation
             while (Input.GetAxis("Reload") == 0) yield return null;
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
+        }
 
+        private IEnumerator ShowAdrenalineTutorial()
+        {
             _player.UpdateAdrenaline(10000);
+            _player.HealthController.TakeDamage(_player.HealthController.GetMaxHealth() * 0.6f);
+            CombatManager.SetForceShowHud(true);
+            yield return new WaitForSeconds(0.5f);
+            TutorialManager.TryOpenTutorial(7, new List<TutorialOverlay> {new TutorialOverlay(RageBarController.AdrenalineRect())});
+            while (TutorialManager.IsTutorialVisible()) yield return null;
             EventTextController.SetOverrideText("Dash with [SPACE], this consumes some adrenaline");
             while (Input.GetAxis("Sprint") == 0) yield return null;
             EventTextController.CloseOverrideText();
@@ -98,16 +108,33 @@ namespace Game.Combat.Generation
             yield return new WaitForSeconds(3);
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
+        }
 
-            _player.HealthController.TakeDamage(_player.HealthController.GetMaxHealth() * 0.75f);
+        private bool _seenAccuracyTutorial;
+
+        private IEnumerator ShowHealthTutorial()
+        {
             CreateEnemies();
 
-            EventTextController.SetOverrideText("Defeat the enemies");
+            EventTextController.SetOverrideText("Defeat all enemies");
             yield return new WaitForSeconds(5);
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
-            while (!CombatManager.ClearOfEnemies()) yield return null;
+            while (!CombatManager.ClearOfEnemies())
+            {
+                if (!_seenAccuracyTutorial && CombatManager.InactiveEnemyCount() == 0 && PlayerCombat.Instance.GetTarget() != null)
+                {
+                    TutorialOverlay overlay = new TutorialOverlay(EnemyUi.Instance.UiHitController.GetComponent<RectTransform>());
+                    TutorialManager.TryOpenTutorial(8, overlay);
+                    _seenAccuracyTutorial = true;
+                }
 
+                yield return null;
+            }
+        }
+
+        private IEnumerator ShowAttributeTutorial()
+        {
             EventTextController.SetOverrideText("Will can be used to restore attributes in and out of combat");
             yield return new WaitForSeconds(3);
             EventTextController.CloseOverrideText();
@@ -129,17 +156,22 @@ namespace Game.Combat.Generation
             UiGearMenuController.SetOpenAllowed(false);
             yield return new WaitForSeconds(1);
 
-            CreateFoodAndWater();
+            EventTextController.SetOverrideText("Attributes can also be restored by sleeping");
+            yield return new WaitForSeconds(3);
+            EventTextController.CloseOverrideText();
+            yield return new WaitForSeconds(1);
+        }
 
+        private IEnumerator ShowCompassTutorial()
+        {
+            CreateFoodAndWater();
             EventTextController.SetOverrideText("Use your compass with [E]");
             while (Input.GetAxis("Compass") == 0) yield return null;
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
 
-            EventTextController.SetOverrideText("The compass reveals nearby objects");
-            yield return new WaitForSeconds(3);
-            EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
+            TutorialManager.TryOpenTutorial(3, new List<TutorialOverlay> {new TutorialOverlay(UiCompassPulseController.CompassRect())});
+            while (TutorialManager.IsTutorialVisible()) yield return null;
 
             EventTextController.SetOverrideText("Collect the revealed items with [T] or [MMB]");
             yield return new WaitForSeconds(2);
@@ -163,14 +195,28 @@ namespace Game.Combat.Generation
             while (UiGearMenuController.IsOpen()) yield return null;
             UiGearMenuController.SetOpenAllowed(false);
             yield return new WaitForSeconds(1);
+        }
 
-
+        private IEnumerator ShowLeaveTutorial()
+        {
+            CombatManager.SetForceShowHud(false);
             RiteStarter.GenerateTutorialStarter();
             EventTextController.SetOverrideText("Walk into the portal to begin your journey");
             yield return new WaitForSeconds(2);
             EventTextController.CloseOverrideText();
-
             CharacterManager.SelectedCharacter.Attributes.ResetValues();
+            UiGearMenuController.SetOpenAllowed(true);
+        }
+
+        private IEnumerator ShowTutorial()
+        {
+            UiGearMenuController.SetOpenAllowed(false);
+            yield return StartCoroutine(ShowBasicControls());
+            yield return StartCoroutine(ShowAdrenalineTutorial());
+            yield return StartCoroutine(ShowHealthTutorial());
+            yield return StartCoroutine(ShowAttributeTutorial());
+            yield return StartCoroutine(ShowCompassTutorial());
+            yield return StartCoroutine(ShowLeaveTutorial());
         }
 
         private void Update()

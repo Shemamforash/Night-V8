@@ -18,17 +18,13 @@ namespace Facilitating.UIControllers
         private ListController _accessoryList;
         private EnhancedText _name, _bonus, _description;
         private static bool _unlocked;
-        private List<TutorialOverlay> _overlays;
         private static UiAccessoryController _instance;
+        private bool _seenTutorial;
 
         public override void Awake()
         {
             base.Awake();
             _instance = this;
-            _overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay()
-            };
         }
 
         private void OnDestroy()
@@ -113,8 +109,15 @@ namespace Facilitating.UIControllers
         {
             UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
             _accessoryList.Show();
-            TutorialManager.TryOpenTutorial(13, _overlays);
             UpdateEquipped();
+            ShowAccessoryTutorial();
+        }
+
+        private void ShowAccessoryTutorial()
+        {
+            if (_seenTutorial || !TutorialManager.Active()) return;
+            TutorialManager.TryOpenTutorial(14, new TutorialOverlay());
+            _seenTutorial = true;
         }
 
         private static List<object> GetAvailableAccessories()

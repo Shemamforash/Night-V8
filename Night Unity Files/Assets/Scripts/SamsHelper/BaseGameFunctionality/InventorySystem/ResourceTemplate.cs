@@ -158,11 +158,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             float rand = Random.Range(0f, 1f);
             EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
-            if (Region.InTutorialPeriod())
-            {
-                return Plant.FindAll(r => r.AttributeType != AttributeType.Grit && r._dropRates[currentEnvironment].CanDrop).RandomElement();
-            }
-
             foreach (ResourceTemplate plantTemplate in Plant)
             {
                 if (!plantTemplate._dropRates[currentEnvironment].ValueWithinRange(rand)) continue;

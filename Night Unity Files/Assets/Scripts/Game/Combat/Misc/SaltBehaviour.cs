@@ -15,7 +15,6 @@ public class SaltBehaviour : MonoBehaviour
     private const float Force = 0.2f;
     private const float PickupRadius = 2f;
     private Transform _tri1Transform, _tri2Transform;
-    private List<TutorialOverlay> _overlays;
 
     public void Awake()
     {
@@ -23,11 +22,6 @@ public class SaltBehaviour : MonoBehaviour
         _tri2Transform = gameObject.FindChildWithName("Triangle 2").transform;
         _tri1Transform.localScale = Vector2.one * 0.5f;
         _rigidBody = GetComponent<Rigidbody2D>();
-        _overlays = new List<TutorialOverlay>
-        {
-            new TutorialOverlay(),
-            new TutorialOverlay()
-        };
     }
 
     public static void Create(Vector2 position)
@@ -44,14 +38,13 @@ public class SaltBehaviour : MonoBehaviour
         Vector2 directionToPlayer = PlayerCombat.Position() - transform.position;
         float distanceToPlayer = directionToPlayer.magnitude;
         if (distanceToPlayer > PickupRadius) return;
-        TryShowTutorial();
         float forceMod = 1f - distanceToPlayer / PickupRadius;
         _rigidBody.AddForce(directionToPlayer.normalized * Force * forceMod);
     }
 
     private void Pulse()
     {
-        float tri1Scale = Mathf.Sin(Time.timeSinceLevelLoad) ;
+        float tri1Scale = Mathf.Sin(Time.timeSinceLevelLoad);
         tri1Scale = (tri1Scale + 1) / 4f + 0.5f;
         float tri2Scale = Mathf.Sin(Time.timeSinceLevelLoad - 3);
         tri2Scale = (tri2Scale + 1) / 4f + 0.5f;
@@ -59,15 +52,11 @@ public class SaltBehaviour : MonoBehaviour
         _tri2Transform.localScale = tri2Scale * Vector2.one;
     }
 
-    private void TryShowTutorial()
-    {
-        TutorialManager.TryOpenTutorial(8, _overlays);
-    }
-
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (!other.gameObject.CompareTag("Player")) return;
         Inventory.IncrementResource("Salt", 1);
+        CombatLogController.PostLog("Picked up some salt");
         _saltPool.Return(this);
     }
 

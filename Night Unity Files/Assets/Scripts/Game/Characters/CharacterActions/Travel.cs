@@ -64,7 +64,7 @@ namespace Game.Characters.CharacterActions
             CurrentRegion = _target;
             if (AtHome())
             {
-                PlayerCharacter.CharacterView().ShowTutorial();
+                PlayerCharacter.CharacterView().ShowAttributeTutorial();
                 PlayerCharacter.RestAction.Enter();
             }
             else

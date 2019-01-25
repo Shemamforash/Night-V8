@@ -1,21 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
-using Facilitating;
 using Game.Characters;
 using Game.Characters.CharacterActions;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Misc;
 using Game.Combat.Player;
-using Game.Combat.Ui;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using Game.Global;
-using Game.Global.Tutorial;
 using NUnit.Framework;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -38,9 +34,9 @@ namespace Game.Combat.Generation
         private static int _maxSize;
         private CanvasGroup _hudCanvas;
         private bool _hudShown;
-        private Sequence _hudTween;
+        private Tweener _hudTween;
         private float _timeSinceLastSpawn;
-        private List<TutorialOverlay> _uiOverviewOverlays;
+        private static bool _forceShowHud;
 
         public static List<EnemyTemplate> GenerateEnemies(int size, List<EnemyTemplate> allowedTypes)
         {
@@ -62,6 +58,8 @@ namespace Game.Combat.Generation
 
         public static bool AllEnemiesDead() => Instance()._enemies.Count == 0 && _inactiveEnemies.Count == 0;
 
+        public static int InactiveEnemyCount() => _inactiveEnemies.Count;
+        
         public static float VisibilityRange() => Instance()._visibilityRange;
 
         public static Region Region() => _currentRegion;
@@ -77,28 +75,22 @@ namespace Game.Combat.Generation
             ScreenFaderController.ShowText(_currentRegion.Name);
         }
 
+        public static void SetForceShowHud(bool forceShow) => _forceShowHud = forceShow;
+
         private void UpdateHud()
         {
-            if (!ClearOfEnemies() && !_hudShown)
+            bool needToShow = !ClearOfEnemies() || _forceShowHud;
+            bool needToHide = ClearOfEnemies() && !_forceShowHud;
+            if (needToShow && !_hudShown)
             {
                 _hudTween?.Kill();
-                Sequence sequence = DOTween.Sequence();
-                sequence.Append(_hudCanvas.DOFade(1f, 1f));
-                sequence.AppendInterval(2f);
-                sequence.AppendCallback(() =>
-                {
-                    if (TutorialManager.FinishedIntroTutorial() || !TutorialManager.Active()) return;
-                    TutorialManager.TryOpenTutorial(6, _uiOverviewOverlays);
-                });
-                _hudTween = sequence;
+                _hudTween = _hudCanvas.DOFade(1f, 1f);
                 _hudShown = true;
             }
-            else if (ClearOfEnemies() && _hudShown)
+            else if (needToHide && _hudShown)
             {
                 _hudTween?.Kill();
-                Sequence sequence = DOTween.Sequence();
-                sequence.Append(_hudCanvas.DOFade(0f, 1f));
-                _hudTween = sequence;
+                _hudTween = _hudCanvas.DOFade(0f, 1f);
                 _hudShown = false;
             }
         }
@@ -129,37 +121,12 @@ namespace Game.Combat.Generation
         public void Start()
         {
             EnterCombat();
-            Sequence sequence = DOTween.Sequence();
-            sequence.AppendInterval(3f);
-            sequence.AppendCallback(() =>
-            {
-                if (!TutorialManager.FinishedIntroTutorial() || !TutorialManager.Active()) return;
-                if (PlayerCombat.Instance == null) return;
-                List<TutorialOverlay> overlays = new List<TutorialOverlay>
-                {
-                    new TutorialOverlay(UiCompassPulseController.CompassRect())
-                };
-                if (TutorialManager.TryOpenTutorial(4, overlays)) return;
-                if (PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Grit) != 0) return;
-                overlays = new List<TutorialOverlay>
-                {
-                    new TutorialOverlay(),
-                    new TutorialOverlay()
-                };
-                TutorialManager.TryOpenTutorial(5, overlays);
-            });
-
-            _uiOverviewOverlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(PlayerUi.Instance.HealthRect()),
-                new TutorialOverlay(PlayerUi.Instance.ArmourRect()),
-                new TutorialOverlay(RageBarController.AdrenalineRect())
-            };
         }
 
         public override void Enter()
         {
             base.Enter();
+            _forceShowHud = false;
             InputHandler.SetCurrentListener(PlayerCombat.Instance);
         }
 
@@ -232,6 +199,7 @@ namespace Game.Combat.Generation
                     worldObject.AddComponent<Tutorial>().Initialise(_currentRegion);
                     break;
             }
+
             AudioController.FadeWeatherOut();
             PlayNightmareParticles();
             _visibilityRange = 10f;

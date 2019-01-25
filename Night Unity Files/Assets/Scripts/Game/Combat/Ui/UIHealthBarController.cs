@@ -16,7 +16,7 @@ namespace Game.Combat.Ui
 
         public void Awake()
         {
-            _healthBar = gameObject.GetComponent<SteppedProgressBar>();
+            _healthBar = gameObject.FindChildWithName<SteppedProgressBar>("Fill");
             _sicknessImage = gameObject.FindChildWithName<Image>("Sickness");
             _rect = GetComponent<RectTransform>();
         }

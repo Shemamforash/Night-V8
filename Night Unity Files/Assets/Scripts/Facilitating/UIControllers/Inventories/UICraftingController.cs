@@ -22,6 +22,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
     private ColourPulse _glow;
     private static bool _unlocked;
     private List<TutorialOverlay> _overlays;
+    private bool _seenTutorial;
 
     public static void Load(XmlNode root)
     {
@@ -61,16 +62,21 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         InputHandler.RegisterInputListener(this);
         if (CharacterManager.SelectedCharacter.CraftAction.IsCurrentState()) ShowCurrentlyCrafting();
         else ShowCraftingList();
-        if (_overlays == null)
-        {
-            _overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(ResourcesUiController.ResourceRect()),
-                new TutorialOverlay()
-            };
-        }
 
-        TutorialManager.TryOpenTutorial(10, _overlays, false);
+
+        ShowCraftingTutorial();
+    }
+
+    private void ShowCraftingTutorial()
+    {
+        if (_seenTutorial || !TutorialManager.Active()) return;
+        List<TutorialOverlay> overlays = new List<TutorialOverlay>
+        {
+            new TutorialOverlay(ResourcesUiController.ResourceRect()),
+            new TutorialOverlay()
+        };
+        TutorialManager.TryOpenTutorial(11, overlays, false);
+        _seenTutorial = true;
     }
 
     private void ShowCurrentlyCrafting()

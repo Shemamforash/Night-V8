@@ -51,7 +51,7 @@ namespace Game.Global
         {
             _changingScene = true;
             _sceneToLoad = sceneName;
-            ScreenFaderController.FadeIn(DefaultFadeTime);
+            
             if (_fadeInAudio)
             {
                 _volumeTweener?.Kill();
@@ -59,7 +59,7 @@ namespace Game.Global
             }
 
             Time.timeScale = 1f;
-            yield return new WaitForSeconds(DefaultFadeTime);
+            yield return ScreenFaderController.FadeIn(DefaultFadeTime).WaitForCompletion();
             _onSceneEnd?.Invoke();
             _onSceneEnd = null;
             StartCoroutine(LoadNextScene());

@@ -125,6 +125,8 @@ namespace Facilitating.UIControllers
             base.Awake();
             bool isCombat = SceneManager.GetActiveScene().name == "Combat";
 
+            _closeAllowed = true;
+            _openAllowed = true;
             _instance = this;
             _audioPool = GetComponent<AudioPoolController>();
             _audioPool.SetMixerGroup("Modified", 0);

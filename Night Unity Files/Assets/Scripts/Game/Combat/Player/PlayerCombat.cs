@@ -286,8 +286,13 @@ namespace Game.Combat.Player
         public void Activate()
         {
             CombatManager.ExitCombat();
+        }
+
+        public void ExitCombat()
+        {
+            InputHandler.UnregisterInputListener(this);
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            InputHandler.SetCurrentListener(null);
+            StopReloading();
         }
 
         public override void Kill()
@@ -472,7 +477,7 @@ namespace Game.Combat.Player
             HealthController.SetInitialHealth(Player.Attributes.CalculateInitialHealth(), this, Player.Attributes.CalculateMaxHealth());
         }
 
-        
+
         public void Initialise()
         {
             InputHandler.SetCurrentListener(this);
@@ -512,11 +517,6 @@ namespace Game.Combat.Player
         }
 
         public override Weapon Weapon() => Player.EquippedWeapon;
-
-        public void ExitCombat()
-        {
-            StopReloading();
-        }
 
         //RELOADING
         private void Reload()

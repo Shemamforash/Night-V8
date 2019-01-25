@@ -46,11 +46,14 @@ public class TutorialManager : MonoBehaviour
         _mainCanvasRaycaster = GameObject.Find("Canvas").GetComponent<GraphicRaycaster>();
     }
 
+    public static bool TryOpenTutorial(int tutorialPart, TutorialOverlay overlay, bool hideResources = true)
+    {
+        return TryOpenTutorial(tutorialPart, new List<TutorialOverlay> {overlay}, hideResources);
+    }
+
     public static bool TryOpenTutorial(int tutorialPart, List<TutorialOverlay> overlays, bool hideResources = true)
     {
-        if (CombatManager.Instance() != null && CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tutorial) return false;
-        if (!_tutorialActive) return false;
-        if (_showingTutorial) return false;
+        if (!_tutorialActive || _showingTutorial) return false;
         _overlays = overlays;
         _hideResouces = hideResources;
         ReadTutorialParts();

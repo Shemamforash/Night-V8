@@ -1,5 +1,4 @@
-﻿using Game.Combat.Generation;
-using Game.Global;
+﻿using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -17,6 +16,7 @@ public class CombatJournalController : Menu, IInputListener
     public override void Awake()
     {
         base.Awake();
+        _closing = false;
         _title = gameObject.FindChildWithName<TextMeshProUGUI>("Title");
         _body = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");

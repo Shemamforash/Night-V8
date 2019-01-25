@@ -58,6 +58,7 @@ namespace Game.Global
 
         private static DifficultySetting _difficultySetting;
         private static float EnemyDamageModifier, EnemyHealthModifier;
+        private bool _seenTutorial;
 
         public static float GetEnemyDamageModifier() => EnemyDamageModifier;
         public static float GetEnemyHealthModifier() => EnemyHealthModifier;
@@ -148,7 +149,7 @@ namespace Game.Global
             _timeAtLastSave = 0;
         }
 
-        public static void ResetWorld(bool clearSave = true, int currentLevel = 1, int difficulty = 0)
+        public static void ResetWorld(bool clearSave = true, int difficulty = 0)
         {
             Inventory.Reset();
             CharacterManager.Reset(clearSave);
@@ -176,6 +177,12 @@ namespace Game.Global
             WeatherManager.Start();
             WorldView.MyUpdate(Hours);
             CharacterManager.Update();
+            ShowExplorationTutorial();
+        }
+
+        private void ShowExplorationTutorial()
+        {
+            if (_seenTutorial || !TutorialManager.Active()) return;
             List<TutorialOverlay> overlays = new List<TutorialOverlay>
             {
                 new TutorialOverlay(),
@@ -183,6 +190,7 @@ namespace Game.Global
                 new TutorialOverlay()
             };
             TutorialManager.TryOpenTutorial(1, overlays);
+            _seenTutorial = true;
         }
 
         public static void ActivateTemple()

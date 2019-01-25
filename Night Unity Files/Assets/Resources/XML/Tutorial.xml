@@ -3,6 +3,7 @@
 		<SectionNumber>1</SectionNumber>
 		<SectionName>Exploration</SectionName>
 		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Exploration</Title>
 		<Text>Exploration is the key to survival in Beyond The Veil. By exploring you can discover numerous regions, each with their own obstacles.</Text>
 	</TutorialPart>
@@ -10,6 +11,7 @@
 		<SectionNumber>1</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Temples</Title>
 		<Text>All Temple regions must be visited and cleansed before the Gate will open, and allow you to travel into The Veil.</Text>
 	</TutorialPart>
@@ -17,6 +19,7 @@
 		<SectionNumber>1</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>3</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Saving Progress</Title>
 		<Text>Progress must be saved manually. Be warned- Beyond the Veil uses only a single save slot.</Text>
 	</TutorialPart>
@@ -24,231 +27,248 @@
 		<SectionNumber>2</SectionNumber>
 		<SectionName>The Map</SectionName>
 		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>The Map</Title>
 		<Text>The Map allows you to discover and revisit regions. The grit required to travel to a region is shown below it's name. Returning to the gate is always free.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>4</SectionNumber>
+		<SectionNumber>3</SectionNumber>
 		<SectionName>The Compass</SectionName>
 		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>The Compass</Title>
 		<Text>Your compass reveals interesting points on the map. Each use of the compass consumes 1 focus.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>5</SectionNumber>
+		<SectionNumber>4</SectionNumber>
 		<SectionName>Meditation and Grit</SectionName>
 		<PartNumber>1</PartNumber>
+		<AutoUnlock>True</AutoUnlock>
 		<Title>Meditating</Title>
 		<Text>Meditating consumes Will to restore other attributes. It can be done at any time, and is a good way to avoid returning to the gate to recover.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>5</SectionNumber>
-		<SectionName>1</SectionName>
-		<PartNumber>2</PartNumber>
-		<Title>Restore Grit</Title>
-		<Text>Meditate by pressing [I] to open the inventory and navigate to the Meditate tab.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>6</SectionNumber>
-		<SectionName>Combat</SectionName>
+		<SectionName>Health</SectionName>
 		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Health</Title>
 		<Text>When a characters health reaches zero in combat, they die. If the Wanderer dies, your journey is over.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>6</SectionNumber>
-		<SectionName>1</SectionName>
-		<PartNumber>2</PartNumber>
+		<SectionName>Armour</SectionName>
+		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Armour</Title>
 		<Text>Your armour bar shows how much damage your armour can absorb.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>6</SectionNumber>
-		<SectionName>1</SectionName>
-		<PartNumber>3</PartNumber>
+		<SectionNumber>7</SectionNumber>
+		<SectionName>Adrenaline</SectionName>
+		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Adrenaline</Title>
 		<Text>Adrenaline is gained by dealing damage to enemies. It can be used to dash or activate skills.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>7</SectionNumber>
-		<SectionName>Enemies</SectionName>
+		<SectionNumber>8</SectionNumber>
+		<SectionName>Accuracy</SectionName>
 		<PartNumber>1</PartNumber>
-		<Title>Enemies</Title>
-		<Text>Enemy health and armour is shown at the top of the screen. Enemy difficulty increases as time goes on, but so does the quality of their loot.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>7</SectionNumber>
-		<SectionName>1</SectionName>
-		<PartNumber>2</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Accuracy</Title>
 		<Text>Your current accuracy is also shown at the top of the screen. Continuous fire decreases your accuracy, so fire in short bursts for maximum effectiveness.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>7</SectionNumber>
-		<SectionName>1</SectionName>
-		<PartNumber>3</PartNumber>
-		<Title>Damage</Title>
-		<Text>Other than the basic damage dealt by weapons, there are 3 types of alternate damage. Shatter depletes armour. Fire causes damage over time. Void stacks to a critical level, and deals massive damage.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>8</SectionNumber>
+		<SectionNumber>9</SectionNumber>
 		<SectionName>Salt and Radiance</SectionName>
 		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Salt</Title>
 		<Text>Human enemies have a chance to drop Salt. Unlike other loot, Salt will automatically be collected when you are near to it.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>8</SectionNumber>
+		<SectionNumber>9</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Radiance</Title>
 		<Text>Salt can be used to craft Radiance. Radiance can be used to claim regions. Over time, these regions add either food, water, or resources to your supply.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>9</SectionNumber>
+		<SectionNumber>10</SectionNumber>
 		<SectionName>Attributes</SectionName>
 		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Attributes</Title>
 		<Text>Characters have 4 attributes- 2 Physical, and 2 Mental:</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>9</SectionNumber>
+		<SectionNumber>10</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Physical</Title>
 		<Text>Fettle increases your maximum health in combat. Grit increases movement speed and map travel distance.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>9</SectionNumber>
+		<SectionNumber>10</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>3</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Mental</Title>
 		<Text>Focus increases the rate you gain adrenaline, and the number of compass charges available. Will decreases the recharge time of your skills, and can be used to restore other attributes.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>10</SectionNumber>
+		<SectionNumber>11</SectionNumber>
 		<SectionName>Crafting</SectionName>
 		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Crafting</Title>
 		<Text>Resources found in the world can be used to craft a variety of different items.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>10</SectionNumber>
+		<SectionNumber>11</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Resources</Title>
 		<Text>Crafting recipes are unlocked over time. You can view and craft recipes through the Craft action.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>11</SectionNumber>
+		<SectionNumber>12</SectionNumber>
 		<SectionName>Weapons</SectionName>
 		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Weapons</Title>
 		<Text>Weapons come in a number of different varieties, all of which with unique firing behaviours.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>11</SectionNumber>
+		<SectionNumber>12</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Power</Title>
 		<Text>Weapon Power affects the damage output of a weapon. Lower power reduces the effectiveness of your weapons, whilst higher power increases it.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>11</SectionNumber>
+		<SectionNumber>12</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>3</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Quality</Title>
 		<Text>Higher quality weapons have higher maximum Power- represented by the width of the power bar. Weapons of equal Power will have similar damage outputs, regardless of their quality.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>12</SectionNumber>
+		<SectionNumber>13</SectionNumber>
 		<SectionName>Armour</SectionName>
 		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Armour</Title>
 		<Text>Armour absorbs damage in place of your health. When depleted, it must recharge. Shatter damage forces armour to deplete.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>12</SectionNumber>
+		<SectionNumber>13</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Upgrade</Title>
 		<Text>Armour can be upgraded to absorb more damage.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>13</SectionNumber>
+		<SectionNumber>14</SectionNumber>
 		<SectionName>Accessories</SectionName>
 		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Accessories</Title>
 		<Text>Accessories are small trinkets that can further modify the power of your weapon. Only one accessory can be equipped at a time.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>14</SectionNumber>
+		<SectionNumber>15</SectionNumber>
 		<SectionName>Skills</SectionName>
 		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Skills</Title>
 		<Text>In total there are 4 skill slots available during combat.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>14</SectionNumber>
+		<SectionNumber>15</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Character Skills</Title>
 		<Text>The first 2 skills are linked to the character. These skills are unlocked over time.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>14</SectionNumber>
+		<SectionNumber>15</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>3</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Weapon Skills</Title>
 		<Text>The last 2 skills are linked to your weapon. Using weapons of each type will unlock their skills.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>14</SectionNumber>
+		<SectionNumber>15</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>4</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Cost</Title>
 		<Text>The dots above a skill indicate the adrenaline required to use them.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>15</SectionNumber>
+		<SectionNumber>16</SectionNumber>
 		<SectionName>Shrines and Trials</SectionName>
 		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Shrines</Title>
 		<Text>Some areas contain shrines where you can show your devotion to the gods. To do so you can accept Rites, each of which have different requirements to complete.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>15</SectionNumber>
+		<SectionNumber>16</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Trials</Title>
 		<Text>When the requirements are met, you must partake in a final trial, the outcome of which will either provide you with a blessing or a curse.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>16</SectionNumber>
+		<SectionNumber>17</SectionNumber>
 		<SectionName>Chanelling</SectionName>
 		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Chanelling</Title>
 		<Text>Weapon power is drained through use, decreasing the damage you deal in combat. If you have essence available, it can be channelled into the weapon to restore its power.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>17</SectionNumber>
+		<SectionNumber>18</SectionNumber>
 		<SectionName>Infusions</SectionName>
 		<PartNumber>2</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
 		<Title>Infusions</Title>
 		<Text>Infusions can be used to grant large, passive bonuses to weapons. Applying Infusions requires Essence, and replaces any Infusions already applied.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>18</SectionNumber>
-		<SectionName>Recovery</SectionName>
+		<SectionNumber>19</SectionNumber>
+		<SectionName>Sleep</SectionName>
 		<PartNumber>1</PartNumber>
-		<Title>Sleeping</Title>
+		<AutoUnlock>True</AutoUnlock>
+		<Title>Sleep</Title>
 		<Text>Sleeping slowly restores your characters attributes over time.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>18</SectionNumber>
-		<SectionName>1</SectionName>
-		<PartNumber>2</PartNumber>
+		<SectionNumber>20</SectionNumber>
+		<SectionName>Hunger and Thirst</SectionName>
+		<PartNumber>1</PartNumber>
+		<AutoUnlock>True</AutoUnlock>
 		<Title>Hunger and Thirst</Title>
 		<Text>If your Hunger or Thirst level reaches 0, you die. Eat food and drink water to prevent this.</Text>
+	</TutorialPart>
+	<TutorialPart>
+		<SectionNumber>21</SectionNumber>
+		<SectionName>Damage Types</SectionName>
+		<PartNumber>1</PartNumber>
+		<AutoUnlock>False</AutoUnlock>
+		<Title>Damage Types</Title>
+		<Text>There are 3 types of alternate damage. Shatter depletes armour. Fire causes damage over time. Void stacks to a critical level, and deals massive damage.</Text>
 	</TutorialPart>
 </Tutorial>

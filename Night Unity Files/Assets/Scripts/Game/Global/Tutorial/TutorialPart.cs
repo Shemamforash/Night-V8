@@ -21,6 +21,7 @@ namespace Game.Global.Tutorial
             Content = Content.Replace(". ", ".\n");
             PartNumber = node.IntFromNode("PartNumber");
             SectionNumber = node.IntFromNode("SectionNumber");
+            _completed = node.BoolFromNode("AutoUnlock");
         }
 
         public void SaveTutorialPart(XmlNode root)

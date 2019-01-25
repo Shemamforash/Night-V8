@@ -9,25 +9,6 @@ namespace Game.Combat.Ui
 {
     public class PlayerUi : CharacterUi
     {
-        public static PlayerUi Instance;
-        private List<TutorialOverlay> _overlays;
-
-        public override void Awake()
-        {
-            base.Awake();
-            Instance = this;
-        }
-
-        public void Start()
-        {
-            _overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(EnemyUi.Instance.GetComponent<RectTransform>()),
-                new TutorialOverlay(EnemyUi.Instance.UiHitController.GetComponent<RectTransform>()),
-                new TutorialOverlay()
-            };
-        }
-
         public void Update()
         {
             if (PlayerCombat.Instance == null) return;
@@ -44,10 +25,7 @@ namespace Game.Combat.Ui
                 nearestAngle = enemyAngle;
                 nearestCharacter = c;
             });
-
             PlayerCombat.Instance.SetTarget(nearestCharacter);
-            if (nearestCharacter == null) return;
-            TutorialManager.TryOpenTutorial(7, _overlays);
         }
 
         protected override void LateUpdate()

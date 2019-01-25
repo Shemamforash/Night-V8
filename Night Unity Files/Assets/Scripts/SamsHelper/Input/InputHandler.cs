@@ -104,6 +104,7 @@ namespace SamsHelper.Input
         {
             if (ListenersToAdd.Contains(inputListener)) ListenersToAdd.Remove(inputListener);
             ListenersToRemove.Add(inputListener);
+            if (_currentInputListener == inputListener) _currentInputListener = null;
         }
 
         private class InputPress

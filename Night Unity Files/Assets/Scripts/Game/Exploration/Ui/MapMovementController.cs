@@ -29,6 +29,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     public void Awake()
     {
+        _visible = false;
         _rigidBody2D = GetComponent<Rigidbody2D>();
         _availableRegions = MapGenerator.SeenRegions();
         MapCamera = GetComponent<Camera>();
@@ -121,7 +122,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
     {
         if (!_visible) return;
         if (_player == null) return;
-        if ((MapMovementController) InputHandler.GetCurrentListener() != this) return;
+        if (InputHandler.GetCurrentListener() != this) return;
         if (!_pressed && _nearestRegion != null) LocateToNearestRegion();
         _direction.Normalize();
         _direction *= CurrentSpeed;

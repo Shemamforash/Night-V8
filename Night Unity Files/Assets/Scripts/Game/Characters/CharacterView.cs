@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
+using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global.Tutorial;
 using SamsHelper.Libraries;
@@ -22,8 +23,7 @@ namespace Game.Characters
         private UIConditionController _thirstController, _hungerController;
         private CanvasGroup _viewCanvas;
         private UIActionListController _actionList;
-        private List<TutorialOverlay> _overlays;
-        private List<TutorialOverlay> _sleepingOverlays;
+        private bool _seenTutorial;
 
         public void SetPlayer(Player player)
         {
@@ -47,22 +47,6 @@ namespace Game.Characters
             _hungerController = gameObject.FindChildWithName<UIConditionController>("Hunger");
 
             _actionList.SetPlayer(_player);
-
-            RectTransform physical = _attributeController.FindChildWithName<RectTransform>("Physical");
-            RectTransform mental = _attributeController.FindChildWithName<RectTransform>("Mental");
-
-            _sleepingOverlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(_actionList.SleepRect()),
-                new TutorialOverlay(gameObject.FindChildWithName("Conditions").GetComponent<RectTransform>())
-            };
-            
-            _overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(_attributeController.GetComponent<RectTransform>()),
-                new TutorialOverlay(physical),
-                new TutorialOverlay(mental),
-            };
         }
 
         public void Update()
@@ -130,11 +114,20 @@ namespace Game.Characters
             if (selectWeapon) WeaponController.EnhancedButton.Select();
         }
 
-        public void ShowTutorial()
+        public void ShowAttributeTutorial()
         {
-            TutorialManager.TryOpenTutorial(18, _sleepingOverlays);
-            if (Region.InTutorialPeriod()) return;
-            TutorialManager.TryOpenTutorial(9, _overlays);
+            if (_seenTutorial || !TutorialManager.Active()) return;
+            if (MapGenerator.DiscoveredRegions().Count < 2) return;
+            RectTransform physical = _attributeController.FindChildWithName<RectTransform>("Physical");
+            RectTransform mental = _attributeController.FindChildWithName<RectTransform>("Mental");
+            List<TutorialOverlay> overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(_attributeController.GetComponent<RectTransform>()),
+                new TutorialOverlay(physical),
+                new TutorialOverlay(mental)
+            };
+            TutorialManager.TryOpenTutorial(10, overlays);
+            _seenTutorial = true;
         }
     }
 }

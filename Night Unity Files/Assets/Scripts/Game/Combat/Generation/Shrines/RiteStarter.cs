@@ -84,10 +84,10 @@ namespace Game.Combat.Generation.Shrines
             {
                 if (_isTutorial)
                 {
+                    CombatManager.ExitCombat(false);
                     StoryController.Show();
                     TutorialManager.FinishIntroTutorial();
                     UiGearMenuController.SetOpenAllowed(true);
-                    Debug.Log(CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion().GetRegionType());
                 }
                 else Return();
             }

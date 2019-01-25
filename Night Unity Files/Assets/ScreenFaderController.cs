@@ -21,6 +21,7 @@ public class ScreenFaderController : MonoBehaviour
 
     public static void ShowText(string text)
     {
+        if (text == "") return;
         if (_textCanvas == null) Initialise();
         _text.text = text;
         _textCanvas.alpha = 1;
@@ -37,10 +38,11 @@ public class ScreenFaderController : MonoBehaviour
         _textCanvas.alpha = 0;
     }
 
-    public static void FadeIn(float duration)
+    public static Tweener FadeIn(float duration)
     {
         ResetFader();
         _tweener = _faderCanvas.DOFade(1, duration).SetUpdate(UpdateType.Normal, true);
+        return _tweener;
     }
 
     private static void ResetFader()

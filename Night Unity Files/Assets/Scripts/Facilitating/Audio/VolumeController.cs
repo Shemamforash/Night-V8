@@ -1,78 +1,39 @@
-﻿using System;
-using System.Xml;
-using DG.Tweening;
+﻿using System.Xml;
 using Facilitating.Persistence;
 using Game.Global;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
-using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class VolumeController : MonoBehaviour
+public class VolumeController : MonoBehaviour, ISelectHandler, IDeselectHandler, IInputListener
 {
-    private EnhancedButton _silentButton, _hushedButton, _loudButton;
-    private Image _silentBackground, _hushedBackground, _loudBackground;
-    private static VolumeLevel _masterVolume = VolumeLevel.Loud;
+    private static float _masterVolume = 1;
     private static float _modifiedVolume;
+    private Slider _volumeSlider;
 
-    private enum VolumeLevel
-    {
-        Mute,
-        Hushed,
-        Loud
-    }
 
     private void OnEnable()
     {
-        UpdateBackground();
-    }
-
-    private void UpdateBackground()
-    {
-        float targetSilentAlpha = _masterVolume == VolumeLevel.Mute ? 0.5f : 0f;
-        float targetHushedAlpha = _masterVolume == VolumeLevel.Hushed ? 0.5f : 0f;
-        float targetLoudAlpha = _masterVolume == VolumeLevel.Loud ? 0.5f : 0f;
-        _silentBackground.DOFade(targetSilentAlpha, 0.5f);
-        _hushedBackground.DOFade(targetHushedAlpha, 0.5f);
-        _loudBackground.DOFade(targetLoudAlpha, 0.5f);
+        _volumeSlider.value = _masterVolume;
     }
 
     private void Awake()
     {
-        _silentButton = gameObject.FindChildWithName("Mute").FindChildWithName<EnhancedButton>("Button");
-        _silentButton.AddOnClick(() =>
-        {
-            SetMasterVolume(VolumeLevel.Mute);
-            UpdateBackground();
-        });
-        _silentBackground = _silentButton.FindChildWithName<Image>("Image");
-
-        _hushedButton = gameObject.FindChildWithName("Hushed").FindChildWithName<EnhancedButton>("Button");
-        _hushedButton.AddOnClick(() =>
-        {
-            SetMasterVolume(VolumeLevel.Hushed);
-            UpdateBackground();
-        });
-        _hushedBackground = _hushedButton.FindChildWithName<Image>("Image");
-
-        _loudButton = gameObject.FindChildWithName("Loud").FindChildWithName<EnhancedButton>("Button");
-        _loudButton.AddOnClick(() =>
-        {
-            SetMasterVolume(VolumeLevel.Loud);
-            UpdateBackground();
-        });
-        _loudBackground = _loudButton.FindChildWithName<Image>("Image");
+        _volumeSlider = GetComponent<Slider>();
+        _volumeSlider.onValueChanged.AddListener(f => SetMasterVolume(_volumeSlider.value));
     }
 
     public static void Load(XmlNode root)
     {
-        VolumeLevel volume = (VolumeLevel) root.IntFromNode("Volume");
+        float volume = root.FloatFromNode("Volume");
         SetMasterVolume(volume);
     }
 
     public static void Save(XmlNode root)
     {
-        root.CreateChild("Volume", (int) _masterVolume);
+        root.CreateChild("Volume", _masterVolume);
     }
 
     public static float Volume()
@@ -80,31 +41,42 @@ public class VolumeController : MonoBehaviour
         return _modifiedVolume;
     }
 
-    private static void SetMasterVolume(VolumeLevel volumeLevel)
+    private static void SetMasterVolume(float volumeLevel)
     {
         _masterVolume = volumeLevel;
-        AudioController.SetMasterVolume(VolumeLevelToValue());
+        AudioController.SetMasterVolume(_masterVolume);
         SaveController.SaveSettings();
-    }
-
-    private static float VolumeLevelToValue()
-    {
-        switch (_masterVolume)
-        {
-            case VolumeLevel.Mute:
-                return 0f;
-            case VolumeLevel.Hushed:
-                return 0.5f;
-            case VolumeLevel.Loud:
-                return 1f;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
     }
 
     public static void SetModifiedVolume(float volume)
     {
         _modifiedVolume = volume;
         AudioController.SetModifiedVolume(_modifiedVolume);
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        InputHandler.RegisterInputListener(this);
+    }
+
+    public void OnDeselect(BaseEventData eventData)
+    {
+        InputHandler.UnregisterInputListener(this);
+    }
+
+    public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+    {
+        if (axis != InputAxis.Horizontal) return;
+        float volumeDifference = 0.5f * Time.deltaTime;
+        volumeDifference *= direction.Polarity();
+        _volumeSlider.value = _volumeSlider.value + volumeDifference;
+    }
+
+    public void OnInputUp(InputAxis axis)
+    {
+    }
+
+    public void OnDoubleTap(InputAxis axis, float direction)
+    {
     }
 }

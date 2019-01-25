@@ -21,11 +21,11 @@ namespace Game.Combat.Misc
         private bool _skillsReady;
         private float _cooldownRemaining;
         private float _duration;
-        private RectTransform _skillBarRect;
-        private List<TutorialOverlay> _overlays;
         private Characters.Player _player;
         private static bool _needsUpdate;
         private static SkillBar _instance;
+        private bool _hasSkill;
+        private bool _seenTutorial;
 
         public void Awake()
         {
@@ -36,14 +36,6 @@ namespace Game.Combat.Misc
                 _skillControllers.Add(gameObject.FindChildWithName<CooldownController>("Skill " + (i + 1)));
 
             _skillsReady = false;
-            _skillBarRect = GetComponent<RectTransform>();
-            _overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(_skillBarRect),
-                new TutorialOverlay(_skillBarRect),
-                new TutorialOverlay(_skillBarRect),
-                new TutorialOverlay(_skillBarRect)
-            };
         }
 
         public void Start()
@@ -65,6 +57,7 @@ namespace Game.Combat.Misc
 
         public void Update()
         {
+            ShowSkillTutorial();
             TryUpdateSkills();
             if (_skillsReady) return;
             _cooldownRemaining -= Time.deltaTime;
@@ -78,6 +71,22 @@ namespace Game.Combat.Misc
 
             float normalisedTime = 1 - _cooldownRemaining / _duration;
             UpdateCooldownControllers(normalisedTime);
+        }
+
+        private void ShowSkillTutorial()
+        {
+            if (_seenTutorial || !TutorialManager.Active()) return;
+            if (!_hasSkill) return;
+            RectTransform skillBarRect = GetComponent<RectTransform>();
+            List<TutorialOverlay> overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(skillBarRect),
+                new TutorialOverlay(skillBarRect),
+                new TutorialOverlay(skillBarRect),
+                new TutorialOverlay(skillBarRect)
+            };
+            TutorialManager.TryOpenTutorial(15, overlays);
+            _seenTutorial = true;
         }
 
         private bool IsCharacterSkillOneUnlocked() => _player.Attributes.SkillOneUnlocked;
@@ -95,6 +104,7 @@ namespace Game.Combat.Misc
             Skill characterSkillTwo = _player.CharacterSkillTwo;
             Skill weaponSkillOne = _player.EquippedWeapon.WeaponSkillOne;
             Skill weaponSkillTwo = _player.EquippedWeapon.WeaponSkillTwo;
+            _hasSkill = IsCharacterSkillOneUnlocked() || IsCharacterSkillTwoUnlocked() || IsWeaponSkillOneUnlocked() || IsWeaponSkillTwoUnlocked();
 
 #if UNITY_EDITOR
             SkillsAreFree = true;
@@ -129,7 +139,7 @@ namespace Game.Combat.Misc
         }
 
         public static SkillBar Instance() => _instance;
-        
+
         public void ActivateSkill(int skillNo)
         {
             if (!_skillsReady) return;
@@ -138,7 +148,6 @@ namespace Game.Combat.Misc
             {
                 bool freeSkill = IsSkillFree();
                 if (!skill.Activate(freeSkill || SkillsAreFree)) return;
-                TutorialManager.TryOpenTutorial(14, _overlays);
                 if (freeSkill) return;
             }
 

@@ -28,6 +28,7 @@ namespace Game.Exploration.Environment
         public static bool IsReturningFromCombat;
         private static CloseButtonController _closeButton;
         private static UIAttributeMarkerController _gritMarker;
+        private bool _seenTutorial;
 
         public override void Awake()
         {
@@ -55,11 +56,15 @@ namespace Game.Exploration.Environment
             MapGenerator.Regions().ForEach(n => { n.ShowNode(); });
             MapMovementController.Enter(CharacterManager.SelectedCharacter);
             AudioController.FadeInMusicMuffle();
-            List<TutorialOverlay> overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(MapGenerator.GetInitialNode().MapNode().transform, 3, 3)
-            };
-            TutorialManager.TryOpenTutorial(2, overlays);
+            ShowMapTutorial();
+        }
+
+        private void ShowMapTutorial()
+        {
+            if (_seenTutorial || !TutorialManager.Active()) return;
+            TutorialOverlay overlay = new TutorialOverlay(MapGenerator.GetInitialNode().MapNode().transform, 3, 3);
+            TutorialManager.TryOpenTutorial(2, overlay);
+            _seenTutorial = true;
         }
 
         public override void Exit()

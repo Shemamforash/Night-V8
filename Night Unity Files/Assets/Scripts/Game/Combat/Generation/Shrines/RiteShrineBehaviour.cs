@@ -21,17 +21,12 @@ namespace Game.Combat.Generation.Shrines
         private int _targetBrand = -1;
         private RiteColliderBehaviour _targetRiteCollider;
         private static RiteShrineBehaviour _instance;
-        private List<TutorialOverlay> _overlays;
         private Region _region;
+        private bool _seenTutorial;
 
         public void Awake()
         {
             _instance = this;
-            _overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(transform, 4, 4),
-                new TutorialOverlay()
-            };
         }
 
         public static RiteShrineBehaviour Instance()
@@ -132,12 +127,21 @@ namespace Game.Combat.Generation.Shrines
 
         public float InRange()
         {
-            if (_targetBrand != -1)
-            {
-                TutorialManager.TryOpenTutorial(15, _overlays);
-            }
-
+            ShowRiteTutorial();
             return _targetBrand;
+        }
+
+        private void ShowRiteTutorial()
+        {
+            if (_seenTutorial || !TutorialManager.Active()) return;
+            if (_targetBrand == -1) return;
+            List<TutorialOverlay> overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(transform, 4, 4),
+                new TutorialOverlay()
+            };
+            TutorialManager.TryOpenTutorial(16, overlays);
+            _seenTutorial = true;
         }
 
         public string GetEventText()

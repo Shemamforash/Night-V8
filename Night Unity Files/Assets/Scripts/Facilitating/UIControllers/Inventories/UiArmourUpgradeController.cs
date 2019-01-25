@@ -16,12 +16,12 @@ namespace Facilitating.UIControllers
     {
         private bool _upgradingAllowed;
         private static bool _unlocked;
-        private List<TutorialOverlay> _overlays;
         private static UiArmourUpgradeController _instance;
         private GameObject _armourObject, _upgradeObject;
         private EnhancedText _nameText, _bonusText, _nextLevelText, _upgradeText, _upgradeMessage;
         private ArmourController _armourController;
         private EnhancedButton _upgradeButton, _acceptButton;
+        private bool _seenTutorial;
 
         public override void Awake()
         {
@@ -63,11 +63,6 @@ namespace Facilitating.UIControllers
             _upgradeButton.AddOnClick(Upgrade);
             _acceptButton = _upgradeObject.gameObject.FindChildWithName<EnhancedButton>("Accept");
             _acceptButton.AddOnClick(OnShow);
-            _overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(_armourObject.GetComponent<RectTransform>()),
-                new TutorialOverlay(_upgradeButton.GetComponent<RectTransform>())
-            };
         }
 
         protected override void Initialise()
@@ -84,7 +79,19 @@ namespace Facilitating.UIControllers
             _upgradeObject.SetActive(false);
             _upgradeButton.Select();
             _upgradeButton.Button().enabled = _armourController.CanUpgrade();
-            TutorialManager.TryOpenTutorial(12, _overlays);
+            ShowArmourTutorial();
+        }
+
+        private void ShowArmourTutorial()
+        {
+            if (_seenTutorial || !TutorialManager.Active()) return;
+            List<TutorialOverlay> overlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(_armourObject.GetComponent<RectTransform>()),
+                new TutorialOverlay(_upgradeButton.GetComponent<RectTransform>())
+            };
+            TutorialManager.TryOpenTutorial(13, overlays);
+            _seenTutorial = true;
         }
 
         private void Upgrade()

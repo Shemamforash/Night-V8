@@ -120,7 +120,7 @@ namespace Facilitating.MenuNavigation
         private void SkipToPoint(int num)
         {
             SaveController.ClearSave();
-            WorldState.ResetWorld(true, num, (num - 1) * 10);
+            WorldState.ResetWorld(true, (num - 1) * 10);
             if (num > 2) CharacterManager.AddCharacter(CharacterManager.GenerateRandomCharacter(CharacterClass.Protector));
             if (num > 4) CharacterManager.AddCharacter(CharacterManager.GenerateRandomCharacter());
             SaveController.ManualSave();

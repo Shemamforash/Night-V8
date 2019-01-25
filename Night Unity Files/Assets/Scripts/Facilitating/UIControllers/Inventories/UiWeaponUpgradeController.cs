@@ -6,6 +6,7 @@ using DefaultNamespace;
 using Facilitating.Persistence;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
+using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Gear;
 using Game.Gear.Armour;
@@ -30,7 +31,7 @@ namespace Facilitating.UIControllers
         private WeaponDetailController _weaponDetail;
         private GameObject _infoGameObject;
         private Weapon _equippedWeapon;
-        private List<TutorialOverlay> _startingOverlays, _channelOverlays, _infuseOverlays;
+        private bool _seenAttributeTutorial, _seenChannelTutorial, _seenInfuseTutorial;
 
         public override bool Unlocked() => true;
 
@@ -43,21 +44,6 @@ namespace Facilitating.UIControllers
             _swapButton = gameObject.FindChildWithName<EnhancedButton>("Swap");
             _channelButton = gameObject.FindChildWithName<EnhancedButton>("Infuse");
             _infoGameObject = gameObject.FindChildWithName("Info");
-
-            _startingOverlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(GetComponent<RectTransform>()),
-                new TutorialOverlay(_weaponDetail.DurabilityRect()),
-                new TutorialOverlay(_weaponDetail.DurabilityRect())
-            };
-            _channelOverlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(_channelButton.GetComponent<RectTransform>())
-            };
-            _infuseOverlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(_infuseButton.GetComponent<RectTransform>())
-            };
 
 #if UNITY_EDITOR
             for (int i = 0; i < 10; ++i)
@@ -151,28 +137,57 @@ namespace Facilitating.UIControllers
             StartCoroutine(TryShowWeaponTutorial());
         }
 
-        private IEnumerator TryShowWeaponTutorial()
+        private IEnumerator ShowWeaponAttributeTutorial()
         {
-            if (TutorialManager.TryOpenTutorial(11, _startingOverlays))
+            if (_seenAttributeTutorial) yield break;
+            if (!TutorialManager.FinishedIntroTutorial()) yield break;
+            List<TutorialOverlay> startingOverlays = new List<TutorialOverlay>
+            {
+                new TutorialOverlay(GetComponent<RectTransform>()),
+                new TutorialOverlay(_weaponDetail.DurabilityRect()),
+                new TutorialOverlay(_weaponDetail.DurabilityRect())
+            };
+            if (TutorialManager.TryOpenTutorial(12, startingOverlays))
             {
                 while (TutorialManager.IsTutorialVisible()) yield return null;
             }
 
-            if (_channelButton.gameObject.activeInHierarchy)
+            _seenAttributeTutorial = true;
+        }
+
+        private IEnumerator ShowChannelTutorial()
+        {
+            if (_seenChannelTutorial) yield break;
+            if (!_channelButton.gameObject.activeInHierarchy) yield break;
+            TutorialOverlay overlay = new TutorialOverlay(_channelButton.GetComponent<RectTransform>());
+            if (TutorialManager.TryOpenTutorial(17, overlay))
             {
-                if (TutorialManager.TryOpenTutorial(16, _channelOverlays))
-                {
-                    while (TutorialManager.IsTutorialVisible()) yield return null;
-                }
+                while (TutorialManager.IsTutorialVisible()) yield return null;
             }
 
-            if (_infuseButton.gameObject.activeInHierarchy)
+            _seenChannelTutorial = true;
+        }
+
+        private IEnumerator ShowInfuseTutorial()
+        {
+            if (_seenInfuseTutorial) yield break;
+            if (!_infuseButton.gameObject.activeInHierarchy) yield break;
+            TutorialOverlay overlay = new TutorialOverlay(_infuseButton.GetComponent<RectTransform>());
+            if (TutorialManager.TryOpenTutorial(18, overlay))
             {
-                if (TutorialManager.TryOpenTutorial(17, _infuseOverlays))
-                {
-                    while (TutorialManager.IsTutorialVisible()) yield return null;
-                }
+                while (TutorialManager.IsTutorialVisible()) yield return null;
             }
+
+            _seenInfuseTutorial = true;
+        }
+
+        private IEnumerator TryShowWeaponTutorial()
+        {
+            if (!TutorialManager.Active()) yield break;
+            if (_seenAttributeTutorial && _seenInfuseTutorial && _seenChannelTutorial) yield break;
+            yield return StartCoroutine(ShowWeaponAttributeTutorial());
+            yield return StartCoroutine(ShowChannelTutorial());
+            yield return StartCoroutine(ShowInfuseTutorial());
         }
 
         protected override void OnHide()

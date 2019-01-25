@@ -378,14 +378,10 @@ namespace Game.Exploration.Environment
                 return RegionType.Gate;
             }
 
-            return RegionType.Temple;
-
             UpdateAvailableRegionTypes();
             _regionTypeBag.Print();
             ++_regionsDiscovered;
-            if (!TutorialManager.Active() || !Region.InTutorialPeriod()) return _regionTypeBag.RemoveRandom();
-            _regionTypeBag.Remove(RegionType.Danger);
-            return RegionType.Danger;
+            return _regionTypeBag.RemoveRandom();
         }
 
         private static void SetWaterQuantities()

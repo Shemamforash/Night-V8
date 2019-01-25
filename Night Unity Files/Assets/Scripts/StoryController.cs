@@ -11,16 +11,17 @@ using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
+using Environment = Game.Exploration.Environment.Environment;
 using Random = UnityEngine.Random;
 
 public class StoryController : Menu
 {
     private const float _timePerWord = 0.3f;
-    private TextMeshProUGUI _storyText;
+    private TextMeshProUGUI _storyText, _actTitle, _actSubtitle;
     private static bool _goToCredits;
     private static bool _paused;
     private bool _skipParagraph;
-    private CanvasGroup _skipCanvas;
+    private CanvasGroup _skipCanvas, _actCanvas;
     private CloseButtonController _closeButton;
     private AudioSource _audioSource;
     private bool _canSkip;
@@ -32,13 +33,15 @@ public class StoryController : Menu
     public override void Awake()
     {
         base.Awake();
+        _actCanvas = GameObject.Find("Act").GetComponent<CanvasGroup>();
+        _actTitle = _actCanvas.gameObject.FindChildWithName<TextMeshProUGUI>("Title");
+        _actSubtitle = _actCanvas.gameObject.FindChildWithName<TextMeshProUGUI>("Subtitle");
         _storyText = GetComponent<TextMeshProUGUI>();
         _storyText.color = UiAppearanceController.InvisibleColour;
         _skipCanvas = GameObject.Find("Skip").GetComponent<CanvasGroup>();
         _closeButton = _skipCanvas.GetComponent<CloseButtonController>();
         _closeButton.SetCallback(Skip);
         _closeButton.SetOnClick(Skip);
-        Debug.Log("using fire input");
         _closeButton.UseFireInput();
         _audioSource = Camera.main.GetComponent<AudioSource>();
         _audioSource.volume = 0f;
@@ -87,6 +90,7 @@ public class StoryController : Menu
 
     private IEnumerator DisplayParagraph()
     {
+        yield return StartCoroutine(DisplayAct());
         Tweener skipTween = null;
         foreach (JournalEntry entry in _journalEntries)
         {
@@ -121,6 +125,20 @@ public class StoryController : Menu
 
         _audioSource.DOFade(0f, 0.5f).SetUpdate(UpdateType.Normal, true);
         End();
+    }
+
+    private static readonly string[] _actNames = {"Act I", "Act II", "Act III", "Act IV", "Act V", "Epilogue"};
+
+
+    private IEnumerator DisplayAct()
+    {
+        _storyText.alpha = 0;
+        EnvironmentType currentEnvironmentType = EnvironmentManager.CurrentEnvironmentType();
+        _actTitle.text = _actNames[(int) currentEnvironmentType];
+        _actSubtitle.text = Environment.EnvironmentTypeToName(currentEnvironmentType);
+        yield return _actCanvas.DOFade(1, 1f).WaitForCompletion();
+        yield return new WaitForSeconds(2f);
+        yield return _actCanvas.DOFade(0f, 1f).WaitForCompletion();
     }
 
     private void End()
