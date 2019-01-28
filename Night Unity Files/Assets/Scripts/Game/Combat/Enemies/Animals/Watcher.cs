@@ -22,7 +22,7 @@ namespace Game.Combat.Enemies.Animals
         {
             if (!Alerted)
             {
-                Cell target = PathingGrid.GetCellOutOfRange(transform.position);
+                Cell target = WorldGrid.GetEdgeCell(transform.position);
                 MoveBehaviour.GoToCell(target);
             }
 

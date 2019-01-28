@@ -74,7 +74,7 @@ namespace Game.Combat.Generation.Shrines
 //                return newPoint;
 //            }
 
-            return PathingGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 5, 1).Position;
+            return WorldGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 5, 1).Position;
         }
 
         private void OnTriggerEnter2D(Collider2D other)

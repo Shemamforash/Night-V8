@@ -105,7 +105,6 @@ public class PauseMenuController : MonoBehaviour
                 break;
         }
     }
-
     public static void Resume()
     {
         switch (SceneManager.GetActiveScene().name)

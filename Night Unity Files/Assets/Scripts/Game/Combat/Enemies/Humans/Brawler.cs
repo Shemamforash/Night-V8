@@ -19,9 +19,8 @@ namespace Game.Combat.Enemies.Humans
         {
             base.Initialise(enemy);
             if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Brawler Particles");
-            GameObject slashObject = Instantiate(_prefab);
+            GameObject slashObject = Instantiate(_prefab, transform, true);
             _slashParticles = slashObject.GetComponent<ParticleSystem>();
-            slashObject.transform.SetParent(transform);
             slashObject.transform.localPosition = Vector2.zero;
         }
 

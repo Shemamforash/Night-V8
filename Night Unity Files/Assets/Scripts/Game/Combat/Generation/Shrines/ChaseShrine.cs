@@ -34,13 +34,13 @@ namespace Game.Combat.Generation.Shrines
         {
             if (_shrinePickupPrefab == null) _shrinePickupPrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Shrine Pickup");
             _currentPickup = Instantiate(_shrinePickupPrefab);
-            _currentPickup.transform.position = PathingGrid.GetCellNearMe(PathingGrid.WorldToCellPosition(Vector2.zero), 6f, 4f).Position;
+            _currentPickup.transform.position = WorldGrid.GetCellNearMe(WorldGrid.WorldToCellPosition(Vector2.zero), 6f, 4f).Position;
             _currentPickup.GetComponent<ShrinePickup>().SetShrine(this);
         }
 
         private void SpawnChaser()
         {
-            CombatManager.SpawnEnemy(EnemyType.Shadow, PathingGrid.GetCellNearMe(PathingGrid.WorldToCellPosition(transform.position), 5f, 2f).Position);
+            CombatManager.SpawnEnemy(EnemyType.Shadow, WorldGrid.GetCellNearMe(WorldGrid.WorldToCellPosition(transform.position), 5f, 2f).Position);
         }
 
         private IEnumerator StartSpawning()

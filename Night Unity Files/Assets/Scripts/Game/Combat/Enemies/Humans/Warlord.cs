@@ -46,7 +46,7 @@ namespace Game.Combat.Enemies.Humans
 
             enemiesToSpawn.ForEach(type =>
             {
-                Vector2 spawnPosition = PathingGrid.GetCellNearMe(transform.position, 3).Position;
+                Vector2 spawnPosition = WorldGrid.GetCellNearMe(transform.position, 3).Position;
                 SpawnTrailController.Create(transform.position, spawnPosition, type);
             });
 

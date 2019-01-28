@@ -470,7 +470,7 @@ namespace Game.Combat.Generation
                 float xCentreDist = x - radius;
                 float yCentreDist = y - radius;
                 worldPosition = new Vector2(xCentreDist, yCentreDist) * Scale;
-                _inRange = worldPosition.magnitude <= PathingGrid.CombatMovementDistance / 2f + 0.25f;
+                _inRange = worldPosition.magnitude <= WorldGrid.CombatMovementDistance / 2f + 0.25f;
                 IsOnScreenEdge = x == 0 || y == 0 || x == Width - 1 || y == Width - 1;
             }
 

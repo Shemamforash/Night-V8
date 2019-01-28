@@ -19,13 +19,13 @@ namespace Game.Combat.Generation
         public static Cell Generate(int xIndex, int yIndex)
         {
             List<Vector2> verts = new List<Vector2>();
-            float xPos = (float) xIndex / PathingGrid.CellResolution - PathingGrid.CombatAreaWidth / 2f;
-            float yPos = (float) yIndex / PathingGrid.CellResolution - PathingGrid.CombatAreaWidth / 2f;
+            float xPos = (float) xIndex / WorldGrid.CellResolution - WorldGrid.CombatAreaWidth / 2f;
+            float yPos = (float) yIndex / WorldGrid.CellResolution - WorldGrid.CombatAreaWidth / 2f;
             Vector2 position = new Vector2(xPos, yPos);
-            verts.Add(new Vector2(-PathingGrid.CellWidth / 2f, -PathingGrid.CellWidth / 2f));
-            verts.Add(new Vector2(-PathingGrid.CellWidth / 2f, PathingGrid.CellWidth / 2f));
-            verts.Add(new Vector2(PathingGrid.CellWidth / 2f, -PathingGrid.CellWidth / 2f));
-            verts.Add(new Vector2(PathingGrid.CellWidth / 2f, PathingGrid.CellWidth / 2f));
+            verts.Add(new Vector2(-WorldGrid.CellWidth / 2f, -WorldGrid.CellWidth / 2f));
+            verts.Add(new Vector2(-WorldGrid.CellWidth / 2f, WorldGrid.CellWidth / 2f));
+            verts.Add(new Vector2(WorldGrid.CellWidth / 2f, -WorldGrid.CellWidth / 2f));
+            verts.Add(new Vector2(WorldGrid.CellWidth / 2f, WorldGrid.CellWidth / 2f));
             Cell cell = new Cell(verts, position, xIndex, yIndex);
             return cell;
         }

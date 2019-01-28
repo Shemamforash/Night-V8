@@ -4,6 +4,7 @@ using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat.Enemies;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Combat.Ui;
@@ -23,12 +24,11 @@ namespace Game.Combat.Misc
         private MoveBehaviour _moveBehaviour;
         private Cell _targetLastCell;
         private bool _leaving;
-        private int _maxEncounterSize;
-        private bool _spawnEnemies;
         private static ShelterCharacterBehaviour _instance;
         private bool _shouldShowText = true;
         private readonly string[] _textStrings = {"Please help me", "Protect me", "I thought this was the end", "Please let me come with you"};
         private string _textToShow;
+        private Cell _targetCell;
 
         public static ShelterCharacterBehaviour Instance()
         {
@@ -37,16 +37,20 @@ namespace Game.Combat.Misc
 
         protected override void Awake()
         {
+            SpriteFlash = gameObject.FindChildWithName<DamageSpriteFlash>("Icon");
+            _bloodSpatter = SpriteFlash.GetComponent<BloodSpatter>();
+            Sprite = SpriteFlash.GetComponent<SpriteRenderer>();
+            MovementController = GetComponent<MovementController>();
+            WeaponAudio = gameObject.FindChildWithName<WeaponAudioController>("Weapon Audio");
+
             _textToShow = _textStrings.RandomElement();
             IsPlayer = true;
-            base.Awake();
             _instance = this;
             HealthController.SetInitialHealth(1000, this);
             transform.SetParent(GameObject.Find("World").transform);
             _moveBehaviour = GetComponent<MoveBehaviour>();
             MovementController.SetSpeed(1);
             ArmourController.AutoFillSlots(10);
-            _maxEncounterSize = (int) (WorldState.Difficulty() / 10f * 5);
         }
 
         public override Weapon Weapon()
@@ -59,12 +63,11 @@ namespace Game.Combat.Misc
             return null;
         }
 
-        public static void Generate(Vector2 position)
+        public static void Generate()
         {
             if (_shelterCharacterPrefab == null) _shelterCharacterPrefab = Resources.Load<GameObject>("Prefabs/Combat/Shelter Character");
             GameObject characterObject = Instantiate(_shelterCharacterPrefab);
-            characterObject.transform.position = position;
-            Debug.Log("generated" + " " + position);
+            characterObject.transform.position = Vector2.zero;
         }
 
         public bool ShowText()
@@ -74,22 +77,34 @@ namespace Game.Combat.Misc
 
         public void Update()
         {
-            if (!CombatManager.IsCombatActive()) return;
             MyUpdate();
+        }
+
+        private void UpdateRotation()
+        {
+            float zRot = AdvancedMaths.AngleFromUp(Vector2.zero, MovementController.GetVelocity());
+            Sprite.transform.rotation = Quaternion.Euler(0, 0, zRot);
         }
 
         public override void MyUpdate()
         {
+            if (!CombatManager.IsCombatActive()) return;
             if (_leaving) return;
-            if (!_spawnEnemies) return;
             UpdateEnemyTarget();
-            UpdateEnemySpawns();
-            if (!CurrentCell().IsEdgeCell) return;
+            CheckToLeave();
+            UpdateRotation();
+        }
+
+        private void CheckToLeave()
+        {
+            if (_targetCell == null) return;
+            if (transform.Distance(_targetCell.Position) > 0.5f) return;
             _leaving = true;
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(GetComponent<SpriteRenderer>().DOColor(UiAppearanceController.InvisibleColour, 2f));
+            sequence.Append(Sprite.DOColor(UiAppearanceController.InvisibleColour, 2f));
             sequence.AppendCallback(() =>
             {
+                CombatManager.ClearInactiveEnemies();
                 ResetEnemyTargets();
                 Destroy(gameObject);
                 Characters.Player character = CombatManager.Region().CharacterHere;
@@ -98,19 +113,6 @@ namespace Game.Combat.Misc
             });
         }
 
-        private void UpdateEnemySpawns()
-        {
-            int currentSize = CombatManager.Enemies().Sum(e => ((EnemyBehaviour) e).Enemy.Template.Value);
-            int size = _maxEncounterSize - currentSize;
-            if (size == 0 || !Helper.RollDie(0, 30)) return;
-            List<EnemyTemplate> allowedTypes = WorldState.GetAllowedHumanEnemyTypes();
-            while (size > 0)
-            {
-                EnemyTemplate template = allowedTypes.RandomElement();
-                CombatManager.QueueEnemyToAdd(template).SetTarget(this);
-                size -= template.Value;
-            }
-        }
 
         private void ResetEnemyTargets()
         {
@@ -122,7 +124,7 @@ namespace Game.Combat.Misc
             CombatManager.Enemies().ForEach(e =>
             {
                 float distanceToPlayer = e.transform.Distance(PlayerCombat.Instance.transform);
-                CanTakeDamage target = distanceToPlayer < 3f ? PlayerCombat.Instance : (CanTakeDamage) this;
+                CanTakeDamage target = distanceToPlayer < 2f ? PlayerCombat.Instance : (CanTakeDamage) this;
                 ((EnemyBehaviour) e).SetTarget(target);
             });
         }
@@ -155,9 +157,13 @@ namespace Game.Combat.Misc
 
         public void Activate()
         {
-            _spawnEnemies = true;
             _shouldShowText = false;
-            _moveBehaviour.GoToCell(PathingGrid.GetCellOutOfRange(transform.position));
+            _targetCell = WorldGrid.GetEdgeCell(transform.position);
+            _moveBehaviour.GoToCell(_targetCell);
+            List<Enemy> enemies = new List<Enemy>();
+            List<EnemyTemplate> allowedTypes = WorldState.GetAllowedHumanEnemyTypes();
+            for (int i = 0; i < 100; ++i) enemies.Add(new Enemy(allowedTypes.RandomElement()));
+            CombatManager.OverrideInactiveEnemies(enemies);
         }
     }
 }

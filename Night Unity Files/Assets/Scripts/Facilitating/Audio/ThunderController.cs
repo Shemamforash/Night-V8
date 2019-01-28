@@ -52,7 +52,7 @@ namespace Facilitating.Audio
         {
             if (_inCombat)
             {
-                Vector2 firePosition = PathingGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 12f).Position;
+                Vector2 firePosition = WorldGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 12f).Position;
                 FireBurstBehaviour.Create(firePosition);
                 _instance.StartCoroutine(_instance.LightningFlash());
             }

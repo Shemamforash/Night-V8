@@ -45,7 +45,7 @@ namespace Game.Combat.Generation.Shrines
             GameObject riteShrineObject = Instantiate(_riteShrinePrefab);
             riteShrineObject.GetComponent<RiteShrineBehaviour>().SetRites(region);
             riteShrineObject.transform.position = Vector2.zero;
-            PathingGrid.AddBlockingArea(Vector2.zero, 1.5f);
+            WorldGrid.AddBlockingArea(Vector2.zero, 1.5f);
         }
 
         private void SetRites(Region region)

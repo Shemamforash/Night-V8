@@ -22,8 +22,8 @@ namespace Game.Combat.Enemies.Nightmares
         private void Wander(bool resetOrigin)
         {
             Alerted = false;
-            if (resetOrigin) _originCell = PathingGrid.WorldToCellPosition(transform.position);
-            TargetCell = PathingGrid.GetCellNearMe(_originCell, WanderDistance);
+            if (resetOrigin) _originCell = WorldGrid.WorldToCellPosition(transform.position);
+            TargetCell = WorldGrid.GetCellNearMe(_originCell, WanderDistance);
             float waitDuration = Random.Range(1f, 3f);
             CurrentAction = () =>
             {

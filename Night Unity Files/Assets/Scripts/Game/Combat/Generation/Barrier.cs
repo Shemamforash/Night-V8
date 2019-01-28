@@ -18,7 +18,7 @@ namespace Game.Combat.Generation
         {
             if (position == Vector2.negativeInfinity) Debug.Log("wat!?");
             _barrierName = barrierName;
-            if (!PathingGrid.AddBarrier(this)) return;
+            if (!WorldGrid.AddBarrier(this)) return;
             barriers.Add(this);
         }
 
@@ -27,7 +27,7 @@ namespace Game.Combat.Generation
             Assert.IsNull(_barrierObject);
             if (_barrierPrefab == null) _barrierPrefab = Resources.Load<GameObject>("Prefabs/Combat/Basic Barrier");
             if (_barrierParent == null) _barrierParent = GameObject.Find("Barriers").transform;
-            PathingGrid.AddBarrier(this);
+            WorldGrid.AddBarrier(this);
             _barrierObject = GameObject.Instantiate(_barrierPrefab);
             _barrierObject.AddComponent<BarrierBehaviour>().SetBarrier(this);
             _barrierObject.transform.SetParent(_barrierParent);
@@ -43,7 +43,7 @@ namespace Game.Combat.Generation
             Vector3[] meshVerts = CreateMesh();
             if (meshVerts == null)
             {
-                PathingGrid.RemoveBarrier(this);
+                WorldGrid.RemoveBarrier(this);
                 GameObject.Destroy(_barrierObject);
                 return;
             }

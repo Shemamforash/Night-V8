@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class VolumeController : MonoBehaviour, ISelectHandler, IDeselectHandler, IInputListener
+public class VolumeController : MonoBehaviour, ISelectHandler, IDeselectHandler
 {
     private static float _masterVolume = 1;
     private static float _modifiedVolume;
@@ -56,27 +56,9 @@ public class VolumeController : MonoBehaviour, ISelectHandler, IDeselectHandler,
 
     public void OnSelect(BaseEventData eventData)
     {
-        InputHandler.RegisterInputListener(this);
     }
 
     public void OnDeselect(BaseEventData eventData)
-    {
-        InputHandler.UnregisterInputListener(this);
-    }
-
-    public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-    {
-        if (axis != InputAxis.Horizontal) return;
-        float volumeDifference = 0.5f * Time.deltaTime;
-        volumeDifference *= direction.Polarity();
-        _volumeSlider.value = _volumeSlider.value + volumeDifference;
-    }
-
-    public void OnInputUp(InputAxis axis)
-    {
-    }
-
-    public void OnDoubleTap(InputAxis axis, float direction)
     {
     }
 }

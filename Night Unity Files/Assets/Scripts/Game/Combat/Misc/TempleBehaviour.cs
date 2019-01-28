@@ -119,7 +119,7 @@ public class TempleBehaviour : BasicShrineBehaviour
     private void SpawnInitialEnemies()
     {
         int startEnemies = 10;
-        List<Cell> cells = PathingGrid.GetCellsNearMe(transform.position, startEnemies, 5, 2);
+        List<Cell> cells = WorldGrid.GetCellsNearMe(transform.position, startEnemies, 5, 2);
         for (int i = 0; i < startEnemies; ++i)
             CombatManager.SpawnEnemy(EnemyType.Ghoul, cells[i].Position);
     }
@@ -149,7 +149,7 @@ public class TempleBehaviour : BasicShrineBehaviour
 
     private void SpawnEnemy(EnemyTemplate template)
     {
-        Cell cell = PathingGrid.GetCellNearMe(transform.position, 5, 2);
+        Cell cell = WorldGrid.GetCellNearMe(transform.position, 5, 2);
         CombatManager.SpawnEnemy(template.EnemyType, cell.Position);
     }
 

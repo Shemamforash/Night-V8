@@ -14,7 +14,7 @@ namespace Game.Combat.Enemies
         {
             _rigidbody = GetComponent<Rigidbody2D>();
         }
-        
+
         public void FixedUpdate()
         {
             _rigidbody.AddForce(_forceToadd);
@@ -48,5 +48,10 @@ namespace Game.Combat.Enemies
         }
 
         public bool Moving() => _rigidbody.velocity == Vector2.zero;
+
+        public Vector3 GetVelocity()
+        {
+            return _rigidbody.velocity;
+        }
     }
 }

@@ -53,7 +53,7 @@ namespace Game.Combat.Generation.Shrines
         {
             _region = region;
             transform.position = Vector2.zero;
-            PathingGrid.AddBlockingArea(Vector2.zero, 1.5f);
+            WorldGrid.AddBlockingArea(Vector2.zero, 1.5f);
             if (!_region.FountainVisited) return;
             GetComponent<CompassItem>().Die();
             Destroy(this);
@@ -74,7 +74,7 @@ namespace Game.Combat.Generation.Shrines
                     yield return null;
                 }
 
-                Vector2 spawnPosition = PathingGrid.GetCellNearMe(transform.position, 5).Position;
+                Vector2 spawnPosition = WorldGrid.GetCellNearMe(transform.position, 5).Position;
                 SpawnTrailController.Create(transform.position, spawnPosition, allowedEnemies.RandomElement().EnemyType);
                 timeToSpawn = Random.Range(0.5f, 1f);
                 yield return null;

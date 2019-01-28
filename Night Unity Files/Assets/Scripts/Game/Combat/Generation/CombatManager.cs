@@ -59,7 +59,7 @@ namespace Game.Combat.Generation
         public static bool AllEnemiesDead() => Instance()._enemies.Count == 0 && _inactiveEnemies.Count == 0;
 
         public static int InactiveEnemyCount() => _inactiveEnemies.Count;
-        
+
         public static float VisibilityRange() => Instance()._visibilityRange;
 
         public static Region Region() => _currentRegion;
@@ -154,7 +154,7 @@ namespace Game.Combat.Generation
         {
             ParticleSystem _nightmareParticles = GameObject.Find("Nightmare Particles").GetComponent<ParticleSystem>();
             ParticleSystem.ShapeModule shape = _nightmareParticles.shape;
-            shape.radius = PathingGrid.CombatAreaWidth / 2f + 6f;
+            shape.radius = WorldGrid.CombatAreaWidth / 2f + 6f;
             _nightmareParticles.Play();
         }
 
@@ -246,11 +246,11 @@ namespace Game.Combat.Generation
             _instance = null;
         }
 
-        public static void OverrideMaxSize(int maxSize, List<Enemy> inactiveEnemies = null)
-        {
-            _maxSize = maxSize;
-            if (_inactiveEnemies != null) _inactiveEnemies = inactiveEnemies;
-        }
+        public static void ClearInactiveEnemies() => _inactiveEnemies.Clear();
+
+        public static void OverrideMaxSize(int maxSize) => _maxSize = maxSize;
+
+        public static void OverrideInactiveEnemies(List<Enemy> inactiveEnemies) => _inactiveEnemies = inactiveEnemies;
 
         private void TrySpawnNewEnemy()
         {
@@ -301,8 +301,8 @@ namespace Game.Combat.Generation
         {
             herds.ForEach(herd =>
             {
-                Vector3 animalSpawnPosition = PathingGrid.GetCellNearMe(Vector2.zero, 8f, 4f).Position;
-                List<Cell> cells = PathingGrid.GetCellsNearMe(PathingGrid.WorldToCellPosition(animalSpawnPosition), herd.Count, range);
+                Vector3 animalSpawnPosition = WorldGrid.GetCellNearMe(Vector2.zero, 8f, 4f).Position;
+                List<Cell> cells = WorldGrid.GetCellsNearMe(WorldGrid.WorldToCellPosition(animalSpawnPosition), herd.Count, range);
                 for (int i = 0; i < cells.Count; ++i)
                 {
                     herd[i].transform.position = cells[i].Position;
@@ -313,14 +313,17 @@ namespace Game.Combat.Generation
         private void OnDrawGizmos()
         {
             if (!_drawGizmos) return;
-            Vector3 cubeSize = 1f / PathingGrid.CellResolution * Vector3.one;
+            Vector3 cubeSize = 1f / WorldGrid.CellResolution * Vector3.one;
             Gizmos.color = Color.red;
-            List<Cell> invalid = PathingGrid._invalidCells.ToList();
+            List<Cell> invalid = WorldGrid.InvalidCells();
             invalid.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
             Gizmos.color = Color.yellow;
-            PathingGrid._outOfRangeList.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
-            Gizmos.color = new Color(0, 1, 0, 0.25f); //Color.green;
-            PathingGrid._edgePositionList.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
+            WorldGrid._outOfRangeList.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
+            WorldGrid._edgePositionList.ForEach(c => {
+            {
+                Gizmos.color = new Color(0, 1, 0, 0.25f); //Color.green;
+                Gizmos.DrawCube(c.Position, cubeSize);
+            } });
         }
 
 

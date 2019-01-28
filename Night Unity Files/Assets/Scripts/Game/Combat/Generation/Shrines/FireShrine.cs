@@ -57,7 +57,8 @@ namespace Game.Combat.Generation.Shrines
                 inactiveEnemies.Add(enemy);
             }
 
-            CombatManager.OverrideMaxSize(_maxEnemies, inactiveEnemies);
+            CombatManager.OverrideInactiveEnemies(inactiveEnemies);
+            CombatManager.OverrideMaxSize(_maxEnemies);
 
             float roundTime = numberOfEnemies * 10;
             float currentTime = roundTime;

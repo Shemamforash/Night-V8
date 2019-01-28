@@ -37,7 +37,7 @@ namespace Game.Combat.Generation.Shrines
         
         protected void End()
         {
-            CombatManager.OverrideMaxSize(0, new List<Enemy>());
+            CombatManager.ClearInactiveEnemies();
             for (int i = CombatManager.Enemies().Count - 1; i >= 0; --i)
             {
                 if (_disappearPrefab == null) _disappearPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Disappear");

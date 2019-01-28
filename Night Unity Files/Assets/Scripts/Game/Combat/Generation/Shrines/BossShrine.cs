@@ -29,7 +29,8 @@ namespace Game.Combat.Generation.Shrines
             List<Enemy> enemies = new List<Enemy>();
             for (int i = 0; i < 500; ++i)
                 enemies.Add(new Enemy(allowedEnemies.RandomElement()));
-            CombatManager.OverrideMaxSize(currentSize, enemies);
+            CombatManager.OverrideInactiveEnemies(enemies);
+            CombatManager.OverrideMaxSize(currentSize);
 
             float roundTime = 60;
             float currentTime = roundTime;
@@ -44,7 +45,8 @@ namespace Game.Combat.Generation.Shrines
                 {
                     sizeIncreaseTimer = 5f;
                     if (currentSize < maxSize) ++currentSize;
-                    CombatManager.OverrideMaxSize(currentSize, enemies);
+                    CombatManager.OverrideInactiveEnemies(enemies);
+                    CombatManager.OverrideMaxSize(currentSize);
                 }
 
                 currentTime -= Time.deltaTime;
@@ -53,7 +55,7 @@ namespace Game.Combat.Generation.Shrines
 
             Succeed();
             base.EndChallenge();
-            CombatManager.OverrideMaxSize(0, new List<Enemy>());
+            CombatManager.ClearInactiveEnemies();
         }
 
         protected override void EndChallenge()

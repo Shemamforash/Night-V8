@@ -24,8 +24,8 @@ namespace Game.Combat.Enemies.Animals
         {
             Vector2 dir = (transform.position - PlayerCombat.Position()).normalized;
             float distance = Random.Range(0.5f, 3f);
-            List<Cell> possibleCells = PathingGrid.GetCellsInFrontOfMe(CurrentCell(), dir, distance);
-            Cell target = possibleCells.Count == 0 ? PathingGrid.GetCellNearMe(CurrentCell(), distance * 1.5f, distance) : possibleCells.RandomElement();
+            List<Cell> possibleCells = WorldGrid.GetCellsInFrontOfMe(CurrentCell(), dir, distance);
+            Cell target = possibleCells.Count == 0 ? WorldGrid.GetCellNearMe(CurrentCell(), distance * 1.5f, distance) : possibleCells.RandomElement();
             MoveBehaviour.GoToCell(target);
         }
 

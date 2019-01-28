@@ -2,7 +2,6 @@
 using Game.Combat.Generation;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
-using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
 {
@@ -33,7 +32,7 @@ namespace Game.Combat.Enemies
 
         private void UpdateCurrentCell()
         {
-            _currentCell = PathingGrid.WorldToCellPosition(transform.position, false);
+            _currentCell = WorldGrid.WorldToCellPosition(transform.position, false);
             if (_currentCell == null || _targetCell == null) return;
             _outOfSight = Physics2D.Linecast(transform.position, _targetCell.Position, 1 << 8).collider != null;
             Vector2 difference = _targetCell.Position - _currentCell.Position;
@@ -41,7 +40,7 @@ namespace Game.Combat.Enemies
             _tooFar = distanceToTargetCell > _maxDistance;
             _tooClose = distanceToTargetCell < _minDistance;
         }
-        
+
         private void FixedUpdate()
         {
             if (_targetCell == null) return;
@@ -64,16 +63,12 @@ namespace Game.Combat.Enemies
             _nextCell = _routeQueue.Dequeue();
         }
 
-        public void StopMoving()
-        {
-            _targetCell = null;
-        }
-
         private List<Cell> DoStraightLinePath()
         {
             Vector2 direction = (_targetCell.Position - _currentCell.Position).normalized;
             Vector2 targetPosition = _targetCell.Position + direction * _minDistance * 1.2f;
-            _targetCell = PathingGrid.WorldToCellPosition(targetPosition, false);
+            _targetCell = WorldGrid.WorldToCellPosition(targetPosition, false);
+            if (_targetCell == null) Debug.Log("null");
             if (_targetCell == null) return null;
             return new List<Cell>(new[] {_targetCell});
         }
@@ -98,7 +93,7 @@ namespace Game.Combat.Enemies
 
         private List<Cell> DoPathFind()
         {
-            List<Cell> route = PathingGrid.JPS(_currentCell, _targetCell);
+            List<Cell> route = WorldGrid.JPS(_currentCell, _targetCell);
             if (route.Count == 0) return null;
             float targetDistance = _minDistance * 1.2f;
             if (targetDistance != 0)
@@ -113,7 +108,7 @@ namespace Game.Combat.Enemies
                 }
             }
 
-            PathingGrid.SmoothRoute(route);
+            WorldGrid.SmoothRoute(route);
             return route;
         }
 

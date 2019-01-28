@@ -35,7 +35,6 @@ namespace Game.Exploration.Environment
             XmlNode regionNode = root.CreateChild("Regions");
             foreach (Region region in _regions) region.Save(regionNode);
             string regionTypesRemaining = "";
-            _regionTypeBag.Print();
             for (int i = 0; i < _regionTypeBag.Count; i++)
             {
                 regionTypesRemaining += (int) _regionTypeBag[i];
@@ -378,6 +377,7 @@ namespace Game.Exploration.Environment
                 return RegionType.Gate;
             }
 
+            return RegionType.Shelter;
             UpdateAvailableRegionTypes();
             _regionTypeBag.Print();
             ++_regionsDiscovered;

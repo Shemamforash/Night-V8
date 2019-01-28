@@ -42,7 +42,6 @@ namespace Game.Exploration.Regions
         public int RegionID, WaterSourceCount, FoodSourceCount, ResourceSourceCount, ClaimRemaining, RitesRemaining = 3;
         public bool ReadJournal = true;
         public Player CharacterHere;
-        public Vector2 CharacterPosition;
         public Vector2? RadianceStonePosition;
         private bool _templeCleansed;
         public bool FountainVisited;
@@ -143,13 +142,6 @@ namespace Game.Exploration.Regions
             Inventory.IncrementResource(_claimBenefit, 1);
         }
 
-        public void Visit()
-        {
-            if (_discovered) return;
-            if (_regionType != RegionType.Shelter) return;
-            GenerateShelter();
-        }
-
         public static Region Load(XmlNode doc)
         {
             Region region = new Region();
@@ -176,6 +168,8 @@ namespace Game.Exploration.Regions
             region._claimBenefit = doc.StringFromNode("ClaimBenefit");
             region.RitesRemaining = doc.IntFromNode("RitesRemaining");
             region.FountainVisited = doc.BoolFromNode("FountainVisited");
+            int characterClassHere = doc.IntFromNode("CharacterHere");
+            region.CharacterHere = characterClassHere == -1 ? null : CharacterManager.GenerateCharacter((CharacterClass) characterClassHere);
             region.CheckIsDynamic();
             return region;
         }
@@ -205,6 +199,8 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("ClaimBenefit", _claimBenefit);
             regionNode.CreateChild("RitesRemaining", RitesRemaining);
             regionNode.CreateChild("FountainVisited", FountainVisited);
+            int characterClassHere = CharacterHere == null ? -1 : (int) CharacterHere.CharacterTemplate.CharacterClass;
+            regionNode.CreateChild("CharacterHere", characterClassHere);
         }
 
         public void HideNode()
@@ -269,12 +265,6 @@ namespace Game.Exploration.Regions
             return templates;
         }
 
-        private void GenerateShelter()
-        {
-            if (CharacterManager.Characters.Count == 3) return;
-            CharacterHere = CharacterManager.GenerateRandomCharacter();
-        }
-
         private void CheckIsDynamic()
         {
             _isDynamicRegion = _regionType != RegionType.Gate
@@ -289,6 +279,9 @@ namespace Game.Exploration.Regions
             _regionType = regionType;
             CheckIsDynamic();
             Name = MapGenerator.GenerateName(_regionType);
+            if (_regionType != RegionType.Shelter) return;
+            if (CharacterManager.Characters.Count == 3) return;
+            CharacterHere = CharacterManager.GenerateRandomCharacter();
         }
 
         public bool IsDynamic()

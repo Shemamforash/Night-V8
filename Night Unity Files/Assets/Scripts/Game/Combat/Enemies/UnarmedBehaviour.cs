@@ -40,7 +40,7 @@ namespace Game.Combat.Enemies
             Cell newTargetCell = ((CharacterCombat) GetTarget()).CurrentCell();
             if (!newTargetCell.Reachable)
             {
-                List<Cell> cellsNearMe = PathingGrid.GetCellsNearMe(newTargetCell.Position, 1, 1);
+                List<Cell> cellsNearMe = WorldGrid.GetCellsNearMe(newTargetCell.Position, 1, 1);
                 if (cellsNearMe.Count == 0) return;
                 TargetCell = cellsNearMe[0];
                 return;

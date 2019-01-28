@@ -9,7 +9,7 @@ namespace Game.Combat.Misc
     public abstract class CanTakeDamage : MonoBehaviour
     {
         protected DamageSpriteFlash SpriteFlash;
-        private BloodSpatter _bloodSpatter;
+        protected BloodSpatter _bloodSpatter;
         public ArmourController ArmourController = new ArmourController();
         public readonly HealthController HealthController = new HealthController();
         private const float SicknessDurationMax = 5f;

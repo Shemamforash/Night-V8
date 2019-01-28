@@ -32,7 +32,7 @@ public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
     private void Initialise()
     {
         transform.position = Vector2.zero;
-        PathingGrid.AddBlockingArea(Vector2.zero, 0.5f);
+        WorldGrid.AddBlockingArea(Vector2.zero, 0.5f);
     }
 
     public float InRange()

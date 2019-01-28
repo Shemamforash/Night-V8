@@ -40,7 +40,7 @@ namespace Game.Combat.Misc
 
         public Vector3 Direction() => transform.up;
 
-        public Cell CurrentCell() => PathingGrid.WorldToCellPosition(transform.position);
+        public Cell CurrentCell() => WorldGrid.WorldToCellPosition(transform.position);
 
         public override void Kill()
         {

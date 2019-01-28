@@ -494,7 +494,7 @@ namespace Game.Combat.Player
             _playerLight.Radius = CombatManager.VisibilityRange();
 
             SkillBar.UpdateSkills();
-            transform.position = PathingGrid.PlayerStartPosition();
+            transform.position = WorldGrid.PlayerStartPosition();
             float zRot = AdvancedMaths.AngleFromUp(transform.position, Vector2.zero);
             transform.rotation = Quaternion.Euler(0f, 0f, zRot);
         }

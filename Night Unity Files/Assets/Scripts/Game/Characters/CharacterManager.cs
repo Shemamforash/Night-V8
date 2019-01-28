@@ -127,9 +127,10 @@ namespace Game.Characters
             AddCharacter(Wanderer);
         }
 
-        private static Player GenerateCharacter(CharacterClass characterClass)
+        public static Player GenerateCharacter(CharacterClass characterClass)
         {
             CharacterTemplate t = FindClass(characterClass);
+            Templates.Remove(t);
             return GenerateCharacterObject(t);
         }
 

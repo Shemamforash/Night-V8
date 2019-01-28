@@ -24,8 +24,8 @@ public class UiCombatRingBoundDrawer : MonoBehaviour
 	{
 		_rings.ForEach(Destroy);
 		_rings.Clear();
-		if(drawInner) CreateRing(PathingGrid.CombatMovementDistance / 2f, 0.02f, Color.white);
-		CreateRing(PathingGrid.CombatAreaWidth / 2f, 0.01f, UiAppearanceController.FadedColour);
+		if(drawInner) CreateRing(WorldGrid.CombatMovementDistance / 2f, 0.02f, Color.white);
+		CreateRing(WorldGrid.CombatAreaWidth / 2f, 0.01f, UiAppearanceController.FadedColour);
 	}
 	
 	private static void CreateRing(float radius, float width, Color colour)

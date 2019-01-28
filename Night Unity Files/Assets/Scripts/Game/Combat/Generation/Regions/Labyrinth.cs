@@ -91,7 +91,7 @@ namespace Game.Combat.Generation
             JoinNeighbors(paths, null);
             radius += originalRadius * Mathf.Pow(radiusMultiplier, iterations);
 
-            while (radius < PathingGrid.CombatAreaWidth)
+            while (radius < WorldGrid.CombatAreaWidth)
             {
                 List<CrackNode> newPaths = new List<CrackNode>();
                 List<Edge> existingEdges = graph.GenerateEdges();

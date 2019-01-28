@@ -233,7 +233,8 @@ namespace Game.Combat.Generation
             inactiveEnemies.Add(new Enemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Sentinel)));
             inactiveEnemies.Add(new Enemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Brawler)));
             inactiveEnemies.Add(new Enemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Sentinel)));
-            CombatManager.OverrideMaxSize(2, inactiveEnemies);
+            CombatManager.OverrideMaxSize(2);
+            CombatManager.OverrideInactiveEnemies(inactiveEnemies);
         }
     }
 }

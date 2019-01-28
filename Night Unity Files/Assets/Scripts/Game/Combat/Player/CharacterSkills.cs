@@ -239,7 +239,7 @@ namespace Game.Combat.Player
                 for (int i = 0; i < explosionCount; ++i)
                 {
                     Vector2 pos = AdvancedMaths.CalculatePointOnCircle(angleInterval * i, Random.Range(1.5f, 2f), position);
-                    Cell cell = PathingGrid.WorldToCellPosition(pos, false);
+                    Cell cell = WorldGrid.WorldToCellPosition(pos, false);
                     if (cell == null || !cell.Reachable) continue;
                     Sequence subSequence = DOTween.Sequence();
                     subSequence.AppendInterval(Random.Range(0.1f, 0.2f));

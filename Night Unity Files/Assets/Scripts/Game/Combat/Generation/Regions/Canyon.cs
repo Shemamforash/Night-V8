@@ -29,14 +29,14 @@ namespace Game.Combat.Generation
 
         private List<Vector2> RockWall(bool left)
         {
-            Vector2 start = new Vector2(0, -PathingGrid.CombatAreaWidth * 0.7f);
+            Vector2 start = new Vector2(0, -WorldGrid.CombatAreaWidth * 0.7f);
             Vector2 current = start;
 
             List<Vector2> points = new List<Vector2>();
             float yStretch = Random.Range(7.5f, 12.5f);
             float verticalOffset = Random.Range(0f, 100f);
             float xStretch = Random.Range(2f, 4f);
-            while (current.y < PathingGrid.CombatAreaWidth * 0.7f)
+            while (current.y < WorldGrid.CombatAreaWidth * 0.7f)
             {
                 points.Add(current);
                 Vector2 next = current;
@@ -48,13 +48,13 @@ namespace Game.Combat.Generation
 
             if (left)
             {
-                points.Add(new Vector2(-PathingGrid.CombatAreaWidth, current.y));
-                points.Add(new Vector2(-PathingGrid.CombatAreaWidth, points[0].y));
+                points.Add(new Vector2(-WorldGrid.CombatAreaWidth, current.y));
+                points.Add(new Vector2(-WorldGrid.CombatAreaWidth, points[0].y));
             }
             else
             {
-                points.Add(new Vector2(PathingGrid.CombatAreaWidth, current.y));
-                points.Add(new Vector2(PathingGrid.CombatAreaWidth, points[0].y));
+                points.Add(new Vector2(WorldGrid.CombatAreaWidth, current.y));
+                points.Add(new Vector2(WorldGrid.CombatAreaWidth, points[0].y));
                 points.Reverse();
             }
 
