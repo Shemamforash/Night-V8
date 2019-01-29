@@ -16,6 +16,7 @@
         Danger,
         Fountain,
         Shrine,
-        Monument
+        Monument,
+        Cache
     }
 }

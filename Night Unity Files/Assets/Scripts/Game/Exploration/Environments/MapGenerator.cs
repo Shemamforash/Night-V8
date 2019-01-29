@@ -203,6 +203,9 @@ namespace Game.Exploration.Environment
         {
             switch (type)
             {
+                case RegionType.Cache:
+                    //todo me
+                    return "";
                 case RegionType.Tutorial:
                     return "";
                 case RegionType.Tomb:
@@ -306,7 +309,8 @@ namespace Game.Exploration.Environment
             XmlNode root = Helper.OpenRootNode("Regions", "RegionType");
             foreach (RegionType type in Enum.GetValues(typeof(RegionType)))
             {
-                if (type == RegionType.None || type == RegionType.Gate || type == RegionType.Rite || type == RegionType.Tomb || type == RegionType.Tutorial) continue;
+                //todo remove cache
+                if (type == RegionType.None || type == RegionType.Gate || type == RegionType.Rite || type == RegionType.Tomb || type == RegionType.Tutorial || type == RegionType.Cache) continue;
                 _regionTypes.Add(type);
             }
 
@@ -338,7 +342,7 @@ namespace Game.Exploration.Environment
         {
             _regionTypeBag.Add(RegionType.Shrine);
             for (int i = 0; i < 2; ++i) _regionTypeBag.Add(RegionType.Animal);
-            for (int i = 0; i < 8; ++i) _regionTypeBag.Add(RegionType.Danger);
+            for (int i = 0; i < 7; ++i) _regionTypeBag.Add(RegionType.Danger);
 
             Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
             bool isDesert = currentEnvironment.EnvironmentType == EnvironmentType.Desert;
@@ -347,9 +351,11 @@ namespace Game.Exploration.Environment
             {
                 _regionTypeBag.Add(RegionType.Monument);
                 _regionTypeBag.Add(RegionType.Fountain);
+                _regionTypeBag.Add(RegionType.Cache);
             }
             else
             {
+                _regionTypeBag.Add(RegionType.Danger);
                 _regionTypeBag.Add(RegionType.Danger);
                 _regionTypeBag.Add(RegionType.Danger);
             }
@@ -377,7 +383,7 @@ namespace Game.Exploration.Environment
                 return RegionType.Gate;
             }
 
-            return RegionType.Shelter;
+            return RegionType.Cache;
             UpdateAvailableRegionTypes();
             _regionTypeBag.Print();
             ++_regionsDiscovered;

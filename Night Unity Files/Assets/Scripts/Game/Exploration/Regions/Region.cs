@@ -119,6 +119,10 @@ namespace Game.Exploration.Regions
                     _claimBenefit = ResourceTemplate.GetResource().Name;
                     _claimQuantity = 1;
                     break;
+                case RegionType.Cache:
+                    _claimBenefit = ResourceTemplate.GetResource().Name;
+                    _claimQuantity = 1;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

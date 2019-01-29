@@ -24,7 +24,7 @@ namespace Game.Combat.Misc
         private MoveBehaviour _moveBehaviour;
         private Cell _targetLastCell;
         private static ShelterCharacterBehaviour _instance;
-        private readonly string[] _textStrings = {"Please help me", "Protect me", "I thought this was the end", "Please let me come with you"};
+        private readonly string _textString = "Free the prisoner";
         private Cell _targetCell;
         private bool _seenText, _freed, _leaving;
         private Sequence _sequence;
@@ -96,17 +96,18 @@ namespace Game.Combat.Misc
             if (_targetCell == null) return;
             if (transform.Distance(_targetCell.Position) > 0.5f) return;
             _leaving = true;
-            Sequence sequence = DOTween.Sequence();
-            sequence.Append(Sprite.DOColor(UiAppearanceController.InvisibleColour, 2f));
-            sequence.AppendCallback(() =>
-            {
-                CombatManager.ClearInactiveEnemies();
-                ResetEnemyTargets();
-                Destroy(gameObject);
-                Characters.Player character = CombatManager.Region().CharacterHere;
-                CharacterManager.AddCharacter(character);
-                CombatManager.Region().CharacterHere = null;
-            });
+            CombatManager.ClearInactiveEnemies();
+            ResetEnemyTargets();
+            Characters.Player character = CombatManager.Region().CharacterHere;
+            CharacterManager.AddCharacter(character);
+            CombatManager.Region().CharacterHere = null;
+            TeleportInOnly.TeleportIn(transform.position);
+            _sequence?.Kill();
+            EventTextController.SetOverrideText("The prisoner has been rescued");
+            _sequence = DOTween.Sequence();
+            _sequence.AppendInterval(2f);
+            _sequence.AppendCallback(EventTextController.CloseOverrideText);
+            Destroy(gameObject);
         }
 
         private void ResetEnemyTargets()
@@ -145,7 +146,7 @@ namespace Game.Combat.Misc
             if (_seenText) return;
             if (transform.Distance(PlayerCombat.Instance.transform) > 5f) return;
             _seenText = true;
-            EventTextController.SetOverrideText(_textStrings.RandomElement());
+            EventTextController.SetOverrideText(_textString);
             _sequence = DOTween.Sequence();
             _sequence.AppendInterval(3f);
             _sequence.AppendCallback(EventTextController.CloseOverrideText);
@@ -162,7 +163,7 @@ namespace Game.Combat.Misc
             for (int i = 0; i < 100; ++i) enemies.Add(new Enemy(allowedTypes.RandomElement()));
             CombatManager.OverrideInactiveEnemies(enemies);
             _sequence?.Kill();
-            EventTextController.SetOverrideText("Protect the survivor");
+            EventTextController.SetOverrideText("Protect the prisoner");
             _sequence = DOTween.Sequence();
             _sequence.AppendInterval(2f);
             _sequence.AppendCallback(EventTextController.CloseOverrideText);

@@ -32,15 +32,23 @@ namespace Game.Combat.Generation
             GenerateFreshEnvironment();
             GenerateObjects();
             GenerateEdges();
-            RemoveCharacterArea();
+            RemoveBlockedArea();
             WorldGrid.FinaliseGrid();
         }
 
-        private void RemoveCharacterArea()
+        private void RemoveBlockedArea()
         {
-            if (_region.CharacterHere == null) return;
-            Polygon characterBlockingArea = WorldGrid.AddBlockingArea(Vector2.zero, 4.5f);
-            WorldGrid.RemoveBarrier(characterBlockingArea);
+            if (_region.CharacterHere != null)
+            {
+                Polygon characterBlockingArea = WorldGrid.AddBlockingArea(Vector2.zero, 5f);
+                WorldGrid.RemoveBarrier(characterBlockingArea);
+            }
+
+            if (_region.GetRegionType() == RegionType.Cache)
+            {
+                Polygon characterBlockingArea = WorldGrid.AddBlockingArea(Vector2.zero, 4.5f);
+                WorldGrid.RemoveBarrier(characterBlockingArea);
+            }
         }
 
         private void SetRegionWidth()
@@ -69,7 +77,7 @@ namespace Game.Combat.Generation
             _region.Fires.ForEach(f => f.CreateObject());
             _region.Containers.ForEach(c => c.CreateObject());
             _region.Barriers.ForEach(b => b.CreateObject());
-            if (_region.GetRegionType() == RegionType.Shelter) return;
+            if (_region.GetRegionType() != RegionType.Shelter) return;
             RescueRingController.Generate();
         }
 
@@ -109,19 +117,20 @@ namespace Game.Combat.Generation
 
         private void GenerateShrine()
         {
-            if (_region.GetRegionType() == RegionType.Shrine)
+            switch (_region.GetRegionType())
             {
-                RiteShrineBehaviour.Generate(_region);
-            }
-
-            if (_region.GetRegionType() == RegionType.Fountain)
-            {
-                FountainBehaviour.Generate(_region);
-            }
-
-            if (_region.GetRegionType() == RegionType.Monument)
-            {
-                SaveStoneBehaviour.Generate();
+                case RegionType.Shrine:
+                    RiteShrineBehaviour.Generate(_region);
+                    break;
+                case RegionType.Fountain:
+                    FountainBehaviour.Generate(_region);
+                    break;
+                case RegionType.Monument:
+                    SaveStoneBehaviour.Generate();
+                    break;
+                case RegionType.Cache:
+                    CacheController.Generate();
+                    break;
             }
         }
 
@@ -138,6 +147,8 @@ namespace Game.Combat.Generation
                     return 2f;
                 case RegionType.Monument:
                     return 1.5f;
+                case RegionType.Cache:
+                    return 4.5f;
                 default:
                     return 0;
             }

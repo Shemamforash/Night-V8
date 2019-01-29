@@ -13,7 +13,7 @@ public class RescueRingController : MonoBehaviour
 {
     private static GameObject _prefab;
     private static RescueRingController _instance;
-    private SpriteRenderer _ringInner, _ringMiddle, _ringOuter;
+    private SpriteRenderer _ringInner, _ringMiddle, _ringOuter, _lockPoints;
     private readonly List<RescuePuzzleButtonController> _buttons = new List<RescuePuzzleButtonController>();
     private readonly Dictionary<SpriteRenderer, int> _ringRotations = new Dictionary<SpriteRenderer, int>();
     private Sequence _waitTween;
@@ -29,6 +29,8 @@ public class RescueRingController : MonoBehaviour
         _ringInner = gameObject.FindChildWithName<SpriteRenderer>("Inner");
         _ringMiddle = gameObject.FindChildWithName<SpriteRenderer>("Middle");
         _ringOuter = gameObject.FindChildWithName<SpriteRenderer>("Outer");
+        _lockPoints = gameObject.FindChildWithName<SpriteRenderer>("Lock");
+        _lockPoints.SetAlpha(0.25f);
         _ringRotations.Add(_ringInner, 0);
         _ringRotations.Add(_ringMiddle, 0);
         _ringRotations.Add(_ringOuter, 0);
@@ -129,6 +131,8 @@ public class RescueRingController : MonoBehaviour
         _ringRotations.Keys.ForEach(g => { g.GetComponent<SpriteRenderer>().DOFade(0.25f, 1.5f); });
         _successEffect.Activate();
         ShelterCharacterBehaviour.Instance().Free();
+        _lockPoints.SetAlpha(1f);
+        _lockPoints.DOFade(0f, 2f);
         Destroy(gameObject.FindChildWithName("Centre"));
         Destroy(this);
         _finishAudio.Play();

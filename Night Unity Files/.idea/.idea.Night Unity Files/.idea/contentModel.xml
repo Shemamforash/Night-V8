@@ -211,6 +211,8 @@
           </e>
           <e p="readme.txt" t="Include" />
         </e>
+        <e p="CacheButtonController.cs" t="Include" />
+        <e p="CacheController.cs" t="Include" />
         <e p="CloseButtonController.cs" t="Include" />
         <e p="CombatLogController.cs" t="Include" />
         <e p="ConsolePro" t="Include">

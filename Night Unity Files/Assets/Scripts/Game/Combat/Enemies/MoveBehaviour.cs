@@ -28,6 +28,7 @@ namespace Game.Combat.Enemies
             _minDistance = minDistance;
             _maxDistance = maxDistance;
             _needsUpdating = true;
+            UpdateCurrentCell();
         }
 
         private void UpdateCurrentCell()

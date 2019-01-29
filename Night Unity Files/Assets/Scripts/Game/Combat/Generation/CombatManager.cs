@@ -319,11 +319,13 @@ namespace Game.Combat.Generation
             invalid.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
             Gizmos.color = Color.yellow;
             WorldGrid._outOfRangeList.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
-            WorldGrid._edgePositionList.ForEach(c => {
+            WorldGrid._edgePositionList.ForEach(c =>
             {
-                Gizmos.color = new Color(0, 1, 0, 0.25f); //Color.green;
-                Gizmos.DrawCube(c.Position, cubeSize);
-            } });
+                {
+                    Gizmos.color = new Color(0, 1, 0, 0.25f); //Color.green;
+                    Gizmos.DrawCube(c.Position, cubeSize);
+                }
+            });
         }
 
 
@@ -383,7 +385,7 @@ namespace Game.Combat.Generation
             EnemyTemplate template = EnemyTemplate.GetEnemyTemplate(enemyType);
             EnemyBehaviour enemy = QueueEnemyToAdd(template);
             enemy.transform.position = position;
-            TeleportInOnly.TeleportObjectIn(enemy.gameObject);
+            TeleportInOnly.TeleportIn(position);
             return enemy;
         }
 
