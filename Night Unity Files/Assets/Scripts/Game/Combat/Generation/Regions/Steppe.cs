@@ -187,7 +187,7 @@ namespace Game.Combat.Generation
 
             return new Area(points, edges);
         }
-        
+
         private void ConnectRegions(List<Area> regions)
         {
             for (int i = regions.Count - 1; i >= 0; --i)
@@ -283,6 +283,7 @@ namespace Game.Combat.Generation
 
         private void RandomFillMap()
         {
+            float protectedAreaWidth = GetCentreProtectedArea();
             for (int x = 0; x < Width; x++)
             {
                 for (int y = 0; y < Width; y++)
@@ -292,7 +293,7 @@ namespace Game.Combat.Generation
                     {
                         _map[x, y].accessible = false;
                     }
-                    else if (ShouldPlaceShrine() && Vector2.Distance(new Vector2((x - Width / 2) * Scale, (y-Width/2) * Scale), Vector2.zero) < 5f)
+                    else if (protectedAreaWidth != 0 && Vector2.Distance(new Vector2((x - Width / 2) * Scale, (y - Width / 2) * Scale), Vector2.zero) < protectedAreaWidth)
                     {
                         _map[x, y].accessible = true;
                     }

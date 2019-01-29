@@ -14,7 +14,7 @@ public class UiSkillUpgradeEffectController : MonoBehaviour
         _glow = gameObject.FindChildWithName<SpriteRenderer>("Glow");
     }
 
-    public static void Activate()
+    public void Activate()
     {
         _pulse.Play();
         _particles.Play();

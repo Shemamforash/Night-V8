@@ -18,17 +18,16 @@ using UnityEngine;
 
 namespace Game.Combat.Misc
 {
-    public class ShelterCharacterBehaviour : CharacterCombat, ICombatEvent
+    public class ShelterCharacterBehaviour : CharacterCombat
     {
         private static GameObject _shelterCharacterPrefab;
         private MoveBehaviour _moveBehaviour;
         private Cell _targetLastCell;
-        private bool _leaving;
         private static ShelterCharacterBehaviour _instance;
-        private bool _shouldShowText = true;
         private readonly string[] _textStrings = {"Please help me", "Protect me", "I thought this was the end", "Please let me come with you"};
-        private string _textToShow;
         private Cell _targetCell;
+        private bool _seenText, _freed, _leaving;
+        private Sequence _sequence;
 
         public static ShelterCharacterBehaviour Instance()
         {
@@ -43,7 +42,6 @@ namespace Game.Combat.Misc
             MovementController = GetComponent<MovementController>();
             WeaponAudio = gameObject.FindChildWithName<WeaponAudioController>("Weapon Audio");
 
-            _textToShow = _textStrings.RandomElement();
             IsPlayer = true;
             _instance = this;
             HealthController.SetInitialHealth(1000, this);
@@ -70,11 +68,6 @@ namespace Game.Combat.Misc
             characterObject.transform.position = Vector2.zero;
         }
 
-        public bool ShowText()
-        {
-            return _shouldShowText;
-        }
-
         public void Update()
         {
             MyUpdate();
@@ -82,17 +75,20 @@ namespace Game.Combat.Misc
 
         private void UpdateRotation()
         {
-            float zRot = AdvancedMaths.AngleFromUp(Vector2.zero, MovementController.GetVelocity());
+            float zRot;
+            if (_freed) zRot = AdvancedMaths.AngleFromUp(Vector2.zero, MovementController.GetVelocity());
+            else zRot = AdvancedMaths.AngleFromUp(transform.position, PlayerCombat.Position());
             Sprite.transform.rotation = Quaternion.Euler(0, 0, zRot);
         }
 
         public override void MyUpdate()
         {
             if (!CombatManager.IsCombatActive()) return;
+            TryShowText();
+            UpdateRotation();
             if (_leaving) return;
             UpdateEnemyTarget();
             CheckToLeave();
-            UpdateRotation();
         }
 
         private void CheckToLeave()
@@ -112,7 +108,6 @@ namespace Game.Combat.Misc
                 CombatManager.Region().CharacterHere = null;
             });
         }
-
 
         private void ResetEnemyTargets()
         {
@@ -145,25 +140,32 @@ namespace Game.Combat.Misc
             HealthController.TakeDamage(shot.Attributes().DamageDealt());
         }
 
-        public float InRange()
+        private void TryShowText()
         {
-            return transform.Distance(PlayerCombat.Instance.transform);
+            if (_seenText) return;
+            if (transform.Distance(PlayerCombat.Instance.transform) > 5f) return;
+            _seenText = true;
+            EventTextController.SetOverrideText(_textStrings.RandomElement());
+            _sequence = DOTween.Sequence();
+            _sequence.AppendInterval(3f);
+            _sequence.AppendCallback(EventTextController.CloseOverrideText);
+            _seenText = true;
         }
 
-        public string GetEventText()
+        public void Free()
         {
-            return _textToShow;
-        }
-
-        public void Activate()
-        {
-            _shouldShowText = false;
+            _freed = true;
             _targetCell = WorldGrid.GetEdgeCell(transform.position);
             _moveBehaviour.GoToCell(_targetCell);
             List<Enemy> enemies = new List<Enemy>();
             List<EnemyTemplate> allowedTypes = WorldState.GetAllowedHumanEnemyTypes();
             for (int i = 0; i < 100; ++i) enemies.Add(new Enemy(allowedTypes.RandomElement()));
             CombatManager.OverrideInactiveEnemies(enemies);
+            _sequence?.Kill();
+            EventTextController.SetOverrideText("Protect the survivor");
+            _sequence = DOTween.Sequence();
+            _sequence.AppendInterval(2f);
+            _sequence.AppendCallback(EventTextController.CloseOverrideText);
         }
     }
 }

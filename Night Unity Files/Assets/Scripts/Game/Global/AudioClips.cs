@@ -20,6 +20,7 @@ namespace Game.Global
         public static AudioClip[] ArmourBreakClips;
         public static AudioClip[] FootstepClips;
         public static AudioClip[] DayAudio;
+        public static AudioClip[] Chimes;
         public static AudioClip Ambient, Night, Campfire, TakeItem;
         public static AudioClip LightRain, MediumRain, HeavyRain;
         public static AudioClip LightWind, MediumWind, HeavyWind;
@@ -135,6 +136,7 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => AbandonedLands = a, "music/combat", "Abandoned Lands"));
 
             Debug.Log("loading misc audio");
+            yield return StartCoroutine(LoadAllClipsFromBundle(a => Chimes = a, "misc/chimes"));
             yield return StartCoroutine(LoadClip(a => TabChange = a, "misc/inventories", "Tab Change"));
             yield return StartCoroutine(LoadClip(a => TakeItem = a, "misc/inventories", "Item Take"));
             yield return StartCoroutine(LoadClip(a => EquipAccessory = a, "misc/inventories", "Equip Accessory"));

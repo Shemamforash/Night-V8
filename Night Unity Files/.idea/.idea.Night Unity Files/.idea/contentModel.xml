@@ -755,6 +755,8 @@
           </e>
         </e>
         <e p="RegionClearController.cs" t="Include" />
+        <e p="RescuePuzzleButtonController.cs" t="Include" />
+        <e p="RescueRingController.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="XML" t="Include">
             <e p="Brands.xml" t="Include" />

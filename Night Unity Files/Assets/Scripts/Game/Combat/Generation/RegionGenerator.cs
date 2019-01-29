@@ -39,7 +39,7 @@ namespace Game.Combat.Generation
         private void RemoveCharacterArea()
         {
             if (_region.CharacterHere == null) return;
-            Polygon characterBlockingArea = WorldGrid.AddBlockingArea(Vector2.zero, 2.5f);
+            Polygon characterBlockingArea = WorldGrid.AddBlockingArea(Vector2.zero, 4.5f);
             WorldGrid.RemoveBarrier(characterBlockingArea);
         }
 
@@ -69,8 +69,8 @@ namespace Game.Combat.Generation
             _region.Fires.ForEach(f => f.CreateObject());
             _region.Containers.ForEach(c => c.CreateObject());
             _region.Barriers.ForEach(b => b.CreateObject());
-            if (_region.CharacterHere == null) return;
-            ShelterCharacterBehaviour.Generate();
+            if (_region.GetRegionType() == RegionType.Shelter) return;
+            RescueRingController.Generate();
         }
 
         private void GenerateEdges()
@@ -125,17 +125,29 @@ namespace Game.Combat.Generation
             }
         }
 
-        protected bool ShouldPlaceShrine()
+        protected float GetCentreProtectedArea()
         {
-            RegionType regionType = _region.GetRegionType();
-            bool validRegion = regionType == RegionType.Monument || regionType == RegionType.Fountain || regionType == RegionType.Shrine || _region.CharacterHere != null;
-            return validRegion;
+            switch (_region.GetRegionType())
+            {
+                case RegionType.Shelter:
+                    if (_region.CharacterHere != null) return 5f;
+                    return 0;
+                case RegionType.Fountain:
+                    return 3f;
+                case RegionType.Shrine:
+                    return 2f;
+                case RegionType.Monument:
+                    return 1.5f;
+                default:
+                    return 0;
+            }
         }
 
         protected void PlaceShrine()
         {
-            if (!ShouldPlaceShrine()) return;
-            CreateImpassablePoint(Vector2.zero, 1.5f);
+            float impassableAreaWidth = GetCentreProtectedArea();
+            if (impassableAreaWidth == 0) return;
+            CreateImpassablePoint(Vector2.zero, impassableAreaWidth);
         }
 
         private void GenerateGenericRock(float radius, float radiusVariation, float smoothness, Vector2 position)

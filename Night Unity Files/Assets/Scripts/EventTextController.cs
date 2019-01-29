@@ -79,7 +79,6 @@ public class EventTextController : MonoBehaviour
     //radiance
     private void DoCheckForPointsOfInterest()
     {
-        if (CheckForNearbyShelterCharacter()) return;
         if (CheckForNearbyContainer()) return;
         if (CheckForNearbyShrines()) return;
         if (CheckForOuterRing()) return;
@@ -121,16 +120,6 @@ public class EventTextController : MonoBehaviour
         _revealSequence = DOTween.Sequence();
         _revealSequence.AppendCallback(() => _overridingText = true);
         _revealSequence.Append(_canvasGroup.DOFade(1f, 1f));
-    }
-
-    private bool CheckForNearbyShelterCharacter()
-    {
-        ShelterCharacterBehaviour shelterCharacter = ShelterCharacterBehaviour.Instance();
-        if (shelterCharacter == null) return false;
-        if (shelterCharacter.InRange() > 1.5f) return false;
-        if (!shelterCharacter.ShowText()) return false;
-        SetCurrentCombatEvent(shelterCharacter);
-        return true;
     }
 
     private bool CheckForRadiance()
