@@ -184,28 +184,28 @@ namespace Game.Characters
         private void CreateAttributeBrands()
         {
             new FettleBrand(_player);
-            new FettleBrand(_player);
-            new FettleBrand(_player);
-            new FettleBrand(_player);
-            new FettleBrand(_player);
+            new FettleBrand(_player).SetMinLevel(1);
+            new FettleBrand(_player).SetMinLevel(2);
+            new FettleBrand(_player).SetMinLevel(3);
+            new FettleBrand(_player).SetMinLevel(4);
 
             new FocusBrand(_player);
-            new FocusBrand(_player);
-            new FocusBrand(_player);
-            new FocusBrand(_player);
-            new FocusBrand(_player);
+            new FocusBrand(_player).SetMinLevel(1);
+            new FocusBrand(_player).SetMinLevel(2);
+            new FocusBrand(_player).SetMinLevel(3);
+            new FocusBrand(_player).SetMinLevel(4);
 
             new WillBrand(_player);
-            new WillBrand(_player);
-            new WillBrand(_player);
-            new WillBrand(_player);
-            new WillBrand(_player);
+            new WillBrand(_player).SetMinLevel(1);
+            new WillBrand(_player).SetMinLevel(2);
+            new WillBrand(_player).SetMinLevel(3);
+            new WillBrand(_player).SetMinLevel(4);
 
             new GritBrand(_player);
-            new GritBrand(_player);
-            new GritBrand(_player);
-            new GritBrand(_player);
-            new GritBrand(_player);
+            new GritBrand(_player).SetMinLevel(1);
+            new GritBrand(_player).SetMinLevel(2);
+            new GritBrand(_player).SetMinLevel(3);
+            new GritBrand(_player).SetMinLevel(4);
         }
 
         private void CreateOtherBrands()

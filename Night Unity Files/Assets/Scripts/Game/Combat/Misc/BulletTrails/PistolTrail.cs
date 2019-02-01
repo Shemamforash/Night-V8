@@ -21,10 +21,7 @@ namespace Game.Combat.Misc
             return trail;
         }
 
-        protected override bool Done()
-        {
-            return _path.particleCount == 0;
-        }
+        protected override bool Done() => _path.particleCount == 0;
 
         public override void SetFinalPosition(Vector2 position)
         {
@@ -38,15 +35,9 @@ namespace Game.Combat.Misc
             }
         }
 
-        protected override ObjectPool<BulletTrail> GetObjectPool()
-        {
-            return _pool;
-        }
+        protected override ObjectPool<BulletTrail> GetObjectPool() => _pool;
 
-        protected override void ClearTrails()
-        {
-            _path.Clear();
-        }
+        protected override void ClearTrails() => _path.Clear();
 
         private void Initialise(bool isPlayer)
         {

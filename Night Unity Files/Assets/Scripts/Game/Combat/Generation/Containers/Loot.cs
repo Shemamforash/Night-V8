@@ -22,6 +22,9 @@ namespace Game.Combat.Generation
         public void SetItem(GearItem item)
         {
             Item = item;
+            if (item is Accessory) ImageLocation = "Accessory";
+            else if (item is Weapon) ImageLocation = "Weapon";
+            else if (item is Inscription) ImageLocation = "Inscription";
         }
 
         protected override string GetLogText()

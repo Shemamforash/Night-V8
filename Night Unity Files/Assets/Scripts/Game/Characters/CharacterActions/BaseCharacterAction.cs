@@ -89,9 +89,8 @@ namespace Game.Characters.CharacterActions
             return DisplayName;
         }
 
-        public virtual float GetRemainingTime()
-        {
-            return (float) Duration / InitialDuration;
-        }
+        public virtual float GetRemainingDuration() => Duration;
+
+        public float GetInitialDuration() => InitialDuration;
     }
 }

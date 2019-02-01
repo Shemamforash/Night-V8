@@ -72,7 +72,6 @@ namespace Game.Combat.Generation
             _hudCanvas.alpha = 0f;
             _instance = this;
             Resume();
-            ScreenFaderController.ShowText(_currentRegion.Name);
         }
 
         public static void SetForceShowHud(bool forceShow) => _forceShowHud = forceShow;
@@ -227,9 +226,7 @@ namespace Game.Combat.Generation
 
         public static void ExitCombat(bool returnToMap = true)
         {
-            Debug.Log("exiting");
-            Assert.IsTrue(_inCombat);
-
+            if (!_inCombat) return;
             if (_currentRegion.IsDynamic())
             {
                 _inactiveEnemies.ForEach(e => _currentRegion.RestoreSize(e.Template.Value));
@@ -328,21 +325,11 @@ namespace Game.Combat.Generation
             });
         }
 
-
         private static void ReturnToMap()
         {
-            if (CharacterManager.SelectedCharacter.CanAffordTravel())
-            {
-                SceneChanger.GoToGameScene();
-                MapMenuController.IsReturningFromCombat = true;
-                return;
-            }
-
-            Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
             if (_currentRegion.GetRegionType() == RegionType.Rite) _currentRegion = Rite.GetLastRegion();
-            int gritCost = RoutePlotter.RouteBetween(_currentRegion, MapGenerator.GetInitialNode()).Count - 1;
-            travelAction.TravelTo(MapGenerator.GetInitialNode(), gritCost);
             SceneChanger.GoToGameScene();
+            MapMenuController.IsReturningFromCombat = true;
             InputHandler.SetCurrentListener(null);
         }
 

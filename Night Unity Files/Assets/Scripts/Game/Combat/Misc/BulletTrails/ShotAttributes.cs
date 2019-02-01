@@ -28,6 +28,7 @@ namespace Game.Combat.Misc
         private bool _seekTarget;
         private int _damage, _damageDealt;
         public bool Piercing, Fired, HasHit;
+        private int _condition = -1;
 
         public ShotAttributes(CharacterCombat origin)
         {
@@ -112,6 +113,21 @@ namespace Game.Combat.Misc
             }
         }
 
+        public BulletTrail GetConditionTrail()
+        {
+            switch (_condition)
+            {
+                case 0:
+                    return ShatterTrail.Create();
+                case 1:
+                    return FireTrail.Create();
+                case 2:
+                    return VoidTrail.Create();
+            }
+
+            return null;
+        }
+
         public void AddOnHit(Action a)
         {
             OnHitAction += a;
@@ -127,7 +143,7 @@ namespace Game.Combat.Misc
             return (int) (_damageDealt * _finalDamageModifier);
         }
 
-        public void ApplyConditions(Vector2 position)
+        private void SetConditions()
         {
             float random = Random.Range(0f, 1f);
             float conditionModifier = _weapon.GetAttributeValue(AttributeType.Pellets) * _weapon.GetAttributeValue(AttributeType.Capacity);
@@ -139,8 +155,12 @@ namespace Game.Combat.Misc
             if (canBurn) conditions.Add(1);
             if (canSicken) conditions.Add(2);
             if (conditions.Count == 0) return;
-            int condition = conditions.GetRandomElement();
-            switch (condition)
+            _condition = conditions.GetRandomElement();
+        }
+
+        public void ApplyConditions(Vector2 position)
+        {
+            switch (_condition)
             {
                 case 0:
                     DecayBehaviour.Create(position);
@@ -188,6 +208,12 @@ namespace Game.Combat.Misc
         {
             _age += Time.deltaTime;
             return _age < MaxAge;
+        }
+
+        public void Fire()
+        {
+            Fired = true;
+            SetConditions();
         }
     }
 }

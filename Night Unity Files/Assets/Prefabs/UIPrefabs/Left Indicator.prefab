@@ -291,7 +291,7 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
@@ -400,7 +400,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7270512246793642198}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2a99d2f601f14d4a90ef7e9ff6e8e20, type: 3}
+  m_Script: {fileID: 11500000, guid: 373b5ebb4953551418322c016b9fad74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7270706733662734162

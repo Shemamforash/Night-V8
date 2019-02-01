@@ -93,18 +93,18 @@ namespace Game.Exploration.Environment
             SetRegionTypes();
             initialNode.Discover();
 #if UNITY_EDITOR
-//            _regions.ForEach(r => r.Discover());
+            _regions.ForEach(r => r.Discover());
 #endif
         }
 
-        private const int BaseRegionCount = 1 + 12;
+        private const int BaseRegionCount = 1 + 11;
 
         private static void GenerateRegions()
         {
             GenerateNames();
             _regions.Clear();
 
-            int additionalRegionCount = (1 + (int) EnvironmentManager.CurrentEnvironmentType()) * 12;
+            int additionalRegionCount = (1 + (int) EnvironmentManager.CurrentEnvironmentType()) * 11;
             int numberOfRegions = BaseRegionCount + additionalRegionCount;
             while (numberOfRegions > 0)
             {
@@ -196,16 +196,60 @@ namespace Game.Exploration.Environment
                 from.RegionHere.AddNeighbor(to.RegionHere);
             }
 
-            CreateMinimumSpanningTree();
+            List<Edge> existingEdges = CreateMinimumSpanningTree();
+            AddRandomLinks(existingEdges);
+        }
+
+        private static void AddRandomLinks(List<Edge> existingEdges)
+        {
+            Dictionary<Region, HashSet<Region>> possibleLinks = new Dictionary<Region, HashSet<Region>>();
+            for (int i = 0; i < _regions.Count; ++i)
+            {
+                Region rA = _regions[i];
+                for (int j = i + 1; j < _regions.Count; ++j)
+                {
+                    Region rB = _regions[j];
+                    Region from = rA.RegionID < rB.RegionID ? rA : rB;
+                    Region to = from == rA ? rB : rA;
+                    if (from.Neighbors().Contains(to)) continue;
+                    if (!possibleLinks.ContainsKey(from)) possibleLinks.Add(from, new HashSet<Region>());
+                    possibleLinks[from].Add(to);
+                }
+            }
+
+            List<Tuple<Region, Region, float>> possibleLinkList = new List<Tuple<Region, Region, float>>();
+            foreach (Region from in possibleLinks.Keys)
+            {
+                foreach (Region to in possibleLinks[from])
+                {
+                    possibleLinkList.Add(Tuple.Create(from, to, from.Position.Distance(to.Position)));
+                }
+            }
+
+            possibleLinkList.Sort((a, b) => a.Item3.CompareTo(b.Item3));
+            int totalLinks = ((int) EnvironmentManager.CurrentEnvironment.EnvironmentType + 1) * 4;
+            if (totalLinks > possibleLinkList.Count) totalLinks = possibleLinkList.Count;
+            for (int i = 0; i < totalLinks; ++i)
+            {
+                (Region from, Region to, _) = possibleLinkList[i];
+                bool valid = true;
+                foreach (Edge edge in existingEdges)
+                {
+                    Vector2? intersection = AdvancedMaths.LineIntersection(from.Position, to.Position, edge.A.Position, edge.B.Position);
+                    if (intersection == null) continue;
+                    valid = false;
+                    break;
+                }
+
+                if (!valid) continue;
+                from.AddNeighbor(to);
+            }
         }
 
         public static string GenerateName(RegionType type)
         {
             switch (type)
             {
-                case RegionType.Cache:
-                    //todo me
-                    return "";
                 case RegionType.Tutorial:
                     return "";
                 case RegionType.Tomb:
@@ -264,9 +308,18 @@ namespace Game.Exploration.Environment
                         switch (type)
                         {
                             case RegionType.Monument:
-                                combinations.Add(prefix + " of " + suffix);
+                                combinations.Add(prefix + "'s " + suffix);
                                 break;
                             case RegionType.Fountain:
+                                combinations.Add(prefix + " " + suffix);
+                                break;
+                            case RegionType.Cache:
+                                combinations.Add(prefix + " of the " + suffix);
+                                break;
+                            case RegionType.Shrine:
+                                combinations.Add(prefix + " of " + suffix);
+                                break;
+                            case RegionType.Temple:
                                 combinations.Add(prefix + " " + suffix);
                                 break;
                             default:
@@ -309,8 +362,7 @@ namespace Game.Exploration.Environment
             XmlNode root = Helper.OpenRootNode("Regions", "RegionType");
             foreach (RegionType type in Enum.GetValues(typeof(RegionType)))
             {
-                //todo remove cache
-                if (type == RegionType.None || type == RegionType.Gate || type == RegionType.Rite || type == RegionType.Tomb || type == RegionType.Tutorial || type == RegionType.Cache) continue;
+                if (type == RegionType.None || type == RegionType.Gate || type == RegionType.Rite || type == RegionType.Tomb || type == RegionType.Tutorial) continue;
                 _regionTypes.Add(type);
             }
 
@@ -341,8 +393,8 @@ namespace Game.Exploration.Environment
         private static void AddBaseRegionTypes(bool includeTemple)
         {
             _regionTypeBag.Add(RegionType.Shrine);
-            for (int i = 0; i < 2; ++i) _regionTypeBag.Add(RegionType.Animal);
-            for (int i = 0; i < 7; ++i) _regionTypeBag.Add(RegionType.Danger);
+            _regionTypeBag.Add(RegionType.Animal);
+            for (int i = 0; i < 6; ++i) _regionTypeBag.Add(RegionType.Danger);
 
             Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
             bool isDesert = currentEnvironment.EnvironmentType == EnvironmentType.Desert;
@@ -383,7 +435,6 @@ namespace Game.Exploration.Environment
                 return RegionType.Gate;
             }
 
-            return RegionType.Cache;
             UpdateAvailableRegionTypes();
             _regionTypeBag.Print();
             ++_regionsDiscovered;
@@ -439,13 +490,14 @@ namespace Game.Exploration.Environment
             SetItemQuantities(resourcesCount, r => r.ResourceSourceCount, r => ++r.ResourceSourceCount);
         }
 
-        private static void CreateMinimumSpanningTree()
+        private static List<Edge> CreateMinimumSpanningTree()
         {
             Graph map = new Graph();
             _regions.ForEach(n => map.AddNode(n));
             map.SetRootNode(initialNode);
             map.ComputeMinimumSpanningTree();
             map.Edges().ForEach(edge => { edge.A.AddNeighbor(edge.B); });
+            return map.Edges();
         }
     }
 }

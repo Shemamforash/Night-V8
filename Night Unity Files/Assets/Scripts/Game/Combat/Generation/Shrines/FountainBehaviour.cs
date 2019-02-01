@@ -101,7 +101,6 @@ namespace Game.Combat.Generation.Shrines
             _audioSource.DOFade(0f, 2f);
         }
 
-
         protected override void StartShrine()
         {
         }
@@ -119,6 +118,7 @@ namespace Game.Combat.Generation.Shrines
         public void Activate()
         {
             if (Triggered) return;
+            _region.FountainVisited = true;
             GetComponent<CompassItem>().Die();
             Triggered = true;
             StartCoroutine(SpawnEnemies());

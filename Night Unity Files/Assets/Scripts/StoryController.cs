@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using EZCameraShake;
 using Game.Exploration.Environment;
 using Game.Global;
-using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -29,11 +27,14 @@ public class StoryController : Menu
     private CameraShaker _shaker;
     private float _waitTime;
     private static List<JournalEntry> _journalEntries;
+    private static readonly string[] _actNames = {"Act I", "Act II", "Act III", "Act IV", "Act V", "Epilogue"};
+    private AudioSource _actAudio;
 
     public override void Awake()
     {
         base.Awake();
         _actCanvas = GameObject.Find("Act").GetComponent<CanvasGroup>();
+        _actAudio = _actCanvas.GetComponent<AudioSource>();
         _actTitle = _actCanvas.gameObject.FindChildWithName<TextMeshProUGUI>("Title");
         _actSubtitle = _actCanvas.gameObject.FindChildWithName<TextMeshProUGUI>("Subtitle");
         _storyText = GetComponent<TextMeshProUGUI>();
@@ -127,15 +128,13 @@ public class StoryController : Menu
         End();
     }
 
-    private static readonly string[] _actNames = {"Act I", "Act II", "Act III", "Act IV", "Act V", "Epilogue"};
-
-
     private IEnumerator DisplayAct()
     {
         _storyText.alpha = 0;
         EnvironmentType currentEnvironmentType = EnvironmentManager.CurrentEnvironmentType();
         _actTitle.text = _actNames[(int) currentEnvironmentType];
         _actSubtitle.text = Environment.EnvironmentTypeToName(currentEnvironmentType);
+        _actAudio.Play();
         yield return _actCanvas.DOFade(1, 1f).WaitForCompletion();
         yield return new WaitForSeconds(2f);
         yield return _actCanvas.DOFade(0f, 1f).WaitForCompletion();

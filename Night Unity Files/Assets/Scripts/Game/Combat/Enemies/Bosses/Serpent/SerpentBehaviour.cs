@@ -19,6 +19,8 @@ public class SerpentBehaviour : Boss
     private Vector3 _targetPosition;
     private bool _firing, _pushing, _gettingInPosition, _canPush;
     private float _pushTimer, _beamTimer;
+    private Transform _beam1Target, _beam2Target;
+    private float _currentBeamAngle;
 
 
     protected override void Awake()
@@ -27,7 +29,25 @@ public class SerpentBehaviour : Boss
         _bombAttack = gameObject.AddComponent<SerpentBombAttack>();
         _instance = this;
         _head = gameObject.FindChildWithName<TailFollowBehaviour>("Wing Segment (0)");
+        _beam1Target = new GameObject("Beam 1 Target").transform;
+        _beam2Target = new GameObject("Beam 2 Target").transform;
+        _beam1Target.SetParent(transform);
+        _beam2Target.SetParent(transform);
+        Vector2 position = transform.position;
+        _beam1Target.position = position;
+        _beam2Target.position = position;
         GetNewTargetPosition();
+    }
+
+    private void UpdateBeamTargets()
+    {
+        float sinTime = Mathf.Sin(Time.timeSinceLevelLoad * 2.5f);
+        sinTime = (sinTime + 1) / 2f;
+        float angleDelta = 15f * sinTime + 5f;
+        float beam1Rotation = angleDelta;
+        float beam2Rotation = -angleDelta;
+        _beam1Target.transform.localRotation = Quaternion.Euler(0, 0, beam1Rotation);
+        _beam2Target.transform.localRotation = Quaternion.Euler(0, 0, beam2Rotation);
     }
 
     private IEnumerator DoBeamAttack()
@@ -41,12 +61,12 @@ public class SerpentBehaviour : Boss
             yield return null;
         }
 
-        BeamController beam = BeamController.Create(transform);
+        BeamController.Create(_beam1Target);
+        BeamController.Create(_beam2Target);
         time = 5f;
         while (time > 0f)
         {
             if (!CombatManager.IsCombatActive()) yield return null;
-            if (Vector2.Distance(transform.position, _targetPosition) < 0.5f) beam.StopFiring();
             time -= Time.deltaTime;
             yield return null;
         }
@@ -169,6 +189,7 @@ public class SerpentBehaviour : Boss
             else if (Vector2.Distance(transform.position, _targetPosition) < 1f) GetNewTargetPosition();
         }
 
+        UpdateBeamTargets();
         Vector2 direction = _targetPosition.Direction(transform.position);
         RigidBody.AddForce(direction * Speed);
     }

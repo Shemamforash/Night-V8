@@ -13,19 +13,18 @@ namespace Game.Combat.Enemies.Animals
             base.UpdateDistanceToTarget();
             bool outOfSight = Physics2D.Linecast(transform.position, PlayerCombat.Position(), 1 << 8).collider != null;
             if (outOfSight) return;
-            bool outOfRange = PlayerCombat.Instance.transform.Distance(transform.position) < DetectionRange;
+            float distanceToPlayer = PlayerCombat.Instance.transform.Distance(transform.position);
+            bool outOfRange = distanceToPlayer < DetectionRange;
             if (outOfRange) return;
+            if (distanceToPlayer < 1f) PushController.Create(transform.position, 0, false, 360f);
             Alert();
         }
 
         public override void Alert()
         {
-            if (!Alerted)
-            {
-                Cell target = WorldGrid.GetEdgeCell(transform.position);
-                MoveBehaviour.GoToCell(target);
-            }
-
+            if (Alerted) return;
+            Cell target = WorldGrid.GetEdgeCell(transform.position);
+            MoveBehaviour.GoToCell(target);
             Alerted = true;
             CombatManager.Enemies().ForEach(e =>
             {

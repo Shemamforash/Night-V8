@@ -200,24 +200,9 @@ namespace Game.Combat.Enemies
         private Loot DropHumanLoot(Vector2 position)
         {
             if (Random.Range(0f, 1f) < Template.DropRate) SaltBehaviour.Create(position);
-            bool dropWeapon = Helper.RollDie(0, 25) && EquippedWeapon != null;
-            bool dropAccessory = Helper.RollDie(0, 25);
-            if (dropWeapon && dropAccessory)
-            {
-                if (Random.Range(0, 2) == 0) dropWeapon = false;
-                else dropAccessory = false;
-            }
-
-            if (!dropWeapon && !dropAccessory) return null;
+            if (!Helper.RollDie(0, 25)) return null;
             Loot loot = new Loot(position);
-
-            if (dropWeapon)
-            {
-                EquippedWeapon.UnEquip();
-                loot.SetItem(EquippedWeapon);
-            }
-
-            if (dropAccessory) loot.SetItem(Accessory.Generate());
+            loot.SetItem(Accessory.Generate());
             return loot;
         }
 
@@ -234,8 +219,17 @@ namespace Game.Combat.Enemies
 
         private Loot DropAnimalLoot(Vector2 position)
         {
-            ResourceItem item = Helper.RollDie(0, 3) ? ResourceTemplate.GetMeat() : ResourceTemplate.Create("Grisly Remains");
-            item.Increment((int) (Template.DropRate - 1));
+            ResourceItem item;
+            if (Template.DropRate > 1 && Helper.RollDie(0, 2))
+            {
+                item = ResourceTemplate.Create("Grisly Remains");
+            }
+            else
+            {
+                item = ResourceTemplate.GetMeat();
+                item.Increment((int) (Template.DropRate - 1));
+            }
+
             Loot loot = new Loot(position);
             loot.SetResource(item);
             return loot;

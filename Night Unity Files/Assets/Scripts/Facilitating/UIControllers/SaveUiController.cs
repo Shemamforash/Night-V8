@@ -24,6 +24,7 @@ namespace Facilitating.UIControllers
             {
                 GetComponent<CanvasGroup>().alpha = 0.3f;
                 EnhancedButton enhancedButton = GetComponent<EnhancedButton>();
+                if (enhancedButton == null) gameObject.PrintHierarchy();
                 Button button = enhancedButton.Button();
                 Destroy(enhancedButton);
                 Destroy(button);

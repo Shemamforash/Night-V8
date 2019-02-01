@@ -16,7 +16,7 @@ namespace Game.Exploration.Ui
     public class MapNodeController : MonoBehaviour
     {
         private const float LetterFadeInDuration = 0.5f;
-        private static Sprite _animalSprite, _dangerSprite, _gateSprite, _fountainSprite, _monumentSprite, _shelterSprite, _shrineSprite, _templeSprite, _noneSprite;
+        private static Sprite _animalSprite, _dangerSprite, _gateSprite, _fountainSprite, _monumentSprite, _shelterSprite, _shrineSprite, _templeSprite, _cacheSprite, _noneSprite;
 
         private readonly List<Letter> _letters = new List<Letter>();
         private string _completeWord;
@@ -122,6 +122,7 @@ namespace Game.Exploration.Ui
             if (_shelterSprite == null) _shelterSprite = Resources.Load<Sprite>("Images/Regions/Shelter");
             if (_shrineSprite == null) _shrineSprite = Resources.Load<Sprite>("Images/Regions/Shrine");
             if (_templeSprite == null) _templeSprite = Resources.Load<Sprite>("Images/Regions/Temple");
+            if (_cacheSprite == null) _cacheSprite = Resources.Load<Sprite>("Images/Regions/Cache");
             if (_noneSprite == null) _noneSprite = Resources.Load<Sprite>("Images/Regions/None");
             switch (regionType)
             {
@@ -148,6 +149,9 @@ namespace Game.Exploration.Ui
                     break;
                 case RegionType.Shrine:
                     _icon.sprite = _shrineSprite;
+                    break;
+                case RegionType.Cache:
+                    _icon.sprite = _cacheSprite;
                     break;
                 default:
                     _icon.sprite = _noneSprite;
@@ -207,7 +211,7 @@ namespace Game.Exploration.Ui
             _border.SetSelected();
             transform.DOScale(Vector2.one * 1.25f, 1f).SetUpdate(UpdateType.Normal, true);
             MapMenuController.SetRoute(_region);
-            MapMovementController.UpdateGrit(_gritCost);
+            MapMenuController.UpdateGrit(_gritCost);
         }
 
         public void LoseFocus(float time = 1f)
@@ -216,7 +220,7 @@ namespace Game.Exploration.Ui
             _targetCentreAlpha = 0.5f;
             _border.SetActive();
             transform.DOScale(Vector2.one, time).SetUpdate(UpdateType.Normal, true);
-            MapMovementController.UpdateGrit(0);
+            MapMenuController.UpdateGrit(0);
         }
 
         private class Letter

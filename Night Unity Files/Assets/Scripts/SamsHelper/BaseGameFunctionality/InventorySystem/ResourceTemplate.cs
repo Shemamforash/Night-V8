@@ -186,7 +186,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private void SetEffect(XmlNode resourceNode)
         {
             XmlNode attributeNode = resourceNode.SelectSingleNode("Attribute");
-            if (attributeNode == null) return;
             string attributeString = attributeNode.InnerText;
             if (attributeString == "") return;
             AttributeType = Inventory.StringToAttributeType(attributeString);

@@ -1,5 +1,3 @@
-using SamsHelper.BaseGameFunctionality.Basic;
-
 namespace Game.Characters.Brands
 {
     public class FettleBrand : Brand

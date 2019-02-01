@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 199023572675823340}
   - component: {fileID: 58306211122194804}
   - component: {fileID: 82522231271590274}
-  - component: {fileID: 114381553143896822}
+  - component: {fileID: 8203423845429362255}
   m_Layer: 0
   m_Name: Fire Trail
   m_TagString: Untagged
@@ -4815,7 +4815,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &114381553143896822
+--- !u!114 &8203423845429362255
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4824,7 +4824,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1154273879603438}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1145da4c133ab54a9056916134bd3d0, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a17e7b119e2be74cb4275bebdcb98c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1915747988318072

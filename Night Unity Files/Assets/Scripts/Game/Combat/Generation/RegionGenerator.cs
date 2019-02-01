@@ -22,6 +22,7 @@ namespace Game.Combat.Generation
         private List<Vector2> _availablePositions;
         private int _barrierNumber;
         protected readonly List<Barrier> barriers = new List<Barrier>();
+        private const float CacheRadius = 5.5f, ShelterRadius = 5f;
 
         public void Initialise(Region region)
         {
@@ -40,13 +41,13 @@ namespace Game.Combat.Generation
         {
             if (_region.CharacterHere != null)
             {
-                Polygon characterBlockingArea = WorldGrid.AddBlockingArea(Vector2.zero, 5f);
+                Polygon characterBlockingArea = WorldGrid.AddBlockingArea(Vector2.zero, ShelterRadius);
                 WorldGrid.RemoveBarrier(characterBlockingArea);
             }
 
             if (_region.GetRegionType() == RegionType.Cache)
             {
-                Polygon characterBlockingArea = WorldGrid.AddBlockingArea(Vector2.zero, 4.5f);
+                Polygon characterBlockingArea = WorldGrid.AddBlockingArea(Vector2.zero, CacheRadius);
                 WorldGrid.RemoveBarrier(characterBlockingArea);
             }
         }
@@ -139,7 +140,7 @@ namespace Game.Combat.Generation
             switch (_region.GetRegionType())
             {
                 case RegionType.Shelter:
-                    if (_region.CharacterHere != null) return 5f;
+                    if (_region.CharacterHere != null) return ShelterRadius;
                     return 0;
                 case RegionType.Fountain:
                     return 3f;
@@ -148,7 +149,7 @@ namespace Game.Combat.Generation
                 case RegionType.Monument:
                     return 1.5f;
                 case RegionType.Cache:
-                    return 4.5f;
+                    return CacheRadius;
                 default:
                     return 0;
             }

@@ -388,7 +388,7 @@ namespace Game.Combat.Generation
             Grid = new Cell[GridWidth][];
             _searchGrid = new StaticGrid(GridWidth, GridWidth);
             int outOfRangeDistanceSquared = (int) Mathf.Pow((CombatAreaWidth - 0.5f) * CellResolution * 0.5f, 2f);
-            int edgeDistanceSquared = (int) Mathf.Pow((CombatMovementDistance + 0.5f) * CellResolution * 0.5f, 2f);
+            int edgeDistanceSquared = (int) Mathf.Pow((CombatMovementDistance) * CellResolution * 0.5f, 2f);
 
             for (int x = 0; x < GridWidth; ++x)
             {

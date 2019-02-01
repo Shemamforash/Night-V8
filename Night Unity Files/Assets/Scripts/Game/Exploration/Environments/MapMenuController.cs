@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using Game.Characters;
 using Game.Exploration.Regions;
 using Game.Global;
@@ -7,14 +8,18 @@ using SamsHelper;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Facilitating.UIControllers;
+using Game.Characters.CharacterActions;
 using Game.Global.Tutorial;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Input;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Environment
 {
-    public class MapMenuController : Menu
+    public class MapMenuController : Menu, IInputListener
     {
         private static List<Region> route;
         public static Transform MapTransform;
@@ -26,16 +31,18 @@ namespace Game.Exploration.Environment
         private bool _isActive;
         private readonly List<RingDrawer> _rings = new List<RingDrawer>();
         public static bool IsReturningFromCombat;
-        private static CloseButtonController _closeButton;
-        private static UIAttributeMarkerController _gritMarker;
+        private static UIAttributeMarkerController _gritMarker, _willMarker;
+        private static EnhancedText _teleportText;
         private bool _seenTutorial;
+        private static Tweener _teleportTween;
+        private static bool _canTeleport;
 
         public override void Awake()
         {
             base.Awake();
-            _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
-            _closeButton.SetOnClick(MapMovementController.ReturnToGame);
             _gritMarker = gameObject.FindChildWithName("Grit").FindChildWithName<UIAttributeMarkerController>("Bar");
+            _willMarker = gameObject.FindChildWithName("Will").FindChildWithName<UIAttributeMarkerController>("Bar");
+            _teleportText = gameObject.FindChildWithName<EnhancedText>("Teleport");
             _nextRouteTime = 2f / MapGenerator.Regions().Count;
             MapTransform = GameObject.Find("Nodes").transform;
             CreateMapRings();
@@ -53,18 +60,14 @@ namespace Game.Exploration.Environment
             base.Enter();
             _isActive = true;
             _rings.ForEach(r => r.TweenColour(UiAppearanceController.InvisibleColour, Color.white, 0.5f));
+            UpdateTeleportText();
+            UpdateWill();
+            ResourcesUiController.Hide();
             MapGenerator.Regions().ForEach(n => { n.ShowNode(); });
-            MapMovementController.Enter(CharacterManager.SelectedCharacter);
+            MapMovementController.Enter();
             AudioController.FadeInMusicMuffle();
+            InputHandler.RegisterInputListener(this);
             ShowMapTutorial();
-        }
-
-        private void ShowMapTutorial()
-        {
-            if (_seenTutorial || !TutorialManager.Active()) return;
-            TutorialOverlay overlay = new TutorialOverlay(MapGenerator.GetInitialNode().MapNode().transform, 3, 3);
-            TutorialManager.TryOpenTutorial(2, overlay);
-            _seenTutorial = true;
         }
 
         public override void Exit()
@@ -76,6 +79,43 @@ namespace Game.Exploration.Environment
             MapMovementController.Exit();
             FadeAndDieTrailRenderer.ForceFadeAll();
             AudioController.FadeOutMusicMuffle();
+            InputHandler.UnregisterInputListener(this);
+            ResourcesUiController.Show();
+        }
+
+        private void UpdateTeleportText()
+        {
+            int stoneQuantity = Inventory.GetResourceQuantity("Gate Stone");
+            _canTeleport = stoneQuantity > 0;
+            string teleportString = "No Gate Stones";
+            if (_canTeleport) teleportString = "Teleport [T] (Consumes 1 Gate Stone)";
+            _teleportText.SetText(teleportString);
+        }
+
+        private void TryTeleport()
+        {
+            Region region = MapMovementController.GetNearestRegion();
+            if (region == null) return;
+            if (!_canTeleport) return;
+            Inventory.DecrementResource("Gate Stone", 1);
+            if (region.GetRegionType() == RegionType.Gate) CharacterManager.SelectedCharacter.TravelAction.ReturnToHomeInstant();
+            else CharacterManager.SelectedCharacter.TravelAction.TravelToInstant(region);
+            IsReturningFromCombat = false;
+        }
+
+        public static void FadeTeleportText(Region region)
+        {
+            _teleportTween?.Kill();
+            float target = region == null ? 0f : 1f;
+            _teleportTween = _teleportText.GetText().DOFade(target, 1f);
+        }
+
+        private void ShowMapTutorial()
+        {
+            if (_seenTutorial || !TutorialManager.Active()) return;
+            TutorialOverlay overlay = new TutorialOverlay(MapGenerator.GetInitialNode().MapNode().transform, 3, 3);
+            TutorialManager.TryOpenTutorial(2, overlay);
+            _seenTutorial = true;
         }
 
         private void CreateRouteLinks()
@@ -203,14 +243,81 @@ namespace Game.Exploration.Environment
             route = RoutePlotter.RouteBetween(CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion(), to);
         }
 
-        public static void FlashCloseButton()
+        private void TravelToRegion()
         {
-            _closeButton.Flash();
+            Region region = MapMovementController.GetNearestRegion();
+            if (region == null) return;
+            if (!CanAffordToTravel(region)) return;
+            if (TutorialManager.IsTutorialVisible()) return;
+            Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
+            travelAction.TravelTo(region, region.MapNode().GetDistance());
+            IsReturningFromCombat = false;
+            MenuStateMachine.ShowMenu("Game Menu");
         }
 
-        public static UIAttributeMarkerController GritMarker()
+        private static bool CanAffordToTravel(Region region)
         {
-            return _gritMarker;
+            int gritCost = region.MapNode().GetGritCost();
+            bool canAfford = CharacterManager.SelectedCharacter.CanAffordTravel(gritCost);
+            bool travellingToGate = region.GetRegionType() == RegionType.Gate;
+            bool canAffordToTravel = canAfford || travellingToGate;
+            return canAffordToTravel;
+        }
+
+        private static void TryRestoreGrit()
+        {
+            CharacterAttribute grit = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Grit);
+            CharacterAttribute will = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Will);
+            if (will.CurrentValue() == 0 || grit.ReachedMax()) return;
+            will.Decrement();
+            grit.Increment();
+            _gritMarker.SetValue(grit.Max, grit.CurrentValue(), 0);
+            _willMarker.SetValue(will.Max, will.CurrentValue(), 0);
+            MapGenerator.Regions().ForEach(n => { n.ShowNode(); });
+        }
+
+        public static void UpdateGrit(int gritCost)
+        {
+            CharacterAttribute grit = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Grit);
+            _gritMarker.SetValue(grit.Max, grit.CurrentValue(), -gritCost);
+        }
+
+        private void UpdateWill()
+        {
+            CharacterAttribute will = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Will);
+            _willMarker.SetValue(will.Max, will.CurrentValue(), 0);
+        }
+
+        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        {
+            if (isHeld) return;
+            switch (axis)
+            {
+                case InputAxis.Fire:
+                    TravelToRegion();
+                    break;
+                case InputAxis.Mouse:
+                    TravelToRegion();
+                    break;
+                case InputAxis.TakeItem:
+                    TryTeleport();
+                    break;
+                case InputAxis.Compass:
+                    TryRestoreGrit();
+                    break;
+                case InputAxis.Menu:
+                    if (!IsReturningFromCombat && !TutorialManager.IsTutorialVisible())
+                        MenuStateMachine.ShowMenu("Game Menu");
+                    break;
+            }
+        }
+
+        public void OnInputUp(InputAxis axis)
+        {
+        }
+
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
         }
     }
 }

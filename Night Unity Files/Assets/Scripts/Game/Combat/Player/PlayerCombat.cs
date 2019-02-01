@@ -253,7 +253,7 @@ namespace Game.Combat.Player
         public float InRange()
         {
             if (!CombatManager.GetCurrentRegion().IsDynamic() && CombatManager.GetCurrentRegion().GetRegionType() != RegionType.Temple) return -1;
-            return CurrentCell().OutOfRange ? 1 : -1;
+            return CurrentCell().OutOfRange || CurrentCell().IsEdgeCell ? 1 : -1;
         }
 
         public string GetEventText()

@@ -15,7 +15,7 @@ public class InsectBehaviour : MonoBehaviour
     {
         int numberOfPoints = Random.Range(1, 5);
         Vector3[] path = new Vector3[numberOfPoints + 1];
-        path[0] = transform.up * 0.2f + transform.localPosition;
+        path[0] = Vector2.zero;
         float distance = 0f;
         for (int i = 0; i < numberOfPoints; ++i)
         {

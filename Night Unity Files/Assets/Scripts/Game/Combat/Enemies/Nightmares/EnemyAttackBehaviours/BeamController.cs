@@ -160,9 +160,4 @@ public class BeamController : MonoBehaviour
             break;
         }
     }
-
-    public void StopFiring()
-    {
-        _stopFiring = true;
-    }
 }

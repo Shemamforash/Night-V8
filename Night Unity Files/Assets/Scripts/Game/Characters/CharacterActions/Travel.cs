@@ -61,6 +61,7 @@ namespace Game.Characters.CharacterActions
         private void ReachTarget()
         {
             _inTransit = false;
+            _target.ShouldGenerateEncounter = _target != CurrentRegion;
             CurrentRegion = _target;
             if (AtHome())
             {
@@ -75,7 +76,7 @@ namespace Game.Characters.CharacterActions
 
         private void EnterRegion()
         {
-            CurrentRegion.Discover(); 
+            CurrentRegion.Discover();
             CombatManager.SetCurrentRegion(CurrentRegion);
             CharacterManager.SelectedCharacter = PlayerCharacter;
             SceneChanger.GoToCombatScene();
@@ -93,12 +94,12 @@ namespace Game.Characters.CharacterActions
 
         public void TravelTo(Region target, int distance)
         {
-            target.ShouldGenerateEncounter = target != CurrentRegion;
             if (target == CurrentRegion && CurrentRegion.GetRegionType() != RegionType.Gate)
             {
                 EnterRegion();
                 return;
             }
+
             Enter();
             _travelTime = 0;
             _inTransit = true;

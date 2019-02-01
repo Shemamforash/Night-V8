@@ -24,16 +24,12 @@ namespace Game.Global
         {
             _changingScene = false;
             _instance = this;
-            float fadeInTime = SceneManager.GetActiveScene().name == "Combat" ? 3f : DefaultFadeTime;
-            ScreenFaderController.SetAlpha(1);
-            ScreenFaderController.FadeOut(fadeInTime);
             if (_fadeInAudio)
             {
                 VolumeController.SetModifiedVolume(0f);
                 _volumeTweener = DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 1f, DefaultFadeTime).SetUpdate(UpdateType.Normal, true);
                 _fadeInAudio = false;
             }
-
             if (SceneManager.GetActiveScene().name == "Game") WorldState.Resume();
         }
 
@@ -51,7 +47,7 @@ namespace Game.Global
         {
             _changingScene = true;
             _sceneToLoad = sceneName;
-            
+
             if (_fadeInAudio)
             {
                 _volumeTweener?.Kill();

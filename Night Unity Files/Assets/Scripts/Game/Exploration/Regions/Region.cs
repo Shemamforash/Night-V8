@@ -44,6 +44,7 @@ namespace Game.Exploration.Regions
         public Player CharacterHere;
         public Vector2? RadianceStonePosition;
         private bool _templeCleansed;
+        public bool IsWeaponHere = true;
         public bool FountainVisited;
         private bool _isDynamicRegion;
         private bool _justDiscovered;
@@ -53,6 +54,7 @@ namespace Game.Exploration.Regions
             RegionID = _currentId;
             ++_currentId;
         }
+
 
         public void SetTempleCleansed()
         {
@@ -74,7 +76,7 @@ namespace Game.Exploration.Regions
         public void CheckForRegionExplored()
         {
             if (!_justDiscovered) return;
-            if (CombatManager.GetCurrentRegion().GetRegionType() != RegionType.Tutorial) return;
+            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tutorial) return;
             PlayerCombat.Instance.Player.BrandManager.IncreaseRegionsExplored();
         }
 
@@ -172,6 +174,7 @@ namespace Game.Exploration.Regions
             region._claimBenefit = doc.StringFromNode("ClaimBenefit");
             region.RitesRemaining = doc.IntFromNode("RitesRemaining");
             region.FountainVisited = doc.BoolFromNode("FountainVisited");
+            region.IsWeaponHere = doc.BoolFromNode("IsWeaponHere");
             int characterClassHere = doc.IntFromNode("CharacterHere");
             region.CharacterHere = characterClassHere == -1 ? null : CharacterManager.GenerateCharacter((CharacterClass) characterClassHere);
             region.CheckIsDynamic();
@@ -203,6 +206,7 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("ClaimBenefit", _claimBenefit);
             regionNode.CreateChild("RitesRemaining", RitesRemaining);
             regionNode.CreateChild("FountainVisited", FountainVisited);
+            regionNode.CreateChild("IsWeaponHere", IsWeaponHere);
             int characterClassHere = CharacterHere == null ? -1 : (int) CharacterHere.CharacterTemplate.CharacterClass;
             regionNode.CreateChild("CharacterHere", characterClassHere);
         }

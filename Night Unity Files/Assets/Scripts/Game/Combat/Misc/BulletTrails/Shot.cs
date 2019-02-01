@@ -19,7 +19,7 @@ namespace Game.Combat.Misc
         private readonly RaycastHit2D[] _collisions = new RaycastHit2D[50];
 
         private Rigidbody2D _rigidBody;
-        private BulletTrail _bulletTrail;
+        private BulletTrail _bulletTrail, _conditionTrail;
         public CharacterCombat _origin;
         private Vector2 _direction, _originPosition, _lastPosition;
         private ShotAttributes _shotAttributes;
@@ -127,17 +127,25 @@ namespace Game.Combat.Misc
             float angleOffset = angleModifier * _shotAttributes.CalculateAccuracy();
             transform.position = _originPosition + _direction * DistanceFromOrigin;
             _direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * _direction;
-            _shotAttributes.Fired = true;
+            _shotAttributes.Fire();
             if (_origin != null) _origin.IncreaseRecoil();
             _bulletTrail = _shotAttributes.GetBulletTrail();
+            _conditionTrail = _shotAttributes.GetConditionTrail();
             _rigidBody.velocity = _direction * _shotAttributes.GetSpeed() * Random.Range(0.9f, 1.1f);
             _lastPosition = transform.position;
             _bulletTrail.SetTarget(transform);
+            if (_conditionTrail != null) _conditionTrail.SetTarget(transform);
             StartCoroutine(WaitToDie());
         }
 
         private void DeactivateShot()
         {
+            if (_conditionTrail != null)
+            {
+                _conditionTrail.SetFinalPosition(_lastPosition);
+                _conditionTrail.StartFade();
+            }
+
             _bulletTrail.SetFinalPosition(_lastPosition);
             _bulletTrail.StartFade();
             _shotPool.Return(this);

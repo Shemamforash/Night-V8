@@ -94,7 +94,7 @@ namespace Game.Combat.Misc
         private void CheckToLeave()
         {
             if (_targetCell == null) return;
-            if (transform.Distance(_targetCell.Position) > 0.5f) return;
+            if (WorldGrid.WorldToCellPosition(transform.position) != _targetCell) return;
             _leaving = true;
             CombatManager.ClearInactiveEnemies();
             ResetEnemyTargets();

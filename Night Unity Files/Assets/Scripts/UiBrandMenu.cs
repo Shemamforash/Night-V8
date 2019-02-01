@@ -77,15 +77,15 @@ public class UiBrandMenu : Menu
         {
             case BrandStatus.Failed:
                 _titleString = "Failed";
-                _benefitString = "A curse of " + brand.GetFailName() + " has been cast upon " + CharacterManager.SelectedCharacter.Name;
+                _benefitString = "A curse has been cast upon " + CharacterManager.SelectedCharacter.Name;
                 break;
             case BrandStatus.Succeeded:
                 _titleString = "Passed";
-                _benefitString = "A boon of " + brand.GetSuccessName() + " has been granted upon " + CharacterManager.SelectedCharacter.Name;
+                _benefitString = "A blessing has been granted to " + CharacterManager.SelectedCharacter.Name;
                 break;
         }
 
-        _titleString = _titleString + " " + brand.GetDisplayName();
+        _titleString = _titleString + " The " + brand.GetDisplayName();
         string descriptionString = "\n<i><size=20>" + brand.Description() + "</size></i>";
         _benefitString += descriptionString;
         _instance.Show();
@@ -97,21 +97,21 @@ public class UiBrandMenu : Menu
 
     private void ShowCharacterSkill(Skill characterSkill)
     {
-        _overviewString = "Skill Unlocked";
-        _effectString = CharacterManager.SelectedCharacter.Name + " has grown with the passing of time";
+        _overviewString = "Character Skill Unlocked";
+        _effectString = CharacterManager.SelectedCharacter.Name + " wisdom has grown with the passing of time";
         ShowSkill(characterSkill);
     }
 
     private void ShowWeaponSkill(WeaponType weaponType, Skill weaponSkill)
     {
-        _overviewString = "Skill Unlocked";
+        _overviewString = "Weapon Skill Unlocked";
         _effectString = CharacterManager.SelectedCharacter.Name + "'s proficiency with " + weaponType + "s grows";
         ShowSkill(weaponSkill);
     }
 
     private void ShowSkill(Skill skill)
     {
-        _titleString = "The Skill '" + skill.Name + "' has been unlocked";
+        _titleString = skill.Name;
         _benefitString = skill.Description();
         _instance.Show();
     }

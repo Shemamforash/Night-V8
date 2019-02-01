@@ -92,11 +92,9 @@ class ResourceImporter(XMLWriter):
     def read_resource(self, row):
         write_single_value(self, "Name", get_value(self, "A", row, ""))
         write_single_value(self, "Type", get_value(self, "B", row, ""))
-        consumable = get_value(self, "C", row, "")
-        write_single_value(self, "Consumable", consumable)
-        if consumable == "TRUE":
-            write_single_value(self, "Attribute", get_value(self, "D", row, ""))
-            write_single_value(self, "Modifier", get_value(self, "E", row, ""))
+        write_single_value(self, "Consumable", get_value(self, "C", row, ""))
+        write_single_value(self, "Attribute", get_value(self, "D", row, ""))
+        write_single_value(self, "Modifier", get_value(self, "E", row, ""))
         write_single_value(self, "Permanent", get_value(self, "F", row, ""))
         write_single_value(self, "DesertDropRate", get_value(self, "G", row, ""))
         write_single_value(self, "MountainsDropRate", get_value(self, "H", row, ""))
@@ -205,17 +203,17 @@ class RegionImporter(XMLWriter):
         write_tag(self, "EnvironmentSuffixes", self.read_environment_suffixes)
 
     def read_regions(self):
-        for offset in range(0, 7):
+        for offset in range(0, 8):
             column = offset * 2 + 1
             column_letter = num2alpha[column]
             write_tag(self, get_value(self, column_letter, 1), self.read_region_type, [column])
 
     def read_environment_suffixes(self):
-        self.read_environment_suffix("P")
-        self.read_environment_suffix("Q")
         self.read_environment_suffix("R")
         self.read_environment_suffix("S")
         self.read_environment_suffix("T")
+        self.read_environment_suffix("U")
+        self.read_environment_suffix("V")
 
     def read_environment_suffix(self, column_letter):
         prefix_string = ""
@@ -464,15 +462,15 @@ def write_single_value(xml_writer, stat_name, value):
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
-# RecipeImporter()
-# ResourceImporter()
+RecipeImporter()
+ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()
-# EnvironmentImporter()
-# BrandImporter()
+EnvironmentImporter()
+BrandImporter()
 # WandererImporter()
 # NecromancerImporter()
 # CharacterStoryImporter()
 # DreamsImporter()
 # LoreImporter()
-TutorialImporter()
+# TutorialImporter()

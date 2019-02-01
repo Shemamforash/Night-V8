@@ -57,5 +57,7 @@ namespace SamsHelper.ReactiveUI.Elements
             _text.color = color;
             _text.ForceMeshUpdate(true);
         }
+
+        public TextMeshProUGUI GetText() => _text;
     }
 }

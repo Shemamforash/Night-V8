@@ -11,7 +11,7 @@
         {
         }
 
-        public override float GetRemainingTime()
+        public override float GetRemainingDuration()
         {
             return 0;
         }

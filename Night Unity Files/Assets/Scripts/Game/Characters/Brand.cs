@@ -34,6 +34,11 @@ namespace Game.Characters
             SetStatus(BrandStatus.Locked);
         }
 
+        public void SetMinLevel(int minLevel)
+        {
+            _minLevel = minLevel;
+        }
+
         public bool PlayerRequirementsMet(Player player)
         {
             if (_requiresSkillUnlock && player.CharacterSkillOne != null) return false;
@@ -66,12 +71,10 @@ namespace Game.Characters
         {
             Status = status;
             Player.BrandManager.UpdateBrandStatus(this);
+            if (Status == BrandStatus.Active) CombatLogController.PostLog("The " + GetDisplayName() + " has begun");
         }
 
-        public string GetDisplayName()
-        {
-            return "Rite of " + _riteName;
-        }
+        public string GetDisplayName() => "Rite of " + _riteName;
 
         public string GetName() => _riteName;
 
@@ -82,11 +85,11 @@ namespace Game.Characters
             _counter += amount;
             if (_counter < _counterTarget)
             {
-                CombatLogController.PostLog(_riteName + " - " + GetProgressString());
+                CombatLogController.PostLog(GetDisplayName() + " - " + GetProgressString());
                 return;
             }
 
-            CombatLogController.PostLog(_riteName + " Completed");
+            CombatLogController.PostLog("Completed The " + GetDisplayName());
             _ready = true;
         }
 

@@ -17,7 +17,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
     private const float PanSpeed = 40f;
     private float CurrentSpeed;
     private List<Region> _availableRegions;
-    private Region _nearestRegion;
+    private static Region _nearestRegion;
     private static Region _currentRegion;
     private static Camera MapCamera;
     private static Player _player;
@@ -37,32 +37,25 @@ public class MapMovementController : MonoBehaviour, IInputListener
         _audioSource = GetComponent<AudioSource>();
     }
 
-    public static void Enter(Player player)
+    public static void Enter()
     {
         _visible = true;
-        ResourcesUiController.Hide();
-        _player = player;
-        UpdateGrit(0);
+        _player = CharacterManager.SelectedCharacter;
+        InputHandler.SetCurrentListener(_instance);
+        MapMenuController.UpdateGrit(0);
+        _audioSource.DOFade(1f, 3f);
         _currentRegion = _player.TravelAction.GetCurrentRegion();
         MapCamera.DOOrthoSize(6, 1f);
-        InputHandler.SetCurrentListener(_instance);
         Recenter();
-        _audioSource.DOFade(1f, 3f);
     }
 
     public static void Exit()
     {
-        ResourcesUiController.Show();
+        _visible = false;
         InputHandler.SetCurrentListener(null);
         _audioSource.DOFade(0f, 3f);
         MapCamera.DOOrthoSize(3, 1f);
         _player = null;
-    }
-
-    public static void UpdateGrit(int gritCost)
-    {
-        CharacterAttribute grit = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Grit);
-        MapMenuController.GritMarker().SetValue(grit.Max, grit.CurrentValue(), -gritCost);
     }
 
     private static void Recenter()
@@ -165,6 +158,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         if (_nearestRegion == newNearestRegion) return;
         _nearestRegion?.MapNode().LoseFocus();
         _nearestRegion = newNearestRegion;
+        MapMenuController.FadeTeleportText(_nearestRegion);
         _nearestRegion?.MapNode().GainFocus();
     }
 
@@ -180,48 +174,15 @@ public class MapMovementController : MonoBehaviour, IInputListener
                 _pressed = true;
                 _direction.y += direction;
                 break;
-            case InputAxis.Menu:
-                if (!MapMenuController.IsReturningFromCombat && !TutorialManager.IsTutorialVisible()) ReturnToGame();
-                break;
-            case InputAxis.Fire:
-                TravelToRegion();
-                break;
-            case InputAxis.Mouse:
-                TravelToRegion();
-                break;
+            default:
+                return;
         }
 
         ClampDirection();
         CurrentSpeed = PanSpeed;
     }
 
-    private bool CanAffordToTravel()
-    {
-        int gritCost = _nearestRegion.MapNode().GetGritCost();
-        bool canAfford = CharacterManager.SelectedCharacter.CanAffordTravel(gritCost);
-        bool travellingToGate = _nearestRegion.GetRegionType() == RegionType.Gate;
-        bool canAffordToTravel = canAfford || travellingToGate;
-        return canAffordToTravel;
-    }
-
-    private void TravelToRegion()
-    {
-        if (_nearestRegion == null) return;
-        if (!CanAffordToTravel()) return;
-        if (TutorialManager.IsTutorialVisible()) return;
-        Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
-        travelAction.TravelTo(_nearestRegion, _nearestRegion.MapNode().GetDistance());
-        MapMenuController.IsReturningFromCombat = false;
-        ReturnToGame();
-    }
-
-    public static void ReturnToGame()
-    {
-        MapMenuController.FlashCloseButton();
-        MenuStateMachine.ShowMenu("Game Menu");
-        InputHandler.SetCurrentListener(null);
-        _visible = false;
-    }
+    public static Region GetNearestRegion() => _nearestRegion;
 
     public void OnInputUp(InputAxis axis)
     {
