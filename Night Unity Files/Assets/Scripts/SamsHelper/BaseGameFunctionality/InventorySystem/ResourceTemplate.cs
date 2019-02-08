@@ -34,11 +34,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private class DropRate
         {
             private readonly float _drMin, _dr;
-            public readonly bool CanDrop;
 
             public DropRate(ref float drCur, float drDiff)
             {
-                CanDrop = drDiff != 0;
                 _drMin = drCur;
                 _dr = _drMin + drDiff;
                 drCur = _dr;
@@ -50,7 +48,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             }
         }
 
-        public static ResourceTemplate StringToTemplate(string templateString)
+        private static ResourceTemplate StringToTemplate(string templateString)
         {
             return AllResources.FirstOrDefault(t => t.Name == templateString);
         }

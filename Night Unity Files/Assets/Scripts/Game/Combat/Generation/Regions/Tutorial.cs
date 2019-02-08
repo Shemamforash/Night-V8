@@ -47,7 +47,7 @@ namespace Game.Combat.Generation
 
         private void CreateFoodAndWater()
         {
-            ResourceItem item = ResourceTemplate.Create("Meat");
+            ResourceItem item = ResourceTemplate.Create("Cooked Meat");
             Vector2 position = AdvancedMaths.RandomDirection() * Random.Range(2f, 5f);
             Loot loot = new Loot(position);
             CombatManager.GetCurrentRegion().Containers.Add(loot);
@@ -190,7 +190,7 @@ namespace Game.Combat.Generation
             while (!UiGearMenuController.IsOpen()) yield return null;
             UiGearMenuController.SetCloseAllowed(false);
             EventTextController.CloseOverrideText();
-            while (Inventory.GetResourceQuantity("Water") > 0 && Inventory.GetResourceQuantity("Meat") > 0) yield return null;
+            while (Inventory.GetResourceQuantity("Water") > 0 && Inventory.GetResourceQuantity("Cooked Meat") > 0) yield return null;
             UiGearMenuController.SetCloseAllowed(true);
             while (UiGearMenuController.IsOpen()) yield return null;
             UiGearMenuController.SetOpenAllowed(false);

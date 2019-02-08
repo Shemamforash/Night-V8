@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
@@ -26,7 +27,17 @@ public class CacheButtonController : MonoBehaviour
         _gateAudio = gateObject.GetComponent<AudioSource>();
         _gateAudio.volume = 0;
         PolygonCollider2D collider = gateObject.GetComponent<PolygonCollider2D>();
-        Polygon b = new Polygon(collider.points.ToList(), Vector2.zero);
+        List<Vector2> points = collider.points.ToList();
+        float rotation = collider.transform.rotation.eulerAngles.z;
+        for (int i = 0; i < points.Count; ++i)
+        {
+            Vector2 position = points[i];
+            position = AdvancedMaths.RotatePoint(position, rotation, Vector2.zero, false);
+            position += (Vector2) collider.transform.position;
+            points[i] = position;
+        }
+
+        Polygon b = new Polygon(points, Vector2.zero);
         WorldGrid.AddBarrier(b);
         _spawnGlow = gateObject.FindChildWithName<SpriteRenderer>("Glow");
         _gateParticles = gateObject.FindChildWithName<ParticleSystem>("Particle System");
@@ -97,6 +108,7 @@ public class CacheButtonController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        if (_disabled) return;
         CacheController.Instance().TryActivateButton(this);
     }
 }

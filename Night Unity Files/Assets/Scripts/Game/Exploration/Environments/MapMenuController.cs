@@ -21,8 +21,8 @@ namespace Game.Exploration.Environment
 {
     public class MapMenuController : Menu, IInputListener
     {
-        private static List<Region> route;
-        public static Transform MapTransform;
+        private List<Region> route;
+        public Transform MapTransform;
 
         private readonly List<Tuple<Region, Region>> _allRoutes = new List<Tuple<Region, Region>>();
         private readonly Queue<Tuple<Region, Region>> _undrawnRoutes = new Queue<Tuple<Region, Region>>();
@@ -31,11 +31,13 @@ namespace Game.Exploration.Environment
         private bool _isActive;
         private readonly List<RingDrawer> _rings = new List<RingDrawer>();
         public static bool IsReturningFromCombat;
-        private static UIAttributeMarkerController _gritMarker, _willMarker;
-        private static EnhancedText _teleportText;
+        private UIAttributeMarkerController _gritMarker, _willMarker;
+        private EnhancedText _teleportText;
         private bool _seenTutorial;
-        private static Tweener _teleportTween;
-        private static bool _canTeleport;
+        private Tweener _teleportTween;
+        private bool _canTeleport;
+        private static MapMenuController _instance;
+        private Region _nearestRegion;
 
         public override void Awake()
         {
@@ -45,8 +47,14 @@ namespace Game.Exploration.Environment
             _teleportText = gameObject.FindChildWithName<EnhancedText>("Teleport");
             _nextRouteTime = 2f / MapGenerator.Regions().Count;
             MapTransform = GameObject.Find("Nodes").transform;
+            _instance = this;
             CreateMapRings();
             CreateRouteLinks();
+        }
+
+        private void OnDestroy()
+        {
+            _instance = null;
         }
 
         private void ReturnFromCombat()
@@ -64,7 +72,7 @@ namespace Game.Exploration.Environment
             UpdateWill();
             ResourcesUiController.Hide();
             MapGenerator.Regions().ForEach(n => { n.ShowNode(); });
-            MapMovementController.Enter();
+            MapMovementController.Instance().Enter();
             AudioController.FadeInMusicMuffle();
             InputHandler.RegisterInputListener(this);
             ShowMapTutorial();
@@ -76,37 +84,43 @@ namespace Game.Exploration.Environment
             _rings.ForEach(r => r.TweenColour(Color.white, UiAppearanceController.InvisibleColour, 0.5f));
             _isActive = false;
             MapGenerator.Regions().ForEach(n => n.HideNode());
-            MapMovementController.Exit();
+            MapMovementController.Instance().Exit();
             FadeAndDieTrailRenderer.ForceFadeAll();
             AudioController.FadeOutMusicMuffle();
             InputHandler.UnregisterInputListener(this);
             ResourcesUiController.Show();
         }
 
+        public override void PreEnter()
+        {
+            UpdateGrit(0);
+            UpdateWill();
+        }
+
         private void UpdateTeleportText()
         {
-            int stoneQuantity = Inventory.GetResourceQuantity("Gate Stone");
+            int stoneQuantity = Inventory.GetResourceQuantity("Mystic Shard");
             _canTeleport = stoneQuantity > 0;
-            string teleportString = "No Gate Stones";
-            if (_canTeleport) teleportString = "Teleport [T] (Consumes 1 Gate Stone)";
+            string teleportString = "No Mystic Shards";
+            if (_canTeleport) teleportString = "Teleport [T] (Consumes 1 Mystics Shard)";
             _teleportText.SetText(teleportString);
         }
 
         private void TryTeleport()
         {
-            Region region = MapMovementController.GetNearestRegion();
+            Region region = _nearestRegion;
             if (region == null) return;
             if (!_canTeleport) return;
-            Inventory.DecrementResource("Gate Stone", 1);
+            Inventory.DecrementResource("Mystic Shard", 1);
             if (region.GetRegionType() == RegionType.Gate) CharacterManager.SelectedCharacter.TravelAction.ReturnToHomeInstant();
             else CharacterManager.SelectedCharacter.TravelAction.TravelToInstant(region);
             IsReturningFromCombat = false;
         }
 
-        public static void FadeTeleportText(Region region)
+        public void FadeTeleportText()
         {
             _teleportTween?.Kill();
-            float target = region == null ? 0f : 1f;
+            float target = _nearestRegion == null ? 0f : 1f;
             _teleportTween = _teleportText.GetText().DOFade(target, 1f);
         }
 
@@ -238,33 +252,32 @@ namespace Game.Exploration.Environment
             DrawTargetRoute();
         }
 
-        public static void SetRoute(Region to)
+        public void SetRoute(Region to)
         {
             route = RoutePlotter.RouteBetween(CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion(), to);
         }
 
         private void TravelToRegion()
         {
-            Region region = MapMovementController.GetNearestRegion();
-            if (region == null) return;
-            if (!CanAffordToTravel(region)) return;
+            if (_nearestRegion == null) return;
+            if (!CanAffordToTravel()) return;
             if (TutorialManager.IsTutorialVisible()) return;
             Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
-            travelAction.TravelTo(region, region.MapNode().GetDistance());
+            travelAction.TravelTo(_nearestRegion, _nearestRegion.MapNode().GetDistance());
             IsReturningFromCombat = false;
             MenuStateMachine.ShowMenu("Game Menu");
         }
 
-        private static bool CanAffordToTravel(Region region)
+        private bool CanAffordToTravel()
         {
-            int gritCost = region.MapNode().GetGritCost();
+            int gritCost = _nearestRegion.MapNode().GetGritCost();
             bool canAfford = CharacterManager.SelectedCharacter.CanAffordTravel(gritCost);
-            bool travellingToGate = region.GetRegionType() == RegionType.Gate;
+            bool travellingToGate = _nearestRegion.GetRegionType() == RegionType.Gate;
             bool canAffordToTravel = canAfford || travellingToGate;
             return canAffordToTravel;
         }
 
-        private static void TryRestoreGrit()
+        private void TryRestoreGrit()
         {
             CharacterAttribute grit = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Grit);
             CharacterAttribute will = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Will);
@@ -276,7 +289,7 @@ namespace Game.Exploration.Environment
             MapGenerator.Regions().ForEach(n => { n.ShowNode(); });
         }
 
-        public static void UpdateGrit(int gritCost)
+        public void UpdateGrit(int gritCost)
         {
             CharacterAttribute grit = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Grit);
             _gritMarker.SetValue(grit.Max, grit.CurrentValue(), -gritCost);
@@ -318,6 +331,13 @@ namespace Game.Exploration.Environment
 
         public void OnDoubleTap(InputAxis axis, float direction)
         {
+        }
+
+        public static MapMenuController Instance() => _instance;
+
+        public void SetNearestRegion(Region nearestRegion)
+        {
+            _nearestRegion = nearestRegion;
         }
     }
 }

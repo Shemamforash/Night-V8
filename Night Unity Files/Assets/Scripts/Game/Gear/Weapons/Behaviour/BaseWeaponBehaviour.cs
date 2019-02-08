@@ -89,8 +89,6 @@ namespace Game.Gear.Weapons
         {
             float durabilityModifier = 1;
             if (amount < 0) amount = AmmoInMagazine;
-            PlayerCombat player = Origin as PlayerCombat;
-            if (player != null) durabilityModifier += player.Player.Attributes.DurabilityLossModifier;
             WeaponAttributes.DecreaseDurability(amount, durabilityModifier);
             AmmoInMagazine -= amount;
             if (AmmoInMagazine < 0) throw new Exceptions.MoreAmmoConsumedThanAvailableException();

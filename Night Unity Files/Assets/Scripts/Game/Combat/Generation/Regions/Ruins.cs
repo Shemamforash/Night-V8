@@ -207,7 +207,6 @@ namespace Game.Combat.Generation
 
         protected override void Generate()
         {
-            PlaceShrine();
             PlaceWalls();
             PlaceItems();
             GenerateTinyRocks(Random.Range(50, 125));

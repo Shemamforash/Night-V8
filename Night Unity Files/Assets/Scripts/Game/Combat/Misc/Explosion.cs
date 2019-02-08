@@ -36,7 +36,7 @@ namespace Game.Combat.Misc
         private bool _decay, _incendiary, _sicken;
         private List<CanTakeDamage> _targetsToIgnore;
         private int BaseDamage = 25;
-        private static Collider2D[] _colliders = new Collider2D[200]; 
+        private static Collider2D[] _colliders = new Collider2D[200];
 
         public void Awake()
         {
@@ -47,7 +47,6 @@ namespace Game.Combat.Misc
             _light = gameObject.FindChildWithName<FastLight>("Light");
             _spriteObject = gameObject.FindChildWithName("Sprites");
             _audioSource = gameObject.FindChildWithName<AudioSource>("Audio");
-            _audioSource.clip = AudioClips.StandardExplosion;
             _explosionSprite.color = UiAppearanceController.InvisibleColour;
             _light.Colour = UiAppearanceController.InvisibleColour;
         }
@@ -86,6 +85,7 @@ namespace Game.Combat.Misc
 
         private void Initialise(Vector2 position, float radius = 1)
         {
+            _audioSource.clip = AudioClips.StandardExplosions.RandomElement();
             transform.position = position;
             _spriteObject.transform.localScale = Vector2.one * radius;
             _explosionRadius = radius;
@@ -171,7 +171,7 @@ namespace Game.Combat.Misc
                 {
                     if (!emitted)
                     {
-                        _audioSource.volume = Random.Range(0.5f, 0.6f);
+                        _audioSource.volume = Random.Range(0.9f, 1f);
                         _audioSource.pitch = Random.Range(0.9f, 1.1f);
                         _audioSource.Play();
                         AddConditions();

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
+using DefaultNamespace;
 using DG.Tweening;
 using Facilitating.Persistence;
 using Facilitating.UIControllers;
@@ -8,6 +9,7 @@ using Game.Characters;
 using Game.Combat.Player;
 using Game.Global;
 using Game.Global.Tutorial;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -124,12 +126,32 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         UiGearMenuController.PlayAudio(AudioClips.Craft);
     }
 
-    private class RecipeElement : BasicListElement
+    private class RecipeElement : ListElement
     {
+        private EnhancedText LeftText;
+        private EnhancedText RightText;
+
+        protected override void SetVisible(bool visible)
+        {
+            LeftText.gameObject.SetActive(visible);
+            RightText.gameObject.SetActive(visible);
+        }
+
+        protected override void CacheUiElements(Transform transform)
+        {
+            LeftText = transform.gameObject.FindChildWithName<EnhancedText>("Type");
+            RightText = transform.gameObject.FindChildWithName<EnhancedText>("Dps");
+        }
+
+        public override void SetColour(Color c)
+        {
+            LeftText.SetColor(c);
+            RightText.SetColor(c);
+        }
+
         protected override void UpdateCentreItemEmpty()
         {
             LeftText.SetText("");
-            CentreText.SetText("No Recipes Unlocked");
             RightText.SetText("");
         }
 
@@ -139,19 +161,18 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
             string productString = recipe.ProductQuantity > 1 ? recipe.Name + " x" + recipe.ProductQuantity : recipe.Name;
             if (recipe.RecipeType == RecipeType.Building) productString += " (Built " + recipe.Built() + ")";
             LeftText.SetText(productString);
+            string ingredient1String = GetIngredientString(recipe.Ingredient1, recipe.Ingredient1Quantity);
+            string ingredient2String = GetIngredientString(recipe.Ingredient2, recipe.Ingredient2Quantity);
+            string fullString = ingredient1String;
+            if (ingredient2String != "") fullString += "  -  " + ingredient2String;
+            RightText.SetText(fullString);
+        }
 
-            bool canAfford = recipe.CanCraft();
-            bool canCraft = CharacterManager.SelectedCharacter.TravelAction.AtHome();
-            string affordString = "";
-            if (!canCraft) affordString += "Cannot Craft When Travelling";
-            else if (!canAfford) affordString += "Insufficient Resources";
-            CentreText.SetText(affordString);
-
-            string ingredient1String = recipe.Ingredient1 + " x" + recipe.Ingredient1Quantity;
-            if (recipe.Ingredient1 == "None") ingredient1String = "";
-            string ingredient2String = ", " + recipe.Ingredient2 + " x" + recipe.Ingredient2Quantity;
-            if (recipe.Ingredient2 == "None") ingredient2String = "";
-            RightText.SetText(ingredient1String + ingredient2String);
+        private string GetIngredientString(string ingredientName, int requiredQuantity)
+        {
+            if (ingredientName == "None") return "";
+            int currentQuantity = Inventory.GetResourceQuantity(ingredientName);
+            return currentQuantity + "/" + requiredQuantity + " " + ingredientName;
         }
     }
 

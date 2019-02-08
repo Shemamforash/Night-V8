@@ -27,7 +27,6 @@ namespace Game.Combat.Generation
 
         protected override void Generate()
         {
-            PlaceShrine();
             GenerateMap();
             PlaceItems();
         }

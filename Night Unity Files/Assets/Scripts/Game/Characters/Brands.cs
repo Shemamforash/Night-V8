@@ -11,9 +11,6 @@ namespace Game.Characters.Brands
             Player.Attributes.ChangeFettleMax(1);
         }
 
-        protected override void OnFail()
-        {
-        }
 
         protected override string GetProgressSubstring()
         {
@@ -32,9 +29,6 @@ namespace Game.Characters.Brands
             Player.Attributes.ChangeGritMax(1);
         }
 
-        protected override void OnFail()
-        {
-        }
 
         protected override string GetProgressSubstring()
         {
@@ -53,9 +47,6 @@ namespace Game.Characters.Brands
             Player.Attributes.ChangeFocusMax(1);
         }
 
-        protected override void OnFail()
-        {
-        }
 
         protected override string GetProgressSubstring()
         {
@@ -74,9 +65,6 @@ namespace Game.Characters.Brands
             Player.Attributes.ChangeWillMax(1);
         }
 
-        protected override void OnFail()
-        {
-        }
 
         protected override string GetProgressSubstring()
         {
@@ -93,11 +81,6 @@ namespace Game.Characters.Brands
         protected override void OnSucceed()
         {
             Player.Attributes.EssenceRecoveryModifier += SuccessModifier;
-        }
-
-        protected override void OnFail()
-        {
-            Player.Attributes.DurabilityLossModifier += FailModifier;
         }
 
         protected override string GetProgressSubstring()
@@ -117,11 +100,6 @@ namespace Game.Characters.Brands
             Player.Attributes.RallyHealthModifier += SuccessModifier;
         }
 
-        protected override void OnFail()
-        {
-            Player.Attributes.StartHealthModifier += FailModifier;
-        }
-
         protected override string GetProgressSubstring()
         {
             return "Taken " + Progress() + " damage";
@@ -137,11 +115,6 @@ namespace Game.Characters.Brands
         protected override void OnSucceed()
         {
             Player.Attributes.ClaimRegionWillGainModifier += SuccessModifier;
-        }
-
-        protected override void OnFail()
-        {
-            Player.Attributes.EnemyKillHealthLoss += FailModifier;
         }
 
         protected override string GetProgressSubstring()
@@ -161,11 +134,6 @@ namespace Game.Characters.Brands
             Player.Attributes.FreeSkillChance += SuccessModifier;
         }
 
-        protected override void OnFail()
-        {
-            Player.Attributes.SkillDisableChance += FailModifier;
-        }
-
         protected override string GetProgressSubstring()
         {
             return "Used only skills in " + Progress() + " battles";
@@ -181,11 +149,6 @@ namespace Game.Characters.Brands
         protected override void OnSucceed()
         {
             Player.Attributes.ReloadOnFatalShot = true;
-        }
-
-        protected override void OnFail()
-        {
-            Player.Attributes.ReloadFailureChance += FailModifier;
         }
 
         protected override string GetProgressSubstring()
@@ -205,11 +168,6 @@ namespace Game.Characters.Brands
             Player.Attributes.ReloadOnEmptyMag = true;
         }
 
-        protected override void OnFail()
-        {
-            Player.Attributes.ReloadFailureChance += FailModifier;
-        }
-
         protected override string GetProgressSubstring()
         {
             return "Used only bullets in " + Progress() + " battles";
@@ -225,11 +183,6 @@ namespace Game.Characters.Brands
         protected override void OnSucceed()
         {
             Player.Attributes.FireExplodeChance += SuccessModifier;
-        }
-
-        protected override void OnFail()
-        {
-            Player.Attributes.FireDamageModifier += FailModifier;
         }
 
         protected override string GetProgressSubstring()
@@ -249,11 +202,6 @@ namespace Game.Characters.Brands
             Player.Attributes.DecayExplodeChance += SuccessModifier;
         }
 
-        protected override void OnFail()
-        {
-            Player.ArmourController.SetRechargeModifier(2f);
-        }
-
         protected override string GetProgressSubstring()
         {
             return "Taken " + Progress() + " shatter damage";
@@ -269,11 +217,6 @@ namespace Game.Characters.Brands
         protected override void OnSucceed()
         {
             Player.Attributes.SpreadSickness = true;
-        }
-
-        protected override void OnFail()
-        {
-            Player.Attributes.SicknessStackModifier += FailModifier;
         }
 
         protected override string GetProgressSubstring()
@@ -293,11 +236,6 @@ namespace Game.Characters.Brands
             Player.Attributes.ResourceFindModifier += SuccessModifier;
         }
 
-        protected override void OnFail()
-        {
-            Player.Attributes.ResourceFindModifier += FailModifier;
-        }
-
         protected override string GetProgressSubstring()
         {
             return "Found " + Progress() + " resources";
@@ -315,11 +253,6 @@ namespace Game.Characters.Brands
             Player.Attributes.HungerModifier += SuccessModifier;
         }
 
-        protected override void OnFail()
-        {
-            Player.Attributes.WaterHungerModifier += FailModifier;
-        }
-
         protected override string GetProgressSubstring()
         {
             return "Found " + Progress() + " food";
@@ -335,11 +268,6 @@ namespace Game.Characters.Brands
         protected override void OnSucceed()
         {
             Player.Attributes.ThirstModifier += SuccessModifier;
-        }
-
-        protected override void OnFail()
-        {
-            Player.Attributes.FoodThirstModifier += FailModifier;
         }
 
         protected override string GetProgressSubstring()

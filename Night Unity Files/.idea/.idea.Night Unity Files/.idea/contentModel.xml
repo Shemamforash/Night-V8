@@ -211,6 +211,8 @@
           </e>
           <e p="readme.txt" t="Include" />
         </e>
+        <e p="BossDeathController.cs" t="Include" />
+        <e p="CombatStoryController.cs" t="Include" />
         <e p="ConsolePro" t="Include">
           <e p="ConsoleProDebug.cs" t="Include" />
           <e p="Remote" t="Include">

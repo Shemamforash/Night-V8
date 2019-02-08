@@ -17,7 +17,6 @@ namespace Game.Gear.Armour
         private const int MaxLevel = 10;
         private const int ProtectionPerLevel = 25;
         private const float BaseRechargeTime = 5f;
-        private float _rechargeModifier = 1f;
         private float _currentRechargeTime;
         private readonly Number _currentHealth = new Number();
         private bool _justTookDamage;
@@ -64,7 +63,7 @@ namespace Game.Gear.Armour
 
         private float GetRechargeTime()
         {
-            return _rechargeModifier * BaseRechargeTime;
+            return BaseRechargeTime;
         }
 
         public bool CanAbsorbDamage()
@@ -189,11 +188,6 @@ namespace Game.Gear.Armour
         public int GetCurrentLevel()
         {
             return _currentLevel;
-        }
-
-        public void SetRechargeModifier(float modifier)
-        {
-            _rechargeModifier = modifier;
         }
     }
 }

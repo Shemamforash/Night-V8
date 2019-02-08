@@ -20,7 +20,7 @@ namespace Game.Combat.Misc
         private CanTakeDamage _target;
         public MovementController MovementController;
         private float _timeToRecoilRecovery;
-        private const float ExplosionForceModifier = 10;
+        private const float ExplosionForceModifier = 200;
 
         protected float DistanceToTarget()
         {
@@ -64,10 +64,8 @@ namespace Game.Combat.Misc
         {
             base.TakeExplosionDamage(damage, origin, radius);
             Vector2 direction = (Vector2) transform.position - origin;
-            float distance = direction.magnitude;
             direction.Normalize();
-            distance = radius - distance;
-            float force = damage * distance * ExplosionForceModifier;
+            float force = ExplosionForceModifier * radius;
             MovementController.KnockBack(direction, force);
         }
 

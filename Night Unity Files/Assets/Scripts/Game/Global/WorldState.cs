@@ -62,7 +62,7 @@ namespace Game.Global
 
         public static float GetEnemyDamageModifier() => EnemyDamageModifier;
         public static float GetEnemyHealthModifier() => EnemyHealthModifier;
-        
+
         public static void SetDifficultyEasy()
         {
             _difficultySetting = DifficultySetting.Easy;
@@ -112,6 +112,8 @@ namespace Game.Global
             _difficultySetting = (DifficultySetting) worldStateValues.IntFromNode("DifficultySetting");
             SetDifficultyModifiers();
             Inventory.Load(doc);
+            Building.LoadBuildings(doc);
+            Recipe.Load(doc);
             MapGenerator.Load(doc);
             CharacterManager.Load(doc);
             WeatherManager.Load(doc);
@@ -137,6 +139,8 @@ namespace Game.Global
             worldStateValues.CreateChild("RealTime", System.DateTime.Now.ToString("MMMM dd '-' hh:mm tt"));
             worldStateValues.CreateChild("DifficultySetting", (int) _difficultySetting);
             Inventory.Save(doc);
+            Building.SaveBuildings(doc);
+            Recipe.Save(doc);
             CharacterManager.Save(doc);
             MapGenerator.Save(doc);
             WeatherManager.Save(doc);
@@ -301,11 +305,11 @@ namespace Game.Global
 
         private static void HourPasses()
         {
-            Campfire.Die();
             Inventory.UpdateBuildings();
             ++_timeAtLastSave;
             if (_timeAtLastSave % 12 == 0) WorldEventManager.SuggestSave();
-            if (Hours != 12 && Hours != 24) return;
+            bool increaseDifficulty = Hours == 14 || Hours == 22 || Hours == 6;
+            if (!increaseDifficulty) return;
             ++_difficulty;
             SaveIconController.AutoSave();
         }

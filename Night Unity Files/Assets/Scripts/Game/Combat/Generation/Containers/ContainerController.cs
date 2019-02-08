@@ -36,6 +36,7 @@ public abstract class ContainerController
         ContainerBehaviour cb = container.GetComponent<ContainerBehaviour>();
         cb.SetContainerController(this);
         if (autoReveal) cb.Reveal();
+        if (Item is GearItem) cb.HideOutline();
         return cb;
     }
 

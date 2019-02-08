@@ -53,7 +53,7 @@ namespace Game.Combat.Enemies.Nightmares
                 _rigidbody2D.AddForce(steeringForce);
                 _rigidbody2D.velocity = Vector2.ClampMagnitude(_rigidbody2D.velocity, MaxVelocity);
                 _duration -= Time.deltaTime;
-                if (Vector2.Distance(transform.position, targetPosition) < 0.3f) break;
+                if (Vector2.Distance(transform.position, targetPosition) < 0.2f) break;
                 yield return null;
             }
 

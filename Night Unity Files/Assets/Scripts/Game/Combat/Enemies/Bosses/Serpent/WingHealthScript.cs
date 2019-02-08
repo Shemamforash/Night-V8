@@ -32,7 +32,6 @@ public class WingHealthScript : BossSectionHealthController
     public override void Kill()
     {
         base.Kill();
-        CombatManager.SpawnEnemy(EnemyType.Ghoul, transform.position);
-        if (Helper.RollDie(0, 2)) CombatManager.SpawnEnemy(EnemyType.Ghoul, transform.position);
+        CombatManager.SpawnEnemy(Helper.RollDie(0, 3) ? EnemyType.Ghast : EnemyType.Ghoul, transform.position);
     }
 }

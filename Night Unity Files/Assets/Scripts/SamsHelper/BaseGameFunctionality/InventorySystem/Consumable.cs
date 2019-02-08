@@ -74,7 +74,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public void Consume()
         {
             if (!CanConsume()) return;
-            if (Template.Name == "Gate Stone")
+            if (Template.Name == "Mystic Shard")
             {
                 Inventory.DecrementResource(Template.Name, 1);
                 _player.TravelAction.ReturnToHomeInstant();
@@ -90,7 +90,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public bool CanConsume()
         {
             _player = CharacterManager.SelectedCharacter;
-            if (Template.Name == "Gate Stone")
+            if (Template.Name == "Mystic Shard")
             {
                 return !_player.TravelAction.AtHome();
             }

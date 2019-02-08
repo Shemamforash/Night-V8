@@ -91,23 +91,6 @@ namespace Facilitating
             _hourCounter = 0;
         }
 
-        private static void TryAddFuel()
-        {
-            ++_hourCounter;
-            if (_hourCounter != WorldState.MinutesPerHour * 2) return;
-            CharacterManager.Characters.ForEach(c =>
-            {
-                if (!c.TravelAction.AtHome()) return;
-                CharacterAttributes attributes = c.Attributes;
-                attributes.Get(AttributeType.Grit).Increment();
-                attributes.Get(AttributeType.Focus).Increment();
-            });
-            _hourCounter = 0;
-            if (Inventory.GetResourceQuantity("Fuel") == 0) return;
-            Inventory.DecrementResource("Fuel", 1);
-            _fireLevel = 1;
-        }
-
         public static void Die()
         {
             if (_tending) return;
@@ -117,8 +100,7 @@ namespace Facilitating
                 return;
             }
 
-            TryAddFuel();
-            _fireLevel -= 0.01f;
+            _fireLevel -= 0.02f;
             if (_fireLevel > 0) return;
             _crackling.FadeOut(1f);
             _fireLevel = 0;
@@ -142,6 +124,5 @@ namespace Facilitating
             _hourCounter = root.IntFromNode("HourCounter");
             _fireLevel = root.FloatFromNode("FireLevel");
         }
-        
     }
 }

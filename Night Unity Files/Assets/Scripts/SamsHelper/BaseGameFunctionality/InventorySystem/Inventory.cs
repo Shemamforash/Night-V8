@@ -91,7 +91,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 Move(Accessory.LoadAccessory(accessoryNode));
             foreach (XmlNode inscriptionNode in itemNode.SelectSingleNode("Inscriptions").ChildNodes)
                 Move(Inscription.LoadInscription(inscriptionNode));
-            Building.LoadBuildings(inventoryNode);
         }
 
         public static void Save(XmlNode root)
@@ -103,7 +102,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             SaveItems(itemNode, "Weapons", _weapons);
             SaveItems(itemNode, "Accessories", _accessories);
             SaveItems(itemNode, "Inscriptions", Inscriptions);
-            Building.SaveBuildings(root);
         }
 
         private static void SaveItems<T>(XmlNode root, string itemType, List<T> items) where T : GearItem

@@ -10,11 +10,13 @@ namespace Facilitating.UIControllers
     {
         private Save _save;
         private EnhancedText _realTime, _gameInfo;
+        private EnhancedButton _button;
 
         public void Awake()
         {
             _realTime = gameObject.FindChildWithName<EnhancedText>("Real Time");
             _gameInfo = gameObject.FindChildWithName<EnhancedText>("Game Info");
+            _button = GetComponent<EnhancedButton>();
         }
 
         public void SetSave(Save save)
@@ -23,13 +25,13 @@ namespace Facilitating.UIControllers
             if (!_save.Valid())
             {
                 GetComponent<CanvasGroup>().alpha = 0.3f;
-                EnhancedButton enhancedButton = GetComponent<EnhancedButton>();
-                if (enhancedButton == null) gameObject.PrintHierarchy();
-                Button button = enhancedButton.Button();
-                Destroy(enhancedButton);
-                Destroy(button);
+                Button b = _button.Button();
+                Destroy(_button);
+                Destroy(b);
                 Destroy(gameObject.FindChildWithName("Border(Clone)"));
             }
+
+            if (_save.IsMostRecent()) _button.Select();
 
             _realTime.SetText(_save.GetRealTime());
             _gameInfo.SetText(_save.GetGameInfo());

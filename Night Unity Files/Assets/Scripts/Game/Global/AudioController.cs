@@ -205,7 +205,7 @@ namespace Game.Global
             _weatherTween = _audioMixer.DOSetFloat("WeatherVolume", 0, 1).SetUpdate(UpdateType.Normal, true);
         }
 
-        private static Tweener _musicTween;
+        private static Tweener _musicTween, _combatTween;
 
         public static void FadeInMusicMuffle()
         {
@@ -219,6 +219,21 @@ namespace Game.Global
             if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
             _musicTween?.Kill();
             _musicTween = _audioMixer.DOSetFloat("MusicLowPassCutoff", 22000, 0.5f).SetUpdate(UpdateType.Normal, true);
+        }
+
+        public static void FadeInCombat()
+        {
+            if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
+            _combatTween?.Kill();
+            _combatTween = _audioMixer.DOSetFloat("CombatVolume", 0, 0.5f).SetUpdate(UpdateType.Normal, true);
+        }
+
+        public static void FadeOutCombat()
+        {
+            if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
+            _combatTween?.Kill();
+            _combatTween = _audioMixer.DOSetFloat("CombatVolume", -80f, 0.5f).SetUpdate(UpdateType.Normal, true);
+
         }
 
         public static void SetMasterVolume(float volume)

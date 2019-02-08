@@ -84,10 +84,24 @@ namespace Game.Global
             return LoreStories[17];
         }
 
-        public static JournalEntry GetEntry()
+        public static JournalEntry GetStoryEntry()
         {
             ReadJournals();
             EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
+            List<JournalEntry> wandererEntries = WandererStories[currentEnvironment];
+            List<JournalEntry> dreamEntries = DreamStories[currentEnvironment];
+            List<JournalEntry> validEntries = new List<JournalEntry>();
+            validEntries.AddRange(wandererEntries.FindAll(j => j._locked));
+            validEntries.AddRange(dreamEntries.FindAll(j => j._locked));
+            if (validEntries.Count == 0) return null;
+            validEntries.Shuffle();
+            validEntries.Sort((a, b) => a._partNumber.CompareTo(b._partNumber));
+            return validEntries[0];
+        }
+
+        public static JournalEntry GetLoreEntry()
+        {
+            ReadJournals();
             List<JournalEntry> characterEntries = new List<JournalEntry>();
             CharacterManager.Characters.ForEach(c =>
             {
@@ -96,20 +110,14 @@ namespace Game.Global
                 characterEntries.AddRange(CharacterStories[characterClass]);
             });
 
-            List<JournalEntry> wandererEntries = WandererStories[currentEnvironment];
-            List<JournalEntry> dreamEntries = DreamStories[currentEnvironment];
             List<JournalEntry> validEntries = new List<JournalEntry>();
-            validEntries.AddRange(characterEntries);
-            validEntries.AddRange(wandererEntries);
-            validEntries.AddRange(dreamEntries);
-            validEntries.RemoveAll(j => !j._locked);
+            validEntries.AddRange(characterEntries.FindAll(j => j._locked));
             if (validEntries.Count == 0)
             {
                 List<int> keys = LoreStories.Keys.ToList();
-                keys.ForEach(k => validEntries.AddRange(LoreStories[k]));
+                keys.ForEach(k => validEntries.AddRange(LoreStories[k].FindAll(j => j._locked)));
             }
 
-            validEntries.RemoveAll(j => !j._locked);
             if (validEntries.Count == 0) return null;
             validEntries.Shuffle();
             validEntries.Sort((a, b) => a._partNumber.CompareTo(b._partNumber));

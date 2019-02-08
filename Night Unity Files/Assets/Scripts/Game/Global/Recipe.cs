@@ -2,10 +2,8 @@
 using System.Linq;
 using System.Xml;
 using Facilitating;
+using Facilitating.Persistence;
 using Game.Exploration.Environment;
-using Game.Gear;
-using Game.Gear.Armour;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -15,17 +13,12 @@ namespace Game.Global
 {
     public class Recipe
     {
-        public readonly string Ingredient1;
-        public readonly string Ingredient2;
-        public readonly int Ingredient1Quantity;
-        public readonly int Ingredient2Quantity;
         private static readonly List<Recipe> _recipes = new List<Recipe>();
         private static bool _loaded;
-        public readonly string Name;
-        public readonly int ProductQuantity;
-        private readonly bool _requiresFire;
+        private static int _craftingLevel;
+        public readonly string Ingredient1, Ingredient2, Name;
+        public readonly int Ingredient1Quantity, Ingredient2Quantity, ProductQuantity;
         public readonly RecipeType RecipeType;
-        private bool _unlocked;
         private readonly int _levelNo;
 
         private Recipe(XmlNode recipeNode)
@@ -36,18 +29,20 @@ namespace Game.Global
             Ingredient2Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
             ProductQuantity = recipeNode.IntFromNode("ProductQuantity");
             Name = recipeNode.StringFromNode("ProductName");
-            _requiresFire = Ingredient1 == "Fire" || Ingredient2 == "Fire";
             string recipeTypeString = recipeNode.StringFromNode("RecipeType");
             switch (recipeTypeString)
             {
                 case "BUILDING":
                     RecipeType = RecipeType.Building;
                     break;
-                case "OTHER":
-                    RecipeType = RecipeType.Other;
+                case "FIRE":
+                    RecipeType = RecipeType.Fire;
                     break;
                 case "RESOURCE":
                     RecipeType = RecipeType.Resource;
+                    break;
+                case "UPGRADE":
+                    RecipeType = RecipeType.Upgrade;
                     break;
                 default:
                     Debug.Log(recipeTypeString);
@@ -57,9 +52,18 @@ namespace Game.Global
             _levelNo = recipeNode.IntFromNode("LevelNo");
         }
 
+        public static void Save(XmlNode doc)
+        {
+            doc.CreateChild("CraftingLevel", _craftingLevel);
+        }
+
+        public static void Load(XmlNode doc)
+        {
+            _craftingLevel = doc.IntFromNode("CraftingLevel");
+        }
+
         public bool CanCraft()
         {
-            if (_requiresFire && !Campfire.IsLit()) return false;
             float ingredient1OwnedQuantity = Inventory.GetResourceQuantity(Ingredient1);
             if (ingredient1OwnedQuantity < Ingredient1Quantity) return false;
             if (Ingredient2 == "None") return true;
@@ -70,7 +74,6 @@ namespace Game.Global
         public void ConsumeResources()
         {
             Assert.IsTrue(CanCraft());
-            if (!CanCraft()) return;
             Inventory.DecrementResource(Ingredient1, Ingredient1Quantity);
             if (Ingredient2 != "None") Inventory.DecrementResource(Ingredient2, Ingredient2Quantity);
         }
@@ -100,11 +103,6 @@ namespace Game.Global
             }
         }
 
-        private void CraftOther()
-        {
-            Assert.IsTrue(Name == "Fire");
-        }
-
         public void Craft()
         {
             switch (RecipeType)
@@ -115,29 +113,28 @@ namespace Game.Global
                 case RecipeType.Resource:
                     Inventory.IncrementResource(Name, ProductQuantity);
                     break;
-                case RecipeType.Other:
-                    CraftOther();
+                case RecipeType.Fire:
+                    break;
+                case RecipeType.Upgrade:
+                    ++_craftingLevel;
                     break;
             }
         }
 
         private bool Available()
         {
-            if (_unlocked) return true;
-            _unlocked = _levelNo <= (int) EnvironmentManager.CurrentEnvironmentType();
-            return _unlocked;
+            bool validLevel = _levelNo <= (int) EnvironmentManager.CurrentEnvironmentType();
+            if (!validLevel) return false;
+            if (RecipeType == RecipeType.Fire) return true;
+            if (!Campfire.IsLit()) return false;
+            if (RecipeType == RecipeType.Upgrade) return _craftingLevel < _levelNo;
+            return _craftingLevel >= _levelNo;
         }
 
         public static List<Recipe> Recipes()
         {
             LoadRecipes();
-            List<Recipe> availableRecipes = new List<Recipe>();
-            _recipes.ForEach(r =>
-            {
-                if (!r.Available()) return;
-                availableRecipes.Add(r);
-            });
-            return availableRecipes;
+            return _recipes.FindAll(r => r.Available());
         }
 
         public static bool RecipesAvailable()

@@ -29,23 +29,14 @@ namespace Game.Characters
         private static readonly List<AttributeType> _attributeTypes = new List<AttributeType>();
 
         public float EssenceRecoveryModifier;
-        public float DurabilityLossModifier;
         public float RallyHealthModifier;
-        public float StartHealthModifier;
         public float ClaimRegionWillGainModifier;
-        public float EnemyKillHealthLoss;
-        public float ReloadFailureChance;
         public float ResourceFindModifier;
         public float HungerModifier;
         public float ThirstModifier;
-        public float FoodThirstModifier;
-        public float WaterHungerModifier;
         public float FireExplodeChance;
-        public float FireDamageModifier;
         public float DecayExplodeChance;
-        public float SicknessStackModifier;
         public float FreeSkillChance;
-        public float SkillDisableChance;
         public bool ReloadOnEmptyMag;
         public bool ReloadOnFatalShot;
         public bool SpreadSickness;
@@ -138,7 +129,6 @@ namespace Game.Characters
         public int CalculateInitialHealth()
         {
             int startingHealth = (int) (Val(AttributeType.Fettle) * PlayerHealthChunkSize);
-            startingHealth = Mathf.FloorToInt(startingHealth * (1f - StartHealthModifier));
             return startingHealth;
         }
 
@@ -245,17 +235,13 @@ namespace Game.Characters
         public void Drink(int thirstRecovery)
         {
             int thirstLoss = (int) ThirstModifier + thirstRecovery;
-            int hungerGain = (int) WaterHungerModifier;
             Get(AttributeType.Thirst).Decrement(thirstLoss);
-            Get(AttributeType.Hunger).Increment(hungerGain);
         }
 
         public void Eat(int hungerRecovery)
         {
             int hungerLoss = (int) HungerModifier + hungerRecovery;
-            int thirstGain = (int) FoodThirstModifier;
             Get(AttributeType.Hunger).Decrement(hungerLoss);
-            Get(AttributeType.Thirst).Increment(thirstGain);
         }
 
         public void CalculateNewFettle(float health)

@@ -11,13 +11,13 @@ namespace Game.Combat.Generation
         public PolygonCollider2D Collider;
         private GameObject _barrierObject;
         private static GameObject _barrierPrefab;
-        private readonly string _barrierName;
+        public readonly string Name;
         private static Transform _barrierParent;
 
-        public Barrier(List<Vector2> vertices, string barrierName, Vector2 position, List<Barrier> barriers) : base(vertices, position)
+        public Barrier(List<Vector2> vertices, string name, Vector2 position, List<Barrier> barriers) : base(vertices, position)
         {
             if (position == Vector2.negativeInfinity) Debug.Log("wat!?");
-            _barrierName = barrierName;
+            Name = name;
             if (!WorldGrid.AddBarrier(this)) return;
             barriers.Add(this);
         }
@@ -28,11 +28,10 @@ namespace Game.Combat.Generation
             if (_barrierPrefab == null) _barrierPrefab = Resources.Load<GameObject>("Prefabs/Combat/Basic Barrier");
             if (_barrierParent == null) _barrierParent = GameObject.Find("Barriers").transform;
             WorldGrid.AddBarrier(this);
-            _barrierObject = GameObject.Instantiate(_barrierPrefab);
+            _barrierObject = GameObject.Instantiate(_barrierPrefab, _barrierParent, true);
             _barrierObject.AddComponent<BarrierBehaviour>().SetBarrier(this);
-            _barrierObject.transform.SetParent(_barrierParent);
             _barrierObject.layer = 8;
-            _barrierObject.name = _barrierName;
+            _barrierObject.name = Name;
             _barrierObject.tag = "Barrier";
             _barrierObject.transform.localScale = Vector2.one;
             _barrierObject.transform.position = Position;
@@ -75,7 +74,8 @@ namespace Game.Combat.Generation
             mesh.vertices = meshVerts;
             try
             {
-                mesh.triangles = Triangulator.Triangulate(meshVerts);
+                int[] tris = Triangulator.Triangulate(meshVerts);
+                mesh.triangles = tris;
             }
             catch
             {

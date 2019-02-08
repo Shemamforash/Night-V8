@@ -37,7 +37,6 @@ namespace SamsHelper.ReactiveUI.Elements
             if (_button.gameObject == EventSystem.current.currentSelectedGameObject) _onHoldActions.ForEach(a => a.ExecuteIfDone());
         }
 
-
         public Button Button()
         {
             if (_button == null) _button = GetComponent<Button>();
@@ -106,6 +105,7 @@ namespace SamsHelper.ReactiveUI.Elements
         }
 
         public void Select() => Button().Select();
+
 
         public bool IsEnabled() => _enabled;
 

@@ -23,6 +23,7 @@ namespace Game.Combat.Generation
         private int _barrierNumber;
         protected readonly List<Barrier> barriers = new List<Barrier>();
         private const float CacheRadius = 5.5f, ShelterRadius = 5f;
+        private float NoGoDistance = -1f;
 
         public void Initialise(Region region)
         {
@@ -33,7 +34,6 @@ namespace Game.Combat.Generation
             GenerateFreshEnvironment();
             GenerateObjects();
             GenerateEdges();
-            RemoveBlockedArea();
             WorldGrid.FinaliseGrid();
         }
 
@@ -100,12 +100,14 @@ namespace Game.Combat.Generation
             edgeCollider.points = edgePoints;
         }
 
-
         private void GenerateFreshEnvironment()
         {
             if (_region.Generated()) return;
+            NoGoDistance = GetCentreProtectedArea();
             _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(900, WorldGrid.CombatAreaWidth * 1.5f));
+            GenerateBlockedArea();
             Generate();
+            RemoveBlockedArea();
             _region.Barriers = barriers;
             WorldGrid.InitialiseGrid(_region.IsDynamic());
             _region.MarkGenerated();
@@ -155,11 +157,10 @@ namespace Game.Combat.Generation
             }
         }
 
-        protected void PlaceShrine()
+        private void GenerateBlockedArea()
         {
-            float impassableAreaWidth = GetCentreProtectedArea();
-            if (impassableAreaWidth == 0) return;
-            CreateImpassablePoint(Vector2.zero, impassableAreaWidth);
+            if (NoGoDistance == 0) return;
+            CreateImpassablePoint(Vector2.zero, NoGoDistance);
         }
 
         private void GenerateGenericRock(float radius, float radiusVariation, float smoothness, Vector2 position)
@@ -189,12 +190,18 @@ namespace Game.Combat.Generation
             new Barrier(barrierVertices, "Barrier " + GetObjectNumber(), position, barriers);
         }
 
+        protected bool IsPositionInNoGoArea(float radius, Vector2 position)
+        {
+            return position.magnitude - radius < NoGoDistance;
+        }
+
         protected Vector2? FindAndRemoveValidPosition(float radius, bool ignoreBounds = false)
         {
             for (int i = _availablePositions.Count - 1; i >= 0; --i)
             {
                 Vector2 position = _availablePositions[i];
                 if (!ignoreBounds && position.magnitude > WorldGrid.CombatMovementDistance / 2f - radius) continue;
+                if (IsPositionInNoGoArea(radius, position)) continue;
                 Cell c = WorldGrid.WorldToCellPosition(position, false);
                 if (c == null) continue;
                 if (!c.Reachable)
@@ -297,7 +304,7 @@ namespace Game.Combat.Generation
                 }
             }
 
-            JournalEntry journalEntry = JournalEntry.GetEntry();
+            JournalEntry journalEntry = JournalEntry.GetLoreEntry();
             if (!_region.ReadJournal && journalEntry != null)
                 CreateContainer<JournalSource>()?.SetEntry(journalEntry);
 

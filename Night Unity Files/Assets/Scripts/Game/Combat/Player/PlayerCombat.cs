@@ -107,20 +107,6 @@ namespace Game.Combat.Player
             _mainCamera = Camera.main;
         }
 
-        protected override int GetBurnDamage()
-        {
-            int burnDamage = base.GetBurnDamage();
-            burnDamage = (int) (burnDamage * (Player.Attributes.FireDamageModifier + 1f));
-            return burnDamage;
-        }
-
-        protected override int GetSicknessTargetTicks()
-        {
-            int sicknessTargetTicks = base.GetSicknessTargetTicks();
-            sicknessTargetTicks = (int) (sicknessTargetTicks - Player.Attributes.SicknessStackModifier);
-            return sicknessTargetTicks;
-        }
-
         private void MoveVertical(float direction = 0)
         {
             if (_useKeyboardMovement) Move(direction * transform.up);
@@ -388,12 +374,13 @@ namespace Game.Combat.Player
         {
             _currentDeathReason = DeathReason.Standard;
             base.TakeExplosionDamage(damage, direction, radius);
-            Shake(damage * 100);
+            Shake(damage * 10);
         }
 
         protected override void TakeDamage(int damage, Vector2 direction)
         {
             if (damage < 1) damage = 1;
+            Debug.Log("took damage");
             Player.BrandManager.IncreaseDamageTaken(damage);
             if (ArmourController.CanAbsorbDamage()) WeaponAudio.PlayShieldHit();
             else WeaponAudio.PlayBodyHit();
@@ -506,7 +493,7 @@ namespace Game.Combat.Player
 
         public void Shake(float dps)
         {
-            float magnitude = dps / 100f;
+            float magnitude = dps / 500f;
             if (magnitude > 1) magnitude = 1f;
             CameraShaker.Instance.ShakeOnce(magnitude, 10, 0.2f, 0.2f);
         }
@@ -524,7 +511,7 @@ namespace Game.Combat.Player
             if (_reloadingCoroutine != null) return;
             if (_weaponBehaviour.FullyLoaded()) return;
             if (!_weaponBehaviour.CanReload()) return;
-            if (_weaponBehaviour.Empty()) Player.BrandManager.IncreasePerfectReloadCount();
+            if (_weaponBehaviour.Empty() && CombatManager.GetEnemiesInRange(transform.position, 5).Count > 0) Player.BrandManager.IncreasePerfectReloadCount();
             _reloadingCoroutine = StartCoroutine(StartReloading());
             _dryFireTimer = 0f;
         }
@@ -551,6 +538,7 @@ namespace Game.Combat.Player
             UIMagazineController.EmptyMagazine();
             _reloading = true;
             WeaponAudio.StartReload(Weapon());
+            OnFireActions.Clear();
 
             float age = 0;
             while (age < duration)
@@ -561,15 +549,9 @@ namespace Game.Combat.Player
                 yield return null;
             }
 
-            float reloadFailChance = Player.Attributes.ReloadFailureChance;
-            if (Random.Range(0f, 1f) >= reloadFailChance)
-            {
-                _weaponBehaviour.Reload();
-                OnFireActions.Clear();
-                ActiveSkillController.Stop();
-                WeaponAudio.StopReload(Weapon());
-            }
-
+            _weaponBehaviour.Reload();
+            ActiveSkillController.Stop();
+            WeaponAudio.StopReload(Weapon());
             StopReloading();
         }
 
@@ -622,12 +604,6 @@ namespace Game.Combat.Player
         public void ConsumeAmmo(int amount = -1)
         {
             _weaponBehaviour.ConsumeAmmo(amount);
-        }
-
-        public void TriggerEnemyDeathEffect()
-        {
-            int damage = Mathf.FloorToInt(HealthController.GetMaxHealth() * Player.Attributes.EnemyKillHealthLoss);
-            TakeRawDamage(damage, Vector2.zero);
         }
 
         public void ReduceAdrenaline(float amount)

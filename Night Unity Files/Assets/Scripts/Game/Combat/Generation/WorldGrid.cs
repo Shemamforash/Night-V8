@@ -31,7 +31,7 @@ namespace Game.Combat.Generation
         private static int GridWidth;
         public static int CombatAreaWidth = 30;
         public static int CombatMovementDistance = CombatAreaWidth - 3;
-        public const int CellResolution = 4;
+        public const int CellResolution = 5;
         public const float CellWidth = 1f / CellResolution;
 
         public static void SetCombatAreaWidth(int width)
@@ -51,22 +51,23 @@ namespace Game.Combat.Generation
             _stopwatch = Stopwatch.StartNew();
         }
 
-        public static bool AddBarrier(Polygon barrier)
+        public static bool AddBarrier(Polygon polygon)
         {
-            HashSet<Cell> intersectingCells = GetIntersectingGridCells(barrier);
-            if (intersectingCells.Intersect(_invalidCells).Count() != 0) return false;
+            CalculateIntersectingGridCells(polygon);
+            IEnumerable<Cell> intersectingInvalidCells = _intersectingCells.Intersect(_invalidCells);
+            if (intersectingInvalidCells.Count() != 0) return false;
 
-            _outOfRangeList.RemoveAll(e => intersectingCells.Contains(e));
-            _edgePositionList.RemoveAll(e => intersectingCells.Contains(e));
+            _outOfRangeList.RemoveAll(e => _intersectingCells.Contains(e));
+            _edgePositionList.RemoveAll(e => _intersectingCells.Contains(e));
 
-            foreach (Cell cell in intersectingCells) _invalidCells.Add(cell);
+            foreach (Cell cell in _intersectingCells) _invalidCells.Add(cell);
             return true;
         }
 
         public static void RemoveBarrier(Polygon barrier)
         {
-            HashSet<Cell> intersectingCells = GetIntersectingGridCells(barrier);
-            intersectingCells.ForEach(c =>
+            CalculateIntersectingGridCells(barrier);
+            _intersectingCells.ForEach(c =>
             {
                 c.Reachable = true;
                 if (c.OutOfRange) _outOfRangeList.Add(c);
@@ -75,7 +76,7 @@ namespace Game.Combat.Generation
             });
         }
 
-        private static HashSet<Cell> GetIntersectingGridCells(Polygon p)
+        private static void CalculateIntersectingGridCells(Polygon p)
         {
             _intersectingCells.Clear();
             List<Cell> possibleCells = CellsInSquare(p.TopLeft, p.BottomRight);
@@ -98,8 +99,6 @@ namespace Game.Combat.Generation
                     _intersectingCells.Add(c);
                 });
             }
-
-            return _intersectingCells;
         }
 
         public static Polygon AddBlockingArea(Vector2 origin, float radius)

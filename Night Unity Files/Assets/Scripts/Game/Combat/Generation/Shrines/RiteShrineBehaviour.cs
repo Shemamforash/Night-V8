@@ -17,9 +17,9 @@ namespace Game.Combat.Generation.Shrines
     {
         private static GameObject _riteShrinePrefab;
         private RiteColliderBehaviour _collider1, _collider2, _collider3;
+        private List<RiteColliderBehaviour> _colliders;
         private List<Brand> _brandChoice;
         private int _targetBrand = -1;
-        private RiteColliderBehaviour _targetRiteCollider;
         private static RiteShrineBehaviour _instance;
         private Region _region;
         private bool _seenTutorial;
@@ -27,6 +27,10 @@ namespace Game.Combat.Generation.Shrines
         public void Awake()
         {
             _instance = this;
+            _collider1 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 1");
+            _collider2 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 2");
+            _collider3 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 3");
+            _colliders = new List<RiteColliderBehaviour>(new[] {_collider1, _collider2, _collider3});
         }
 
         public static RiteShrineBehaviour Instance()
@@ -51,11 +55,9 @@ namespace Game.Combat.Generation.Shrines
         private void SetRites(Region region)
         {
             _region = region;
-            int ritesRemaining = region.RitesRemaining;
-            _collider1 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 1");
-            _collider2 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 2");
-            _collider3 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 3");
-            _brandChoice = CharacterManager.SelectedCharacter.BrandManager.GetBrandChoice(ritesRemaining);
+            bool ritesRemain = region.RitesRemain;
+            _brandChoice = CharacterManager.SelectedCharacter.BrandManager.GetBrandChoice();
+            if (!ritesRemain) _brandChoice.Clear();
             if (_brandChoice.Count < 3)
             {
                 StopCandles(_collider3.transform);
@@ -87,7 +89,6 @@ namespace Game.Combat.Generation.Shrines
 
         public void EnterShrineCollider(RiteColliderBehaviour riteColliderBehaviour)
         {
-            _targetRiteCollider = riteColliderBehaviour;
             if (riteColliderBehaviour == _collider1)
                 _targetBrand = 0;
             else if (riteColliderBehaviour == _collider2)
@@ -101,11 +102,15 @@ namespace Game.Combat.Generation.Shrines
             _targetBrand = -1;
         }
 
-        private void FadeCandles(Transform riteTransform)
+        private void FadeCandles()
         {
-            riteTransform.GetComponent<ParticleSystem>().Stop();
-            foreach (ParticleSystem candle in riteTransform.Find("Candles").GetComponentsInChildren<ParticleSystem>())
-                StartCoroutine(FadeCandle(candle));
+            _colliders.ForEach(c =>
+            {
+                Transform riteTransform = c.transform;
+                riteTransform.GetComponent<ParticleSystem>().Stop();
+                foreach (ParticleSystem candle in riteTransform.Find("Candles").GetComponentsInChildren<ParticleSystem>())
+                    StartCoroutine(FadeCandle(candle));
+            });
         }
 
         private IEnumerator FadeCandle(ParticleSystem candle)
@@ -167,9 +172,8 @@ namespace Game.Combat.Generation.Shrines
         public void ActivateBrand()
         {
             Triggered = true;
-            FadeCandles(_targetRiteCollider.transform);
-            Destroy(_targetRiteCollider);
-            --_region.RitesRemaining;
+            FadeCandles();
+            _region.RitesRemain = false;
             CombatLogController.PostLog("Accepted the " + _brandChoice[_targetBrand].GetDisplayName());
             _brandChoice[_targetBrand] = null;
             _targetBrand = -1;

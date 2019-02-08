@@ -79,7 +79,7 @@ namespace Game.Characters.CharacterActions
             CurrentRegion.Discover();
             CombatManager.SetCurrentRegion(CurrentRegion);
             CharacterManager.SelectedCharacter = PlayerCharacter;
-            SceneChanger.GoToCombatScene();
+            CombatStoryController.TryEnter();
         }
 
         protected override void OnClick()
@@ -100,11 +100,12 @@ namespace Game.Characters.CharacterActions
                 return;
             }
 
-            Enter();
             _travelTime = 0;
             _inTransit = true;
             _target = target;
             SetDuration(distance * MinutesPerGritPoint);
+            ForceViewUpdate = true;
+            Enter();
         }
 
         public void TravelToInstant(Region target)

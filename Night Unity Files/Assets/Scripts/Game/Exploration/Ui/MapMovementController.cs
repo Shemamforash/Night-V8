@@ -1,31 +1,29 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
 using Game.Characters;
-using Game.Characters.CharacterActions;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
-using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
 public class MapMovementController : MonoBehaviour, IInputListener
 {
+    private static MapMovementController _instance;
     private Rigidbody2D _rigidBody2D;
     private Vector2 _direction;
     private const float PanSpeed = 40f;
     private float CurrentSpeed;
     private List<Region> _availableRegions;
-    private static Region _nearestRegion;
-    private static Region _currentRegion;
-    private static Camera MapCamera;
-    private static Player _player;
-    private static MapMovementController _instance;
+    private Region _nearestRegion;
+    private Region _currentRegion;
+    private Camera MapCamera;
+    private Player _player;
     private bool _pressed;
     private Vector3 velocity;
-    private static bool _visible;
-    private static AudioSource _audioSource;
+    private bool _visible;
+    private AudioSource _audioSource;
+    private Coroutine _currentCoroutine;
 
     public void Awake()
     {
@@ -37,19 +35,20 @@ public class MapMovementController : MonoBehaviour, IInputListener
         _audioSource = GetComponent<AudioSource>();
     }
 
-    public static void Enter()
+    public static MapMovementController Instance() => _instance;
+
+    public void Enter()
     {
         _visible = true;
         _player = CharacterManager.SelectedCharacter;
         InputHandler.SetCurrentListener(_instance);
-        MapMenuController.UpdateGrit(0);
         _audioSource.DOFade(1f, 3f);
         _currentRegion = _player.TravelAction.GetCurrentRegion();
         MapCamera.DOOrthoSize(6, 1f);
         Recenter();
     }
 
-    public static void Exit()
+    public void Exit()
     {
         _visible = false;
         InputHandler.SetCurrentListener(null);
@@ -58,7 +57,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         _player = null;
     }
 
-    private static void Recenter()
+    private void Recenter()
     {
         Vector3 position = _currentRegion.Position;
         position.z = -10;
@@ -158,7 +157,8 @@ public class MapMovementController : MonoBehaviour, IInputListener
         if (_nearestRegion == newNearestRegion) return;
         _nearestRegion?.MapNode().LoseFocus();
         _nearestRegion = newNearestRegion;
-        MapMenuController.FadeTeleportText(_nearestRegion);
+        MapMenuController.Instance().SetNearestRegion(_nearestRegion);
+        MapMenuController.Instance().FadeTeleportText();
         _nearestRegion?.MapNode().GainFocus();
     }
 
@@ -182,8 +182,6 @@ public class MapMovementController : MonoBehaviour, IInputListener
         CurrentSpeed = PanSpeed;
     }
 
-    public static Region GetNearestRegion() => _nearestRegion;
-
     public void OnInputUp(InputAxis axis)
     {
         if (axis != InputAxis.Horizontal && axis != InputAxis.Vertical) return;
@@ -192,5 +190,10 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     public void OnDoubleTap(InputAxis axis, float direction)
     {
+    }
+
+    private void OnDestroy()
+    {
+        _instance = null;
     }
 }

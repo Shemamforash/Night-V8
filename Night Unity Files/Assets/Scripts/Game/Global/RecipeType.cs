@@ -4,6 +4,7 @@ namespace Game.Global
     {
         Building,
         Resource,
-        Other
+        Fire,
+        Upgrade
     }
 }

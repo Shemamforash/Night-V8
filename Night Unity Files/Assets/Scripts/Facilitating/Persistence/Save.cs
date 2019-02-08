@@ -45,6 +45,7 @@ namespace Facilitating.Persistence
                 createdOn = "Created on " + RealTime;
                 if (_mostRecent) createdOn += " (More Recent)";
             }
+
             return createdOn;
         }
 
@@ -67,5 +68,7 @@ namespace Facilitating.Persistence
             WorldState.Load(_root);
             GameController.StartGame(false);
         }
+
+        public bool IsMostRecent() => _mostRecent;
     }
 }

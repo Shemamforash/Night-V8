@@ -62,7 +62,7 @@ class RecipeImporter(XMLWriter):
         write_single_value(self, "Description", get_value(self, "I", row))
 
     def read_recipes(self):
-        for row_no in range(4, 25):
+        for row_no in range(4, 31):
             write_tag(self, "Recipe", self.read_recipe, [row_no])
 
 
@@ -104,7 +104,7 @@ class ResourceImporter(XMLWriter):
         write_single_value(self, "Description", get_value(self, "L", row, ""))
 
     def read_resources(self):
-        for row_no in range(3, 44):
+        for row_no in range(3, 46):
             write_tag(self, "Resource", self.read_resource, [row_no])
 
 
@@ -114,7 +114,7 @@ class InscriptionImporter(XMLWriter):
         write_tag(self, "Inscriptions", self.read_inscriptions)
 
     def read_inscriptions(self):
-        for row in range(2, 16):
+        for row in range(2, 15):
             write_tag(self, "Inscription", self.read_inscription, [row])
 
     def read_inscription(self, row):
@@ -291,17 +291,14 @@ class BrandImporter(XMLWriter):
             write_tag(self, get_value(self, "A", row), self.read_brand, [row])
 
     def read_brand(self, row):
+        write_single_value(self, "Name", get_value(self, "A", row))
         write_single_value(self, "Description", get_value(self, "B", row))
         write_single_value(self, "Requirement", get_value(self, "C", row))
         write_single_value(self, "TargetValue", get_value(self, "D", row))
-        write_single_value(self, "SuccessName", get_value(self, "E", row))
-        write_single_value(self, "SuccessEffect", get_value(self, "F", row))
-        write_single_value(self, "SuccessValue", get_value(self, "G", row, "0"))
-        write_single_value(self, "FailName", get_value(self, "H", row))
-        write_single_value(self, "FailEffect", get_value(self, "I", row))
-        write_single_value(self, "FailValue", get_value(self, "J", row))
-        write_single_value(self, "RequiresSkill", get_value(self, "K", row))
-        write_single_value(self, "MinLevel", get_value(self, "L", row))
+        write_single_value(self, "Effect", get_value(self, "E", row))
+        write_single_value(self, "Modifier", get_value(self, "F", row, "0"))
+        write_single_value(self, "RequiresSkill", get_value(self, "G", row))
+        write_single_value(self, "MinLevel", get_value(self, "H", row))
 
 
 class WandererImporter(XMLWriter):
@@ -455,16 +452,16 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-# WeaponImporter()
+WeaponImporter()
 # GearImporter()
-# WeatherImporter()
+WeatherImporter()
 # WeatherProbabilityImporter();
 # RegionImporter()
 # CharacterImporter()
-# EnemyImporter()
+EnemyImporter()
 RecipeImporter()
 ResourceImporter()
-# InscriptionImporter()
+InscriptionImporter()
 # SkillImporter()
 EnvironmentImporter()
 BrandImporter()

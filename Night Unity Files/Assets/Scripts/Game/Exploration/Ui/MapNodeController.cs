@@ -210,8 +210,8 @@ namespace Game.Exploration.Ui
             _targetCentreAlpha = 1f;
             _border.SetSelected();
             transform.DOScale(Vector2.one * 1.25f, 1f).SetUpdate(UpdateType.Normal, true);
-            MapMenuController.SetRoute(_region);
-            MapMenuController.UpdateGrit(_gritCost);
+            MapMenuController.Instance().SetRoute(_region);
+            MapMenuController.Instance().UpdateGrit(_gritCost);
         }
 
         public void LoseFocus(float time = 1f)
@@ -220,7 +220,7 @@ namespace Game.Exploration.Ui
             _targetCentreAlpha = 0.5f;
             _border.SetActive();
             transform.DOScale(Vector2.one, time).SetUpdate(UpdateType.Normal, true);
-            MapMenuController.UpdateGrit(0);
+            MapMenuController.Instance().UpdateGrit(0);
         }
 
         private class Letter

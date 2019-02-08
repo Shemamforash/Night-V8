@@ -16,8 +16,7 @@ namespace Game.Combat.Generation
 
         protected override void Generate()
         {
-            PlaceShrine();
-            GenerateSplinteredArea(Random.Range(4, 7));
+            GenerateSplinteredArea(Random.Range(5, 7));
             PlaceItems();
             GenerateTinyRocks(Random.Range(0, 30));
         }

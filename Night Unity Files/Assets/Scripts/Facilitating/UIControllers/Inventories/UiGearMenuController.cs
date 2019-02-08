@@ -189,6 +189,14 @@ namespace Facilitating.UIControllers
             DOTween.defaultTimeScaleIndependent = true;
             WorldState.Pause();
             ButtonClickListener.SuppressClick();
+            AudioController.FadeInMusicMuffle();
+            AudioController.FadeOutCombat();
+        }
+
+        public override void Exit()
+        {
+            AudioController.FadeOutMusicMuffle();
+            AudioController.FadeInCombat();
         }
 
         public static void OpenInventoryMenu(UiInventoryMenuController menu)

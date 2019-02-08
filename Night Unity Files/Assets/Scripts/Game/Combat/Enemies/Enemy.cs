@@ -27,6 +27,8 @@ namespace Game.Combat.Enemies
         private static GameObject _enemyPrefab;
         private static GameObject _footStepPrefab, _trailPrefab, _hoofprintPrefab;
         private static readonly Dictionary<EnemyType, Sprite> _enemySprites = new Dictionary<EnemyType, Sprite>();
+        private static float _accessoryDropChance = -0.25f, _inscriptionDropChance = -0.25f;
+        private const float DropChanceIncrement = 0.01f;
 
         public Enemy(EnemyTemplate template) : base(template.EnemyType.ToString())
         {
@@ -200,18 +202,37 @@ namespace Game.Combat.Enemies
         private Loot DropHumanLoot(Vector2 position)
         {
             if (Random.Range(0f, 1f) < Template.DropRate) SaltBehaviour.Create(position);
-            if (!Helper.RollDie(0, 25)) return null;
+            if (!CanDropAccessory()) return null;
             Loot loot = new Loot(position);
             loot.SetItem(Accessory.Generate());
             return loot;
         }
 
+        private bool CanDropAccessory()
+        {
+            _accessoryDropChance += DropChanceIncrement;
+            bool drop = Random.Range(0f, 1f) < _accessoryDropChance;
+            if (drop) _accessoryDropChance = -0.25f;
+            return drop;
+        }
+
+        private bool CanDropInscription()
+        {
+            _inscriptionDropChance += DropChanceIncrement;
+            bool drop = Random.Range(0f, 1f) < _inscriptionDropChance;
+            if (drop) _inscriptionDropChance = -0.25f;
+            return drop;
+        }
+
         private Loot DropNightmareLoot(Vector2 position)
         {
-            if (Random.Range(0f, 1f) < Template.DropRate) EssenceCloudBehaviour.Create(position);
             if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Rite) return null;
-            bool dropInscription = Random.Range(0, 20) == 0;
-            if (!dropInscription) return null;
+            if (!CanDropInscription())
+            {
+                if (Random.Range(0f, 1f) < Template.DropRate) EssenceCloudBehaviour.Create(position);
+                return null;
+            }
+
             Loot loot = new Loot(position);
             loot.SetItem(Inscription.Generate());
             return loot;

@@ -355,10 +355,11 @@ namespace SamsHelper.Libraries
             return true;
         }
 
-        public static Vector2 RotatePoint(Vector2 point, int rotateAmount, Vector2 origin)
+        public static Vector2 RotatePoint(Vector2 point, float rotateAmount, Vector2 origin, bool inRadians = true)
         {
             float x = point.x - origin.x;
             float y = point.y - origin.y;
+            if (!inRadians) rotateAmount = Mathf.Deg2Rad * rotateAmount;
             point.x = x * Mathf.Cos(rotateAmount) - y * Mathf.Sin(rotateAmount);
             point.y = x * Mathf.Sin(rotateAmount) + y * Mathf.Cos(rotateAmount);
             point.x += origin.x;
@@ -393,10 +394,10 @@ namespace SamsHelper.Libraries
         public static Vector3[] WorldCornersToCanvasSpace(Vector3[] corners, float canvasWidth, float canvasHeight)
         {
             if (mainCamera == null) mainCamera = Camera.main;
-            
+
             float screenWidth = Screen.width;
             float screenHeight = Screen.height;
-           
+
             float widthRatio = canvasWidth / screenWidth;
             float heightRatio = canvasHeight / screenHeight;
 
@@ -408,6 +409,7 @@ namespace SamsHelper.Libraries
                 worldCorner.y *= heightRatio;
                 corners[i] = worldCorner;
             }
+
             return corners;
         }
     }

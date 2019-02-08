@@ -78,7 +78,7 @@ namespace Game.Characters
             });
         }
 
-        public List<Brand> GetBrandChoice(int ritesRemaining)
+        public List<Brand> GetBrandChoice()
         {
             List<Brand> possibleBrands = new List<Brand>();
             if (_lockedBrands.Count == 0) return possibleBrands;
@@ -95,7 +95,7 @@ namespace Game.Characters
             if (!_focusBrandsAllowed) possibleBrands.RemoveAll(b => b is FocusBrand);
             possibleBrands.Shuffle();
             List<Brand> brandSelection = new List<Brand>();
-            for (int i = 0; i < ritesRemaining && i < possibleBrands.Count; ++i) brandSelection.Add(possibleBrands[i]);
+            for (int i = 0; i < 3 && i < possibleBrands.Count; ++i) brandSelection.Add(possibleBrands[i]);
             return brandSelection;
         }
 

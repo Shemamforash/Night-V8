@@ -13,7 +13,7 @@ namespace Game.Combat.Misc
         public ArmourController ArmourController = new ArmourController();
         public readonly HealthController HealthController = new HealthController();
         private const float SicknessDurationMax = 5f;
-        private const int SicknessTargetTicks = 10;
+        private const int SicknessTargetTicks = 5;
         private float _timeSinceLastBurn;
         protected int SicknessStacks;
         private float _sicknessDuration;
@@ -79,14 +79,14 @@ namespace Game.Combat.Misc
 
         public bool IsSick() => SicknessStacks > 0;
 
-        protected virtual int GetBurnDamage()
+        protected int GetBurnDamage()
         {
             int burnDamage = Mathf.FloorToInt(HealthController.GetMaxHealth() * 0.01f);
             if (burnDamage < 1) burnDamage = 1;
             return burnDamage;
         }
 
-        protected virtual int GetSicknessTargetTicks()
+        protected int GetSicknessTargetTicks()
         {
             return SicknessTargetTicks;
         }

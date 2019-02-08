@@ -1,8 +1,6 @@
 ﻿using DG.Tweening;
-using Facilitating.Persistence;
 using Game.Combat.Generation;
 using Game.Global;
-using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
@@ -43,6 +41,7 @@ public class PauseMenuController : MonoBehaviour
     {
         _background.blocksRaycasts = true;
         AudioController.FadeInGlobalMuffle();
+        AudioController.FadeOutCombat();
         _lastMenu = MenuStateMachine.CurrentMenu().gameObject.name;
         _instance.ShowPauseMenu();
         _fading = true;
@@ -72,6 +71,7 @@ public class PauseMenuController : MonoBehaviour
         _background.blocksRaycasts = false;
         _closeButton.Disable();
         AudioController.FadeOutGlobalMuffle();
+        AudioController.FadeInCombat();
         MenuStateMachine.ShowMenu(_lastMenu);
         _fading = true;
         Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);

@@ -39,7 +39,8 @@ namespace Game.Exploration.Regions
         private int _claimQuantity;
         public List<Barrier> Barriers = new List<Barrier>();
         public string Name;
-        public int RegionID, WaterSourceCount, FoodSourceCount, ResourceSourceCount, ClaimRemaining, RitesRemaining = 3;
+        public int RegionID, WaterSourceCount, FoodSourceCount, ResourceSourceCount, ClaimRemaining;
+        public bool RitesRemain = true;
         public bool ReadJournal = true;
         public Player CharacterHere;
         public Vector2? RadianceStonePosition;
@@ -172,7 +173,7 @@ namespace Game.Exploration.Regions
             region.ClaimRemaining = doc.IntFromNode("ClaimRemaining");
             region._claimQuantity = doc.IntFromNode("ClaimQuantity");
             region._claimBenefit = doc.StringFromNode("ClaimBenefit");
-            region.RitesRemaining = doc.IntFromNode("RitesRemaining");
+            region.RitesRemain = doc.BoolFromNode("RitesRemaining");
             region.FountainVisited = doc.BoolFromNode("FountainVisited");
             region.IsWeaponHere = doc.BoolFromNode("IsWeaponHere");
             int characterClassHere = doc.IntFromNode("CharacterHere");
@@ -204,7 +205,7 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("ClaimRemaining", ClaimRemaining);
             regionNode.CreateChild("ClaimQuantity", _claimQuantity);
             regionNode.CreateChild("ClaimBenefit", _claimBenefit);
-            regionNode.CreateChild("RitesRemaining", RitesRemaining);
+            regionNode.CreateChild("RitesRemaining", RitesRemain);
             regionNode.CreateChild("FountainVisited", FountainVisited);
             regionNode.CreateChild("IsWeaponHere", IsWeaponHere);
             int characterClassHere = CharacterHere == null ? -1 : (int) CharacterHere.CharacterTemplate.CharacterClass;
@@ -227,8 +228,7 @@ namespace Game.Exploration.Regions
         private void CreateNodeObject()
         {
             if (_nodePrefab == null) _nodePrefab = Resources.Load<GameObject>("Prefabs/Map/Map Node");
-            _nodeObject = GameObject.Instantiate(_nodePrefab);
-            _nodeObject.transform.SetParent(MapMenuController.MapTransform);
+            _nodeObject = GameObject.Instantiate(_nodePrefab, MapMenuController.Instance().MapTransform, true);
             _nodeObject.name = Name;
             _nodeObject.transform.position = new Vector3(Position.x, Position.y, 0);
             _nodeObject.transform.localScale = Vector3.one;

@@ -16,6 +16,7 @@ namespace Game.Global
         public static AudioClip[] ThunderSounds;
         public static AudioClip[] SMGShots, RifleShots, PistolShots, ShotgunShots;
         public static AudioClip[] SMGCasings, RifleCasings, PistolCasings, ShotgunCasings;
+        public static AudioClip[] StandardExplosions;
         public static AudioClip[] DryFireClips;
         public static AudioClip[] ArmourBreakClips;
         public static AudioClip[] FootstepClips;
@@ -27,7 +28,7 @@ namespace Game.Global
         public static AudioClip PistolClipIn, PistolClipOut, ShotgunClipIn, ShotgunClipOut, RifleClipIn, RifleClipOut, SMGClipIn, SMGClipOut;
         public static AudioClip BrawlerSlash, BulletHit, ShieldHit, BodyHit;
         public static AudioClip GodsAreDead, AbandonedLands;
-        public static AudioClip StandardExplosion, FireExplosion, ShatterExplosion;
+        public static AudioClip FireExplosion, ShatterExplosion;
         public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Craft, OpenJournal, CloseJournal, Tick;
         public static AudioClip EatWater, EatMeat, EatPlant, EatPotion;
         public static AudioClip ShortHeartBeat, LongHeartBeat;
@@ -97,9 +98,9 @@ namespace Game.Global
             yield return StartCoroutine(LoadAllClipsFromBundle(a => DryFireClips = a, "combat/dryfire"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => ArmourBreakClips = a, "combat/armourbreak"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => FootstepClips = a, "combat/footsteps"));
-            yield return StartCoroutine(LoadClip(a => StandardExplosion = a, "combat/explosions", "standard explosion"));
-            yield return StartCoroutine(LoadClip(a => FireExplosion = a, "combat/explosions", "fire explosion"));
-            yield return StartCoroutine(LoadClip(a => ShatterExplosion = a, "combat/explosions", "shatter explosion"));
+            yield return StartCoroutine(LoadAllClipsFromBundle(a => StandardExplosions = a, "combat/explosions/standard"));
+            yield return StartCoroutine(LoadClip(a => FireExplosion = a, "combat/explosions/fire", "fire explosion"));
+            yield return StartCoroutine(LoadClip(a => ShatterExplosion = a, "combat/explosions/shatter", "shatter explosion"));
             yield return StartCoroutine(LoadClip(a => PistolClipIn = a, "combat/reload/clip", "Pistol Clip In"));
             yield return StartCoroutine(LoadClip(a => PistolClipOut = a, "combat/reload/clip", "Pistol Clip Out"));
             yield return StartCoroutine(LoadClip(a => ShotgunClipIn = a, "combat/reload/clip", "Shotgun Clip In"));

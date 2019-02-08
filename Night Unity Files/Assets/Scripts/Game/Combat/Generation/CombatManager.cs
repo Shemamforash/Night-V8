@@ -355,7 +355,6 @@ namespace Game.Combat.Generation
             Instance()._enemies.Add(enemy);
         }
 
-
         public static EnemyBehaviour QueueEnemyToAdd(EnemyTemplate template)
         {
             Enemy e = template.Create();

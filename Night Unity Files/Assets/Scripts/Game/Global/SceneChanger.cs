@@ -30,6 +30,7 @@ namespace Game.Global
                 _volumeTweener = DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 1f, DefaultFadeTime).SetUpdate(UpdateType.Normal, true);
                 _fadeInAudio = false;
             }
+
             if (SceneManager.GetActiveScene().name == "Game") WorldState.Resume();
         }
 
@@ -111,6 +112,11 @@ namespace Game.Global
         public static bool ChangingScene()
         {
             return _changingScene;
+        }
+
+        public static void GoToCombatStoryScene()
+        {
+            ChangeScene("Combat Story");
         }
     }
 }

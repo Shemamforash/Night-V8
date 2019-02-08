@@ -98,7 +98,6 @@ namespace Game.Combat.Enemies
 
             Loot loot = Enemy.DropLoot(transform.position);
             loot?.CreateObject(true);
-            PlayerCombat.Instance.TriggerEnemyDeathEffect();
             base.Kill();
         }
     }

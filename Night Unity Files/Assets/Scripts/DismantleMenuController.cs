@@ -22,19 +22,19 @@ public class DismantleMenuController : Menu
     private static CloseButtonController _closeButton;
     private static GameObject _dismantledScreen;
     private EnhancedText _receivedText;
+    private GearItem _gearToDismantle;
 
     public override void Awake()
     {
         base.Awake();
         _dismantleList = gameObject.FindChildWithName<ListController>("List");
-        _dismantleList.Initialise(typeof(DismantleElement), Dismantle, Close, GetDismantleItems);
+        _dismantleList.Initialise(typeof(DismantleElement), ShowDismantledScreen, Close, GetDismantleItems);
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
-        _closeButton.SetOnClick(Close);
-        _closeButton.SetCallback(Close);
+
 
         _dismantledScreen = gameObject.FindChildWithName("Dismantled");
         _acceptButton = _dismantledScreen.FindChildWithName<EnhancedButton>("Button");
-        _acceptButton.AddOnClick(Show);
+        _acceptButton.AddOnClick(Dismantle);
         _receivedText = _dismantledScreen.FindChildWithName<EnhancedText>("Receive");
     }
 
@@ -49,6 +49,8 @@ public class DismantleMenuController : Menu
     {
         _dismantleRewards.Clear();
         int quality = (int) gear.Quality() + 1;
+        Random.State oldState = Random.state;
+        Random.InitState(gear.ID());
         switch (gear)
         {
             case Inscription _:
@@ -61,6 +63,8 @@ public class DismantleMenuController : Menu
                 CalculateAccessoryReward(quality);
                 break;
         }
+
+        Random.state = oldState;
     }
 
     private static string GetDismantleText(GearItem gear)
@@ -88,15 +92,15 @@ public class DismantleMenuController : Menu
         List<string> possibleRewards = new List<string>();
         for (int i = 0; i < quality; ++i)
         {
-            if (i > 0) possibleRewards.Add("Rusty Scrap");
-            if (i > 1) possibleRewards.Add("Metal Shards");
-            if (i > 2) possibleRewards.Add("Ancient Relics");
-            if (i > 3) possibleRewards.Add("Celestial Fragments");
+            if (i == 0) possibleRewards.Add("Essence");
+            if (i == 1) possibleRewards.Add("Rusty Scrap");
+            if (i == 2) possibleRewards.Add("Metal Shards");
+            if (i == 3) possibleRewards.Add("Ancient Relics");
+            if (i == 4) possibleRewards.Add("Celestial Fragments");
         }
 
-        if (possibleRewards.Count == 0) return;
-        AddReward(possibleRewards.RandomElement(), 1);
-        AddReward(possibleRewards.RandomElement(), 1);
+        int count = Mathf.FloorToInt(quality / 2f) + 1;
+        for (int i = 0; i < count; ++i) AddReward(possibleRewards.RemoveRandom(), 2);
     }
 
     private static void CalculateAccessoryReward(int quality)
@@ -106,15 +110,15 @@ public class DismantleMenuController : Menu
         List<string> possibleRewards = new List<string>();
         for (int i = 0; i < quality; ++i)
         {
-            if (i > 0) possibleRewards.Add("Rusty Scrap");
-            if (i > 1) possibleRewards.Add("Metal Shards");
-            if (i > 2) possibleRewards.Add("Ancient Relics");
-            if (i > 3) possibleRewards.Add("Celestial Shards");
+            if (i == 0) possibleRewards.Add("Essence");
+            if (i == 1) possibleRewards.Add("Rusty Scrap");
+            if (i == 2) possibleRewards.Add("Metal Shards");
+            if (i == 3) possibleRewards.Add("Ancient Relics");
+            if (i == 4) possibleRewards.Add("Celestial Shards");
         }
 
-        AddReward(possibleRewards.RandomElement(), 1);
-        AddReward(possibleRewards.RandomElement(), 1);
-        AddReward(possibleRewards.RandomElement(), 1);
+        int count = Mathf.FloorToInt(quality / 2f) + 1;
+        for (int i = 0; i < count; ++i) AddReward(possibleRewards.RemoveRandom(), 1);
     }
 
     private class DismantleElement : ListElement
@@ -158,7 +162,7 @@ public class DismantleMenuController : Menu
         return items;
     }
 
-    private void Dismantle(object o)
+    private void Dismantle()
     {
         foreach (string reward in _dismantleRewards.Keys)
         {
@@ -166,34 +170,29 @@ public class DismantleMenuController : Menu
             Inventory.IncrementResource(reward, quantity);
         }
 
-        if (o is Armour armour) Inventory.DecrementResource(armour.Name, 1);
-        else
+        _gearToDismantle.UnEquip();
+        switch (_gearToDismantle)
         {
-            GearItem gear = (GearItem) o;
-            gear.UnEquip();
-            switch (gear)
-            {
-                case Weapon weapon:
-                    Inventory.Destroy(weapon);
-                    break;
-                case Accessory accessory:
-                    Inventory.Destroy(accessory);
-                    break;
-                case Inscription inscription:
-                    Inventory.Destroy(inscription);
-                    break;
-            }
+            case Weapon weapon:
+                Inventory.Destroy(weapon);
+                break;
+            case Accessory accessory:
+                Inventory.Destroy(accessory);
+                break;
+            case Inscription inscription:
+                Inventory.Destroy(inscription);
+                break;
         }
-
-        ShowDismantledScreen(o);
     }
 
     private void ShowDismantledScreen(object o)
     {
-        GearItem gear = (GearItem) o;
+        _closeButton.SetOnClick(Show);
+        _closeButton.SetCallback(Show);
+        _gearToDismantle = (GearItem) o;
         _dismantledScreen.SetActive(true);
         _dismantleList.gameObject.SetActive(false);
-        _receivedText.SetText(GetDismantleText(gear));
+        _receivedText.SetText(GetDismantleText(_gearToDismantle));
         _acceptButton.Select();
     }
 
@@ -207,6 +206,8 @@ public class DismantleMenuController : Menu
     public override void Enter()
     {
         base.Enter();
+        _closeButton.SetOnClick(Close);
+        _closeButton.SetCallback(Close);
         WorldState.Pause();
         DOTween.defaultTimeScaleIndependent = true;
         _closeButton.Enable();

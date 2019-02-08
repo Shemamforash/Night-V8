@@ -18,8 +18,8 @@ namespace Game.Characters
         protected readonly Player Player;
 
         private int _counterTarget;
-        private string _description, _successName, _failName, _successEffect, _failEffect, _requirementString;
-        protected float SuccessModifier, FailModifier;
+        private string _description, _effect, _requirementString;
+        protected float SuccessModifier;
 
         private int _counter;
         public BrandStatus Status = BrandStatus.Locked;
@@ -52,12 +52,8 @@ namespace Game.Characters
             _requirementString = root.StringFromNode("Requirement");
             _counterTarget = root.IntFromNode("TargetValue");
             _requirementString = _requirementString.Replace("num", _counterTarget.ToString());
-            _successName = root.StringFromNode("SuccessName");
-            _successEffect = root.StringFromNode("SuccessEffect");
-            SuccessModifier = root.FloatFromNode("SuccessValue");
-            _failName = root.StringFromNode("FailName");
-            _failEffect = root.StringFromNode("FailEffect");
-            FailModifier = root.FloatFromNode("FailValue");
+            _effect = root.StringFromNode("Effect");
+            SuccessModifier = root.FloatFromNode("Modifier");
             _requiresSkillUnlock = root.BoolFromNode("RequiresSkill");
             _minLevel = root.IntFromNode("MinLevel");
         }
@@ -109,8 +105,7 @@ namespace Game.Characters
             Player.BrandManager.SetBrandInactive(this);
             SetStatus(BrandStatus.Failed);
             UiBrandMenu.ShowBrand(this);
-            if (this is FettleBrand || this is GritBrand || this is FocusBrand || this is WillBrand) LoseAttributes();
-            OnFail();
+            LoseAttributes();
             _ready = false;
         }
 
@@ -127,7 +122,6 @@ namespace Game.Characters
         }
 
         protected abstract void OnSucceed();
-        protected abstract void OnFail();
 
         public void PrintStatus()
         {
@@ -148,7 +142,6 @@ namespace Game.Characters
             if (Status == BrandStatus.Active && _counter >= _counterTarget) _ready = true;
             if (this is FettleBrand || this is GritBrand || this is FocusBrand || this is WillBrand) return;
             if (Status == BrandStatus.Succeeded) OnSucceed();
-            else if (Status == BrandStatus.Failed) OnFail();
         }
 
         public void Save(XmlNode doc)
@@ -156,21 +149,6 @@ namespace Game.Characters
             doc.CreateChild("Name", _riteName);
             doc.CreateChild("Counter", _counter);
             doc.CreateChild("Status", (int) Status);
-        }
-
-        public string GetSuccessName()
-        {
-            return _successName;
-        }
-
-        public string GetFailName()
-        {
-            return _failName;
-        }
-
-        public string GetEffectString()
-        {
-            return Status == BrandStatus.Succeeded ? _successEffect : _failEffect;
         }
 
         public string GetRequirementText()
@@ -187,5 +165,7 @@ namespace Game.Characters
         {
             return _counter / (float) _counterTarget;
         }
+
+        public string GetEffectText() => _effect;
     }
 }

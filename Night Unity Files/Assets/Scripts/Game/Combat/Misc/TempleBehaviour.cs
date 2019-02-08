@@ -102,7 +102,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         _templeSprite.DOFade(0.4f, 2f);
 
         yield return StartCoroutine(StartSpawningEnemies());
-        
+
         float glowTimeMax = 1f;
         float currentTime = glowTimeMax;
         while (currentTime > 0f)
@@ -129,9 +129,9 @@ public class TempleBehaviour : BasicShrineBehaviour
         List<EnemyTemplate> enemyTypesToSpawn = new List<EnemyTemplate>();
         List<EnemyTemplate> allowedTypes = WorldState.GetAllowedNightmareEnemyTypes();
         int size = (Mathf.FloorToInt(WorldState.Difficulty() / 10f) + 1) * 20;
-        Debug.Log(size);
         while (size > 0)
         {
+            allowedTypes.Shuffle();
             foreach (EnemyTemplate e in allowedTypes)
             {
                 if (e.Value > size) continue;
@@ -158,6 +158,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         SpawnInitialEnemies();
         yield return new WaitForSeconds(2f);
         Queue<EnemyTemplate> enemyTypesToSpawn = GetEnemyTypesToSpawn();
+        int maxEnemyCount = 5 + WorldState.Difficulty() / 5;
         while (enemyTypesToSpawn.NotEmpty())
         {
             EnemyTemplate nextEnemy = enemyTypesToSpawn.Dequeue();
@@ -168,12 +169,12 @@ public class TempleBehaviour : BasicShrineBehaviour
                 yield return null;
             }
 
+            while (CombatManager.Enemies().Count > maxEnemyCount) yield return null;
             SpawnEnemy(nextEnemy);
         }
 
         StartCoroutine(CheckAllEnemiesDead());
     }
-
 
     protected override void Succeed()
     {
@@ -183,6 +184,10 @@ public class TempleBehaviour : BasicShrineBehaviour
         _cleansedAudio.Play();
         _explosion.Play();
         _flames.Stop();
+        EventTextController.SetOverrideText("The Temple seal has been broken");
+        Sequence sequence = DOTween.Sequence();
+        sequence.AppendInterval(3f);
+        sequence.AppendCallback(EventTextController.CloseOverrideText);
     }
 
     private IEnumerator CheckAllEnemiesDead()

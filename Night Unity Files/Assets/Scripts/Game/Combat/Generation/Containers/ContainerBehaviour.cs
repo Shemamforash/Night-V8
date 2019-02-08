@@ -23,6 +23,7 @@ namespace Game.Combat.Generation
         private float _targetAlpha;
         private float _currentAlpha;
         private ParticleSystem _puddleDrops;
+        private bool _hideOutline;
 
         public void Awake()
         {
@@ -58,7 +59,7 @@ namespace Game.Combat.Generation
             _fading = true;
             _iconSprite.color = Color.white;
             _glowSprite.color = Color.white;
-            _selectSprite.color = Color.white;
+            if (!_hideOutline) _selectSprite.color = Color.white;
             if (_insectBehaviour != null) _insectBehaviour.Fade();
             _iconSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
             _glowSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
@@ -78,8 +79,11 @@ namespace Game.Combat.Generation
             if (_currentAlpha > _targetAlpha) _currentAlpha -= Time.deltaTime;
             else _currentAlpha += Time.deltaTime;
             _currentAlpha = Mathf.Clamp(_currentAlpha, 0f, 1f);
+            if (_hideOutline) return;
             _selectSprite.color = new Color(1, 1, 1, _currentAlpha);
         }
+
+        public void HideOutline() => _hideOutline = true;
 
         public void Reveal()
         {

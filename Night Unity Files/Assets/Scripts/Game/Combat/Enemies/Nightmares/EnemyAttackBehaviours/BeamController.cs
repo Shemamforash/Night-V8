@@ -21,7 +21,7 @@ public class BeamController : MonoBehaviour
     private Transform _origin;
     private Vector3 _targetPosition;
     private bool _firing;
-    private const int BeamDamage = 20;
+    private const int BeamDamage = 15;
     private float _lastBeamDamage;
 
     private ParticleSystem[] _blastParticles, _chargeParticles;

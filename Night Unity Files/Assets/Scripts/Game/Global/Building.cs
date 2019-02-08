@@ -91,7 +91,7 @@ namespace Game.Global
 
         private void ResetCounter()
         {
-            counter = Random.Range(2, 5);
+            counter = Random.Range(6, 12);
         }
 
         public override void Update()
@@ -181,7 +181,7 @@ namespace Game.Global
     {
         private int _time;
 
-        public Smoker() : base("Smoker", 2, "Rotmeat", "Meat")
+        public Smoker() : base("Smoker", 6, "Rotmeat", "Meat")
         {
         }
     }

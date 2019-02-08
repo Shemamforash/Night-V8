@@ -26,7 +26,8 @@ public class ActionProgressController : MonoBehaviour
     public void UpdateCurrentAction(BaseCharacterAction state)
     {
         if (state == null) return;
-        if (_lastState == state) return;
+        if (_lastState == state && !state.ForceViewUpdate) return;
+        state.ForceViewUpdate = false;
         _barCanvas.DOFade(state is Rest ? 0f : 1f, 0.5f);
         float initialDuration = state.GetInitialDuration();
         float remainingDuration = state.GetRemainingDuration();
@@ -36,8 +37,8 @@ public class ActionProgressController : MonoBehaviour
         _right.fillAmount = startFill;
         _leftTween?.Kill();
         _rightTween?.Kill();
-        _leftTween = _left.DOFillAmount(0f, timeToComplete).SetUpdate(UpdateType.Manual);
-        _rightTween = _right.DOFillAmount(0f, timeToComplete).SetUpdate(UpdateType.Manual);
+        _leftTween = _left.DOFillAmount(0f, timeToComplete).SetUpdate(UpdateType.Manual).SetEase(Ease.Linear);
+        _rightTween = _right.DOFillAmount(0f, timeToComplete).SetUpdate(UpdateType.Manual).SetEase(Ease.Linear);
         _text.text = state.GetDisplayName();
         _lastState = state;
     }

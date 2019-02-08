@@ -21,7 +21,6 @@ namespace Game.Combat.Generation
             int rotateAmount = Random.Range(0, 360);
             GenerateRockWall(leftPosition, true, rotateAmount);
             GenerateRockWall(rightPosition, false, rotateAmount);
-            PlaceShrine();
             PlaceItems();
             GenerateSmallRocks(Random.Range(5, 20));
             GenerateTinyRocks(Random.Range(20, 60));

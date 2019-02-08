@@ -36,6 +36,7 @@ namespace Game.Combat.Enemies.Bosses
             List<CanTakeDamage> enemies = CombatManager.Enemies();
             for (int i = enemies.Count - 1; i >= 0; --i) enemies[i].Kill();
             Destroy(gameObject);
+            BossDeathController.Create(transform.position);
             RiteStarter.GenerateNextEnvironmentPortal();
         }
 

@@ -92,7 +92,7 @@ public class CacheController : MonoBehaviour
     private void Deactivate()
     {
         _cacheRings.ForEach(r => r.Deactivate());
-        _scrambledButtons.ForEach(b =>
+        _orderedButtons.ForEach(b =>
         {
             b.DisableButton();
             b.SetGateActive(false);

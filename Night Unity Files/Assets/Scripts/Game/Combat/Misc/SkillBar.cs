@@ -126,12 +126,6 @@ namespace Game.Combat.Misc
             _skillControllers[slot].SetSkill(skill, isSkillUnlocked, getProgress);
         }
 
-        private bool FailToCastSkill()
-        {
-            float failChance = PlayerCombat.Instance.Player.Attributes.SkillDisableChance;
-            return !(Random.Range(0f, 1f) > failChance);
-        }
-
         private bool IsSkillFree()
         {
             float freeSkillChance = PlayerCombat.Instance.Player.Attributes.FreeSkillChance;
@@ -144,13 +138,9 @@ namespace Game.Combat.Misc
         {
             if (!_skillsReady) return;
             Skill skill = _skillControllers[skillNo].Skill();
-            if (!FailToCastSkill())
-            {
-                bool freeSkill = IsSkillFree();
-                if (!skill.Activate(freeSkill || SkillsAreFree)) return;
-                if (freeSkill) return;
-            }
-
+            bool freeSkill = IsSkillFree();
+            if (!skill.Activate(freeSkill || SkillsAreFree)) return;
+            if (freeSkill) return;
             StartCooldown(skill.AdrenalineCost());
         }
 

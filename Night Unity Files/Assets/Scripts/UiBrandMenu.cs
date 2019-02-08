@@ -77,11 +77,11 @@ public class UiBrandMenu : Menu
         {
             case BrandStatus.Failed:
                 _titleString = "Failed";
-                _benefitString = "A curse has been cast upon " + CharacterManager.SelectedCharacter.Name;
+                _benefitString = "You feel your body go weak\nAll attributes reduced to 1";
                 break;
             case BrandStatus.Succeeded:
                 _titleString = "Passed";
-                _benefitString = "A blessing has been granted to " + CharacterManager.SelectedCharacter.Name;
+                _benefitString = "You feel a warmth bloom inside\n" + brand.GetEffectText();
                 break;
         }
 

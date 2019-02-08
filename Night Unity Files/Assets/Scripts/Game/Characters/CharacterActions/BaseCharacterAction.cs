@@ -19,6 +19,7 @@ namespace Game.Characters.CharacterActions
         protected Action MinuteCallback;
         protected string DisplayName;
         private EnhancedButton _button;
+        public bool ForceViewUpdate;
 
         protected BaseCharacterAction(string name, Player playerCharacter) : base(playerCharacter.States, name)
         {
@@ -84,7 +85,7 @@ namespace Game.Characters.CharacterActions
             return doc;
         }
 
-        public  virtual string GetDisplayName()
+        public virtual string GetDisplayName()
         {
             return DisplayName;
         }
