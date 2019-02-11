@@ -17,6 +17,8 @@ public class StarfishBehaviour : Boss
     private bool _contracting;
     private StarfishGhoulSpawn _ghoulSpawn;
     private StarfishSpreadFire _spreadFire;
+    private SpriteRenderer _shotGlow;
+    private Tweener _glowTween;
 
 
     public static void Create()
@@ -31,6 +33,14 @@ public class StarfishBehaviour : Boss
         _instance = this;
         _ghoulSpawn = gameObject.AddComponent<StarfishGhoulSpawn>();
         _spreadFire = gameObject.AddComponent<StarfishSpreadFire>();
+        _shotGlow = gameObject.FindChildWithName<SpriteRenderer>("Shot Glow");
+    }
+
+    public void FlashGlow()
+    {
+        _glowTween?.Kill();
+        _shotGlow.SetAlpha(1f);
+        _glowTween = _shotGlow.DOFade(0f, 0.5f);
     }
 
     public void Start()
@@ -51,11 +61,20 @@ public class StarfishBehaviour : Boss
 
     private void PreWarmArms()
     {
-        for (int i = 0; i < _arms.Count; i++)
+        float prewarmTime = 3f;
+        float currentTime = Time.timeSinceLevelLoad - prewarmTime;
+        int frames = (int) (prewarmTime * 60);
+        float interval = prewarmTime / frames;
+        for (int i = 0; i < frames; ++i)
         {
-            StarFishMainArmBehaviour arm = _arms[i];
-            float zAngle = GetCurrentAngle(i);
-            for (int j = 0; j < 150; ++j) arm.UpdateAngle(zAngle);
+            currentTime += interval;
+            for (int j = 0; j < _arms.Count; j++)
+            {
+                StarFishMainArmBehaviour arm = _arms[j];
+                float sinTime = Mathf.Sin(currentTime + 0.25f * Mathf.PerlinNoise(currentTime, j));
+                float zAngle = sinTime * 30;
+                arm.UpdateAngle(zAngle);
+            }
         }
     }
 
@@ -131,6 +150,7 @@ public class StarfishBehaviour : Boss
 
     public void FixedUpdate()
     {
+        transform.rotation = Quaternion.Euler(0, 0, GetCurrentAngle(0));
         for (int i = 0; i < _arms.Count; i++)
         {
             StarFishMainArmBehaviour a = _arms[i];

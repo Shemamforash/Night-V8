@@ -48,17 +48,17 @@ namespace Facilitating.Audio
             }
         }
 
-        private static void Strike()
+        public static void Strike(bool flashOnly)
         {
             if (_inCombat)
             {
                 Vector2 firePosition = WorldGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 12f).Position;
-                FireBurstBehaviour.Create(firePosition);
+                if(!flashOnly) FireBurstBehaviour.Create(firePosition);
                 _instance.StartCoroutine(_instance.LightningFlash());
             }
             else
             {
-                WeatherSystemController.TriggerLightning();
+                if (!flashOnly) WeatherSystemController.TriggerLightning();
                 _instance.StartCoroutine(_instance.LightningFlash(1.5f));
             }
         }
@@ -98,7 +98,7 @@ namespace Facilitating.Audio
                 yield return null;
             }
 
-            Strike();
+            Strike(false);
             _waitingForThunder = false;
         }
     }

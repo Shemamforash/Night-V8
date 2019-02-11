@@ -27,6 +27,9 @@ public class PauseMenuController : MonoBehaviour
         _open = false;
         _background = GetComponent<CanvasGroup>();
         _background.alpha = 0f;
+        _background.blocksRaycasts = false;
+        _background.interactable = false;
+        _closeButton.Disable();
         _closeButton.SetCallback(CloseClicked);
         _closeButton.SetOnClick(CloseClicked);
     }
@@ -40,6 +43,7 @@ public class PauseMenuController : MonoBehaviour
     private void Show()
     {
         _background.blocksRaycasts = true;
+        _background.interactable = true;
         AudioController.FadeInGlobalMuffle();
         AudioController.FadeOutCombat();
         _lastMenu = MenuStateMachine.CurrentMenu().gameObject.name;
@@ -69,6 +73,7 @@ public class PauseMenuController : MonoBehaviour
     public void Hide()
     {
         _background.blocksRaycasts = false;
+        _background.interactable = false;
         _closeButton.Disable();
         AudioController.FadeOutGlobalMuffle();
         AudioController.FadeInCombat();
@@ -105,6 +110,7 @@ public class PauseMenuController : MonoBehaviour
                 break;
         }
     }
+
     public static void Resume()
     {
         switch (SceneManager.GetActiveScene().name)

@@ -123,7 +123,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         if (!CharacterManager.SelectedCharacter.TravelAction.AtHome()) return;
         CharacterManager.SelectedCharacter.CraftAction.StartCrafting(recipe);
         ShowCurrentlyCrafting();
-        UiGearMenuController.PlayAudio(AudioClips.Craft);
+        UiGearMenuController.PlayAudio(recipe.RecipeType == RecipeType.Fire ? AudioClips.LightFire : AudioClips.Craft);
     }
 
     private class RecipeElement : ListElement

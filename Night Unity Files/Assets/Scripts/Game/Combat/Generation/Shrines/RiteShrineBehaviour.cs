@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters;
@@ -31,6 +32,11 @@ namespace Game.Combat.Generation.Shrines
             _collider2 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 2");
             _collider3 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 3");
             _colliders = new List<RiteColliderBehaviour>(new[] {_collider1, _collider2, _collider3});
+
+            PolygonCollider2D col = gameObject.FindChildWithName<PolygonCollider2D>("Triangle");
+            List<Vector2> points = col.points.ToList();
+            Polygon b = new Polygon(points, Vector2.zero);
+            WorldGrid.AddBarrier(b);
         }
 
         public static RiteShrineBehaviour Instance()

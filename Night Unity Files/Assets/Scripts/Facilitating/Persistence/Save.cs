@@ -1,9 +1,10 @@
+using System;
 using System.IO;
 using System.Xml;
-using Game.Exploration.Environment;
 using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
+using Environment = Game.Exploration.Environment.Environment;
 
 namespace Facilitating.Persistence
 {
@@ -13,7 +14,6 @@ namespace Facilitating.Persistence
         private readonly XmlNode _root;
         private readonly bool _valid;
         private bool _loading;
-        public readonly int TotalTime;
         private bool _mostRecent;
 
         public Save(string location)
@@ -27,8 +27,6 @@ namespace Facilitating.Persistence
             RealTime = worldValues.StringFromNode("RealTime");
             int days = worldValues.IntFromNode("Days");
             int hours = worldValues.IntFromNode("Hours");
-            int minutes = worldValues.IntFromNode("Hours");
-            TotalTime = days * 24 * 60 + hours * 60 + minutes;
             GameTime = "Day " + days + " - ";
             string hourTime = WorldView.TimeToName(hours);
             GameTime += hourTime;
@@ -70,5 +68,12 @@ namespace Facilitating.Persistence
         }
 
         public bool IsMostRecent() => _mostRecent;
+
+        public bool MoreRecentThan(Save other)
+        {
+            DateTime thisTime = DateTime.ParseExact(RealTime, "MMMM dd '-' hh:mm tt", System.Globalization.CultureInfo.InvariantCulture);
+            DateTime otherTime = DateTime.ParseExact(other.RealTime, "MMMM dd '-' hh:mm tt", System.Globalization.CultureInfo.InvariantCulture);
+            return DateTime.Compare(thisTime, otherTime) > 0;
+        }
     }
 }

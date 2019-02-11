@@ -89,11 +89,8 @@ public class RescueRingController : MonoBehaviour
     private void StartWaitTween()
     {
         _waitTween = DOTween.Sequence();
-        _waitTween.AppendCallback(() =>
-        {
-            _buttons.ForEach(b => b.DisableButton());
-            _rotateAudio.Play();
-        });
+        _buttons.ForEach(b => b.DisableButton());
+        _rotateAudio.Play();
         _waitTween.AppendInterval(1.5f);
         _waitTween.AppendCallback(() =>
         {

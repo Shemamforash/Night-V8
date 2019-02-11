@@ -380,7 +380,6 @@ namespace Game.Combat.Player
         protected override void TakeDamage(int damage, Vector2 direction)
         {
             if (damage < 1) damage = 1;
-            Debug.Log("took damage");
             Player.BrandManager.IncreaseDamageTaken(damage);
             if (ArmourController.CanAbsorbDamage()) WeaponAudio.PlayShieldHit();
             else WeaponAudio.PlayBodyHit();
@@ -593,7 +592,6 @@ namespace Game.Combat.Player
         {
             bool enemyDead = hit.HealthController.GetCurrentHealth() == 0;
             bool magazineEmpty = _weaponBehaviour.Empty();
-            WeaponAudio.PlayBulletHit();
             if (!enemyDead || !magazineEmpty) return;
             Player.BrandManager.IncreaseLastRoundKills();
             if (Player.Attributes.ReloadOnFatalShot) InstantReload();

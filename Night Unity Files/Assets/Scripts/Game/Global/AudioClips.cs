@@ -30,7 +30,7 @@ namespace Game.Global
         public static AudioClip GodsAreDead, AbandonedLands;
         public static AudioClip FireExplosion, ShatterExplosion;
         public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Craft, OpenJournal, CloseJournal, Tick;
-        public static AudioClip EatWater, EatMeat, EatPlant, EatPotion;
+        public static AudioClip EatWater, EatMeat, EatPlant, EatPotion, LightFire;
         public static AudioClip ShortHeartBeat, LongHeartBeat;
         public static AudioClip NeedleMove, NeedleHit, NeedleFire;
         public static AudioClip ActiveSkill;
@@ -152,6 +152,7 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => EatPotion = a, "misc/inventories", "Eat Potion"));
             yield return StartCoroutine(LoadClip(a => Campfire = a, "campfire", "Campfire"));
             yield return StartCoroutine(LoadClip(a => Tick = a, "misc/tick", "Tick"));
+            yield return StartCoroutine(LoadClip(a => LightFire = a, "misc/lightfire", "Light Fire"));
 
 
             watch.Stop();

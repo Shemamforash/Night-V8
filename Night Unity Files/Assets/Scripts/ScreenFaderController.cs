@@ -24,7 +24,8 @@ public class ScreenFaderController : MonoBehaviour
         float pause = isCombat ? 1f : 0.5f;
         _sequence = DOTween.Sequence();
         _sequence.AppendInterval(pause);
-        _sequence.Append(_faderCanvas.DOFade(0, duration).SetUpdate(UpdateType.Normal, true));
+        _sequence.Append(_faderCanvas.DOFade(0, duration));
+        _sequence.SetUpdate(UpdateType.Normal, true);
     }
 
     private void Start()

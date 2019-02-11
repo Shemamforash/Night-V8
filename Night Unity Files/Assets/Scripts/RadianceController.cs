@@ -4,6 +4,8 @@ using Game.Combat.Player;
 using Game.Exploration.Regions;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
+using Sirenix.Utilities;
+using Steamworks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -19,9 +21,9 @@ public class RadianceController : MonoBehaviour, ICombatEvent
     {
         _instance = this;
         _radianceAvailable = Inventory.GetResourceQuantity("Radiance");
-        _activated = false;
+        _activated = CombatManager.GetCurrentRegion().Claimed();
+        if (!_activated) return;
         Vector2? existingRadianceStone = CombatManager.GetCurrentRegion().RadianceStonePosition;
-        if (existingRadianceStone == null) return;
         CreateRadianceStone(existingRadianceStone.Value, false);
     }
 
@@ -48,9 +50,11 @@ public class RadianceController : MonoBehaviour, ICombatEvent
     public float InRange()
     {
         if (_activated) return -1;
+        if (_radianceAvailable == 0) return -1;
         if (!CombatManager.AllEnemiesDead()) return -1;
         if (!CombatManager.Region().IsDynamic()) return -1;
-        return _radianceAvailable > 0 ? 1 : -1;
+        if (CacheController.Active()) return -1;
+        return 1;
     }
 
     public string GetEventText()
@@ -64,9 +68,16 @@ public class RadianceController : MonoBehaviour, ICombatEvent
         GameObject stoneObject = Instantiate(_stonePrefab);
         RadianceBehaviour radianceBehaviour = stoneObject.AddComponent<RadianceBehaviour>();
         if (playPulse) radianceBehaviour.Pulse();
+        else
+        {
+            stoneObject.GetComponentsInChildren<ParticleSystem>().ForEach(p =>
+            {
+                ParticleSystem.MainModule main = p.main;
+                main.prewarm = true;
+            });
+        }
 
         stoneObject.transform.position = position;
-        _activated = true;
     }
 
     public void Activate()
@@ -75,10 +86,8 @@ public class RadianceController : MonoBehaviour, ICombatEvent
         Vector3 position = transform.position;
         PlayerCombat.Instance.Player.TravelAction.GetCurrentRegion().Claim(position);
         CreateRadianceStone(position, true);
+        _activated = true;
     }
 
-    public static RadianceController Instance()
-    {
-        return _instance;
-    }
+    public static RadianceController Instance() => _instance;
 }

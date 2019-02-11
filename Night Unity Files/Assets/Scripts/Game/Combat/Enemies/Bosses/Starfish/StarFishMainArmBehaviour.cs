@@ -1,11 +1,13 @@
-﻿using SamsHelper.Libraries;
+﻿using System.Collections;
+using System.Collections.Generic;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 public class StarFishMainArmBehaviour : MonoBehaviour
 {
-    private float _currentAngle;
     private StarFishArmBehaviour _firstArmSegment;
     private bool _armActive = true;
+    private bool _exploding;
 
     private void Awake()
     {
@@ -20,7 +22,7 @@ public class StarFishMainArmBehaviour : MonoBehaviour
         if (AllArmsDead(_firstArmSegment))
         {
             _armActive = false;
-            ExplodeArms(_firstArmSegment);
+            StartCoroutine(ExplodeArms());
         }
 
         if (_firstArmSegment == null) return;
@@ -33,15 +35,22 @@ public class StarFishMainArmBehaviour : MonoBehaviour
         return arm.Dead() && AllArmsDead(arm.NextArm());
     }
 
-    private void ExplodeArms(StarFishArmBehaviour arm)
+    private IEnumerator ExplodeArms()
     {
-        while (true)
+        List<StarFishArmBehaviour> arms = new List<StarFishArmBehaviour>();
+        StarFishArmBehaviour arm = _firstArmSegment;
+        while (arm != null)
         {
-            if (arm == null) return;
-            LeafBehaviour.CreateLeaves(arm.transform.position);
-            StarFishArmBehaviour lastArm = arm;
+            arms.Add(arm);
             arm = arm.NextArm();
-            Destroy(lastArm.gameObject);
+        }
+
+        arms.Reverse();
+        foreach (StarFishArmBehaviour a in arms)
+        {
+            LeafBehaviour.CreateLeaves(a.transform.position);
+            Destroy(a.gameObject);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 }

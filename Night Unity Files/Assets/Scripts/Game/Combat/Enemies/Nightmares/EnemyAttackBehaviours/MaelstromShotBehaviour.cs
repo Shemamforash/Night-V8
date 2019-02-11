@@ -88,7 +88,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
 
     private IEnumerator WaitToDie()
     {
-        _trail.StartFade();
+        if (_trail != null) _trail.StartFade();
         foreach (SpriteRenderer spriteRenderer in _sprites) spriteRenderer.enabled = false;
         _dying = true;
         _rigidBody.velocity = Vector2.zero;
@@ -98,7 +98,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
 
     private void Explode()
     {
-        MaelstromImpactBehaviour.Create(transform.position, _rigidBody.velocity.normalized);
+        MaelstromImpactBehaviour.Create(transform.position);
         StartCoroutine(WaitToDie());
     }
 

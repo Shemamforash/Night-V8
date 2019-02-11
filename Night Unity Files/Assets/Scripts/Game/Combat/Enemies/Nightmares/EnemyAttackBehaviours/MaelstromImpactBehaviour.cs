@@ -7,12 +7,10 @@ public class MaelstromImpactBehaviour : MonoBehaviour {
 
 	private static readonly ObjectPool<MaelstromImpactBehaviour> _impactPool = new ObjectPool<MaelstromImpactBehaviour>("Impacts", "Prefabs/Combat/Visuals/Maelstrom Impact");
 	
-	public static void Create(Vector2 position, Vector2 direction)
+	public static void Create(Vector2 position)
 	{
 		MaelstromImpactBehaviour impact = _impactPool.Create();
 		impact.transform.position = position;
-		float rot = AdvancedMaths.AngleFromUp(Vector2.zero, direction);
-		impact.transform.rotation = Quaternion.Euler(0, 0, rot);
 		impact.StartCoroutine(impact.WaitAndDie());
 	}
 

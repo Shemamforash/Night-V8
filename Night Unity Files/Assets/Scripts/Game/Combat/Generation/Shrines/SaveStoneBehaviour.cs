@@ -1,6 +1,8 @@
-﻿using Game.Combat.Generation;
+﻿using System.Collections.Generic;
+using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
@@ -11,13 +13,20 @@ public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
     public void Awake()
     {
         _instance = this;
+        List<Vector2> points = new List<Vector2>();
+        points.Add(new Vector2(-0.2f, 0.2f));
+        points.Add(new Vector2(0.2f, 0.2f));
+        points.Add(new Vector2(0.2f, -0.2f));
+        points.Add(new Vector2(-0.2f, -0.2f));
+        Polygon b = new Polygon(points, Vector2.zero);
+        WorldGrid.AddBarrier(b);
     }
 
     public static SaveStoneBehaviour Instance()
     {
         return _instance;
     }
-    
+
     protected override void StartShrine()
     {
     }

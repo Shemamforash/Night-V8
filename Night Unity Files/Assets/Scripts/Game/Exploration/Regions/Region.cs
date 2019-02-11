@@ -25,37 +25,30 @@ namespace Game.Exploration.Regions
         private static int _currentId;
 
         private readonly List<int> _neighborIds = new List<int>();
-        public readonly List<EnemyCampfire> Fires = new List<EnemyCampfire>();
-        public readonly List<ContainerController> Containers = new List<ContainerController>();
 
-        private RegionType _regionType;
-        private bool _discovered, _seen, _generated;
-        private int _size;
-        public bool ShouldGenerateEncounter;
+        private const int TimeToGenerateResource = 12 * WorldState.MinutesPerHour;
+
         private GameObject _nodeObject;
         private MapNodeController _mapNode;
-
+        private RegionType _regionType;
         private string _claimBenefit = "";
-        private int _claimQuantity;
+        private int _size, _claimQuantity, _remainingTimeToGenerateResource;
+        private bool _discovered, _seen, _generated, _templeCleansed, _isDynamicRegion, _justDiscovered;
+
+        public readonly List<EnemyCampfire> Fires = new List<EnemyCampfire>();
+        public readonly List<ContainerController> Containers = new List<ContainerController>();
         public List<Barrier> Barriers = new List<Barrier>();
-        public string Name;
-        public int RegionID, WaterSourceCount, FoodSourceCount, ResourceSourceCount, ClaimRemaining;
-        public bool RitesRemain = true;
-        public bool ReadJournal = true;
         public Player CharacterHere;
         public Vector2? RadianceStonePosition;
-        private bool _templeCleansed;
-        public bool IsWeaponHere = true;
-        public bool FountainVisited;
-        private bool _isDynamicRegion;
-        private bool _justDiscovered;
+        public string Name;
+        public bool ShouldGenerateEncounter, FountainVisited, IsWeaponHere = true, RitesRemain = true, ReadJournal = true;
+        public int RegionID, WaterSourceCount, FoodSourceCount, ResourceSourceCount;
 
         public Region() : base(Vector2.zero)
         {
             RegionID = _currentId;
             ++_currentId;
         }
-
 
         public void SetTempleCleansed()
         {
@@ -66,8 +59,8 @@ namespace Game.Exploration.Regions
         public string ClaimBenefitString()
         {
             if (_claimBenefit == "") return _claimBenefit;
-            int minutesPerDay = 24 * WorldState.MinutesPerHour;
-            int timeRemaining = ClaimRemaining;
+            int minutesPerDay = TimeToGenerateResource;
+            int timeRemaining = _remainingTimeToGenerateResource;
             if (timeRemaining > minutesPerDay) timeRemaining -= minutesPerDay;
             int timeRemainingInHours = Mathf.CeilToInt(timeRemaining / 24f);
             string hourString = timeRemainingInHours == 1 ? "hr" : "hrs";
@@ -81,10 +74,8 @@ namespace Game.Exploration.Regions
             PlayerCombat.Instance.Player.BrandManager.IncreaseRegionsExplored();
         }
 
-        public void Claim(Vector2 position)
+        private void SetClaimResource()
         {
-            RadianceStonePosition = position;
-            ClaimRemaining = 2 * 24 * WorldState.MinutesPerHour;
             switch (_regionType)
             {
                 case RegionType.Shelter:
@@ -97,22 +88,15 @@ namespace Game.Exploration.Regions
                     break;
                 case RegionType.Animal:
                     _claimBenefit = "Meat";
-                    _claimQuantity = 2;
+                    _claimQuantity = 1;
                     break;
                 case RegionType.Danger:
-                    if (Random.Range(0, 2) == 0)
-                    {
-                        _claimBenefit = "Water";
-                        _claimQuantity = 1;
-                        break;
-                    }
-
-                    _claimBenefit = "Meat";
+                    _claimBenefit = Random.Range(0, 2) == 0 ? "Water" : "Meat";
                     _claimQuantity = 1;
                     break;
                 case RegionType.Fountain:
                     _claimBenefit = "Water";
-                    _claimQuantity = 2;
+                    _claimQuantity = 1;
                     break;
                 case RegionType.Monument:
                     _claimBenefit = ResourceTemplate.GetResource().Name;
@@ -126,27 +110,26 @@ namespace Game.Exploration.Regions
                     _claimBenefit = ResourceTemplate.GetResource().Name;
                     _claimQuantity = 1;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
+        }
 
+        public void Claim(Vector2 position)
+        {
+            RadianceStonePosition = position;
+            _remainingTimeToGenerateResource = TimeToGenerateResource;
             int willGain = Mathf.FloorToInt(PlayerCombat.Instance.Player.Attributes.ClaimRegionWillGainModifier);
             PlayerCombat.Instance.Player.Attributes.Get(AttributeType.Will).Increment(willGain);
         }
 
+        public bool Claimed() => RadianceStonePosition != null;
+
         public void Update()
         {
-            if (ClaimRemaining == 0) return;
-            --ClaimRemaining;
-            if (ClaimRemaining == 0)
-            {
-                _claimBenefit = "";
-                WorldEventManager.GenerateEvent(new WorldEvent(Name + " has been lost to the darkness"));
-                RadianceStonePosition = null;
-            }
-
-            if (ClaimRemaining % (24 * WorldState.MinutesPerHour) != 0) return;
-            Inventory.IncrementResource(_claimBenefit, 1);
+            if (!Claimed()) return;
+            --_remainingTimeToGenerateResource;
+            if (_remainingTimeToGenerateResource != 0) return;
+            _remainingTimeToGenerateResource = TimeToGenerateResource;
+            Inventory.IncrementResource(_claimBenefit, _claimQuantity);
         }
 
         public static Region Load(XmlNode doc)
@@ -170,7 +153,7 @@ namespace Game.Exploration.Regions
             region.FoodSourceCount = doc.IntFromNode("FoodSourceCount");
             region.ResourceSourceCount = doc.IntFromNode("ResourceSourceCount");
             region.ReadJournal = doc.BoolFromNode("ReadJournal");
-            region.ClaimRemaining = doc.IntFromNode("ClaimRemaining");
+            region._remainingTimeToGenerateResource = doc.IntFromNode("ClaimRemaining");
             region._claimQuantity = doc.IntFromNode("ClaimQuantity");
             region._claimBenefit = doc.StringFromNode("ClaimBenefit");
             region.RitesRemain = doc.BoolFromNode("RitesRemaining");
@@ -202,7 +185,7 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("FoodSourceCount", FoodSourceCount);
             regionNode.CreateChild("ResourceSourceCount", ResourceSourceCount);
             regionNode.CreateChild("ReadJournal", ReadJournal);
-            regionNode.CreateChild("ClaimRemaining", ClaimRemaining);
+            regionNode.CreateChild("ClaimRemaining", _remainingTimeToGenerateResource);
             regionNode.CreateChild("ClaimQuantity", _claimQuantity);
             regionNode.CreateChild("ClaimBenefit", _claimBenefit);
             regionNode.CreateChild("RitesRemaining", RitesRemain);
@@ -239,9 +222,8 @@ namespace Game.Exploration.Regions
         private List<EnemyTemplate> GenerateEncounter(List<EnemyTemplate> allowedTypes)
         {
             List<EnemyTemplate> templates = new List<EnemyTemplate>();
-            if (!IsDynamic()) return templates;
-            if (ShouldGenerateEncounter && RadianceStonePosition == null)
-                _size = WorldState.Difficulty() + 4;
+            if (Claimed() || !IsDynamic()) return templates;
+            if (ShouldGenerateEncounter) _size = WorldState.Difficulty() + 4;
             templates.AddRange(CombatManager.GenerateEnemies(_size, allowedTypes));
             _size = 0;
             return templates;
@@ -250,14 +232,14 @@ namespace Game.Exploration.Regions
         private List<EnemyTemplate> GenerateAnimalEncounter()
         {
             List<EnemyTemplate> templates = new List<EnemyTemplate>();
+            if (Claimed()) return templates;
             List<EnemyTemplate> animalTypes = new List<EnemyTemplate>
             {
                 EnemyTemplate.GetEnemyTemplate(EnemyType.Grazer),
                 EnemyTemplate.GetEnemyTemplate(EnemyType.Watcher),
                 EnemyTemplate.GetEnemyTemplate(EnemyType.Curio)
             };
-            if (ShouldGenerateEncounter && RadianceStonePosition == null)
-                _size = WorldState.Difficulty() / 10 + 5;
+            if (ShouldGenerateEncounter) _size = WorldState.Difficulty() / 10 + 5;
             while (_size > 0)
             {
                 animalTypes.Shuffle();
@@ -287,6 +269,7 @@ namespace Game.Exploration.Regions
             _regionType = regionType;
             CheckIsDynamic();
             Name = MapGenerator.GenerateName(_regionType);
+            SetClaimResource();
             if (_regionType != RegionType.Shelter) return;
             if (CharacterManager.Characters.Count == 3) return;
             CharacterHere = CharacterManager.GenerateRandomCharacter();

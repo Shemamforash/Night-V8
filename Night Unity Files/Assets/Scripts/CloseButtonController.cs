@@ -11,11 +11,10 @@ using UnityEngine.UI;
 
 public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField]
-    private Button _button;
+    [SerializeField] private Button _button;
     [SerializeField] private TextMeshProUGUI _buttonText;
     [SerializeField] private Image _glowImage;
-    
+
     private InputAxis _targetAxis = InputAxis.Menu;
     private Action _callback;
     private bool _usingFireInput;
@@ -25,7 +24,6 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
         if (!_usingFireInput) UseDefaultInput();
         else _targetAxis = InputAxis.Sprint;
     }
-
 
     public void SetOnClick(UnityAction a)
     {
@@ -91,11 +89,11 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        _glowImage.DOFade(0.5f, 0.25f);
+        _glowImage.DOFade(0.5f, 0.25f).SetUpdate(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        _glowImage.DOFade(0f, 0.25f);
+        _glowImage.DOFade(0f, 0.25f).SetUpdate(true);
     }
 }

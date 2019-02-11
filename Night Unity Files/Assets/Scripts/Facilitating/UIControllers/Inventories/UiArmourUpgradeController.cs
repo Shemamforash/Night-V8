@@ -4,6 +4,7 @@ using Facilitating.Persistence;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Gear.Armour;
+using Game.Global;
 using Game.Global.Tutorial;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -77,8 +78,16 @@ namespace Facilitating.UIControllers
             InputHandler.RegisterInputListener(this);
             _armourObject.SetActive(true);
             _upgradeObject.SetActive(false);
-            _upgradeButton.Select();
-            _upgradeButton.Button().enabled = _armourController.CanUpgrade();
+            if (_armourController.GetCurrentLevel() == 10)
+            {
+                _upgradeButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                _upgradeButton.Select();
+                _upgradeButton.Button().enabled = _armourController.CanUpgrade();
+            }
+
             ShowArmourTutorial();
         }
 
@@ -96,6 +105,7 @@ namespace Facilitating.UIControllers
 
         private void Upgrade()
         {
+            UiGearMenuController.PlayAudio(AudioClips.EquipArmour);
             _armourController.Upgrade();
             _upgradeMessage.SetText("Upgraded to " + _armourController.GetName());
             _armourObject.SetActive(false);

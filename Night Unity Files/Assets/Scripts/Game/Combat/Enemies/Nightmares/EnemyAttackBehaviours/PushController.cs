@@ -25,7 +25,7 @@ public class PushController : MonoBehaviour
         shape.arc = arcSize;
         int emitCount = (int) (arcSize / 360f * 150);
         ParticleSystem.CollisionModule collision = _pushParticles.collision;
-        int mask = player ? 1 << 10 : 1 << 17;
+        int mask = player ? 1 << 10 | 1 << 24 : 1 << 17;
         collision.collidesWith = mask;
         _pushParticles.Emit(emitCount);
         _audioSource.volume = Random.Range(0.8f, 0.9f);

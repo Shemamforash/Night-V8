@@ -38,8 +38,4 @@ public class MaelstromShotTrail : BulletTrail
         _paths.Clear();
         _points.Clear();
     }
-
-    protected virtual void Initialise(bool isPlayer)
-    {
-    }
 }

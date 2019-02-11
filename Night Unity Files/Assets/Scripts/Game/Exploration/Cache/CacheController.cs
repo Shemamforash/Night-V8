@@ -18,6 +18,7 @@ public class CacheController : MonoBehaviour
     private static GameObject _prefab;
     private CacheButtonController _lastButton;
     private UiSkillUpgradeEffectController _successEffect;
+    private bool _active = true;
 
     private void Awake()
     {
@@ -91,6 +92,7 @@ public class CacheController : MonoBehaviour
 
     private void Deactivate()
     {
+        _active = false;
         _cacheRings.ForEach(r => r.Deactivate());
         _orderedButtons.ForEach(b =>
         {
@@ -139,5 +141,10 @@ public class CacheController : MonoBehaviour
         _cacheRings[buttonIndex].SetActive(true);
         if (buttonIndex + 1 == _scrambledButtons.Count) Succeed();
         else _nextButton = _scrambledButtons[buttonIndex + 1];
+    }
+
+    public static bool Active()
+    {
+        return _instance != null && _instance._active;
     }
 }

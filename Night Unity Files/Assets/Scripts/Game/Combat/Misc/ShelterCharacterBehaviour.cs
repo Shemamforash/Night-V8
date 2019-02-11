@@ -93,7 +93,6 @@ namespace Game.Combat.Misc
 
         private void CheckToLeave()
         {
-            Debug.DrawLine(transform.position, _targetCell.Position, Color.red, 2f);
             if (_targetCell == null) return;
             if (WorldGrid.WorldToCellPosition(transform.position) != _targetCell) return;
             _leaving = true;

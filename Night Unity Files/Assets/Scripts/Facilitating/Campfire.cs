@@ -24,11 +24,18 @@ namespace Facilitating
         private static bool _tending;
         private static float _fireLevel;
         private static Crackling _crackling;
+        private static Campfire _instance;
 
         public void Awake()
         {
             _crackling = GetComponent<Crackling>();
             _crackling.Silence();
+            _instance = this;
+        }
+
+        private void OnDestroy()
+        {
+            _instance = null;
         }
 
         public void Start()
@@ -54,21 +61,23 @@ namespace Facilitating
 
         private void UpdateRates()
         {
-            ParticleSystem.EmissionModule fireEmission = _fire.emission;
-            float fireEmissionLevel = _fireLevel - FireBurnOutPoint;
-            if (fireEmissionLevel < 0) fireEmissionLevel = 0;
-            fireEmissionLevel /= 1 - FireBurnOutPoint;
-            fireEmission.rateOverTime = FireEmissionRateMax * fireEmissionLevel;
+            if (_tending)
+            {
+                ParticleSystem.EmissionModule fireEmission = _fire.emission;
+                float fireEmissionLevel = _fireLevel - FireBurnOutPoint;
+                if (fireEmissionLevel < 0) fireEmissionLevel = 0;
+                fireEmissionLevel /= 1 - FireBurnOutPoint;
+                fireEmission.rateOverTime = FireEmissionRateMax * fireEmissionLevel;
 
-            ParticleSystem.MainModule _smoke1Main = _smoke1.main;
-            _smoke1Main.startLifetime = Smoke1DurationMax * _fireLevel;
-            ParticleSystem.MainModule _smoke2Main = _smoke2.main;
-            _smoke2Main.startLifetime = Smoke2DurationMax * _fireLevel;
-            ParticleSystem.MainModule _smoke3Main = _smoke3.main;
-            _smoke3Main.startLifetime = Smoke3DurationMax * _fireLevel;
-            ParticleSystem.MainModule _smoke4Main = _smoke4.main;
-            _smoke4Main.startLifetime = Smoke4DurationMax * _fireLevel;
-
+                ParticleSystem.MainModule _smoke1Main = _smoke1.main;
+                _smoke1Main.startLifetime = Smoke1DurationMax * _fireLevel;
+                ParticleSystem.MainModule _smoke2Main = _smoke2.main;
+                _smoke2Main.startLifetime = Smoke2DurationMax * _fireLevel;
+                ParticleSystem.MainModule _smoke3Main = _smoke3.main;
+                _smoke3Main.startLifetime = Smoke3DurationMax * _fireLevel;
+                ParticleSystem.MainModule _smoke4Main = _smoke4.main;
+                _smoke4Main.startLifetime = Smoke4DurationMax * _fireLevel;
+            }
             _fireLightImage.color = Color.Lerp(Color.black, Color.white, _fireLevel);
         }
 
@@ -79,7 +88,11 @@ namespace Facilitating
 
         public static void Tend()
         {
-            if (!_tending) _crackling.FadeIn(6f);
+            if (!_tending)
+            {
+                _crackling.FadeIn(6f);
+            }
+
             _tending = true;
             _fireLevel += 0.2f;
             if (_fireLevel > 1) _fireLevel = 1;
@@ -102,6 +115,11 @@ namespace Facilitating
 
             _fireLevel -= 0.02f;
             if (_fireLevel > 0) return;
+            _instance._fire.Stop();
+            _instance._smoke1.Stop();
+            _instance._smoke2.Stop();
+            _instance._smoke3.Stop();
+            _instance._smoke4.Stop();
             _crackling.FadeOut(1f);
             _fireLevel = 0;
         }

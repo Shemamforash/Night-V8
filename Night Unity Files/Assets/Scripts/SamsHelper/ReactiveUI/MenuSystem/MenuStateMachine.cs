@@ -19,6 +19,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         private static StateMachine States;
         public Menu InitialMenu;
         private static Action OnTransition;
+        private static Sequence _sequence;
         private const float MenuFadeTime = 0.1f;
 
         public void Awake()
@@ -63,18 +64,18 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             MenuState currentState = (MenuState) States.GetCurrentState();
             MenuState nextState = (MenuState) States.GetState(menuName);
 
-            Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
-
+            _sequence?.Complete(true);
+            _sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
             EventSystem.current.sendNavigationEvents = false;
-            if (currentState != null) sequence.Append(DOTween.To(currentState.Menu.GetAlpha, currentState.Menu.SetAlpha, 0f, MenuFadeTime));
-            sequence.AppendCallback(() =>
+            if (currentState != null) _sequence.Append(DOTween.To(currentState.Menu.GetAlpha, currentState.Menu.SetAlpha, 0f, MenuFadeTime));
+            _sequence.AppendCallback(() =>
             {
                 currentState?.SetActive(false);
                 nextState.SetActive(true);
                 nextState.Menu.PreEnter();
             });
-            sequence.Append(DOTween.To(nextState.Menu.GetAlpha, nextState.Menu.SetAlpha, 1f, MenuFadeTime));
-            sequence.AppendCallback(() =>
+            _sequence.Append(DOTween.To(nextState.Menu.GetAlpha, nextState.Menu.SetAlpha, 1f, MenuFadeTime));
+            _sequence.AppendCallback(() =>
             {
                 EventSystem.current.sendNavigationEvents = true;
                 nextState.Enter();

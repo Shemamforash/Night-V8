@@ -10,34 +10,34 @@ namespace Game.Gear.Weapons
 {
     public class BaseWeaponBehaviour : MonoBehaviour
     {
-        protected Weapon Weapon;
-        private WeaponAttributes WeaponAttributes;
-        public int AmmoInMagazine;
-        protected float TimeToNextFire;
-        protected CharacterCombat Origin;
+        private Weapon _weapon;
+        private WeaponAttributes _weaponAttributes;
+        private float TimeToNextFire;
+        private CharacterCombat _origin;
         private bool _fired;
+        private int _ammoInMagazine;
 
         public void Initialise(CharacterCombat origin)
         {
-            Origin = origin;
-            Weapon = origin.Weapon();
-            WeaponAttributes = Weapon.WeaponAttributes;
+            _origin = origin;
+            _weapon = origin.Weapon();
+            _weaponAttributes = _weapon.WeaponAttributes;
             Reload();
         }
 
-        public virtual void Reload()
+        public void Reload()
         {
-            AmmoInMagazine = (int) WeaponAttributes.Val(AttributeType.Capacity);
+            _ammoInMagazine = (int) _weaponAttributes.Val(AttributeType.Capacity);
             _fired = false;
         }
 
-        public bool FullyLoaded() => GetRemainingAmmo() == (int) WeaponAttributes.Val(AttributeType.Capacity);
+        public bool FullyLoaded() => GetRemainingAmmo() == (int) _weaponAttributes.Val(AttributeType.Capacity);
 
-        public int Capacity() => (int) WeaponAttributes.Val(AttributeType.Capacity);
+        public int Capacity() => (int) _weaponAttributes.Val(AttributeType.Capacity);
 
         public bool Empty() => GetRemainingAmmo() == 0;
 
-        public int GetRemainingAmmo() => AmmoInMagazine;
+        public int GetRemainingAmmo() => _ammoInMagazine;
 
         protected bool FireRateTargetMet()
         {
@@ -46,7 +46,7 @@ namespace Game.Gear.Weapons
 
         public bool CanFire()
         {
-            bool needsTriggerPull = !WeaponAttributes.Automatic && _fired;
+            bool needsTriggerPull = !_weaponAttributes.Automatic && _fired;
             return !Empty() && FireRateTargetMet() && !needsTriggerPull;
         }
 
@@ -55,7 +55,7 @@ namespace Game.Gear.Weapons
             _fired = true;
         }
 
-        public virtual void StopFiring()
+        public void StopFiring()
         {
             _fired = false;
         }
@@ -68,19 +68,19 @@ namespace Game.Gear.Weapons
         protected void Fire()
         {
             if (Empty()) return;
-            TimeToNextFire = Helper.TimeInSeconds() + 1f / Weapon.GetAttributeValue(AttributeType.FireRate);
-            for (int i = 0; i < WeaponAttributes.Val(AttributeType.Pellets); ++i)
+            TimeToNextFire = Helper.TimeInSeconds() + 1f / _weapon.GetAttributeValue(AttributeType.FireRate);
+            for (int i = 0; i < _weaponAttributes.Val(AttributeType.Pellets); ++i)
             {
-                Shot shot = Shot.Create(Origin);
-                Origin.ApplyShotEffects(shot);
+                Shot shot = Shot.Create(_origin);
+                _origin.ApplyShotEffects(shot);
                 if (this is HoldAndFire) shot.Attributes().Piercing = true;
                 shot.Fire();
             }
 
-            if (Origin is PlayerCombat) PlayerCombat.Instance.Shake(Weapon.WeaponAttributes.DPS());
-            Origin.WeaponAudio.Fire(Weapon);
+            if (_origin is PlayerCombat) PlayerCombat.Instance.Shake(_weapon.WeaponAttributes.DPS());
+            _origin.WeaponAudio.Fire(_weapon);
             ConsumeAmmo(1);
-            if (!(Origin is PlayerCombat)) return;
+            if (!(_origin is PlayerCombat)) return;
             PlayerCombat.Instance.MuzzleFlashOpacity = 0.2f;
             UIMagazineController.UpdateMagazineUi();
         }
@@ -88,17 +88,17 @@ namespace Game.Gear.Weapons
         public void ConsumeAmmo(int amount = -1)
         {
             float durabilityModifier = 1;
-            if (amount < 0) amount = AmmoInMagazine;
-            WeaponAttributes.DecreaseDurability(amount, durabilityModifier);
-            AmmoInMagazine -= amount;
-            if (AmmoInMagazine < 0) throw new Exceptions.MoreAmmoConsumedThanAvailableException();
+            if (amount < 0) amount = _ammoInMagazine;
+            _weaponAttributes.DecreaseDurability(amount, durabilityModifier);
+            _ammoInMagazine -= amount;
+            if (_ammoInMagazine < 0) throw new Exceptions.MoreAmmoConsumedThanAvailableException();
         }
 
         public void IncreaseAmmo(int amount)
         {
-            AmmoInMagazine += amount;
-            if (AmmoInMagazine > Capacity()) AmmoInMagazine = Capacity();
-            if (!(Origin is PlayerCombat)) return;
+            _ammoInMagazine += amount;
+            if (_ammoInMagazine > Capacity()) _ammoInMagazine = Capacity();
+            if (!(_origin is PlayerCombat)) return;
             UIMagazineController.UpdateMagazineUi();
         }
     }

@@ -42,9 +42,10 @@ namespace Game.Combat.Enemies.Bosses.Starfish
                 float x = Mathf.Cos(angle * Mathf.Deg2Rad);
                 float y = Mathf.Sin(angle * Mathf.Deg2Rad);
                 Vector3 direction = new Vector2(x, y);
-                MaelstromShotBehaviour.Create(direction, transform.position + direction, 1.5f, false);
+                MaelstromShotBehaviour.Create(direction, transform.position + direction, 2f, false);
             }
 
+            StarfishBehaviour.Instance().FlashGlow();
             _radialAttackAngle += 5f;
         }
 
@@ -60,7 +61,7 @@ namespace Game.Combat.Enemies.Bosses.Starfish
         private IEnumerator DoBurstAttack()
         {
             _attacking = true;
-            int count = 30;
+            int count = 25;
             float angleInterval = 360f / count;
             float startAngle = 0f;
 
@@ -72,9 +73,10 @@ namespace Game.Combat.Enemies.Bosses.Starfish
                     float x = Mathf.Cos(angle * Mathf.Deg2Rad);
                     float y = Mathf.Sin(angle * Mathf.Deg2Rad);
                     Vector3 direction = new Vector2(x, y);
-                    MaelstromShotBehaviour.Create(direction, transform.position + direction, 1.5f, false);
+                    MaelstromShotBehaviour.Create(direction, transform.position + direction, 1f, false);
                 }
 
+                StarfishBehaviour.Instance().FlashGlow();
                 startAngle = startAngle == 0 ? angleInterval / 2f : 0;
                 yield return new WaitForSeconds(0.5f);
             }
@@ -99,9 +101,10 @@ namespace Game.Combat.Enemies.Bosses.Starfish
                 x = Mathf.Cos(angleB * Mathf.Deg2Rad);
                 y = Mathf.Sin(angleB * Mathf.Deg2Rad);
                 Vector3 dirB = new Vector2(x, y);
-                MaelstromShotBehaviour.Create(dirA, transform.position + dirA, 1.5f, false);
-                MaelstromShotBehaviour.Create(dirB, transform.position + dirB, 1.5f, false);
-                yield return new WaitForSeconds(0.15f);
+                MaelstromShotBehaviour.Create(dirA, transform.position + dirA, 1f, false);
+                MaelstromShotBehaviour.Create(dirB, transform.position + dirB, 1f, false);
+                StarfishBehaviour.Instance().FlashGlow();
+                yield return new WaitForSeconds(0.25f);
             }
 
             _spinAttackCooldown = Random.Range(7.5f, 15f);

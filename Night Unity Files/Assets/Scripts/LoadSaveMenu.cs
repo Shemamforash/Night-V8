@@ -29,7 +29,7 @@ public class LoadSaveMenu : Menu
     private void SetMostRecentSave()
     {
         if (!_autoSave.Valid()) return;
-        if (_autoSave.TotalTime > _manualSave.TotalTime)
+        if (_autoSave.MoreRecentThan(_manualSave))
             _autoSave.SetMostRecent();
         else
             _manualSave.SetMostRecent();

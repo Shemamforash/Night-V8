@@ -30,6 +30,17 @@ namespace Game.Combat.Generation.Shrines
             _instance = this;
             _particleSystems = transform.GetComponentsInChildren<ParticleSystem>();
             _audioSource = GetComponent<AudioSource>();
+
+            List<Vector2> points = new List<Vector2>();
+            for (int i = 0; i < points.Count; ++i)
+            {
+                float angle = 360f / 25;
+                Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, 1.25f, Vector2.zero, false);
+                points.Add(position);
+            }
+
+            Polygon b = new Polygon(points, Vector2.zero);
+            WorldGrid.AddBarrier(b);
         }
 
         private void OnDestroy()

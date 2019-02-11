@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DG.Tweening;
 using Game.Combat.Enemies.Bosses;
 using Game.Combat.Generation;
 using SamsHelper.Libraries;
@@ -72,7 +73,8 @@ public class StarFishArmBehaviour : BossSectionHealthController
     public override void Kill()
     {
         _dead = true;
-        Destroy(GetComponent<SpriteRenderer>());
+        float opacity = Damping / 3f;
+        GetComponent<SpriteRenderer>().DOFade(opacity, 1f);
         Destroy(GetComponent<PolygonCollider2D>());
         Destroy(GetComponent<DamageSpriteFlash>());
         CombatManager.RemoveEnemy(this);

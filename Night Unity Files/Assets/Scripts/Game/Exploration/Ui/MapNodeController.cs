@@ -25,17 +25,17 @@ namespace Game.Exploration.Ui
         private bool _doneFading;
         private TextMeshProUGUI _nameText, _costText, _claimText;
 
-        private Image _icon, _selectedImage;
+        private Image _icon, _selectedImage, _claimedSprite;
         private float _targetCentreAlpha, _targetNodeAlpha;
-        private CanvasGroup _nodeCanvas, _centreCanvas;
+        private CanvasGroup _nodeCanvas, _centreCanvas, _ringCanvas;
         private UIBorderController _border;
         private int _gritCost;
         private Region _region;
-        private ParticleSystem _claimedParticles;
 
         private bool _hidden;
         private bool _canAfford;
         private int _distance;
+        private Sequence _sequence;
 
         public void Awake()
         {
@@ -50,18 +50,11 @@ namespace Game.Exploration.Ui
 
             _border = gameObject.FindChildWithName<UIBorderController>("Border");
             _border.SetActive();
-            _claimedParticles = gameObject.FindChildWithName<ParticleSystem>("Claimed");
-        }
+            _claimedSprite = gameObject.FindChildWithName<Image>("Claimed");
+            _claimedSprite.SetAlpha(0);
 
-        private void SetTrailAlpha(float alpha)
-        {
-            ParticleSystem.TrailModule trails = _claimedParticles.trails;
-            trails.colorOverTrail = new Color(1, 1, 1, alpha);
-        }
-
-        private float GetTrailAlpha()
-        {
-            return _claimedParticles.trails.colorOverTrail.color.a;
+            _ringCanvas = gameObject.FindChildWithName<CanvasGroup>("Rings");
+            _ringCanvas.alpha = 0;
         }
 
         private void SetGritText()
@@ -85,15 +78,24 @@ namespace Game.Exploration.Ui
             SetGritText();
             _targetCentreAlpha = 0.6f;
             _targetNodeAlpha = _canAfford ? 1f : 0.5f;
-            float claimAlpha = _region.ClaimRemaining > 0 ? 1 : 0;
-            DOTween.To(GetTrailAlpha, SetTrailAlpha, claimAlpha, 1f).SetUpdate(UpdateType.Normal, true);
+            float claimAlpha = _region.Claimed() ? 0.5f : 0;
+            float ringAlpha = _region.Claimed() ? 0f : 1f;
+            _sequence?.Kill();
+            _sequence = DOTween.Sequence();
+            _sequence.Append(_claimedSprite.DOFade(claimAlpha, 1f));
+            _sequence.Insert(0f, _ringCanvas.DOFade(ringAlpha, 1f));
+            _sequence.SetUpdate(UpdateType.Normal, true);
         }
 
         public void Hide()
         {
             _hidden = true;
             _targetNodeAlpha = 0f;
-            DOTween.To(GetTrailAlpha, SetTrailAlpha, 0f, 1f).SetUpdate(UpdateType.Normal, true);
+            _sequence?.Kill();
+            _sequence = DOTween.Sequence();
+            _sequence.Append(_claimedSprite.DOFade(0f, 1f));
+            _sequence.Insert(0f, _ringCanvas.DOFade(0f, 1f));
+            _sequence.SetUpdate(UpdateType.Normal, true);
         }
 
         public void SetRegion(Region region)

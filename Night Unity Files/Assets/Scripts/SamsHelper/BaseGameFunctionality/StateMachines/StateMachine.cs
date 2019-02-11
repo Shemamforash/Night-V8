@@ -41,21 +41,5 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         {
             _currentState = state;
         }
-
-        public void ReturnToDefault()
-        {
-            if (_defaultState == null) throw new Exceptions.DefaultStateNotSpecifiedException();
-            if (_currentState == null || !_defaultState.IsCurrentState()) _defaultState.Enter();
-        }
-
-        public bool IsDefaultState(BaseCharacterAction currentState)
-        {
-            return currentState == _defaultState;
-        }
-
-        public string GetDefaultStateName()
-        {
-            return _defaultState.Name;
-        }
     }
 }
