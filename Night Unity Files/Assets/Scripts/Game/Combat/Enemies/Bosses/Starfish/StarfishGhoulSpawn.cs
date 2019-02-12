@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
+using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -35,7 +36,8 @@ namespace Game.Combat.Enemies.Bosses.Starfish
             if (_ghouls.Count == MaxGhouls) return;
             _timeToNextGhoul -= Time.deltaTime;
             if (_timeToNextGhoul > 0f) return;
-            EnemyBehaviour enemy = CombatManager.SpawnEnemy(EnemyType.Ghoul, AdvancedMaths.RandomDirection() * 9);
+            EnemyType typeToSpawn = WorldState.GetAllowedNightmareEnemyTypes().RandomElement().EnemyType;
+            EnemyBehaviour enemy = CombatManager.SpawnEnemy(typeToSpawn, AdvancedMaths.RandomDirection() * 9);
             _ghouls.Add(enemy);
             if (_timeAlive > 60 && Helper.RollDie(0, 3))
             {

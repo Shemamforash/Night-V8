@@ -1,26 +1,61 @@
 using System.Collections;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+using Game.Combat.Misc;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Bosses.Starfish
 {
     public class StarfishSpreadFire : MonoBehaviour
     {
-        private bool _tier1Active;
-        private bool _tier2Active;
-
-        private float _spinAttackCooldown, _burstAttackCooldown, _radialAttackTimer, _radialAttackAngle;
-        private bool _attacking;
+        private bool _tier1Active, _tier2Active, _tier3Active, _tier4Active, _attacking;
+        private float _spinAttackCooldown, _burstAttackCooldown, _radialAttackTimer, _radialAttackAngle, _spinningBombTimer, _radialBombTimer;
+        private float _spinningBombAngle, _radialBombAngle;
 
         public void UpdateSpreadFire()
         {
+            UpdateSpinningBombAttack();
+            UpdateRadialBombAttack();
             if (_attacking) return;
-            UpdateSpinAttack();
-            UpdateBurstAttack();
-            UpdateRadialAttack();
+            UpdateSpinningProjectileAttack();
+            UpdateBurstProjectileAttack();
+            UpdateRadialProjectileAttack();
         }
 
-        private void UpdateSpinAttack()
+        private void UpdateRadialBombAttack()
+        {
+            if (!_tier4Active) return;
+            _radialBombTimer += Time.deltaTime;
+            if (_radialBombTimer < 2f) return;
+            _radialBombTimer = 0f;
+            _radialBombAngle += 36;
+            if (_radialBombAngle >= 360) _radialBombAngle -= 360f;
+            for (int i = 0; i < 5; ++i)
+            {
+                float angle = i * 72 + _radialBombAngle;
+                Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, 4f, Vector2.zero);
+                Explosion explosion = Explosion.CreateExplosion(position);
+                explosion.AddIgnoreTargets(StarfishBehaviour.Instance().GetSections());
+                explosion.Detonate();
+            }
+        }
+
+        private void UpdateSpinningBombAttack()
+        {
+            if (!_tier3Active) return;
+            _spinningBombTimer += Time.deltaTime;
+            if (_spinningBombTimer < 0.5f) return;
+            _spinningBombTimer = 0f;
+            _spinningBombAngle += 6f;
+            if (_spinningBombAngle >= 360) _spinningBombAngle -= 360f;
+            Vector2 position = AdvancedMaths.CalculatePointOnCircle(_spinningBombAngle, 7f, Vector2.zero);
+            Explosion.CreateExplosion(position).Detonate();
+
+            position = AdvancedMaths.CalculatePointOnCircle(_spinningBombAngle + 180f, 7f, Vector2.zero);
+            Explosion.CreateExplosion(position).Detonate();
+        }
+
+        private void UpdateSpinningProjectileAttack()
         {
             if (_spinAttackCooldown < 0f) return;
             _spinAttackCooldown -= Time.deltaTime;
@@ -28,7 +63,7 @@ namespace Game.Combat.Enemies.Bosses.Starfish
             StartCoroutine(DoSpinAttack());
         }
 
-        private void UpdateRadialAttack()
+        private void UpdateRadialProjectileAttack()
         {
             if (!_tier2Active) return;
             _radialAttackTimer -= Time.deltaTime;
@@ -49,7 +84,7 @@ namespace Game.Combat.Enemies.Bosses.Starfish
             _radialAttackAngle += 5f;
         }
 
-        private void UpdateBurstAttack()
+        private void UpdateBurstProjectileAttack()
         {
             if (!_tier1Active) return;
             if (_burstAttackCooldown < 0f) return;
@@ -111,14 +146,12 @@ namespace Game.Combat.Enemies.Bosses.Starfish
             _attacking = false;
         }
 
-        public void StartTier1()
-        {
-            _tier1Active = true;
-        }
+        public void StartTier1() => _tier1Active = true;
 
-        public void StartTier2()
-        {
-            _tier2Active = true;
-        }
+        public void StartTier2() => _tier2Active = true;
+
+        public void StartTier3() => _tier3Active = true;
+
+        public void StartTier4() => _tier4Active = true;
     }
 }

@@ -17,4 +17,9 @@ public class DamageSpriteFlash : MonoBehaviour {
 		_sprite.color = Color.red;
 		colourTween = _sprite.DOColor(Color.white, 0.5f);
 	}
+
+	public void Kill()
+	{
+		colourTween.Complete();
+	}
 }

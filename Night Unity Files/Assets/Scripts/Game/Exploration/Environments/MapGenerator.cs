@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -299,6 +300,7 @@ namespace Game.Exploration.Environment
         {
             LoadRegionNames();
             _regionNames.Clear();
+            string combinationsString = "";
             foreach (RegionType type in _regionTypes)
             {
                 List<string> combinations = new List<string>();
@@ -350,7 +352,11 @@ namespace Game.Exploration.Environment
 
                 combinations.Shuffle();
                 _regionNames.Add(type, combinations);
+                combinationsString += string.Join(System.Environment.NewLine, combinations);
             }
+#if UNITY_EDITOR
+            File.WriteAllText(Directory.GetCurrentDirectory() + "/nametest.txt", combinationsString);
+#endif
         }
 
         private static string StripBlanks(string text)

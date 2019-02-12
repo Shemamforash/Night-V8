@@ -1,5 +1,7 @@
 ﻿using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace SamsHelper.ReactiveUI.MenuSystem
 {
@@ -23,6 +25,8 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             Menu.Enter();
             if (Menu.PauseOnOpen) WorldState.Pause();
             if (Menu.DefaultSelectable == null) return;
+            GameObject current = EventSystem.current.currentSelectedGameObject;
+            if (current != null && current.activeInHierarchy) return;
             Menu.DefaultSelectable.Select();
         }
 

@@ -248,15 +248,15 @@ class CharacterImporter(XMLWriter):
         write_tag(self, "Classes", self.read_classes)
 
     def read_classes(self):
-        for row in range(3, 12):
+        for row in range(3, 9):
             write_tag(self, "Class", self.read_class, [row])
 
     def read_class(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
-        write_single_value(self, "Grit", get_value(self, "D", row))
-        write_single_value(self, "Fettle", get_value(self, "E", row))
-        write_single_value(self, "Will", get_value(self, "F", row))
-        write_single_value(self, "Focus", get_value(self, "G", row))
+        write_single_value(self, "Grit", get_value(self, "B", row))
+        write_single_value(self, "Fettle", get_value(self, "C", row))
+        write_single_value(self, "Will", get_value(self, "D", row))
+        write_single_value(self, "Focus", get_value(self, "E", row))
 
 
 class EnemyImporter(XMLWriter):
@@ -338,7 +338,7 @@ class CharacterStoryImporter(XMLWriter):
         write_tag(self, "Characters", self.read_story)
 
     def read_story(self):
-        for row in range(2, 22):
+        for row in range(2, 20):
             write_tag(self, "StoryPart", self.read_story_part, [row])
 
     def read_story_part(self, row):
@@ -386,7 +386,7 @@ class SkillImporter(XMLWriter):
         write_tag(self, "Skills", self.read_skills)
 
     def read_skills(self):
-        for row in range(2, 28):
+        for row in range(2, 22):
             write_tag(self, "Skill", self.read_skill, [row])
 
     def read_skill(self, row):
@@ -457,17 +457,17 @@ WeaponImporter()
 WeatherImporter()
 # WeatherProbabilityImporter();
 # RegionImporter()
-# CharacterImporter()
+CharacterImporter()
 EnemyImporter()
 RecipeImporter()
 ResourceImporter()
 InscriptionImporter()
-# SkillImporter()
+SkillImporter()
 EnvironmentImporter()
 BrandImporter()
 # WandererImporter()
 # NecromancerImporter()
-# CharacterStoryImporter()
+CharacterStoryImporter()
 # DreamsImporter()
 # LoreImporter()
 # TutorialImporter()

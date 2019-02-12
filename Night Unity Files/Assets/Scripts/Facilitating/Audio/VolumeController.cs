@@ -3,6 +3,7 @@ using Facilitating.Persistence;
 using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -56,6 +57,7 @@ public class VolumeController : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public void OnSelect(BaseEventData eventData)
     {
+        EnhancedButton.DeselectCurrent();
     }
 
     public void OnDeselect(BaseEventData eventData)

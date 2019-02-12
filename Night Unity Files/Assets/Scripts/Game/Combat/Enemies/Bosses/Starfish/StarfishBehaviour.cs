@@ -4,22 +4,22 @@ using Game.Combat.Enemies.Bosses;
 using Game.Combat.Enemies.Bosses.Starfish;
 using Game.Combat.Enemies.Misc;
 using Game.Combat.Generation;
+using Game.Combat.Misc;
 using SamsHelper.Libraries;
 using UnityEngine;
 
 public class StarfishBehaviour : Boss
 {
+    private const int Attack1Target = 60, Attack2Target = 45, Attack3Target = 35, Attack4Target = 20;
     private readonly List<StarFishMainArmBehaviour> _arms = new List<StarFishMainArmBehaviour>();
     private static float _radiusModifier = 1f;
     private float _timeToContract;
-    private static int _bombsToLaunch;
     private static StarfishBehaviour _instance;
     private bool _contracting;
     private StarfishGhoulSpawn _ghoulSpawn;
     private StarfishSpreadFire _spreadFire;
     private SpriteRenderer _shotGlow;
     private Tweener _glowTween;
-
 
     public static void Create()
     {
@@ -104,22 +104,6 @@ public class StarfishBehaviour : Boss
         PushController.Create(transform.position, 288f, false, 40f);
     }
 
-    private void LaunchBombs()
-    {
-        if (_bombsToLaunch == 0) return;
-        float angleDivision = 360f / _bombsToLaunch;
-        for (int i = 0; i < _bombsToLaunch; ++i)
-        {
-            float angleFrom = i * angleDivision;
-            float angleTo = (i + 1) * angleDivision;
-            float angle = Random.Range(angleFrom, angleTo);
-            float x = Mathf.Cos(angle * Mathf.Deg2Rad);
-            float y = Mathf.Sin(angle * Mathf.Deg2Rad);
-            Vector3 direction = new Vector2(x, y) * Random.Range(3f, 5f);
-            Grenade.CreateBasic(transform.position, direction, false);
-        }
-    }
-
     private void Contract()
     {
         if (_contracting) return;
@@ -129,7 +113,6 @@ public class StarfishBehaviour : Boss
         sequence.Append(DOTween.To(GetRadiusModifier, SetRadiusModifier, 1.2f, 1f).SetEase(Ease.OutExpo));
         sequence.Append(DOTween.To(GetRadiusModifier, SetRadiusModifier, 0.4f, 0.2f).SetEase(Ease.InBack));
         sequence.AppendCallback(PushPulse);
-        sequence.AppendCallback(LaunchBombs);
         sequence.Append(DOTween.To(GetRadiusModifier, SetRadiusModifier, 1f, 3f));
         sequence.AppendCallback(ResetContract);
     }
@@ -164,12 +147,18 @@ public class StarfishBehaviour : Boss
         base.UnregisterSection(starFishArmBehaviour);
         int armCountAfter = SectionCount();
 
-        if (armCountBefore > 50 && armCountAfter <= 50)
+        if (armCountBefore > Attack1Target && armCountAfter <= Attack1Target)
             _spreadFire.StartTier1();
-        else if (armCountBefore > 25 && armCountAfter <= 25)
+        else if (armCountBefore > Attack2Target && armCountAfter <= Attack2Target)
             _spreadFire.StartTier2();
+        else if (armCountBefore > Attack3Target && armCountAfter <= Attack3Target)
+            _spreadFire.StartTier3();
+        else if (armCountBefore > Attack4Target && armCountAfter <= Attack4Target)
+            _spreadFire.StartTier4();
+    }
 
-        if (armCountAfter > 35) return;
-        _bombsToLaunch = Mathf.CeilToInt((35f - armCountAfter) / 3f);
+    public List<CanTakeDamage> GetSections()
+    {
+        return new List<CanTakeDamage>(Sections);
     }
 }

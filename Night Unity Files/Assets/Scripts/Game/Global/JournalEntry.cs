@@ -107,6 +107,7 @@ namespace Game.Global
             {
                 CharacterClass characterClass = c.CharacterTemplate.CharacterClass;
                 if (characterClass == CharacterClass.Wanderer) return;
+                if (!CharacterStories.ContainsKey(characterClass)) return;
                 characterEntries.AddRange(CharacterStories[characterClass]);
             });
 

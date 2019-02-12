@@ -32,11 +32,6 @@ namespace Game.Combat.Misc
             return characters;
         }
 
-        public static List<CanTakeDamage> Create(Vector2 position, int stacks = 1)
-        {
-            return Create(position, new List<CanTakeDamage>(), stacks);
-        }
-
         public static void Create(Vector2 position, CanTakeDamage target)
         {
             SickenBehaviour sickness = _sicknessPool.Create();

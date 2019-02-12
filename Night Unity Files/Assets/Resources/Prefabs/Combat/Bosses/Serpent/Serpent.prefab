@@ -1928,8 +1928,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 0.25
-  MinDistance: 1
-  MaxDistance: 5
+  MinDistance: 0.25
+  MaxDistance: 2
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -2814,8 +2814,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 0.25
-  MinDistance: 1
-  MaxDistance: 5
+  MinDistance: 0.25
+  MaxDistance: 2
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -4875,8 +4875,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 0.25
-  MinDistance: 1
-  MaxDistance: 5
+  MinDistance: 0.25
+  MaxDistance: 2
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -6392,8 +6392,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 0.25
-  MinDistance: 1
-  MaxDistance: 5
+  MinDistance: 0.25
+  MaxDistance: 2
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -6721,8 +6721,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 0.25
-  MinDistance: 1
-  MaxDistance: 5
+  MinDistance: 0.25
+  MaxDistance: 2
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0

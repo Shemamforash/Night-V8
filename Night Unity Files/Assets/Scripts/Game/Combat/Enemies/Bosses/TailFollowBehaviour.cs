@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using DG.Tweening;
 using SamsHelper.Libraries;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Bosses
@@ -13,10 +15,12 @@ namespace Game.Combat.Enemies.Bosses
         private Vector3 _lastPosition;
         private Rigidbody2D _parentRigidbody;
         private int ignoreCount;
+        private readonly List<SpriteRenderer> _sprites = new List<SpriteRenderer>();
 
         public void Awake()
         {
             transform.position = Vector2.zero;
+            CacheSprites();
             if (!_isHead) return;
             _parentRigidbody = transform.parent.GetComponent<Rigidbody2D>();
             List<TailFollowBehaviour> tailSegments = new List<TailFollowBehaviour>();
@@ -33,6 +37,14 @@ namespace Game.Combat.Enemies.Bosses
                 tailSegments[i].SetParent(i == 0 ? this : tailSegments[i - 1]);
         }
 
+        private void CacheSprites()
+        {
+            SpriteRenderer spriteOnTail = GetComponent<SpriteRenderer>();
+            if (spriteOnTail != null) _sprites.Add(spriteOnTail);
+            transform.GetComponentsInChildren<SpriteRenderer>().ForEach(s => _sprites.Add(s));
+            _sprites.ForEach(s => s.SetAlpha(0f));
+        }
+
         public TailFollowBehaviour GetChild()
         {
             return _child;
@@ -47,12 +59,20 @@ namespace Game.Combat.Enemies.Bosses
 
         private void SetPosition(Vector2 position)
         {
+            if (_positionList.Count == 6)
+            {
+                Sequence sequence = DOTween.Sequence();
+                sequence.AppendInterval(0.5f);
+                _sprites.ForEach(s => sequence.Insert(1f, s.DOFade(0.5f, 1f)));
+            }
+
             _positionList.Enqueue(position);
             if (_positionList.Count < 8)
             {
                 SetInactive();
                 return;
             }
+
             Vector3 newPosition = _positionList.Dequeue();
             transform.position = newPosition;
             if (_child == null) return;

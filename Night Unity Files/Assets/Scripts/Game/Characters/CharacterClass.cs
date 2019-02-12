@@ -4,13 +4,10 @@
     {
         None,
         Villain,
-        Deserter,
         Beast,
-        Watcher,
         Survivor,
         Protector,
         Hunter,
-        Ghost,
         Wanderer
     }
 }

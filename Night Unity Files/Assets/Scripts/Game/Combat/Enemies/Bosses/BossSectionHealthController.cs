@@ -1,5 +1,4 @@
 ﻿using Game.Combat.Misc;
-using Game.Gear.Armour;
 
 namespace Game.Combat.Enemies.Bosses
 {

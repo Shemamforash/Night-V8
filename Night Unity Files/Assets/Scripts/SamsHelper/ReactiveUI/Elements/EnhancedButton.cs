@@ -72,10 +72,14 @@ namespace SamsHelper.ReactiveUI.Elements
             else _border.SetDisabled();
         }
 
-
         private void OnDestroy()
         {
             InputHandler.UnregisterInputListener(this);
+        }
+
+        public static void DeselectCurrent()
+        {
+            _currentButton.Exit();
         }
 
         private class HoldAction
@@ -105,7 +109,6 @@ namespace SamsHelper.ReactiveUI.Elements
         }
 
         public void Select() => Button().Select();
-
 
         public bool IsEnabled() => _enabled;
 

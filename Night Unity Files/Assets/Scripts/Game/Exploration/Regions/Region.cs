@@ -59,10 +59,7 @@ namespace Game.Exploration.Regions
         public string ClaimBenefitString()
         {
             if (_claimBenefit == "") return _claimBenefit;
-            int minutesPerDay = TimeToGenerateResource;
-            int timeRemaining = _remainingTimeToGenerateResource;
-            if (timeRemaining > minutesPerDay) timeRemaining -= minutesPerDay;
-            int timeRemainingInHours = Mathf.CeilToInt(timeRemaining / 24f);
+            int timeRemainingInHours = Mathf.CeilToInt(_remainingTimeToGenerateResource / (float)WorldState.MinutesPerHour);
             string hourString = timeRemainingInHours == 1 ? "hr" : "hrs";
             return " +" + _claimQuantity + " " + _claimBenefit + " in " + timeRemainingInHours + hourString;
         }

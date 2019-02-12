@@ -19,6 +19,7 @@ namespace Game.Combat.Enemies.Nightmares
         private void Awake()
         {
             _audioSource = GetComponent<AudioSource>();
+            _audioSource.pitch = Random.Range(0.8f, 1f);
         }
 
         public static void Create(Vector3 position, Vector3 direction)
