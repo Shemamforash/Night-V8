@@ -29,6 +29,7 @@ public class BeamController : MonoBehaviour
     private GameObject _blastObject, _lineObject;
     private AudioSource _chargeAudio;
     private bool _stopFiring;
+    private bool _beamActive;
 
     public void Awake()
     {
@@ -99,6 +100,7 @@ public class BeamController : MonoBehaviour
             s.volume = 0.5f;
             s.Play();
         });
+        _beamActive = true;
         _firing = true;
         _blastObject.SetActive(true);
         _chargeParticles.ForEach(p => p.Stop());
@@ -127,6 +129,7 @@ public class BeamController : MonoBehaviour
         _blastParticles.ForEach(p => p.Stop());
         _firing = false;
         while (_blastParticles.Any(p => p.particleCount > 0)) yield return null;
+        _beamActive = false;
         _blastObject.SetActive(false);
         _beamPool.Return(this);
     }
@@ -160,4 +163,6 @@ public class BeamController : MonoBehaviour
             break;
         }
     }
+
+    public bool Active() => _beamActive;
 }

@@ -8,16 +8,19 @@ public class StarFishMainArmBehaviour : MonoBehaviour
     private StarFishArmBehaviour _firstArmSegment;
     private bool _armActive = true;
     private bool _exploding;
+    private AudioSource _audio;
 
     private void Awake()
     {
         float angleOffset = transform.rotation.eulerAngles.z + 90f;
         _firstArmSegment = gameObject.FindChildWithName<StarFishArmBehaviour>("Arm 1");
         _firstArmSegment.SetOffset(angleOffset, transform, transform, 2, 1);
+        _audio = _firstArmSegment.GetComponent<AudioSource>();
     }
 
     public void UpdateAngle(float zAngle)
     {
+        if (StarfishBehaviour.ShouldPlayAudio()) _audio.Play();
         if (!_armActive) return;
         if (AllArmsDead(_firstArmSegment))
         {

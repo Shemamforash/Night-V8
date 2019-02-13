@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Statistic">
+    <option name="excludedDirectories">
+      <list>
+        <option value="$PROJECT_DIR$/Assets/Scripts/JPS" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Triangle-NET-Unity-Port-master" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Steamworks.NET" />
+      </list>
+    </option>
+  </component>
+</project>

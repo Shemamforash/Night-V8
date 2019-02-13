@@ -122,32 +122,32 @@ public class WeaponAudioController : MonoBehaviour
         float durability = weapon.WeaponAttributes.GetDurability().CurrentValue();
         float hpfValue = -15f * durability + 750;
         hpfValue = Mathf.Clamp(hpfValue, 0, 750);
-        InstancedAudio audio = _audioPool.Create();
-        audio.SetMinMaxDistance(0.5f, 25f);
-        audio.Play(shots[0], Random.Range(0.6f, 0.7f), Random.Range(0.8f, 1f), hpfValue);
+        InstancedAudio instancedAudio = _audioPool.Create();
+        instancedAudio.SetMinMaxDistance(0.5f, 25f);
+        instancedAudio.SetHighPassCutoff(hpfValue);
+        instancedAudio.Play(shots[0], Random.Range(0.7f, 0.8f), Random.Range(0.8f, 1f));
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(0.25f);
         sequence.AppendCallback(() =>
         {
-            audio = _audioPool.Create();
-            audio.SetMinMaxDistance(0.5f, 15f);
-            audio.Play(casings[0], 0.2f);
+            instancedAudio = _audioPool.Create();
+            instancedAudio.SetMinMaxDistance(0.5f, 15f);
+            instancedAudio.Play(casings[0], 0.2f);
         });
-    }
-
-    public void BreakArmour()
-    {
-        _audioPool.Create().Play(AudioClips.ArmourBreakClips.RandomElement());
     }
 
     public void PlayBrawlerSlash()
     {
-        _audioPool.Create().Play(AudioClips.BrawlerSlash, Random.Range(0.4f, 0.5f), Random.Range(0.9f, 1f), 1000);
+        InstancedAudio instancedAudio = _audioPool.Create();
+        instancedAudio.SetHighPassCutoff(1000);
+        instancedAudio.Play(AudioClips.BrawlerSlash, Random.Range(0.4f, 0.5f), Random.Range(0.9f, 1f));
     }
 
     public void PlayTakeItem()
     {
-        _audioPool.Create().Play(AudioClips.TakeItem, Random.Range(0.5f, 0.6f), Random.Range(0.9f, 1f), Random.Range(800, 1200));
+        InstancedAudio instancedAudio = _audioPool.Create();
+        instancedAudio.SetHighPassCutoff(Random.Range(800, 1200));
+        instancedAudio.Play(AudioClips.TakeItem, Random.Range(0.5f, 0.6f), Random.Range(0.9f, 1f));
     }
 
     public void PlayNeedleFire()

@@ -89,7 +89,9 @@ namespace Game.Combat.Misc
             AudioClip clip = AudioClips.FootstepClips[_nextClip];
             float volume = Random.Range(0.3f, 0.4f);
             float pitch = Random.Range(0.9f, 1f);
-            _audioPool.Create().Play(clip, volume, pitch, 2000);
+            InstancedAudio instancedAudio = _audioPool.Create();
+            instancedAudio.SetHighPassCutoff(2000);
+            instancedAudio.Play(clip, volume, pitch);
         }
 
         private void Update()

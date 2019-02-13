@@ -1,4 +1,5 @@
 ﻿using Facilitating.Audio;
+using Game.Combat.Enemies;
 using Game.Combat.Enemies.Bosses;
 using Game.Combat.Generation;
 using Game.Combat.Misc;

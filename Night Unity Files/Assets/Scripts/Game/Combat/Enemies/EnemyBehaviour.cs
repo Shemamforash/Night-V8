@@ -32,9 +32,10 @@ namespace Game.Combat.Enemies
 
         protected virtual void UpdateRotation()
         {
-            float targetRotation;
-            if (GetTarget() != null) targetRotation = AdvancedMaths.AngleFromUp(transform.position, TargetPosition());
-            else targetRotation = AdvancedMaths.AngleFromUp(transform.position, transform.position + (Vector3) GetComponent<Rigidbody2D>().velocity);
+            Vector2 targetPosition;
+            if (GetTarget() != null) targetPosition = TargetPosition();
+            else targetPosition = transform.position + (Vector3) GetComponent<Rigidbody2D>().velocity;
+            float targetRotation = AdvancedMaths.AngleFromUp(transform.position, targetPosition);
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, targetRotation));
         }
 

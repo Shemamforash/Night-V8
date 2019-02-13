@@ -100,7 +100,7 @@ public class SpermBehaviour : CanTakeDamage
             Transform child = transform.GetChild(childCount);
             Vector3 childPosition = child.transform.position;
             LeafBehaviour.CreateLeaves(childPosition);
-            MaelstromShotBehaviour.CreateBurst(60, childPosition, 1f, Random.Range(0, 360));
+            MaelstromShotBehaviour.CreateBurst(60, childPosition, 1f, false, Random.Range(0, 360));
             Explosion.CreateExplosion(childPosition, 0.5f).InstantDetonate();
             Destroy(child.gameObject);
             --childCount;
@@ -109,7 +109,7 @@ public class SpermBehaviour : CanTakeDamage
 
         Vector3 position = transform.position;
         LeafBehaviour.CreateLeaves(position);
-        MaelstromShotBehaviour.CreateBurst(30, position, 1f, Random.Range(0, 360));
+        MaelstromShotBehaviour.CreateBurst(30, position, 1f, false, Random.Range(0, 360));
         Explosion.CreateExplosion(position);
         Destroy(gameObject);
     }

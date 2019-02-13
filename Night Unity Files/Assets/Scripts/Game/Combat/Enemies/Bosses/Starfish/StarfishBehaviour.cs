@@ -5,6 +5,7 @@ using Game.Combat.Enemies.Bosses.Starfish;
 using Game.Combat.Enemies.Misc;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
+using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -20,6 +21,9 @@ public class StarfishBehaviour : Boss
     private StarfishSpreadFire _spreadFire;
     private SpriteRenderer _shotGlow;
     private Tweener _glowTween;
+    private float _sinTime = 0;
+    private static bool _playAudio;
+    private AudioPoolController _audioPool;
 
     public static void Create()
     {
@@ -34,6 +38,8 @@ public class StarfishBehaviour : Boss
         _ghoulSpawn = gameObject.AddComponent<StarfishGhoulSpawn>();
         _spreadFire = gameObject.AddComponent<StarfishSpreadFire>();
         _shotGlow = gameObject.FindChildWithName<SpriteRenderer>("Shot Glow");
+        _audioPool = gameObject.GetComponent<AudioPoolController>();
+        _audioPool.SetMixerGroup("Combat", 0.5f);
     }
 
     public void FlashGlow()
@@ -41,6 +47,15 @@ public class StarfishBehaviour : Boss
         _glowTween?.Kill();
         _shotGlow.SetAlpha(1f);
         _glowTween = _shotGlow.DOFade(0f, 0.5f);
+    }
+
+    public void PlayAudio(float volumeOffset, float pitchOffset, float lpfLimit = 25000)
+    {
+        InstancedAudio instancedAudio = _audioPool.Create(false);
+        float volume = Random.Range(0.9f, 1f) - volumeOffset;
+        float pitch = Random.Range(0.9f, 1f) - pitchOffset;
+        instancedAudio.SetLowPassCutoff(lpfLimit);
+        instancedAudio.Play(AudioClips.StarfishAttack, volume, pitch);
     }
 
     public void Start()
@@ -80,10 +95,15 @@ public class StarfishBehaviour : Boss
 
     private float GetCurrentAngle(int i)
     {
-        float sinTime = Mathf.Sin(Time.timeSinceLevelLoad + 0.25f * Mathf.PerlinNoise(Time.timeSinceLevelLoad, i));
-        float zAngle = sinTime * 30;
+        float oldSinTime = _sinTime;
+        _sinTime = Mathf.Sin(Time.timeSinceLevelLoad);
+        if (oldSinTime < 0f && _sinTime >= 0f || oldSinTime > 0f && _sinTime <= 0f) _playAudio = true;
+        else _playAudio = false;
+        float zAngle = _sinTime * 30;
         return zAngle;
     }
+
+    public static bool ShouldPlayAudio() => _playAudio;
 
     public static float GetRadiusModifier()
     {

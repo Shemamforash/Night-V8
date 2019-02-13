@@ -18,7 +18,6 @@ namespace Game.Global
         public static AudioClip[] SMGCasings, RifleCasings, PistolCasings, ShotgunCasings;
         public static AudioClip[] StandardExplosions;
         public static AudioClip[] DryFireClips;
-        public static AudioClip[] ArmourBreakClips;
         public static AudioClip[] FootstepClips;
         public static AudioClip[] DayAudio;
         public static AudioClip[] Chimes;
@@ -34,6 +33,7 @@ namespace Game.Global
         public static AudioClip EatWater, EatMeat, EatPlant, EatPotion, LightFire;
         public static AudioClip ShortHeartBeat, LongHeartBeat;
         public static AudioClip NeedleMove, NeedleHit, NeedleFire;
+        public static AudioClip StarfishAttack;
         public static AudioClip ActiveSkill;
         private static readonly List<AssetBundle> _loadedBundles = new List<AssetBundle>();
         private static bool _loaded;
@@ -97,7 +97,6 @@ namespace Game.Global
 
             Debug.Log("loading misc combat audio");
             yield return StartCoroutine(LoadAllClipsFromBundle(a => DryFireClips = a, "combat/dryfire"));
-            yield return StartCoroutine(LoadAllClipsFromBundle(a => ArmourBreakClips = a, "combat/armourbreak"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => FootstepClips = a, "combat/footsteps"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => StandardExplosions = a, "combat/explosions/standard"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => TombHits = a, "misc/tomb"));
@@ -123,6 +122,7 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => BulletHit = a, "combat/misc", "Bullet Hit"));
             yield return StartCoroutine(LoadClip(a => ShieldHit = a, "combat/misc", "Shield Hit"));
             yield return StartCoroutine(LoadClip(a => BodyHit = a, "combat/misc", "Body Hit"));
+            yield return StartCoroutine(LoadClip(a => StarfishAttack = a, "combat/misc", "Starfish Attack"));
 
             Debug.Log("loading weather audio");
             yield return StartCoroutine(LoadAllClipsFromBundle(a => ThunderSounds = a, "thunder"));

@@ -35,7 +35,7 @@ namespace Game.Combat.Enemies.Nightmares
 
         public override void Kill()
         {
-            MaelstromShotBehaviour.CreateBurst(60, (Vector2) transform.position, 1f, Random.Range(0, 360));
+            MaelstromShotBehaviour.CreateBurst(60, (Vector2) transform.position, 1f, false, Random.Range(0, 360));
             base.Kill();
         }
     }

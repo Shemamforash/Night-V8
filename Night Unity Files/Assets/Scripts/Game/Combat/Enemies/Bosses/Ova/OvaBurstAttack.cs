@@ -24,7 +24,7 @@ namespace Game.Combat.Enemies.Bosses
                 {
                     float angle = (i + offset * 12) * angleInterval;
                     Vector2 direction = AdvancedMaths.CalculatePointOnCircle(angle, 1, Vector2.zero);
-                    MaelstromShotBehaviour.Create(direction, (Vector2) transform.position + direction, 0.5f, false);
+                    MaelstromShotBehaviour.Create(direction, (Vector2) transform.position + direction, 0.5f, false, false);
                 }
 
                 yield return new WaitForSeconds(0.5f);

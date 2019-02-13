@@ -14,7 +14,7 @@ public class SwarmBehaviour : Boss
     private static readonly List<SwarmBehaviour> _swarms = new List<SwarmBehaviour>();
     private const int SwarmCount = 150;
     private float _fireCounter;
-    private float _fireCounterMin, _fireCounterMax;
+    private float _fireCounterMin;
     private float _contractTimer;
     private bool _contracting;
     private float _burstForce;
@@ -63,7 +63,7 @@ public class SwarmBehaviour : Boss
 
         if (Random.Range(0, 2) == 0) _orbit.SwitchSpin();
         _swarms.Add(this);
-        _fireCounter = Random.Range(_fireCounterMin, _fireCounterMax);
+        _fireCounter = Random.Range(_fireCounterMin, _fireCounterMin + 2);
         _contractTimer = Random.Range(8f, 12f);
     }
 
@@ -77,8 +77,7 @@ public class SwarmBehaviour : Boss
 
     private void RecalculateFireTimer()
     {
-        _fireCounterMax = 1f / 200f * SectionCount() + 0.5f;
-        _fireCounterMin = 1f / 300f * SectionCount() + 0.25f;
+        _fireCounterMin = 1f / 100f * SectionCount() + 1f;
     }
 
     private void UpdateFireCounter()
@@ -86,8 +85,8 @@ public class SwarmBehaviour : Boss
         if (_burstCounter < 0f) return;
         _fireCounter -= Time.deltaTime;
         if (_fireCounter > 0f) return;
-        _fireCounter = Random.Range(_fireCounterMin, _fireCounterMax);
-        if (SectionCount() == 0) return;
+        _fireCounter = Random.Range(_fireCounterMin, _fireCounterMin + 2);
+        if (SectionCount() < 20) return;
         SwarmSegmentBehaviour swarmSegment = (SwarmSegmentBehaviour) Sections[0];
         swarmSegment.StartSeeking();
     }
@@ -119,7 +118,7 @@ public class SwarmBehaviour : Boss
             for (float angle = 0f; angle < 360f; angle += angleInterval)
             {
                 Vector3 direction = AdvancedMaths.CalculatePointOnCircle(angle, 1, Vector2.zero);
-                MaelstromShotBehaviour.Create(direction, transform.position + direction * 0.5f, 3f);
+                MaelstromShotBehaviour.Create(direction, transform.position + direction * 0.5f, 3f, false);
             }
 
             _contracting = false;
@@ -130,6 +129,9 @@ public class SwarmBehaviour : Boss
     {
         if (Sections.Count > 100) return;
 
+        List<CanTakeDamage> enemies = CombatManager.Enemies();
+        enemies.RemoveAll(e => e is SwarmSegmentBehaviour);
+        if (enemies.Count > 10) return;
         if (_spawnTimer < 0f)
         {
             float spawnTime = 12 - Sections.Count / 10f;

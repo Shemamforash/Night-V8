@@ -14,5 +14,7 @@
             if (_beamController == null) return;
             Destroy(_beamController.gameObject);
         }
+
+        public bool Active() => _beamController != null && _beamController.Active();
     }
 }

@@ -19,26 +19,28 @@ public class MaelstromShotBehaviour : MonoBehaviour
     private float _angleModifier;
     private const float AngleDecay = 0.97f;
     private const int ShotDamage = 10;
+    private AudioSource _audioSource;
 
-    public static void Create(Vector3 direction, Vector3 position, float speed, bool follow = true)
+    public static void Create(Vector3 direction, Vector3 position, float speed, bool suppressAudio, bool follow = true)
     {
         MaelstromShotBehaviour shot = _shotPool.Create();
         shot.transform.position = position;
-        shot.ResetShot(direction, speed, follow);
+        shot.ResetShot(direction, speed, suppressAudio, follow);
     }
 
-    public static void CreateBurst(int angleInterval, Vector3 position, float speed, int startRotation = 0)
+    public static void CreateBurst(int angleInterval, Vector3 position, float speed, bool suppressAudio, int startRotation = 0)
     {
         for (int i = 0; i < 360; i += angleInterval)
         {
             Vector2 direction = AdvancedMaths.CalculatePointOnCircle(i + startRotation, 1, Vector2.zero);
-            Create(direction, (Vector2) position + direction / 2f, speed, false);
+            Create(direction, (Vector2) position + direction / 2f, speed, suppressAudio, false);
         }
     }
 
-    private void ResetShot(Vector2 direction, float speed, bool follow)
+    private void ResetShot(Vector2 direction, float speed, bool suppressAudio, bool follow)
     {
         foreach (SpriteRenderer spriteRenderer in _sprites) spriteRenderer.enabled = true;
+        if (!suppressAudio) _audioSource.Play();
         _direction = direction;
         _speed = speed;
         _lifeTime = 5f;
@@ -54,6 +56,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
     {
         _rigidBody = GetComponent<Rigidbody2D>();
         _sprites = GetComponentsInChildren<SpriteRenderer>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public void FixedUpdate()

@@ -77,10 +77,11 @@ namespace Game.Combat.Enemies.Bosses.Starfish
                 float x = Mathf.Cos(angle * Mathf.Deg2Rad);
                 float y = Mathf.Sin(angle * Mathf.Deg2Rad);
                 Vector3 direction = new Vector2(x, y);
-                MaelstromShotBehaviour.Create(direction, transform.position + direction, 2f, false);
+                MaelstromShotBehaviour.Create(direction, transform.position + direction, 2f, true, false);
             }
 
             StarfishBehaviour.Instance().FlashGlow();
+            StarfishBehaviour.Instance().PlayAudio(0f, 0.4f);
             _radialAttackAngle += 5f;
         }
 
@@ -108,10 +109,11 @@ namespace Game.Combat.Enemies.Bosses.Starfish
                     float x = Mathf.Cos(angle * Mathf.Deg2Rad);
                     float y = Mathf.Sin(angle * Mathf.Deg2Rad);
                     Vector3 direction = new Vector2(x, y);
-                    MaelstromShotBehaviour.Create(direction, transform.position + direction, 1f, false);
+                    MaelstromShotBehaviour.Create(direction, transform.position + direction, 1f, true, false);
                 }
 
                 StarfishBehaviour.Instance().FlashGlow();
+                StarfishBehaviour.Instance().PlayAudio(0f, 0.2f);
                 startAngle = startAngle == 0 ? angleInterval / 2f : 0;
                 yield return new WaitForSeconds(0.5f);
             }
@@ -136,9 +138,10 @@ namespace Game.Combat.Enemies.Bosses.Starfish
                 x = Mathf.Cos(angleB * Mathf.Deg2Rad);
                 y = Mathf.Sin(angleB * Mathf.Deg2Rad);
                 Vector3 dirB = new Vector2(x, y);
-                MaelstromShotBehaviour.Create(dirA, transform.position + dirA, 1f, false);
-                MaelstromShotBehaviour.Create(dirB, transform.position + dirB, 1f, false);
+                MaelstromShotBehaviour.Create(dirA, transform.position + dirA, 1f, true, false);
+                MaelstromShotBehaviour.Create(dirB, transform.position + dirB, 1f, true, false);
                 StarfishBehaviour.Instance().FlashGlow();
+                StarfishBehaviour.Instance().PlayAudio(0.3f, 0, 500);
                 yield return new WaitForSeconds(0.25f);
             }
 
