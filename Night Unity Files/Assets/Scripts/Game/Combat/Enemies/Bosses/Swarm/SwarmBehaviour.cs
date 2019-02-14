@@ -11,8 +11,8 @@ using UnityEngine;
 
 public class SwarmBehaviour : Boss
 {
-    private static readonly List<SwarmBehaviour> _swarms = new List<SwarmBehaviour>();
-    private const int SwarmCount = 150;
+    private static SwarmBehaviour _instance;
+    private const int SwarmCount = 200;
     private float _fireCounter;
     private float _fireCounterMin;
     private float _contractTimer;
@@ -25,23 +25,14 @@ public class SwarmBehaviour : Boss
 
     public static void Create()
     {
-        for (int i = 0; i < 360; i += 120)
-        {
-            Vector2 position = AdvancedMaths.CalculatePointOnCircle(i, 4f, Vector2.zero);
-            CreateNew().Initialise(position);
-        }
-    }
-
-    private static SwarmBehaviour CreateNew()
-    {
         GameObject prefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Swarm/Swarm Boss");
         GameObject swarm = Instantiate(prefab);
-        return swarm.GetComponent<SwarmBehaviour>();
+        swarm.GetComponent<SwarmBehaviour>().Initialise();
     }
 
-    private void Initialise(Vector2 position)
+    private void Initialise()
     {
-        transform.position = position;
+        transform.position = Vector2.zero;
         SpawnNewChildren();
         RecalculateFireTimer();
     }
@@ -62,7 +53,7 @@ public class SwarmBehaviour : Boss
         _orbit = gameObject.AddComponent<Orbit>();
 
         if (Random.Range(0, 2) == 0) _orbit.SwitchSpin();
-        _swarms.Add(this);
+        _instance = this;
         _fireCounter = Random.Range(_fireCounterMin, _fireCounterMin + 2);
         _contractTimer = Random.Range(8f, 12f);
     }
@@ -172,15 +163,12 @@ public class SwarmBehaviour : Boss
         Sections.Remove(segment);
         RecalculateFireTimer();
         if (Sections.Count != 0) return;
-        _swarms.Remove(this);
-        if (_swarms.Count == 0) Kill();
+        Kill();
         Destroy(gameObject);
     }
 
     public static List<CanTakeDamage> GetAllSegments()
     {
-        List<CanTakeDamage> segments = new List<CanTakeDamage>();
-        _swarms.ForEach(s => { segments.AddRange(s.Sections); });
-        return segments;
+        return new List<CanTakeDamage>(_instance.Sections);
     }
 }

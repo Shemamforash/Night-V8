@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
@@ -7,9 +8,10 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
     {
         private static GameObject _particlesPrefab;
         private ParticleSystem _particles;
-        private bool _firing;
+        private bool _firing = true;
         private float _speed;
         private float _offset;
+        private float _damageModifier = 1;
 
         public void Initialise(float maxTimer, float minTimer, float speed, float offset)
         {
@@ -50,9 +52,16 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
                 yield return null;
             }
 
-            Vector3 direction = GetComponent<Rigidbody2D>().velocity;
-            MaelstromShotBehaviour.Create(direction, transform.position + direction * _offset, _speed);
+            float rotation = -transform.rotation.z;
+            Vector2 direction = AdvancedMaths.CalculatePointOnCircle(rotation, 1f, Vector2.zero);
+            MaelstromShotBehaviour shot = MaelstromShotBehaviour.Create(direction, (Vector2) transform.position + direction * _offset, _speed, false);
+            shot.SetDamageModifier(_damageModifier);
             UnpauseOthers();
+        }
+
+        public void SetDamageModifier(float damageModifier)
+        {
+            _damageModifier = damageModifier;
         }
     }
 }

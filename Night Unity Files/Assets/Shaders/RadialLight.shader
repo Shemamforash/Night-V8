@@ -43,6 +43,10 @@ Shader "LOS/Radial Light" {
                 float4 color : COLOR;
             };
             
+            float rand(float3 co){
+                return frac(sin(dot(co.xyz ,float3(12.9898,78.233,45.5432))) * 43758.5453);
+            }
+            
             v2f vert (vIn v) {
                 v2f o;
                 o.uv0 = v.texcoord0;
@@ -57,6 +61,8 @@ Shader "LOS/Radial Light" {
                 float texRGBAverage = (_MainTex_var.r + _MainTex_var.g + _MainTex_var.b) / 3;
                 fixed4 color = fixed4(i.color.rgb * _intensity, texRGBAverage * i.color.a);
                 color *= _Color;
+                float r = rand(i.pos) / 255;
+                color += r;
                 if(i.color.r > color.r) {
                     color.r = i.color.r;
                 }

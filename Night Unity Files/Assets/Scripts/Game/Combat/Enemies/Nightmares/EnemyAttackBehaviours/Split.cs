@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Game.Combat.Generation;
-using Game.Combat.Generation.Shrines;
 using SamsHelper.Libraries;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 {
@@ -14,6 +15,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         private readonly List<EnemyBehaviour> _enemies = new List<EnemyBehaviour>();
         private EnemyType _enemyType;
         private int _generation;
+        private Action<EnemyBehaviour> _onSplit;
 
         protected override void Attack()
         {
@@ -31,6 +33,9 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
                 Split split = enemy.GetComponent<Split>();
                 if (split != null) split._generation = newGeneration;
             }
+
+            if (_onSplit == null) return;
+            _enemies.ForEach(e => _onSplit(e));
         }
 
         public void Initialise(int splitCountMin, float spawnForce, EnemyType enemyType, int healthThreshold, int splitCountMax = -1, bool activateOnDeath = false)
@@ -41,6 +46,8 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             _spawnForce = spawnForce;
             _enemyType = enemyType;
         }
+
+        public void SetOnSplit(Action<EnemyBehaviour> onSplit) => _onSplit = onSplit;
 
         public List<EnemyBehaviour> LastSplitEnemies()
         {

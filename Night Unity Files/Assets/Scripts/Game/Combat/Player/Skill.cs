@@ -19,7 +19,7 @@ namespace Game.Combat.Player
         private SkillValue _skillValue;
         private PlayerCombat _player;
         private Transform _playerTransform;
-        
+
 
         protected Skill(string name)
         {
@@ -79,7 +79,7 @@ namespace Game.Combat.Player
         protected PlayerCombat Player() => _player;
         protected Transform PlayerTransform() => _playerTransform;
         protected Vector2 PlayerPosition() => _playerTransform.position;
-        
+
         public bool Activate(bool freeSkill)
         {
             if (Target() == null && _skillValue.NeedsTarget) return false;
@@ -89,8 +89,12 @@ namespace Game.Combat.Player
             InstantEffect();
             if (_skillValue.AppliesToMagazine)
             {
-                PlayerCombat.Instance.OnFireActions.Add(MagazineEffect);
+                _player.OnFireAction = MagazineEffect;
                 ActiveSkillController.Play();
+            }
+            else
+            {
+                _player.WeaponAudio.PlayActiveSkill();
             }
 
             UIMagazineController.UpdateMagazineUi();

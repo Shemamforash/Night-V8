@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Combat Vignette
   m_Shader: {fileID: 4800000, guid: c705e3da8a7b6794781b3b68c22a7e6f, type: 3}
   m_ShaderKeywords: 
@@ -85,7 +86,7 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _Val: 2.100364
-    - _ViewDistance: 10
+    - _ViewDistance: 9
     - _Width: 0.25
     - _ZWrite: 1
     - __dirty: 0

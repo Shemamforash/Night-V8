@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PixelRect:
     serializedVersion: 2
-    x: 2566
-    y: 6.666667
-    width: 2547
-    height: 1396
+    x: 2560.6667
+    y: 0.6666667
+    width: 2559
+    height: 1408
   m_ShowMode: 0
   m_Title: 
-  m_RootView: {fileID: 15}
+  m_RootView: {fileID: 32}
   m_MinSize: {x: 100, y: 125}
   m_MaxSize: {x: 4000, y: 4025}
 --- !u!114 &2
@@ -43,7 +43,7 @@ MonoBehaviour:
     height: 1367
   m_ShowMode: 4
   m_Title: 
-  m_RootView: {fileID: 77}
+  m_RootView: {fileID: 94}
   m_MinSize: {x: 950, y: 548}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &3
@@ -297,7 +297,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Children: []
@@ -305,15 +305,11 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 2547
-    height: 1396
-  m_MinSize: {x: 100, y: 125}
-  m_MaxSize: {x: 4000, y: 4025}
-  m_ActualView: {fileID: 87}
-  m_Panes:
-  - {fileID: 87}
-  m_Selected: 0
-  m_LastSelected: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
 --- !u!114 &15
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -323,21 +319,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Children:
-  - {fileID: 14}
+  m_Children: []
   m_Position:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 2547
-    height: 1396
-  m_MinSize: {x: 100, y: 125}
-  m_MaxSize: {x: 4000, y: 4025}
-  vertical: 0
-  controlID: 112
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
 --- !u!114 &16
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -677,7 +671,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Children: []
@@ -685,11 +679,15 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 100
-    height: 100
-  m_MinSize: {x: 0, y: 0}
-  m_MaxSize: {x: 0, y: 0}
-  m_ActualView: {fileID: 0}
+    width: 2559
+    height: 1408
+  m_MinSize: {x: 100, y: 125}
+  m_MaxSize: {x: 4000, y: 4025}
+  m_ActualView: {fileID: 105}
+  m_Panes:
+  - {fileID: 105}
+  m_Selected: 0
+  m_LastSelected: 0
 --- !u!114 &32
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -699,19 +697,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Children: []
+  m_Children:
+  - {fileID: 31}
   m_Position:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 100
-    height: 100
-  m_MinSize: {x: 0, y: 0}
-  m_MaxSize: {x: 0, y: 0}
-  m_ActualView: {fileID: 0}
+    width: 2559
+    height: 1408
+  m_MinSize: {x: 100, y: 125}
+  m_MaxSize: {x: 4000, y: 4025}
+  vertical: 0
+  controlID: 13
 --- !u!114 &33
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -1688,14 +1688,388 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &78
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &79
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &80
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &81
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &82
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &83
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &84
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &85
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &86
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &87
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &88
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &89
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &90
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &91
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &92
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &93
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12047, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_MinSize: {x: 0, y: 0}
+  m_MaxSize: {x: 0, y: 0}
+  m_ActualView: {fileID: 0}
+--- !u!114 &94
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12008, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Children:
-  - {fileID: 78}
-  - {fileID: 80}
-  - {fileID: 79}
+  - {fileID: 95}
+  - {fileID: 97}
+  - {fileID: 96}
   m_Position:
     serializedVersion: 2
     x: 0
@@ -1704,7 +2078,7 @@ MonoBehaviour:
     height: 1367
   m_MinSize: {x: 950, y: 548}
   m_MaxSize: {x: 10000, y: 10000}
---- !u!114 &78
+--- !u!114 &95
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1726,7 +2100,7 @@ MonoBehaviour:
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
   m_LastLoadedLayoutName: 
---- !u!114 &79
+--- !u!114 &96
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1747,7 +2121,7 @@ MonoBehaviour:
     height: 20
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
---- !u!114 &80
+--- !u!114 &97
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1760,8 +2134,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Children:
-  - {fileID: 81}
-  - {fileID: 86}
+  - {fileID: 98}
+  - {fileID: 103}
   m_Position:
     serializedVersion: 2
     x: 0
@@ -1771,8 +2145,8 @@ MonoBehaviour:
   m_MinSize: {x: 683, y: 498}
   m_MaxSize: {x: 14004, y: 14048}
   vertical: 0
-  controlID: 92
---- !u!114 &81
+  controlID: 147
+--- !u!114 &98
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1785,8 +2159,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Children:
-  - {fileID: 82}
-  - {fileID: 85}
+  - {fileID: 99}
+  - {fileID: 102}
   m_Position:
     serializedVersion: 2
     x: 0
@@ -1796,8 +2170,8 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 498}
   m_MaxSize: {x: 10002, y: 14048}
   vertical: 1
-  controlID: 93
---- !u!114 &82
+  controlID: 78
+--- !u!114 &99
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1810,19 +2184,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Children:
-  - {fileID: 83}
-  - {fileID: 84}
+  - {fileID: 100}
+  - {fileID: 101}
   m_Position:
     serializedVersion: 2
     x: 0
     y: 0
     width: 2199
-    height: 898
+    height: 700
   m_MinSize: {x: 406, y: 224}
   m_MaxSize: {x: 8006, y: 4024}
   vertical: 0
-  controlID: 94
---- !u!114 &83
+  controlID: 79
+--- !u!114 &100
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1840,15 +2214,15 @@ MonoBehaviour:
     x: 0
     y: 0
     width: 264
-    height: 898
+    height: 700
   m_MinSize: {x: 202, y: 224}
   m_MaxSize: {x: 4002, y: 4024}
-  m_ActualView: {fileID: 95}
+  m_ActualView: {fileID: 112}
   m_Panes:
-  - {fileID: 95}
+  - {fileID: 112}
   m_Selected: 0
   m_LastSelected: 0
---- !u!114 &84
+--- !u!114 &101
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1866,19 +2240,18 @@ MonoBehaviour:
     x: 264
     y: 0
     width: 1935
-    height: 898
+    height: 700
   m_MinSize: {x: 204, y: 224}
   m_MaxSize: {x: 4004, y: 4024}
-  m_ActualView: {fileID: 96}
+  m_ActualView: {fileID: 113}
   m_Panes:
-  - {fileID: 97}
-  - {fileID: 96}
-  - {fileID: 93}
-  - {fileID: 91}
-  - {fileID: 88}
+  - {fileID: 114}
+  - {fileID: 113}
+  - {fileID: 110}
+  - {fileID: 108}
   m_Selected: 1
-  m_LastSelected: 3
---- !u!114 &85
+  m_LastSelected: 1
+--- !u!114 &102
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1894,20 +2267,20 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 898
+    y: 700
     width: 2199
-    height: 419
+    height: 617
   m_MinSize: {x: 232, y: 274}
   m_MaxSize: {x: 10002, y: 10024}
-  m_ActualView: {fileID: 98}
+  m_ActualView: {fileID: 115}
   m_Panes:
-  - {fileID: 98}
-  - {fileID: 94}
-  - {fileID: 92}
-  - {fileID: 89}
+  - {fileID: 115}
+  - {fileID: 111}
+  - {fileID: 109}
+  - {fileID: 106}
   m_Selected: 0
   m_LastSelected: 3
---- !u!114 &86
+--- !u!114 &103
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1928,93 +2301,13 @@ MonoBehaviour:
     height: 1317
   m_MinSize: {x: 277, y: 74}
   m_MaxSize: {x: 4002, y: 4024}
-  m_ActualView: {fileID: 99}
+  m_ActualView: {fileID: 116}
   m_Panes:
-  - {fileID: 99}
-  - {fileID: 90}
+  - {fileID: 116}
+  - {fileID: 107}
   m_Selected: 0
   m_LastSelected: 1
---- !u!114 &87
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 12015, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MinSize: {x: 100, y: 100}
-  m_MaxSize: {x: 4000, y: 4000}
-  m_TitleContent:
-    m_Text: Game
-    m_Image: {fileID: -2087823869225018852, guid: 0000000000000000d000000000000000,
-      type: 0}
-    m_Tooltip: 
-  m_Pos:
-    serializedVersion: 2
-    x: 2566
-    y: 6.666667
-    width: 2547
-    height: 1374
-  m_PersistentViewDataDictionary: {fileID: 0}
-  m_MaximizeOnPlay: 0
-  m_Gizmos: 0
-  m_Stats: 0
-  m_SelectedSizes: 05000000000000000000000000000000000000000000000000000000000000000000000000000000
-  m_TargetDisplay: 0
-  m_ZoomArea:
-    m_HRangeLocked: 0
-    m_VRangeLocked: 0
-    hZoomLockedByDefault: 0
-    vZoomLockedByDefault: 0
-    m_HBaseRangeMin: -1206.3334
-    m_HBaseRangeMax: 1206.3334
-    m_VBaseRangeMin: -678.5
-    m_VBaseRangeMax: 678.5
-    m_HAllowExceedBaseRangeMin: 1
-    m_HAllowExceedBaseRangeMax: 1
-    m_VAllowExceedBaseRangeMin: 1
-    m_VAllowExceedBaseRangeMax: 1
-    m_ScaleWithWindow: 0
-    m_HSlider: 0
-    m_VSlider: 0
-    m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 1
-    m_EnableSliderZoomHorizontal: 0
-    m_EnableSliderZoomVertical: 0
-    m_UniformScale: 1
-    m_UpDirection: 1
-    m_DrawArea:
-      serializedVersion: 2
-      x: 0
-      y: 17
-      width: 2547
-      height: 1357
-    m_Scale: {x: 1, y: 1}
-    m_Translation: {x: 1273.5, y: 678.5}
-    m_MarginLeft: 0
-    m_MarginRight: 0
-    m_MarginTop: 0
-    m_MarginBottom: 0
-    m_LastShownAreaInsideMargins:
-      serializedVersion: 2
-      x: -1273.5
-      y: -678.5
-      width: 2547
-      height: 1357
-    m_MinimalGUI: 1
-  m_defaultScale: 1
-  m_TargetTexture: {fileID: 0}
-  m_CurrentColorSpace: 0
-  m_LastWindowPixelSize: {x: 3820.5, y: 2061}
-  m_ClearInEditMode: 1
-  m_NoCameraWarning: 1
-  m_LowResolutionForAspectRatios: 00000000000000000000
-  m_XRRenderMode: 0
---- !u!114 &88
+--- !u!114 &104
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2029,15 +2322,15 @@ MonoBehaviour:
   m_MinSize: {x: 480, y: 270}
   m_MaxSize: {x: 4000, y: 4000}
   m_TitleContent:
-    m_Text: Unlit
+    m_Text: Shader Editor
     m_Image: {fileID: 0}
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 272
-    y: 72.66667
-    width: 1986
-    height: 917
+    x: 0
+    y: 0
+    width: 320
+    height: 550
   m_PersistentViewDataDictionary: {fileID: 0}
   m_customGraph: {fileID: 0}
   m_templatesManager: {fileID: 0}
@@ -2065,28 +2358,28 @@ MonoBehaviour:
     m_expandedDepth: 0
     m_expandedTesselation: 0
     m_expandedProperties: 1
-  m_lastpath: Assets/Shaders/FloorShader.shader
+  m_lastpath: 
   m_selectionMode: 0
   m_duplicatePreventionBuffer:
     m_availableUVChannelsArray: ffffffffffffffffffffffffffffffff
-  m_inactivityTime: 21968.775551866765
-  m_lastTimeSaved: 21932.76735258304
+  m_inactivityTime: 0
+  m_lastTimeSaved: 0
   m_cacheSaveOp: 0
   m_mainGraphInstance: {fileID: 0}
-  m_cameraOffset: {x: 3047.4905, y: 696.6786}
-  m_cameraZoom: 2.2686129
-  m_minNodePos: {x: -2996.3252, y: -597.5679}
-  m_maxNodePos: {x: 762.9862, y: 930.5069}
+  m_cameraOffset: {x: 160, y: 275}
+  m_cameraZoom: 1
+  m_minNodePos: {x: 3.4028235e+38, y: 3.4028235e+38}
+  m_maxNodePos: {x: -3.4028235e+38, y: -3.4028235e+38}
   m_isDirty: 0
-  m_saveIsDirty: 1
-  m_repaintIsDirty: 1
+  m_saveIsDirty: 0
+  m_repaintIsDirty: 0
   m_liveShaderEditing: 0
   m_shaderIsModified: 0
-  m_lastOpenedLocation: Assets/Shaders/FloorShader.shader
-  m_zoomChanged: 0
-  m_lastWindowWidth: 1986
+  m_lastOpenedLocation: 
+  m_zoomChanged: 1
+  m_lastWindowWidth: 0
   m_graphCount: 1
-  m_currentInactiveTime: 3.3759436728396395
+  m_currentInactiveTime: 0
   m_currentNodeAvailability: 1
   m_nodeParametersWindowMaximized: 1
   m_paletteWindowMaximized: 1
@@ -2095,7 +2388,87 @@ MonoBehaviour:
   m_openedAssetFromNode: 0
   CheckFunctions: 0
   MouseInteracted: 0
---- !u!114 &89
+--- !u!114 &105
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12015, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Game
+    m_Image: {fileID: -2087823869225018852, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 2560.6667
+    y: 0.6666667
+    width: 2559
+    height: 1386
+  m_PersistentViewDataDictionary: {fileID: 0}
+  m_MaximizeOnPlay: 0
+  m_Gizmos: 0
+  m_Stats: 0
+  m_SelectedSizes: 05000000000000000000000000000000000000000000000000000000000000000000000000000000
+  m_TargetDisplay: 0
+  m_ZoomArea:
+    m_HRangeLocked: 0
+    m_VRangeLocked: 0
+    hZoomLockedByDefault: 0
+    vZoomLockedByDefault: 0
+    m_HBaseRangeMin: -1217
+    m_HBaseRangeMax: 1217
+    m_VBaseRangeMin: -684.5
+    m_VBaseRangeMax: 684.5
+    m_HAllowExceedBaseRangeMin: 1
+    m_HAllowExceedBaseRangeMax: 1
+    m_VAllowExceedBaseRangeMin: 1
+    m_VAllowExceedBaseRangeMax: 1
+    m_ScaleWithWindow: 0
+    m_HSlider: 0
+    m_VSlider: 0
+    m_IgnoreScrollWheelUntilClicked: 0
+    m_EnableMouseInput: 1
+    m_EnableSliderZoomHorizontal: 0
+    m_EnableSliderZoomVertical: 0
+    m_UniformScale: 1
+    m_UpDirection: 1
+    m_DrawArea:
+      serializedVersion: 2
+      x: 0
+      y: 17
+      width: 2559
+      height: 1369
+    m_Scale: {x: 1, y: 1}
+    m_Translation: {x: 1279.5, y: 684.5}
+    m_MarginLeft: 0
+    m_MarginRight: 0
+    m_MarginTop: 0
+    m_MarginBottom: 0
+    m_LastShownAreaInsideMargins:
+      serializedVersion: 2
+      x: -1279.5
+      y: -684.5
+      width: 2559
+      height: 1369
+    m_MinimalGUI: 1
+  m_defaultScale: 1
+  m_TargetTexture: {fileID: 0}
+  m_CurrentColorSpace: 0
+  m_LastWindowPixelSize: {x: 3838.5, y: 2079}
+  m_ClearInEditMode: 1
+  m_NoCameraWarning: 1
+  m_LowResolutionForAspectRatios: 00000000000000000000
+  m_XRRenderMode: 0
+--- !u!114 &106
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2116,19 +2489,18 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 970.6667
+    y: 772.6667
     width: 2197
-    height: 399
+    height: 597
   m_PersistentViewDataDictionary: {fileID: 0}
-  logPanelScroll: {x: 0, y: 0}
-  logPanelSelectedIndex: 5
-  logPanelAutoScroll: 0
-  currentFrame: 2676310
+  logPanelScroll: {x: 0, y: -315.33334}
+  logPanelSelectedIndex: -1
+  logPanelAutoScroll: 1
+  currentFrame: 2866007
   logs:
     lastGrabbedIndex: 1
     lastGrabbedCount: 2
-    proEntries: []
-    newEntries:
+    proEntries:
     - logType: 4
       ignore: 0
       processed: 1
@@ -2136,85 +2508,187 @@ MonoBehaviour:
       remoteEndPoint: Local
       logPanelVisible: 1
       logPanelIndex: 0
-      logOutputHeight: -1
+      logOutputHeight: 15
       listIndex: 0
       nativeIndex: 0
       nativeIdentifier: 0
-      originalLog: 'ArgumentNullException: Value cannot be null.
+      originalLog: 'NullReferenceException: Object reference not set to an instance
+        of an object'
+      originalStackTrace: 'NullReferenceException: Object reference not set to an
+        instance of an object
 
-        Parameter name: source'
-      originalStackTrace: "ArgumentNullException: Value cannot be null.\r\nParameter
-        name: source\nSystem.Linq.Enumerable.Any[TSource] (System.Collections.Generic.IEnumerable`1[T]
-        source) (at <1b13ba6391c74847bbc3eddc86df7eee>:0)\nUnityEditor.RiderPathLocator+<CollectPathsFromToolbox>c__AnonStorey3.<>m__0
-        (System.String a) (at C:/buildslave/unity/build/Editor/Mono/SyncRiderProject.cs:198)\nUnityEditor.SyncRiderProject:PathCallback()\nUnityEditorInternal.ScriptEditorUtility:GetFoundScriptEditorPaths(RuntimePlatform)
-        (at C:/buildslave/unity/build/Editor/Mono/ScriptEditorUtility.cs:146)\nUnityEditor.SettingsService:OpenUserPreferenceWindow()\n"
-      nativeFileName: <1b13ba6391c74847bbc3eddc86df7eee>
-      nativeLineNumber: 0
+        WindowHelper+R_DockArea.AddTab (UnityEditor.EditorWindow pane) (at Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:62)
+
+        WindowHelper.AddTab (UnityEditor.EditorWindow existingWindow, UnityEditor.EditorWindow
+        newWindow) (at Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:149)
+
+        AmplifyShaderEditor.AmplifyShaderEditorWindow.ConvertShaderToASE (UnityEngine.Shader
+        shader) (at Assets/AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs:379)
+
+        UnityEditor.CustomShaderInspector.OnInspectorGUI () (at Assets/AmplifyShaderEditor/Plugins/Editor/Utils/CustomShaderInspector.cs:218)
+
+        UnityEditor.InspectorWindow.DoOnInspectorGUI (System.Boolean rebuildOptimizedGUIBlock,
+        UnityEditor.Editor editor, System.Boolean wasVisible, UnityEngine.Rect& contentRect)
+        (at C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs:1625)
+
+        UnityEngine.GUIUtility:ProcessEvent(Int32, IntPtr)
+
+'
+      nativeFileName: Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+      nativeLineNumber: 62
       watchName: 
-      logText: 'ArgumentNullException: Value cannot be null.
-
-        Parameter name: source'
-      logTruncatedText: 'ArgumentNullException: Value cannot be null.
-
-        Parameter name: source'
-      logColumnText: 
+      logText: 'NullReferenceException: Object reference not set to an instance of
+        an object'
+      logTruncatedText: 'NullReferenceException: Object reference not set to an instance
+        of an object'
+      logColumnText: 'NullReferenceException: Object reference not set to an instance
+        of an object'
       fileName: 
       className: 
       namespaceName: 
-      lineCount: 2
-      hasSourceCode: 0
+      lineCount: 1
+      hasSourceCode: 1
       timeStamp: -1
       timeFrame: -1
       instanceID: 0
-      collapsedCount: 12
-      cachedHeight: -1
-      cachedHeightLogWidth: 0
+      collapsedCount: 1
+      cachedHeight: 19.666668
+      cachedHeightLogWidth: 2153
       stackEntries:
-      - fileName: <1b13ba6391c74847bbc3eddc86df7eee>
-        fileNameWithoutAssets: <1b13ba6391c74847bbc3eddc86df7eee>
-        fileNameWithoutAssetsPlusLineNumber: <1b13ba6391c74847bbc3eddc86df7eee>
-        fileNameWithoutPath: _1b13ba6391c74847bbc3eddc86df7eee_
-        fileNameWithoutPathPlusLineNumber: _1b13ba6391c74847bbc3eddc86df7eee_
+      - fileName: Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+        fileNameWithoutAssets: AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+        fileNameWithoutAssetsPlusLineNumber: AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:62
+        fileNameWithoutPath: WindowHelper.cs
+        fileNameWithoutPathPlusLineNumber: WindowHelper.cs:62
         instanceID: -1
-        className: Enumerable
-        methodName: Any[TSource]
-        namespaceName: System.Linq
-        lineNumber: 0
+        className: WindowHelper+R_DockArea
+        methodName: AddTab
+        namespaceName: None
+        lineNumber: 62
         charNumber: 0
-        stackLabel: Enumerable.Any[TSource]()
-        stackLabel2: '    <1b13ba6391c74847bbc3eddc86df7eee>:0'
+        stackLabel: WindowHelper+R_DockArea.AddTab()
+        stackLabel2: '    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:62'
         stackLabelContent:
-          m_Text: 
+          m_Text: <b>WindowHelper+R_DockArea.AddTab()</b>    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:62
           m_Image: {fileID: 0}
           m_Tooltip: 
-        stackLabelWidth: 0
-        stackLabelHeight: 0
-        stackSourceLineHeight: 0
-        sourceCode: []
-        sourceCodeUpdated: 0
+        stackLabelWidth: 782.6667
+        stackLabelHeight: 22.666668
+        stackSourceLineHeight: 14.666667
+        sourceCode:
+        - '60:       {'
+        - '61:           var method = m_type.GetMethod( "AddTab", BindingFlags.Instance
+          | BindingFlags.Public, null, new System.Type[] { typeof( EditorWindow )
+          }, null );'
+        - '62:           method.Invoke( m_instance, new object[] { pane } );'
+        - '63:       }'
+        - '64:   }'
+        sourceCodeUpdated: 1
         showSource: 1
-      - fileName: C:/buildslave/unity/build/Editor/Mono/SyncRiderProject.cs
-        fileNameWithoutAssets: C:/buildslave/unity/build/Editor/Mono/SyncRiderProject.cs
-        fileNameWithoutAssetsPlusLineNumber: C:/buildslave/unity/build/Editor/Mono/SyncRiderProject.cs:198
-        fileNameWithoutPath: SyncRiderProject.cs
-        fileNameWithoutPathPlusLineNumber: SyncRiderProject.cs:198
+      - fileName: Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+        fileNameWithoutAssets: AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+        fileNameWithoutAssetsPlusLineNumber: AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:149
+        fileNameWithoutPath: WindowHelper.cs
+        fileNameWithoutPathPlusLineNumber: WindowHelper.cs:149
         instanceID: -1
-        className: RiderPathLocator+<CollectPathsFromToolbox>c__AnonStorey3
-        methodName: <>m__0
-        namespaceName: UnityEditor
-        lineNumber: 198
+        className: WindowHelper
+        methodName: AddTab
+        namespaceName: None
+        lineNumber: 149
         charNumber: 0
-        stackLabel: RiderPathLocator+<CollectPathsFromToolbox>c__AnonStorey3.<>m__0()
-        stackLabel2: '    C:/buildslave/unity/build/Editor/Mono/SyncRiderProject.cs:198'
+        stackLabel: WindowHelper.AddTab()
+        stackLabel2: '    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:149'
         stackLabelContent:
-          m_Text: 
+          m_Text: <b>WindowHelper.AddTab()</b>    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:149
           m_Image: {fileID: 0}
           m_Tooltip: 
-        stackLabelWidth: 0
-        stackLabelHeight: 0
-        stackSourceLineHeight: 0
+        stackLabelWidth: 704
+        stackLabelHeight: 22.666668
+        stackSourceLineHeight: 14.666667
+        sourceCode:
+        - '147:       var dockArea = new R_DockArea( parent.Parent );'
+        - '148:       dockArea.OriginalDragSource = child.Parent;'
+        - '149:       dockArea.AddTab( newWindow );'
+        - '150:   }'
+        sourceCodeUpdated: 1
+        showSource: 1
+      - fileName: Assets/AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs
+        fileNameWithoutAssets: AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs
+        fileNameWithoutAssetsPlusLineNumber: AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs:379
+        fileNameWithoutPath: AmplifyShaderEditorWindow.cs
+        fileNameWithoutPathPlusLineNumber: AmplifyShaderEditorWindow.cs:379
+        instanceID: -1
+        className: AmplifyShaderEditorWindow
+        methodName: ConvertShaderToASE
+        namespaceName: AmplifyShaderEditor
+        lineNumber: 379
+        charNumber: 0
+        stackLabel: AmplifyShaderEditorWindow.ConvertShaderToASE()
+        stackLabel2: '    Assets/AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs:379'
+        stackLabelContent:
+          m_Text: <b>AmplifyShaderEditorWindow.ConvertShaderToASE()</b>    Assets/AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs:379
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 974.6667
+        stackLabelHeight: 22.666668
+        stackSourceLineHeight: 14.666667
+        sourceCode:
+        - '377:       EditorWindow openedWindow = AmplifyShaderEditorWindow.GetWindow<AmplifyShaderEditorWindow>();'
+        - '378:       AmplifyShaderEditorWindow currentWindow = CreateTab();'
+        - '379:       WindowHelper.AddTab( openedWindow, currentWindow );'
+        - '380:       UIUtils.CurrentWindow = currentWindow;'
+        - '381:   }'
+        sourceCodeUpdated: 1
+        showSource: 1
+      - fileName: Assets/AmplifyShaderEditor/Plugins/Editor/Utils/CustomShaderInspector.cs
+        fileNameWithoutAssets: AmplifyShaderEditor/Plugins/Editor/Utils/CustomShaderInspector.cs
+        fileNameWithoutAssetsPlusLineNumber: AmplifyShaderEditor/Plugins/Editor/Utils/CustomShaderInspector.cs:218
+        fileNameWithoutPath: CustomShaderInspector.cs
+        fileNameWithoutPathPlusLineNumber: CustomShaderInspector.cs:218
+        instanceID: -1
+        className: CustomShaderInspector
+        methodName: OnInspectorGUI
+        namespaceName: UnityEditor
+        lineNumber: 218
+        charNumber: 0
+        stackLabel: CustomShaderInspector.OnInspectorGUI()
+        stackLabel2: '    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/CustomShaderInspector.cs:218'
+        stackLabelContent:
+          m_Text: <b>CustomShaderInspector.OnInspectorGUI()</b>    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/CustomShaderInspector.cs:218
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 879.3333
+        stackLabelHeight: 22.666668
+        stackSourceLineHeight: 14.666667
+        sourceCode:
+        - '216:   if ( GUILayout.Button( "Open in Shader Editor" ) )'
+        - '217:   {'
+        - '218:       AmplifyShaderEditorWindow.ConvertShaderToASE( shader );'
+        - '219:   }'
+        sourceCodeUpdated: 1
+        showSource: 1
+      - fileName: C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs
+        fileNameWithoutAssets: C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs
+        fileNameWithoutAssetsPlusLineNumber: C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs:1625
+        fileNameWithoutPath: InspectorWindow.cs
+        fileNameWithoutPathPlusLineNumber: InspectorWindow.cs:1625
+        instanceID: -1
+        className: InspectorWindow
+        methodName: DoOnInspectorGUI
+        namespaceName: UnityEditor
+        lineNumber: 1625
+        charNumber: 0
+        stackLabel: InspectorWindow.DoOnInspectorGUI()
+        stackLabel2: '    C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs:1625'
+        stackLabelContent:
+          m_Text: <b>InspectorWindow.DoOnInspectorGUI()</b>    C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs:1625
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 830
+        stackLabelHeight: 22.666668
+        stackSourceLineHeight: 14.666667
         sourceCode: []
-        sourceCodeUpdated: 0
+        sourceCodeUpdated: 1
         showSource: 1
       - fileName: None
         fileNameWithoutAssets: None
@@ -2222,73 +2696,295 @@ MonoBehaviour:
         fileNameWithoutPath: None
         fileNameWithoutPathPlusLineNumber: None
         instanceID: -1
-        className: SyncRiderProject
-        methodName: PathCallback
-        namespaceName: UnityEditor
+        className: GUIUtility
+        methodName: ProcessEvent
+        namespaceName: UnityEngine
         lineNumber: 0
         charNumber: 0
-        stackLabel: SyncRiderProject.PathCallback()
+        stackLabel: GUIUtility.ProcessEvent()
         stackLabel2: 
         stackLabelContent:
-          m_Text: 
+          m_Text: <b>GUIUtility.ProcessEvent()</b>
           m_Image: {fileID: 0}
           m_Tooltip: 
-        stackLabelWidth: 0
-        stackLabelHeight: 0
-        stackSourceLineHeight: 0
+        stackLabelWidth: 228.66667
+        stackLabelHeight: 22.666668
+        stackSourceLineHeight: 14.666667
         sourceCode: []
-        sourceCodeUpdated: 0
-        showSource: 1
-      - fileName: C:/buildslave/unity/build/Editor/Mono/ScriptEditorUtility.cs
-        fileNameWithoutAssets: C:/buildslave/unity/build/Editor/Mono/ScriptEditorUtility.cs
-        fileNameWithoutAssetsPlusLineNumber: C:/buildslave/unity/build/Editor/Mono/ScriptEditorUtility.cs:146
-        fileNameWithoutPath: ScriptEditorUtility.cs
-        fileNameWithoutPathPlusLineNumber: ScriptEditorUtility.cs:146
-        instanceID: -1
-        className: ScriptEditorUtility
-        methodName: GetFoundScriptEditorPaths
-        namespaceName: UnityEditorInternal
-        lineNumber: 146
-        charNumber: 0
-        stackLabel: ScriptEditorUtility.GetFoundScriptEditorPaths()
-        stackLabel2: '    C:/buildslave/unity/build/Editor/Mono/ScriptEditorUtility.cs:146'
-        stackLabelContent:
-          m_Text: 
-          m_Image: {fileID: 0}
-          m_Tooltip: 
-        stackLabelWidth: 0
-        stackLabelHeight: 0
-        stackSourceLineHeight: 0
-        sourceCode: []
-        sourceCodeUpdated: 0
-        showSource: 1
-      - fileName: None
-        fileNameWithoutAssets: None
-        fileNameWithoutAssetsPlusLineNumber: None
-        fileNameWithoutPath: None
-        fileNameWithoutPathPlusLineNumber: None
-        instanceID: -1
-        className: SettingsService
-        methodName: OpenUserPreferenceWindow
-        namespaceName: UnityEditor
-        lineNumber: 0
-        charNumber: 0
-        stackLabel: SettingsService.OpenUserPreferenceWindow()
-        stackLabel2: 
-        stackLabelContent:
-          m_Text: 
-          m_Image: {fileID: 0}
-          m_Tooltip: 
-        stackLabelWidth: 0
-        stackLabelHeight: 0
-        stackSourceLineHeight: 0
-        sourceCode: []
-        sourceCodeUpdated: 0
+        sourceCodeUpdated: 1
         showSource: 1
       ignoredStackEntries: []
-      lastMatchedCount: 0
-      belongsToFilters: []
-      belongsToStandardFilters: []
+      lastMatchedCount: 1
+      belongsToFilters:
+      - name: Exception
+        isEnabled: 1
+        collapsed: 1
+        itemGUID: 14f1e92c-4001-4d59-96fa-5daaa1cb1439
+        filterName: 
+        mainColor: {r: 0.616, g: 0, b: 1, a: 0.7}
+        isStandardFilter: 1
+        isTempFilter: 0
+        useAdvancedColors: 1
+        customTextColor: {r: 1, g: 1, b: 1, a: 1}
+        customBackgroundColor: {r: 0.616, g: 0, b: 1, a: 0.7}
+        swallowStandard: 1
+        standardCanSwallow: 0
+        overrideStandardColors: 1
+        overrideStandardIcon: 1
+        collapseIconBackground: 0
+        collapseIconSymbol: 0
+        collapseIconLetter: 0
+        collapseIconTexture: 0
+        useIconBackground: 1
+        useIconSymbol: 0
+        useIconLetter: 1
+        useIconTexture: 0
+        filterFormatVersion: 1
+        iconColorize: 0
+        useAndOpForSearchList: 0
+        searchList:
+          list:
+          - name: 
+            isEnabled: 1
+            collapsed: 0
+            itemGUID: 55d57256-98d6-4469-80b2-a94e03815af9
+            searchString: <Any>
+            searchType: 1
+            removeSearchStringFromLog: 0
+            logTypeList:
+              list:
+              - name: 
+                isEnabled: 1
+                collapsed: 0
+                itemGUID: 227e2606-7e58-4704-8b0d-e30ba3c7aa45
+                logType: 4
+              - name: 
+                isEnabled: 1
+                collapsed: 0
+                itemGUID: 7451050a-1ba4-47ea-963f-c5f361316ad1
+                logType: 7
+              selectionList: 0
+              collapsable: 1
+              collapsed: 0
+            columnTypeList:
+              list:
+              - name: 
+                isEnabled: 1
+                collapsed: 0
+                itemGUID: 6f2a0507-5824-415c-ab08-604df1e1e067
+                columnType: 1
+              selectionList: 0
+              collapsable: 1
+              collapsed: 0
+          selectionList: 0
+          collapsable: 1
+          collapsed: 0
+        iconLetter:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 3
+          iconType2: 1
+          iconText: X
+          useIconTextFirstLetter: 0
+          useIconLogColor: 0
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 7
+        iconSymbol:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        iconBackground:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        iconTexture:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        showInToolbar: 1
+        hideLabelInToolbar: 0
+        hideWhenNoMatches: 1
+      belongsToStandardFilters:
+      - name: Exception
+        isEnabled: 1
+        collapsed: 1
+        itemGUID: 14f1e92c-4001-4d59-96fa-5daaa1cb1439
+        filterName: 
+        mainColor: {r: 0.616, g: 0, b: 1, a: 0.7}
+        isStandardFilter: 1
+        isTempFilter: 0
+        useAdvancedColors: 1
+        customTextColor: {r: 1, g: 1, b: 1, a: 1}
+        customBackgroundColor: {r: 0.616, g: 0, b: 1, a: 0.7}
+        swallowStandard: 1
+        standardCanSwallow: 0
+        overrideStandardColors: 1
+        overrideStandardIcon: 1
+        collapseIconBackground: 0
+        collapseIconSymbol: 0
+        collapseIconLetter: 0
+        collapseIconTexture: 0
+        useIconBackground: 1
+        useIconSymbol: 0
+        useIconLetter: 1
+        useIconTexture: 0
+        filterFormatVersion: 1
+        iconColorize: 0
+        useAndOpForSearchList: 0
+        searchList:
+          list:
+          - name: 
+            isEnabled: 1
+            collapsed: 0
+            itemGUID: 55d57256-98d6-4469-80b2-a94e03815af9
+            searchString: <Any>
+            searchType: 1
+            removeSearchStringFromLog: 0
+            logTypeList:
+              list:
+              - name: 
+                isEnabled: 1
+                collapsed: 0
+                itemGUID: 227e2606-7e58-4704-8b0d-e30ba3c7aa45
+                logType: 4
+              - name: 
+                isEnabled: 1
+                collapsed: 0
+                itemGUID: 7451050a-1ba4-47ea-963f-c5f361316ad1
+                logType: 7
+              selectionList: 0
+              collapsable: 1
+              collapsed: 0
+            columnTypeList:
+              list:
+              - name: 
+                isEnabled: 1
+                collapsed: 0
+                itemGUID: 6f2a0507-5824-415c-ab08-604df1e1e067
+                columnType: 1
+              selectionList: 0
+              collapsable: 1
+              collapsed: 0
+          selectionList: 0
+          collapsable: 1
+          collapsed: 0
+        iconLetter:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 3
+          iconType2: 1
+          iconText: X
+          useIconTextFirstLetter: 0
+          useIconLogColor: 0
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 7
+        iconSymbol:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        iconBackground:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        iconTexture:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        showInToolbar: 1
+        hideLabelInToolbar: 0
+        hideWhenNoMatches: 1
       assignedTempFilter:
         name: 
         isEnabled: 1
@@ -2392,7 +3088,8 @@ MonoBehaviour:
         showInToolbar: 1
         hideLabelInToolbar: 0
         hideWhenNoMatches: 0
-    - logType: 2
+    newEntries:
+    - logType: 4
       ignore: 0
       processed: 1
       tempFilterProcessed: 1
@@ -2403,54 +3100,204 @@ MonoBehaviour:
       listIndex: 0
       nativeIndex: 1
       nativeIdentifier: 0
-      originalLog: 'Failed to get RiderPath via .channel.settings.json
+      originalLog: 'NullReferenceException: Object reference not set to an instance
+        of an object'
+      originalStackTrace: 'NullReferenceException: Object reference not set to an
+        instance of an object
 
-        UnityEditor.SyncRiderProject:PathCallback()'
-      originalStackTrace: 'Failed to get RiderPath via .channel.settings.json
+        WindowHelper+R_DockArea.AddTab (UnityEditor.EditorWindow pane) (at Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:62)
 
-        UnityEditor.SyncRiderProject:PathCallback()
+        WindowHelper.AddTab (UnityEditor.EditorWindow existingWindow, UnityEditor.EditorWindow
+        newWindow) (at Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:149)
 
-        UnityEditorInternal.ScriptEditorUtility:GetFoundScriptEditorPaths(RuntimePlatform)
-        (at C:/buildslave/unity/build/Editor/Mono/ScriptEditorUtility.cs:146)
+        AmplifyShaderEditor.AmplifyShaderEditorWindow.LoadMaterialToASE (UnityEngine.Material
+        material) (at Assets/AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs:424)
 
-        UnityEditor.SettingsService:OpenUserPreferenceWindow()
+        ASEMaterialInspector.OnGUI (UnityEditor.MaterialEditor materialEditor, UnityEditor.MaterialProperty[]
+        properties) (at Assets/AmplifyShaderEditor/Plugins/Editor/Utils/CustomMaterialInspector.cs:106)
+
+        UnityEditor.MaterialEditor.PropertiesGUI () (at C:/buildslave/unity/build/Editor/Mono/Inspector/MaterialEditor.cs:1606)
+
+        UnityEditor.MaterialEditor.OnInspectorGUI () (at C:/buildslave/unity/build/Editor/Mono/Inspector/MaterialEditor.cs:393)
+
+        UnityEditor.InspectorWindow.DoOnInspectorGUI (System.Boolean rebuildOptimizedGUIBlock,
+        UnityEditor.Editor editor, System.Boolean wasVisible, UnityEngine.Rect& contentRect)
+        (at C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs:1625)
+
+        UnityEngine.GUIUtility:ProcessEvent(Int32, IntPtr)
 
 '
-      nativeFileName: C:/buildslave/unity/build/Editor/Mono/SyncRiderProject.cs
-      nativeLineNumber: 210
+      nativeFileName: Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+      nativeLineNumber: 62
       watchName: 
-      logText: 'Failed to get RiderPath via .channel.settings.json
-
-        UnityEditor.SyncRiderProject:PathCallback()'
-      logTruncatedText: 'Failed to get RiderPath via .channel.settings.json
-
-        UnityEditor.SyncRiderProject:PathCallback()'
+      logText: 'NullReferenceException: Object reference not set to an instance of
+        an object'
+      logTruncatedText: 'NullReferenceException: Object reference not set to an instance
+        of an object'
       logColumnText: 
       fileName: 
       className: 
       namespaceName: 
-      lineCount: 2
+      lineCount: 1
       hasSourceCode: 0
       timeStamp: -1
       timeFrame: -1
       instanceID: 0
-      collapsedCount: 12
+      collapsedCount: 1
       cachedHeight: -1
       cachedHeightLogWidth: 0
       stackEntries:
-      - fileName: C:/buildslave/unity/build/Editor/Mono/ScriptEditorUtility.cs
-        fileNameWithoutAssets: C:/buildslave/unity/build/Editor/Mono/ScriptEditorUtility.cs
-        fileNameWithoutAssetsPlusLineNumber: C:/buildslave/unity/build/Editor/Mono/ScriptEditorUtility.cs:146
-        fileNameWithoutPath: ScriptEditorUtility.cs
-        fileNameWithoutPathPlusLineNumber: ScriptEditorUtility.cs:146
+      - fileName: Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+        fileNameWithoutAssets: AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+        fileNameWithoutAssetsPlusLineNumber: AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:62
+        fileNameWithoutPath: WindowHelper.cs
+        fileNameWithoutPathPlusLineNumber: WindowHelper.cs:62
         instanceID: -1
-        className: ScriptEditorUtility
-        methodName: GetFoundScriptEditorPaths
-        namespaceName: UnityEditorInternal
-        lineNumber: 146
+        className: WindowHelper+R_DockArea
+        methodName: AddTab
+        namespaceName: None
+        lineNumber: 62
         charNumber: 0
-        stackLabel: ScriptEditorUtility.GetFoundScriptEditorPaths()
-        stackLabel2: '    C:/buildslave/unity/build/Editor/Mono/ScriptEditorUtility.cs:146'
+        stackLabel: WindowHelper+R_DockArea.AddTab()
+        stackLabel2: '    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:62'
+        stackLabelContent:
+          m_Text: 
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 0
+        stackLabelHeight: 0
+        stackSourceLineHeight: 0
+        sourceCode: []
+        sourceCodeUpdated: 0
+        showSource: 1
+      - fileName: Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+        fileNameWithoutAssets: AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+        fileNameWithoutAssetsPlusLineNumber: AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:149
+        fileNameWithoutPath: WindowHelper.cs
+        fileNameWithoutPathPlusLineNumber: WindowHelper.cs:149
+        instanceID: -1
+        className: WindowHelper
+        methodName: AddTab
+        namespaceName: None
+        lineNumber: 149
+        charNumber: 0
+        stackLabel: WindowHelper.AddTab()
+        stackLabel2: '    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:149'
+        stackLabelContent:
+          m_Text: 
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 0
+        stackLabelHeight: 0
+        stackSourceLineHeight: 0
+        sourceCode: []
+        sourceCodeUpdated: 0
+        showSource: 1
+      - fileName: Assets/AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs
+        fileNameWithoutAssets: AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs
+        fileNameWithoutAssetsPlusLineNumber: AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs:424
+        fileNameWithoutPath: AmplifyShaderEditorWindow.cs
+        fileNameWithoutPathPlusLineNumber: AmplifyShaderEditorWindow.cs:424
+        instanceID: -1
+        className: AmplifyShaderEditorWindow
+        methodName: LoadMaterialToASE
+        namespaceName: AmplifyShaderEditor
+        lineNumber: 424
+        charNumber: 0
+        stackLabel: AmplifyShaderEditorWindow.LoadMaterialToASE()
+        stackLabel2: '    Assets/AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs:424'
+        stackLabelContent:
+          m_Text: 
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 0
+        stackLabelHeight: 0
+        stackSourceLineHeight: 0
+        sourceCode: []
+        sourceCodeUpdated: 0
+        showSource: 1
+      - fileName: Assets/AmplifyShaderEditor/Plugins/Editor/Utils/CustomMaterialInspector.cs
+        fileNameWithoutAssets: AmplifyShaderEditor/Plugins/Editor/Utils/CustomMaterialInspector.cs
+        fileNameWithoutAssetsPlusLineNumber: AmplifyShaderEditor/Plugins/Editor/Utils/CustomMaterialInspector.cs:106
+        fileNameWithoutPath: CustomMaterialInspector.cs
+        fileNameWithoutPathPlusLineNumber: CustomMaterialInspector.cs:106
+        instanceID: -1
+        className: ASEMaterialInspector
+        methodName: OnGUI
+        namespaceName: None
+        lineNumber: 106
+        charNumber: 0
+        stackLabel: ASEMaterialInspector.OnGUI()
+        stackLabel2: '    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/CustomMaterialInspector.cs:106'
+        stackLabelContent:
+          m_Text: 
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 0
+        stackLabelHeight: 0
+        stackSourceLineHeight: 0
+        sourceCode: []
+        sourceCodeUpdated: 0
+        showSource: 1
+      - fileName: C:/buildslave/unity/build/Editor/Mono/Inspector/MaterialEditor.cs
+        fileNameWithoutAssets: C:/buildslave/unity/build/Editor/Mono/Inspector/MaterialEditor.cs
+        fileNameWithoutAssetsPlusLineNumber: C:/buildslave/unity/build/Editor/Mono/Inspector/MaterialEditor.cs:1606
+        fileNameWithoutPath: MaterialEditor.cs
+        fileNameWithoutPathPlusLineNumber: MaterialEditor.cs:1606
+        instanceID: -1
+        className: MaterialEditor
+        methodName: PropertiesGUI
+        namespaceName: UnityEditor
+        lineNumber: 1606
+        charNumber: 0
+        stackLabel: MaterialEditor.PropertiesGUI()
+        stackLabel2: '    C:/buildslave/unity/build/Editor/Mono/Inspector/MaterialEditor.cs:1606'
+        stackLabelContent:
+          m_Text: 
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 0
+        stackLabelHeight: 0
+        stackSourceLineHeight: 0
+        sourceCode: []
+        sourceCodeUpdated: 0
+        showSource: 1
+      - fileName: C:/buildslave/unity/build/Editor/Mono/Inspector/MaterialEditor.cs
+        fileNameWithoutAssets: C:/buildslave/unity/build/Editor/Mono/Inspector/MaterialEditor.cs
+        fileNameWithoutAssetsPlusLineNumber: C:/buildslave/unity/build/Editor/Mono/Inspector/MaterialEditor.cs:393
+        fileNameWithoutPath: MaterialEditor.cs
+        fileNameWithoutPathPlusLineNumber: MaterialEditor.cs:393
+        instanceID: -1
+        className: MaterialEditor
+        methodName: OnInspectorGUI
+        namespaceName: UnityEditor
+        lineNumber: 393
+        charNumber: 0
+        stackLabel: MaterialEditor.OnInspectorGUI()
+        stackLabel2: '    C:/buildslave/unity/build/Editor/Mono/Inspector/MaterialEditor.cs:393'
+        stackLabelContent:
+          m_Text: 
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 0
+        stackLabelHeight: 0
+        stackSourceLineHeight: 0
+        sourceCode: []
+        sourceCodeUpdated: 0
+        showSource: 1
+      - fileName: C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs
+        fileNameWithoutAssets: C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs
+        fileNameWithoutAssetsPlusLineNumber: C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs:1625
+        fileNameWithoutPath: InspectorWindow.cs
+        fileNameWithoutPathPlusLineNumber: InspectorWindow.cs:1625
+        instanceID: -1
+        className: InspectorWindow
+        methodName: DoOnInspectorGUI
+        namespaceName: UnityEditor
+        lineNumber: 1625
+        charNumber: 0
+        stackLabel: InspectorWindow.DoOnInspectorGUI()
+        stackLabel2: '    C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs:1625'
         stackLabelContent:
           m_Text: 
           m_Image: {fileID: 0}
@@ -2467,12 +3314,12 @@ MonoBehaviour:
         fileNameWithoutPath: None
         fileNameWithoutPathPlusLineNumber: None
         instanceID: -1
-        className: SettingsService
-        methodName: OpenUserPreferenceWindow
-        namespaceName: UnityEditor
+        className: GUIUtility
+        methodName: ProcessEvent
+        namespaceName: UnityEngine
         lineNumber: 0
         charNumber: 0
-        stackLabel: SettingsService.OpenUserPreferenceWindow()
+        stackLabel: GUIUtility.ProcessEvent()
         stackLabel2: 
         stackLabelContent:
           m_Text: 
@@ -2594,8 +3441,595 @@ MonoBehaviour:
     resetCompilerErrorEntries: 1
     compilerErrorEntries: []
     timeFrames: 
-    _filteredEntries: []
---- !u!114 &90
+    _filteredEntries:
+    - logType: 4
+      ignore: 0
+      processed: 1
+      tempFilterProcessed: 1
+      remoteEndPoint: Local
+      logPanelVisible: 1
+      logPanelIndex: 0
+      logOutputHeight: 15
+      listIndex: 0
+      nativeIndex: 0
+      nativeIdentifier: 0
+      originalLog: 'NullReferenceException: Object reference not set to an instance
+        of an object'
+      originalStackTrace: 'NullReferenceException: Object reference not set to an
+        instance of an object
+
+        WindowHelper+R_DockArea.AddTab (UnityEditor.EditorWindow pane) (at Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:62)
+
+        WindowHelper.AddTab (UnityEditor.EditorWindow existingWindow, UnityEditor.EditorWindow
+        newWindow) (at Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:149)
+
+        AmplifyShaderEditor.AmplifyShaderEditorWindow.ConvertShaderToASE (UnityEngine.Shader
+        shader) (at Assets/AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs:379)
+
+        UnityEditor.CustomShaderInspector.OnInspectorGUI () (at Assets/AmplifyShaderEditor/Plugins/Editor/Utils/CustomShaderInspector.cs:218)
+
+        UnityEditor.InspectorWindow.DoOnInspectorGUI (System.Boolean rebuildOptimizedGUIBlock,
+        UnityEditor.Editor editor, System.Boolean wasVisible, UnityEngine.Rect& contentRect)
+        (at C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs:1625)
+
+        UnityEngine.GUIUtility:ProcessEvent(Int32, IntPtr)
+
+'
+      nativeFileName: Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+      nativeLineNumber: 62
+      watchName: 
+      logText: 'NullReferenceException: Object reference not set to an instance of
+        an object'
+      logTruncatedText: 'NullReferenceException: Object reference not set to an instance
+        of an object'
+      logColumnText: 'NullReferenceException: Object reference not set to an instance
+        of an object'
+      fileName: 
+      className: 
+      namespaceName: 
+      lineCount: 1
+      hasSourceCode: 1
+      timeStamp: -1
+      timeFrame: -1
+      instanceID: 0
+      collapsedCount: 1
+      cachedHeight: 19.666668
+      cachedHeightLogWidth: 2153
+      stackEntries:
+      - fileName: Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+        fileNameWithoutAssets: AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+        fileNameWithoutAssetsPlusLineNumber: AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:62
+        fileNameWithoutPath: WindowHelper.cs
+        fileNameWithoutPathPlusLineNumber: WindowHelper.cs:62
+        instanceID: -1
+        className: WindowHelper+R_DockArea
+        methodName: AddTab
+        namespaceName: None
+        lineNumber: 62
+        charNumber: 0
+        stackLabel: WindowHelper+R_DockArea.AddTab()
+        stackLabel2: '    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:62'
+        stackLabelContent:
+          m_Text: <b>WindowHelper+R_DockArea.AddTab()</b>    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:62
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 782.6667
+        stackLabelHeight: 22.666668
+        stackSourceLineHeight: 14.666667
+        sourceCode:
+        - '60:       {'
+        - '61:           var method = m_type.GetMethod( "AddTab", BindingFlags.Instance
+          | BindingFlags.Public, null, new System.Type[] { typeof( EditorWindow )
+          }, null );'
+        - '62:           method.Invoke( m_instance, new object[] { pane } );'
+        - '63:       }'
+        - '64:   }'
+        sourceCodeUpdated: 1
+        showSource: 1
+      - fileName: Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+        fileNameWithoutAssets: AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs
+        fileNameWithoutAssetsPlusLineNumber: AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:149
+        fileNameWithoutPath: WindowHelper.cs
+        fileNameWithoutPathPlusLineNumber: WindowHelper.cs:149
+        instanceID: -1
+        className: WindowHelper
+        methodName: AddTab
+        namespaceName: None
+        lineNumber: 149
+        charNumber: 0
+        stackLabel: WindowHelper.AddTab()
+        stackLabel2: '    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:149'
+        stackLabelContent:
+          m_Text: <b>WindowHelper.AddTab()</b>    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/WindowHelper.cs:149
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 704
+        stackLabelHeight: 22.666668
+        stackSourceLineHeight: 14.666667
+        sourceCode:
+        - '147:       var dockArea = new R_DockArea( parent.Parent );'
+        - '148:       dockArea.OriginalDragSource = child.Parent;'
+        - '149:       dockArea.AddTab( newWindow );'
+        - '150:   }'
+        sourceCodeUpdated: 1
+        showSource: 1
+      - fileName: Assets/AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs
+        fileNameWithoutAssets: AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs
+        fileNameWithoutAssetsPlusLineNumber: AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs:379
+        fileNameWithoutPath: AmplifyShaderEditorWindow.cs
+        fileNameWithoutPathPlusLineNumber: AmplifyShaderEditorWindow.cs:379
+        instanceID: -1
+        className: AmplifyShaderEditorWindow
+        methodName: ConvertShaderToASE
+        namespaceName: AmplifyShaderEditor
+        lineNumber: 379
+        charNumber: 0
+        stackLabel: AmplifyShaderEditorWindow.ConvertShaderToASE()
+        stackLabel2: '    Assets/AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs:379'
+        stackLabelContent:
+          m_Text: <b>AmplifyShaderEditorWindow.ConvertShaderToASE()</b>    Assets/AmplifyShaderEditor/Plugins/Editor/Menu/AmplifyShaderEditorWindow.cs:379
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 974.6667
+        stackLabelHeight: 22.666668
+        stackSourceLineHeight: 14.666667
+        sourceCode:
+        - '377:       EditorWindow openedWindow = AmplifyShaderEditorWindow.GetWindow<AmplifyShaderEditorWindow>();'
+        - '378:       AmplifyShaderEditorWindow currentWindow = CreateTab();'
+        - '379:       WindowHelper.AddTab( openedWindow, currentWindow );'
+        - '380:       UIUtils.CurrentWindow = currentWindow;'
+        - '381:   }'
+        sourceCodeUpdated: 1
+        showSource: 1
+      - fileName: Assets/AmplifyShaderEditor/Plugins/Editor/Utils/CustomShaderInspector.cs
+        fileNameWithoutAssets: AmplifyShaderEditor/Plugins/Editor/Utils/CustomShaderInspector.cs
+        fileNameWithoutAssetsPlusLineNumber: AmplifyShaderEditor/Plugins/Editor/Utils/CustomShaderInspector.cs:218
+        fileNameWithoutPath: CustomShaderInspector.cs
+        fileNameWithoutPathPlusLineNumber: CustomShaderInspector.cs:218
+        instanceID: -1
+        className: CustomShaderInspector
+        methodName: OnInspectorGUI
+        namespaceName: UnityEditor
+        lineNumber: 218
+        charNumber: 0
+        stackLabel: CustomShaderInspector.OnInspectorGUI()
+        stackLabel2: '    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/CustomShaderInspector.cs:218'
+        stackLabelContent:
+          m_Text: <b>CustomShaderInspector.OnInspectorGUI()</b>    Assets/AmplifyShaderEditor/Plugins/Editor/Utils/CustomShaderInspector.cs:218
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 879.3333
+        stackLabelHeight: 22.666668
+        stackSourceLineHeight: 14.666667
+        sourceCode:
+        - '216:   if ( GUILayout.Button( "Open in Shader Editor" ) )'
+        - '217:   {'
+        - '218:       AmplifyShaderEditorWindow.ConvertShaderToASE( shader );'
+        - '219:   }'
+        sourceCodeUpdated: 1
+        showSource: 1
+      - fileName: C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs
+        fileNameWithoutAssets: C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs
+        fileNameWithoutAssetsPlusLineNumber: C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs:1625
+        fileNameWithoutPath: InspectorWindow.cs
+        fileNameWithoutPathPlusLineNumber: InspectorWindow.cs:1625
+        instanceID: -1
+        className: InspectorWindow
+        methodName: DoOnInspectorGUI
+        namespaceName: UnityEditor
+        lineNumber: 1625
+        charNumber: 0
+        stackLabel: InspectorWindow.DoOnInspectorGUI()
+        stackLabel2: '    C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs:1625'
+        stackLabelContent:
+          m_Text: <b>InspectorWindow.DoOnInspectorGUI()</b>    C:/buildslave/unity/build/Editor/Mono/Inspector/InspectorWindow.cs:1625
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 830
+        stackLabelHeight: 22.666668
+        stackSourceLineHeight: 14.666667
+        sourceCode: []
+        sourceCodeUpdated: 1
+        showSource: 1
+      - fileName: None
+        fileNameWithoutAssets: None
+        fileNameWithoutAssetsPlusLineNumber: None
+        fileNameWithoutPath: None
+        fileNameWithoutPathPlusLineNumber: None
+        instanceID: -1
+        className: GUIUtility
+        methodName: ProcessEvent
+        namespaceName: UnityEngine
+        lineNumber: 0
+        charNumber: 0
+        stackLabel: GUIUtility.ProcessEvent()
+        stackLabel2: 
+        stackLabelContent:
+          m_Text: <b>GUIUtility.ProcessEvent()</b>
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+        stackLabelWidth: 228.66667
+        stackLabelHeight: 22.666668
+        stackSourceLineHeight: 14.666667
+        sourceCode: []
+        sourceCodeUpdated: 1
+        showSource: 1
+      ignoredStackEntries: []
+      lastMatchedCount: 1
+      belongsToFilters:
+      - name: Exception
+        isEnabled: 1
+        collapsed: 1
+        itemGUID: 14f1e92c-4001-4d59-96fa-5daaa1cb1439
+        filterName: 
+        mainColor: {r: 0.616, g: 0, b: 1, a: 0.7}
+        isStandardFilter: 1
+        isTempFilter: 0
+        useAdvancedColors: 1
+        customTextColor: {r: 1, g: 1, b: 1, a: 1}
+        customBackgroundColor: {r: 0.616, g: 0, b: 1, a: 0.7}
+        swallowStandard: 1
+        standardCanSwallow: 0
+        overrideStandardColors: 1
+        overrideStandardIcon: 1
+        collapseIconBackground: 0
+        collapseIconSymbol: 0
+        collapseIconLetter: 0
+        collapseIconTexture: 0
+        useIconBackground: 1
+        useIconSymbol: 0
+        useIconLetter: 1
+        useIconTexture: 0
+        filterFormatVersion: 1
+        iconColorize: 0
+        useAndOpForSearchList: 0
+        searchList:
+          list:
+          - name: 
+            isEnabled: 1
+            collapsed: 0
+            itemGUID: 55d57256-98d6-4469-80b2-a94e03815af9
+            searchString: <Any>
+            searchType: 1
+            removeSearchStringFromLog: 0
+            logTypeList:
+              list:
+              - name: 
+                isEnabled: 1
+                collapsed: 0
+                itemGUID: 227e2606-7e58-4704-8b0d-e30ba3c7aa45
+                logType: 4
+              - name: 
+                isEnabled: 1
+                collapsed: 0
+                itemGUID: 7451050a-1ba4-47ea-963f-c5f361316ad1
+                logType: 7
+              selectionList: 0
+              collapsable: 1
+              collapsed: 0
+            columnTypeList:
+              list:
+              - name: 
+                isEnabled: 1
+                collapsed: 0
+                itemGUID: 6f2a0507-5824-415c-ab08-604df1e1e067
+                columnType: 1
+              selectionList: 0
+              collapsable: 1
+              collapsed: 0
+          selectionList: 0
+          collapsable: 1
+          collapsed: 0
+        iconLetter:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 3
+          iconType2: 1
+          iconText: X
+          useIconTextFirstLetter: 0
+          useIconLogColor: 0
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 7
+        iconSymbol:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        iconBackground:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        iconTexture:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        showInToolbar: 1
+        hideLabelInToolbar: 0
+        hideWhenNoMatches: 1
+      belongsToStandardFilters:
+      - name: Exception
+        isEnabled: 1
+        collapsed: 1
+        itemGUID: 14f1e92c-4001-4d59-96fa-5daaa1cb1439
+        filterName: 
+        mainColor: {r: 0.616, g: 0, b: 1, a: 0.7}
+        isStandardFilter: 1
+        isTempFilter: 0
+        useAdvancedColors: 1
+        customTextColor: {r: 1, g: 1, b: 1, a: 1}
+        customBackgroundColor: {r: 0.616, g: 0, b: 1, a: 0.7}
+        swallowStandard: 1
+        standardCanSwallow: 0
+        overrideStandardColors: 1
+        overrideStandardIcon: 1
+        collapseIconBackground: 0
+        collapseIconSymbol: 0
+        collapseIconLetter: 0
+        collapseIconTexture: 0
+        useIconBackground: 1
+        useIconSymbol: 0
+        useIconLetter: 1
+        useIconTexture: 0
+        filterFormatVersion: 1
+        iconColorize: 0
+        useAndOpForSearchList: 0
+        searchList:
+          list:
+          - name: 
+            isEnabled: 1
+            collapsed: 0
+            itemGUID: 55d57256-98d6-4469-80b2-a94e03815af9
+            searchString: <Any>
+            searchType: 1
+            removeSearchStringFromLog: 0
+            logTypeList:
+              list:
+              - name: 
+                isEnabled: 1
+                collapsed: 0
+                itemGUID: 227e2606-7e58-4704-8b0d-e30ba3c7aa45
+                logType: 4
+              - name: 
+                isEnabled: 1
+                collapsed: 0
+                itemGUID: 7451050a-1ba4-47ea-963f-c5f361316ad1
+                logType: 7
+              selectionList: 0
+              collapsable: 1
+              collapsed: 0
+            columnTypeList:
+              list:
+              - name: 
+                isEnabled: 1
+                collapsed: 0
+                itemGUID: 6f2a0507-5824-415c-ab08-604df1e1e067
+                columnType: 1
+              selectionList: 0
+              collapsable: 1
+              collapsed: 0
+          selectionList: 0
+          collapsable: 1
+          collapsed: 0
+        iconLetter:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 3
+          iconType2: 1
+          iconText: X
+          useIconTextFirstLetter: 0
+          useIconLogColor: 0
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 7
+        iconSymbol:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        iconBackground:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        iconTexture:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        showInToolbar: 1
+        hideLabelInToolbar: 0
+        hideWhenNoMatches: 1
+      assignedTempFilter:
+        name: 
+        isEnabled: 1
+        collapsed: 0
+        itemGUID: 
+        filterName: 
+        mainColor: {r: 1, g: 1, b: 1, a: 1}
+        isStandardFilter: 0
+        isTempFilter: 0
+        useAdvancedColors: 0
+        customTextColor: {r: 1, g: 1, b: 1, a: 1}
+        customBackgroundColor: {r: 1, g: 1, b: 1, a: 1}
+        swallowStandard: 1
+        standardCanSwallow: 0
+        overrideStandardColors: 1
+        overrideStandardIcon: 1
+        collapseIconBackground: 0
+        collapseIconSymbol: 0
+        collapseIconLetter: 0
+        collapseIconTexture: 0
+        useIconBackground: 1
+        useIconSymbol: 0
+        useIconLetter: 0
+        useIconTexture: 0
+        filterFormatVersion: -1
+        iconColorize: 0
+        useAndOpForSearchList: 0
+        searchList:
+          list: []
+          selectionList: 0
+          collapsable: 1
+          collapsed: 0
+        iconLetter:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        iconSymbol:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        iconBackground:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        iconTexture:
+          name: 
+          isEnabled: 1
+          collapsed: 0
+          itemGUID: 
+          iconType: 1
+          iconType2: 1
+          iconText: A
+          useIconTextFirstLetter: 1
+          useIconLogColor: 1
+          iconColor: {r: 1, g: 1, b: 1, a: 1}
+          iconBuiltInID: BACKGROUNDS_ECPBGROUNDEDSQUARE
+          iconTextureGUID: 
+          useIconShadow: 1
+          iconOffset: {x: 0, y: 0}
+          iconShadowOffset: {x: 0.5, y: 0.5}
+          iconSize: 13
+        showInToolbar: 1
+        hideLabelInToolbar: 0
+        hideWhenNoMatches: 0
+--- !u!114 &107
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2626,7 +4060,7 @@ MonoBehaviour:
   - https://public-cdn.cloud.unity3d.com/editor/production/cloud/hub
   m_RegisteredViewInstances:
   - {fileID: 0}
---- !u!114 &91
+--- !u!114 &108
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2647,16 +4081,16 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 265.33334
+    x: 264
     y: 72.66667
-    width: 1930
-    height: 861
+    width: 1931
+    height: 680
   m_PersistentViewDataDictionary: {fileID: 0}
   m_PosLeft: {x: 0, y: 0}
-  m_PosRight: {x: 0, y: 3272.955}
+  m_PosRight: {x: 0, y: 613.9551}
   m_Scope: 1
   m_SplitterFlex: 0.2
---- !u!114 &92
+--- !u!114 &109
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2678,14 +4112,14 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 954
+    y: 970.6667
     width: 2197
-    height: 416
+    height: 399
   m_PersistentViewDataDictionary: {fileID: 0}
   m_MixersTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 
-    m_LastClickedID: 6290
+    m_SelectedIDs: b6180000
+    m_LastClickedID: 6326
     m_ExpandedIDs: 12eb343c
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -2756,7 +4190,7 @@ MonoBehaviour:
       splitSize: 6
       xOffset: 0
     m_HorizontalSplitter:
-      ID: 18173
+      ID: 2670
       splitterInitialOffset: 0
       currentActiveSplitter: -1
       realSizes: 9302000003060000
@@ -2774,7 +4208,7 @@ MonoBehaviour:
   m_ShowReferencedBuses: 1
   m_ShowBusConnections: 0
   m_ShowBusConnectionsOfSelection: 0
---- !u!114 &93
+--- !u!114 &110
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2823,7 +4257,7 @@ MonoBehaviour:
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 0}
     m_SearchString: 
---- !u!114 &94
+--- !u!114 &111
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2845,21 +4279,21 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 954
+    y: 772.6667
     width: 2197
-    height: 416
+    height: 597
   m_PersistentViewDataDictionary: {fileID: 0}
   m_VertSplit:
-    ID: 18173
+    ID: 2670
     splitterInitialOffset: 261
     currentActiveSplitter: -1
-    realSizes: d7000000b9000000
+    realSizes: 380100000d010000
     relativeSizes:
     - 0.5377778
     - 0.46222222
     minSizes: 3200000032000000
     maxSizes: 0000000000000000
-    lastTotalSize: 400
+    lastTotalSize: 581
     splitSize: 6
     xOffset: 0
   m_Recording: 1
@@ -2874,7 +4308,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: db000000
       m_LastClickedID: 219
-      m_ExpandedIDs: 0200000012000000200000003400000070000000dd000000e800000042010000
+      m_ExpandedIDs: 02000000120000001e00000020000000340000007000000071000000ca000000dd000000e8000000080100000901000042010000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -3225,7 +4659,7 @@ MonoBehaviour:
           m_VisibleColumns: 0000000001000000020000000300000004000000
           m_SortedColumns: 03000000
   m_ClearOnPlay: 0
---- !u!114 &95
+--- !u!114 &112
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3249,14 +4683,14 @@ MonoBehaviour:
     x: 0
     y: 72.66667
     width: 262
-    height: 878
+    height: 680
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: c8150000
+      m_SelectedIDs: 403b0000
       m_LastClickedID: 0
-      m_ExpandedIDs: d0fbffff
+      m_ExpandedIDs: f41667ffda3c67ff824067fff87e67ff9ca467ff5ae467ffa82268fff4d468ff1af671ff0c5873ffb45e73ffe49173ff46e673ff7e2474ffdec174ffa0b177ffdc0178ff10fc79ff443a7aff32017bff663f7bff8c7d7bff3cbc7bffca1b7dff30547fffac7e7fff06b87fffac0a80ff744980ff98e280ffca2081ff6c5c82ffd69b82ff361184ff6e4f84ff30a784ffb6e584ffd4ee84ff042d85ff223685ff2e7785ff488085ff6ebe85ff88c785ffac8786ff80a487ffbce387ff5eac8aff46eb8affbcd58effc6148fffb02390ff846290ff601e91ff865c91fff8f891ff7c3792ff2ec192ff66ff92ff208d93ff64cb93ffc04d94ffcc4d94ffdc4d94ffa64e94ffc68e94ff241c95ffd05d95ff9c1d96ffe05d96ff1cee96ff962c97ffe29d97ff66a497ffbaa497ffd2a497ff98ed9aff5a2c9bffa8db9bff7c1a9cff56b69cff92f49cffbc329dffc03e9dffcc3e9dff20759dff24c79dffaa059effd4439effce189fff7e43a0ff582fa1fff83ca2ffbeaaa2ff9067a3ff12a7a3ffac3ba4ffa07aa4ff024fa5ff3c90a6ff62e2a6ffa020a7ffba29a7ffe067a7ff0071a7ff66afa7ff80b8a7ffb4f6a7ffceffa7ff223ea8ff4447a8fffca1a8ff0ef4a8ff9665a9ffbcb7a9ffd2f6a9ff9acbaaff300aabff4a13abff7051abff8a5aabff7ef8abff86faabffcaa4acff9aaaacffeeacacfff0acacff7e44aeff924daeff1c4faefff2deaefffce7aeff58e9aeffb46eafff9074afff8e7eafff566db1ffe46eb1ff0078b1fff479b1ff4ee7b1ff98e8b1ff86abb4ff6eb0b4ff6885b6ffb286b6ff4c05b7ffc206b7ff64b2b8ff48b4b8ffba87b9fffc88b9ff2820bbffa821bbff28bebcffeec2bcff92f3bcff841ebdff7c70bdff067bbdff4e7cbdff7280bdffb83cbeff3241befffa62bffff267bfff506bbffffe2ec0fff854c0ff067fc1ffe6c9c1ff0602c5ff98a4c6ff9eaac6ffca5fc8ffdc63c8ffdeeec8ff42f2c8ffa0f5c8ffc4fec8ffec02c9ff360cc9ffaa83c9ffce8cc9ffe291c9fff89ac9ffc49cc9ff969fc9ff32a1c9ff42aac9ff84abc9ff92b4c9ffbcb8c9ff3c09cbff5828cbff200fccff322accff6e2accffce2bccff2654ccff8e54ccff9a54ccffd093ccff6834cfff2239cfff2e39cfff3678cffff4cacfff7037d0ff2a6ad0fffe6ed3fffc77d3ffa29ed3ffd4c3d3ffa8ddd4ffda3dd5ff0c63d5ff1a7cd6ff56a1d6ff70aad6ffaecfd6ffe0f4d6ff4458d7ff9867d7ffa867d7ff5a82d7ff90c0d7ffb827d9fff065d9ffeefed9ff123ddaff0cdadbff8219dcff127cdcff04bbdcffae1dddffec5bddffb80cdeff624bdeffce70deffeed3deffcef9deffd25cdfffaa83dffff8b7dfff18b8dfff6cb8dfffbcd4dfff9438e0ffd05de0ffec66e0ff768ce0fff6cae0ff1e09e1ff009ee1ff989ee1ff9c9ee1ff3ca3e1ff94eee1ffee52e2ff1696e2ff6a96e2ff6c96e2ff08d9e2ffe6fee3ff5c24e4ff8849e4ffbad1e4ff185be5ffd690e6ff56b6e6ff18dee7ffc003e8ff6c9fe8ff34c5e8ff06f1e9ffd216eaff3c3bebffe461ebff9286ebff9686ebff9a86ebfffa86ebff68b0ebffb09cecffcac2ecff3008edff1af5edff241beeffe87aefff34abf0fff4d0f0ffe05ff1ffb485f1ff0e13f2ff3c38f2ffeac6f2ff04edf2ff1612f4ff2238f4fffa78f6ff329ef6ff56c3f6ff76ccf6ffbef1f6ffd8faf6ff6020f7ff8445f7ffa44ef7ffd273f7fff27cf7ffd4a3f7ff9e00f9ff7e77faffb6aefaff36d4faffc09afbffae16fcff164dfcff544dfcff609efcff4ef0fcff7616fdff2a1afdff861dfdff3cbefdffa0c1fdfffcc4fdffd44afeff52cbfeff34f3ffffa6faffff86e5000006f50000161a0100562a0100662a010010270200e48802006a950200529c0200d8ac0200c0b102005ac60200040603000442030074420300d8830300e6830300848403008e9603009c9603003a970300ea03040090040400ee04040052e90600686b0700a86b070078aa08008cde080088eb0900125b0a00e85e0a00285f0a004c600a00fe610a00ea630a00f0640a00ce670a00
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -3272,7 +4706,7 @@ MonoBehaviour:
         m_IsRenaming: 0
         m_OriginalEventType: 11
         m_IsRenamingFilename: 0
-        m_ClientGUIView: {fileID: 83}
+        m_ClientGUIView: {fileID: 100}
       m_SearchString: 
     m_ExpandedScenes: []
     m_CurrenRootInstanceID: 0
@@ -3280,7 +4714,7 @@ MonoBehaviour:
       m_IsLocked: 0
     m_CurrentSortingName: TransformSorting
   m_WindowGUID: ad5f90a1d684c9747b3e9a8bb65eed88
---- !u!114 &96
+--- !u!114 &113
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3303,7 +4737,7 @@ MonoBehaviour:
     x: 264
     y: 72.66667
     width: 1931
-    height: 878
+    height: 680
   m_PersistentViewDataDictionary: {fileID: 0}
   m_WindowGUID: 5cc9bb3e6a8937747a4d97e8d1cbbd57
   m_SceneLighting: 1
@@ -3311,9 +4745,9 @@ MonoBehaviour:
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -3.9982073, y: -1.6557617, z: 203.14583}
+    m_Target: {x: 1.1999998, y: -2.1785107, z: -0.27148455}
     speed: 2
-    m_Value: {x: -3.9982073, y: -1.6557617, z: 203.14583}
+    m_Value: {x: 1.1999998, y: -2.1785107, z: -0.27148455}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -3345,9 +4779,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 26.913631
+    m_Target: 9.1692295
     speed: 2
-    m_Value: 26.913631
+    m_Value: 9.1692295
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -3359,7 +4793,7 @@ MonoBehaviour:
   m_ReplacementString: 
   m_LastLockedObject: {fileID: 0}
   m_ViewIsLockedToObject: 0
---- !u!114 &97
+--- !u!114 &114
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3385,7 +4819,7 @@ MonoBehaviour:
     width: 1573
     height: 755
   m_PersistentViewDataDictionary: {fileID: 0}
---- !u!114 &98
+--- !u!114 &115
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3407,12 +4841,12 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 970.6667
+    y: 772.6667
     width: 2197
-    height: 399
+    height: 597
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SearchFilter:
-    m_NameFilter: pause
+    m_NameFilter: menu
     m_ClassNames: []
     m_AssetLabels: []
     m_AssetBundleNames: []
@@ -3422,21 +4856,22 @@ MonoBehaviour:
     m_SceneHandles: 
     m_ShowAllHits: 0
     m_SearchArea: 1
-    m_Folders: []
+    m_Folders:
+    - Assets/Sounds/Misc
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Resources/Prefabs/Borders
+  - Assets/Sounds/Misc
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Users\Sam\Desktop\Desolation - The Last Road\Night-V8\Night
     Unity Files
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 242}
+    scrollPos: {x: 0, y: 652}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000d41b0000021c0000201d0000da1d0000181e00004c1e0000961e0000c61e0000d41e00007e1f0000961f0000ca1f0000ea20000048210000d4220000fe220000182300006223000032240000d42400008626000076270000c82700002a280000302900008e290000aa290000482a0000c62a00000c2b0000d82b00004e2c0000ac2c0000e22c0000782d0000702e00005e2f0000762f0000aa2f0000c82f0000043000000457000006570000085700000a5700000c5700000e5700001057000012570000145700001657000000ca9a3b
+    m_ExpandedIDs: 00000000bc390000623a0000043b0000c03b0000fe3b0000343c00007e3c0000ae3c0000ba3c0000603d00007a3d0000ae3d0000d23e00002e3f0000ba400000e4400000fe4000004841000016420000664400005c450000ac4500000e46000076470000924700002e480000aa480000f44800006e490000c2490000384a00009a4a0000ce4a00005e4b00005a4c0000404d00005a4d0000924d0000ae4d000036580000385800003a5800003c5800003e580000405800004258000044580000465800004858000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -3452,7 +4887,7 @@ MonoBehaviour:
       m_IsRenaming: 0
       m_OriginalEventType: 11
       m_IsRenamingFilename: 1
-      m_ClientGUIView: {fileID: 85}
+      m_ClientGUIView: {fileID: 102}
     m_SearchString: 
     m_CreateAssetUtility:
       m_EndAction: {fileID: 0}
@@ -3464,7 +4899,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000d41b0000021c0000201d0000da1d0000181e00004c1e0000961e0000c61e0000d41e00007e1f0000961f0000ca1f0000ea20000048210000d4220000fe220000182300006223000032240000d42400008626000076270000c82700002a280000302900008e290000aa290000482a0000c62a00000c2b0000d82b00004e2c0000ac2c0000e22c0000782d0000702e00005e2f0000762f0000aa2f0000c82f0000043000000457000006570000085700000a5700000c5700000e57000010570000125700001457000016570000
+    m_ExpandedIDs: 00000000bc390000ec390000043b0000c03b0000fe3b0000343c00007e3c0000ae3c0000ba3c0000603d00007a3d0000ae3d0000d23e00002e3f0000ba400000e4400000fe4000004841000016420000b8420000664400005c450000ac4500000e4600001647000076470000924700002e480000aa480000f4480000c2490000384a00009a4a0000ce4a0000604b00005a4c0000404d00005a4d0000924d0000ae4d0000e84d000036580000385800003a5800003c5800003e5800004058000042580000445800004658000048580000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -3492,23 +4927,23 @@ MonoBehaviour:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
-    m_ExpandedInstanceIDs: c6230000d8d6f2ffb667f2ffb829000078170000281b00005a140000b8aa0000f6ab0000b67b0000fa9e00000023000048230000ac240000c8250000f0450000682a0000
+    m_ExpandedInstanceIDs: c6230000d8d6f2ffb667f2ffb829000078170000281b00005a140000b8aa0000f6ab0000b67b0000fa9e00000023000048230000ac240000c8250000f0450000682a00001c3e000086450000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: PauseMenuController
-      m_OriginalName: PauseMenuController
+      m_Name: Shadow
+      m_OriginalName: Shadow
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 5576
+      m_UserData: 820
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0
       m_IsRenamingFilename: 1
-      m_ClientGUIView: {fileID: 85}
+      m_ClientGUIView: {fileID: 102}
     m_CreateAssetUtility:
       m_EndAction: {fileID: 0}
       m_InstanceID: 0
@@ -3516,10 +4951,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 0}
+    m_ScrollPosition: {x: 0, y: 14}
     m_GridSize: 16
   m_DirectoriesAreaWidth: 350
---- !u!114 &99
+--- !u!114 &116
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}

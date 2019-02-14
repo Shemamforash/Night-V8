@@ -73,8 +73,8 @@ namespace Facilitating.UIControllers
                 InputHandler.UnregisterInputListener(this);
                 _infoGameObject.SetActive(false);
             });
-            _channelButton.AddOnClick(Infuse);
-            _channelButton.AddOnHold(Infuse, 0.5f);
+            _channelButton.AddOnClick(Channel);
+            _channelButton.AddOnHold(Channel, 0.5f);
         }
 
         protected override void Initialise()
@@ -109,11 +109,12 @@ namespace Facilitating.UIControllers
             return Inventory.Inscriptions.ToObjectList();
         }
 
-        private void Infuse()
+        private void Channel()
         {
             if (CharacterManager.SelectedCharacter.EquippedWeapon == null) return;
             if (CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.GetDurability().ReachedMax()) return;
             if (Inventory.GetResourceQuantity("Essence") == 0) return;
+            UiGearMenuController.PlayAudio(AudioClips.Channel);
             Inventory.DecrementResource("Essence", 1);
             CharacterManager.SelectedCharacter.BrandManager.IncreaseEssenceInfused();
             int durabilityGain = 1 + (int) CharacterManager.SelectedCharacter.Attributes.EssenceRecoveryModifier;
@@ -210,6 +211,7 @@ namespace Facilitating.UIControllers
             Weapon weapon = CharacterManager.SelectedCharacter.EquippedWeapon;
             weapon.SetInscription(inscription);
             Show();
+            UiGearMenuController.PlayAudio(AudioClips.Infuse);
             if (PlayerCombat.Instance == null) return;
             PlayerCombat.Instance.EquipInscription();
             UpdateWeaponActions();

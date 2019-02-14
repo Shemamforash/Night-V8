@@ -55,7 +55,7 @@ namespace Game.Combat.Player
         private float _rotateSpeedCurrent;
         private const float RotateAcceleration = 400f;
         private bool _recovered;
-        public List<Action<Shot>> OnFireActions = new List<Action<Shot>>();
+        public Action<Shot> OnFireAction = null;
         public List<Action> UpdateSkillActions = new List<Action>();
         public BaseWeaponBehaviour _weaponBehaviour;
         private FastLight _muzzleFlash;
@@ -537,7 +537,7 @@ namespace Game.Combat.Player
             UIMagazineController.EmptyMagazine();
             _reloading = true;
             WeaponAudio.StartReload(Weapon());
-            OnFireActions.Clear();
+            OnFireAction = null;
 
             float age = 0;
             while (age < duration)
@@ -557,7 +557,9 @@ namespace Game.Combat.Player
 
         public override void ApplyShotEffects(Shot s)
         {
-            OnFireActions.ForEach(a => a.Invoke(s));
+            if (OnFireAction == null) return;
+            OnFireAction(s);
+            WeaponAudio.PlayPassiveSkill();
         }
 
         //FIRING

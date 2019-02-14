@@ -11,6 +11,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             float rotateSpeed = Random.Range(10f, 20f);
             if (Random.Range(0, 2) == 0) rotateSpeed = -rotateSpeed;
             gameObject.AddComponent<Rotate>().RotateSpeed = rotateSpeed;
+            ArmourController.AutoFillSlots(Random.Range(0, 3));
         }
 
         public void SetTarget(Transform targetTransform)

@@ -20,12 +20,14 @@ public class MaelstromShotBehaviour : MonoBehaviour
     private const float AngleDecay = 0.97f;
     private const int ShotDamage = 10;
     private AudioSource _audioSource;
+    private float _damageModifier = 1;
 
-    public static void Create(Vector3 direction, Vector3 position, float speed, bool suppressAudio, bool follow = true)
+    public static MaelstromShotBehaviour Create(Vector3 direction, Vector3 position, float speed, bool suppressAudio, bool follow = true)
     {
         MaelstromShotBehaviour shot = _shotPool.Create();
         shot.transform.position = position;
         shot.ResetShot(direction, speed, suppressAudio, follow);
+        return shot;
     }
 
     public static void CreateBurst(int angleInterval, Vector3 position, float speed, bool suppressAudio, int startRotation = 0)
@@ -83,7 +85,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         PlayerCombat player = other.gameObject.GetComponent<PlayerCombat>();
-        int damage = WorldState.ScaleValue(ShotDamage);
+        int damage = (int) (WorldState.ScaleValue(ShotDamage) * _damageModifier);
         player.TakeRawDamage(damage, _rigidBody.velocity.normalized);
         player.MovementController.AddForce(_rigidBody.velocity.normalized * 20f);
         Explode();
@@ -108,5 +110,10 @@ public class MaelstromShotBehaviour : MonoBehaviour
     public void OnDestroy()
     {
         _shotPool.Dispose(this);
+    }
+
+    public void SetDamageModifier(float damageModifier)
+    {
+        _damageModifier = damageModifier;
     }
 }

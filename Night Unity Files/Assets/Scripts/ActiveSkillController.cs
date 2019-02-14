@@ -16,7 +16,7 @@ public class ActiveSkillController : MonoBehaviour
         _swirl2 = gameObject.FindChildWithName<ParticleSystem>("Swirl 2");
         _swirl3 = gameObject.FindChildWithName<ParticleSystem>("Swirl 3");
         _audioSource = GetComponent<AudioSource>();
-        _audioSource.clip = AudioClips.ActiveSkill;
+        _audioSource.clip = AudioClips.MagazineEffect;
         _audioSource.volume = 0f;
         _audioSource.Play();
         _instance = this;
