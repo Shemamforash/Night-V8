@@ -166,5 +166,13 @@ namespace Game.Gear
         {
             return Inventory.GetResourceQuantity("Essence") >= _inscriptionCost;
         }
+
+        protected override void CalculateDismantleRewards()
+        {
+            base.CalculateDismantleRewards();
+            int quality = (int) Quality() + 1;
+            AddReward("Essence", 5 * quality);
+            if (Helper.RollDie(0, 6)) AddReward("Radiance", 1);
+        }
     }
 }

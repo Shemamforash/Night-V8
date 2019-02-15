@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.Collections.Generic;
+using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Misc;
@@ -178,5 +179,24 @@ namespace Game.Gear.Weapons
         }
 
         public Inscription GetInscription() => _inscription;
+
+        protected override void CalculateDismantleRewards()
+        {
+            base.CalculateDismantleRewards();
+            int quality = (int) Quality() + 1;
+            AddReward("Essence", quality);
+            List<string> possibleRewards = new List<string>();
+            for (int i = 0; i < quality; ++i)
+            {
+                if (i == 0) possibleRewards.Add("Essence");
+                if (i == 1) possibleRewards.Add("Rusty Scrap");
+                if (i == 2) possibleRewards.Add("Metal Shards");
+                if (i == 3) possibleRewards.Add("Ancient Relics");
+                if (i == 4) possibleRewards.Add("Celestial Fragments");
+            }
+
+            int count = Mathf.FloorToInt(quality / 2f) + 1;
+            for (int i = 0; i < count; ++i) AddReward(possibleRewards.RemoveRandom(), 2);
+        }
     }
 }

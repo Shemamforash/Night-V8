@@ -62,8 +62,8 @@ namespace Game.Combat.Enemies.Bosses
             if (_positionList.Count == 6)
             {
                 Sequence sequence = DOTween.Sequence();
-                sequence.AppendInterval(0.5f);
-                _sprites.ForEach(s => sequence.Insert(1f, s.DOFade(0.5f, 1f)));
+                sequence.AppendInterval(0.25f);
+                _sprites.ForEach(s => sequence.Insert(0.5f, s.DOFade(1f, 1f)));
             }
 
             _positionList.Enqueue(position);

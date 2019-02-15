@@ -41,7 +41,7 @@ namespace Game.Exploration.Regions
         public Player CharacterHere;
         public Vector2? RadianceStonePosition;
         public string Name;
-        public bool ShouldGenerateEncounter, FountainVisited, IsWeaponHere = true, RitesRemain = true, ReadJournal = true;
+        public bool MonumentUsed, ShouldGenerateEncounter, FountainVisited, IsWeaponHere = true, RitesRemain = true, ReadJournal = true;
         public int RegionID, WaterSourceCount, FoodSourceCount, ResourceSourceCount;
 
         public Region() : base(Vector2.zero)
@@ -49,6 +49,7 @@ namespace Game.Exploration.Regions
             RegionID = _currentId;
             ++_currentId;
         }
+
 
         public void SetTempleCleansed()
         {
@@ -58,8 +59,8 @@ namespace Game.Exploration.Regions
 
         public string ClaimBenefitString()
         {
-            if (_claimBenefit == "") return _claimBenefit;
-            int timeRemainingInHours = Mathf.CeilToInt(_remainingTimeToGenerateResource / (float)WorldState.MinutesPerHour);
+            if (!Claimed()) return "";
+            int timeRemainingInHours = Mathf.CeilToInt(_remainingTimeToGenerateResource / (float) WorldState.MinutesPerHour);
             string hourString = timeRemainingInHours == 1 ? "hr" : "hrs";
             return " +" + _claimQuantity + " " + _claimBenefit + " in " + timeRemainingInHours + hourString;
         }
@@ -150,6 +151,7 @@ namespace Game.Exploration.Regions
             region.FoodSourceCount = doc.IntFromNode("FoodSourceCount");
             region.ResourceSourceCount = doc.IntFromNode("ResourceSourceCount");
             region.ReadJournal = doc.BoolFromNode("ReadJournal");
+            region.MonumentUsed = doc.BoolFromNode("MonumentUsed");
             region._remainingTimeToGenerateResource = doc.IntFromNode("ClaimRemaining");
             region._claimQuantity = doc.IntFromNode("ClaimQuantity");
             region._claimBenefit = doc.StringFromNode("ClaimBenefit");
@@ -182,6 +184,7 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("FoodSourceCount", FoodSourceCount);
             regionNode.CreateChild("ResourceSourceCount", ResourceSourceCount);
             regionNode.CreateChild("ReadJournal", ReadJournal);
+            regionNode.CreateChild("MonumentUsed", MonumentUsed);
             regionNode.CreateChild("ClaimRemaining", _remainingTimeToGenerateResource);
             regionNode.CreateChild("ClaimQuantity", _claimQuantity);
             regionNode.CreateChild("ClaimBenefit", _claimBenefit);

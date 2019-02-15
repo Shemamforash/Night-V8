@@ -101,6 +101,9 @@ namespace Game.Characters
 
         public bool TryActivateBrand(Brand targetBrand)
         {
+#if UNITY_EDITOR
+            targetBrand.UpdateValue(10000);
+#endif
             if (_activeBrandOne == null)
             {
                 SetActiveBrandOne(targetBrand);

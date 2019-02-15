@@ -10,12 +10,12 @@ using UnityEngine;
 
 public class UiBrandMenu : Menu
 {
-    private EnhancedText _titleText, _benefitText, _effectText, _overviewText;
+    private EnhancedText _titleText, _benefitText, _quoteText, _descriptionText, _overviewText;
     private CanvasGroup _detailCanvas, _overviewCanvas;
     private static UiBrandMenu _instance;
     private CloseButtonController _closeButton;
     private Menu _lastMenu;
-    private static string _titleString, _benefitString, _effectString, _overviewString;
+    private static string _titleString, _benefitString, _quoteString, _overviewString, _descriptionString;
 
     public override void Awake()
     {
@@ -25,7 +25,8 @@ public class UiBrandMenu : Menu
         _overviewText = _overviewCanvas.GetComponent<EnhancedText>();
         _titleText = gameObject.FindChildWithName<EnhancedText>("Title");
         _benefitText = gameObject.FindChildWithName<EnhancedText>("Benefit");
-        _effectText = gameObject.FindChildWithName<EnhancedText>("Effect");
+        _quoteText = gameObject.FindChildWithName<EnhancedText>("Quote");
+        _descriptionText = gameObject.FindChildWithName<EnhancedText>("Description");
         _instance = this;
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
     }
@@ -61,7 +62,8 @@ public class UiBrandMenu : Menu
     {
         _titleText.SetText(_titleString);
         _benefitText.SetText(_benefitString);
-        _effectText.SetText(_effectString);
+        _quoteText.SetText(_quoteString);
+        _descriptionText.SetText(_descriptionString);
         _overviewCanvas.alpha = 0;
         _detailCanvas.alpha = 1;
         _closeButton.SetOnClick(Hide);
@@ -77,17 +79,18 @@ public class UiBrandMenu : Menu
         {
             case BrandStatus.Failed:
                 _titleString = "Failed";
-                _benefitString = "You feel your body go weak\nAll attributes reduced to 1";
+                _descriptionString = "You feel your body go weak";
+                _benefitString = "All attributes reduced to 1";
                 break;
             case BrandStatus.Succeeded:
                 _titleString = "Passed";
-                _benefitString = "You feel a warmth bloom inside\n" + brand.GetEffectText();
+                _descriptionString = "You feel a warmth bloom inside you";
+                _benefitString = brand.GetEffectText();
                 break;
         }
 
         _titleString = _titleString + " The " + brand.GetDisplayName();
-        string descriptionString = "\n<i><size=20>" + brand.Description() + "</size></i>";
-        _benefitString += descriptionString;
+        _quoteString = brand.Description();
         _instance.Show();
     }
 
@@ -98,14 +101,14 @@ public class UiBrandMenu : Menu
     private void ShowCharacterSkill(Skill characterSkill)
     {
         _overviewString = "Character Skill Unlocked";
-        _effectString = CharacterManager.SelectedCharacter.Name + " wisdom has grown with the passing of time";
+        _descriptionString = "The " + CharacterManager.SelectedCharacter.Name + "'s wisdom has grown with the passing of time";
         ShowSkill(characterSkill);
     }
 
     private void ShowWeaponSkill(WeaponType weaponType, Skill weaponSkill)
     {
         _overviewString = "Weapon Skill Unlocked";
-        _effectString = CharacterManager.SelectedCharacter.Name + "'s proficiency with " + weaponType + "s grows";
+        _descriptionString = CharacterManager.SelectedCharacter.Name + "'s proficiency with " + weaponType + "s grows";
         ShowSkill(weaponSkill);
     }
 

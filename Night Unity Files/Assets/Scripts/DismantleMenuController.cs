@@ -17,7 +17,7 @@ using UnityEngine;
 public class DismantleMenuController : Menu
 {
     private static ListController _dismantleList;
-    private static readonly Dictionary<string, int> _dismantleRewards = new Dictionary<string, int>();
+    private static Dictionary<string, int> _dismantleRewards;
     private EnhancedButton _acceptButton;
     private static CloseButtonController _closeButton;
     private static GameObject _dismantledScreen;
@@ -38,38 +38,8 @@ public class DismantleMenuController : Menu
         _receivedText = _dismantledScreen.FindChildWithName<EnhancedText>("Receive");
     }
 
-    private static void AddReward(string reward, int quantity)
+    private static string GetDismantleText()
     {
-        if (!_dismantleRewards.ContainsKey(reward)) _dismantleRewards.Add(reward, 0);
-        quantity = _dismantleRewards[reward] + quantity;
-        _dismantleRewards[reward] = quantity;
-    }
-
-    private static void CalculateDismantleRewards(GearItem gear)
-    {
-        _dismantleRewards.Clear();
-        int quality = (int) gear.Quality() + 1;
-        Random.State oldState = Random.state;
-        Random.InitState(gear.ID());
-        switch (gear)
-        {
-            case Inscription _:
-                CalculateInscriptionReward(quality);
-                break;
-            case Weapon _:
-                CalculateWeaponReward(quality);
-                break;
-            case Accessory _:
-                CalculateAccessoryReward(quality);
-                break;
-        }
-
-        Random.state = oldState;
-    }
-
-    private static string GetDismantleText(GearItem gear)
-    {
-        CalculateDismantleRewards(gear);
         string dismantleText = "";
         foreach (string reward in _dismantleRewards.Keys)
         {
@@ -80,45 +50,84 @@ public class DismantleMenuController : Menu
         return dismantleText;
     }
 
-    private static void CalculateInscriptionReward(int quality)
+    private static List<object> GetDismantleItems()
     {
-        AddReward("Essence", 5 * quality);
-        if (Helper.RollDie(0, 6)) AddReward("Radiance", 1);
+        List<object> items = Inventory.GetAvailableWeapons().ToObjectList();
+        items.AddRange(Inventory.GetAvailableAccessories().ToObjectList());
+        items.AddRange(Inventory.Inscriptions.ToObjectList());
+        return items;
     }
 
-    private static void CalculateWeaponReward(int quality)
+    private void Dismantle()
     {
-        AddReward("Essence", quality);
-        List<string> possibleRewards = new List<string>();
-        for (int i = 0; i < quality; ++i)
+        foreach (string reward in _dismantleRewards.Keys)
         {
-            if (i == 0) possibleRewards.Add("Essence");
-            if (i == 1) possibleRewards.Add("Rusty Scrap");
-            if (i == 2) possibleRewards.Add("Metal Shards");
-            if (i == 3) possibleRewards.Add("Ancient Relics");
-            if (i == 4) possibleRewards.Add("Celestial Fragments");
+            int quantity = _dismantleRewards[reward];
+            Inventory.IncrementResource(reward, quantity);
         }
 
-        int count = Mathf.FloorToInt(quality / 2f) + 1;
-        for (int i = 0; i < count; ++i) AddReward(possibleRewards.RemoveRandom(), 2);
+        _gearToDismantle.UnEquip();
+        switch (_gearToDismantle)
+        {
+            case Weapon weapon:
+                Inventory.Destroy(weapon);
+                break;
+            case Accessory accessory:
+                Inventory.Destroy(accessory);
+                break;
+            case Inscription inscription:
+                Inventory.Destroy(inscription);
+                break;
+        }
+
+        _closeButton.SetOnClick(Close);
+        _closeButton.SetCallback(Close);
+        SaveStoneBehaviour.SetUsed();
+        Close();
     }
 
-    private static void CalculateAccessoryReward(int quality)
+    private void ShowDismantledScreen(object o)
     {
-        AddReward("Salt", quality);
-        AddReward("Essence", quality);
-        List<string> possibleRewards = new List<string>();
-        for (int i = 0; i < quality; ++i)
-        {
-            if (i == 0) possibleRewards.Add("Essence");
-            if (i == 1) possibleRewards.Add("Rusty Scrap");
-            if (i == 2) possibleRewards.Add("Metal Shards");
-            if (i == 3) possibleRewards.Add("Ancient Relics");
-            if (i == 4) possibleRewards.Add("Celestial Shards");
-        }
+        _closeButton.SetOnClick(ShowDismantleList);
+        _closeButton.SetCallback(ShowDismantleList);
+        _gearToDismantle = (GearItem) o;
+        _dismantleRewards = _gearToDismantle.GetDismantleRewards();
+        _dismantledScreen.SetActive(true);
+        _dismantleList.gameObject.SetActive(false);
+        _receivedText.SetText(GetDismantleText());
+        _acceptButton.Select();
+    }
 
-        int count = Mathf.FloorToInt(quality / 2f) + 1;
-        for (int i = 0; i < count; ++i) AddReward(possibleRewards.RemoveRandom(), 1);
+    private static void ShowDismantleList()
+    {
+        _dismantledScreen.SetActive(false);
+        _dismantleList.gameObject.SetActive(true);
+        _dismantleList.Show();
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+        _closeButton.SetOnClick(Close);
+        _closeButton.SetCallback(Close);
+        WorldState.Pause();
+        DOTween.defaultTimeScaleIndependent = true;
+        _closeButton.Enable();
+        ShowDismantleList();
+    }
+
+    public static void Show()
+    {
+        MenuStateMachine.ShowMenu("Dismantle Menu");
+    }
+
+    private void Close()
+    {
+        _closeButton.Disable();
+        _closeButton.Flash();
+        _dismantleList.Hide();
+        WorldState.Resume();
+        MenuStateMachine.ReturnToDefault();
     }
 
     private class DismantleElement : ListElement
@@ -152,80 +161,5 @@ public class DismantleMenuController : Menu
             _text.SetText(item.Name);
             if (isCentreItem) _text.FindChildWithName<CanvasGroup>("Button").alpha = 1;
         }
-    }
-
-    private static List<object> GetDismantleItems()
-    {
-        List<object> items = Inventory.GetAvailableWeapons().ToObjectList();
-        items.AddRange(Inventory.GetAvailableAccessories().ToObjectList());
-        items.AddRange(Inventory.Inscriptions.ToObjectList());
-        return items;
-    }
-
-    private void Dismantle()
-    {
-        foreach (string reward in _dismantleRewards.Keys)
-        {
-            int quantity = _dismantleRewards[reward];
-            Inventory.IncrementResource(reward, quantity);
-        }
-
-        _gearToDismantle.UnEquip();
-        switch (_gearToDismantle)
-        {
-            case Weapon weapon:
-                Inventory.Destroy(weapon);
-                break;
-            case Accessory accessory:
-                Inventory.Destroy(accessory);
-                break;
-            case Inscription inscription:
-                Inventory.Destroy(inscription);
-                break;
-        }
-    }
-
-    private void ShowDismantledScreen(object o)
-    {
-        _closeButton.SetOnClick(Show);
-        _closeButton.SetCallback(Show);
-        _gearToDismantle = (GearItem) o;
-        _dismantledScreen.SetActive(true);
-        _dismantleList.gameObject.SetActive(false);
-        _receivedText.SetText(GetDismantleText(_gearToDismantle));
-        _acceptButton.Select();
-    }
-
-    private static void ShowDismantleList()
-    {
-        _dismantledScreen.SetActive(false);
-        _dismantleList.gameObject.SetActive(true);
-        _dismantleList.Show();
-    }
-
-    public override void Enter()
-    {
-        base.Enter();
-        _closeButton.SetOnClick(Close);
-        _closeButton.SetCallback(Close);
-        WorldState.Pause();
-        DOTween.defaultTimeScaleIndependent = true;
-        _closeButton.Enable();
-        ShowDismantleList();
-    }
-
-    public static void Show()
-    {
-        MenuStateMachine.ShowMenu("Dismantle Menu");
-        ShowDismantleList();
-    }
-
-    public void Close()
-    {
-        _closeButton.Disable();
-        _closeButton.Flash();
-        _dismantleList.Hide();
-        WorldState.Resume();
-        MenuStateMachine.ReturnToDefault();
     }
 }

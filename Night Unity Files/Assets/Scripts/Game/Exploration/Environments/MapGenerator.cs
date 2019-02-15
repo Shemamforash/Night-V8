@@ -350,9 +350,11 @@ namespace Game.Exploration.Environment
                     }
                 }
 
-                combinations.Shuffle();
+//                combinations.Shuffle();
                 _regionNames.Add(type, combinations);
+                combinationsString += type+ "\n";
                 combinationsString += string.Join(System.Environment.NewLine, combinations);
+                combinationsString += "\n\n";
             }
 #if UNITY_EDITOR
             File.WriteAllText(Directory.GetCurrentDirectory() + "/nametest.txt", combinationsString);
@@ -415,6 +417,7 @@ namespace Game.Exploration.Environment
             }
             else
             {
+                _regionTypeBag.Add(RegionType.Danger);
                 _regionTypeBag.Add(RegionType.Danger);
                 _regionTypeBag.Add(RegionType.Danger);
             }

@@ -3258,6 +3258,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Screen Fader
       objectReference: {fileID: 0}
+    - target: {fileID: 1401659306923592, guid: b3eae0f9d0f47c140868cc9aba3d3fec, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 224000622174951850, guid: b3eae0f9d0f47c140868cc9aba3d3fec,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10035,16 +10039,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 5941189574797491185, guid: 92387613743f1774b9561e7a4016dded,
-        type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5941189574797491185, guid: 92387613743f1774b9561e7a4016dded,
-        type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1585977318886291530, guid: 92387613743f1774b9561e7a4016dded,
         type: 3}
       propertyPath: m_havePropertiesChanged
@@ -10081,6 +10075,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8697849132623772436, guid: 92387613743f1774b9561e7a4016dded,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1212829356730661723, guid: 92387613743f1774b9561e7a4016dded,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1212829356730661723, guid: 92387613743f1774b9561e7a4016dded,
         type: 3}
       propertyPath: m_isInputParsingRequired
       value: 1
