@@ -103,7 +103,9 @@ namespace Game.Characters.CharacterActions
             _travelTime = 0;
             _inTransit = true;
             _target = target;
-            SetDuration(distance * MinutesPerGritPoint);
+            int duration = distance * MinutesPerGritPoint;
+            if (target.GetRegionType() == RegionType.Gate) duration /= 2;
+            SetDuration(duration);
             ForceViewUpdate = true;
             Enter();
         }

@@ -55,7 +55,7 @@ public class WeaponDetailController : MonoBehaviour
         WeaponAttributes attr = weapon.WeaponAttributes;
         _nameText.SetText(weapon.GetDisplayName());
         _dpsText.SetText(attr.DPS().Round(1).ToString());
-        _typeText.SetText(weapon.WeaponType().ToString());
+        _typeText.SetText(weapon.WeaponAttributes.GetWeaponTypeDescription());
         SetInscriptionText(weapon);
         SetConditionText();
         SetAttibuteText(attr);
@@ -68,7 +68,7 @@ public class WeaponDetailController : MonoBehaviour
         string inscriptionEffectText = inscription == null ? "" : inscription.GetSummary();
         if (!IsDetailed)
         {
-            _typeText.SetText(weapon.WeaponType() + " - " + inscriptionEffectText);
+            _typeText.SetText(weapon.WeaponAttributes.GetWeaponTypeDescription() + " - " + inscriptionEffectText);
             return;
         }
 

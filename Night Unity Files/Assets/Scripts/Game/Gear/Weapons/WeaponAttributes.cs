@@ -17,6 +17,7 @@ namespace Game.Gear.Weapons
         private readonly AttributeModifier _reloadSpeedDurabilityModifier;
         private readonly AttributeModifier _accuracyDurabilityModifier;
         private readonly Weapon _weapon;
+        private string Description;
         public bool Automatic = true;
         private WeaponClassType WeaponClassType;
         public WeaponType WeaponType;
@@ -36,6 +37,7 @@ namespace Game.Gear.Weapons
             _durability = new Number(maxDurability, 0, maxDurability);
             SetMax(AttributeType.Accuracy, 1);
             SetClass(weaponClass);
+            Description = weaponClass.Description;
         }
 
         public override XmlNode Save(XmlNode root)
@@ -120,6 +122,11 @@ namespace Game.Gear.Weapons
         public Number GetDurability()
         {
             return _durability;
+        }
+
+        public string GetWeaponTypeDescription()
+        {
+            return Description;
         }
     }
 }

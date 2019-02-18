@@ -158,7 +158,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         protected override void Update(object o, bool isCentreItem)
         {
             Recipe recipe = (Recipe) o;
-            string productString = recipe.ProductQuantity > 1 ? recipe.Name + " x" + recipe.ProductQuantity : recipe.Name;
+            string productString = recipe.GetCraftableQuantity() > 1 ? recipe.Name + " x" + recipe.GetCraftableQuantity() : recipe.Name;
             if (recipe.RecipeType == RecipeType.Building) productString += " (Built " + recipe.Built() + ")";
             LeftText.SetText(productString);
             string ingredient1String = GetIngredientString(recipe.Ingredient1, recipe.Ingredient1Quantity);

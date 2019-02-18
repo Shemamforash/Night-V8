@@ -45,7 +45,7 @@ namespace Game.Characters.CharacterActions
         
         private void ResetTimePassed()
         {
-            _timePassed = WorldState.MinutesPerHour / 2;
+            _timePassed = WorldState.MinutesPerHour / 4;
         }
 
         protected override void OnClick()
@@ -57,7 +57,7 @@ namespace Game.Characters.CharacterActions
             }
             int maxSleepTime = PlayerCharacter.GetMaxSleepTime();
             if (maxSleepTime == 0) return;
-            SetDuration(maxSleepTime * WorldState.MinutesPerHour / 2);
+            SetDuration(maxSleepTime * WorldState.MinutesPerHour / 4);
             ResetTimePassed();
             Enter();
             _sleeping = true;

@@ -17,9 +17,12 @@ namespace Game.Global
         private static bool _loaded;
         private static int _craftingLevel;
         public readonly string Ingredient1, Ingredient2, Name;
-        public readonly int Ingredient1Quantity, Ingredient2Quantity, ProductQuantity;
+        public readonly int Ingredient1Quantity, Ingredient2Quantity;
+        private readonly int _productQuantity;
         public readonly RecipeType RecipeType;
+        private readonly bool _makesAll;
         private readonly int _levelNo;
+        private int _quantityToCraft;
 
         private Recipe(XmlNode recipeNode)
         {
@@ -27,7 +30,7 @@ namespace Game.Global
             Ingredient2 = recipeNode.StringFromNode("Ingredient2Name");
             Ingredient1Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
             Ingredient2Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
-            ProductQuantity = recipeNode.IntFromNode("ProductQuantity");
+            _productQuantity = recipeNode.IntFromNode("ProductQuantity");
             Name = recipeNode.StringFromNode("ProductName");
             string recipeTypeString = recipeNode.StringFromNode("RecipeType");
             switch (recipeTypeString)
@@ -50,6 +53,25 @@ namespace Game.Global
             }
 
             _levelNo = recipeNode.IntFromNode("LevelNo");
+            _makesAll = recipeNode.BoolFromNode("MakeAll");
+        }
+
+        private void CalculateQuantityToCraft()
+        {
+            int productQuantity = _productQuantity;
+            if (_makesAll)
+            {
+                int ingredient1Have = Inventory.GetResourceQuantity(Ingredient1);
+                productQuantity = Mathf.FloorToInt(ingredient1Have / (float) Ingredient1Quantity);
+                if (Ingredient2 != "None")
+                {
+                    int ingredient2Have = Inventory.GetResourceQuantity(Ingredient2);
+                    int ingredient2Makes = Mathf.FloorToInt(ingredient2Have / (float) Ingredient2Quantity);
+                    if (ingredient2Makes < productQuantity) productQuantity = ingredient2Makes;
+                }
+            }
+
+            _quantityToCraft = productQuantity;
         }
 
         public static void Save(XmlNode doc)
@@ -62,20 +84,27 @@ namespace Game.Global
             _craftingLevel = doc.IntFromNode("CraftingLevel");
         }
 
+        public static void RecalculateCraftableRecipes()
+        {
+            LoadRecipes();
+            _recipes.ForEach(r => r.CalculateQuantityToCraft());
+        }
+
         public bool CanCraft()
         {
-            float ingredient1OwnedQuantity = Inventory.GetResourceQuantity(Ingredient1);
-            if (ingredient1OwnedQuantity < Ingredient1Quantity) return false;
-            if (Ingredient2 == "None") return true;
-            float ingredient2OwnedQuantity = Inventory.GetResourceQuantity(Ingredient2);
-            return ingredient2OwnedQuantity >= Ingredient2Quantity;
+            return _quantityToCraft > 0;
+        }
+
+        public int GetCraftableQuantity()
+        {
+            return _quantityToCraft;
         }
 
         public void ConsumeResources()
         {
             Assert.IsTrue(CanCraft());
-            Inventory.DecrementResource(Ingredient1, Ingredient1Quantity);
-            if (Ingredient2 != "None") Inventory.DecrementResource(Ingredient2, Ingredient2Quantity);
+            Inventory.DecrementResource(Ingredient1, _quantityToCraft);
+            if (Ingredient2 != "None") Inventory.DecrementResource(Ingredient2, _quantityToCraft);
         }
 
         private void Build()
@@ -111,7 +140,7 @@ namespace Game.Global
                     Build();
                     break;
                 case RecipeType.Resource:
-                    Inventory.IncrementResource(Name, ProductQuantity);
+                    Inventory.IncrementResource(Name, _quantityToCraft);
                     break;
                 case RecipeType.Fire:
                     break;
@@ -119,6 +148,8 @@ namespace Game.Global
                     ++_craftingLevel;
                     break;
             }
+
+            RecalculateCraftableRecipes();
         }
 
         private bool Available()

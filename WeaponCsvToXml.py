@@ -30,6 +30,7 @@ class WeaponImporter(XMLWriter):
         write_single_value(self, "Accuracy", get_value(self, "G", row))
         write_single_value(self, "Recoil", get_value(self, "H", row))
         write_single_value(self, "Capacity", get_value(self, "I", row))
+        write_single_value(self, "Description", get_value(self, "O", row))
 
     def read_weapon_subtypes(self, subtype_row):
         for i in range(0, 3):
@@ -57,9 +58,10 @@ class RecipeImporter(XMLWriter):
         write_single_value(self, "Ingredient2Quantity", get_value(self, "D", row, "0"))
         write_single_value(self, "ProductName", get_value(self, "E", row, ""))
         write_single_value(self, "ProductQuantity", get_value(self, "F", row, "0"))
-        write_single_value(self, "RecipeType", get_value(self, "G", row))
-        write_single_value(self, "LevelNo", get_value(self, "H", row))
-        write_single_value(self, "Description", get_value(self, "I", row))
+        write_single_value(self, "MakeAll", get_value(self, "G", row))
+        write_single_value(self, "RecipeType", get_value(self, "H", row))
+        write_single_value(self, "LevelNo", get_value(self, "I", row))
+        write_single_value(self, "Description", get_value(self, "J", row))
 
     def read_recipes(self):
         for row_no in range(4, 31):
@@ -195,51 +197,33 @@ class EnvironmentImporter(XMLWriter):
 
 class RegionImporter(XMLWriter):
     def __init__(self):
-        super(RegionImporter, self).__init__("Regions", "Regions")
+        super(RegionImporter, self).__init__("Region Names", "Regions")
         write_tag(self, "Names", self.read_names)
 
     def read_names(self):
-        write_tag(self, "RegionType", self.read_regions)
-        write_tag(self, "EnvironmentSuffixes", self.read_environment_suffixes)
+        for column_num in range(2, 10):
+            column_letter = num2alpha[column_num]
+            region_type = get_value(self, column_letter, 1, "")
+            write_tag(self, region_type, self.read_region_names, [column_letter])
 
-    def read_regions(self):
-        for offset in range(0, 8):
-            column = offset * 2 + 1
-            column_letter = num2alpha[column]
-            write_tag(self, get_value(self, column_letter, 1), self.read_region_type, [column])
+    def read_region_names(self, column_letter):
+        write_single_value(self, "Generic", self.read_regions(column_letter, 2, 40))
+        write_single_value(self, "Desert", self.read_regions(column_letter, 40, 48))
+        write_single_value(self, "Mountains", self.read_regions(column_letter, 48, 59))
+        write_single_value(self, "Sea", self.read_regions(column_letter, 59, 71))
+        write_single_value(self, "Ruins", self.read_regions(column_letter, 71, 86))
+        write_single_value(self, "Wasteland", self.read_regions(column_letter, 86, 104))
 
-    def read_environment_suffixes(self):
-        self.read_environment_suffix("R")
-        self.read_environment_suffix("S")
-        self.read_environment_suffix("T")
-        self.read_environment_suffix("U")
-        self.read_environment_suffix("V")
-
-    def read_environment_suffix(self, column_letter):
-        prefix_string = ""
-        for row in range(3, 16):
-            prefix = get_value(self, column_letter, row)
-            if prefix == "1":
-                break
-            if prefix_string != "":
-                prefix_string += ","
-            prefix_string += prefix
-        write_single_value(self, get_value(self, column_letter, 2), prefix_string)
-
-    def read_region_type(self, column):
-        self.read_region_names(num2alpha[column], "Prefixes")
-        self.read_region_names(num2alpha[column + 1], "Suffixes")
-
-    def read_region_names(self, column_letter, name_type):
-        prefix_string = ""
-        for row in range(3, 40):
-            prefix = get_value(self, column_letter, row)
-            if prefix == "1":
-                break
-            if prefix_string != "":
-                prefix_string += ","
-            prefix_string += prefix
-        write_single_value(self, name_type, prefix_string)
+    def read_regions(self, column_letter, row_from, row_to):
+        names = []
+        for row in range(row_from, row_to):
+            region_name = get_value(self, column_letter, row, "")
+            if region_name == "":
+                continue
+            names.append(region_name)
+        name_string = ","
+        name_string = name_string.join(names)
+        return name_string
 
 
 class CharacterImporter(XMLWriter):
@@ -403,11 +387,11 @@ class WeatherProbabilityImporter(XMLWriter):
         write_tag(self, "Regions", self.read_regions)
 
     def read_regions(self):
-        write_tag(self, "Desert", self.read_weathers, [20, 28])
-        write_tag(self, "Mountains", self.read_weathers, [31, 42])
-        write_tag(self, "Sea", self.read_weathers, [45, 55])
-        write_tag(self, "Ruins", self.read_weathers, [58, 67])
-        write_tag(self, "Wasteland", self.read_weathers, [70, 78])
+        write_tag(self, "Desert", self.read_weathers, [20, 27])
+        write_tag(self, "Mountains", self.read_weathers, [30, 41])
+        write_tag(self, "Sea", self.read_weathers, [44, 54])
+        write_tag(self, "Ruins", self.read_weathers, [57, 66])
+        write_tag(self, "Wasteland", self.read_weathers, [69, 77])
 
     def read_weathers(self, row_from, row_to):
         difference = row_to - row_from
@@ -455,8 +439,8 @@ def write_single_value(xml_writer, stat_name, value):
 WeaponImporter()
 # GearImporter()
 WeatherImporter()
-# WeatherProbabilityImporter();
-# RegionImporter()
+WeatherProbabilityImporter()
+RegionImporter()
 CharacterImporter()
 EnemyImporter()
 RecipeImporter()

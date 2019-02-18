@@ -308,7 +308,7 @@ namespace Game.Global
             Inventory.UpdateBuildings();
             ++_timeAtLastSave;
             if (_timeAtLastSave % 12 == 0) WorldEventManager.SuggestSave();
-            bool increaseDifficulty = Hours == 14 || Hours == 22 || Hours == 6;
+            bool increaseDifficulty = Hours % 6 == 0;
             if (!increaseDifficulty) return;
             ++_difficulty;
             SaveIconController.AutoSave();

@@ -1,43 +1,66 @@
 <Names>
-	<RegionType>
-		<Danger>
-			<Prefixes>Savage,Execrator,Mortal,Cripple,Civilisation,Anger,Hatred,Betrayer,Maverick,Failure,Deceiver,Downfall,Hell,Vandal,Juggernaut,Leviathan,Carcass,Behemoth,Glutton,Hellion,Demon,Beast,Devil,Monstrosity,Titan,Carrion,Gargantua,Fiend,Demagogue,Dissident,Apostate,Baleful,Spiteful</Prefixes>
-			<Suffixes>Burden,Cessation,Blight,Agony,Anguish,Bane,Curse,Woe,Grief,Affliction,Damnation,Agony,Anguish,Carcass,Remains,Loss,Decay,Hulk,Shell,Wreck,Waste,Failure,Collapse,Sorrow,Waste,Heartache,Pity,Heresy,Torment,Terminus,Dusk,Pit,Root,Ruin,End,Downfall,Spite</Suffixes>
-		</Danger>
-		<Animal>
-			<Prefixes>Pursuit,Chaser,Stalker,Huntress,Hunter,Pursuer,Trapper,Tracker,Prowler,Predator,Bounty,Haunt,Seeker,Strider</Prefixes>
-			<Suffixes>Sustenance,Fruit,Bloom,Blessing,Range,Wild,Dell,Dale,Vale,Remission,Restitution,Relief,Succour,Comfort,Den</Suffixes>
-		</Animal>
-		<Temple>
-			<Prefixes>Corrupted,Maligned,Festering,Mouldering,Rotting,Abandoned,Wasted,Spoiled,Putrefied,Decaying,Tainted,Blighted,Sullied,Crumbling</Prefixes>
-			<Suffixes>Temple</Suffixes>
-		</Temple>
-		<Shelter>
-			<Prefixes>Drifter,Vagrant,Destitute,Suppliant,Scavenger</Prefixes>
-			<Suffixes>Prison,Shackles,Chains,Fetters,Retraints,Tethers</Suffixes>
-		</Shelter>
-		<Shrine>
-			<Prefixes>Marker,Monolith,Testament,Cenotaph,Obelisk,Chronicle,Record,Testimony,Witness</Prefixes>
-			<Suffixes>Prosperity,Promise,Memory,Legend,Deeds,Fables,Lore,Myth,Sagas,Acts,Triumph,Success</Suffixes>
-		</Shrine>
-		<Monument>
-			<Prefixes>Dedication,Adherent,Devotion,Disciple,Believer,Advocate</Prefixes>
-			<Suffixes>Altar,Shrine,Tablet,Commitment,Offering,Gift,Atonement</Suffixes>
-		</Monument>
-		<Fountain>
-			<Prefixes>Faithful,Heavenly,Defending,Protecting,Salving,Delivering,Guarding,Exalting,Benevolent,Devoted,Appeasing,Elating,Prosperity,Victory,Triumph,Endurance,Devotion,Hope,Piety,Love,Beauty,Duty,Faith,Passion</Prefixes>
-			<Suffixes>Escape,Rapture,Balm,Virtue,Grace,Ease,Promise,Kindness,Clemency,Pardon,Reverence,Benevolence,Resolution,Dignity,Rescue,Paragon,Flow,Font,Drink,Spring,Reprieve</Suffixes>
-		</Fountain>
-		<Cache>
-			<Prefixes>Hoard,Cache,Supply,Wealth,Treasure,Hide,Vault,Prize,Pride,Reward</Prefixes>
-			<Suffixes>Ancients,Venerated,Old Ones,Ones Before,Elders,Ancestors,Forbearers,Lost Age,Great Light,Makers,Mystics</Suffixes>
-		</Cache>
-	</RegionType>
-	<EnvironmentSuffixes>
-		<Desert>Dune,Bank,Erg,Channel,Drift,Slope,Side</Desert>
-		<Mountains>Tor,Ridge,Knoll,Frost,Crag,Crevasse,Down,Steep,Cliff,Crest,Edge</Mountains>
-		<Sea>Cliff,Valley,Crest,Pinnacle,Precipice,Bluff,Escarpment,Talus,Gorge,Trench</Sea>
-		<Ruins>Vaults,Pillars,Rubble,Tower,Drome,Fragments,Citadel,Columns,Stele</Ruins>
-		<Wasteland>Gulch,Menhir,Aquifer,Crater,Outcrop,Scar</Wasteland>
-	</EnvironmentSuffixes>
+	<Danger>
+		<Generic>Mortal's Curse,Mortal's Woe,Civilisation's Waste,Pit of the Demagogue,Civilisation's Rest,Root of Grief,Betrayal's Heartache,Hellion's Affliction,Hell's Damnation,Carcass of Gargantua,Apostate's Terminus,Spiteful Remains,Hateful Wreck,Heresy's Hulk,Fiend's Torment,Endeavour's Sunset,Hatred's End,Execrator's Downfall,Deceiver's Dusk,Maverick's Grief,The Ache of the Earth,Contested Wastes,Dream's End,Dissident's Strife,Apostate's Trial,The Blight,Horizon's End,God's Shame,Failure's Burden,Love's Limit,Ground of the Lost,Haunt of the Damned,The Bloody Sink,The Burden of Man,Piety's Fall,Arrogance's Reward</Generic>
+		<Desert>Badland's Edge,Long Bank,Whispering Dunes,Deep Erg,Dry Channel,Repentance of Eo,Arid Brush</Desert>
+		<Mountains>Blackspire,Brink,The Coldslopes,Broken Talus,Craggy Tarn,Scarfell,Scarfell Pike,Hoarfrost Ridge,Fallen Peak,Blasted Steep,Sheer Edge</Mountains>
+		<Sea>Dry Tide,Godswater,The Depths,Dimlight Crevasse,Leviathan's Ruin,Salt Cliffs,Bathus Ridge,Abyssal Floor,Mammoth's Grave,Deep Shelf,Sunfall,Dead Fen</Sea>
+		<Ruins>Greyhaven,Architect's Ruin,Silent Pathways,Dead Vaults,Pillar's Shadow,Fallen Drome,Fragments of Time,Citadel's Remnants,Iron Cathedral,Cursed Crossroad,Quiet Square,Abandoned Chambers,Worker's Quarters,The Priests' District,Deserted Station</Ruins>
+		<Wasteland>Nomansland,Caustic Plain,Field of Woe,Tracks of Fear,Pitted Field,Behemoth Rise,Warscar,Great Crater,Broken Battlements,Ruined Tower,Buried Machine,Blistering Path,The Last Road,The Outer Wastes,The Vile Expanse,The Long Wound,The Black Gulf,Grim Hollow</Wasteland>
+	</Danger>
+	<Animal>
+		<Generic>Trapper's Dale,Vale of the Hunt,Predator's Remission,Strider's Den,Range of the Wilds,Wilderness' Bounty,Chaser's Blessing,Stalker's Fruit,Seeker's Dale,Beast's Rest,Lost Herd,Errant Flock,Beast's Convoy</Generic>
+		<Desert>Hunter's Bluff,Dry Watering Hole</Desert>
+		<Mountains>Predator's Slope,Rocky Tracks,Devil's Crag</Mountains>
+		<Sea>Coral Shelter,The Deep Gather</Sea>
+		<Ruins>Longleg's Dominion,Reclamation of Nature</Ruins>
+		<Wasteland>Poisoned Aquifer,Blackened Wellspring</Wasteland>
+	</Animal>
+	<Temple>
+		<Generic>The Maligned Temple,The Festering Temple,The Corrupt Temple,The Rotting Temple,The Abandoned Temple,The Wasted Temple,The Spoiled Temple,The Decaying Temple,The Crumbling Temple,The Mouldering Temple,The Sullied Temple,The Tainted Temple,The Blighted Temple,The Infected Temple,The Blasted Temple,The Putrified Temple,The Ruined Temple,The Foul Temple</Generic>
+		<Desert></Desert>
+		<Mountains>The Soul of the Earth</Mountains>
+		<Sea>Ossuary of the Ocean</Sea>
+		<Ruins>The Fallen Sanctuary,The Mystic's Library</Ruins>
+		<Wasteland>The Foundations of Faith,The Root of Despair</Wasteland>
+	</Temple>
+	<Shelter>
+		<Generic>The Drifter's Prison,The Suppliant's Seal,Shackles of the Scavenger,Fetters of the Destitute</Generic>
+		<Desert></Desert>
+		<Mountains></Mountains>
+		<Sea></Sea>
+		<Ruins></Ruins>
+		<Wasteland></Wasteland>
+	</Shelter>
+	<Shrine>
+		<Generic>The Marker of Myth,Cenotaph of Legend,Triumph's Monolith,Testament of Deeds,Chronicle of Lore,Record of Acts,Legend's Witness,Triumph's Promise,Obelisk of Sagas,The Foundation of Memory,The Stone of Rites,Mythic Monolith,Covenant of Glory,Valour's Eminence,The Annals of History</Generic>
+		<Desert>Call of the Colossus</Desert>
+		<Mountains>Mountain's Memory,The Mind of The Earth</Mountains>
+		<Sea>Shrine of the Sea Lords,Demand of the Deep</Sea>
+		<Ruins>The Seat of Power,The Great Cenotaph</Ruins>
+		<Wasteland>The Proving Grounds,Warrior's Test</Wasteland>
+	</Shrine>
+	<Monument>
+		<Generic>Shrine of Devotion,The Gathering Stone,The Tablet of Gifts,Believer's Atonement,The Altar of Dedication,Disciple's Shrine,Adherant's Calling,Heaven's Communion,The Place of Power</Generic>
+		<Desert></Desert>
+		<Mountains>Sheltered Place</Mountains>
+		<Sea></Sea>
+		<Ruins></Ruins>
+		<Wasteland></Wasteland>
+	</Monument>
+	<Fountain>
+		<Generic>Font of Rapture,Salvation Flow,Faith's Reprieve,Promise of Exaltation,Quenching Spring,Paragon's Pardon,Aqua Salve,Seraph's Virtue,Slaking Channel,Sating Remission,Alleviating Rest</Generic>
+		<Desert>Lost Fountain,Eo's Legacy</Desert>
+		<Mountains>The Blood of the Earth</Mountains>
+		<Sea>Breath of the Sea,Exhausted Trickle</Sea>
+		<Ruins>The City Well,Pure Spring</Ruins>
+		<Wasteland>Township's Legacy,Grimy Well</Wasteland>
+	</Fountain>
+	<Cache>
+		<Generic>Hoard of the Ancients,Ancient Cache,Sealed Cache,Venerated Chamber,Vault of the Old Ones,Pride of the Ones Before,Mystic Cache,Elders' Hoard,Vault of the Lost Age,Ark of the Great Light,Ancestor's Wealth,Forbearer's Treasure,Maker's Pride</Generic>
+		<Desert>Sandy Vault,Secret of the Dunes</Desert>
+		<Mountains>The Heart of The Mountain,The Veins of the Earth,The Smith's Trove</Mountains>
+		<Sea>Treasures of the Waves,Bounty of the Tide</Sea>
+		<Ruins>Forgotten Things,What Was Left Behind</Ruins>
+		<Wasteland>Lost Supplies,Abandoned Machinery,Burial Grounds</Wasteland>
+	</Cache>
 </Names>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Facilitating.Persistence;
+using Game.Combat.Misc;
 using Game.Exploration.Regions;
 using SamsHelper.Libraries;
 using Sirenix.Utilities;
@@ -20,9 +21,7 @@ namespace Game.Exploration.Environment
     {
         public const int MinRadius = 3;
 
-        private static readonly Dictionary<RegionType, string[]> prefixes = new Dictionary<RegionType, string[]>();
-        private static readonly Dictionary<RegionType, string[]> suffixes = new Dictionary<RegionType, string[]>();
-        private static readonly Dictionary<RegionType, List<string>> _regionNames = new Dictionary<RegionType, List<string>>();
+        private static readonly Dictionary<RegionType, List<string>> _genericNames = new Dictionary<RegionType, List<string>>();
         private static readonly List<Region> _regions = new List<Region>();
         private static Region initialNode;
 
@@ -62,7 +61,7 @@ namespace Game.Exploration.Environment
 
         public static void Load(XmlNode doc)
         {
-            GenerateNames();
+            LoadRegionNames();
             _regions.Clear();
             XmlNode regionsNode = doc.SelectSingleNode("Regions");
             foreach (XmlNode regionNode in regionsNode.SelectNodes("Region"))
@@ -104,7 +103,7 @@ namespace Game.Exploration.Environment
 
         private static void GenerateRegions()
         {
-            GenerateNames();
+            LoadRegionNames();
             _regions.Clear();
 
             int regionCount = (2 + (int) EnvironmentManager.CurrentEnvironmentType()) * BaseRegionCount;
@@ -251,6 +250,7 @@ namespace Game.Exploration.Environment
 
         public static string GenerateName(RegionType type)
         {
+            LoadRegionNames();
             switch (type)
             {
                 case RegionType.Tutorial:
@@ -259,15 +259,15 @@ namespace Game.Exploration.Environment
                     switch (EnvironmentManager.CurrentEnvironmentType())
                     {
                         case EnvironmentType.Desert:
-                            return "The Grave of Eo";
+                            return "The Tomb of Eo";
                         case EnvironmentType.Mountains:
-                            return "The Mausoleum of Hythinea";
+                            return "The Tomb of Hythinea";
                         case EnvironmentType.Ruins:
-                            return "The Barrow of Rha";
+                            return "The Tomb of Rha";
                         case EnvironmentType.Sea:
                             return "The Tomb of Ahna";
                         case EnvironmentType.Wasteland:
-                            return "The Throne of Corypthos";
+                            return "The Tomb of Corypthos";
                     }
 
                     break;
@@ -291,75 +291,18 @@ namespace Game.Exploration.Environment
                     break;
             }
 
-            return _regionNames[type].RemoveRandom();
+            string regionName = EnvironmentManager.CurrentEnvironment.GetRegionName(type);
+            if (type == RegionType.Temple)
+            {
+                Debug.Log(regionName + " " + type);
+                Debug.Log(regionName == null);
+            }
+
+            regionName = regionName ?? _genericNames[type].RemoveRandom();
+            return regionName;
         }
 
         private static readonly List<RegionType> _regionTypes = new List<RegionType>();
-
-        private static void GenerateNames()
-        {
-            LoadRegionNames();
-            _regionNames.Clear();
-            string combinationsString = "";
-            foreach (RegionType type in _regionTypes)
-            {
-                List<string> combinations = new List<string>();
-                foreach (string prefix in prefixes[type])
-                {
-                    foreach (string suffix in suffixes[type])
-                    {
-                        if (prefix == suffix) continue;
-                        switch (type)
-                        {
-                            case RegionType.Monument:
-                                combinations.Add(prefix + "'s " + suffix);
-                                break;
-                            case RegionType.Fountain:
-                                combinations.Add(prefix + " " + suffix);
-                                break;
-                            case RegionType.Cache:
-                                combinations.Add(prefix + " of the " + suffix);
-                                break;
-                            case RegionType.Shrine:
-                                combinations.Add(prefix + " of " + suffix);
-                                break;
-                            case RegionType.Temple:
-                                combinations.Add(prefix + " " + suffix);
-                                break;
-                            default:
-                                combinations.Add(prefix + "'s " + suffix);
-                                break;
-                        }
-                    }
-
-                    if (type == RegionType.Monument) continue;
-                    foreach (string environmentSuffix in EnvironmentManager.CurrentEnvironment.Suffixes())
-                    {
-                        switch (type)
-                        {
-                            case RegionType.Fountain:
-                                combinations.Add(prefix + " " + environmentSuffix);
-                                break;
-                            case RegionType.Shrine:
-                                combinations.Add(prefix + " " + environmentSuffix);
-                                break;
-                            default:
-                                combinations.Add(prefix + "'s " + environmentSuffix);
-                                break;
-                        }
-                    }
-                }
-
-//                combinations.Shuffle();
-                _regionNames.Add(type, combinations);
-                combinationsString += type+ "\n";
-                combinationsString += string.Join(System.Environment.NewLine, combinations);
-                combinationsString += "\n\n";
-            }
-#if UNITY_EDITOR
-            File.WriteAllText(Directory.GetCurrentDirectory() + "/nametest.txt", combinationsString);
-#endif
-        }
 
         private static string StripBlanks(string text)
         {
@@ -369,20 +312,15 @@ namespace Game.Exploration.Environment
         private static void LoadRegionNames()
         {
             if (_loaded) return;
-            XmlNode root = Helper.OpenRootNode("Regions", "RegionType");
-            foreach (RegionType type in Enum.GetValues(typeof(RegionType)))
+            XmlNode root = Helper.OpenRootNode("Regions", "Names");
+            RegionType[] regionTypes = {RegionType.Danger, RegionType.Animal, RegionType.Temple, RegionType.Shelter, RegionType.Shrine, RegionType.Monument, RegionType.Fountain, RegionType.Cache};
+            regionTypes.ForEach(r =>
             {
-                if (type == RegionType.None || type == RegionType.Gate || type == RegionType.Rite || type == RegionType.Tomb || type == RegionType.Tutorial) continue;
-                _regionTypes.Add(type);
-            }
-
-            foreach (XmlNode regionTypeNode in root.ChildNodes)
-            {
-                RegionType regionType = _regionTypes.Find(r => r.ToString() == regionTypeNode.Name);
-                prefixes[regionType] = StripBlanks(regionTypeNode.StringFromNode("Prefixes")).Split(',');
-                suffixes[regionType] = StripBlanks(regionTypeNode.StringFromNode("Suffixes")).Split(',');
-            }
-
+                XmlNode regionNode = root.GetNode(r.ToString());
+                string nameString = regionNode.StringFromNode("Generic");
+                List<string> names = nameString.Split(',').ToList();
+                _genericNames.Add(r, names);
+            });
             _loaded = true;
         }
 
@@ -406,8 +344,7 @@ namespace Game.Exploration.Environment
             _regionTypeBag.Add(RegionType.Animal);
             for (int i = 0; i < 5; ++i) _regionTypeBag.Add(RegionType.Danger);
 
-            Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
-            bool isDesert = currentEnvironment.EnvironmentType == EnvironmentType.Desert;
+            bool isDesert = EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.Desert;
             bool includeBonusRegions = isDesert && includeTemple || !isDesert;
             if (includeBonusRegions)
             {
@@ -442,7 +379,12 @@ namespace Game.Exploration.Environment
             ++_regionsDiscovered;
             if (_regionsDiscovered == 0) return RegionType.Gate;
             UpdateAvailableRegionTypes();
-            return _regionTypeBag.RemoveRandom();
+            bool isDesert = EnvironmentManager.CurrentEnvironmentType() != EnvironmentType.Desert;
+            bool containsCache = _regionTypeBag.Contains(RegionType.Cache);
+            bool selectRandom = !isDesert || !containsCache;
+            if (selectRandom) return _regionTypeBag.RemoveRandom();
+            _regionTypeBag.Remove(RegionType.Cache);
+            return RegionType.Cache;
         }
 
         private static void SetWaterQuantities()

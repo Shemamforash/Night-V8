@@ -141,6 +141,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
             resourceItem.Increment(amount);
             if (resourceItem is Armour) UiArmourUpgradeController.Unlock();
+            Recipe.RecalculateCraftableRecipes();
         }
 
         public static void DecrementResource(string name, int amount)
@@ -151,6 +152,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             if (resourceItem.Quantity() < amount) return;
             resourceItem.Decrement(amount);
             if (resourceItem.Quantity() == 0) _resources.Remove(name);
+            Recipe.RecalculateCraftableRecipes();
         }
 
         public static int GetResourceQuantity(string type)

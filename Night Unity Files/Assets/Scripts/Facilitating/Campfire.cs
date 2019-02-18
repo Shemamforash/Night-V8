@@ -20,7 +20,6 @@ namespace Facilitating
         private const float Smoke4DurationMax = 3;
         private const float FireBurnOutPoint = 0.2f;
         private Image _fireLightImage;
-        private static int _hourCounter;
         private static bool _tending;
         private static float _fireLevel;
         private static Crackling _crackling;
@@ -78,12 +77,8 @@ namespace Facilitating
                 ParticleSystem.MainModule _smoke4Main = _smoke4.main;
                 _smoke4Main.startLifetime = Smoke4DurationMax * _fireLevel;
             }
-            _fireLightImage.color = Color.Lerp(Color.black, Color.white, _fireLevel);
-        }
 
-        public void Update()
-        {
-            UpdateRates();
+            _fireLightImage.color = Color.Lerp(Color.black, Color.white, _fireLevel);
         }
 
         public static void Tend()
@@ -96,24 +91,20 @@ namespace Facilitating
             _tending = true;
             _fireLevel += 0.2f;
             if (_fireLevel > 1) _fireLevel = 1;
+            _instance.UpdateRates();
         }
 
         public static void FinishTending()
         {
             _tending = false;
-            _hourCounter = 0;
         }
 
         public static void Die()
         {
             if (_tending) return;
-            if (_fireLevel == 0)
-            {
-                _hourCounter = 0;
-                return;
-            }
-
             _fireLevel -= 0.02f;
+            if (_fireLevel < 0) _fireLevel = 0;
+            _instance.UpdateRates();
             if (_fireLevel > 0) return;
             _instance._fire.Stop();
             _instance._smoke1.Stop();
@@ -132,14 +123,12 @@ namespace Facilitating
         public static void Save(XmlNode root)
         {
             root = root.CreateChild("Campfire");
-            root.CreateChild("HourCounter", _hourCounter);
             root.CreateChild("FireLevel", _fireLevel);
         }
 
         public static void Load(XmlNode root)
         {
             root = root.GetNode("Campfire");
-            _hourCounter = root.IntFromNode("HourCounter");
             _fireLevel = root.FloatFromNode("FireLevel");
         }
     }

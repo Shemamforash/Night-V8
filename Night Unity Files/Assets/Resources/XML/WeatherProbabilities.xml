@@ -1,13 +1,12 @@
 <Regions>
 	<Desert>
-		<Types>Drizzle,Haze,Mist,Fog,Clear,Cloudy,Overcast</Types>
-		<Drizzle>0.05,0.1,0.05,0.05,0.2,0.25,0.3</Drizzle>
-		<Haze>0.1,0.05,0.1,0.1,0.25,0.2,0.2</Haze>
-		<Mist>0.15,0.1,0.05,0.25,0.15,0.15,0.15</Mist>
-		<Fog>0.1,0.1,0.15,0.05,0.2,0.2,0.2</Fog>
-		<Clear>0.1,0.15,0.15,0.1,0.1,0.2,0.2</Clear>
-		<Cloudy>0.1,0.1,0.1,0.1,0.25,0.1,0.25</Cloudy>
-		<Overcast>0.1,0.15,0.1,0.1,0.25,0.25,0.05</Overcast>
+		<Types>Haze,Mist,Fog,Clear,Cloudy,Overcast</Types>
+		<Haze>0.05,0.1,0.1,0.3,0.25,0.2</Haze>
+		<Mist>0.1,0.05,0.25,0.2,0.2,0.2</Mist>
+		<Fog>0.1,0.15,0.05,0.25,0.25,0.2</Fog>
+		<Clear>0.15,0.15,0.1,0.2,0.2,0.2</Clear>
+		<Cloudy>0.1,0.1,0.1,0.3,0.15,0.25</Cloudy>
+		<Overcast>0.15,0.1,0.1,0.3,0.25,0.1</Overcast>
 	</Desert>
 	<Mountains>
 		<Types>Drizzle,Rain,Downpour,Mist,Fog,Cloudy,Overcast,Hail,Icestorm,Lightning</Types>

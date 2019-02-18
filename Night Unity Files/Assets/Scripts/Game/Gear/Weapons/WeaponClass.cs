@@ -11,6 +11,7 @@ namespace Game.Gear.Weapons
         public readonly bool Automatic;
         public readonly WeaponClassType Name;
         public readonly WeaponType Type;
+        public readonly String Description;
         public readonly int Pellets, Capacity, Recoil, Damage;
         public readonly float ReloadSpeed, FireRate, Accuracy;
         private static readonly List<WeaponClassType> _weaponClassTypes = new List<WeaponClassType>();
@@ -27,6 +28,8 @@ namespace Game.Gear.Weapons
             Accuracy = subtypeNode.FloatFromNode("Accuracy") / 100f;
             Recoil = subtypeNode.IntFromNode("Recoil");
             Capacity = subtypeNode.IntFromNode("Capacity");
+            Description = subtypeNode.StringFromNode("Description");
+            Description = Description + " " + Type;
             Pellets = type == WeaponType.Shotgun ? 10 : 1;
             _weaponClasses.Add(this);
         }

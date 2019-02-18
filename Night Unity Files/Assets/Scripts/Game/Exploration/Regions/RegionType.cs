@@ -3,12 +3,13 @@
     public enum RegionType
     {
         None,
+
         //Non Dynamic
         Gate,
         Tomb,
         Rite,
         Tutorial,
-        
+
         //Dynamic
         Shelter,
         Temple,

@@ -2,97 +2,6 @@ Base path: C:/Program Files/Unity/Editor/2018.3.0f2/Editor/Data
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
-Cmd: preprocess
-  insize=2299 outsize=707 ok=1
-Cmd: compileSnippet
-  error: 2 plat 4 at (46): unrecognized identifier 'vec2'\nCompiling Vertex program
-Platform defines: UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING
-  api=4 type=0 insize=2030 outsize=0 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=0
-Cmd: compileSnippet
-  error: 2 plat 4 at (46): unrecognized identifier 'vec2'\nCompiling Vertex program
-Platform defines: UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING
-  api=4 type=0 insize=2030 outsize=0 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=0
-Cmd: compileSnippet
-  error: 2 plat 4 at (46): unrecognized identifier 'vec2'\nCompiling Fragment program
-Platform defines: UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING
-  api=4 type=1 insize=2030 outsize=0 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=0
-Cmd: preprocess
-  insize=2309 outsize=707 ok=1
-Cmd: compileSnippet
-  error: 2 plat 4 at (46): unrecognized identifier 'vec2'\nCompiling Vertex program
-Platform defines: UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING
-  api=4 type=0 insize=2040 outsize=0 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=0
-Cmd: compileSnippet
-  error: 2 plat 4 at (46): unrecognized identifier 'vec2'\nCompiling Vertex program
-Platform defines: UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING
-  api=4 type=0 insize=2040 outsize=0 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=0
-Cmd: compileSnippet
-  error: 2 plat 4 at (46): unrecognized identifier 'vec2'\nCompiling Fragment program
-Platform defines: UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING
-  api=4 type=1 insize=2040 outsize=0 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=0
-Cmd: preprocess
-  insize=2311 outsize=707 ok=1
-Cmd: compileSnippet
-  error: 2 plat 4 at (47): undeclared identifier 'fract'\nCompiling Vertex program
-Platform defines: UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING
-  api=4 type=0 insize=2042 outsize=0 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=0
-Cmd: compileSnippet
-  error: 2 plat 4 at (47): undeclared identifier 'fract'\nCompiling Vertex program
-Platform defines: UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING
-  api=4 type=0 insize=2042 outsize=0 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=0
-Cmd: compileSnippet
-  error: 2 plat 4 at (47): undeclared identifier 'fract'\nCompiling Fragment program
-Platform defines: UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING
-  api=4 type=1 insize=2042 outsize=0 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=0
-Cmd: preprocess
-  insize=2311 outsize=707 ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=2042 outsize=750 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=2042 outsize=782 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=1
-Cmd: preprocess
-  insize=2315 outsize=707 ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=2046 outsize=750 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=2046 outsize=774 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=1
-Cmd: preprocess
-  insize=2314 outsize=707 ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=2045 outsize=750 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=2045 outsize=774 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=1
-Cmd: preprocess
-  insize=2317 outsize=707 ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=2048 outsize=750 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=2048 outsize=746 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=1
-Cmd: preprocess
-  insize=2306 outsize=707 ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=2037 outsize=750 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=2037 outsize=574 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=1
-Cmd: preprocess
-  insize=2304 outsize=707 ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=2035 outsize=750 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=2035 outsize=774 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_NO_SCREENSPACE_SHADOWS UNITY_PBS_USE_BRDF1 SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA UNITY_LIGHTMAP_RGBM_ENCODING ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: preprocess
-  insize=1516 outsize=295 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
@@ -126,40 +35,27 @@ Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: preprocess
   insize=1516 outsize=295 ok=1
-Cmd: preprocess
-  insize=1516 outsize=295 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: preprocess
-  insize=1516 outsize=295 ok=1
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
-Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: preprocess
   insize=1516 outsize=295 ok=1
 Cmd: initializeCompiler
-Cmd: preprocess
-  insize=1516 outsize=295 ok=1
 Cmd: initializeCompiler
-Cmd: preprocess
-  insize=1516 outsize=295 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler

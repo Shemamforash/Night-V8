@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.Libraries;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Game.Exploration.Environment
@@ -15,8 +17,8 @@ namespace Game.Exploration.Environment
         private readonly List<float> _temperatureArray = new List<float>();
         private readonly int Monuments, Shrines, Fountains, Shelters, Animals, Dangers, RegionCount;
         public readonly EnvironmentType EnvironmentType;
-        private readonly List<string> _environmentNames = new List<string>();
         public readonly int ResourceSources, FoodSources, WaterSources, Temples;
+        private readonly Dictionary<RegionType, List<string>> _environmentRegionNames = new Dictionary<RegionType, List<string>>();
 
         public Environment(XmlNode environmentNode)
         {
@@ -41,12 +43,16 @@ namespace Game.Exploration.Environment
 
         private void LoadEnvironmentNames()
         {
-            XmlNode root = Helper.OpenRootNode("Regions", "EnvironmentSuffixes");
-            string[] environmentNames = root.StringFromNode(EnvironmentType.ToString()).Split(',');
-            foreach (string name in environmentNames)
+            XmlNode root = Helper.OpenRootNode("Regions", "Names");
+            RegionType[] regionTypes = {RegionType.Danger, RegionType.Animal, RegionType.Temple, RegionType.Shelter, RegionType.Shrine, RegionType.Monument, RegionType.Fountain, RegionType.Cache};
+            regionTypes.ForEach(r =>
             {
-                _environmentNames.Add(name);
-            }
+                XmlNode regionNode = root.GetNode(r.ToString());
+                string nameString = regionNode.StringFromNode(EnvironmentType.ToString());
+                List<string> names = new List<string>();
+                if (nameString != "") names = nameString.Split(',').ToList();
+                _environmentRegionNames.Add(r, names);
+            });
         }
 
         public static EnvironmentType StringToEnvironmentType(string environmentString)
@@ -111,9 +117,15 @@ namespace Game.Exploration.Environment
             return (int) _temperatureArray[arrayPosition];
         }
 
-        public List<string> Suffixes()
+        public string GetRegionName(RegionType regionType)
         {
-            return _environmentNames;
+            if (regionType == RegionType.Temple)
+            {
+                Debug.Log(_environmentRegionNames[regionType].Count);
+                _environmentRegionNames[regionType].Print();
+            }
+
+            return _environmentRegionNames[regionType].Count == 0 ? null : _environmentRegionNames[regionType].RemoveRandom();
         }
     }
 }

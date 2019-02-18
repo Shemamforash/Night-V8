@@ -64,33 +64,25 @@ namespace Game.Combat.Generation.Shrines
             bool ritesRemain = region.RitesRemain;
             _brandChoice = CharacterManager.SelectedCharacter.BrandManager.GetBrandChoice();
             if (!ritesRemain) _brandChoice.Clear();
-            if (_brandChoice.Count < 3)
-            {
-                StopCandles(_collider3.transform);
-                Destroy(_collider3);
-            }
-
-            if (_brandChoice.Count < 2)
-            {
-                StopCandles(_collider2.transform);
-                Destroy(_collider2);
-            }
-
+            if (_brandChoice.Count < 3) StopCandles(_collider3);
+            if (_brandChoice.Count < 2) StopCandles(_collider2);
             if (_brandChoice.Count != 0) return;
             GetComponent<CompassItem>().Die();
-            StopCandles(_collider1.transform);
-            Destroy(_collider1);
+            StopCandles(_collider1);
             Destroy(this);
         }
 
-        private void StopCandles(Transform candleParent)
+        private void StopCandles(RiteColliderBehaviour candleParent)
         {
             candleParent.GetComponent<ParticleSystem>().Stop();
-            foreach (ParticleSystem candle in candleParent.Find("Candles").GetComponentsInChildren<ParticleSystem>())
+            foreach (ParticleSystem candle in candleParent.transform.Find("Candles").GetComponentsInChildren<ParticleSystem>())
             {
                 candle.Stop();
                 candle.Clear();
             }
+
+            _colliders.Remove(_collider3);
+            Destroy(_collider3);
         }
 
         public void EnterShrineCollider(RiteColliderBehaviour riteColliderBehaviour)
