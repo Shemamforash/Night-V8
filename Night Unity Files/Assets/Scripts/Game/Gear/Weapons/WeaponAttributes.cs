@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
+using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
@@ -127,6 +128,33 @@ namespace Game.Gear.Weapons
         public string GetWeaponTypeDescription()
         {
             return Description;
+        }
+
+        public float CalculateShatterChance()
+        {
+            float weaponShatterChance = Val(AttributeType.Shatter) * 100;
+            float characterShatterChance = ((Player) _weapon.EquippedCharacter).Attributes.Val(AttributeType.Shatter);
+            float totalChance = weaponShatterChance + characterShatterChance;
+            totalChance = totalChance.Round(2);
+            return totalChance;
+        }
+
+        public float CalculateBurnChance()
+        {
+            float weaponBurnChance = Val(AttributeType.Burn) * 100;
+            float characterBurnChance = ((Player) _weapon.EquippedCharacter).Attributes.Val(AttributeType.Burn);
+            float totalChance = weaponBurnChance + characterBurnChance;
+            totalChance = totalChance.Round(2);
+            return totalChance;
+        }
+
+        public float CalculateSicknessChance()
+        {
+            float weaponSicknessChance = Val(AttributeType.Sickness) * 100;
+            float characterSicknessChance = ((Player) _weapon.EquippedCharacter).Attributes.Val(AttributeType.Sickness);
+            float totalChance = weaponSicknessChance + characterSicknessChance;
+            totalChance = totalChance.Round(2);
+            return totalChance;
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Game.Combat.Enemies.Bosses
             if (Sections.Count == 0 && countBefore > 0) Kill();
         }
 
-        public void Kill()
+        public virtual void Kill()
         {
             ScreenFaderController.FlashWhite(1f, new Color(1, 1, 1, 0f));
             List<CanTakeDamage> enemies = CombatManager.Enemies();

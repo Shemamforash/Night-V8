@@ -36,7 +36,10 @@ public class TrailFireBehaviour : FireDamageDeal
     {
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(LifeTime);
-        sequence.AppendCallback(() => _fire.Stop());
+        sequence.AppendCallback(() =>
+        {
+            if (_fire != null) _fire.Stop();
+        });
         sequence.AppendInterval(1f);
         sequence.AppendCallback(() => _firePool.Return(this));
     }

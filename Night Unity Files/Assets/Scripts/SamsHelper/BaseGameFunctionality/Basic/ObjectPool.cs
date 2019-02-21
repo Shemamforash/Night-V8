@@ -60,6 +60,12 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 
         public void Return(T thing)
         {
+            if (thing == null)
+            {
+                _active.RemoveAll(r => r == null);
+                return;
+            }
+
             _pool.Add(thing);
             _active.Remove(thing);
             thing.gameObject.SetActive(false);

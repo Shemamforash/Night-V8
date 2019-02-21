@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.Combat.Generation;
+using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,9 +13,15 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         private float _orbitRadiusMin = 2.5f;
         private float _orbitRadiusMax = 5f;
         private float _currentOrbitRadius;
-        private bool _oppositeSpin;
         private Action<Vector2> _forceAction;
         private float _speed;
+        private SpinDirection _spinDir = SpinDirection.Clockwise;
+
+        public enum SpinDirection
+        {
+            Clockwise,
+            Anticlockwise
+        }
 
         public void Initialise(Transform target, Action<Vector2> forceAction, float speed, float orbitRadiusMin, float orbitRadiusMax = -1)
         {
@@ -22,7 +29,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             _targetTransform = target;
             _orbitRadiusMin = orbitRadiusMin;
             _orbitRadiusMax = orbitRadiusMax < 0 ? _orbitRadiusMin : orbitRadiusMax;
-            _oppositeSpin = Random.Range(0, 2) == 0;
+            if (Helper.RollDie(0, 2)) _spinDir = SpinDirection.Anticlockwise;
             _speed = speed;
         }
 
@@ -33,9 +40,9 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             return _currentOrbitRadius;
         }
 
-        public void SwitchSpin()
+        public void SetSpin(SpinDirection spinDir)
         {
-            _oppositeSpin = !_oppositeSpin;
+            _spinDir = spinDir;
         }
 
         public void Update()
@@ -48,7 +55,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             Vector2 tangent = new Vector2(-dirToTarget.y, dirToTarget.x);
             Vector2 pos = -dirToTarget * GetOrbitRadius() + _targetPosition;
             float mult = 2;
-            if (_oppositeSpin) mult = -mult;
+            if (_spinDir == SpinDirection.Anticlockwise) mult = -mult;
             pos += tangent * mult;
             Vector2 dirToTangent = (pos - currentPosition).normalized;
             _forceAction.Invoke(dirToTangent * GetSpeed());

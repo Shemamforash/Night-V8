@@ -15,7 +15,6 @@ namespace Game.Exploration.Environment
         private static List<EnvironmentType> _environmentTypes;
         private readonly float minTemp, maxTemp;
         private readonly List<float> _temperatureArray = new List<float>();
-        private readonly int Monuments, Shrines, Fountains, Shelters, Animals, Dangers, RegionCount;
         public readonly EnvironmentType EnvironmentType;
         public readonly int ResourceSources, FoodSources, WaterSources, Temples;
         private readonly Dictionary<RegionType, List<string>> _environmentRegionNames = new Dictionary<RegionType, List<string>>();
@@ -28,16 +27,9 @@ namespace Game.Exploration.Environment
             minTemp = maxTemp - 20;
             CalculateTemperatures();
             Temples = environmentNode.IntFromNode("Temples");
-            Monuments = environmentNode.IntFromNode("Monuments");
-            Shrines = environmentNode.IntFromNode("Shrines");
-            Fountains = environmentNode.IntFromNode("Fountains");
-            Shelters = environmentNode.IntFromNode("Shelters");
-            Animals = environmentNode.IntFromNode("Animals");
-            Dangers = environmentNode.IntFromNode("Danger");
             WaterSources = environmentNode.IntFromNode("WaterSources");
             FoodSources = environmentNode.IntFromNode("FoodSources");
             ResourceSources = environmentNode.IntFromNode("ResourceSources");
-            RegionCount = Temples + Monuments + Shrines + Fountains + Shelters + Animals + Dangers;
             LoadEnvironmentNames();
         }
 

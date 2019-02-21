@@ -407,9 +407,9 @@ namespace Game.Global
             return _isPaused;
         }
 
-        public static int ScaleValue(int damage)
+        public static int ScaleValue(int value)
         {
-            return (int) (damage + damage * _difficulty / 25f);
+            return (int) (value + value * _difficulty / 25f);
         }
     }
 }

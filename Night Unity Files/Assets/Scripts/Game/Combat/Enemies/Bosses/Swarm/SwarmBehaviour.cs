@@ -1,174 +1,72 @@
-﻿using System.Collections.Generic;
-using DG.Tweening;
-using Game.Combat.Enemies;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Game.Combat.Enemies.Bosses;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
-using Game.Combat.Generation;
 using Game.Combat.Misc;
-using Game.Combat.Player;
 using SamsHelper.Libraries;
+using Sirenix.Utilities;
 using UnityEngine;
 
 public class SwarmBehaviour : Boss
 {
     private static SwarmBehaviour _instance;
-    private const int SwarmCount = 200;
-    private float _fireCounter;
-    private float _fireCounterMin;
-    private float _contractTimer;
-    private bool _contracting;
-    private float _burstForce;
-    private static GameObject[] _swarmPrefabs;
-    private float _burstCounter;
-    private Orbit _orbit;
-    private float _spawnTimer;
+    private bool _secondStageStarted;
 
     public static void Create()
     {
         GameObject prefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Swarm/Swarm Boss");
         GameObject swarm = Instantiate(prefab);
-        swarm.GetComponent<SwarmBehaviour>().Initialise();
-    }
-
-    private void Initialise()
-    {
-        transform.position = Vector2.zero;
-        SpawnNewChildren();
-        RecalculateFireTimer();
-    }
-
-    private void SpawnNewChildren()
-    {
-        if (_swarmPrefabs == null) _swarmPrefabs = Resources.LoadAll<GameObject>("Prefabs/Combat/Bosses/Swarm/Segments");
-        for (int i = 0; i < SwarmCount; ++i)
-        {
-            SwarmSegmentBehaviour swarm = Instantiate(_swarmPrefabs.RandomElement()).GetComponent<SwarmSegmentBehaviour>();
-            swarm.SetSwarmParent(this);
-        }
-    }
-
-    protected override void Awake()
-    {
-        base.Awake();
-        _orbit = gameObject.AddComponent<Orbit>();
-
-        if (Random.Range(0, 2) == 0) _orbit.SwitchSpin();
-        _instance = this;
-        _fireCounter = Random.Range(_fireCounterMin, _fireCounterMin + 2);
-        _contractTimer = Random.Range(8f, 12f);
-    }
-
-    private void Start()
-    {
-        float minOrbitRadius = Random.Range(1.5f, 2.5f);
-        float maxOrbitRadius = minOrbitRadius * 2f;
-        float moveSpeed = Random.Range(1f, 2f);
-        _orbit.Initialise(PlayerCombat.Instance.transform, RigidBody.AddForce, moveSpeed, minOrbitRadius, maxOrbitRadius);
-    }
-
-    private void RecalculateFireTimer()
-    {
-        _fireCounterMin = 1f / 100f * SectionCount() + 1f;
-    }
-
-    private void UpdateFireCounter()
-    {
-        if (_burstCounter < 0f) return;
-        _fireCounter -= Time.deltaTime;
-        if (_fireCounter > 0f) return;
-        _fireCounter = Random.Range(_fireCounterMin, _fireCounterMin + 2);
-        if (SectionCount() < 20) return;
-        SwarmSegmentBehaviour swarmSegment = (SwarmSegmentBehaviour) Sections[0];
-        swarmSegment.StartSeeking();
-    }
-
-    private void UpdateBurstCounter()
-    {
-        if (SectionCount() > 100) return;
-        if (_burstCounter < 0f) return;
-        _burstCounter -= Time.deltaTime;
-        if (_burstCounter > 0f) return;
-        Sections.ForEach(s => ((SwarmSegmentBehaviour) s).StartBurst());
-        Sequence sequence = DOTween.Sequence();
-        sequence.AppendInterval(4f);
-        sequence.AppendCallback(() => _burstCounter = Random.Range(10, 20));
-    }
-
-    private void UpdateContractTimer()
-    {
-        if (_burstCounter < 0f) return;
-        _contractTimer -= Time.deltaTime;
-        if (_contractTimer > 0f) return;
-        _contractTimer = Random.Range(8f, 12f);
-        _contracting = true;
-        Sequence sequence = DOTween.Sequence();
-        sequence.Append(DOTween.To(() => _burstForce, f => _burstForce = f, -1f, 1f).SetEase(Ease.OutBounce));
-        sequence.AppendCallback(() =>
-        {
-            float angleInterval = 360 / 3f;
-            for (float angle = 0f; angle < 360f; angle += angleInterval)
-            {
-                Vector3 direction = AdvancedMaths.CalculatePointOnCircle(angle, 1, Vector2.zero);
-                MaelstromShotBehaviour.Create(direction, transform.position + direction * 0.5f, 3f, false);
-            }
-
-            _contracting = false;
-        });
-    }
-
-    private void UpdateSpawnTimer()
-    {
-        if (Sections.Count > 100) return;
-
-        List<CanTakeDamage> enemies = CombatManager.Enemies();
-        enemies.RemoveAll(e => e is SwarmSegmentBehaviour);
-        if (enemies.Count > 10) return;
-        if (_spawnTimer < 0f)
-        {
-            float spawnTime = 12 - Sections.Count / 10f;
-            _spawnTimer = Random.Range(spawnTime * 0.75f, spawnTime * 1.25f);
-            switch (Random.Range(0, 4))
-            {
-                case 0:
-                    CombatManager.SpawnEnemy(EnemyType.Shadow, transform.position);
-                    break;
-                case 1:
-                    CombatManager.SpawnEnemy(EnemyType.Ghast, transform.position);
-                    break;
-                case 2:
-                    CombatManager.SpawnEnemy(EnemyType.Ghoul, transform.position);
-                    break;
-                case 3:
-                    CombatManager.SpawnEnemy(EnemyType.Revenant, transform.position);
-                    break;
-            }
-        }
-
-        _spawnTimer -= Time.deltaTime;
-    }
-
-    public void Update()
-    {
-        UpdateFireCounter();
-        UpdateContractTimer();
-        UpdateBurstCounter();
-        UpdateSpawnTimer();
-        if (!_contracting) _burstForce = Mathf.PerlinNoise(Time.timeSinceLevelLoad, 0f);
-        for (int i = Sections.Count - 1; i >= 0; --i)
-            ((SwarmSegmentBehaviour) Sections[i]).UpdateSection(transform.position, _burstForce * 1.3f - 0.3f);
+        swarm.transform.position = Vector2.zero;
+        _instance = swarm.GetComponent<SwarmBehaviour>();
     }
 
     public override void UnregisterSection(BossSectionHealthController segment)
     {
         Sections.Remove(segment);
-        RecalculateFireTimer();
-        if (Sections.Count != 0) return;
-        Kill();
-        Destroy(gameObject);
+    }
+
+    public bool CheckChangeToStageTwo()
+    {
+        if (_secondStageStarted) return false;
+        StartCoroutine(StartSecondStage());
+        return true;
+    }
+
+    private IEnumerator StartSecondStage()
+    {
+        _secondStageStarted = true;
+        SwarmSegmentBehaviour.Active.ForEach(s => s.Collapse(transform.position));
+        yield return new WaitForSeconds(2f);
+        GameObject heavyPrefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Swarm/Heavy Swarm Segment");
+        for (int i = 0; i < 6; ++i)
+        {
+            float angle = 360f / 6 * i;
+            Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, 2f, transform.position);
+            TeleportInOnly.TeleportIn(position);
+            GameObject heavySwarmSegment = Instantiate(heavyPrefab, transform, true);
+            heavySwarmSegment.transform.position = position;
+            heavySwarmSegment.GetComponent<HeavySwarmSegmentBehaviour>().SetAngleOffset(angle);
+        }
     }
 
     public static List<CanTakeDamage> GetAllSegments()
     {
         return new List<CanTakeDamage>(_instance.Sections);
+    }
+
+    public static SwarmBehaviour Instance() => _instance;
+
+    public override void Kill()
+    {
+        base.Kill();
+        for (int i = SwarmSegmentBehaviour.Active.Count - 1; i >= 0; --i)
+            SwarmSegmentBehaviour.Active[i].Kill();
+        for (int i = HeavySwarmSegmentBehaviour.Active.Count - 1; i >= 0; --i)
+
+        {
+            HeavySwarmSegmentBehaviour segment = HeavySwarmSegmentBehaviour.Active[i];
+            LeafBehaviour.CreateLeaves(segment.transform.position);
+            Destroy(segment.gameObject);
+        }
     }
 }

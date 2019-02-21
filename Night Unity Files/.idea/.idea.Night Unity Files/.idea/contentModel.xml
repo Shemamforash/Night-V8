@@ -919,6 +919,8 @@
                     <e p="StarfishSpreadFire.cs" t="Include" />
                   </e>
                   <e p="Swarm" t="Include">
+                    <e p="HeavySwarmSegmentBehaviour.cs" t="Include" />
+                    <e p="MainSwarmSegmentBehaviour.cs" t="Include" />
                     <e p="SwarmBehaviour.cs" t="Include" />
                     <e p="SwarmSegmentBehaviour.cs" t="Include" />
                   </e>

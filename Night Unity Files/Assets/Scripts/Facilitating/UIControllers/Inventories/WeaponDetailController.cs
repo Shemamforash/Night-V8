@@ -102,9 +102,9 @@ public class WeaponDetailController : MonoBehaviour
     {
         if (!IsDetailed) return;
         WeaponAttributes attributes = _weapon?.WeaponAttributes;
-        float shatterChance = attributes?.Val(AttributeType.Shatter) * 100 ?? 0;
-        float burnChance = attributes?.Val(AttributeType.Burn) * 100 ?? 0;
-        float sicknessChance = attributes?.Val(AttributeType.Sickness) * 100 ?? 0;
+        float shatterChance = attributes.CalculateShatterChance();
+        float burnChance = attributes.CalculateBurnChance();
+        float sicknessChance = attributes.CalculateSicknessChance();
 
         _shatterObject.SetActive(shatterChance != 0);
         _burnObject.SetActive(burnChance != 0);

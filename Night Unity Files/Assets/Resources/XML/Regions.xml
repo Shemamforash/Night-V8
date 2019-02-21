@@ -1,11 +1,11 @@
 <Names>
 	<Danger>
-		<Generic>Mortal's Curse,Mortal's Woe,Civilisation's Waste,Pit of the Demagogue,Civilisation's Rest,Root of Grief,Betrayal's Heartache,Hellion's Affliction,Hell's Damnation,Carcass of Gargantua,Apostate's Terminus,Spiteful Remains,Hateful Wreck,Heresy's Hulk,Fiend's Torment,Endeavour's Sunset,Hatred's End,Execrator's Downfall,Deceiver's Dusk,Maverick's Grief,The Ache of the Earth,Contested Wastes,Dream's End,Dissident's Strife,Apostate's Trial,The Blight,Horizon's End,God's Shame,Failure's Burden,Love's Limit,Ground of the Lost,Haunt of the Damned,The Bloody Sink,The Burden of Man,Piety's Fall,Arrogance's Reward</Generic>
-		<Desert>Badland's Edge,Long Bank,Whispering Dunes,Deep Erg,Dry Channel,Repentance of Eo,Arid Brush</Desert>
+		<Generic>Mortal's Curse,Mortal's Woe,Civilisation's Waste,Pit of the Demagogue,Civilisation's Rest,Root of Grief,Betrayal's Heartache,Hellion's Affliction,Hell's Damnation,Carcass of Gargantua,Apostate's Terminus,Spiteful Remains,Hateful Wreck,Heresy's Hulk,Fiend's Torment,Endeavour's Sunset,Hatred's End,Execrator's Downfall,Deceiver's Dusk,Maverick's Grief,The Ache of the Earth,Contested Wastes,Dream's End,Dissident's Strife,Apostate's Trial,The Blight,Horizon's End,God's Shame,Failure's Burden,Love's Limit,Ground of the Lost,Haunt of the Damned,The Bloody Sink,The Burden of Man,Piety's Fall,Arrogance's Reward,The Dark Dell,Believer's Fall</Generic>
+		<Desert>Badland's Edge,Long Bank,Whispering Dunes,Deep Erg,Dry Channel,Repentance of Eo,Arid Brush,Sandy Turn</Desert>
 		<Mountains>Blackspire,Brink,The Coldslopes,Broken Talus,Craggy Tarn,Scarfell,Scarfell Pike,Hoarfrost Ridge,Fallen Peak,Blasted Steep,Sheer Edge</Mountains>
 		<Sea>Dry Tide,Godswater,The Depths,Dimlight Crevasse,Leviathan's Ruin,Salt Cliffs,Bathus Ridge,Abyssal Floor,Mammoth's Grave,Deep Shelf,Sunfall,Dead Fen</Sea>
 		<Ruins>Greyhaven,Architect's Ruin,Silent Pathways,Dead Vaults,Pillar's Shadow,Fallen Drome,Fragments of Time,Citadel's Remnants,Iron Cathedral,Cursed Crossroad,Quiet Square,Abandoned Chambers,Worker's Quarters,The Priests' District,Deserted Station</Ruins>
-		<Wasteland>Nomansland,Caustic Plain,Field of Woe,Tracks of Fear,Pitted Field,Behemoth Rise,Warscar,Great Crater,Broken Battlements,Ruined Tower,Buried Machine,Blistering Path,The Last Road,The Outer Wastes,The Vile Expanse,The Long Wound,The Black Gulf,Grim Hollow</Wasteland>
+		<Wasteland>The Toppled Walls,Nomansland,Caustic Plain,Field of Woe,Tracks of Fear,Pitted Field,Behemoth Rise,Warscar,Great Crater,Broken Battlements,Ruined Tower,Buried Machine,Blistering Path,The Last Road,The Outer Wastes,The Vile Expanse,The Long Wound,The Black Gulf</Wasteland>
 	</Danger>
 	<Animal>
 		<Generic>Trapper's Dale,Vale of the Hunt,Predator's Remission,Strider's Den,Range of the Wilds,Wilderness' Bounty,Chaser's Blessing,Stalker's Fruit,Seeker's Dale,Beast's Rest,Lost Herd,Errant Flock,Beast's Convoy</Generic>
@@ -40,20 +40,20 @@
 		<Wasteland>The Proving Grounds,Warrior's Test</Wasteland>
 	</Shrine>
 	<Monument>
-		<Generic>Shrine of Devotion,The Gathering Stone,The Tablet of Gifts,Believer's Atonement,The Altar of Dedication,Disciple's Shrine,Adherant's Calling,Heaven's Communion,The Place of Power</Generic>
+		<Generic>Shrine of Devotion,The Gathering Stone,The Tablet of Gifts,Believer's Atonement,The Altar of Dedication,Disciple's Shrine,Adherant's Calling,Heaven's Communion,The Place of Power,The God's Favour,The Altar of Appeal,Ancient Monument,Decrepit Stones,Praying Place,Mother's Offering,The Divine Channel,Seam of Worlds,Concourse of Heaven</Generic>
 		<Desert></Desert>
 		<Mountains>Sheltered Place</Mountains>
-		<Sea></Sea>
-		<Ruins></Ruins>
-		<Wasteland></Wasteland>
+		<Sea>The Reclamation</Sea>
+		<Ruins>The Offering Place,The Alm Stone</Ruins>
+		<Wasteland>The Sacrificial Stone,King's Oblation</Wasteland>
 	</Monument>
 	<Fountain>
-		<Generic>Font of Rapture,Salvation Flow,Faith's Reprieve,Promise of Exaltation,Quenching Spring,Paragon's Pardon,Aqua Salve,Seraph's Virtue,Slaking Channel,Sating Remission,Alleviating Rest</Generic>
-		<Desert>Lost Fountain,Eo's Legacy</Desert>
-		<Mountains>The Blood of the Earth</Mountains>
+		<Generic>Font of Rapture,Salvation Flow,Faith's Reprieve,Promise of Exaltation,Quenching Spring,Paragon's Pardon,Aqua Salve,Seraph's Virtue,Slaking Channel,Sating Remission,Alleviating Rest,The Dark Fountain,Relieving Drink</Generic>
+		<Desert>Appeasing Mirage,Eo's Legacy</Desert>
+		<Mountains>The Blood of the Earth,Lost Fountain</Mountains>
 		<Sea>Breath of the Sea,Exhausted Trickle</Sea>
 		<Ruins>The City Well,Pure Spring</Ruins>
-		<Wasteland>Township's Legacy,Grimy Well</Wasteland>
+		<Wasteland>Township's Legacy,Grimy Well,Shadowy Spring</Wasteland>
 	</Fountain>
 	<Cache>
 		<Generic>Hoard of the Ancients,Ancient Cache,Sealed Cache,Venerated Chamber,Vault of the Old Ones,Pride of the Ones Before,Mystic Cache,Elders' Hoard,Vault of the Lost Age,Ark of the Great Light,Ancestor's Wealth,Forbearer's Treasure,Maker's Pride</Generic>

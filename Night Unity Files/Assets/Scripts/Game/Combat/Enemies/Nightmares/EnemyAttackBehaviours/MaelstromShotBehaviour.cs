@@ -93,7 +93,8 @@ public class MaelstromShotBehaviour : MonoBehaviour
 
     private IEnumerator WaitToDie()
     {
-        if (_trail != null) _trail.StartFade();
+        if (!_trail.gameObject.activeInHierarchy) Destroy(_trail);
+        else if (_trail != null) _trail.StartFade();
         foreach (SpriteRenderer spriteRenderer in _sprites) spriteRenderer.enabled = false;
         _dying = true;
         _rigidBody.velocity = Vector2.zero;

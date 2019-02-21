@@ -71,9 +71,9 @@ namespace Game.Combat.Misc
             WeaponAttributes attributes = _weapon.WeaponAttributes;
             _damage = (int) attributes.Val(AttributeType.Damage);
             _accuracy = 1 - attributes.Val(AttributeType.Accuracy);
-            _shatterChance = attributes.Val(AttributeType.Shatter);
-            _burnChance = attributes.Val(AttributeType.Burn);
-            _sicknessChance = attributes.Val(AttributeType.Sickness);
+            _shatterChance = attributes.CalculateShatterChance();
+            _burnChance = attributes.CalculateShatterChance();
+            _sicknessChance = attributes.CalculateShatterChance();
             if (!(_origin is PlayerCombat)) return;
             _shatterChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Shatter);
             _burnChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Burn);
