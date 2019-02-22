@@ -111,12 +111,6 @@ namespace Game.Exploration.Environment
 
         public string GetRegionName(RegionType regionType)
         {
-            if (regionType == RegionType.Temple)
-            {
-                Debug.Log(_environmentRegionNames[regionType].Count);
-                _environmentRegionNames[regionType].Print();
-            }
-
             return _environmentRegionNames[regionType].Count == 0 ? null : _environmentRegionNames[regionType].RemoveRandom();
         }
     }

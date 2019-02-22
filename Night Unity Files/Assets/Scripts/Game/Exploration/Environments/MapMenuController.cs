@@ -52,6 +52,11 @@ namespace Game.Exploration.Environment
             CreateRouteLinks();
         }
 
+        public void Start()
+        {
+            MenuStateMachine.RegisterMenu(this);
+        }
+
         private void OnDestroy()
         {
             _instance = null;

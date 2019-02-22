@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Facilitating.Persistence;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Misc;
 using Game.Exploration.Regions;
+using Game.Global;
 using SamsHelper.Libraries;
 using Sirenix.Utilities;
 using TriangleNet.Voronoi.Legacy;
@@ -20,12 +22,11 @@ namespace Game.Exploration.Environment
     public static class MapGenerator
     {
         public const int MinRadius = 3;
-
+        private static readonly List<Tuple<RegionType, bool>> _regionOrder = new List<Tuple<RegionType, bool>>();
         private static readonly Dictionary<RegionType, List<string>> _genericNames = new Dictionary<RegionType, List<string>>();
         private static readonly List<Region> _regions = new List<Region>();
         private static Region initialNode;
 
-        private static readonly List<RegionType> _regionTypeBag = new List<RegionType>();
         private static int _regionsDiscovered;
 
         private static bool _loaded;
@@ -34,14 +35,15 @@ namespace Game.Exploration.Environment
         {
             XmlNode regionNode = root.CreateChild("Regions");
             foreach (Region region in _regions) region.Save(regionNode);
-            string regionTypesRemaining = "";
-            for (int i = 0; i < _regionTypeBag.Count; i++)
+            string regionOrderString = "";
+            for (int i = 0; i < _regionOrder.Count; i++)
             {
-                regionTypesRemaining += (int) _regionTypeBag[i];
-                if (i != _regionTypeBag.Count - 1) regionTypesRemaining += ",";
+                Tuple<RegionType, bool> tup = _regionOrder[i];
+                regionOrderString += (int) tup.Item1 + "," + tup.Item2;
+                if (i != _regionOrder.Count - 1) regionOrderString += ",";
             }
 
-            regionNode.CreateChild("RegionTypes", regionTypesRemaining);
+            regionNode.CreateChild("RegionTypes", regionOrderString);
         }
 
         public static Region GetRegionById(int id)
@@ -74,8 +76,13 @@ namespace Game.Exploration.Environment
             _regions.ForEach(r => r.ConnectNeighbors());
             string regionTypeString = regionsNode.StringFromNode("RegionTypes");
             if (regionTypeString == "") return;
-            string[] regionTypesRemaining = regionTypeString.Split(',');
-            regionTypesRemaining.ForEach(r => _regionTypeBag.Add((RegionType) int.Parse(r)));
+            string[] regionOrder = regionTypeString.Split(',');
+            for (int i = 0; i < regionOrder.Length; i += 2)
+            {
+                RegionType regionType = (RegionType) int.Parse(regionOrder[i]);
+                bool storyHere = bool.Parse(regionOrder[i + 1]);
+                _regionOrder.Add(Tuple.Create(regionType, storyHere));
+            }
         }
 
         public static List<Region> Regions()
@@ -95,7 +102,7 @@ namespace Game.Exploration.Environment
             SetRegionTypes();
             initialNode.Discover();
 #if UNITY_EDITOR
-            _regions.ForEach(r => r.Discover());
+//            _regions.ForEach(r => r.Discover());
 #endif
         }
 
@@ -292,21 +299,8 @@ namespace Game.Exploration.Environment
             }
 
             string regionName = EnvironmentManager.CurrentEnvironment.GetRegionName(type);
-            if (type == RegionType.Temple)
-            {
-                Debug.Log(regionName + " " + type);
-                Debug.Log(regionName == null);
-            }
-
             regionName = regionName ?? _genericNames[type].RemoveRandom();
             return regionName;
-        }
-
-        private static readonly List<RegionType> _regionTypes = new List<RegionType>();
-
-        private static string StripBlanks(string text)
-        {
-            return Regex.Replace(text, @"\s+", "");
         }
 
         private static void LoadRegionNames()
@@ -327,64 +321,99 @@ namespace Game.Exploration.Environment
         private static void SetRegionTypes()
         {
             _regionsDiscovered = -1;
-            _regionTypeBag.Clear();
+            _regionOrder.Clear();
             _addedShelter = false;
-            AddBaseRegionTypes(false);
+            AddRegionTypes(false);
             SetJournalQuantities();
             SetWaterQuantities();
             SetFoodQuantities();
             SetResourceQuantities();
+            SetRegionOrder();
+        }
+
+        private static void SetRegionOrder()
+        {
+            int environmentNumber = (int) EnvironmentManager.CurrentEnvironmentType();
+            AddRegionTypes(false);
+            for (int i = 0; i < environmentNumber + 1; ++i)
+            {
+                AddRegionTypes(true);
+            }
+
+            int lastTemple = _regionOrder.FindLastIndex(t => t.Item1 == RegionType.Temple);
+            int storyCount = JournalEntry.GetStoryCount();
+            List<int> validIndexes = new List<int>();
+            for (int i = 0; i < lastTemple; ++i) validIndexes.Add(i);
+            while (storyCount > 0)
+            {
+                int regionIndex = validIndexes.RemoveRandom();
+                Tuple<RegionType, bool> tup = _regionOrder[regionIndex];
+                _regionOrder[regionIndex] = Tuple.Create(tup.Item1, true);
+                storyCount -= 1;
+            }
+
+            CheckToMoveCache();
+        }
+
+        private static void CheckToMoveCache()
+        {
+            if (EnvironmentManager.CurrentEnvironmentType() != EnvironmentType.Desert) return;
+            int cacheIndex = _regionOrder.FindIndex(t => t.Item1 == RegionType.Cache);
+            Tuple<RegionType, bool> cache = _regionOrder[cacheIndex];
+            Tuple<RegionType, bool> other = _regionOrder[10];
+            _regionOrder[10] = cache;
+            _regionOrder[cacheIndex] = other;
         }
 
         private static bool _addedShelter;
 
-        private static void AddBaseRegionTypes(bool includeTemple)
+        private static void AddRegionTypes(bool includeTemple)
         {
-            _regionTypeBag.Add(RegionType.Shrine);
-            _regionTypeBag.Add(RegionType.Animal);
-            for (int i = 0; i < 5; ++i) _regionTypeBag.Add(RegionType.Danger);
+            List<RegionType> validTypes = GetValidRegionTypes(includeTemple);
+            validTypes.Shuffle();
+            validTypes.ForEach(r => _regionOrder.Add(Tuple.Create(r, false)));
+        }
+
+        private static List<RegionType> GetValidRegionTypes(bool includeTemple)
+        {
+            List<RegionType> validTypes = new List<RegionType>();
+            validTypes.Add(RegionType.Shrine);
+            validTypes.Add(RegionType.Animal);
+            for (int i = 0; i < 5; ++i) validTypes.Add(RegionType.Danger);
 
             bool isDesert = EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.Desert;
             bool includeBonusRegions = isDesert && includeTemple || !isDesert;
             if (includeBonusRegions)
             {
-                _regionTypeBag.Add(isDesert ? RegionType.Danger : RegionType.Monument);
-                _regionTypeBag.Add(RegionType.Fountain);
-                _regionTypeBag.Add(RegionType.Cache);
+                validTypes.Add(isDesert ? RegionType.Danger : RegionType.Monument);
+                validTypes.Add(RegionType.Fountain);
+                validTypes.Add(RegionType.Cache);
             }
             else
             {
-                _regionTypeBag.Add(RegionType.Danger);
-                _regionTypeBag.Add(RegionType.Danger);
-                _regionTypeBag.Add(RegionType.Danger);
+                validTypes.Add(RegionType.Danger);
+                validTypes.Add(RegionType.Danger);
+                validTypes.Add(RegionType.Danger);
             }
 
-            if (!includeTemple) return;
-            _regionTypeBag.Remove(RegionType.Danger);
-            _regionTypeBag.Add(RegionType.Temple);
-            if (_addedShelter || isDesert) return;
+            if (!includeTemple) return validTypes;
+            validTypes.Remove(RegionType.Danger);
+            validTypes.Add(RegionType.Temple);
+            if (_addedShelter || isDesert) return validTypes;
             _addedShelter = true;
-            _regionTypeBag.Remove(RegionType.Danger);
-            _regionTypeBag.Add(RegionType.Shelter);
-        }
-
-        private static void UpdateAvailableRegionTypes()
-        {
-            if (_regionTypeBag.Count > 0) return;
-            AddBaseRegionTypes(true);
+            validTypes.Remove(RegionType.Danger);
+            validTypes.Add(RegionType.Shelter);
+            return validTypes;
         }
 
         public static RegionType GetNewRegionType()
         {
             ++_regionsDiscovered;
             if (_regionsDiscovered == 0) return RegionType.Gate;
-            UpdateAvailableRegionTypes();
-            bool isDesert = EnvironmentManager.CurrentEnvironmentType() != EnvironmentType.Desert;
-            bool containsCache = _regionTypeBag.Contains(RegionType.Cache);
-            bool selectRandom = !isDesert || !containsCache;
-            if (selectRandom) return _regionTypeBag.RemoveRandom();
-            _regionTypeBag.Remove(RegionType.Cache);
-            return RegionType.Cache;
+            Tuple<RegionType, bool> regionTup = _regionOrder[_regionsDiscovered - 1];
+            RegionType newRegionType = regionTup.Item1;
+            CombatStoryController.ShouldShow = regionTup.Item2;
+            return newRegionType;
         }
 
         private static void SetWaterQuantities()
@@ -395,12 +424,12 @@ namespace Game.Exploration.Environment
 
         private static void SetJournalQuantities()
         {
-            int journalCount = 10 + (int) EnvironmentManager.CurrentEnvironment.EnvironmentType * 4;
+            int journalCount =  2 + ((int) EnvironmentManager.CurrentEnvironment.EnvironmentType + 1) * 2;
             _regions.Shuffle();
             for (int i = 0; i < journalCount; ++i)
             {
                 if (_regions[i] == initialNode) continue;
-                _regions[i].ReadJournal = false;
+                _regions[i].JournalIsHere = true;
             }
         }
 

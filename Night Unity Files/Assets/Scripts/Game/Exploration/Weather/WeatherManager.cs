@@ -48,7 +48,6 @@ namespace Game.Exploration.Weather
                     return _types[i];
                 }
 
-                Debug.Log(currentWeather);
                 pValues.ToArray().Print();
                 _types.ToArray().Print();
                 throw new ArgumentOutOfRangeException();
@@ -106,7 +105,6 @@ namespace Game.Exploration.Weather
             for (int i = 0; i < 5; ++i)
             {
                 stringLength = (int) max;
-                Debug.Log(EnvironmentManager.CurrentEnvironmentType());
                 GoToWeather();
                 Dictionary<string, int> _weatherOccurrences = new Dictionary<string, int>();
                 string weatherString = "";
@@ -132,7 +130,6 @@ namespace Game.Exploration.Weather
                     weatherString = occurences + "\n" + weatherString;
                 }
 
-                Debug.Log(weatherString);
                 EnvironmentManager.NextLevel(false, false);
             }
         }

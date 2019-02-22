@@ -12,6 +12,7 @@ public class CombatStoryController : MonoBehaviour
     private EnhancedText _titleText, _contentText;
     private CloseButtonController _closeButton;
     private static JournalEntry _journalHere;
+    public static bool ShouldShow;
 
     public void Awake()
     {
@@ -40,10 +41,15 @@ public class CombatStoryController : MonoBehaviour
 
     public static void TryEnter()
     {
-        Region currentRegion = CombatManager.GetCurrentRegion();
-        _journalHere = currentRegion.ReadJournal ? null : JournalEntry.GetStoryEntry();
-        currentRegion.ReadJournal = true;
-        if (_journalHere == null) SceneChanger.GoToCombatScene();
-        else SceneChanger.GoToCombatStoryScene();
+        if (ShouldShow)
+        {
+            SceneChanger.GoToCombatStoryScene();
+            _journalHere = JournalEntry.GetStoryEntry();
+            ShouldShow = false;
+        }
+        else
+        {
+            SceneChanger.GoToCombatScene();
+        }
     }
 }

@@ -40,7 +40,7 @@ public class SwarmBehaviour : Boss
         GameObject heavyPrefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Swarm/Heavy Swarm Segment");
         for (int i = 0; i < 6; ++i)
         {
-            float angle = 360f / 6 * i;
+            float angle = 360f / 6f * i;
             Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, 2f, transform.position);
             TeleportInOnly.TeleportIn(position);
             GameObject heavySwarmSegment = Instantiate(heavyPrefab, transform, true);

@@ -3,150 +3,486 @@
 		<Title>A New World</Title>
 		<Environment>Desert</Environment>
 		<PartNumber>1</PartNumber>
-		<Text>The land before me �is just as the Necromancer described- blackened, and dying. Even the dry ground seems to creak with hunger, eager to slake its thirst with my blood. There are others here, some of whom I have seen in the distance, whilst others are just voices on the wind. They walk aimlessly like purgatorial souls. Even the familiar is now foreign to me- the sky a deep crimson, lit by the weak glow of three ailing suns, and the air heavy with dread expectation. At night the heavens glitter with the light of a thousand unknown constellations.</Text>
+		<Text>The land before me is just as the Necromancer said- dark and dying. Even the dry ground seems to creak with hunger, eager to slake its thirst with my blood. There are others here. They are vague shapes on the horizon and subtle whispers on the wind. Purgatorial souls - �fearful and wary. If I am to be alone in my journey, then that is the way it must be.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>A New World</Title>
 		<Environment>Desert</Environment>
 		<PartNumber>2</PartNumber>
-		<Text>Though the ground is arid and the air still, this place is not completely devoid of life. The gentle rustle of the breeze is occasionally broken by the coos of vibrant birds and the churrs of spiny insects. What it is they eat I am not sure, for all the plants I have seen are as brittle and cracked as the dry sand they grow in. The few fruit they bear are wizened, and coloured with such evil hues I would not dare to touch them. The wind carries the braying sound of distant creatures and the rotten stench of the dead and dying.</Text>
+		<Text>Sensations come and go, like memories without context. Warm light on my back. The green glow of a sunlit canopy, and dappled colour on the ground where the light breaks through. They match nothing of what I have experienced. Here there are no living trees, no leaf-laden boughs, only dead roots, withered stumps, and stifling heat.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>A New World</Title>
 		<Environment>Desert</Environment>
 		<PartNumber>3</PartNumber>
-		<Text>More unsettling than the blood red sky, the three suns, even the weird magic that grips the world, is the absence of my memory. Since I opened my eyes upon this strange world I have been unable to recall where I have come from or who I was. When I came out of the darkness with the Necromancer it was as if I had been born again, my slate wiped clean. I have not quite forgotten all- my muscles retain their memory, and my instincts are as sharp as this oppressive land allows. I would dearly like to speak to another, to learn more about this world, though I worry that all who wander here will be like me- oblivious ghosts haunting a dead world.</Text>
+		<Text>What was once familiar is now foreign to me - the sky a deep shade of crimson, lit by the weak glow of three ailing suns, and the air heavy with dread expectation. At night the heavens glitter with the light of unknown constellations. I am not sure if I will ever share the Necromancer�s faith, but if the alternative is a life of solitude and fear, well, then I will go wherever she bids.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>A New World</Title>
 		<Environment>Desert</Environment>
 		<PartNumber>4</PartNumber>
-		<Text>Sometimes I have brief sensations, almost memories, but without context. The feeling of warm light on my back, the green glow of a canopy hit by sun beams above, and dapples of colour on the ground where the light breaks through. But these sensations go unpaired, they match nothing �of what I have experienced, and they do not stir up any lost memories of my past. Here there are no living trees, no drooping boughs, only dead roots, withered stumps, and stifling heat. Even the water is tainted- potable only to skeletal creatures that prowl around on long limbs, to vicious insects that prick at my skin, and to the mysterious birds that fly above. All life in this land is cursed, it is a curse that threatens to bring me to my knees with every shallow breath. It weighs upon my will, begging me to give in to darkness. I utter a prayer under my breath to ward off the voice, but the Necromancer was right, there are no gods listening here.</Text>
+		<Text>Though the ground is arid and the air still the desert is not completely devoid of life. The gentle rustle of the breeze is broken by the coo of small birds and the churr of insects. The plants I have seen are as brittle and cracked as the dry sand they grow in. The few fruit they bear are wizened, and coloured with such evil hues I would not dare to touch them.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>A New World</Title>
 		<Environment>Desert</Environment>
 		<PartNumber>5</PartNumber>
-		<Text>It was not chance that brought me here, but it was not fate either. The Necromancer was adamant that I was chosen for this task, that I alone am able to find and awaken the gods, but can I believe her? It seems likely that I am just one of many, doomed to wander, endlessly searching for purpose until the end of my days with the other souls that roam here. The burden on my mind grows with every passing day, sometimes lurking in the back of my mind, sometimes occupying me completely- leaving me unable to focus on anything else. There is something from my past that I do not want to remember. When I try to ignore it I find myself unable, but if try to recall the memory it shrinks back from me, retreating into my subconscious.</Text>
+		<Text>More unsettling than the blood red sky is the loss I feel inside. I cannot shake it. What has the Necromancer hidden from me? I cannot remember anything of where I came, nor how I came to be here. It is like there is a thick fog in my mind, pushing all else beyond the boundaries of my subconscious.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>A New World</Title>
 		<Environment>Desert</Environment>
 		<PartNumber>6</PartNumber>
-		<Text>The cloud in my mind grows with every minute that passes. It boils and crackles like a storm eager to break. I worry that I will lose myself here. The air is thin and I cannot breath easily, when inside it languishes, choking me, forcing me to breathe deeply to expel it from my lungs. It is making me delirious, causing me to jump at every slight sound and flicker of light. Sometimes I hear distant voices, muffled as if speaking from another room. It is as if the walls of the world are thinning, bringing the living and the dead close to each other. Some voices are louder than others, but they go silent as soon as I speak out to them, leaving me in silence once again.</Text>
+		<Text>I have slept well here, for the first time in a long time I know. In my dreams I am in a cavernous room. There are no walls. Far above I can see a stone roof, arching away into the blackness beyond. I let myself lie back and drift in silence on the murky currents of my thoughts.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>A New World</Title>
+		<Environment>Desert</Environment>
+		<PartNumber>7</PartNumber>
+		<Text>I feel my emotions ebb and flow like the tide, and I allow myself to be borne away on their currents. With every swell come glimpses of my past, clearer now. But as every swell passes, so do these memories fade. I cannot hold onto them in this bleak and desolate world.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>A New World</Title>
+		<Environment>Desert</Environment>
+		<PartNumber>8</PartNumber>
+		<Text>It was neither chance nor fate that brought me here. The Necromancer was adamant that I was chosen for this task, that I alone am able to find and awaken the gods, but can I believe her? It seems likely that I am just one of many. Doomed to wander, endlessly searching for purpose until the end of my days.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>A New World</Title>
+		<Environment>Desert</Environment>
+		<PartNumber>9</PartNumber>
+		<Text>My dreams are strange. When I am in them they seem so utterly convincing that I wake with a start. The shift to reality is unwelcome, for in my dreams I am at peace, and in this nightmare world I cannot escape the weight of my grief.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>A New World</Title>
+		<Environment>Desert</Environment>
+		<PartNumber>10</PartNumber>
+		<Text>I am not a man of faith, I do not believe in gods or demons, but I will do what I can to heal the wound inside me. I cannot live with it, and I fear it will only deepen with time. I have already seen so much that does not make sense, so I will find the gates, and perhaps I will find deliverance.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ebb and Flow</Title>
 		<Environment>Mountains</Environment>
 		<PartNumber>1</PartNumber>
-		<Text>Four gates remain, and I am all but spent. To follow the path to open the Gate of Eo has been burdensome enough, but with four more in wait, I am not sure if I am able to go on. I feel only a sense of dread at the journey ahead. Amid the great wildernesses that lie before me there are greater dangers than I have already faced. I have seen the ancient things that rest amongst the wastes of civilisation, and doubtless there things more horrible still. What shall I find in this new desolation of mountains and crevasses? Where before the gentle rolling of sandy dunes stretched out to the distant horizon, here the ground is sharp, steep, and rises to heights high above and depths below, to mountain peaks and abyssal floor.</Text>
+		<Text>Four gates remain, and I am all but spent. To follow the path to open the Gate of Eo has been burdensome enough, but with four more in wait I am not sure if I am able to go on. I feel only dread at the thought journey before me. There is no doubt that greater dangers lie in the wilderness ahead. I just hope that I will be prepared.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ebb and Flow</Title>
 		<Environment>Mountains</Environment>
 		<PartNumber>2</PartNumber>
-		<Text>To the other people of this world I have cried out, but they do not care to listen. Some sprint away from me, others stare wide eyed, with madness and hate burning in their skull-sockets, and others turn to attack me- slack jawed and vacant. It is as if they want to die, but they do not know why. If that is the way it must be in this world, then that is the way it shall be. I am not sure if I share the Necromancer's faith, but if there is any chance at redemption I will take it.</Text>
+		<Text>The gently rolling dunes are gone. Scree clad mountains rise up in their stead. From abyssal floor to mist shrouded peaks they tower. The ground is steep, sharp, and treacherous underfoot. Darkness abounds - the light of the sun veiled by the mountains� long shadows. Beneath me the earth groans and strains, trembling at the forces at work deep below.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ebb and Flow</Title>
 		<Environment>Mountains</Environment>
 		<PartNumber>3</PartNumber>
-		<Text>Day and night, hour after hour, ceaseless in their howling do the mountain winds blow. From the throaty gusts across the wide mountain passes, to the shrill cry through narrow crevasses. The call of the mountain lords echo between every stone and every wall. Dislodged from scree slopes by great black birds, loose rocks thunder to the valley floor below. It is as if the mountains themselves are alive- grey giants moving imperceptibly slowly across the land, speaking to each other through the winds and gales that buffet their peaks. The white woman of my dreams protects me as I sleep, her soothing voice drowning out the winds and chaos outside. If only she could be with me in my waking hours, to guide me as I scramble through crags and caves, and witness the ancient majesty of these black peaks.</Text>
+		<Text>Before coming here I would awaken violently, panting and covered in layer of sweat, white knuckled fists digging bloody nails into my palms. I know this, for I can see the scars in my hands, even if I cannot recall the memories. Instead I wander the hallways of my dreams. The cavernous hall in which I walk broken by monolithic pillar, whos trunks rise unbroken to the ceiling above.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ebb and Flow</Title>
 		<Environment>Mountains</Environment>
 		<PartNumber>4</PartNumber>
-		<Text>I am at odds in Hythinea�s kingdom. It is at once terrifying and peaceful. Constantly I am in fear of slicing my hand open on the razor rocks, and indeed I have cuts and scabs from less fortunate expeditions. But at the same time I have come across many moments of solitude and reflection, times when I can just sit upon the rocks and be alone. The wind is so constant that it drowns out all thoughts, leaving me to focus only on my journey. My instincts take me where I need to be, and my mind is free to wander unburdened by the reality of this world.</Text>
+		<Text>When last I dreamed I saw a distant figure. I called out, but there was no reply. When I approached, it faded into the darkness, only to reappear further away. At first it vexed me, so I approached slowly, only to find it vanish again. Once more I tried, more carefully still, and this time the figure did not vanish. When at last I came upon it, I found a woman. She was clad in ivory robes, and asleep upon the floor. Suddenly I was overcome with unease, for when I looked upon her face, I realised I knew her.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ebb and Flow</Title>
 		<Environment>Mountains</Environment>
 		<PartNumber>5</PartNumber>
-		<Text>Peace and chaos ebb and flow in these lands and in my mind. Just as I go to rest my weary limbs, I am forced into action. When I find myself able to shut my mind to my fears, despair creeps up on me and throws my mind into turmoil. The dread fog in my mind grows larger every day. It seems that whatever past I have escaped from in coming here is catching up with me. It is only a matter of time before it does.</Text>
+		<Text>A shadow lives within me, lurking in the back of my mind. Inside its inky depths is something from my past that I do not want to remember. �It swells to fill every crevice of mind, and I cannot think of anything else. Just as I try to bring the memory into focus it shrinks and retreats into my subconscious.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ebb and Flow</Title>
 		<Environment>Mountains</Environment>
 		<PartNumber>6</PartNumber>
-		<Text>The life force of the world can be felt everywhere. From the slow rise and erratic fall of the winds, to the calamitous echoes of falling rocks. The beating heart of the earth resounds through the landscape. And with each beat I count down my life, one moment at a time. The shadowy claws of dread and despair desperately pull at the sanity I struggle to maintain. The direness of my quest becomes more apparent every day, this is not merely a journey to save a world I do not know, it is also one to save my very soul.</Text>
+		<Text>Hythinea�s kingdom is one of balance. At once terrifying and peaceful. Even the simplest journeys require absolute focus to avoid cutting my hands or twisting my ankle. But moments of peace come too - times when I can just sit upon the rocks and be alone. The wind drowns out the ill thoughts, and my mind is lifted of its burdens.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Ebb and Flow</Title>
+		<Environment>Mountains</Environment>
+		<PartNumber>7</PartNumber>
+		<Text>The shadow in me darkens, roiling like a storm eager to break. I worry that it will consume me. If it does not then this world surely will. Every breath I take languishes deep in my lungs, and the relief that water and food brings is too swiftly replaced with thirst and hunger.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Ebb and Flow</Title>
+		<Environment>Mountains</Environment>
+		<PartNumber>8</PartNumber>
+		<Text>Again I saw the woman in my dreams. This time she came to meet me, her long hair flowing with her robes as she walked. She sat upon her knees, and I saw the floor around us was no longer dark stone, but white marble, and the blackness around us lifted, revealing an infinite expanse of marbled pillars. There we sat together, waiting for� something. But something never came, and I woke confused, with only a greater sense of loss than before.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Ebb and Flow</Title>
+		<Environment>Mountains</Environment>
+		<PartNumber>9</PartNumber>
+		<Text>Flashes of memory come and go, stirring up hope and despair within me. I see unfamiliar faces, solemn, with heads bowed. Like a great beast I feel my past approaching. It is distant now, but draws closer, growing ever more defined, until the full horror of its figure is clear.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Ebb and Flow</Title>
+		<Environment>Mountains</Environment>
+		<PartNumber>10</PartNumber>
+		<Text>The beating heart of the earth resounds through the landscape. And with each beat I count down my life, one moment at a time. The shadowy claws of defeat desperately pull at the sanity I struggle to maintain. The direness of my quest becomes more apparent every day, for it is one that may claim my very soul.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Ebb and Flow</Title>
+		<Environment>Mountains</Environment>
+		<PartNumber>11</PartNumber>
+		<Text>I call her my angel. She will not tell me her true name. Though I recognise her face, it is her eyes that are most familiar to me. They are wide, with green irises, but burdened by the dark rings of sleepless nights. I have spoken to her, well, whispered really, for I am afraid to upset the fragility of the dream. I know she spoke to, but now I cannot recall what it was she said.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Ebb and Flow</Title>
+		<Environment>Mountains</Environment>
+		<PartNumber>12</PartNumber>
+		<Text>Whilst my vision grows dull, my dreams become more vivid, and with them she becomes more alive. I resent her absence when I wake, I think only of her as I walk through twilight lands, and the desire in my heart grows as weariness sets in. I am unaffected by the sting of injury, or the pang of hunger. I survive only to see the day through, so that I might be with her at its end.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Ebb and Flow</Title>
+		<Environment>Mountains</Environment>
+		<PartNumber>13</PartNumber>
+		<Text>Day and night, hour after hour, ceaseless in their howling do the mountain winds blow. From the throaty gusts across the wide mountain passes, to the shrill cry through narrow crevasses. The call of the mountain lords echo between every stone and every wall. I have not seen but one flower growing upon the mountainside, only poisonous vines and rusted metal. How cruel time is to bring beauty to ruin, whilst leaving evil untouched.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Ebb and Flow</Title>
+		<Environment>Mountains</Environment>
+		<PartNumber>14</PartNumber>
+		<Text>Now we spoke more freely, and her words sit firm in my memory. I must know who she is, whether she is a part of my psyche, or just another apparition in this wasted world. I asked her how she knew where we were, how she knew who I was. I asked gently at first, but my curiosity turned to frustration when she would not answer, and as it so easily does, my frustration turned to anger.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Ebb and Flow</Title>
+		<Environment>Mountains</Environment>
+		<PartNumber>15</PartNumber>
+		<Text>She turned her face to hide, but I could see the tears upon her cheek. I knew then, that it did not matter who she was. She has not appeared to me to be my guide, to lead me to my fabled destiny, she is here to be a companion, to give me respite when I sleep and something to live for when my will is spent.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Twilight of the Gods</Title>
 		<Environment>Sea</Environment>
 		<PartNumber>1</PartNumber>
-		<Text>A new land, different to the last in every way, but the heavy sense of dread in the air remains. An endless plain of salty islands, riven by the hot sun into massive islands. Some cracks are so large one could throw a rock from one wall with all their strength, and still it would not reach the other side. But the gate is still here, like a chisel hammered through these disparate lands, binding them to each other. The daytime sun beats down relentlessly, burning my exposed skin. Even the salt seems to sizzle beneath its burning rays. So I am forced to take shelter in the shadowy cracks in the salt, where the maze like walls hide the remains of the ancient sea.</Text>
+		<Text>A new land, different to the last in every way, but the heavy sense of dread in my stomach remains. An endless plain of salty islands - a landscape shattered by the endless beat of the sun. Only in the crevasses between the islands is it cool enough to survive. Some are small, almost hairline fractures, whilst others are so wide that the light of my torch does not reach the other side.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Twilight of the Gods</Title>
 		<Environment>Sea</Environment>
 		<PartNumber>2</PartNumber>
-		<Text>Now that I have seen the temples and monuments that litter the world I see how the Necromancer could keep her faith through these long eons. I did not believe her talk of dead gods and ancient prophecies when I came here, but now that I have experienced the mysteries of this dead world I have no doubt in her words. Or perhaps it is madness that has driven me to think this way. Perhaps none of this is real, a figment of a disturbed mind, after all, I have never seen The Necromancer in the flesh, only heard her whispering in my head.</Text>
+		<Text>There is a curse laid upon this land. It is a curse that threatens to bring me to my knees. It weighs heavy upon my shoulders, begs me to give in to darkness. I utter a prayer under my breath to ward off the voices, but the Necromancer was right, there are no gods listening here.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Twilight of the Gods</Title>
 		<Environment>Sea</Environment>
 		<PartNumber>3</PartNumber>
-		<Text>Perhaps she is right, perhaps the world can be saved. Am I falling for her spell, or are my thoughts still my own? I am changing, I know it, every moment I am different. Will things ever return to how they were, or is this the new balance? I believe her, I believe the world can be saved- I believe I can be saved. I lost something in my previous life, and now it is hidden in the fog in my mind. I do not know if I should dispel the clouds. I am afraid of what I might find. I do not want to know. The gods will save me, they will bring me back.</Text>
+		<Text>The gate is the only constant on my journey. It stands some twenty metres high, constructed of smooth rock with no visible evidence of tool marks. It is as if there is only one gate, existing simultaneously across the five realms, like a nail hammered into layers of wood, binding the world together at a single point.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Twilight of the Gods</Title>
 		<Environment>Sea</Environment>
 		<PartNumber>4</PartNumber>
-		<Text>I cannot imagine the pain she has been through, to have to watch her entire world fade away before her eyes, helpless to do anything but watch. I feel a similar pain deep inside, when I think about it I find my heart rises to my throat and my breathing comes staggered. I see the face of my dream-angel as if she were before me, and the storm in my mind expands greedily. So I breath deep, I look before me and focus on the things that I believe to be real, and it retreats. My breathing stabilises, and the visions fade.</Text>
+		<Text>Sometimes I hear distant voices, muffled as if speaking from another room. It is as if the walls of the world are thinning, bringing the living and the dead close to each other. Some voices are louder than others, but they go silent as soon as I speak out to them, leaving me in silence once again.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>5</PartNumber>
+		<Text>I came across the hull of an ancient boat. Though its mast was broken, and its sail long since carried away by the winds, I could see that it once would have flown across the waves swiftly. The planks of its hull were rotten, and its metal supports warped and rusted, but I could tell that it was once strong and sleek, able to glide atop the water�s surface and weather the heaviest of waves. Even now, shattered, and strewn across the wastes, the beauty of the vessel was clear to me, and I will carry that beauty until the end of my days.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>6</PartNumber>
+		<Text>The daytime sun bears down on me, burning my exposed skin. Even the salt seems to sizzle beneath its rays. So I am forced to walk in the shadows - my eyes accustomed now to the twilight gloom. The maze of salt hides the remains of the ancient sea - �the bones of ancient creatures half buried in the walls, and the bleached wrecks of ships strewn across the seabed.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>7</PartNumber>
+		<Text>When the Necromancer first told me of dead gods and ancient prophecies I thought her mad. Now I am not sure what I believe. Perhaps my hysteria has grown to such heights that I cannot distinguish dream from reality. Or perhaps it is all as it seems. Without evidence either way, I can only have faith in her words.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>8</PartNumber>
+		<Text>I told the angel what the Necromancer told me, and she nodded with a faint smile across her lips. After that we spoke more freely. To me she is still a stranger, I know I have memories of her, but they resist my call. She listens to me, and I her. We talk of things we love and things we lost. It does not matter if she is real, for she is real enough to keep me going.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>9</PartNumber>
+		<Text>My steps falter, and I come to a stop. My path is unclear. I see only a destination that leads to another - markers in the desert, endless but going nowhere. The shadow grows and my hope dwindles. There, deep inside me, there is my goal. I must dispel the clouds, but I am afraid of what I will find. No, I will wait. For now at least. I cannot face it yet.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>10</PartNumber>
+		<Text>Where have the seas gone? Where are the tides that broke on salty shores and flowed around the now bleached corals? Life has vanished, never to return. It leaves a vacuum that cannot be filled. The water has been locked up at the ends of the earth - a memory of the world that was. The oceans are forgotten, the fisherfolk fled, but what remains must go on.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>11</PartNumber>
+		<Text>Once again my feet disobey me. I am stuck, as if chained to the spot, but it is only my mind that holds me. �Go on�, I tell myself but will not listen. �One more step� I say out loud, to no avail. For I know it to be a lie, there are many steps ahead, and for what? To what end am I journeying? The struggle is within me, not out there. Why do I desire so strongly to find the gods I do not believe in?</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>12</PartNumber>
+		<Text>The realisation dawns. The gods are a comfort. I try hard to believe they care about me, that they can fix me, because I do not want to face my demons alone. It is why the Necromancer still believes. But face them I must, before they destroy me.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>13</PartNumber>
+		<Text>Faith is what carries me forward. Not faith in the gods, but faith in myself. It turns my weakness into strength, so that I may see the light that casts the shadow. Though my steps are laboured I can see where my path leads, and so I go on with purpose - to free the gods, The Necromancer, and myself.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>14</PartNumber>
+		<Text>My dreams are no longer calming. My angel is more animate than ever, and it is draining me to my core. I wake feeling both physically and mentally exhausted. One moment she laughs and smiles, the marble floor radiating with soothing light as she does. The next she is on the ground, kicking and screaming with pain and rage, locked in her dream-prison.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>15</PartNumber>
+		<Text>During one of her fits she became suddenly still, contorted on the ground with fists curled and ragged breath. She turned her eyes to me, and I saw pain deep in them. I can do nothing to sooth her, but I would still rather be with her in the chaos of my dreams, than alone and awake in this midnight world.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>16</PartNumber>
+		<Text>She said that something was coming, something terrible, and that I must prepare myself. I tell her I know that she is dying, and I tell her I will come for her. At this she shook her head and wept. The darkness began to close in, and the dream came to an end. When I opened my eyes I did not see an ivory angel, only the dead sky above.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>17</PartNumber>
+		<Text>I can see the sickness growing in her. Her hair has become thin, and her face gaunt. Even her robes have turned an ashen shade of grey. Her beautiful eyes are now sullen and set deep in dark sockets. She stumbles often when we walk together, and I fear that her time draws near. I must escape this terrible place. Even if I cannot save her, I must be with her. I will not let her be alone.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>18</PartNumber>
+		<Text>I hold her in my lap, and I watch her chest rise and fall. We have nothing to say, so we sit are silent. I hold her close. The dream-light is fading, drawing closer around us like a cocoon of darkness. I promise her we are close now, there is not long left. I am not sure if she can hear, but it does not matter, it was said as much for me as it was for her.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>19</PartNumber>
+		<Text>She tried to speak to me last night, but I could not hear her, for she was too far away. I tried to run to her, but I could not get close enough for her to hear. Instead I could see her eyes wide with terror, and her mouth open to scream. Now I could hear her, but it was a muffled scream as if from under water.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Twilight of the Gods</Title>
+		<Environment>Sea</Environment>
+		<PartNumber>20</PartNumber>
+		<Text>She screamed and screamed, the muscles on her atrophied arms tensed and relaxed in spasm. Then I too was screaming on my knees with my head in my heads. It did not end, it just went on, the endless wailing, and the tears. All I wanted to do was to hold her again, to stop her screams. But I could not.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>1</PartNumber>
-		<Text>A terrible sight is before me, a great city in ruins. Buildings that reach far into the heavens above reduced to skeletons of twisted metal, broken glass buried in the ground below, foundations shattered and exposed. There is no life here, no birdsong on the breeze, nothing in the black pools of water in the roads. The trees here are dead, their brittle roots cling to furious earth. How long must it have been for such leviathans to turn to dust, how long since the guards abandoned their posts and the walls left unguarded? And through all that time she has haunted the world. How must it have been to live through those lonely aeons, how could a mind cope through those long years.</Text>
+		<Text>A terrible sight is before me, a great city in ruins. Buildings that reach far into the heavens above now reduced to skeletons of twisted metal, broken glass buried in the ground below, foundations shattered and exposed. There is no life here, no birdsong on the breeze, nothing in the black pools of water in the roads. The trees here are dead, their brittle roots cling to furious earth.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>2</PartNumber>
-		<Text>Terrible have been the ravages of time upon this ancient city. Even now there remain signs of plight- deep and dark craters, munition cases- rusted and spent, and the twisted carcasses of war machines, now long dead. But there are no bones, no bodies, no graves, no markers of human inhabitation to speak of. Everything that once lived has been swept away. It is horrifying to stand here amongst the ruins, a place where light cannot reach. I know that if the Necromancer were to come here she would fall to her knees and weep. This must be why she whispers in the darkness, to shield herself from reality, to allow herself to have hope in a place where hope dies.</Text>
+		<Text>A red glow punches through the darkness. Her eyes stare unblinking at its source, though I cannot make it out in the gloom. �Go� she says. So I do, cradling her light frame in my arms as we walk towards the light. A fountain, made of black stone, containing a pool of glowing red liquid. �Drink� she said, touching her lips gently. I hesitate, then gently lower her to the pool so that she could drink. Just as the liquid touched her lips she fell unconscious, she slipped from my hands, and fell to the floor. The liquid pooled around her chest, and her breathing ceased.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>3</PartNumber>
-		<Text>I do not think I could bear to watch my world fall away before me, to watch as the places and people I knew wither and age and eventually die. To have no one to speak to about such things, and be left with only my unquietable thoughts for company. I know I would fall into a coma, reliving my past again and again. I would watch myself, and wish that I could change the mistakes I had once made, that I could go back and right the wrongs with those who are no longer with me.</Text>
+		<Text>She lay unmoving upon the floor. I tried all I could to bring her back. Then, just as I had given up hope, she jerked awake, spitting the red liquid upon herself. Before I had a chance to say anything, she pointed to the fountain, and to her lips. I shook my head, feeling the tears rolling down my cheeks. Again she pointed to her lips. So again I took her to drink from the fountain. This time I caught her as she went limp, and again I waited for her to wake.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>4</PartNumber>
-		<Text>On my travels I came across the wreck of an ancient boat. Thought its mast was broken, and its sail long since lost, I could see that it once would have flown across the waves swiftly. The planks of its hull were rotten, and its metal supports warped and rusted, but I could tell that it was once strong and sleek, able to glide atop the water�s surface and weather the heaviest of waves. Even now, shattered, and strewn across the wastes, the beauty of the vessel was clear to me, and I will carry that beauty until the end of my days.</Text>
+		<Text>She is silent now, her eyes will not open, she does not move. I would think her dead if it were not for the shallow breathing of her chest. The fervour of past dreams is gone, replaced instead by anxious waiting. I stand in the endless marble room, unable to do anything but watch her rest.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>5</PartNumber>
-		<Text>The loss of love is hard, but it is living in the absence of that love which is harder. To go about your life as before, but now lacking. To return to a once precious place only to find it has changed, it is no longer yours. The world becomes an illusion, a simulation, moving about you and without you. But time heals all, and we can look back with fondness, not regret. We can find new love, love that does not replace the old but allows us to go on, and with it we may remember the old love without sadness. That is what I wish for The Necromancer, that she may find solace in a new world when our quest is over, and not pine for the old. I will stay here, with her, and together we will find a new love.</Text>
+		<Text>Time passes imperceptibly slowly, and I cannot take my eyes from her. Truly this is hell, to watch, and wait, and not know what to do, until the hours of your life have wasted away. I wake slowly now, gazing at the sky and unable to rise. My body has betrayed me, muscles tug feebly at aching tendons. I fear I am losing myself to this world, and to her.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>6</PartNumber>
+		<Text>Waiting, watching, pacing to and fro. Stuck in my dream prison, unable to help the one I love. Forced to watch her pale skin shiver. I can only watch when the spasms strike, her grey face contorted with pain. Yet still she remains asleep. Her eyes will not open. I speak to her as much as I can, but there are times when I cannot muster any words worth saying. Instead I brush her pale hair from her face, and I hold her cold hands in my lap. And despite everything I know, everything I have done, and everything I have seen, I pray for it to be over.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>7</PartNumber>
+		<Text>This has happened before, in another world. The painful wait for remission, and the fear of relapse. Why is my mind making me relive it? Could it be a warning I wonder, a warning to make haste to finish my quest. Or it could just be fever dreams, brought on by the gradual onset of the essence�s affliction.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>8</PartNumber>
+		<Text>I will never forget the pain on her face as she drank, or the pain I felt as I held her, thinking she would never wake again. Eventually she roused from her death sleep. She was calm again, the mania driven from her eyes. She lifted my hand to mine, and kissed my cheek. I carried her away from the vile fountain, and as I did the light began to return.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>9</PartNumber>
+		<Text>Finally things seem to have changed for the better. A warm glow replaces ghostly pallor. Her eyes bright once again, and her smile broad. I rejoiced, and said I thought she was lost. �I�m sorry� she said. I told her not to be sorry, that she could not hold herself to blame. I told her of the things I had remembered since we last spoke- happy memories, places I had been. She nodded as if she recalled them too.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>10</PartNumber>
+		<Text>How long has it been since the guards abandoned their posts. Was it the firey bellow of cannons that brought down the city walls or the inescapable force of time? Through it all The Necromancer has haunted the world. She seen sickness take hold of her world without the respite of recovery.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>11</PartNumber>
+		<Text>Fierce have been the ravages of time upon this ancient city. Even now there remain signs of plight- dark craters, munition cases- rusted and spent, and the twisted carcasses of war machines, now long dead. But there are no bones, no bodies, no graves, no markers of human inhabitation to speak of.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>12</PartNumber>
+		<Text>Today the angel came to me. At first I thought it a dream, that I had been struck unconscious in my journey. No, she was there, a vision still, but one that stood with me in the waking world. She looked better, her features full and no longer sunken, and her smile had returned. She was not near enough to speak, so I waved. For a moment I thought she could not see me, but then she waved back. Then as suddenly as it had begun, the vision ended.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>13</PartNumber>
+		<Text>Everything that once lived here has been swept away. It is good the Necromancer is not with me. If she were to lay her eyes upon the ruin that has come to this place she would fall to her knees and weep. Perhaps that is why she whispers to me from the darkness - to shield herself from reality, to allow herself to have hope in a place where hope dies.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>14</PartNumber>
+		<Text>I cannot imagine the things The Necromancer has had to endure. Sometimes I think my burden insignificant compared to hers - �after all what is one life against hundreds? No, that is not fair. I shall not trivialise my own grief, they cannot be compared. The more I stay here, the more I see what has been lost. When this is all over I will return to help her, if I can.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>15</PartNumber>
+		<Text>The pain inside grows unbearable, the shadow grows and presses against my skull. I feel my breathing become shallow and my heart rise into my throat. Panic, my vision tunnels, and I collapse to the floor. Then before me I see her, my angel, her hand upon my forehead. Memories explode within me, I see her pale face, flowers, white sheets. �Breathe� she says. I close my eyes and breath deep, and slowly the dark thoughts fade away.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>16</PartNumber>
+		<Text>I do not think I could bear to watch my world fall away before me, to watch as the places and people I knew wither and age and eventually die. To have no one to speak to about such things, and be left with only my unquietable thoughts for company, reliving my past again and again. I would watch myself, and wish that I could change the mistakes I had once made, that I could go back and right the wrongs with those who are no longer with me.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>17</PartNumber>
+		<Text>Another vision. I saw her from the corner of my eye, she sat at the top of some steps. When I reached her I found her looking at the base of a broken statue. Atop the statues head was a crown, and in his arms a bouquet of flowers. Clearly this man was once well loved by his people. She pointed at the inscription at its base, but it was illegible, the raised stone letters worn away by the wind. None would ever know his name.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>18</PartNumber>
+		<Text>I remember a story I heard once, a long time ago. An old man lives in a rickety house. One day a child throws a rock at his window and it shatters. He cries, for he has not the strength to repair it, nor the money to pay another. But he moves on, after all, he has lived through worse. The wind blows through the hole, knocking over his belongings and making an awful din. Rain too comes through the broken window, and ruins his floor. Soon enough the season grows cold, and the snow builds up. But now the window cannot be repaired - the frame is too warped. And so sleeps in the deepening cold, until one day he does not wake up.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>19</PartNumber>
+		<Text>Time heals all, and we can look back with fondness, not regret. We can find new love, love that does not replace the old but allows us to go on, and with it we may remember the old love without sadness. That is what I wish for The Necromancer, that she may find solace in a new world when our quest is over, and not pine for the old.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>20</PartNumber>
+		<Text>I saw her once again. She sat outside a ruined building reclining on a small drift of sand. So I sat with her, and I asked her how she had escaped her dream prison, but she only gave me a knowing smile and changed the conversation. I do not belong to this world, yet I am growing comfortable here. I am afraid that if I leave I will lose her.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>21</PartNumber>
+		<Text>I asked her what would become of her when I return home, but she only smiled and held her fingers to her lips. I will not ask again. I told her I could not lose her, that she must stay, but as soon as I finished speaking I was struck by a flash of painful memories. I awoke with a jolt, confused by the bitter-sweet dream. It is not long until the journey is over.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>22</PartNumber>
+		<Text>I have tried to listen, truly, I have. Still I cannot hear the gods, only the whisper of sand and the howl of wind. I want to hear them, even for a moment, to know they are there. Maybe The Necromancer, with her mystic ways, can hear what I cannot. The world does not feel any different to me.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>23</PartNumber>
+		<Text>Do you see it when you sleep? Can you hear it in silent places? Do you catch glimpses of it when you blink, as if engraved on the lids of your eyes? It is there, everywhere, in all places, and in all times. Do you not know of what I speak? It is the cold in the pit of your stomach at night, the black thoughts when you are alone. It is the dread, the terrible thought that things will not always be. It is the fear that gives life brilliance. I feel it always, with every waking moment and every darkened sleep. I know you feel it too, we all do.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The End of All Things</Title>
 		<Environment>Wasteland</Environment>
 		<PartNumber>1</PartNumber>
-		<Text>There are no voices in my head, I have tried to listen for the gods, but they are not there. The Necromancer promised she would save me, but it is clear now she does not know what to save me from. She is not concerned with my plight, she is concerned only for herself, throughout the years her journey to save the world has clearly turned her to madness. Now the truth wells up inside me- there are no gods, they are dead, leaving behind only whatever corruption was in their souls. Still I will go on, I will find the final tomb, if only to assure myself of this new truth, but also to try and bring the Necromancer back from her insanity.</Text>
+		<Text>Here I stand, in the Eternal Wasteland, at the end of all things, searching for something I cannot find, running from something I cannot remember. It is fitting that, if I should die, I should die here, in this bleak landscape, devoid of memory, no evidence of the past, and no future to speak of. At least it would be a peaceful death, with no-one to see, and no-one to mourn.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The End of All Things</Title>
 		<Environment>Wasteland</Environment>
 		<PartNumber>2</PartNumber>
+		<Text>Though at least a thousand years have passed the scars of the war remain untouched here. The earth has died, and cannot harbour life. Canyons criss cross the landscape, and within them so do the tracks of ancient war machines. The spirits of the dead linger, striking the ground as bolts of lightning, reminding the living that this world is not theirs.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The End of All Things</Title>
+		<Environment>Wasteland</Environment>
+		<PartNumber>3</PartNumber>
+		<Text>I have seen the gods. I know them to be real. Yet I still cannot believe in them. I simply cannot accept that they can do anything to help me. Indeed they might be able to change this world, and in turn help the Necromancer, but they cannot help me. I will not hide from reality any longer. I have looked for comfort in faith, I have tried to ignore my pain, but the only way to be rid of it is to confront it.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The End of All Things</Title>
+		<Environment>Wasteland</Environment>
+		<PartNumber>4</PartNumber>
+		<Text>I admit to myself, I have been selfish. I am not looking for the tombs because I wish to help the Necromancer or her world. I do it because I want to be free of my own suffering. At least now I can empathise with her, though she may be blinded by her faith. Together though, we can work together, and perhaps we both can summon the courage to face down our demons.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The End of All Things</Title>
+		<Environment>Wasteland</Environment>
+		<PartNumber>5</PartNumber>
 		<Text>The gods are gone, fled from this world. The vaults of their tombs are empty, their souls lost to this world. The ingenuity of man has failed. It is a sad truth, impossible to bear, yet it is the truth. It is a truth born upon a wind that lifts the weight from my shoulders and draws the despair from my lungs. It provides me with a certainty, where before there was only uncertainty. This dark, dim, and despairing world is doomed. There is nothing left to do, but accept our fate.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The End of All Things</Title>
 		<Environment>Wasteland</Environment>
-		<PartNumber>3</PartNumber>
-		<Text>There is no saving breath that will bring us back from the beyond. The suns will fade and shrink, and the land will freeze beneath the starless skies, and all the beasts upon the earth will huddle together for warmth as they take their final breaths on this world. The Necromancer cannot accept this fact, and therein lies the root of her madness. I pity her, for I know her struggle. I do not know where she will go when the last gate is opened. I do not think she will ever be whole again. Whoever she was all those years ago is not who she is now. In some ways I envy her blind belief, with it I could ignore the revelation that is coming, but I cannot make myself blind, instead I will have to face the truth.</Text>
+		<PartNumber>6</PartNumber>
+		<Text>There is nothing that can bring us back from the beyond. The suns will fade and shrink, and the land will freeze beneath the starless skies, and all the beasts upon the earth will huddle together for warmth as they take their final breaths on this world. The Necromancer cannot accept this fact, and therein lies the root of her madness.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The End of All Things</Title>
 		<Environment>Wasteland</Environment>
-		<PartNumber>4</PartNumber>
-		<Text>I can hear in her voice that she suffers still, she has seen the destruction of her home, her world, and her people. She forfeited her life because she believed that one day the world would be cleansed of its corruption. That belief grew stronger with time, growing ever less rational, consuming her. But she had to believe it, because only by the saving the world could her life be saved. We all are prey to these beliefs, we must hold fast to the idea that dark days precede the light, because without it we would be paralysed in hopelessness. It is this belief that allows us to change the course of things, allows us to overcome horror and sorrow, and allows us to live.</Text>
+		<PartNumber>7</PartNumber>
+		<Text>I pity her, for I know her struggle. I do not know where she will go when the last gate is opened. I do not think she will ever be whole again. Whoever she was all those years ago is not who she is now. In some ways I envy her blind belief, with it I could ignore the revelation that is coming, but I cannot make myself blind, instead I will have to face the truth.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The End of All Things</Title>
+		<Environment>Wasteland</Environment>
+		<PartNumber>8</PartNumber>
+		<Text>I can hear in her voice that her suffering grows. With every passing moment her faith is tested, the doubt grows in her mind. She has seen the destruction of her home, her world, and her people. She forfeited her life because she believed that one day the world would be cleansed of its corruption. That belief grew stronger with time, growing ever less rational, consuming her. But she had to believe it, because only by the saving the world could her life be saved.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The End of All Things</Title>
+		<Environment>Wasteland</Environment>
+		<PartNumber>9</PartNumber>
+		<Text>We all are prey to irrationality, we must hold fast to the belief that our dark days precede the light. Without it we would be paralysed in hopelessness. Only through this belief are we able to change the course of our lives. We can push against the currents of reality rather than allow ourselves to be swept away. To give in is not in our nature, to lay down our arms at the feet of our aggressors rather than fight for what we hold dear. Our belief allows us to overcome horror and sorrow, and go on striving for better days, even when we ourselves may not see them.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The End of All Things</Title>
+		<Environment>Wasteland</Environment>
+		<PartNumber>10</PartNumber>
+		<Text>When the time comes, as it does for all of us, when the dissonance in our mind comes to a crescendo, our lives change irreversibly. �Either we succumb to the alluring voice of denial, or we accept the harsh voice of reality.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The End of All Things</Title>
+		<Environment>Wasteland</Environment>
+		<PartNumber>11</PartNumber>
+		<Text>We shared another quiet night. She looked well again, though there was a sadness in her voice that couldn�t be displaced. She asked me about the world, but I did not wish to tell her about it. I sensed that her fate is somehow related to the fate of the gods. Instead I told her that the essence was retreating, that it would not be long before I opened the final gate. I expected her to be elated, to beam and throw her arms around me. Instead she smiled weakly, and became quiet. I did not speak further. I did not know what to say, so I let the silence say it for me. We held hands, and when the time came to wake, I kissed her softly. As I left the dream world she held her hand out to me, and said she loved me.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The End of All Things</Title>
+		<Environment>Wasteland</Environment>
+		<PartNumber>12</PartNumber>
+		<Text>Now I am alone. When I fell asleep she was gone. I called out for her, but there was no answer. I ran through the endless corridors of my mind to find her, but there was nothing but emptiness. I knew she would not return. I had not opened the gates in time, and now she was gone forever. I sat in my dream world, overwhelmed with emotion. Despair and relief washed over me in equal measures. She would not be in pain any longer, but I do not think I can go on without her. The world is so bleak, so harsh, that without hope I cannot hope to overcome it. Despite our short time together, I will not be able to forget her, I know she will be with me until my last breath.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The End of All Things</Title>
+		<Environment>Wasteland</Environment>
+		<PartNumber>13</PartNumber>
+		<Text>The fog has cleared, and the memories return. The woman, the angel of my dreams, she was real once, a long time ago. I know this, because I was there with her at the end. She believed we would meet again, beyond the veil, she believed it because she had to believe it. Because it was the only thing that would ease the truth of her passing, we knew that nothing could be done for either of us. I am not sure if I believed that we would meet again, but the lie was so sweet. We used the lie to spend our last times in peace and not fear. To pretend to each other as if we were going on a long journey was far easier than to speak a final farewell.</Text>
 	</StoryPart>
 </Wanderer>

@@ -1,4 +1,5 @@
-﻿using Game.Gear;
+﻿using System.Globalization;
+using Game.Gear;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
@@ -54,11 +55,11 @@ public class WeaponDetailController : MonoBehaviour
     {
         WeaponAttributes attr = weapon.WeaponAttributes;
         _nameText.SetText(weapon.GetDisplayName());
-        _dpsText.SetText(attr.DPS().Round(1).ToString());
+        _dpsText.SetText(attr.DPS().Round(1).ToString(CultureInfo.InvariantCulture));
         _typeText.SetText(weapon.WeaponAttributes.GetWeaponTypeDescription());
         SetInscriptionText(weapon);
         SetConditionText();
-        SetAttibuteText(attr);
+        SetAttributeText(attr);
     }
 
     private void SetInscriptionText(Weapon weapon)
@@ -76,7 +77,7 @@ public class WeaponDetailController : MonoBehaviour
         _inscriptionEffectText.SetText(inscriptionEffectText == "" ? "-" : inscriptionEffectText);
     }
 
-    private void SetAttibuteText(WeaponAttributes attr)
+    private void SetAttributeText(WeaponAttributes attr)
     {
         if (!IsDetailed) return;
         _damageText.SetText(attr.Val(AttributeType.Damage).Round(1) + " Damage");
@@ -109,9 +110,9 @@ public class WeaponDetailController : MonoBehaviour
         _shatterObject.SetActive(shatterChance != 0);
         _burnObject.SetActive(burnChance != 0);
         _sicknessObject.SetActive(sicknessChance != 0);
-        _shatterText.SetText(shatterChance == 0 ? "" : "+" + shatterChance + "% Shatter");
-        _burnText.SetText(burnChance == 0 ? "" : "+" + burnChance + "% Burn");
-        _sicknessText.SetText(sicknessChance == 0 ? "" : "+" + sicknessChance + "% Sickness");
+        _shatterText.SetText(shatterChance == 0 ? "" : shatterChance + " Shatter");
+        _burnText.SetText(burnChance == 0 ? "" : burnChance + " Burn");
+        _sicknessText.SetText(sicknessChance == 0 ? "" : sicknessChance + " Sickness");
     }
 
     public void UpdateWeaponInfo()
@@ -133,54 +134,9 @@ public class WeaponDetailController : MonoBehaviour
         SetConditionText();
     }
 
-    public void Hide()
-    {
-        _durabilityBar.SetWeapon(null);
-    }
-
     private void UpdateDurabilityParticles()
     {
         _durabilityBar.SetWeapon(_weapon);
-    }
-
-    public void CompareTo(Weapon weapon)
-    {
-        _damageText.SetText(GetAttributePrefix(weapon, AttributeType.Damage, " Damage"));
-        _fireRateText.SetText(GetAttributePrefix(weapon, AttributeType.FireRate, " Fire Rate"));
-        _accuracyText.SetText(GetAttributePrefix(weapon, AttributeType.Accuracy, "% Accuracy"));
-        _reloadSpeedText.SetText(GetAttributePrefix(weapon, AttributeType.ReloadSpeed, "s Reload "));
-        _recoilText.SetText(GetAttributePrefix(weapon, AttributeType.Recoil, "% Handling"));
-        _capacityText.SetText(GetAttributePrefix(weapon, AttributeType.Capacity, " Capacity"));
-    }
-
-    private string GetAttributePrefix(Weapon equipped, AttributeType attribute, string displayText)
-    {
-        float equippedValue = equipped.GetAttributeValue(attribute);
-        float compareValue = _weapon.GetAttributeValue(attribute);
-
-        if (attribute == AttributeType.Accuracy)
-        {
-            equippedValue *= 100;
-            compareValue *= 100;
-        }
-
-        if (attribute == AttributeType.Capacity)
-        {
-            equippedValue = Mathf.FloorToInt(equippedValue);
-            compareValue = Mathf.FloorToInt(compareValue);
-        }
-        else
-        {
-            equippedValue = equippedValue.Round(1);
-            compareValue = compareValue.Round(1);
-        }
-
-        float difference = compareValue - equippedValue;
-        difference = difference.Round(1);
-        string differenceString = difference < 0 ? "-" + difference : "+" + difference;
-
-        string prefixString = compareValue + displayText + " (" + differenceString + ")";
-        return prefixString;
     }
 
     public RectTransform DurabilityRect()

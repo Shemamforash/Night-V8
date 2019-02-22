@@ -2,6 +2,7 @@
 using System.Collections;
 using DG.Tweening;
 using Game.Combat.Generation;
+using Game.Exploration.Environment;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Input;
@@ -33,7 +34,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             }
         }
 
-        private static void RegisterMenu(Menu t)
+        public static void RegisterMenu(Menu t)
         {
             MenuState menu = new MenuState(States, t.name, t);
             if (!t.gameObject.activeInHierarchy)
@@ -118,5 +119,6 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         public void OnDoubleTap(InputAxis axis, float direction)
         {
         }
+
     }
 }

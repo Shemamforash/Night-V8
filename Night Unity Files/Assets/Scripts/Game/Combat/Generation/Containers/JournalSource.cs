@@ -30,7 +30,7 @@ public class JournalSource : ContainerController
         _read = true;
         _journalEntry.Unlock();
         CombatJournalController.ShowJournal(_journalEntry);
-        CombatManager.GetCurrentRegion().ReadJournal = true;
+        CombatManager.GetCurrentRegion().JournalIsHere = false;
     }
 
     protected override string GetLogText() => null;

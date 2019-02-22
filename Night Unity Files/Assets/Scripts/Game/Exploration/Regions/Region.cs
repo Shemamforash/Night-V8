@@ -41,7 +41,7 @@ namespace Game.Exploration.Regions
         public Player CharacterHere;
         public Vector2? RadianceStonePosition;
         public string Name;
-        public bool MonumentUsed, ShouldGenerateEncounter, FountainVisited, IsWeaponHere = true, RitesRemain = true, ReadJournal = true;
+        public bool MonumentUsed, ShouldGenerateEncounter, FountainVisited, IsWeaponHere = true, RitesRemain = true, JournalIsHere;
         public int RegionID, WaterSourceCount, FoodSourceCount, ResourceSourceCount;
 
         public Region() : base(Vector2.zero)
@@ -150,7 +150,7 @@ namespace Game.Exploration.Regions
             region.WaterSourceCount = doc.IntFromNode("WaterSourceCount");
             region.FoodSourceCount = doc.IntFromNode("FoodSourceCount");
             region.ResourceSourceCount = doc.IntFromNode("ResourceSourceCount");
-            region.ReadJournal = doc.BoolFromNode("ReadJournal");
+            region.JournalIsHere = doc.BoolFromNode("JournalIsHere");
             region.MonumentUsed = doc.BoolFromNode("MonumentUsed");
             region._remainingTimeToGenerateResource = doc.IntFromNode("ClaimRemaining");
             region._claimQuantity = doc.IntFromNode("ClaimQuantity");
@@ -183,7 +183,7 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("WaterSourceCount", WaterSourceCount);
             regionNode.CreateChild("FoodSourceCount", FoodSourceCount);
             regionNode.CreateChild("ResourceSourceCount", ResourceSourceCount);
-            regionNode.CreateChild("ReadJournal", ReadJournal);
+            regionNode.CreateChild("JournalIsHere", JournalIsHere);
             regionNode.CreateChild("MonumentUsed", MonumentUsed);
             regionNode.CreateChild("ClaimRemaining", _remainingTimeToGenerateResource);
             regionNode.CreateChild("ClaimQuantity", _claimQuantity);

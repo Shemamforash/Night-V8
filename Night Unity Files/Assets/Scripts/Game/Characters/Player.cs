@@ -166,7 +166,7 @@ namespace Game.Characters
             TryUnlockCharacterSkill(true);
         }
 
-        private const int CharacterSkillOneTarget = 5, CharacterSkillTwoTarget = 10, WeaponSkillOneTarget = 100, WeaponSkillTwoTarget = 300;
+        private const int CharacterSkillOneTarget = 2, CharacterSkillTwoTarget = 4, WeaponSkillOneTarget = 50, WeaponSkillTwoTarget = 150;
 
         private void TryUnlockCharacterSkill(bool showScreen)
         {

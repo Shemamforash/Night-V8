@@ -15,7 +15,7 @@ public class DurabilityBarController : MonoBehaviour
     private bool _forceUpdate;
     private float _lastPixelWidth;
     private const float AbsoluteMaxDurability = ((int) ItemQuality.Radiant + 1) * 10;
-    private const float WorldWidthCoefficient = 0.00502f;
+    private const float WorldWidthCoefficient = 0.004367f;
 
     private readonly List<GameObject> _leftMarkers = new List<GameObject>();
     private readonly List<GameObject> _rightMarkers = new List<GameObject>();

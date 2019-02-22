@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
@@ -12,28 +13,19 @@ using UnityEngine;
 
 public class MainSwarmSegmentBehaviour : CanTakeDamage
 {
-    private float _fireCounter;
-    private static float _fireTimer = 2f;
-    private float _contractTimer;
     private bool _contracting;
-    private float _burstForce;
     private static GameObject[] _swarmPrefabs;
-    private float _burstTimer = 10f;
     private Orbit _orbit;
-    private float _spawnTimer;
     private float _childSpawnTimer;
-    private float _modifiedChildSpawnTimer = 1;
-    private const float BaseChildSpawnTimer = 2f;
+    private const float BaseChildSpawnTimer = 1.5f;
     private const float ChildSpawnDecayRate = 0.99f;
     private const int InitialSwarmCount = 20;
-    private const float FireTimerDecay = 0.95f;
+    private bool _canFire, _canBurst, _canContract;
 
     protected override void Awake()
     {
         base.Awake();
         _orbit = gameObject.AddComponent<Orbit>();
-        _fireCounter = Random.Range(_fireTimer, _fireTimer + 2);
-        _contractTimer = Random.Range(8f, 12f);
         int initialHealth = WorldState.ScaleValue(1000);
         HealthController.SetInitialHealth(initialHealth, this);
         ArmourController.AutoGenerateArmour();
@@ -46,6 +38,10 @@ public class MainSwarmSegmentBehaviour : CanTakeDamage
     {
         for (int i = 0; i < InitialSwarmCount; ++i) SpawnChild();
         _orbit.Initialise(PlayerCombat.Instance.transform, GetComponent<Rigidbody2D>().AddForce, 0.25f, 1.5f, 2.5f);
+        StartCoroutine(StartSpawnChildBehaviour());
+        StartCoroutine(StartFireBehaviour());
+        StartCoroutine(StartContractBehaviour());
+        StartCoroutine(StartBurstBehaviour());
     }
 
     public override void Kill()
@@ -60,26 +56,41 @@ public class MainSwarmSegmentBehaviour : CanTakeDamage
         SwarmBehaviour.Instance().Kill();
     }
 
-    public void Update()
+    protected override void TakeDamage(int damage, Vector2 direction)
     {
-        UpdateFireCounter();
-        UpdateContractTimer();
-        UpdateBurstCounter();
-        UpdateSpawnChildTimer();
-        if (!_contracting) _burstForce = Mathf.PerlinNoise(Time.timeSinceLevelLoad, 0f);
-        for (int i = SwarmSegmentBehaviour.Active.Count - 1; i >= 0; --i)
-            SwarmSegmentBehaviour.Active[i].UpdateSection(_burstForce * 1.3f - 0.3f);
+        float normalisedHealthBefore = HealthController.GetNormalisedHealthValue();
+        base.TakeDamage(damage, direction);
+        float normalisedHealthAfter = HealthController.GetNormalisedHealthValue();
+        if (normalisedHealthBefore > 0.8f && normalisedHealthAfter <= 0.8f) _canFire = true;
+        if (normalisedHealthBefore > 0.6f && normalisedHealthAfter <= 0.6f) _canBurst = true;
+        if (normalisedHealthBefore > 0.4f && normalisedHealthAfter <= 0.4f) _canContract = true;
     }
 
-    private void UpdateSpawnChildTimer()
+    public void Update()
     {
-        if (SwarmSegmentBehaviour.Active.Count > 100) return;
-        _childSpawnTimer -= Time.deltaTime;
-        if (_childSpawnTimer > 0f) return;
-        _childSpawnTimer = BaseChildSpawnTimer * _modifiedChildSpawnTimer;
-        _modifiedChildSpawnTimer *= ChildSpawnDecayRate;
-        if (_modifiedChildSpawnTimer < 1f) _modifiedChildSpawnTimer = 1f;
-        SpawnChild();
+        if (!CombatManager.IsCombatActive()) return;
+        for (int i = SwarmSegmentBehaviour.Active.Count - 1; i >= 0; --i)
+            SwarmSegmentBehaviour.Active[i].UpdateSection();
+    }
+
+    private IEnumerator StartSpawnChildBehaviour()
+    {
+        float spawnTimeModifier = 2f;
+        while (true)
+        {
+            if (CombatManager.IsCombatActive() && SwarmSegmentBehaviour.Active.Count < 100)
+            {
+                float time = BaseChildSpawnTimer * spawnTimeModifier;
+                spawnTimeModifier *= ChildSpawnDecayRate;
+                if (spawnTimeModifier < 0.5f) spawnTimeModifier = 0.5f;
+                SpawnChild();
+                yield return new WaitForSeconds(time);
+            }
+            else
+            {
+                yield return null;
+            }
+        }
     }
 
     private void SpawnChild()
@@ -89,82 +100,73 @@ public class MainSwarmSegmentBehaviour : CanTakeDamage
         swarm.SetSwarmParent(SwarmBehaviour.Instance());
     }
 
-    private void UpdateFireCounter()
+    private IEnumerator StartFireBehaviour()
     {
-        if (_fireCounter < 0f) return;
-        _fireCounter -= Time.deltaTime;
-        if (_fireCounter > 0f) return;
-        _fireTimer *= FireTimerDecay;
-        if (_fireTimer < 1f) _fireTimer = 1f;
-        _fireCounter = Random.Range(_fireTimer, _fireTimer * 2);
-        if (SwarmSegmentBehaviour.Active.Count == 0) return;
-        SwarmSegmentBehaviour swarmSegment = SwarmSegmentBehaviour.Active[0];
-        swarmSegment.StartSeeking();
-    }
-
-    private static int SectionCount() => SwarmBehaviour.Instance().Sections.Count;
-
-    private void UpdateBurstCounter()
-    {
-        if (_burstTimer < 0f) return;
-        _burstTimer -= Time.deltaTime;
-        if (_burstTimer > 0f) return;
-        SwarmSegmentBehaviour.Active.ForEach(s => s.StartBurst());
-        Sequence sequence = DOTween.Sequence();
-        sequence.AppendInterval(4f);
-        sequence.AppendCallback(() => _burstTimer = 10);
-    }
-
-    private void UpdateContractTimer()
-    {
-        if (_contractTimer < 0f) return;
-        _contractTimer -= Time.deltaTime;
-        if (_contractTimer > 0f) return;
-        _contractTimer = Random.Range(8f, 12f);
-        _contracting = true;
-        Sequence sequence = DOTween.Sequence();
-        sequence.Append(DOTween.To(() => _burstForce, f => _burstForce = f, -1f, 1f).SetEase(Ease.OutBounce));
-        sequence.AppendCallback(() =>
+        while (true)
         {
-            float angleInterval = 360 / 3f;
-            for (float angle = 0f; angle < 360f; angle += angleInterval)
+            if (CombatManager.IsCombatActive() && _canFire && SwarmSegmentBehaviour.Active.Count > 0)
             {
-                Vector3 direction = AdvancedMaths.CalculatePointOnCircle(angle, 1, Vector2.zero);
-                MaelstromShotBehaviour.Create(direction, transform.position + direction * 0.5f, 3f, false);
+                SwarmSegmentBehaviour swarmSegment = SwarmSegmentBehaviour.Active[0];
+                swarmSegment.StartSeeking();
+                float time = HealthController.GetNormalisedHealthValue() + 0.5f;
+                yield return new WaitForSeconds(time);
             }
-
-            _contracting = false;
-        });
-    }
-
-    private void UpdateSpawnTimer()
-    {
-        if (SwarmSegmentBehaviour.Active.Count > 100) return;
-
-        List<CanTakeDamage> enemies = CombatManager.Enemies();
-        enemies.RemoveAll(e => e is SwarmSegmentBehaviour);
-        if (enemies.Count > 10) return;
-        if (_spawnTimer < 0f)
-        {
-            float spawnTime = 12 - SwarmSegmentBehaviour.Active.Count / 10f;
-            _spawnTimer = Random.Range(spawnTime * 0.75f, spawnTime * 1.25f);
-            switch (Random.Range(0, 4))
+            else
             {
-                case 0:
-                    CombatManager.SpawnEnemy(EnemyType.Shadow, transform.position);
-                    break;
-                case 1:
-                    CombatManager.SpawnEnemy(EnemyType.Ghast, transform.position);
-                    break;
-                case 2:
-                    CombatManager.SpawnEnemy(EnemyType.Ghoul, transform.position);
-                    break;
-                case 3:
-                    CombatManager.SpawnEnemy(EnemyType.Revenant, transform.position);
-                    break;
+                yield return null;
             }
         }
+    }
 
-        _spawnTimer -= Time.deltaTime;
+    private IEnumerator StartBurstBehaviour()
+    {
+        while (true)
+        {
+            if (CombatManager.IsCombatActive() && _canBurst)
+            {
+                if (!_canBurst) yield return null;
+                SwarmSegmentBehaviour.Active.ForEach(s => s.StartBurst());
+                yield return DOTween.To(() => RadiusModifier, f => RadiusModifier = f, 4f, 1f).SetEase(Ease.InExpo).WaitForCompletion();
+                SwarmSegmentBehaviour.Active.ForEach(s => s.Detonate());
+                yield return new WaitForSeconds(1.5f);
+                yield return DOTween.To(() => RadiusModifier, f => RadiusModifier = f, 1f, 0.5f).SetEase(Ease.InExpo).WaitForCompletion();
+                SwarmSegmentBehaviour.Active.ForEach(s => s.EndBurst());
+                yield return new WaitForSeconds(14);
+            }
+            else
+            {
+                yield return null;
+            }
+        }
+    }
+
+    public static float RadiusModifier = 1f;
+
+    private IEnumerator StartContractBehaviour()
+    {
+        while (true)
+        {
+            if (CombatManager.IsCombatActive() && _canContract)
+            {
+                _contracting = true;
+                yield return DOTween.To(() => RadiusModifier, f => RadiusModifier = f, 0.1f, 1f).SetEase(Ease.InExpo).WaitForCompletion();
+                yield return new WaitForSeconds(0.5f);
+                float angleInterval = 360 / 3f;
+                for (float angle = 0f; angle < 360f; angle += angleInterval)
+                {
+                    Vector3 direction = AdvancedMaths.CalculatePointOnCircle(angle, 1, Vector2.zero);
+                    MaelstromShotBehaviour.Create(direction, transform.position + direction * 0.5f, 3f, false);
+                }
+
+                yield return new WaitForSeconds(0.2f);
+                yield return DOTween.To(() => RadiusModifier, f => RadiusModifier = f, 1f, 0.5f).SetEase(Ease.OutBack).WaitForCompletion();
+                _contracting = false;
+                yield return new WaitForSeconds(Random.Range(3f, 5f));
+            }
+            else
+            {
+                yield return null;
+            }
+        }
     }
 }

@@ -59,7 +59,7 @@ public class HeavySwarmSegmentBehaviour : BossSectionHealthController
     protected void FixedUpdate()
     {
         Vector2 parentPosition = SwarmBehaviour.Instance().transform.position;
-        float angle = (Time.timeSinceLevelLoad + _angleOffset) * 10;
+        float angle = Time.timeSinceLevelLoad * 10 + _angleOffset;
         Vector3 targetPosition = AdvancedMaths.CalculatePointOnCircle(angle, OrbitRadius, parentPosition);
         _rigidBody.MovePosition(targetPosition);
     }

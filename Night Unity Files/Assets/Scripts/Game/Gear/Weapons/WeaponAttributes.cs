@@ -6,6 +6,7 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
+using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
@@ -130,31 +131,21 @@ namespace Game.Gear.Weapons
             return Description;
         }
 
-        public float CalculateShatterChance()
+        private float CalculateConditionChance(AttributeType condition)
         {
-            float weaponShatterChance = Val(AttributeType.Shatter) * 100;
-            float characterShatterChance = ((Player) _weapon.EquippedCharacter).Attributes.Val(AttributeType.Shatter);
-            float totalChance = weaponShatterChance + characterShatterChance;
+            float weaponChance = Val(condition);
+            float characterChance = 0;
+            if (_weapon.EquippedCharacter is Player player) characterChance += player.Attributes.Val(condition);
+            float totalChance = weaponChance + characterChance;
+            totalChance *= 100;
             totalChance = totalChance.Round(2);
             return totalChance;
         }
 
-        public float CalculateBurnChance()
-        {
-            float weaponBurnChance = Val(AttributeType.Burn) * 100;
-            float characterBurnChance = ((Player) _weapon.EquippedCharacter).Attributes.Val(AttributeType.Burn);
-            float totalChance = weaponBurnChance + characterBurnChance;
-            totalChance = totalChance.Round(2);
-            return totalChance;
-        }
+        public float CalculateShatterChance() => CalculateConditionChance(AttributeType.Shatter);
 
-        public float CalculateSicknessChance()
-        {
-            float weaponSicknessChance = Val(AttributeType.Sickness) * 100;
-            float characterSicknessChance = ((Player) _weapon.EquippedCharacter).Attributes.Val(AttributeType.Sickness);
-            float totalChance = weaponSicknessChance + characterSicknessChance;
-            totalChance = totalChance.Round(2);
-            return totalChance;
-        }
+        public float CalculateBurnChance() => CalculateConditionChance(AttributeType.Burn);
+
+        public float CalculateSicknessChance() => CalculateConditionChance(AttributeType.Sickness);
     }
 }

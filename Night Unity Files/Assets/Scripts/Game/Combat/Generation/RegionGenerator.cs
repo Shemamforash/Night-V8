@@ -305,7 +305,7 @@ namespace Game.Combat.Generation
             }
 
             JournalEntry journalEntry = JournalEntry.GetLoreEntry();
-            if (!_region.ReadJournal && journalEntry != null)
+            if (_region.JournalIsHere && journalEntry != null)
                 CreateContainer<JournalSource>()?.SetEntry(journalEntry);
 
             for (int i = 0; i < _region.WaterSourceCount; ++i)

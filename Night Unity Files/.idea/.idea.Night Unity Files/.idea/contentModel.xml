@@ -750,7 +750,6 @@
             <e p="Brands.xml" t="Include" />
             <e p="Characters.xml" t="Include" />
             <e p="Classes.xml" t="Include" />
-            <e p="Dreams.xml" t="Include" />
             <e p="Enemies.xml" t="Include" />
             <e p="Environments.xml" t="Include" />
             <e p="Gear.xml" t="Include" />

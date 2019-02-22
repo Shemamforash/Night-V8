@@ -96,7 +96,9 @@ namespace Facilitating.MenuNavigation
             CacheGameObjects();
             CreateFadeInSequence();
             CheckForExistingSave();
+#if UNITY_EDITOR
             WeaponGenerationTester.Test();
+#endif
         }
 
         private void CheckForExistingSave()

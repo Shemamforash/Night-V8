@@ -54,6 +54,7 @@ public class BossRingController : MonoBehaviour
 
     private void Update()
     {
+        if (PlayerCombat.Instance == null) return;
         float playerDistance = PlayerCombat.Position().magnitude;
         _rings.ForEach(r => r.Update(playerDistance));
     }

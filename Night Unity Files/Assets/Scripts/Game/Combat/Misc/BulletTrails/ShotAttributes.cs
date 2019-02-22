@@ -72,8 +72,8 @@ namespace Game.Combat.Misc
             _damage = (int) attributes.Val(AttributeType.Damage);
             _accuracy = 1 - attributes.Val(AttributeType.Accuracy);
             _shatterChance = attributes.CalculateShatterChance();
-            _burnChance = attributes.CalculateShatterChance();
-            _sicknessChance = attributes.CalculateShatterChance();
+            _burnChance = attributes.CalculateBurnChance();
+            _sicknessChance = attributes.CalculateSicknessChance();
             if (!(_origin is PlayerCombat)) return;
             _shatterChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Shatter);
             _burnChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Burn);
@@ -145,7 +145,7 @@ namespace Game.Combat.Misc
 
         private void SetConditions()
         {
-            float random = Random.Range(0f, 1f);
+            float random = Random.Range(0f, 100f);
             float conditionModifier = _weapon.GetAttributeValue(AttributeType.Pellets) * _weapon.GetAttributeValue(AttributeType.Capacity);
             bool canDecay = random < _shatterChance / conditionModifier;
             bool canBurn = random < _burnChance / conditionModifier;
