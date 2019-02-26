@@ -17,6 +17,8 @@ public class ScreenFaderController : MonoBehaviour
     {
         _faderCanvas = GetComponent<CanvasGroup>();
         _faderImage = GetComponent<Image>();
+        _faderCanvas.alpha = 1f;
+        _faderImage.color = Color.black;
         _textCanvas = gameObject.FindChildWithName<CanvasGroup>("Text Canvas");
         _text = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
         bool isCombat = SceneManager.GetActiveScene().name == "Combat";

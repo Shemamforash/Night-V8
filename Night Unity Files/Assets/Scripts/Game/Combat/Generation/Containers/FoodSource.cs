@@ -9,10 +9,10 @@ namespace Game.Combat.Generation
 
         public FoodSource(Vector2 position) : base(position)
         {
-            string foodType = ResourceTemplate.GetPlant().Name;
-            ResourceItem resource = ResourceTemplate.Create(foodType);
+            string plantType = ResourceTemplate.GetPlant().Name;
+            ResourceItem resource = ResourceTemplate.Create(plantType);
             Item = resource;
-            ImageLocation = "Plants/" + foodType;
+            Sprite = ResourceTemplate.GetSprite(plantType);
         }
 
         public override ContainerBehaviour CreateObject(bool autoReveal = false)

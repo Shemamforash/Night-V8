@@ -62,7 +62,7 @@ public class CombatWeatherController : MonoBehaviour
             if (!(c is CharacterCombat character)) return;
             character.MovementController.KnockBack(windForce);
         });
-        Shot.Shots().ForEach(s => { s.RigidBody2D().AddForce(windForce * 0.1f); });
+        ShotManager.Shots().ForEach(s => { s.RigidBody2D().AddForce(windForce * 0.1f); });
         Grenade.Grenades().ForEach(g => { g.RigidBody2D().AddForce(windForce * 0.5f); });
     }
 }

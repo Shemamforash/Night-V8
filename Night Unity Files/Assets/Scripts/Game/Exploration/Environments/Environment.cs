@@ -95,7 +95,7 @@ namespace Game.Exploration.Environment
                 case EnvironmentType.Wasteland:
                     return "The Eternal Wasteland";
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return "";
             }
         }
 

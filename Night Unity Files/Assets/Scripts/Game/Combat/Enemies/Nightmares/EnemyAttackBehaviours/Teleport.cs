@@ -31,7 +31,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             GameObject teleportOut = Instantiate(_teleportOutPrefab);
             teleportOut.transform.SetParent(transform, false);
             _teleportOutParticles = teleportOut.GetComponent<ParticleSystem>();
-            
+
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _collider = GetComponent<CircleCollider2D>();
             _trail = transform.GetComponentInChildren<TrailRenderer>();
@@ -56,10 +56,11 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
                 yield return null;
             }
 
-            Vector2 position = (Vector2)PlayerCombat.Position() + AdvancedMaths.RandomDirection() * Random.Range(2f, 6f);
+            Vector2 inPosition = PlayerCombat.Instance == null ? AdvancedMaths.RandomDirection() * 2 : (Vector2) PlayerCombat.Position();
+            Vector2 position = inPosition + AdvancedMaths.RandomDirection() * Random.Range(2f, 6f);
             transform.position = position;
             _trail.Clear();
-            
+
             _teleportInParticles.Play();
             SetVisible(true);
             UnpauseOthers();
@@ -74,7 +75,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         {
             _spriteRenderer.enabled = visible;
             _collider.enabled = visible;
-            if(visible) _trail.Clear();
+            if (visible) _trail.Clear();
         }
     }
 }

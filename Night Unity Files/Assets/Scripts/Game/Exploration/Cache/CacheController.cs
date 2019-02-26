@@ -122,6 +122,7 @@ public class CacheController : MonoBehaviour
         Loot loot = new Loot(Vector2.zero);
         loot.SetItem(WeaponGenerator.GenerateWeapon());
         loot.CreateObject(true);
+        CombatLogController.PostLog("An artifact is revealed");
         CombatManager.GetCurrentRegion().IsWeaponHere = false;
     }
 

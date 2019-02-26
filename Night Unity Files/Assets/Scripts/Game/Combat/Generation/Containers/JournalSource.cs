@@ -8,10 +8,12 @@ public class JournalSource : ContainerController
     private JournalEntry _journalEntry;
     private CanvasGroup _journalIndicator;
     private bool _read;
+    private static Sprite _journalSprite;
 
     public JournalSource(Vector2 position) : base(position)
     {
-        ImageLocation = "Journal";
+        if (_journalSprite == null) _journalSprite = Resources.Load<Sprite>("Images/Container Symbols/Journal");
+        Sprite = _journalSprite;
     }
 
     public void SetEntry(JournalEntry journalEntry)

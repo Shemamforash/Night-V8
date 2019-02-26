@@ -13,7 +13,6 @@ namespace Game.Combat.Misc
     {
         private const float DistanceFromOrigin = 0.2f;
 
-        private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Shots", "Prefabs/Combat/Shots/Bullet");
         private static GameObject _bulletPrefab;
 
         private readonly RaycastHit2D[] _collisions = new RaycastHit2D[50];
@@ -23,12 +22,7 @@ namespace Game.Combat.Misc
         public CharacterCombat _origin;
         private Vector2 _direction, _originPosition, _lastPosition;
         private ShotAttributes _shotAttributes;
-
-        public static List<Shot> Shots()
-        {
-            return _shotPool.Active();
-        }
-
+        
         public Rigidbody2D RigidBody2D()
         {
             return _rigidBody;
@@ -44,21 +38,12 @@ namespace Game.Combat.Misc
             return _shotAttributes;
         }
 
-        public static Shot Create(CharacterCombat origin)
-        {
-            Shot shot = _shotPool.Create();
-            shot.gameObject.layer = origin is PlayerCombat ? 16 : 15;
-            Vector3 direction = origin.Direction();
-            shot.Initialise(origin, direction);
-            return shot;
-        }
-
         public void OverrideDirection(Vector2 direction)
         {
             _direction = direction;
         }
 
-        private void Initialise(CharacterCombat origin, Vector3 direction)
+        public void Initialise(CharacterCombat origin, Vector3 direction)
         {
             _shotAttributes = new ShotAttributes(origin);
             _origin = origin;
@@ -98,7 +83,7 @@ namespace Game.Combat.Misc
             _lastPosition = newPosition;
         }
 
-        private void FixedUpdate()
+        public void MyFixedUpdate()
         {
             if (!_shotAttributes.Fired) return;
             _lastPosition = transform.position;
@@ -148,7 +133,7 @@ namespace Game.Combat.Misc
 
             _bulletTrail.SetFinalPosition(_lastPosition);
             _bulletTrail.StartFade();
-            _shotPool.Return(this);
+            ShotManager.Return(this);
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -189,7 +174,7 @@ namespace Game.Combat.Misc
 
         private void OnDestroy()
         {
-            _shotPool.Dispose(this);
+            ShotManager.Dispose(this);
         }
     }
 }

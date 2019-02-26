@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
+using DefaultNamespace;
 using Facilitating.Persistence;
 using Facilitating.UIControllers;
 using Facilitating.UIControllers.Inventories;
@@ -8,7 +9,9 @@ using Game.Global;
 using InventorySystem;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using Random = UnityEngine.Random;
+using SamsHelper.ReactiveUI.Elements;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class UiConsumableController : UiInventoryMenuController
 {
@@ -69,26 +72,101 @@ public class UiConsumableController : UiInventoryMenuController
 
     protected override void Initialise()
     {
-        _consumableList.Initialise(typeof(ConsumableElement), Consume, UiGearMenuController.Close, GetAvailableConsumables);
+        List<ListElement> listElements = new List<ListElement>();
+        listElements.Add(new ConsumableElement());
+        listElements.Add(new ConsumableElement());
+        listElements.Add(new ConsumableElement());
+        listElements.Add(new CentreConsumableElement());
+        listElements.Add(new ConsumableElement());
+        listElements.Add(new ConsumableElement());
+        listElements.Add(new ConsumableElement());
+        _consumableList.Initialise(listElements, Consume, UiGearMenuController.Close, GetAvailableConsumables);
     }
 
-    private class ConsumableElement : BasicListElement
+    private class CentreConsumableElement : ConsumableElement
     {
+        private EnhancedText _descriptionText;
+
         protected override void UpdateCentreItemEmpty()
         {
-            LeftText.SetText("");
-            CentreText.SetText("No Consumables Available");
-            RightText.SetText("");
+            base.UpdateCentreItemEmpty();
+            _descriptionText.SetText("-");
+        }
+
+        protected override void Update(object o, bool isCentreItem)
+        {
+            base.Update(o, isCentreItem);
+            Consumable consumable = (Consumable) o;
+            _descriptionText.SetText(consumable.Template.Description);
+            UpdateConditions(consumable);
+        }
+
+        protected override void SetVisible(bool visible)
+        {
+            base.SetVisible(visible);
+            _descriptionText.gameObject.SetActive(visible);
+        }
+
+        protected override void CacheUiElements(Transform transform)
+        {
+            base.CacheUiElements(transform);
+            _descriptionText = transform.gameObject.FindChildWithName<EnhancedText>("Description");
+        }
+
+        public override void SetColour(Color c)
+        {
+            base.SetColour(c);
+            c.a = 0.6f;
+            _descriptionText.SetColor(c);
+        }
+    }
+
+    private class ConsumableElement : ListElement
+    {
+        private EnhancedText _consumableText, _nameText, _effectText;
+        private Image _icon;
+
+        protected override void UpdateCentreItemEmpty()
+        {
+            _consumableText.SetText("");
+            _nameText.SetText("No Consumables Available");
+            _effectText.SetText("");
+            _icon.SetAlpha(0f);
         }
 
         protected override void Update(object o, bool isCentreItem)
         {
             Consumable consumable = (Consumable) o;
             string nameText = consumable.Quantity() > 1 ? consumable.Name + " x" + consumable.Quantity() : consumable.Name;
-            LeftText.SetText(nameText);
-            CentreText.SetText(consumable.CanConsume() ? "" : "Cannot Consume");
-            RightText.SetText(consumable.Template.Description);
-            if (isCentreItem) UpdateConditions(consumable);
+            _nameText.SetText(nameText);
+            _consumableText.SetText(consumable.CanConsume() ? "" : "Cannot Consume");
+            _effectText.SetText(consumable.Template.EffectString);
+            _icon.SetAlpha(1f);
+            _icon.sprite = consumable.Template.Sprite;
+        }
+
+        protected override void SetVisible(bool visible)
+        {
+            _consumableText.gameObject.SetActive(visible);
+            _nameText.gameObject.SetActive(visible);
+            _effectText.gameObject.SetActive(visible);
+            _icon.gameObject.SetActive(visible);
+        }
+
+        protected override void CacheUiElements(Transform transform)
+        {
+            _consumableText = transform.gameObject.FindChildWithName<EnhancedText>("Consumable");
+            _nameText = transform.gameObject.FindChildWithName<EnhancedText>("Name");
+            _effectText = transform.gameObject.FindChildWithName<EnhancedText>("Effect");
+            _icon = transform.gameObject.FindChildWithName<Image>("Icon");
+        }
+
+        public override void SetColour(Color c)
+        {
+            _consumableText.SetColor(c);
+            _nameText.SetColor(c);
+            _effectText.SetColor(c);
+            _icon.color = c;
         }
     }
 

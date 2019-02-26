@@ -109,7 +109,6 @@ namespace Game.Gear.Weapons
         {
             if (CharacterAttribute.IsCharacterAttribute(target)) return;
             WeaponAttributes.Get(target).RemoveModifier(modifier);
-            Debug.Log(target + " " + modifier.FinalBonusToString());
             WeaponAttributes.RecalculateAttributeValues();
         }
 

@@ -11,7 +11,6 @@ using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using UnityEngine;
 
 namespace Game.Gear
 {
@@ -141,14 +140,8 @@ namespace Game.Gear
             {
                 float scaledValue = _modifierValue * ((int) quality + 1);
                 string attributeName = AttributeTarget.AttributeToDisplayString();
-                if (!_additive || AttributeTarget == AttributeType.Shatter ||
-                    AttributeTarget == AttributeType.Burn ||
-                    AttributeTarget == AttributeType.Sickness)
-                {
-                    return "+" + (int) (scaledValue * 100) + "% " + attributeName;
-                }
-
-                return "+" + scaledValue + " " + attributeName;
+                if (!_additive) return "+" + (int) (scaledValue * 100) + "% " + attributeName;
+                return "+" + (int)scaledValue + " " + attributeName;
             }
         }
 

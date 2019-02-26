@@ -35,6 +35,14 @@ public class LoadSaveMenu : Menu
             _manualSave.SetMostRecent();
     }
 
+    public static void LoadMostRecentSave()
+    {
+        Save autoSave = SaveController.LoadAutoSave();
+        Save manualSave = SaveController.LoadManualSave();
+        if (autoSave.MoreRecentThan(manualSave) && autoSave.Valid()) autoSave.LoadFromSave();
+        else manualSave.LoadFromSave();
+    }
+
     public void LoadAutoSave()
     {
         if (_loading) return;

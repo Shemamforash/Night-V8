@@ -34,7 +34,6 @@ public class EndGameAudioController : MonoBehaviour
         float elapsedTime = 0f;
         _timeToNextBeep = -1;
 
-
         while (elapsedTime < Duration)
         {
             elapsedTime += Time.deltaTime;

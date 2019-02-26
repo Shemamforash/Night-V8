@@ -15,7 +15,7 @@ namespace Game.Combat.Generation
             resource.Increment(capacity);
             Item = resource;
             PrefabLocation = "Puddle";
-            ImageLocation = "Water";
+            Sprite = ResourceTemplate.GetSprite("Water");
         }
 
         protected override string GetLogText() => "Found some water";

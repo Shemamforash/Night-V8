@@ -102,7 +102,7 @@ namespace Game.Exploration.Environment
             SetRegionTypes();
             initialNode.Discover();
 #if UNITY_EDITOR
-//            _regions.ForEach(r => r.Discover());
+            _regions.ForEach(r => r.Discover());
 #endif
         }
 
@@ -424,7 +424,7 @@ namespace Game.Exploration.Environment
 
         private static void SetJournalQuantities()
         {
-            int journalCount =  2 + ((int) EnvironmentManager.CurrentEnvironment.EnvironmentType + 1) * 2;
+            int journalCount = 2 + ((int) EnvironmentManager.CurrentEnvironment.EnvironmentType + 1) * 2;
             _regions.Shuffle();
             for (int i = 0; i < journalCount; ++i)
             {

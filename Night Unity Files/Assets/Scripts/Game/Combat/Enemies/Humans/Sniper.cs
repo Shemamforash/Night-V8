@@ -18,7 +18,7 @@ namespace Game.Combat.Enemies.Humans
 
         private void FirePowerShot()
         {
-            Shot powerShot = Shot.Create(this);
+            Shot powerShot = ShotManager.Create(this);
             powerShot.Attributes().AddOnHit(() => FireBurstBehaviour.Create(powerShot.transform.position));
             powerShot.Fire();
             ResetCooldown();

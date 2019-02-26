@@ -50,7 +50,7 @@ namespace Facilitating.UIControllers
             {
                 _name.SetText("No Accessory Equipped");
                 _bonus.SetText("-");
-                _description.SetText("-");
+                _description.SetText("");
             }
             else
             {
@@ -108,9 +108,9 @@ namespace Facilitating.UIControllers
         protected override void OnShow()
         {
             UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
-            _accessoryList.Show();
             UpdateEquipped();
             ShowAccessoryTutorial();
+            _accessoryList.Show();
         }
 
         private void ShowAccessoryTutorial()

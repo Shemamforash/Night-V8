@@ -63,7 +63,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (_dying || !_follow) return;
+        if (_dying || !_follow || PlayerCombat.Instance == null) return;
         Vector2 dir = new Vector2(-_rigidBody.velocity.y, _rigidBody.velocity.x).normalized;
         float angle = Vector2.Angle(dir, PlayerCombat.Position() - transform.position);
         _angleModifier *= AngleDecay;

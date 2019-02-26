@@ -199,9 +199,9 @@
               <e p="Templates" t="Include">
                 <e p="Legacy" t="Include">
                   <e p="DefaultUnlit.shader" t="Include" />
+                  <e p="InvertPostProcess.shader" t="Include" />
                   <e p="MultiPassUnlit.shader" t="Include" />
                   <e p="Particle Alpha Blend.shader" t="Include" />
-                  <e p="PostProcess.shader" t="Include" />
                   <e p="Sprites-Default.shader" t="Include" />
                   <e p="UIDefault.shader" t="Include" />
                 </e>
@@ -745,6 +745,7 @@
             </e>
           </e>
         </e>
+        <e p="PostProcessInvertColour.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="XML" t="Include">
             <e p="Brands.xml" t="Include" />
@@ -952,6 +953,7 @@
                 </e>
                 <e p="MoveBehaviour.cs" t="Include" />
                 <e p="MovementController.cs" t="Include" />
+                <e p="MovementControllerManager.cs" t="Include" />
                 <e p="Nightmares" t="Include">
                   <e p="Decoy.cs" t="Include" />
                   <e p="EnemyAttackBehaviours" t="Include">
@@ -1047,6 +1049,7 @@
                   <e p="Shot.cs" t="Include" />
                   <e p="ShotAttributes.cs" t="Include" />
                   <e p="ShotgunTrail.cs" t="Include" />
+                  <e p="ShotManager.cs" t="Include" />
                   <e p="SMGTrail.cs" t="Include" />
                   <e p="VoidTrail.cs" t="Include" />
                 </e>
@@ -1408,9 +1411,6 @@
         <e p="Shaders" t="Include">
           <e p="Combat Vignette Shader.shader" t="Include" />
           <e p="CombatShader.shader" t="Include" />
-          <e p="FloorShader.shader" t="Include" />
-          <e p="MapBackgroundShader.shader" t="Include" />
-          <e p="MapBackgroundShader2.shader" t="Include" />
           <e p="MenuGradientShader.shader" t="Include" />
           <e p="RadialLight.shader" t="Include" />
           <e p="Shadow.shader" t="Include" />

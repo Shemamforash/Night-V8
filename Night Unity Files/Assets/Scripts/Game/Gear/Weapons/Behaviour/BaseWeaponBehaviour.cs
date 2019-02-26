@@ -71,7 +71,7 @@ namespace Game.Gear.Weapons
             TimeToNextFire = Helper.TimeInSeconds() + 1f / _weapon.GetAttributeValue(AttributeType.FireRate);
             for (int i = 0; i < _weaponAttributes.Val(AttributeType.Pellets); ++i)
             {
-                Shot shot = Shot.Create(_origin);
+                Shot shot = ShotManager.Create(_origin);
                 _origin.ApplyShotEffects(shot);
                 if (this is HoldAndFire) shot.Attributes().Piercing = true;
                 shot.Fire();

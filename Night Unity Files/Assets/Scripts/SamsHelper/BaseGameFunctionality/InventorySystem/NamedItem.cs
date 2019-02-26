@@ -4,7 +4,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     {
         public string Name;
 
-        public NamedItem(string name)
+        protected NamedItem(string name)
         {
             Name = name;
         }

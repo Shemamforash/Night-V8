@@ -25,7 +25,7 @@ namespace Game.Exploration.Ui
         private bool _doneFading;
         private TextMeshProUGUI _nameText, _costText, _claimText;
 
-        private Image _icon, _selectedImage, _claimedSprite;
+        private Image _icon, _selectedImage, _claimedSprite, _cleansedSprite;
         private float _targetCentreAlpha, _targetNodeAlpha;
         private CanvasGroup _nodeCanvas, _centreCanvas, _ringCanvas;
         private UIBorderController _border;
@@ -52,6 +52,9 @@ namespace Game.Exploration.Ui
             _border.SetActive();
             _claimedSprite = gameObject.FindChildWithName<Image>("Claimed");
             _claimedSprite.SetAlpha(0);
+
+            _cleansedSprite = gameObject.FindChildWithName<Image>("Cleansed");
+            _cleansedSprite.SetAlpha(0);
 
             _ringCanvas = gameObject.FindChildWithName<CanvasGroup>("Rings");
             _ringCanvas.alpha = 0;
@@ -80,10 +83,12 @@ namespace Game.Exploration.Ui
             _targetNodeAlpha = _canAfford ? 1f : 0.5f;
             float claimAlpha = _region.Claimed() ? 0.5f : 0;
             float ringAlpha = _region.Claimed() ? 0f : 1f;
+            float cleansedAlpha = _region.IsTempleCleansed() ? 0.5f : 0f;
             _sequence?.Kill();
             _sequence = DOTween.Sequence();
             _sequence.Append(_claimedSprite.DOFade(claimAlpha, 1f));
             _sequence.Insert(0f, _ringCanvas.DOFade(ringAlpha, 1f));
+            _sequence.Insert(0f, _cleansedSprite.DOFade(cleansedAlpha, 1f));
             _sequence.SetUpdate(UpdateType.Normal, true);
         }
 
@@ -95,6 +100,7 @@ namespace Game.Exploration.Ui
             _sequence = DOTween.Sequence();
             _sequence.Append(_claimedSprite.DOFade(0f, 1f));
             _sequence.Insert(0f, _ringCanvas.DOFade(0f, 1f));
+            _sequence.Insert(0f, _cleansedSprite.DOFade(0f, 1f));
             _sequence.SetUpdate(UpdateType.Normal, true);
         }
 

@@ -16,13 +16,22 @@ namespace Game.Global
         private static readonly List<Recipe> _recipes = new List<Recipe>();
         private static bool _loaded;
         private static int _craftingLevel;
-        public readonly string Ingredient1, Ingredient2, Name;
+        public readonly string Ingredient1, Ingredient2, Name, Description;
         public readonly int Ingredient1Quantity, Ingredient2Quantity;
-        private readonly int _productQuantity;
         public readonly RecipeType RecipeType;
-        private readonly bool _makesAll;
+        public readonly RecipeAudioType RecipeAudio;
         private readonly int _levelNo;
-        private int _quantityToCraft;
+        private bool _canCraft;
+        private readonly int _productQuantity;
+
+        public enum RecipeAudioType
+        {
+            Cook,
+            Craft,
+            BoilWater,
+            Furnace,
+            LightFire
+        }
 
         private Recipe(XmlNode recipeNode)
         {
@@ -30,8 +39,29 @@ namespace Game.Global
             Ingredient2 = recipeNode.StringFromNode("Ingredient2Name");
             Ingredient1Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
             Ingredient2Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
-            _productQuantity = recipeNode.IntFromNode("ProductQuantity");
             Name = recipeNode.StringFromNode("ProductName");
+            Description = recipeNode.StringFromNode("Description");
+            _productQuantity = recipeNode.IntFromNode("ProductQuantity");
+            string recipeAudioString = recipeNode.StringFromNode("Audio");
+            switch (recipeAudioString)
+            {
+                case "COOK":
+                    RecipeAudio = RecipeAudioType.Cook;
+                    break;
+                case "CRAFT":
+                    RecipeAudio = RecipeAudioType.Craft;
+                    break;
+                case "LIGHTFIRE":
+                    RecipeAudio = RecipeAudioType.LightFire;
+                    break;
+                case "FURNACE":
+                    RecipeAudio = RecipeAudioType.Furnace;
+                    break;
+                case "BOILWATER":
+                    RecipeAudio = RecipeAudioType.BoilWater;
+                    break;
+            }
+
             string recipeTypeString = recipeNode.StringFromNode("RecipeType");
             switch (recipeTypeString)
             {
@@ -53,25 +83,15 @@ namespace Game.Global
             }
 
             _levelNo = recipeNode.IntFromNode("LevelNo");
-            _makesAll = recipeNode.BoolFromNode("MakeAll");
         }
 
         private void CalculateQuantityToCraft()
         {
-            int productQuantity = _productQuantity;
-            if (_makesAll)
-            {
-                int ingredient1Have = Inventory.GetResourceQuantity(Ingredient1);
-                productQuantity = Mathf.FloorToInt(ingredient1Have / (float) Ingredient1Quantity);
-                if (Ingredient2 != "None")
-                {
-                    int ingredient2Have = Inventory.GetResourceQuantity(Ingredient2);
-                    int ingredient2Makes = Mathf.FloorToInt(ingredient2Have / (float) Ingredient2Quantity);
-                    if (ingredient2Makes < productQuantity) productQuantity = ingredient2Makes;
-                }
-            }
-
-            _quantityToCraft = productQuantity;
+            int ingredient1Have = Inventory.GetResourceQuantity(Ingredient1);
+            _canCraft = ingredient1Have >= Ingredient1Quantity;
+            if (Ingredient2 == "None") return;
+            int ingredient2Have = Inventory.GetResourceQuantity(Ingredient2);
+            _canCraft = _canCraft && ingredient2Have >= Ingredient2Quantity;
         }
 
         public static void Save(XmlNode doc)
@@ -90,21 +110,14 @@ namespace Game.Global
             _recipes.ForEach(r => r.CalculateQuantityToCraft());
         }
 
-        public bool CanCraft()
-        {
-            return _quantityToCraft > 0;
-        }
+        public bool CanCraft() => _canCraft;
 
-        public int GetCraftableQuantity()
-        {
-            return _quantityToCraft;
-        }
 
         public void ConsumeResources()
         {
             Assert.IsTrue(CanCraft());
-            Inventory.DecrementResource(Ingredient1, _quantityToCraft);
-            if (Ingredient2 != "None") Inventory.DecrementResource(Ingredient2, _quantityToCraft);
+            Inventory.DecrementResource(Ingredient1, Ingredient1Quantity);
+            if (Ingredient2 != "None") Inventory.DecrementResource(Ingredient2, Ingredient2Quantity);
         }
 
         private void Build()
@@ -140,7 +153,7 @@ namespace Game.Global
                     Build();
                     break;
                 case RecipeType.Resource:
-                    Inventory.IncrementResource(Name, _quantityToCraft);
+                    Inventory.IncrementResource(Name, _productQuantity);
                     break;
                 case RecipeType.Fire:
                     break;
@@ -158,7 +171,7 @@ namespace Game.Global
             if (!validLevel) return false;
             if (RecipeType == RecipeType.Fire) return true;
             if (!Campfire.IsLit()) return false;
-            if (RecipeType == RecipeType.Upgrade) return _craftingLevel < _levelNo;
+            if (RecipeType == RecipeType.Upgrade) return _levelNo == _craftingLevel + 1;
             return _craftingLevel >= _levelNo;
         }
 
@@ -198,5 +211,7 @@ namespace Game.Global
         {
             return Inventory.GetBuildingCount(Name);
         }
+
+        public int GetProductQuantity() => _productQuantity;
     }
 }

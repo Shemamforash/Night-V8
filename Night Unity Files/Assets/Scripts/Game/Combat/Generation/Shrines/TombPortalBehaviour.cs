@@ -16,7 +16,6 @@ public class TombPortalBehaviour : CanTakeDamage
     {
         _audioPool = GetComponent<AudioPoolController>();
         _audioPool.SetMixerGroup("Combat", 0.5f);
-        BossRingController.Create();
         SpriteFlash = gameObject.FindChildWithName<DamageSpriteFlash>("Shadow 5");
         _bloodSpatter = GetComponent<BloodSpatter>();
         gameObject.layer = 24;
@@ -44,7 +43,7 @@ public class TombPortalBehaviour : CanTakeDamage
         InstancedAudio instancedAudio = _audioPool.Create(false);
         instancedAudio.SetMinMaxDistance(1, 100);
         instancedAudio.Play(AudioClips.TombBreak, Random.Range(0.6f, 7f), Random.Range(0.9f, 1f));
-        ThunderController.Strike(true);
+        ThunderController.Instance().Strike(true);
         switch (EnvironmentManager.CurrentEnvironmentType())
         {
             case EnvironmentType.Desert:
@@ -60,13 +59,5 @@ public class TombPortalBehaviour : CanTakeDamage
                 OvaBehaviour.Create();
                 break;
         }
-    }
-
-    public static void ActivateRing()
-    {
-        if (_audioPool == null) return;
-        InstancedAudio instancedAudio = _audioPool.Create();
-        instancedAudio.SetMinMaxDistance(1, 100);
-        instancedAudio.Play(AudioClips.TombRing, 1f, Random.Range(0.8f, 1f));
     }
 }

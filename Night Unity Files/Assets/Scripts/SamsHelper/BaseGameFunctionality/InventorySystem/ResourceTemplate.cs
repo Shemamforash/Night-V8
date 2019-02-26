@@ -19,6 +19,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public readonly ResourceType ResourceType;
         private readonly bool Consumable;
         public readonly string Description;
+        public string EffectString;
         public readonly bool IsEffectPermanent;
         public bool HasEffect;
         public float EffectBonus;
@@ -26,10 +27,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private static readonly List<ResourceTemplate> Meat = new List<ResourceTemplate>();
         private static readonly List<ResourceTemplate> Water = new List<ResourceTemplate>();
         private static readonly List<ResourceTemplate> Plant = new List<ResourceTemplate>();
-        public static readonly List<ResourceTemplate> Resources = new List<ResourceTemplate>();
+        public static readonly List<ResourceTemplate> OtherResources = new List<ResourceTemplate>();
         public static readonly List<ResourceTemplate> AllResources = new List<ResourceTemplate>();
         private static float DesertDRCur, MountainsDRCur, RuinsDRCur, SeaDRCur, WastelandDRCur;
         private readonly Dictionary<EnvironmentType, DropRate> _dropRates = new Dictionary<EnvironmentType, DropRate>();
+        private static readonly Dictionary<string, Sprite> _resourceSprites = new Dictionary<string, Sprite>();
+        public Sprite Sprite;
 
         private class DropRate
         {
@@ -48,6 +51,20 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             }
         }
 
+        private void TryLoadSprite(string spriteName)
+        {
+            if (!_resourceSprites.ContainsKey(spriteName))
+            {
+                Sprite sprite = Resources.Load<Sprite>("Images/Container Symbols/" + spriteName);
+                _resourceSprites.Add(spriteName, sprite);
+            }
+
+            Sprite = _resourceSprites[spriteName];
+        }
+
+        public static Sprite GetSprite(string spriteName) => _resourceSprites[spriteName];
+
+
         private static ResourceTemplate StringToTemplate(string templateString)
         {
             return AllResources.FirstOrDefault(t => t.Name == templateString);
@@ -64,21 +81,27 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 case "Water":
                     ResourceType = ResourceType.Water;
                     Water.Add(this);
+                    TryLoadSprite("Water");
                     break;
                 case "Meat":
                     ResourceType = ResourceType.Meat;
                     Meat.Add(this);
+                    TryLoadSprite("Meat");
                     break;
                 case "Resource":
                     ResourceType = ResourceType.Resource;
-                    Resources.Add(this);
+                    OtherResources.Add(this);
+                    TryLoadSprite("Loot");
                     break;
                 case "Plant":
                     ResourceType = ResourceType.Plant;
                     Plant.Add(this);
+                    TryLoadSprite("Plants/" + Name);
                     break;
                 case "Potion":
                     ResourceType = ResourceType.Potion;
+                    //todo
+                    TryLoadSprite("Water");
                     break;
                 case "Armour":
                     ResourceType = ResourceType.Armour;
@@ -87,6 +110,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
             IsEffectPermanent = resourceNode.BoolFromNode("Permanent");
             Description = resourceNode.StringFromNode("Description");
+            EffectString = resourceNode.StringFromNode("Effect");
             AllResources.Add(this);
 
             if (_lastType != ResourceType)
@@ -130,7 +154,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             float rand = Random.Range(0f, 1f);
             EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
-            foreach (ResourceTemplate resourceTemplate in Resources)
+            foreach (ResourceTemplate resourceTemplate in OtherResources)
             {
                 if (!resourceTemplate._dropRates[currentEnvironment].ValueWithinRange(rand)) continue;
                 return resourceTemplate;

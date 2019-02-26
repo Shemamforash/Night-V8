@@ -80,6 +80,7 @@ namespace Game.Global
         private int GetEnemiesInRange()
         {
             if (PlayerCombat.Instance == null) return -1;
+            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tomb) return Tomb.TombActive ? 1 : 0;
             Vector2 playerPosition = PlayerCombat.Position();
             List<CanTakeDamage> enemies = CombatManager.Enemies();
             if (enemies.Count == 0) return -1;
@@ -90,39 +91,37 @@ namespace Game.Global
         private void UpdateTimeNearEnemies()
         {
             int enemiesInRange = GetEnemiesInRange();
-            float timeChange = Time.deltaTime;
+            float timeChange = Time.deltaTime / 5f;
             if (enemiesInRange == -1) timeChange *= -MusicFadeDuration;
             if (enemiesInRange == 0) timeChange *= -1;
-            _timeNearEnemies = Mathf.Clamp(_timeNearEnemies + timeChange, 0, 5);
+            _timeNearEnemies = Mathf.Clamp(_timeNearEnemies + timeChange, 0, 1);
         }
-
 
         private float _minAmbientVolume, _maxCombatVolume;
         private bool _useAlternateCombatMusic;
 
         private void UpdateMinMaxVolumes(bool isCombatScene)
         {
-            if (isCombatScene)
+            if (!isCombatScene) return;
+            Region currentRegion = CombatManager.GetCurrentRegion();
+            if (currentRegion.IsDynamic())
             {
-                Region currentRegion = CombatManager.GetCurrentRegion();
-                if (currentRegion.IsDynamic())
-                {
-                    _minAmbientVolume = 0.25f;
-                    _maxCombatVolume = 0.75f;
-                }
-                else
-                {
-                    _minAmbientVolume = 0f;
-                    _maxCombatVolume = 1f;
-                }
-
-                _useAlternateCombatMusic = currentRegion.GetRegionType() == RegionType.Tomb;
+                _minAmbientVolume = 0.25f;
+                _maxCombatVolume = 0.75f;
             }
+            else
+            {
+                _minAmbientVolume = 0f;
+                _maxCombatVolume = 1f;
+            }
+
+            _useAlternateCombatMusic = currentRegion.GetRegionType() == RegionType.Tomb;
         }
 
         private void UpdateInGameVolumes()
         {
             float ambientVolumeModifier = 1 - _combatTargetVolume;
+//            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tomb) ambientVolumeModifier = 0f;
             if (ambientVolumeModifier < _minAmbientVolume) ambientVolumeModifier = _minAmbientVolume;
             _ambient.volume = _ambientVolume * ambientVolumeModifier;
             if (_combatTargetVolume > _maxCombatVolume) _combatTargetVolume = _maxCombatVolume;
@@ -144,7 +143,7 @@ namespace Game.Global
             UpdateMinMaxVolumes(isCombatScene);
             UpdateTimeNearEnemies();
 
-            _combatTargetVolume = _timeNearEnemies / 5f;
+            _combatTargetVolume = _timeNearEnemies;
 
             if (!isGameScene && !isCombatScene) UpdateOutOfGameVolumes();
             else UpdateInGameVolumes();
@@ -233,7 +232,6 @@ namespace Game.Global
             if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
             _combatTween?.Kill();
             _combatTween = _audioMixer.DOSetFloat("CombatVolume", -80f, 0.5f).SetUpdate(UpdateType.Normal, true);
-
         }
 
         public static void SetMasterVolume(float volume)

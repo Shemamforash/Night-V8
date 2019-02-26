@@ -29,6 +29,7 @@ public class BossRingController : MonoBehaviour
         private readonly SpriteRenderer _ring, _glow;
         private readonly float _targetDistance;
         private bool _shown;
+        private readonly AudioSource _audioSource;
 
         public BossRing(string name, GameObject parent, float targetDistance)
         {
@@ -37,13 +38,15 @@ public class BossRingController : MonoBehaviour
             _ring.SetAlpha(0.2f);
             _glow.SetAlpha(0f);
             _targetDistance = targetDistance;
+            _audioSource = _ring.GetComponent<AudioSource>();
+            _audioSource.pitch = Random.Range(0.8f, 1f);
         }
 
         public void Update(float playerDistance)
         {
             if (_shown) return;
             if (playerDistance > _targetDistance) return;
-            TombPortalBehaviour.ActivateRing();
+            _audioSource.Play();
             _shown = true;
             _glow.SetAlpha(1f);
             _glow.DOFade(0f, 1f);

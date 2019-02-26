@@ -179,9 +179,6 @@ namespace Game.Combat.Enemies
                 case EnemyType.Shadow:
                     enemyBehaviour = enemyObject.AddComponent<Shadow>();
                     break;
-                case EnemyType.Drone:
-                    enemyBehaviour = enemyObject.AddComponent<Drone>();
-                    break;
                 case EnemyType.Grazer:
                     enemyBehaviour = enemyObject.AddComponent<Grazer>();
                     break;

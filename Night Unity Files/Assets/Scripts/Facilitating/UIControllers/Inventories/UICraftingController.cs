@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using DefaultNamespace;
 using DG.Tweening;
@@ -14,6 +15,7 @@ using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UICraftingController : UiInventoryMenuController, IInputListener
 {
@@ -108,7 +110,15 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
 
     protected override void Initialise()
     {
-        _craftingList.Initialise(typeof(RecipeElement), CreateRecipe, UiGearMenuController.Close, GetAvailableRecipes);
+        List<ListElement> listElements = new List<ListElement>();
+        listElements.Add(new CraftingElement());
+        listElements.Add(new CraftingElement());
+        listElements.Add(new CraftingElement());
+        listElements.Add(new CentreCraftingElement());
+        listElements.Add(new CraftingElement());
+        listElements.Add(new CraftingElement());
+        listElements.Add(new CraftingElement());
+        _craftingList.Initialise(listElements, CreateRecipe, UiGearMenuController.Close, GetAvailableRecipes);
     }
 
     protected override void OnHide()
@@ -122,50 +132,104 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         if (!recipe.CanCraft()) return;
         if (!CharacterManager.SelectedCharacter.TravelAction.AtHome()) return;
         CharacterManager.SelectedCharacter.CraftAction.StartCrafting(recipe);
-        ShowCurrentlyCrafting();
-        UiGearMenuController.PlayAudio(recipe.RecipeType == RecipeType.Fire ? AudioClips.LightFire : AudioClips.Craft);
+        UiGearMenuController.Close();
+        AudioClip audioClip;
+        switch (recipe.RecipeAudio)
+        {
+            case Recipe.RecipeAudioType.Cook:
+                audioClip = AudioClips.CookMeat;
+                break;
+            case Recipe.RecipeAudioType.Craft:
+                audioClip = AudioClips.Craft;
+                break;
+            case Recipe.RecipeAudioType.BoilWater:
+                audioClip = AudioClips.BoilWater;
+                break;
+            case Recipe.RecipeAudioType.Furnace:
+                audioClip = AudioClips.Furnace;
+                break;
+            case Recipe.RecipeAudioType.LightFire:
+                audioClip = AudioClips.LightFire;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        UiGearMenuController.PlayAudio(audioClip);
     }
 
-    private class RecipeElement : ListElement
+
+    private class CentreCraftingElement : CraftingElement
     {
-        private EnhancedText LeftText;
-        private EnhancedText RightText;
+        private EnhancedText _descriptionText;
+
+        protected override void UpdateCentreItemEmpty()
+        {
+            base.UpdateCentreItemEmpty();
+            _descriptionText.SetText("-");
+        }
+
+        protected override void Update(object o, bool isCentreItem)
+        {
+            base.Update(o, isCentreItem);
+            Recipe recipe = (Recipe) o;
+            _descriptionText.SetText(recipe.Description);
+        }
 
         protected override void SetVisible(bool visible)
         {
-            LeftText.gameObject.SetActive(visible);
-            RightText.gameObject.SetActive(visible);
+            base.SetVisible(visible);
+            _descriptionText.gameObject.SetActive(visible);
         }
 
         protected override void CacheUiElements(Transform transform)
         {
-            LeftText = transform.gameObject.FindChildWithName<EnhancedText>("Type");
-            RightText = transform.gameObject.FindChildWithName<EnhancedText>("Dps");
+            base.CacheUiElements(transform);
+            _descriptionText = transform.gameObject.FindChildWithName<EnhancedText>("Description");
         }
 
         public override void SetColour(Color c)
         {
-            LeftText.SetColor(c);
-            RightText.SetColor(c);
+            base.SetColour(c);
+            c.a = 0.6f;
+            _descriptionText.SetColor(c);
         }
+    }
+
+    private class CraftingElement : ListElement
+    {
+        private EnhancedText _craftableText, _nameText, _costText;
+        private Image _icon;
 
         protected override void UpdateCentreItemEmpty()
         {
-            LeftText.SetText("");
-            RightText.SetText("");
+            _craftableText.SetText("");
+            _nameText.SetText("No Recipes Available");
+            _costText.SetText("");
+            _icon.SetAlpha(0f);
         }
 
         protected override void Update(object o, bool isCentreItem)
         {
             Recipe recipe = (Recipe) o;
-            string productString = recipe.GetCraftableQuantity() > 1 ? recipe.Name + " x" + recipe.GetCraftableQuantity() : recipe.Name;
-            if (recipe.RecipeType == RecipeType.Building) productString += " (Built " + recipe.Built() + ")";
-            LeftText.SetText(productString);
+            string productString = recipe.GetProductQuantity() > 1 ? recipe.Name + " x" + recipe.GetProductQuantity() : recipe.Name;
+            _nameText.SetText(productString);
+
+            string craftableString = "";
+            if (recipe.RecipeType == RecipeType.Building)
+            {
+                int builtCount = recipe.Built();
+                if (builtCount != 0) craftableString += "Built " + recipe.Built() + "   ";
+            }
+
+            if (!recipe.CanCraft()) craftableString += "Need Resources";
+            _craftableText.SetText(craftableString);
+
             string ingredient1String = GetIngredientString(recipe.Ingredient1, recipe.Ingredient1Quantity);
             string ingredient2String = GetIngredientString(recipe.Ingredient2, recipe.Ingredient2Quantity);
             string fullString = ingredient1String;
-            if (ingredient2String != "") fullString += "  -  " + ingredient2String;
-            RightText.SetText(fullString);
+            if (ingredient2String != "") fullString += "\n" + ingredient2String;
+            _costText.SetText(fullString);
         }
 
         private string GetIngredientString(string ingredientName, int requiredQuantity)
@@ -174,7 +238,32 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
             int currentQuantity = Inventory.GetResourceQuantity(ingredientName);
             return currentQuantity + "/" + requiredQuantity + " " + ingredientName;
         }
+
+        protected override void SetVisible(bool visible)
+        {
+            _craftableText.gameObject.SetActive(visible);
+            _nameText.gameObject.SetActive(visible);
+            _costText.gameObject.SetActive(visible);
+            _icon.gameObject.SetActive(visible);
+        }
+
+        protected override void CacheUiElements(Transform transform)
+        {
+            _craftableText = transform.gameObject.FindChildWithName<EnhancedText>("Craftable");
+            _nameText = transform.gameObject.FindChildWithName<EnhancedText>("Name");
+            _costText = transform.gameObject.FindChildWithName<EnhancedText>("Cost");
+            _icon = transform.gameObject.FindChildWithName<Image>("Icon");
+        }
+
+        public override void SetColour(Color c)
+        {
+            _craftableText.SetColor(c);
+            _nameText.SetColor(c);
+            _costText.SetColor(c);
+            _icon.color = c;
+        }
     }
+
 
     private static List<object> GetAvailableRecipes()
     {

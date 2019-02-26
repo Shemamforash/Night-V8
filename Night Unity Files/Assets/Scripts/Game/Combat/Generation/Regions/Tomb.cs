@@ -27,6 +27,7 @@ namespace Game.Combat.Generation
         private Camera _secondaryCamera;
         private float _timeToNextShake;
         private float _shakeModifier = 1;
+        public static bool TombActive;
 
         private void Awake()
         {
@@ -42,6 +43,7 @@ namespace Game.Combat.Generation
             Inventory.Move(Inscription.Generate(ItemQuality.Shining));
 #endif
 
+            BossRingController.Create();
             if (GenerateJournals()) return;
             if (_tombPrefab == null) _tombPrefab = Resources.Load<GameObject>("Prefabs/Combat/Tomb Portal");
             Instantiate(_tombPrefab).transform.position = Vector2.zero;
@@ -54,7 +56,7 @@ namespace Game.Combat.Generation
             int entryNo = 0;
             for (int angle = 0; angle < 360; angle += 120)
             {
-                Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, 2f, Vector2.zero);
+                Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, 1f, Vector2.zero);
                 JournalSource journalSource = new JournalSource(position);
                 journalSource.SetEntry(journals[entryNo]);
                 ++entryNo;
@@ -97,7 +99,7 @@ namespace Game.Combat.Generation
 
         private void AddNextEnemyType()
         {
-            _timeToNextEnemyType = 20f;
+            _timeToNextEnemyType = 18f;
             if (TryAddEnemyType(EnemyType.Ghoul)) return;
             if (TryAddEnemyType(EnemyType.Brawler)) return;
             if (TryAddEnemyType(EnemyType.Ghast)) return;
@@ -110,20 +112,26 @@ namespace Game.Combat.Generation
             if (TryAddEnemyType(EnemyType.Revenant)) return;
             if (TryAddEnemyType(EnemyType.Mountain)) return;
             if (TryAddEnemyType(EnemyType.Witch)) return;
+            if (TryAddEnemyType(EnemyType.Nightmare)) return;
         }
 
         private IEnumerator StartSpawningEnemies()
         {
+            TombActive = true;
             float maxTime = 60f * 5f;
             float currentTime = maxTime;
             _timeToIncreaseMaxEnemies = 20f;
+            Sequence seq = DOTween.Sequence();
+            seq.AppendInterval(maxTime - 30f);
+            seq.AppendCallback(SpawnEndGameAudio);
             _timeToNextShake = 10f;
             _maxEnemies = 2;
             AddNextEnemyType();
-            _secondaryCamera.DOColor(new Color(0.6f, 0.3f, 0.3f), maxTime).SetEase(Ease.InExpo);
+            _secondaryCamera.DOColor(new Color(0.7f, 0.4f, 0.4f), maxTime).SetEase(Ease.InSine);
             while (currentTime > 0f)
             {
                 if (!CombatManager.IsCombatActive()) yield return null;
+                AudioController.SetAmbientVolume(1f - currentTime / maxTime);
                 currentTime -= Time.deltaTime;
                 CheckToIncreaseMaxEnemies();
                 CheckToAddEnemyType();
@@ -132,12 +140,22 @@ namespace Game.Combat.Generation
                 yield return null;
             }
 
+            AudioController.SetAmbientVolume(1f);
             CombatManager.SetInCombat(false);
             float flashDuration = 3f;
-            ScreenFaderController.FlashWhite(flashDuration, Color.black);
+            ScreenFaderController.FlashWhite(flashDuration, Color.white);
             CombatManager.ExitCombat(false);
             yield return new WaitForSeconds(flashDuration);
+            EnvironmentManager.NextLevel(false, false);
             StoryController.Show();
+        }
+
+        private void SpawnEndGameAudio()
+        {
+            TombActive = false;
+            GameObject audioPrefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/End Game Audio");
+            GameObject audioObject = Instantiate(audioPrefab);
+            audioObject.transform.position = Vector2.zero;
         }
 
         private void CheckToShakeCamera()

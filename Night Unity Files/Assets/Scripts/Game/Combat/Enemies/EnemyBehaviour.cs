@@ -84,6 +84,7 @@ namespace Game.Combat.Enemies
 
         public override void Kill()
         {
+            if(gameObject == null) return;
             Characters.Player player = PlayerCombat.Instance.Player;
             if (player.Attributes.SpreadSickness && IsSick())
             {

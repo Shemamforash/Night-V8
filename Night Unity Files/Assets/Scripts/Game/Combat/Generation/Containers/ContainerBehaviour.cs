@@ -39,7 +39,7 @@ namespace Game.Combat.Generation
         {
             ContainerController.Containers.Add(this);
             ContainerController = containerController;
-            _iconSprite.sprite = Resources.Load<Sprite>("Images/Container Symbols/" + containerController.GetImageLocation());
+            _iconSprite.sprite = containerController.GetSprite();
             if (!(containerController is WaterSource)) return;
             _puddleDrops = gameObject.FindChildWithName<ParticleSystem>("Drop Randomiser");
         }

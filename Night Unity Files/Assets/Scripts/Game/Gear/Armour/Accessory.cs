@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
@@ -26,7 +28,8 @@ namespace Game.Gear.Armour
         {
             _template = template;
             _modifier = template.GetModifier((int) itemQuality + 1);
-            _summary = template.ModifiesCondition ? _modifier.RawBonusToString() : _modifier.FinalBonusToString();
+            if (template.ModifiesCondition) _summary = _modifier.RawBonus().ToString(CultureInfo.InvariantCulture);
+            else _summary = _modifier.FinalBonusToString();
             string attributeString = _template.TargetAttribute.AttributeToDisplayString();
             _summary += " " + attributeString;
         }
@@ -108,7 +111,7 @@ namespace Game.Gear.Armour
                 _accessoryTemplates.Add(this);
                 ModifiesCondition = TargetAttribute == AttributeType.Shatter ||
                                     TargetAttribute == AttributeType.Sickness ||
-                                    TargetAttribute == AttributeType.Shatter;
+                                    TargetAttribute == AttributeType.Burn;
             }
 
             public AttributeModifier GetModifier(int qualityMultiplier)

@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using EZCameraShake;
+using Facilitating.Audio;
+using Facilitating.Persistence;
 using Game.Exploration.Environment;
 using Game.Global;
+using NUnit.Framework;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -29,10 +32,14 @@ public class StoryController : Menu
     private static List<JournalEntry> _journalEntries;
     private static readonly string[] _actNames = {"Act I", "Act II", "Act III", "Act IV", "Act V", "Epilogue"};
     private AudioSource _actAudio;
+    public static bool StorySeen;
+    private PostProcessInvertColour _invertColour;
 
     public override void Awake()
     {
         base.Awake();
+        _invertColour = Camera.main.GetComponent<PostProcessInvertColour>();
+        if (EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.End) _invertColour.Set(1);
         _actCanvas = GameObject.Find("Act").GetComponent<CanvasGroup>();
         _actAudio = _actCanvas.GetComponent<AudioSource>();
         _actTitle = _actCanvas.gameObject.FindChildWithName<TextMeshProUGUI>("Title");
@@ -51,9 +58,8 @@ public class StoryController : Menu
         _paused = false;
         if (!_goToCredits) return;
         _waitTime = Random.Range(2f, 4f);
-        _lightningSystem = GameObject.Find("Lightning").GetComponent<ParticleSystem>();
+        _lightningSystem = GameObject.Find("Lightning System").GetComponent<ParticleSystem>();
         _shaker = GameObject.Find("Shaker").GetComponent<CameraShaker>();
-        _lightningSystem.Play();
     }
 
     public void Update()
@@ -61,13 +67,20 @@ public class StoryController : Menu
         if (!_goToCredits) return;
         _waitTime -= Time.deltaTime;
         if (_waitTime > 0f) return;
-        float magnitude = Random.Range(5, 10);
-        float roughness = Random.Range(5, 10);
-        float inDuration = Random.Range(0.5f, 2f);
-        float outDuration = Random.Range(0.5f, 2f);
-        _shaker.ShakeOnce(magnitude, roughness, inDuration, outDuration);
+        float magnitude = Random.Range(4, 8);
+        float roughness = Random.Range(10, 20);
+        float inDuration = Random.Range(0.25f, 0.5f);
+        float outDuration = Random.Range(0.25f, 0.5f);
+        Sequence sequence = DOTween.Sequence();
+        sequence.AppendCallback(() => _lightningSystem.Emit(1));
+        sequence.AppendInterval(3f);
+        sequence.AppendCallback(() =>
+        {
+            ThunderController.Instance().Thunder();
+            _shaker.ShakeOnce(magnitude, roughness, inDuration, outDuration);
+        });
         float totalDuration = inDuration + outDuration;
-        _waitTime = Random.Range(totalDuration * 2f, totalDuration * 4f);
+        _waitTime = Random.Range(totalDuration * 4f, totalDuration * 8f);
     }
 
     public override void Enter()
@@ -77,6 +90,7 @@ public class StoryController : Menu
 
     public static void Show()
     {
+        StorySeen = false;
         _journalEntries = JournalEntry.GetStoryText();
         _goToCredits = EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.End;
         SceneChanger.GoToStoryScene();
@@ -124,6 +138,7 @@ public class StoryController : Menu
             yield return _storyText.DOFade(0f, 1f).WaitForCompletion();
         }
 
+        _invertColour.FadeTo(0f, 0.5f);
         _audioSource.DOFade(0f, 0.5f).SetUpdate(UpdateType.Normal, true);
         End();
     }
@@ -142,6 +157,8 @@ public class StoryController : Menu
 
     private void End()
     {
+        StorySeen = true;
+        SaveController.AutoSave();
         _closeButton.Disable();
         SceneChanger.FadeInAudio();
         if (_goToCredits) SceneChanger.GoToCreditsScene();

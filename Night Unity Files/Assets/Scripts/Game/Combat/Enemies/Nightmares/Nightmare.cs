@@ -10,7 +10,7 @@ namespace Game.Combat.Enemies.Nightmares
     public class Nightmare : NightmareEnemyBehaviour
     {
         private Beam _beam;
-        private readonly List<EnemyBehaviour> _drones = new List<EnemyBehaviour>();
+        private readonly List<Drone> _drones = new List<Drone>();
 
         public override void Initialise(Enemy enemy)
         {
@@ -25,10 +25,10 @@ namespace Game.Combat.Enemies.Nightmares
             int NumberOfDrones = (int) (WorldState.Difficulty() / 10f) + 2;
             for (int i = 0; i < NumberOfDrones; ++i)
             {
-                EnemyBehaviour drone = CombatManager.QueueEnemyToAdd(EnemyType.Drone);
+                float angleOffset = Random.Range(0f, 360f);
+                float radius = Random.Range(0.5f, 0.75f);
+                Drone drone = Drone.Create(transform, radius, angleOffset);
                 _drones.Add(drone);
-                drone.transform.position = AdvancedMaths.CalculatePointOnCircle(Random.Range(0, 360), 2f, transform.position);
-                ((Drone) drone).SetTarget(transform);
             }
         }
 

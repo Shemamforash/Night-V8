@@ -10,7 +10,7 @@ namespace Game.Combat.Enemies.Misc
 {
     public sealed class Grenade : MonoBehaviour
     {
-        private static readonly float ThrowForce = 300f;
+        private static readonly float ThrowForce = 200f;
         private static readonly ObjectPool<Grenade> _grenadePool = new ObjectPool<Grenade>("Grenades", "Prefabs/Combat/Enemies/Grenade");
         private Action<List<EnemyBehaviour>> OnDetonate;
         private bool _incendiary, _decaying, _sickening;
@@ -28,7 +28,7 @@ namespace Game.Combat.Enemies.Misc
         {
             return _rb2d;
         }
-        
+
         public void Awake()
         {
             _rb2d = GetComponent<Rigidbody2D>();

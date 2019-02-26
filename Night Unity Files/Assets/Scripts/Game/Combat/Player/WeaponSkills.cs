@@ -55,7 +55,7 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            Shot s = Shot.Create(PlayerCombat.Instance);
+            Shot s = ShotManager.Create(PlayerCombat.Instance);
             s.Attributes().AddOnHit(() => FireBurstBehaviour.Create(s.transform.position));
             s.Fire();
         }
@@ -69,7 +69,7 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            Shot s = Shot.Create(PlayerCombat.Instance);
+            Shot s = ShotManager.Create(PlayerCombat.Instance);
             s.Attributes().AddOnHit(() => { VortexBehaviour.Create(s.transform.position, 
                 () => Explosion.CreateExplosion(s.transform.position, 0.5f).InstantDetonate()); });
             s.Fire();
@@ -95,7 +95,6 @@ namespace Game.Combat.Player
         public Swarm() : base(nameof(Swarm))
         {
         }
-
         protected override void InstantEffect()
         {
             int shots = 50;
@@ -106,9 +105,10 @@ namespace Game.Combat.Player
                 float x = Mathf.Cos(angle);
                 float y = Mathf.Sin(angle);
                 Vector2 dir = new Vector2(x, y);
-                Shot s = Shot.Create(PlayerCombat.Instance);
+                Shot s = ShotManager.Create(PlayerCombat.Instance);
                 s.Attributes().SetDamageModifier(2);
                 s.OverrideDirection(dir);
+                s.Attributes().Seek();
                 s.Fire();
             }
         }

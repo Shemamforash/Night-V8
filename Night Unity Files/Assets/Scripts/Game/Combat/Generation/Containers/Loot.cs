@@ -9,22 +9,36 @@ namespace Game.Combat.Generation
 {
     public class Loot : ContainerController
     {
+        private static Sprite _accessorySprite, _weaponSprite, _inscriptionSprite;
+
         public Loot(Vector2 position) : base(position)
         {
+            if (_accessorySprite == null) _accessorySprite = Resources.Load<Sprite>("Images/Container Symbols/Accessory");
+            if (_weaponSprite == null) _weaponSprite = Resources.Load<Sprite>("Images/Container Symbols/Weapon");
+            if (_inscriptionSprite == null) _inscriptionSprite = Resources.Load<Sprite>("Images/Container Symbols/Inscription");
         }
 
         public void SetResource(ResourceItem item)
         {
             Item = item;
-            if (item.Template?.ResourceType == ResourceType.Meat) ImageLocation = "Meat";
+            if (item.Template?.ResourceType == ResourceType.Meat) Sprite = ResourceTemplate.GetSprite("Meat");
         }
 
         public void SetItem(GearItem item)
         {
             Item = item;
-            if (item is Accessory) ImageLocation = "Accessory";
-            else if (item is Weapon) ImageLocation = "Weapon";
-            else if (item is Inscription) ImageLocation = "Inscription";
+            switch (item)
+            {
+                case Accessory _:
+                    Sprite = _accessorySprite;
+                    break;
+                case Weapon _:
+                    Sprite = _weaponSprite;
+                    break;
+                case Inscription _:
+                    Sprite = _inscriptionSprite;
+                    break;
+            }
         }
 
         protected override string GetLogText()

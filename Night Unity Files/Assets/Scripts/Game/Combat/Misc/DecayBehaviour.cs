@@ -52,9 +52,8 @@ namespace Game.Combat.Misc
                 _burstParticles.Emit(EmitCount);
                 _shardParticles.Emit(EmitCount);
                 _thunderParticles.Emit(15);
+                _audioSource.Play();
             });
-            sequence.AppendInterval(0.2f);
-            sequence.AppendCallback(() => _audioSource.Play());
             sequence.Append(DOTween.To(GetImpactValue, SetImpactValue, 0f, 2.5f));
             sequence.AppendCallback(() => StartCoroutine(Fade()));
         }

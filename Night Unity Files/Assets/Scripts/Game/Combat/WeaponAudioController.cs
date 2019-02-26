@@ -97,6 +97,8 @@ public class WeaponAudioController : MonoBehaviour
         AudioClip[] shots = null;
         AudioClip[] casings = null;
         WeaponType weaponType = weapon.WeaponAttributes.WeaponType;
+        float maxVolume = 0.8f;
+        float minDistance = 0.5f;
         switch (weaponType)
         {
             case WeaponType.Pistol:
@@ -106,14 +108,19 @@ public class WeaponAudioController : MonoBehaviour
             case WeaponType.Rifle:
                 shots = new[] {AudioClips.RifleShots[0]};
                 casings = AudioClips.RifleCasings;
+                maxVolume = 1f;
+                minDistance = 1f;
                 break;
             case WeaponType.Shotgun:
                 shots = AudioClips.ShotgunShots;
                 casings = AudioClips.ShotgunCasings;
+                maxVolume = 0.9f;
+                minDistance = 0.75f;
                 break;
             case WeaponType.SMG:
                 shots = AudioClips.SMGShots;
                 casings = AudioClips.SMGCasings;
+                maxVolume = 0.7f;
                 break;
         }
 
@@ -123,9 +130,9 @@ public class WeaponAudioController : MonoBehaviour
         float hpfValue = -15f * durability + 750;
         hpfValue = Mathf.Clamp(hpfValue, 0, 750);
         InstancedAudio instancedAudio = _audioPool.Create();
-        instancedAudio.SetMinMaxDistance(0.5f, 25f);
+        instancedAudio.SetMinMaxDistance(minDistance, 100f);
         instancedAudio.SetHighPassCutoff(hpfValue);
-        instancedAudio.Play(shots[0], Random.Range(0.7f, 0.8f), Random.Range(0.8f, 1f));
+        instancedAudio.Play(shots[0], Random.Range(maxVolume - 0.1f, maxVolume), Random.Range(0.8f, 1f));
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(0.25f);
         sequence.AppendCallback(() =>
@@ -172,6 +179,6 @@ public class WeaponAudioController : MonoBehaviour
 
     public void PlayActiveSkill()
     {
-        _audioPool.Create().Play(AudioClips.ActiveSkill, Random.Range(0.9f, 1f), Random.Range(0.9f, 1f));
+        _audioPool.Create().Play(AudioClips.ActiveSkill, Random.Range(0.8f, 1f), Random.Range(0.75f, 1f));
     }
 }

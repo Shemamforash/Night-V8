@@ -73,12 +73,17 @@ public class MainSwarmSegmentBehaviour : CanTakeDamage
             SwarmSegmentBehaviour.Active[i].UpdateSection();
     }
 
+    private void FixedUpdate()
+    {
+        SwarmSegmentBehaviour.Active.ForEach(s => s.MyFixedUpdate());
+    }
+
     private IEnumerator StartSpawnChildBehaviour()
     {
         float spawnTimeModifier = 2f;
         while (true)
         {
-            if (CombatManager.IsCombatActive() && SwarmSegmentBehaviour.Active.Count < 100)
+            if (!_contracting && CombatManager.IsCombatActive() && SwarmSegmentBehaviour.Active.Count < 100)
             {
                 float time = BaseChildSpawnTimer * spawnTimeModifier;
                 spawnTimeModifier *= ChildSpawnDecayRate;
@@ -104,7 +109,7 @@ public class MainSwarmSegmentBehaviour : CanTakeDamage
     {
         while (true)
         {
-            if (CombatManager.IsCombatActive() && _canFire && SwarmSegmentBehaviour.Active.Count > 0)
+            if (!_contracting && CombatManager.IsCombatActive() && _canFire && SwarmSegmentBehaviour.Active.Count > 0)
             {
                 SwarmSegmentBehaviour swarmSegment = SwarmSegmentBehaviour.Active[0];
                 swarmSegment.StartSeeking();
@@ -122,7 +127,7 @@ public class MainSwarmSegmentBehaviour : CanTakeDamage
     {
         while (true)
         {
-            if (CombatManager.IsCombatActive() && _canBurst)
+            if (!_contracting && CombatManager.IsCombatActive() && _canBurst)
             {
                 if (!_canBurst) yield return null;
                 SwarmSegmentBehaviour.Active.ForEach(s => s.StartBurst());

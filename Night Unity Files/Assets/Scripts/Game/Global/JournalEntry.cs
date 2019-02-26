@@ -61,29 +61,36 @@ namespace Game.Global
 
         public static void Save(XmlNode root)
         {
-            root = root.CreateChild("Journals");
-            foreach (JournalEntry entry in AllEntries)
+            string journalString = "";
+            for (int i = 0; i < AllEntries.Count; i++)
             {
-                XmlNode entryNode = root.CreateChild("Entry");
-                entryNode.CreateChild("GroupNumber", entry._groupNumber);
-                entryNode.CreateChild("PartNumber", entry._partNumber);
-                entryNode.CreateChild("Locked", entry._locked);
+                JournalEntry entry = AllEntries[i];
+                journalString += entry._groupNumber + ",";
+                journalString += entry._partNumber + ",";
+                journalString += entry._locked;
+                if (i < AllEntries.Count - 1) journalString += ",";
             }
+
+            root.CreateChild("Journals", journalString);
+            root.CreateChild("StorySeen", StoryController.StorySeen);
         }
 
         public static void Load(XmlNode root)
         {
             ReadJournals();
-            XmlNode journalNode = root.SelectSingleNode("Journals");
-            foreach (XmlNode entryNode in journalNode.SelectNodes("Entry"))
+            string journalString = root.StringFromNode("Journals");
+            string[] journalArr = journalString.Split(',');
+            for (int i = 0; i < journalArr.Length; i += 3)
             {
-                int groupNumber = entryNode.IntFromNode("GroupNumber");
-                int partNumber = entryNode.IntFromNode("PartNumber");
-                bool locked = entryNode.BoolFromNode("Locked");
+                int groupNumber = int.Parse(journalArr[i]);
+                int partNumber = int.Parse(journalArr[i + 1]);
+                bool locked = bool.Parse(journalArr[i + 2]);
                 if (locked) continue;
                 JournalEntry entry = AllEntries.Find(j => j._groupNumber == groupNumber && j._partNumber == partNumber);
                 entry.Unlock();
             }
+
+            StoryController.StorySeen = root.BoolFromNode("StorySeen");
         }
 
         public static List<JournalEntry> GetCorypthosLore()

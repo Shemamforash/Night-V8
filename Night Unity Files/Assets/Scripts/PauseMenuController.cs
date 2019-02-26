@@ -4,6 +4,7 @@ using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -167,6 +168,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void ExitToMenu()
     {
+        Resume();
         SceneChanger.GoToMainMenuScene();
     }
 

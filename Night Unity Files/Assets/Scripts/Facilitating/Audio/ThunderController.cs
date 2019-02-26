@@ -22,7 +22,7 @@ namespace Facilitating.Audio
         private bool _waitingForThunder;
 
         public Image lightningImage;
-        private static bool _inCombat;
+        private bool _inCombat;
 
         public void Awake()
         {
@@ -31,12 +31,18 @@ namespace Facilitating.Audio
             _inCombat = SceneManager.GetActiveScene().name == "Combat";
         }
 
-        private IEnumerator LightningFlash(float waitTime = 0f)
+        public void Thunder()
         {
-            yield return new WaitForSeconds(waitTime);
+            if (thunderSource == null) return;
             thunderSource.volume = Random.Range(0.9f, 1f);
             thunderSource.pitch = Random.Range(0.8f, 1f);
             thunderSource.PlayOneShot(AudioClips.ThunderSounds.RandomElement(), Random.Range(0.6f, 1f));
+        }
+
+        private IEnumerator LightningFlash(float waitTime = 0f)
+        {
+            yield return new WaitForSeconds(waitTime);
+            Thunder();
             lightningTimer = LightningDuration;
             while (lightningTimer > 0f)
             {
@@ -48,12 +54,14 @@ namespace Facilitating.Audio
             }
         }
 
-        public static void Strike(bool flashOnly)
+        public static ThunderController Instance() => _instance;
+
+        public void Strike(bool flashOnly)
         {
             if (_inCombat)
             {
                 Vector2 firePosition = WorldGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 12f).Position;
-                if(!flashOnly) FireBurstBehaviour.Create(firePosition);
+                if (!flashOnly) FireBurstBehaviour.Create(firePosition);
                 _instance.StartCoroutine(_instance.LightningFlash());
             }
             else

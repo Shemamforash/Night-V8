@@ -63,7 +63,7 @@ namespace Game.Characters.CharacterActions
             _recipeName = _recipe.Name;
             if (_recipeName == "Fire") LightFire();
             else CraftThing();
-            SetDuration();
+            SetDuration(WorldState.MinutesPerHour / 4);
             Enter();
         }
 

@@ -29,7 +29,7 @@ namespace Game.Global
         public static AudioClip BrawlerSlash, BulletHit, ShieldHit, BodyHit;
         public static AudioClip GodsAreDead, AbandonedLands;
         public static AudioClip FireExplosion, ShatterExplosion, TombBreak, TombRing, ActiveSkill, PassiveSkill;
-        public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Channel, Infuse, Craft, OpenJournal, CloseJournal, Tick;
+        public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Channel, Infuse, Craft, OpenJournal, CloseJournal, Tick, CookMeat, Furnace, BoilWater;
         public static AudioClip EatWater, EatMeat, EatPlant, EatPotion, LightFire;
         public static AudioClip ShortHeartBeat, LongHeartBeat;
         public static AudioClip NeedleMove, NeedleHit, NeedleFire;
@@ -158,6 +158,9 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => EatPotion = a, "misc/inventories", "Eat Potion"));
             yield return StartCoroutine(LoadClip(a => Channel = a, "misc/inventories", "Channel"));
             yield return StartCoroutine(LoadClip(a => Infuse = a, "misc/inventories", "Infuse"));
+            yield return StartCoroutine(LoadClip(a => CookMeat = a, "misc/inventories", "Meat Cook"));
+            yield return StartCoroutine(LoadClip(a => Furnace = a, "misc/inventories", "Charcoal"));
+            yield return StartCoroutine(LoadClip(a => BoilWater = a, "misc/inventories", "Water Boil"));
             yield return StartCoroutine(LoadClip(a => Campfire = a, "campfire", "Campfire"));
             yield return StartCoroutine(LoadClip(a => Tick = a, "misc/tick", "Tick"));
             yield return StartCoroutine(LoadClip(a => LightFire = a, "misc/lightfire", "Light Fire"));

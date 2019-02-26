@@ -55,7 +55,7 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
 
     protected override int GetInitialHealth() => WorldState.ScaleValue(30);
 
-    protected void FixedUpdate()
+    public void MyFixedUpdate()
     {
         SpriteFlash.transform.Rotate(0, 0, _rotateSpeed * Time.fixedDeltaTime);
         switch (_currentState)

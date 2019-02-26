@@ -13,9 +13,15 @@ namespace Game.Combat.Enemies
         public void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
+            MovementControllerManager.RegisterMovementController(this);
         }
 
-        public void FixedUpdate()
+        private void OnDestroy()
+        {
+            MovementControllerManager.UnregisterMovementController(this);
+        }
+
+        public void MyFixedUpdate()
         {
             _rigidbody.AddForce(_forceToadd);
             _forceToadd = Vector2.zero;

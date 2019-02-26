@@ -24,6 +24,12 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             _prefabLocation = prefabLocation;
         }
 
+        public ObjectPool(string prefabLocation, Transform parent)
+        {
+            _prefabLocation = prefabLocation;
+            _poolParent = parent;
+        }
+
         private void CreatePoolParent()
         {
             if (_poolParent != null || _poolName == null) return;
@@ -76,7 +82,6 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             _pool.Remove(thing);
             _active.Remove(thing);
             Object.Destroy(thing.gameObject);
-            if (Empty() && _poolParent != null) GameObject.Destroy(_poolParent.gameObject);
         }
 
         public bool Empty()

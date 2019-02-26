@@ -12,13 +12,14 @@
 		<RuinsDropRate>0.3</RuinsDropRate>
 		<WastelandDropRate>0.1</WastelandDropRate>
 		<Description>Fresh and clear, not yet tainted by the earth</Description>
+		<Effect>Slightly quenches Thirst</Effect>
 	</Resource>
 	<Resource>
 		<Name>Deathwater</Name>
 		<Type>Water</Type>
 		<Consumable>True</Consumable>
 		<Attribute>Thirst</Attribute>
-		<Modifier>0</Modifier>
+		<Modifier>-1</Modifier>
 		<Permanent>TRUE</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0.2</MountainsDropRate>
@@ -26,6 +27,7 @@
 		<RuinsDropRate>0.55</RuinsDropRate>
 		<WastelandDropRate>0.6</WastelandDropRate>
 		<Description>Black and bubbling, passes straight through you</Description>
+		<Effect>Increases Thirst</Effect>
 	</Resource>
 	<Resource>
 		<Name>Earthmilk</Name>
@@ -40,13 +42,14 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.3</WastelandDropRate>
 		<Description>Milky and refreshing, welcome relief in the wilderness</Description>
+		<Effect>Quenches Thirst</Effect>
 	</Resource>
 	<Resource>
 		<Name>Rotmeat</Name>
 		<Type>Meat</Type>
 		<Consumable>True</Consumable>
 		<Attribute>Hunger</Attribute>
-		<Modifier>0</Modifier>
+		<Modifier>-1</Modifier>
 		<Permanent>TRUE</Permanent>
 		<DesertDropRate>0.1</DesertDropRate>
 		<MountainsDropRate>0.2</MountainsDropRate>
@@ -54,13 +57,14 @@
 		<RuinsDropRate>0.55</RuinsDropRate>
 		<WastelandDropRate>0.6</WastelandDropRate>
 		<Description>Grey sinew and hollow bone, not good for you</Description>
+		<Effect>Increases Hunger</Effect>
 	</Resource>
 	<Resource>
 		<Name>Cooked Meat</Name>
 		<Type>Meat</Type>
 		<Consumable>True</Consumable>
 		<Attribute>Hunger</Attribute>
-		<Modifier>1</Modifier>
+		<Modifier>2</Modifier>
 		<Permanent>TRUE</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
@@ -68,6 +72,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description></Description>
+		<Effect>Slightly sates Hunger</Effect>
 	</Resource>
 	<Resource>
 		<Name>Meat</Name>
@@ -82,13 +87,14 @@
 		<RuinsDropRate>0.3</RuinsDropRate>
 		<WastelandDropRate>0.1</WastelandDropRate>
 		<Description>Gristly meat- tough, but manageable</Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Blubber</Name>
 		<Type>Meat</Type>
 		<Consumable>False</Consumable>
 		<Attribute>Hunger</Attribute>
-		<Modifier>2</Modifier>
+		<Modifier>3</Modifier>
 		<Permanent>TRUE</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0.1</MountainsDropRate>
@@ -96,13 +102,14 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.3</WastelandDropRate>
 		<Description>Thick fatty meat, even tastes good raw</Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Dried Meat</Name>
 		<Type>Meat</Type>
 		<Consumable>True</Consumable>
 		<Attribute>Hunger</Attribute>
-		<Modifier>4</Modifier>
+		<Modifier>3</Modifier>
 		<Permanent>TRUE</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
@@ -110,13 +117,14 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description>Very salty, very tasty</Description>
+		<Effect>Sates Hunger</Effect>
 	</Resource>
 	<Resource>
 		<Name>Cooked Blubber</Name>
 		<Type>Meat</Type>
 		<Consumable>True</Consumable>
 		<Attribute>Hunger</Attribute>
-		<Modifier>2</Modifier>
+		<Modifier>5</Modifier>
 		<Permanent>TRUE</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
@@ -124,6 +132,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description></Description>
+		<Effect>Greatly sates Hunger</Effect>
 	</Resource>
 	<Resource>
 		<Name>Deathbloom</Name>
@@ -138,6 +147,7 @@
 		<RuinsDropRate>0.05</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description>Helps to heal wounds when rubbed into the skin</Description>
+		<Effect>Recover 1 Fettle</Effect>
 	</Resource>
 	<Resource>
 		<Name>Hollowroot</Name>
@@ -152,6 +162,7 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.2</WastelandDropRate>
 		<Description>Restores even deep wounds, but won't numb the pain</Description>
+		<Effect>Recover 2 Fettle</Effect>
 	</Resource>
 	<Resource>
 		<Name>Shaman Frond</Name>
@@ -166,6 +177,7 @@
 		<RuinsDropRate>0.05</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description>Used in ancient times to calm the nerves</Description>
+		<Effect>Recover 1 Will</Effect>
 	</Resource>
 	<Resource>
 		<Name>Sageleaf</Name>
@@ -180,6 +192,7 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.2</WastelandDropRate>
 		<Description>A strongly scented leaf, returns reality to the demented</Description>
+		<Effect>Recover 2 Will</Effect>
 	</Resource>
 	<Resource>
 		<Name>Mother's Tear</Name>
@@ -194,6 +207,7 @@
 		<RuinsDropRate>0.05</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description>Provides a little clarity in moments of darkness</Description>
+		<Effect>Recover 1 Focus</Effect>
 	</Resource>
 	<Resource>
 		<Name>Glowcap</Name>
@@ -208,6 +222,7 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.2</WastelandDropRate>
 		<Description>Clears the mind, and focuses the soul</Description>
+		<Effect>Recover 2 Focus</Effect>
 	</Resource>
 	<Resource>
 		<Name>Fleetfoot</Name>
@@ -222,6 +237,7 @@
 		<RuinsDropRate>0.05</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description>A sweet root, helps the legs go that bit further</Description>
+		<Effect>Recover 1 Grit</Effect>
 	</Resource>
 	<Resource>
 		<Name>Aquiris</Name>
@@ -236,13 +252,14 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.2</WastelandDropRate>
 		<Description>A fragile pouch protecting sugary liquid</Description>
+		<Effect>Recover 2 Grit</Effect>
 	</Resource>
 	<Resource>
 		<Name>Cinderberry</Name>
 		<Type>Plant</Type>
 		<Consumable>True</Consumable>
 		<Attribute>Burn</Attribute>
-		<Modifier>0.01</Modifier>
+		<Modifier>1</Modifier>
 		<Permanent>True</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0.02</MountainsDropRate>
@@ -250,13 +267,14 @@
 		<RuinsDropRate>0.04</RuinsDropRate>
 		<WastelandDropRate>0.04</WastelandDropRate>
 		<Description>A red berry- hot to the touch, spewing smoke and burning red</Description>
+		<Effect>Increases Burn</Effect>
 	</Resource>
 	<Resource>
 		<Name>Blightberry</Name>
 		<Type>Plant</Type>
 		<Consumable>True</Consumable>
 		<Attribute>Sickness</Attribute>
-		<Modifier>0.01</Modifier>
+		<Modifier>1</Modifier>
 		<Permanent>True</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0.02</MountainsDropRate>
@@ -264,13 +282,14 @@
 		<RuinsDropRate>0.04</RuinsDropRate>
 		<WastelandDropRate>0.04</WastelandDropRate>
 		<Description>A small berry, heavy to hold, reeking of sickness</Description>
+		<Effect>Increases Void</Effect>
 	</Resource>
 	<Resource>
 		<Name>Rotberry</Name>
 		<Type>Plant</Type>
 		<Consumable>True</Consumable>
 		<Attribute>Shatter</Attribute>
-		<Modifier>0.01</Modifier>
+		<Modifier>1</Modifier>
 		<Permanent>True</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0.02</MountainsDropRate>
@@ -278,6 +297,7 @@
 		<RuinsDropRate>0.04</RuinsDropRate>
 		<WastelandDropRate>0.04</WastelandDropRate>
 		<Description>A blue fruit, star shaped, bristling with thorns</Description>
+		<Effect>Increases Shatter</Effect>
 	</Resource>
 	<Resource>
 		<Name>Cerulean Bloom</Name>
@@ -292,6 +312,7 @@
 		<RuinsDropRate>0.04</RuinsDropRate>
 		<WastelandDropRate>0.04</WastelandDropRate>
 		<Description>An iridescent silver flower, quickens your fingers and your thoughts</Description>
+		<Effect>Increases Skill Recharge</Effect>
 	</Resource>
 	<Resource>
 		<Name>Crimson Bloom</Name>
@@ -306,6 +327,7 @@
 		<RuinsDropRate>0.04</RuinsDropRate>
 		<WastelandDropRate>0.04</WastelandDropRate>
 		<Description>A darkly glowing bloom, radiating with bloody rage</Description>
+		<Effect>Increases Adrenaline Gain</Effect>
 	</Resource>
 	<Resource>
 		<Name>Fuel</Name>
@@ -320,6 +342,7 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.15</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Rusty Scrap</Name>
@@ -334,6 +357,7 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.15</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Grisly Remains</Name>
@@ -348,6 +372,7 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.1</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Charcoal</Name>
@@ -362,6 +387,7 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.15</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Metal Shards</Name>
@@ -376,6 +402,7 @@
 		<RuinsDropRate>0.2</RuinsDropRate>
 		<WastelandDropRate>0.15</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Ancient Relics</Name>
@@ -390,6 +417,7 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.15</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Celestial Fragments</Name>
@@ -404,6 +432,7 @@
 		<RuinsDropRate>0.05</RuinsDropRate>
 		<WastelandDropRate>0.15</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Essence</Name>
@@ -418,6 +447,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Salt</Name>
@@ -432,6 +462,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Ice</Name>
@@ -446,6 +477,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Radiance</Name>
@@ -460,11 +492,12 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Mystic Shard</Name>
 		<Type>Resource</Type>
-		<Consumable>TRUE</Consumable>
+		<Consumable>FALSE</Consumable>
 		<Attribute></Attribute>
 		<Modifier></Modifier>
 		<Permanent>False</Permanent>
@@ -473,7 +506,8 @@
 		<SeaDropRate>0</SeaDropRate>
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
-		<Description>Shatter to return to the gate instantly</Description>
+		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Leather Square</Name>
@@ -488,6 +522,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Makeshift Plate</Name>
@@ -502,6 +537,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Metal Plate</Name>
@@ -516,6 +552,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Iridescent Scale</Name>
@@ -530,6 +567,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Celestial Scale</Name>
@@ -544,6 +582,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Tonic of Fettle</Name>
@@ -558,6 +597,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description>A ghastly tonic that increases your Fettle</Description>
+		<Effect>Increases Maximum Fettle</Effect>
 	</Resource>
 	<Resource>
 		<Name>Elixir of Will</Name>
@@ -572,6 +612,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description>Just few drops of this argent liquid strengthens your Will.</Description>
+		<Effect>Increases Maximum Will</Effect>
 	</Resource>
 	<Resource>
 		<Name>Dose of Focus</Name>
@@ -586,6 +627,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description>More a gas than a liquid, one deep breath enhances your Focus.</Description>
+		<Effect>Increases Maximum Focus</Effect>
 	</Resource>
 	<Resource>
 		<Name>Concoction of Grit</Name>
@@ -600,5 +642,6 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description>One swig of this earthy concoction and your Grit will not falter.</Description>
+		<Effect>Increases Maximum Grit</Effect>
 	</Resource>
 </Resources>

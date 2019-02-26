@@ -14,6 +14,7 @@ namespace Game.Exploration.Environment
         private static readonly Dictionary<EnvironmentType, Environment> _environments = new Dictionary<EnvironmentType, Environment>();
         private static Environment _currentEnvironment;
         private static TemperatureCategory _temperatureCategory;
+        private static EnvironmentType _currentEnvironmentType;
 
         public static void Start()
         {
@@ -32,35 +33,48 @@ namespace Game.Exploration.Environment
         public static void NextLevel(bool reset, bool isLoading)
         {
             LoadEnvironments();
-            if (reset) _currentEnvironment = _environments[EnvironmentType.Desert];
+            if (reset) _currentEnvironmentType = EnvironmentType.Desert;
             else
             {
                 switch (_currentEnvironment.EnvironmentType)
                 {
                     case EnvironmentType.Desert:
-                        _currentEnvironment = _environments[EnvironmentType.Mountains];
+                        _currentEnvironmentType = EnvironmentType.Mountains;
                         break;
                     case EnvironmentType.Mountains:
-                        _currentEnvironment = _environments[EnvironmentType.Sea];
+                        _currentEnvironmentType = EnvironmentType.Sea;
                         break;
                     case EnvironmentType.Sea:
-                        _currentEnvironment = _environments[EnvironmentType.Ruins];
+                        _currentEnvironmentType = EnvironmentType.Ruins;
                         break;
                     case EnvironmentType.Ruins:
-                        _currentEnvironment = _environments[EnvironmentType.Wasteland];
+                        _currentEnvironmentType = EnvironmentType.Wasteland;
                         break;
                     case EnvironmentType.Wasteland:
-                        _currentEnvironment = null;
-                        break;
+                        _currentEnvironmentType = EnvironmentType.End;
+                        return;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
 
+            SetCurrentEnvironment();
             if (!isLoading && _currentEnvironment != null) MapGenerator.Generate();
         }
 
-        public static EnvironmentType CurrentEnvironmentType() => _currentEnvironment.EnvironmentType;
+        private static void SetCurrentEnvironment()
+        {
+            LoadEnvironments();
+            if (_currentEnvironmentType == EnvironmentType.End)
+            {
+                _currentEnvironment = null;
+                return;
+            }
+
+            _currentEnvironment = _environments[_currentEnvironmentType];
+        }
+
+        public static EnvironmentType CurrentEnvironmentType() => _currentEnvironmentType;
 
         private static void LoadEnvironments()
         {
@@ -112,18 +126,19 @@ namespace Game.Exploration.Environment
         public static void Save(XmlNode doc)
         {
             if (_currentEnvironment == null) return;
-            doc.CreateChild("CurrentEnvironment", _currentEnvironment.EnvironmentType.ToString());
+            doc.CreateChild("CurrentEnvironment", _currentEnvironmentType.ToString());
         }
 
         public static void Load(XmlNode doc)
         {
             LoadEnvironments();
             string currentEnvironmentText = doc.StringFromNode("CurrentEnvironment");
-            foreach (KeyValuePair<EnvironmentType, Environment> environment in _environments)
+            foreach (EnvironmentType environmentType in Enum.GetValues(typeof(EnvironmentType)))
             {
-                if (environment.Key.ToString() != currentEnvironmentText) continue;
-                _currentEnvironment = environment.Value;
-                return;
+                if (environmentType.ToString() != currentEnvironmentText) continue;
+                _currentEnvironmentType = environmentType;
+                SetCurrentEnvironment();
+                break;
             }
         }
     }

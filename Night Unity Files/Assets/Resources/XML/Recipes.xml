@@ -7,9 +7,10 @@
 		<ProductName>Cooked Meat</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>True</MakeAll>
+		<Audio>COOK</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>0</LevelNo>
-		<Description>Tought yet nourishing</Description>
+		<Description>Tough, but nourishing</Description>
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Blubber</Ingredient1Name>
@@ -19,9 +20,10 @@
 		<ProductName>Cooked Blubber</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>True</MakeAll>
+		<Audio>COOK</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>0</LevelNo>
-		<Description>Delicious, fatty, meat</Description>
+		<Description>Delicious fatty meat</Description>
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Fuel</Ingredient1Name>
@@ -31,9 +33,10 @@
 		<ProductName>Fire</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>LIGHTFIRE</Audio>
 		<RecipeType>FIRE</RecipeType>
 		<LevelNo>0</LevelNo>
-		<Description>1</Description>
+		<Description>Light the fire</Description>
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Meat</Ingredient1Name>
@@ -43,6 +46,7 @@
 		<ProductName>Dried Meat</ProductName>
 		<ProductQuantity>2</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>COOK</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>0</LevelNo>
 		<Description>Salty meat, keeps well</Description>
@@ -55,6 +59,7 @@
 		<ProductName>Leather Square</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>0</LevelNo>
 		<Description>Hardened animal hide</Description>
@@ -67,9 +72,10 @@
 		<ProductName>Mystic Shard</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>0</LevelNo>
-		<Description>A fragile, glowing rock</Description>
+		<Description>A fragile glowing rock</Description>
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Grisly Remains</Ingredient1Name>
@@ -79,6 +85,7 @@
 		<ProductName>Improvised Furnace</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>UPGRADE</RecipeType>
 		<LevelNo>1</LevelNo>
 		<Description>Hot enough to melt scrap</Description>
@@ -91,6 +98,7 @@
 		<ProductName>Radiance</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>1</LevelNo>
 		<Description>Banishes the darkness</Description>
@@ -103,6 +111,7 @@
 		<ProductName>Water</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>True</MakeAll>
+		<Audio>BOILWATER</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>1</LevelNo>
 		<Description>A chunk of clear ice</Description>
@@ -115,6 +124,7 @@
 		<ProductName>Trap</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>BUILDING</RecipeType>
 		<LevelNo>1</LevelNo>
 		<Description>Attracts small animals</Description>
@@ -127,6 +137,7 @@
 		<ProductName>Water Collector</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>BUILDING</RecipeType>
 		<LevelNo>1</LevelNo>
 		<Description>Collects rain water</Description>
@@ -139,9 +150,10 @@
 		<ProductName>Makeshift Plate</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>1</LevelNo>
-		<Description>Heavy, metal-bound leather</Description>
+		<Description>Heavy metal-bound leather</Description>
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Metal Shards</Ingredient1Name>
@@ -151,6 +163,7 @@
 		<ProductName>Forging Hammer</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>UPGRADE</RecipeType>
 		<LevelNo>2</LevelNo>
 		<Description>Allows the shaping of metal</Description>
@@ -163,6 +176,7 @@
 		<ProductName>Charcoal</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>FURNACE</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>2</LevelNo>
 		<Description>A longer burning fuel</Description>
@@ -175,6 +189,7 @@
 		<ProductName>Condenser</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>BUILDING</RecipeType>
 		<LevelNo>2</LevelNo>
 		<Description>Condenses water from the air</Description>
@@ -187,6 +202,7 @@
 		<ProductName>Metal Plate</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>2</LevelNo>
 		<Description>Strong metal armour</Description>
@@ -199,6 +215,7 @@
 		<ProductName>Purifier</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>BUILDING</RecipeType>
 		<LevelNo>2</LevelNo>
 		<Description>Slowly makes deathwater potable</Description>
@@ -211,6 +228,7 @@
 		<ProductName>Smoker</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>BUILDING</RecipeType>
 		<LevelNo>2</LevelNo>
 		<Description>Slowly makes rotmeat edible</Description>
@@ -223,6 +241,7 @@
 		<ProductName>Bellows</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>UPGRADE</RecipeType>
 		<LevelNo>3</LevelNo>
 		<Description>Raises the furnace temperature</Description>
@@ -235,6 +254,7 @@
 		<ProductName>Essence Filter</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>BUILDING</RecipeType>
 		<LevelNo>3</LevelNo>
 		<Description>Slowly draws essence from the air</Description>
@@ -247,6 +267,7 @@
 		<ProductName>Tonic of Fettle</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>BOILWATER</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>3</LevelNo>
 		<Description>A tonic of blooms and roots</Description>
@@ -259,6 +280,7 @@
 		<ProductName>Dose of Focus</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>BOILWATER</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>3</LevelNo>
 		<Description>A dose of tears and toadstools</Description>
@@ -271,6 +293,7 @@
 		<ProductName>Iridescent Scale</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>3</LevelNo>
 		<Description>Durable metal scale armour</Description>
@@ -283,6 +306,7 @@
 		<ProductName>Celestial Scale</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>4</LevelNo>
 		<Description>A shard of divine armour</Description>
@@ -295,6 +319,7 @@
 		<ProductName>Elixir of Will</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>BOILWATER</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>4</LevelNo>
 		<Description>An elixer of fronds and leaves</Description>
@@ -307,6 +332,7 @@
 		<ProductName>Concoction of Grit</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>BOILWATER</Audio>
 		<RecipeType>RESOURCE</RecipeType>
 		<LevelNo>4</LevelNo>
 		<Description>A concoction of stems and sacs</Description>
@@ -319,6 +345,7 @@
 		<ProductName>Intricate Tools</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
+		<Audio>CRAFT</Audio>
 		<RecipeType>UPGRADE</RecipeType>
 		<LevelNo>4</LevelNo>
 		<Description>For working the finest metals</Description>

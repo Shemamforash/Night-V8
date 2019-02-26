@@ -276,7 +276,7 @@ namespace Game.Characters
 
         public void UnlockCharacterSkillTwo(bool showScreen)
         {
-            if (SkillOneUnlocked) return;
+            if (SkillTwoUnlocked) return;
             SkillTwoUnlocked = true;
             if (!showScreen) return;
             UiBrandMenu.ShowCharacterSkillUnlock(_player.CharacterSkillTwo);

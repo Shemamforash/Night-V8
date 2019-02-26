@@ -137,7 +137,6 @@ namespace Game.Gear.Weapons
             float characterChance = 0;
             if (_weapon.EquippedCharacter is Player player) characterChance += player.Attributes.Val(condition);
             float totalChance = weaponChance + characterChance;
-            totalChance *= 100;
             totalChance = totalChance.Round(2);
             return totalChance;
         }

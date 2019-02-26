@@ -6,6 +6,7 @@ using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -34,7 +35,7 @@ public class GameController : MonoBehaviour
             return;
         }
 
-        if (newGame) StoryController.Show();
+        if (newGame || !StoryController.StorySeen) StoryController.Show();
         else
         {
             SceneChanger.GoToGameScene();
@@ -47,7 +48,8 @@ public class GameController : MonoBehaviour
     public void ContinueGame()
     {
         if (_starting) return;
-        MenuStateMachine.ShowMenu("Load Save Menu");
+        if (SceneManager.GetActiveScene().name == "Menu") MenuStateMachine.ShowMenu("Load Save Menu");
+        else LoadSaveMenu.LoadMostRecentSave();
     }
 
     public void QuitToDesktop()

@@ -19,12 +19,12 @@ public abstract class ContainerController
     private readonly Vector2 _position;
     protected NamedItem Item;
     protected string PrefabLocation = "Container";
-    protected string ImageLocation;
+    protected Sprite Sprite;
 
     protected ContainerController(Vector2 position)
     {
         _position = position;
-        ImageLocation = "Loot";
+        Sprite = ResourceTemplate.GetSprite("Loot");
     }
 
     public virtual ContainerBehaviour CreateObject(bool autoReveal = false)
@@ -126,8 +126,5 @@ public abstract class ContainerController
         return contentsName;
     }
 
-    public string GetImageLocation()
-    {
-        return ImageLocation;
-    }
+    public Sprite GetSprite() => Sprite;
 }

@@ -2,8 +2,6 @@
 using System.Linq;
 using QuickEngine.Extensions;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.Libraries;
-using UnityEngine;
 
 namespace Game.Gear.Armour
 {

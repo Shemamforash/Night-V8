@@ -24,13 +24,9 @@ public class CreditsController : Menu, IInputListener
             _texts.Add(transform.GetChild(i).GetComponent<TextMeshProUGUI>());
             _texts[i].color = UiAppearanceController.InvisibleColour;
         }
-    }
 
-    public override void Enter()
-    {
-        base.Enter();
-        InputHandler.SetCurrentListener(this);
         FadeInText();
+        InputHandler.SetCurrentListener(this);
     }
 
     private void FadeInText()
