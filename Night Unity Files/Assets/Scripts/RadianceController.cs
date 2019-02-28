@@ -1,13 +1,10 @@
-﻿using Game.Combat.Generation;
+﻿using System;
+using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
-using Game.Exploration.Regions;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using Sirenix.Utilities;
-using Steamworks;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class RadianceController : MonoBehaviour, ICombatEvent
 {
@@ -70,7 +67,8 @@ public class RadianceController : MonoBehaviour, ICombatEvent
         if (playPulse) radianceBehaviour.Pulse();
         else
         {
-            stoneObject.GetComponentsInChildren<ParticleSystem>().ForEach(p =>
+            ParticleSystem[] particles = stoneObject.GetComponentsInChildren<ParticleSystem>();
+            Array.ForEach(particles, p =>
             {
                 ParticleSystem.MainModule main = p.main;
                 main.prewarm = true;

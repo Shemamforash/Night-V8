@@ -4,8 +4,8 @@ using Game.Combat.Enemies;
 using Game.Combat.Player;
 using Game.Exploration.Weather;
 using Game.Gear.Weapons;
-using QuickEngine.Extensions;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -155,7 +155,7 @@ namespace Game.Combat.Misc
             if (canBurn) conditions.Add(1);
             if (canSicken) conditions.Add(2);
             if (conditions.Count == 0) return;
-            _condition = conditions.GetRandomElement();
+            _condition = conditions.RandomElement();
         }
 
         public void ApplyConditions(Vector2 position)

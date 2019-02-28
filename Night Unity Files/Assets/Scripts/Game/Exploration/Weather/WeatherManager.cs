@@ -4,10 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Xml;
 using Game.Exploration.Environment;
-using QuickEngine.Extensions;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Weather

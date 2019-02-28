@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using QuickEngine.Extensions;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 
 namespace Game.Gear.Armour

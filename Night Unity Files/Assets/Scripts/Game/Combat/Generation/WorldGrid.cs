@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using EpPathFinding.cs;
-using Game.Combat.Player;
 using Game.Exploration.Regions;
 using SamsHelper.Libraries;
-using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Debug = UnityEngine.Debug;
@@ -67,7 +64,7 @@ namespace Game.Combat.Generation
         public static void RemoveBarrier(Polygon barrier)
         {
             CalculateIntersectingGridCells(barrier);
-            _intersectingCells.ForEach(c =>
+            _intersectingCells.ToList().ForEach(c =>
             {
                 c.Reachable = true;
                 if (c.OutOfRange) _outOfRangeList.Add(c);

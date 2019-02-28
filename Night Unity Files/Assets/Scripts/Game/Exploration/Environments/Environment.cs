@@ -5,7 +5,6 @@ using System.Xml;
 using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.Libraries;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Game.Exploration.Environment
@@ -37,7 +36,7 @@ namespace Game.Exploration.Environment
         {
             XmlNode root = Helper.OpenRootNode("Regions", "Names");
             RegionType[] regionTypes = {RegionType.Danger, RegionType.Animal, RegionType.Temple, RegionType.Shelter, RegionType.Shrine, RegionType.Monument, RegionType.Fountain, RegionType.Cache};
-            regionTypes.ForEach(r =>
+            Array.ForEach(regionTypes, r =>
             {
                 XmlNode regionNode = root.GetNode(r.ToString());
                 string nameString = regionNode.StringFromNode(EnvironmentType.ToString());

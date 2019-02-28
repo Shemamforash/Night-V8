@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using QuickEngine.Extensions;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
-using UnityEngine.Profiling;
-using UnityEngine.UI;
 
 namespace SamsHelper.Libraries
 {

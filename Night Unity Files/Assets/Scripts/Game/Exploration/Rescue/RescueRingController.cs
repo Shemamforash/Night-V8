@@ -5,7 +5,6 @@ using DG.Tweening;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using SamsHelper.Libraries;
-using Sirenix.Utilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -125,7 +124,7 @@ public class RescueRingController : MonoBehaviour
     {
         if (_ringRotations.Values.Any(v => v != 0)) return;
         _buttons.ForEach(b => b.DisableButton());
-        _ringRotations.Keys.ForEach(g => { g.GetComponent<SpriteRenderer>().DOFade(0.25f, 1.5f); });
+        _ringRotations.Keys.ToList().ForEach(g => { g.GetComponent<SpriteRenderer>().DOFade(0.25f, 1.5f); });
         _successEffect.Activate();
         ShelterCharacterBehaviour.Instance().Free();
         _lockPoints.SetAlpha(1f);
@@ -138,7 +137,7 @@ public class RescueRingController : MonoBehaviour
     private void SetComplete()
     {
         _buttons.ForEach(b => b.DisableButton());
-        _ringRotations.Keys.ForEach(g => { g.GetComponent<SpriteRenderer>().SetAlpha(0.25f); });
+        _ringRotations.Keys.ToList().ForEach(g => { g.GetComponent<SpriteRenderer>().SetAlpha(0.25f); });
         Destroy(gameObject.FindChildWithName("Centre"));
         Destroy(this);
     }

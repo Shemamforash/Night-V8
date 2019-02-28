@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using DG.Tweening;
-using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Player;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
-using Sirenix.Utilities;
 using UnityEngine;
 
 public class BeamController : MonoBehaviour
@@ -77,7 +75,7 @@ public class BeamController : MonoBehaviour
     private IEnumerator WarmUp()
     {
         _chargeAudio.Play();
-        _chargeParticles.ForEach(p => p.Play());
+        Array.ForEach(_chargeParticles, p => p.Play());
         _lineObject.SetActive(true);
         _leadLine.enabled = true;
         _glowLine.enabled = false;
@@ -95,7 +93,7 @@ public class BeamController : MonoBehaviour
 
     private IEnumerator FireBeam()
     {
-        _audioSources.ForEach(s =>
+        Array.ForEach(_audioSources, s =>
         {
             s.volume = 0.5f;
             s.Play();
@@ -103,8 +101,8 @@ public class BeamController : MonoBehaviour
         _beamActive = true;
         _firing = true;
         _blastObject.SetActive(true);
-        _chargeParticles.ForEach(p => p.Stop());
-        _blastParticles.ForEach(b => b.Play());
+        Array.ForEach(_chargeParticles, p => p.Stop());
+        Array.ForEach(_blastParticles, b => b.Play());
         _beamLine.enabled = true;
         _glowLine.enabled = true;
         _leadLine.enabled = false;
@@ -124,9 +122,9 @@ public class BeamController : MonoBehaviour
         }
 
         _stopFiring = false;
-        _audioSources.ForEach(s => s.DOFade(0f, 0.5f));
+        Array.ForEach(_audioSources, s => s.DOFade(0f, 0.5f));
         _lineObject.SetActive(false);
-        _blastParticles.ForEach(p => p.Stop());
+        Array.ForEach(_blastParticles, p => p.Stop());
         _firing = false;
         while (_blastParticles.Any(p => p.particleCount > 0)) yield return null;
         _beamActive = false;

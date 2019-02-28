@@ -1,6 +1,5 @@
 using System;
 using Game.Combat.Player;
-using QuickEngine.Extensions;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -96,8 +95,9 @@ namespace Game.Global.Tutorial
                 CalculateWorldCornersForTransform();
 
             RectTransform canvasRectTransform = canvas.GetComponent<RectTransform>();
-            float canvasWidth = canvasRectTransform.GetWidth();
-            float canvasHeight = canvasRectTransform.GetHeight();
+            Rect rect = canvasRectTransform.rect;
+            float canvasWidth = rect.width;
+            float canvasHeight = rect.height;
 
             _worldCorners = AdvancedMaths.WorldCornersToCanvasSpace(_worldCorners, canvasWidth, canvasHeight);
 

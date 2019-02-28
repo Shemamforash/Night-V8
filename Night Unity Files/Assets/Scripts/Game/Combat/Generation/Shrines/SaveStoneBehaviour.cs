@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using SamsHelper.Libraries;
-using Sirenix.Utilities;
 using UnityEngine;
 
 public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
@@ -22,13 +22,15 @@ public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
         Polygon b = new Polygon(points, Vector2.zero);
         WorldGrid.AddBarrier(b);
         if (CombatManager.GetCurrentRegion().MonumentUsed) return;
-        _instance.transform.GetComponentsInChildren<ParticleSystem>().ForEach(p => p.Play());
+        ParticleSystem[] particles = _instance.transform.GetComponentsInChildren<ParticleSystem>();
+        Array.ForEach(particles, p => p.Play());
     }
 
     public static void SetUsed()
     {
         CombatManager.GetCurrentRegion().MonumentUsed = true;
-        _instance.transform.GetComponentsInChildren<ParticleSystem>().ForEach(p => p.Stop());
+        ParticleSystem[] particles = _instance.transform.GetComponentsInChildren<ParticleSystem>();
+        Array.ForEach(particles, p => p.Stop());
     }
 
     public static SaveStoneBehaviour Instance()

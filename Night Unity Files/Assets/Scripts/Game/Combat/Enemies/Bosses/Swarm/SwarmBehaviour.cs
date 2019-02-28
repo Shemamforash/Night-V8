@@ -4,7 +4,6 @@ using Game.Combat.Enemies.Bosses;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Misc;
 using SamsHelper.Libraries;
-using Sirenix.Utilities;
 using UnityEngine;
 
 public class SwarmBehaviour : Boss

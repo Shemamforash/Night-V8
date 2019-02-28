@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using SamsHelper.Libraries;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Bosses
@@ -41,7 +41,8 @@ namespace Game.Combat.Enemies.Bosses
         {
             SpriteRenderer spriteOnTail = GetComponent<SpriteRenderer>();
             if (spriteOnTail != null) _sprites.Add(spriteOnTail);
-            transform.GetComponentsInChildren<SpriteRenderer>().ForEach(s => _sprites.Add(s));
+            SpriteRenderer[] sprites = transform.GetComponentsInChildren<SpriteRenderer>();
+            Array.ForEach(sprites, s => _sprites.Add(s));
             _sprites.ForEach(s => s.SetAlpha(0f));
         }
 

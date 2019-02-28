@@ -1,14 +1,11 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
-using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Global;
 using SamsHelper.Libraries;
-using Sirenix.Utilities;
 using UnityEngine;
 
 public class MainSwarmSegmentBehaviour : CanTakeDamage
