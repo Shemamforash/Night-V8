@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Characters;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using Game.Exploration.Regions;
@@ -25,10 +26,10 @@ namespace Game.Combat.Generation
         private const float CacheRadius = 5.5f, ShelterRadius = 5f;
         private float NoGoDistance = -1f;
 
-        public void Initialise(Region region)
+        public void Initialise()
         {
-            _region = region;
-            Random.InitState(region.RegionID + WorldState.Seed);
+            _region = CharacterManager.CurrentRegion();
+            Random.InitState(_region.RegionID + WorldState.Seed);
             SetRegionWidth();
             WorldGrid.InitialiseGrid(_region.IsDynamic());
             GenerateFreshEnvironment();

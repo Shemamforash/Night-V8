@@ -145,7 +145,7 @@ public class StarfishBehaviour : Boss
 
     public void Update()
     {
-        if (!CombatManager.IsCombatActive()) return;
+        if (!CombatManager.Instance().IsCombatActive()) return;
         _ghoulSpawn.UpdateGhoulSpawn(SectionCount());
         _spreadFire.UpdateSpreadFire();
         Contract();

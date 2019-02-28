@@ -15,7 +15,7 @@ namespace Game.Combat.Enemies
         public readonly EnemyType EnemyType;
         public readonly int Health, Speed, Value, Difficulty;
         public readonly string DropResource, Species;
-        public readonly bool HasWeapon, HasGear;
+        public readonly bool HasWeapon;
         public readonly float DropRate;
 
         private EnemyTemplate(XmlNode enemyNode)
@@ -27,7 +27,6 @@ namespace Game.Combat.Enemies
             Difficulty = enemyNode.IntFromNode("Difficulty");
             HasWeapon = enemyNode.BoolFromNode("HasWeapon");
             Species = enemyNode.StringFromNode("Species");
-            HasGear = enemyNode.BoolFromNode("HasGear");
             EnemyTemplates[EnemyType] = this;
             DropResource = enemyNode.StringFromNode("Drops");
             DropRate = enemyNode.FloatFromNode("DropRate");
@@ -61,17 +60,37 @@ namespace Game.Combat.Enemies
             _loaded = true;
         }
 
-        public static EnemyTemplate GetEnemyTemplate(EnemyType enemyType)
+        private static EnemyTemplate GetEnemyTemplate(EnemyType enemyType)
         {
             LoadTemplates();
             if (!EnemyTemplates.ContainsKey(enemyType)) throw new Exceptions.EnemyTypeDoesNotExistException(enemyType.ToString());
-
             return EnemyTemplates[enemyType];
         }
 
-        public Enemy Create()
+        public static EnemyBehaviour Create(EnemyType enemyType)
         {
-            return new Enemy(this);
+            return new Enemy(GetEnemyTemplate(enemyType)).GetEnemyBehaviour();
         }
+
+        public static List<EnemyType> RandomiseEnemiesToSize(List<EnemyType> validTypes, int size)
+        {
+            List<EnemyType> enemyTypes = new List<EnemyType>();
+            while (size > 0)
+            {
+                validTypes.Shuffle();
+                foreach (EnemyType e in validTypes)
+                {
+                    int enemyValue = GetEnemyTemplate(e).Value;
+                    if (enemyValue > size) continue;
+                    enemyTypes.Add(e);
+                    size -= enemyValue;
+                    break;
+                }
+            }
+
+            return enemyTypes;
+        }
+
+        public static int GetEnemyValue(EnemyType enemyType) => GetEnemyTemplate(enemyType).Value;
     }
 }

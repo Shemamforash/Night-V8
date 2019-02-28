@@ -2,14 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using DG.Tweening;
 using EZCameraShake;
 using Facilitating;
 using Facilitating.UIControllers;
 using Fastlights;
 using Game.Characters;
-using Game.Combat.Enemies.Animals;
-using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
@@ -22,7 +19,6 @@ using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
-using static Game.Combat.Player.PlayerCombat;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Player
@@ -40,8 +36,6 @@ namespace Game.Combat.Player
 
         private Coroutine _reloadingCoroutine;
 
-        private Number _fettleText;
-
         public Characters.Player Player;
         public FastLight _playerLight;
 
@@ -55,7 +49,7 @@ namespace Game.Combat.Player
         private float _rotateSpeedCurrent;
         private const float RotateAcceleration = 400f;
         private bool _recovered;
-        public Action<Shot> OnFireAction = null;
+        public Action<Shot> OnFireAction;
         public List<Action> UpdateSkillActions = new List<Action>();
         public BaseWeaponBehaviour _weaponBehaviour;
         private FastLight _muzzleFlash;
@@ -65,10 +59,17 @@ namespace Game.Combat.Player
         private Camera _mainCamera;
         private bool _swivelling;
         private float _swivelAmount;
+        public static bool Alive;
 
         public static Vector3 Position()
         {
             return Instance.transform.position;
+        }
+
+        private void OnDestroy()
+        {
+            Alive = false;
+            Instance = null;
         }
 
         public bool ConsumeAdrenaline(int amount)
@@ -127,9 +128,6 @@ namespace Game.Combat.Player
             {
                 switch (axis)
                 {
-                    case InputAxis.Mouse:
-                        FireWeapon();
-                        break;
                     case InputAxis.Fire:
                         FireWeapon();
                         break;
@@ -195,9 +193,6 @@ namespace Game.Combat.Player
         {
             switch (axis)
             {
-                case InputAxis.Mouse:
-                    _weaponBehaviour.StopFiring();
-                    break;
                 case InputAxis.Fire:
                     _weaponBehaviour.StopFiring();
                     break;
@@ -239,7 +234,7 @@ namespace Game.Combat.Player
 
         public float InRange()
         {
-            if (!CombatManager.GetCurrentRegion().IsDynamic() && CombatManager.GetCurrentRegion().GetRegionType() != RegionType.Temple) return -1;
+            if (!CharacterManager.CurrentRegion().IsDynamic() && CharacterManager.CurrentRegion().GetRegionType() != RegionType.Temple) return -1;
             return CurrentCell().OutOfRange || CurrentCell().IsEdgeCell ? 1 : -1;
         }
 
@@ -272,11 +267,12 @@ namespace Game.Combat.Player
 
         public void Activate()
         {
-            CombatManager.ExitCombat();
+            CombatManager.Instance().ExitCombat();
         }
 
         public void ExitCombat()
         {
+            Alive = false;
             InputHandler.UnregisterInputListener(this);
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             StopReloading();
@@ -284,6 +280,7 @@ namespace Game.Combat.Player
 
         public override void Kill()
         {
+            if (!Alive) return;
             if (!_recovered)
             {
                 float recoverAmount = Player.Attributes.RallyHealthModifier;
@@ -296,7 +293,7 @@ namespace Game.Combat.Player
                 }
             }
 
-            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Rite)
+            if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Rite)
             {
                 ShrineBehaviour.ActiveShrine.Fail();
                 return;
@@ -304,9 +301,10 @@ namespace Game.Combat.Player
 
             InputHandler.SetCurrentListener(null);
             InputHandler.UnregisterInputListener(this);
-            base.Kill();
+            WeaponAudio.Destroy();
+            Alive = false;
             bool isWanderer = Player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer;
-            if (!isWanderer) CombatManager.ExitCombat();
+            if (!isWanderer) CombatManager.Instance().ExitCombat();
             Player.Kill(_currentDeathReason);
         }
 
@@ -335,7 +333,7 @@ namespace Game.Combat.Player
         private void CheckBrandUnlock()
         {
             if (!RiteStarter.Available()) return;
-            if (!CombatManager.GetCurrentRegion().IsDynamic()) return;
+            if (!CharacterManager.CurrentRegion().IsDynamic()) return;
             Brand unlocked = Player.BrandManager.GetActiveBrands().FirstOrDefault(b => b != null && b.Ready());
             if (unlocked == null) return;
             RiteStarter.Generate(unlocked);
@@ -404,7 +402,7 @@ namespace Game.Combat.Player
             else FireBurstBehaviour.Create(transform.position).AddIgnoreTarget(this);
         }
 
-        public void EquipWeapon(Weapon weapon)
+        public void EquipWeapon()
         {
             Destroy(_weaponBehaviour);
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
@@ -468,17 +466,17 @@ namespace Game.Combat.Player
         public void Initialise()
         {
             InputHandler.SetCurrentListener(this);
-
+            Alive = true;
             _muzzleFlash = GameObject.Find("Muzzle Flash").GetComponent<FastLight>();
             Player = CharacterManager.SelectedCharacter;
             RecalculateHealth();
-            EquipWeapon(Weapon());
+            EquipWeapon();
             EquipArmour();
             ResetCompass();
             _adrenalineLevel.SetCurrentValue(0f);
 
             _playerLight = GameObject.Find("Player Light").GetComponent<FastLight>();
-            _playerLight.Radius = CombatManager.VisibilityRange();
+            _playerLight.Radius = CombatManager.Instance().VisibilityRange();
 
             SkillBar.UpdateSkills();
             transform.position = WorldGrid.PlayerStartPosition();
@@ -511,7 +509,7 @@ namespace Game.Combat.Player
             if (_reloadingCoroutine != null) return;
             if (_weaponBehaviour.FullyLoaded()) return;
             if (!_weaponBehaviour.CanReload()) return;
-            if (_weaponBehaviour.Empty() && CombatManager.GetEnemiesInRange(transform.position, 5).Count > 0) Player.BrandManager.IncreasePerfectReloadCount();
+            if (_weaponBehaviour.Empty() && CombatManager.Instance().GetEnemiesInRange(transform.position, 5).Count > 0) Player.BrandManager.IncreasePerfectReloadCount();
             _reloadingCoroutine = StartCoroutine(StartReloading());
             _dryFireTimer = 0f;
         }
@@ -601,11 +599,6 @@ namespace Game.Combat.Player
         }
 
         //MISC
-
-        public void ConsumeAmmo(int amount = -1)
-        {
-            _weaponBehaviour.ConsumeAmmo(amount);
-        }
 
         public void ReduceAdrenaline(float amount)
         {

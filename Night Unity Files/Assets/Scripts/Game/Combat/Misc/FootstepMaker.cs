@@ -96,7 +96,7 @@ namespace Game.Combat.Misc
 
         private void Update()
         {
-            if (!CombatManager.IsCombatActive()) return;
+            if (!CombatManager.Instance().IsCombatActive()) return;
             if (Vector2.Distance(_lastPosition, transform.position) < 0.25f) return;
             _timePassed += Time.deltaTime;
             if (_timePassed < TimeToFootPrint) return;

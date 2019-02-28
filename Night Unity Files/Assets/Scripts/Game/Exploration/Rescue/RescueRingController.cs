@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using SamsHelper.Libraries;
@@ -40,7 +41,7 @@ public class RescueRingController : MonoBehaviour
         AddButton("Clockwise A", () => RotateGroupA(-1));
         AddButton("Clockwise B", () => RotateGroupB(-1));
         AddButton("Clockwise C", () => RotateGroupC(-1));
-        if (CombatManager.GetCurrentRegion().CharacterHere == null) SetComplete();
+        if (CharacterManager.CurrentRegion().CharacterHere == null) SetComplete();
         else RandomiseLock();
     }
 

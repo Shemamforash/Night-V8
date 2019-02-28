@@ -81,7 +81,7 @@ public class SpermBehaviour : CanTakeDamage
 
     public override void Kill()
     {
-        CombatManager.RemoveEnemy(this);
+        CombatManager.Instance().RemoveEnemy(this);
         Destroy(GetComponent<CircleCollider2D>());
         StartCoroutine(Explode());
     }
@@ -96,7 +96,7 @@ public class SpermBehaviour : CanTakeDamage
 
         while (childCount >= 0)
         {
-            if (!CombatManager.IsCombatActive()) yield return null;
+            if (!CombatManager.Instance().IsCombatActive()) yield return null;
             Transform child = transform.GetChild(childCount);
             Vector3 childPosition = child.transform.position;
             LeafBehaviour.CreateLeaves(childPosition);

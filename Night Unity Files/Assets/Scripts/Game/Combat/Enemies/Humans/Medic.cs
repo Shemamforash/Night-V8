@@ -68,7 +68,7 @@ namespace Game.Combat.Enemies.Humans
 
         private List<EnemyBehaviour> GetEnemiesNearby()
         {
-            List<CanTakeDamage> chars = CombatManager.GetEnemiesInRange(transform.position, 5f);
+            List<CanTakeDamage> chars = CombatManager.Instance().GetEnemiesInRange(transform.position, 5f);
             List<EnemyBehaviour> enemiesNearby = new List<EnemyBehaviour>();
             chars.ForEach(c =>
             {
@@ -108,7 +108,7 @@ namespace Game.Combat.Enemies.Humans
             _healing = true;
             SkillAnimationController.Create(transform, "Medic", 1.5f, () =>
             {
-                CombatManager.GetEnemiesInRange(transform.position, 1f).ForEach(e =>
+                CombatManager.Instance().GetEnemiesInRange(transform.position, 1f).ForEach(e =>
                 {
                     EnemyBehaviour enemy = e as EnemyBehaviour;
                     if (enemy == null) return;

@@ -27,7 +27,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
                 for (int i = 0; i < enemiesToSpawn; ++i)
                 {
                     Vector2 spawnPosition = AdvancedMaths.RandomDirection() * Random.Range(0.5f, 2f) + (Vector2) transform.position;
-                    CombatManager.SpawnEnemy(_spawnType, spawnPosition);
+                    CombatManager.Instance().SpawnEnemy(_spawnType, spawnPosition);
                 }
             });
         }

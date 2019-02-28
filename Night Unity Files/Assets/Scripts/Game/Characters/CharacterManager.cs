@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
-using Game.Combat.Player;
+using Game.Exploration.Regions;
 using Game.Gear;
 using Game.Gear.Weapons;
 using SamsHelper;
@@ -187,5 +187,7 @@ namespace Game.Characters
                     RemoveCharacter(c);
             }
         }
+
+        public static Region CurrentRegion() => SelectedCharacter.TravelAction.GetCurrentRegion();
     }
 }

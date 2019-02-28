@@ -25,7 +25,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             if (newGeneration == 3) return;
             for (int i = 0; i < splitCount; ++i)
             {
-                EnemyBehaviour enemy = _enemyType == EnemyType.Decoy ? Decoy.Create(GetComponent<EnemyBehaviour>()) : CombatManager.QueueEnemyToAdd(_enemyType);
+                EnemyBehaviour enemy = _enemyType == EnemyType.Decoy ? Decoy.Create(GetComponent<EnemyBehaviour>()) : EnemyTemplate.Create(_enemyType);
                 Vector2 randomDir = AdvancedMaths.RandomVectorWithinRange(Vector3.zero, 1).normalized;
                 enemy.gameObject.transform.position = transform.position;
                 enemy.MovementController.AddForce(randomDir * _spawnForce);

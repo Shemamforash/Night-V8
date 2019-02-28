@@ -43,7 +43,7 @@ public class InsectBehaviour : MonoBehaviour
         float initialRate = emission.rateOverDistance.constant;
         while (currentTime > 0f)
         {
-            if (!CombatManager.IsCombatActive()) yield return null;
+            if (!CombatManager.Instance().IsCombatActive()) yield return null;
             emission.rateOverDistance = currentTime * initialRate;
             currentTime -= Time.deltaTime;
             yield return null;
@@ -52,7 +52,7 @@ public class InsectBehaviour : MonoBehaviour
         emission.rateOverDistance = 0f;
         while (particles.particleCount > 0)
         {
-            if (!CombatManager.IsCombatActive()) particles.PauseParticles();
+            if (!CombatManager.Instance().IsCombatActive()) particles.PauseParticles();
             else particles.ResumeParticles();
             yield return null;
         }

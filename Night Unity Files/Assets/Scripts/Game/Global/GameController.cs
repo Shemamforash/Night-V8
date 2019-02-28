@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Facilitating.Persistence;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Exploration.Regions;
 using Game.Global;
@@ -30,7 +31,7 @@ public class GameController : MonoBehaviour
         {
             Region region = new Region();
             region.SetRegionType(RegionType.Tutorial);
-            CombatManager.SetCurrentRegion(region);
+            CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(region);
             SceneChanger.GoToCombatScene();
             return;
         }

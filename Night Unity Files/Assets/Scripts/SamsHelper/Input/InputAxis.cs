@@ -2,10 +2,11 @@
 {
     public enum InputAxis
     {
-        Mouse,
         Horizontal,
         Vertical,
         Menu,
+        Cancel,
+        Accept,
         SwitchTab,
         Fire,
         Reload,

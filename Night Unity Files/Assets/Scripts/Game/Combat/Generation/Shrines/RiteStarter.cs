@@ -84,7 +84,7 @@ namespace Game.Combat.Generation.Shrines
             {
                 if (_isTutorial)
                 {
-                    CombatManager.ExitCombat(false);
+                    CombatManager.Instance().ExitCombat(false);
                     StoryController.Show();
                     TutorialManager.FinishIntroTutorial();
                     UiGearMenuController.SetOpenAllowed(true);
@@ -93,6 +93,7 @@ namespace Game.Combat.Generation.Shrines
             }
             else
                 GoToRite();
+
             Flash();
             Destroy(this);
         }
@@ -108,26 +109,26 @@ namespace Game.Combat.Generation.Shrines
 
         private void GoToRite()
         {
-            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Rite) return;
+            if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Rite) return;
             Region r = new Region();
             r.SetRegionType(RegionType.Rite);
             Rite.SetBrand(_brand, CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion());
-            CombatManager.SetCurrentRegion(r);
+            CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(r);
             SceneChanger.GoToCombatScene();
-            CombatManager.SetInCombat(false);
+            CombatManager.Instance().LeaveCombat();
         }
 
         private void Return()
         {
-            CombatManager.ExitCombat(false);
+            CombatManager.Instance().ExitCombat(false);
             if (_goToNextRegion)
             {
                 WorldState.TravelToNextEnvironment();
                 return;
             }
 
-            Travel travel = CharacterManager.SelectedCharacter.TravelAction;
-            SceneChanger.GoToCombatScene(() => CombatManager.SetCurrentRegion(travel.GetCurrentRegion()));
+            CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(Rite.GetLastRegion());
+            SceneChanger.GoToCombatScene();
         }
 
         public static void GenerateTutorialStarter()

@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Global;
 using UnityEngine;
@@ -32,7 +33,7 @@ public class JournalSource : ContainerController
         _read = true;
         _journalEntry.Unlock();
         CombatJournalController.ShowJournal(_journalEntry);
-        CombatManager.GetCurrentRegion().JournalIsHere = false;
+        CharacterManager.CurrentRegion().JournalIsHere = false;
     }
 
     protected override string GetLogText() => null;

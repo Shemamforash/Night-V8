@@ -11,8 +11,8 @@ namespace Facilitating.UI
         public float TimeBetweenLines = 1f;
         public float TimeToRead = 3f;
         private static DayChangeSequence _instance;
-        
-        public override void Awake()
+
+        protected override void Awake()
         {
             base.Awake();
             _instance = this;

@@ -124,7 +124,7 @@ namespace Game.Combat.Player
 
         protected override void MagazineEffect(Shot s)
         {
-            if (CombatManager.GetEnemiesInRange(PlayerPosition(), 1.5f).Count == 0) return;
+            if (CombatManager.Instance().GetEnemiesInRange(PlayerPosition(), 1.5f).Count == 0) return;
             _timePassed += Time.deltaTime;
             if (_timePassed < 0.25f) return;
             _timePassed = 0f;

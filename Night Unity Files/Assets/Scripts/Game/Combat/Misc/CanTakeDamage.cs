@@ -29,12 +29,12 @@ namespace Game.Combat.Misc
         {
             SpriteFlash = GetComponent<DamageSpriteFlash>();
             _bloodSpatter = GetComponent<BloodSpatter>();
-            if (!IsPlayer) CombatManager.AddEnemy(this);
+            if (!IsPlayer) CombatManager.Instance().AddEnemy(this);
         }
 
         public virtual void Kill()
         {
-            if (!IsPlayer) CombatManager.RemoveEnemy(this);
+            CombatManager.Instance().RemoveEnemy(this);
             Destroy(gameObject);
         }
 

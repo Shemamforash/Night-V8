@@ -17,7 +17,7 @@ public class UiBrandMenu : Menu
     private Menu _lastMenu;
     private static string _titleString, _benefitString, _quoteString, _overviewString, _descriptionString;
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _detailCanvas = gameObject.FindChildWithName<CanvasGroup>("Detail");
@@ -52,7 +52,7 @@ public class UiBrandMenu : Menu
         _overviewText.SetText(_overviewString);
         _overviewCanvas.alpha = 1;
         _detailCanvas.alpha = 0;
-        _closeButton.UseFireInput();
+        _closeButton.UseAcceptInput();
         _closeButton.Enable();
         _closeButton.SetOnClick(ShowDetail);
         _closeButton.SetCallback(ShowDetail);

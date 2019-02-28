@@ -65,7 +65,7 @@ public class MainSwarmSegmentBehaviour : CanTakeDamage
 
     public void Update()
     {
-        if (!CombatManager.IsCombatActive()) return;
+        if (!CombatManager.Instance().IsCombatActive()) return;
         for (int i = SwarmSegmentBehaviour.Active.Count - 1; i >= 0; --i)
             SwarmSegmentBehaviour.Active[i].UpdateSection();
     }
@@ -80,7 +80,7 @@ public class MainSwarmSegmentBehaviour : CanTakeDamage
         float spawnTimeModifier = 2f;
         while (true)
         {
-            if (!_contracting && CombatManager.IsCombatActive() && SwarmSegmentBehaviour.Active.Count < 100)
+            if (!_contracting && CombatManager.Instance().IsCombatActive() && SwarmSegmentBehaviour.Active.Count < 100)
             {
                 float time = BaseChildSpawnTimer * spawnTimeModifier;
                 spawnTimeModifier *= ChildSpawnDecayRate;
@@ -106,7 +106,7 @@ public class MainSwarmSegmentBehaviour : CanTakeDamage
     {
         while (true)
         {
-            if (!_contracting && CombatManager.IsCombatActive() && _canFire && SwarmSegmentBehaviour.Active.Count > 0)
+            if (!_contracting && CombatManager.Instance().IsCombatActive() && _canFire && SwarmSegmentBehaviour.Active.Count > 0)
             {
                 SwarmSegmentBehaviour swarmSegment = SwarmSegmentBehaviour.Active[0];
                 swarmSegment.StartSeeking();
@@ -124,7 +124,7 @@ public class MainSwarmSegmentBehaviour : CanTakeDamage
     {
         while (true)
         {
-            if (!_contracting && CombatManager.IsCombatActive() && _canBurst)
+            if (!_contracting && CombatManager.Instance().IsCombatActive() && _canBurst)
             {
                 if (!_canBurst) yield return null;
                 SwarmSegmentBehaviour.Active.ForEach(s => s.StartBurst());
@@ -148,7 +148,7 @@ public class MainSwarmSegmentBehaviour : CanTakeDamage
     {
         while (true)
         {
-            if (CombatManager.IsCombatActive() && _canContract)
+            if (CombatManager.Instance().IsCombatActive() && _canContract)
             {
                 _contracting = true;
                 yield return DOTween.To(() => RadiusModifier, f => RadiusModifier = f, 0.1f, 1f).SetEase(Ease.InExpo).WaitForCompletion();

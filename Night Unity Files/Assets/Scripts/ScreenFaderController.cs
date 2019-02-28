@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Game.Characters;
 using Game.Combat.Generation;
 using SamsHelper.Libraries;
 using TMPro;
@@ -33,7 +34,7 @@ public class ScreenFaderController : MonoBehaviour
     private void Start()
     {
         if (CombatManager.Instance() == null) return;
-        string text = CombatManager.GetCurrentRegion().Name;
+        string text = CharacterManager.CurrentRegion().Name;
         if (text == "") return;
         _text.text = text;
         _textCanvas.alpha = 1;

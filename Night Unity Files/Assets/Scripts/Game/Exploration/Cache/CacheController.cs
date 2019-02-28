@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
@@ -44,7 +45,7 @@ public class CacheController : MonoBehaviour
     public void Start()
     {
         WorldGrid.FinaliseGrid();
-        if (CombatManager.GetCurrentRegion().IsWeaponHere) return;
+        if (CharacterManager.CurrentRegion().IsWeaponHere) return;
         Deactivate();
         Destroy(this);
     }
@@ -105,10 +106,10 @@ public class CacheController : MonoBehaviour
     {
         int enemyCount = WorldState.ScaleValue(10);
         int currentButton = 0;
-        List<EnemyTemplate> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
+        List<EnemyType> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
         while (enemyCount > 0)
         {
-            EnemyType enemyType = allowedEnemies.RandomElement().EnemyType;
+            EnemyType enemyType = allowedEnemies.RandomElement();
             _orderedButtons[currentButton].SpawnInEnemy(enemyType);
             --enemyCount;
             ++currentButton;
@@ -116,14 +117,14 @@ public class CacheController : MonoBehaviour
             yield return new WaitForSeconds(5f);
         }
 
-        while (CombatManager.Enemies().Count > 0) yield return null;
+        while (CombatManager.Instance().Enemies().Count > 0) yield return null;
         Deactivate();
         _successEffect.Activate();
         Loot loot = new Loot(Vector2.zero);
         loot.SetItem(WeaponGenerator.GenerateWeapon());
         loot.CreateObject(true);
         CombatLogController.PostLog("An artifact is revealed");
-        CombatManager.GetCurrentRegion().IsWeaponHere = false;
+        CharacterManager.CurrentRegion().IsWeaponHere = false;
     }
 
     private void ResetButtons()

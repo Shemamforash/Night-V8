@@ -33,7 +33,7 @@ namespace Game.Combat.Enemies.Bosses
         public virtual void Kill()
         {
             ScreenFaderController.FlashWhite(1f, new Color(1, 1, 1, 0f));
-            List<CanTakeDamage> enemies = CombatManager.Enemies();
+            List<CanTakeDamage> enemies = CombatManager.Instance().Enemies();
             for (int i = enemies.Count - 1; i >= 0; --i) enemies[i].Kill();
             Destroy(gameObject);
             BossDeathController.Create(transform.position);

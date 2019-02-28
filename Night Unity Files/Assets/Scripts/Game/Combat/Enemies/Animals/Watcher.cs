@@ -26,7 +26,7 @@ namespace Game.Combat.Enemies.Animals
             Cell target = WorldGrid.GetEdgeCell(transform.position);
             MoveBehaviour.GoToCell(target);
             Alerted = true;
-            CombatManager.Enemies().ForEach(e =>
+            CombatManager.Instance().Enemies().ForEach(e =>
             {
                 if (!(e is Grazer enemy)) return;
                 if (enemy.Alerted) return;

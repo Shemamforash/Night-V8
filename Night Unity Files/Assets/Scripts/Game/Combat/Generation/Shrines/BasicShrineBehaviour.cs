@@ -37,12 +37,12 @@ namespace Game.Combat.Generation.Shrines
         
         protected void End()
         {
-            CombatManager.ClearInactiveEnemies();
-            for (int i = CombatManager.Enemies().Count - 1; i >= 0; --i)
+            CombatManager.Instance().ClearInactiveEnemies();
+            for (int i = CombatManager.Instance().Enemies().Count - 1; i >= 0; --i)
             {
                 if (_disappearPrefab == null) _disappearPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Disappear");
-                Instantiate(_disappearPrefab).transform.position = CombatManager.Enemies()[i].transform.position;
-                CombatManager.Enemies()[i].Kill();
+                Instantiate(_disappearPrefab).transform.position = CombatManager.Instance().Enemies()[i].transform.position;
+                CombatManager.Instance().Enemies()[i].Kill();
             }
         }
         

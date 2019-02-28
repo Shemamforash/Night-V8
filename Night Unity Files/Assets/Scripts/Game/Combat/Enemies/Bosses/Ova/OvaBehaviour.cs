@@ -100,11 +100,11 @@ namespace Game.Combat.Enemies.Bosses
             SpawnTimer = Random.Range(20f, 30f);
             float normalisedHealth = HealthController.GetNormalisedHealthValue();
             if (normalisedHealth < 0.25f)
-                CombatManager.SpawnEnemy(EnemyType.Revenant, Vector2.zero);
+                CombatManager.Instance().SpawnEnemy(EnemyType.Revenant, Vector2.zero);
             else if (normalisedHealth < 0.5f)
                 for (int i = 0; i < Random.Range(1, 4); ++i)
-                    CombatManager.SpawnEnemy(EnemyType.Shadow, Vector2.zero);
-            for (int i = 0; i < Random.Range(5, 11); ++i) CombatManager.SpawnEnemy(EnemyType.Ghoul, Vector2.zero);
+                    CombatManager.Instance().SpawnEnemy(EnemyType.Shadow, Vector2.zero);
+            for (int i = 0; i < Random.Range(5, 11); ++i) CombatManager.Instance().SpawnEnemy(EnemyType.Ghoul, Vector2.zero);
         }
 
         private void TryAddBeamAttack()

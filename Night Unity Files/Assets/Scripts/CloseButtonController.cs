@@ -15,7 +15,7 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
     [SerializeField] private TextMeshProUGUI _buttonText;
     [SerializeField] private Image _glowImage;
 
-    private InputAxis _targetAxis = InputAxis.Menu;
+    private InputAxis _targetAxis = InputAxis.Cancel;
     private Action _callback;
     private bool _usingFireInput;
 
@@ -36,18 +36,17 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
         _callback = callback;
     }
 
-    public void UseFireInput()
+    public void UseAcceptInput()
     {
-        _targetAxis = InputAxis.Sprint;
-        _buttonText.SetText("SPC");
+        _targetAxis = InputAxis.Accept;
+        _buttonText.SetText("OK");
         _usingFireInput = true;
     }
 
     private void UseDefaultInput()
     {
-        _targetAxis = InputAxis.Menu;
-        if (_buttonText == null) Debug.Log("null");
-        _buttonText.SetText("ESC");
+        _targetAxis = InputAxis.Cancel;
+        _buttonText.SetText("X");
         _usingFireInput = false;
     }
 

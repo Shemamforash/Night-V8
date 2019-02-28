@@ -77,7 +77,7 @@ public class StarFishArmBehaviour : BossSectionHealthController
         GetComponent<SpriteRenderer>().DOFade(opacity, 1f);
         Destroy(GetComponent<PolygonCollider2D>());
         Destroy(GetComponent<DamageSpriteFlash>());
-        CombatManager.RemoveEnemy(this);
+        CombatManager.Instance().RemoveEnemy(this);
         Parent.UnregisterSection(this);
         LeafBehaviour.CreateLeaves(transform.position);
     }

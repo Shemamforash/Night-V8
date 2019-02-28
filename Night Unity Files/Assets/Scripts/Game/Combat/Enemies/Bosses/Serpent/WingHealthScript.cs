@@ -30,9 +30,9 @@ public class WingHealthScript : BossSectionHealthController
 
     public override void Kill()
     {
-        CombatManager.SpawnEnemy(Helper.RollDie(0, 3) ? EnemyType.Ghast : EnemyType.Ghoul, transform.position);
+        CombatManager.Instance().SpawnEnemy(Helper.RollDie(0, 3) ? EnemyType.Ghast : EnemyType.Ghoul, transform.position);
         Parent.UnregisterSection(this);
-        CombatManager.RemoveEnemy(this);
+        CombatManager.Instance().RemoveEnemy(this);
         Destroy(GetComponent<Rigidbody2D>());
         Destroy(GetComponent<PolygonCollider2D>());
         DamageSpriteFlash damageSpriteFlash = GetComponent<DamageSpriteFlash>();

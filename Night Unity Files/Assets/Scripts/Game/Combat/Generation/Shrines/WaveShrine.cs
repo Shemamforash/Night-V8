@@ -50,10 +50,10 @@ namespace Game.Combat.Generation.Shrines
 
             for (int i = 0; i < spawnCount; ++i)
             {
-                if (!CombatManager.IsCombatActive()) yield return null;
+                if (!CombatManager.Instance().IsCombatActive()) yield return null;
                 Vector2 ghoulPos = AdvancedMaths.CalculatePointOnCircle(currentAngle, SpawnRadius, transform.position);
-                EnemyType enemyType = WorldState.GetAllowedNightmareEnemyTypes().RandomElement().EnemyType;
-                EnemyBehaviour enemy = CombatManager.SpawnEnemy(enemyType, ghoulPos);
+                EnemyType enemyType = WorldState.GetAllowedNightmareEnemyTypes().RandomElement();
+                EnemyBehaviour enemy = CombatManager.Instance().SpawnEnemy(enemyType, ghoulPos);
                 waveDuration += enemy.Enemy.Template.Value;
                 yield return new WaitForSeconds(SpawnDelay);
                 currentAngle += angleInterval;
@@ -65,10 +65,10 @@ namespace Game.Combat.Generation.Shrines
             UpdateCountdown(currentTime, waveDuration, true);
             while (currentTime > 0f)
             {
-                if (!CombatManager.IsCombatActive()) yield return null;
+                if (!CombatManager.Instance().IsCombatActive()) yield return null;
                 currentTime -= Time.deltaTime;
                 UpdateCountdown(currentTime, waveDuration);
-                if (CombatManager.ClearOfEnemies()) break;
+                if (CombatManager.Instance().ClearOfEnemies()) break;
                 yield return null;
             }
 
@@ -77,7 +77,7 @@ namespace Game.Combat.Generation.Shrines
 
         protected override void EndChallenge()
         {
-            if (CombatManager.ClearOfEnemies())
+            if (CombatManager.Instance().ClearOfEnemies())
             {
                 AddIndicator();
                 if (_currentShrineLevel == _shrineLevelMax)

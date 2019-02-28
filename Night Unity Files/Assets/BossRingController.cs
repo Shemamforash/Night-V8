@@ -8,6 +8,7 @@ public class BossRingController : MonoBehaviour
 {
     private static GameObject _bossPrefab;
     private readonly List<BossRing> _rings = new List<BossRing>();
+    private PlayerCombat _playerCombat;
 
     private void Awake()
     {

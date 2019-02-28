@@ -21,7 +21,7 @@ namespace Game.Combat.Misc
 
         public static List<CanTakeDamage> Create(Vector2 position, List<CanTakeDamage> ignoreTargets, int stacks = 1)
         {
-            List<CanTakeDamage> characters = CombatManager.GetCharactersInRange(position, 1);
+            List<CanTakeDamage> characters = CombatManager.Instance().GetCharactersInRange(position, 1);
             characters.ForEach(c =>
             {
                 if (ignoreTargets.Contains(c)) return;

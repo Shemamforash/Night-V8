@@ -65,7 +65,7 @@ namespace Game.Combat.Generation.Shrines
 
         public void Update()
         {
-            if (!CombatManager.IsCombatActive()) return;
+            if (!CombatManager.Instance().IsCombatActive()) return;
             TryFollowPlayer();
             TryAttractToShrine();
             if (_returning && _particles.particleCount == 0) Destroy(gameObject);

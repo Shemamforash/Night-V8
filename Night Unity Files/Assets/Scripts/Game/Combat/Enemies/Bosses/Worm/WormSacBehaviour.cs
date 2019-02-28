@@ -117,24 +117,12 @@ public class WormSacBehaviour : BossSectionHealthController
     {
         Kill();
         Parent.UnregisterSection(this);
-        List<EnemyTemplate> validEnemies = WorldState.GetAllowedNightmareEnemyTypes();
-        List<EnemyType> typesToAdd = new List<EnemyType>();
+        List<EnemyType> validEnemies = WorldState.GetAllowedNightmareEnemyTypes();
         int size = Random.Range(4, 7);
-        while (size > 0)
-        {
-            validEnemies.Shuffle();
-            foreach (EnemyTemplate template in validEnemies)
-            {
-                if (template.Value > size) return;
-                size -= template.Value;
-                typesToAdd.Add(template.EnemyType);
-                break;
-            }
-        }
-
+        List<EnemyType> typesToAdd = EnemyTemplate.RandomiseEnemiesToSize(validEnemies, size);
         foreach (EnemyType enemyType in typesToAdd)
         {
-            EnemyBehaviour enemy = CombatManager.SpawnEnemy(enemyType, transform.position);
+            EnemyBehaviour enemy = CombatManager.Instance().SpawnEnemy(enemyType, transform.position);
             Vector2 direction = (enemy.transform.position - transform.position).normalized;
             enemy.MovementController.KnockBack(direction, Random.Range(20f, 30f));
         }

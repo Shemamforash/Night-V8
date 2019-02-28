@@ -18,7 +18,7 @@ public class GateTransitController : Menu
     private AudioSource _audioSource;
     private static GateTransitController _instance;
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _instance = this;
@@ -75,7 +75,7 @@ public class GateTransitController : Menu
         CharacterManager.SelectedCharacter = CharacterManager.Wanderer;
         ScreenFaderController.FlashWhite(3f, Color.black);
         yield return new WaitForSeconds(3f);
-        CombatManager.SetCurrentRegion(r);
+        CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(r);
         SceneChanger.GoToCombatScene();
     }
 }

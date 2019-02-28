@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Game.Characters;
 using Game.Combat.Generation;
 using UnityEngine;
 
@@ -18,9 +19,9 @@ public class RegionClearController : MonoBehaviour
     private void Update()
     {
         if (_cleared) return;
-        if (!CombatManager.GetCurrentRegion().IsDynamic()) return;
+        if (!CharacterManager.CurrentRegion().IsDynamic()) return;
         if (ContainerController.Containers.Count > 0) return;
-        if (!CombatManager.ClearOfEnemies()) return;
+        if (!CombatManager.Instance().ClearOfEnemies()) return;
         _cleared = true;
         _canvasGroup.DOFade(1f, 1f);
     }

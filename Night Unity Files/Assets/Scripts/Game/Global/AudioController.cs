@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using Game.Characters;
 using Game.Combat.Enemies.Nightmares;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
@@ -80,9 +81,9 @@ namespace Game.Global
         private int GetEnemiesInRange()
         {
             if (PlayerCombat.Instance == null) return -1;
-            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tomb) return Tomb.TombActive ? 1 : 0;
+            if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Tomb) return Tomb.TombActive ? 1 : 0;
             Vector2 playerPosition = PlayerCombat.Position();
-            List<CanTakeDamage> enemies = CombatManager.Enemies();
+            List<CanTakeDamage> enemies = CombatManager.Instance().Enemies();
             if (enemies.Count == 0) return -1;
             int enemiesInRange = enemies.Count(e => e.transform.Distance(playerPosition) <= ThresholdCombatMusicDistance && !(e is AnimalBehaviour));
             return enemiesInRange;
@@ -103,7 +104,7 @@ namespace Game.Global
         private void UpdateMinMaxVolumes(bool isCombatScene)
         {
             if (!isCombatScene) return;
-            Region currentRegion = CombatManager.GetCurrentRegion();
+            Region currentRegion = CharacterManager.CurrentRegion();
             if (currentRegion.IsDynamic())
             {
                 _minAmbientVolume = 0.25f;

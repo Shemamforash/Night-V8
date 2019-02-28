@@ -24,7 +24,7 @@ public class DismantleMenuController : Menu
     private EnhancedText _receivedText;
     private GearItem _gearToDismantle;
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _dismantleList = gameObject.FindChildWithName<ListController>("List");

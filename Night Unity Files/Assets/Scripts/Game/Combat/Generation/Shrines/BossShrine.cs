@@ -25,12 +25,12 @@ namespace Game.Combat.Generation.Shrines
         {
             int maxSize = (int) (WorldState.Difficulty() / 5f + 5);
             int currentSize = 1;
-            List<EnemyTemplate> allowedEnemies = WorldState.GetAllowedNightmareEnemyTypes();
-            List<Enemy> enemies = new List<Enemy>();
+            List<EnemyType> allowedEnemies = WorldState.GetAllowedNightmareEnemyTypes();
+            List<EnemyType> enemies = new List<EnemyType>();
             for (int i = 0; i < 500; ++i)
-                enemies.Add(new Enemy(allowedEnemies.RandomElement()));
-            CombatManager.OverrideInactiveEnemies(enemies);
-            CombatManager.OverrideMaxSize(currentSize);
+                enemies.Add(allowedEnemies.RandomElement());
+            CombatManager.Instance().OverrideInactiveEnemies(enemies);
+            CombatManager.Instance().OverrideMaxSize(currentSize);
 
             float roundTime = 60;
             float currentTime = roundTime;
@@ -38,15 +38,15 @@ namespace Game.Combat.Generation.Shrines
 
             while (currentTime > 0)
             {
-                if (!CombatManager.IsCombatActive()) yield return null;
+                if (!CombatManager.Instance().IsCombatActive()) yield return null;
                 UpdateCountdown(currentTime, roundTime);
                 sizeIncreaseTimer -= Time.deltaTime;
                 if (sizeIncreaseTimer < 0)
                 {
                     sizeIncreaseTimer = 5f;
                     if (currentSize < maxSize) ++currentSize;
-                    CombatManager.OverrideInactiveEnemies(enemies);
-                    CombatManager.OverrideMaxSize(currentSize);
+                    CombatManager.Instance().OverrideInactiveEnemies(enemies);
+                    CombatManager.Instance().OverrideMaxSize(currentSize);
                 }
 
                 currentTime -= Time.deltaTime;
@@ -55,12 +55,12 @@ namespace Game.Combat.Generation.Shrines
 
             Succeed();
             base.EndChallenge();
-            CombatManager.ClearInactiveEnemies();
+            CombatManager.Instance().ClearInactiveEnemies();
         }
 
         protected override void EndChallenge()
         {
-            if (CombatManager.ClearOfEnemies())
+            if (CombatManager.Instance().ClearOfEnemies())
                 Succeed();
             else
                 Fail();

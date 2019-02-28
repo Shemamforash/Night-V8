@@ -120,7 +120,7 @@ namespace Facilitating.UIControllers
             _instance = null;
         }
 
-        public override void Awake()
+        protected override void Awake()
         {
             base.Awake();
             bool isCombat = SceneManager.GetActiveScene().name == "Combat";

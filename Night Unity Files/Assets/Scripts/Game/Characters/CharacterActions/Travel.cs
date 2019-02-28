@@ -54,7 +54,7 @@ namespace Game.Characters.CharacterActions
             CurrentRegion = MapGenerator.GetInitialNode();
             _inTransit = false;
             PlayerCharacter.RestAction.Enter();
-            CombatManager.ExitCombat(false);
+            CombatManager.Instance().ExitCombat(false);
             SceneChanger.GoToGameScene();
         }
 
@@ -77,7 +77,6 @@ namespace Game.Characters.CharacterActions
         private void EnterRegion()
         {
             CurrentRegion.Discover();
-            CombatManager.SetCurrentRegion(CurrentRegion);
             CharacterManager.SelectedCharacter = PlayerCharacter;
             CombatStoryController.TryEnter();
         }
@@ -135,5 +134,7 @@ namespace Game.Characters.CharacterActions
             doc.CreateChild("TravelTime", _travelTime);
             return doc;
         }
+
+        public void SetCurrentRegion(Region region) => CurrentRegion = region;
     }
 }

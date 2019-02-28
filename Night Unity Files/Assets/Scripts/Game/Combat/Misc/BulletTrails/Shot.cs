@@ -56,7 +56,7 @@ namespace Game.Combat.Misc
             float seekForce = _shotAttributes.GetSeekForce();
             if (seekForce < 0) return;
 
-            CanTakeDamage nearestEnemy = CombatManager.NearestEnemy(transform.position);
+            CanTakeDamage nearestEnemy = CombatManager.Instance().NearestEnemy(transform.position);
             if (nearestEnemy == null) return;
             Vector2 dir = new Vector2(-_rigidBody.velocity.y, _rigidBody.velocity.x).normalized;
             float angle = Vector2.Angle(dir, nearestEnemy.transform.position - transform.position);

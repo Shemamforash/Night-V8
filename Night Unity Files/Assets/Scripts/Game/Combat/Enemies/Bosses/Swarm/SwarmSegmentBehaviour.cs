@@ -40,7 +40,7 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
         ArmourController.AutoGenerateArmour();
         SpriteFlash = gameObject.FindChildWithName<DamageSpriteFlash>("Sprite");
         Active.Add(this);
-        CombatManager.RemoveEnemy(this);
+        CombatManager.Instance().RemoveEnemy(this);
     }
 
     public override string GetDisplayName() => "";

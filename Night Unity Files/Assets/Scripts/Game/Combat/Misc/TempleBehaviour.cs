@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
@@ -50,7 +51,7 @@ public class TempleBehaviour : BasicShrineBehaviour
 
     protected override void StartShrine()
     {
-        if (CombatManager.GetCurrentRegion().IsTempleCleansed())
+        if (CharacterManager.CurrentRegion().IsTempleCleansed())
         {
             Succeed();
             return;
@@ -88,7 +89,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         _audioSource.Play();
         while (vortexTime > 0f)
         {
-            if (!CombatManager.IsCombatActive()) yield return null;
+            if (!CombatManager.Instance().IsCombatActive()) yield return null;
             vortexTime -= Time.deltaTime;
             yield return null;
         }
@@ -107,7 +108,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         float currentTime = glowTimeMax;
         while (currentTime > 0f)
         {
-            if (!CombatManager.IsCombatActive()) yield return null;
+            if (!CombatManager.Instance().IsCombatActive()) yield return null;
             _glow.color = new Color(1, 1, 1, currentTime / glowTimeMax);
             currentTime -= Time.deltaTime;
             yield return null;
@@ -121,56 +122,38 @@ public class TempleBehaviour : BasicShrineBehaviour
         int startEnemies = 10;
         List<Cell> cells = WorldGrid.GetCellsNearMe(transform.position, startEnemies, 5, 2);
         for (int i = 0; i < startEnemies; ++i)
-            CombatManager.SpawnEnemy(EnemyType.Ghoul, cells[i].Position);
+            CombatManager.Instance().SpawnEnemy(EnemyType.Ghoul, cells[i].Position);
     }
 
-    private Queue<EnemyTemplate> GetEnemyTypesToSpawn()
+    private Queue<EnemyType> GetEnemyTypesToSpawn()
     {
-        List<EnemyTemplate> enemyTypesToSpawn = new List<EnemyTemplate>();
-        List<EnemyTemplate> allowedTypes = WorldState.GetAllowedNightmareEnemyTypes();
+        List<EnemyType> allowedTypes = WorldState.GetAllowedNightmareEnemyTypes();
         int size = (Mathf.FloorToInt(WorldState.Difficulty() / 10f) + 1) * 20;
-        while (size > 0)
-        {
-            allowedTypes.Shuffle();
-            foreach (EnemyTemplate e in allowedTypes)
-            {
-                if (e.Value > size) continue;
-                size -= e.Value;
-                enemyTypesToSpawn.Add(e);
-                break;
-            }
-        }
-
-        enemyTypesToSpawn.Shuffle();
-        Queue<EnemyTemplate> typeQueue = new Queue<EnemyTemplate>();
+        List<EnemyType> enemyTypesToSpawn = EnemyTemplate.RandomiseEnemiesToSize(allowedTypes, size);
+        Queue<EnemyType> typeQueue = new Queue<EnemyType>();
         enemyTypesToSpawn.ForEach(e => typeQueue.Enqueue(e));
         return typeQueue;
-    }
-
-    private void SpawnEnemy(EnemyTemplate template)
-    {
-        Cell cell = WorldGrid.GetCellNearMe(transform.position, 5, 2);
-        CombatManager.SpawnEnemy(template.EnemyType, cell.Position);
     }
 
     private IEnumerator StartSpawningEnemies()
     {
         SpawnInitialEnemies();
         yield return new WaitForSeconds(2f);
-        Queue<EnemyTemplate> enemyTypesToSpawn = GetEnemyTypesToSpawn();
+        Queue<EnemyType> enemyTypesToSpawn = GetEnemyTypesToSpawn();
         int maxEnemyCount = 5 + WorldState.Difficulty() / 5;
         while (enemyTypesToSpawn.NotEmpty())
         {
-            EnemyTemplate nextEnemy = enemyTypesToSpawn.Dequeue();
-            float nextEnemyArrivalTime = nextEnemy.Value;
+            EnemyType nextEnemy = enemyTypesToSpawn.Dequeue();
+            float nextEnemyArrivalTime = EnemyTemplate.GetEnemyValue(nextEnemy);
             while (nextEnemyArrivalTime > 0f)
             {
-                if (CombatManager.IsCombatActive()) nextEnemyArrivalTime -= Time.deltaTime;
+                if (CombatManager.Instance().IsCombatActive()) nextEnemyArrivalTime -= Time.deltaTime;
                 yield return null;
             }
 
-            while (CombatManager.Enemies().Count > maxEnemyCount) yield return null;
-            SpawnEnemy(nextEnemy);
+            while (CombatManager.Instance().Enemies().Count > maxEnemyCount) yield return null;
+            Cell cell = WorldGrid.GetCellNearMe(transform.position, 5, 2);
+            CombatManager.Instance().SpawnEnemy(nextEnemy, cell.Position);
         }
 
         StartCoroutine(CheckAllEnemiesDead());
@@ -192,11 +175,11 @@ public class TempleBehaviour : BasicShrineBehaviour
 
     private IEnumerator CheckAllEnemiesDead()
     {
-        while (!CombatManager.ClearOfEnemies()) yield return null;
+        while (!CombatManager.Instance().ClearOfEnemies()) yield return null;
         End();
         Succeed();
         WorldState.ActivateTemple();
-        CombatManager.GetCurrentRegion().SetTempleCleansed();
+        CharacterManager.CurrentRegion().SetTempleCleansed();
     }
 
     private void StartLights()
@@ -213,7 +196,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         float maxTime = duration;
         while (duration > 0f)
         {
-            if (!CombatManager.IsCombatActive()) yield return null;
+            if (!CombatManager.Instance().IsCombatActive()) yield return null;
             duration -= Time.deltaTime;
             ring.SetAlphaMultiplier(1f - duration / maxTime);
             yield return null;

@@ -36,8 +36,8 @@ namespace Game.Global
 
         private static int DaysSpentHere;
 
-        private static readonly List<EnemyTemplate> _allowedHumanEnemies = new List<EnemyTemplate>();
-        private static readonly List<EnemyTemplate> _allowedNightmareEnemies = new List<EnemyTemplate>();
+        private static readonly List<EnemyType> _allowedHumanEnemies = new List<EnemyType>();
+        private static readonly List<EnemyType> _allowedNightmareEnemies = new List<EnemyType>();
         private static bool _gateActive;
 
         private static int MinutesPassed;
@@ -374,29 +374,28 @@ namespace Game.Global
             enemyTypes.ForEach(e =>
             {
                 if (e.Difficulty >= difficulty) return;
+                EnemyType enemyType = e.EnemyType;
                 switch (e.Species)
                 {
                     case "Animal":
                         return;
                     case "Human":
-                        if (_allowedHumanEnemies.Contains(e)) return;
-                        _allowedHumanEnemies.Add(e);
+                        _allowedHumanEnemies.AddOnce(enemyType);
                         return;
                     case "Nightmare":
-                        if (_allowedNightmareEnemies.Contains(e)) return;
-                        _allowedNightmareEnemies.Add(e);
+                        _allowedNightmareEnemies.AddOnce(enemyType);
                         return;
                 }
             });
         }
 
-        public static List<EnemyTemplate> GetAllowedHumanEnemyTypes()
+        public static List<EnemyType> GetAllowedHumanEnemyTypes()
         {
             CheckEnemyUnlock();
             return _allowedHumanEnemies;
         }
 
-        public static List<EnemyTemplate> GetAllowedNightmareEnemyTypes()
+        public static List<EnemyType> GetAllowedNightmareEnemyTypes()
         {
             CheckEnemyUnlock();
             return _allowedNightmareEnemies;

@@ -13,14 +13,14 @@ public class CombatJournalController : Menu, IInputListener
     private static bool _closing;
     private AudioSource _audioSource;
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _closing = false;
         _title = gameObject.FindChildWithName<TextMeshProUGUI>("Title");
         _body = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
-        _closeButton.UseFireInput();
+        _closeButton.UseAcceptInput();
         _closeButton.SetOnClick(Close);
         _closeButton.SetCallback(Close);
         _audioSource = GetComponent<AudioSource>();
@@ -60,7 +60,7 @@ public class CombatJournalController : Menu, IInputListener
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
-        if (axis != InputAxis.Menu || isHeld) return;
+        if (axis != InputAxis.Cancel || isHeld) return;
         Close();
     }
 

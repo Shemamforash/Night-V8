@@ -83,7 +83,7 @@ namespace Game.Combat.Misc
 
         public override void MyUpdate()
         {
-            if (!CombatManager.IsCombatActive()) return;
+            if (!CombatManager.Instance().IsCombatActive()) return;
             TryShowText();
             UpdateRotation();
             if (_leaving) return;
@@ -96,11 +96,11 @@ namespace Game.Combat.Misc
             if (_targetCell == null) return;
             if (WorldGrid.WorldToCellPosition(transform.position) != _targetCell) return;
             _leaving = true;
-            CombatManager.ClearInactiveEnemies();
+            CombatManager.Instance().ClearInactiveEnemies();
             ResetEnemyTargets();
-            Characters.Player character = CombatManager.Region().CharacterHere;
+            Characters.Player character = CharacterManager.CurrentRegion().CharacterHere;
             CharacterManager.AddCharacter(character);
-            CombatManager.Region().CharacterHere = null;
+            CharacterManager.CurrentRegion().CharacterHere = null;
             TeleportInOnly.TeleportIn(transform.position);
             _sequence?.Kill();
             EventTextController.SetOverrideText("The prisoner has been rescued");
@@ -112,12 +112,12 @@ namespace Game.Combat.Misc
 
         private void ResetEnemyTargets()
         {
-            CombatManager.Enemies().ForEach(e => ((EnemyBehaviour) e).SetTarget(PlayerCombat.Instance));
+            CombatManager.Instance().Enemies().ForEach(e => ((EnemyBehaviour) e).SetTarget(PlayerCombat.Instance));
         }
 
         private void UpdateEnemyTarget()
         {
-            CombatManager.Enemies().ForEach(e =>
+            CombatManager.Instance().Enemies().ForEach(e =>
             {
                 float distanceToPlayer = e.transform.Distance(PlayerCombat.Instance.transform);
                 CanTakeDamage target = distanceToPlayer < 2f ? PlayerCombat.Instance : (CanTakeDamage) this;
@@ -158,10 +158,10 @@ namespace Game.Combat.Misc
             _freed = true;
             _targetCell = WorldGrid.GetEdgeCell(transform.position);
             _moveBehaviour.GoToCell(_targetCell);
-            List<Enemy> enemies = new List<Enemy>();
-            List<EnemyTemplate> allowedTypes = WorldState.GetAllowedHumanEnemyTypes();
-            for (int i = 0; i < 100; ++i) enemies.Add(new Enemy(allowedTypes.RandomElement()));
-            CombatManager.OverrideInactiveEnemies(enemies);
+            List<EnemyType> enemies = new List<EnemyType>();
+            List<EnemyType> allowedTypes = WorldState.GetAllowedHumanEnemyTypes();
+            for (int i = 0; i < 100; ++i) enemies.Add(allowedTypes.RandomElement());
+            CombatManager.Instance().OverrideInactiveEnemies(enemies);
             _sequence?.Kill();
             EventTextController.SetOverrideText("Protect the prisoner");
             _sequence = DOTween.Sequence();

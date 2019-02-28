@@ -9,7 +9,7 @@ public class FireDamageDeal : MonoBehaviour
 
     public void OnTriggerStay2D(Collider2D other)
     {
-        if (!CombatManager.IsCombatActive()) return;
+        if (!CombatManager.Instance().IsCombatActive()) return;
         CanTakeDamage character = other.GetComponent<CanTakeDamage>();
         if (character == null) return;
         if (_ignoreTargets.Contains(other.GetComponent<CanTakeDamage>())) return;

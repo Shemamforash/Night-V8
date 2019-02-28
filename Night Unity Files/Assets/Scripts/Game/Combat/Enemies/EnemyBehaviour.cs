@@ -90,7 +90,7 @@ namespace Game.Combat.Enemies
             {
                 int sicknessStacks = SicknessStacks;
                 if (sicknessStacks > 5) sicknessStacks = 5;
-                CombatManager.GetCharactersInRange(transform.position, 3).ForEach(c =>
+                CombatManager.Instance().GetCharactersInRange(transform.position, 3).ForEach(c =>
                 {
                     EnemyBehaviour b = c as EnemyBehaviour;
                     if (b == null) return;

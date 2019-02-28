@@ -39,7 +39,7 @@ namespace Game.Exploration.Environment
         private static MapMenuController _instance;
         private Region _nearestRegion;
 
-        public override void Awake()
+        protected override void Awake()
         {
             base.Awake();
             _gritMarker = gameObject.FindChildWithName("Grit").FindChildWithName<UIAttributeMarkerController>("Bar");
@@ -311,19 +311,19 @@ namespace Game.Exploration.Environment
             if (isHeld) return;
             switch (axis)
             {
+                case InputAxis.Accept:
+                    TravelToRegion();
+                    break;
                 case InputAxis.Fire:
                     TravelToRegion();
                     break;
-                case InputAxis.Mouse:
-                    TravelToRegion();
-                    break;
-                case InputAxis.TakeItem:
+                case InputAxis.Compass:
                     TryTeleport();
                     break;
-                case InputAxis.Compass:
+                case InputAxis.Reload:
                     TryRestoreGrit();
                     break;
-                case InputAxis.Menu:
+                case InputAxis.Cancel:
                     if (!IsReturningFromCombat && !TutorialManager.IsTutorialVisible())
                         MenuStateMachine.ShowMenu("Game Menu");
                     break;

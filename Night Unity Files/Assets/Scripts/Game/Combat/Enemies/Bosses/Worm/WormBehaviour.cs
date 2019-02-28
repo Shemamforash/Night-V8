@@ -34,7 +34,7 @@ public class WormBehaviour : Boss
 
     public void Update()
     {
-        if (!CombatManager.IsCombatActive()) return;
+        if (!CombatManager.Instance().IsCombatActive()) return;
         MyUpdate();
     }
 

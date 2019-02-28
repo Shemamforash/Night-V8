@@ -79,7 +79,7 @@ namespace Facilitating.Audio
 
         private bool ShouldUpdate()
         {
-            return !(_inCombat && !CombatManager.IsCombatActive());
+            return !(_inCombat && !CombatManager.Instance().IsCombatActive());
         }
 
         private void UpdateThunder()
@@ -93,7 +93,7 @@ namespace Facilitating.Audio
         {
             _waitingForThunder = true;
             float pause = 4 - WeatherManager.CurrentWeather().Thunder;
-            float pauseMultiplier = CombatManager.IsCombatActive() ? 15f : 5f;
+            float pauseMultiplier = CombatManager.Instance().IsCombatActive() ? 15f : 5f;
             pause *= pauseMultiplier;
             pause = Random.Range(0.75f * pause, 1.25f * pause);
             while (pause > 0f)

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using EpPathFinding.cs;
+using Game.Characters;
 using Game.Exploration.Regions;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -371,7 +372,7 @@ namespace Game.Combat.Generation
 
         public static Vector2 PlayerStartPosition()
         {
-            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tutorial) return Vector2.zero;
+            if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Tutorial) return Vector2.zero;
             return _edgePositionList.RandomElement().Position;
         }
 

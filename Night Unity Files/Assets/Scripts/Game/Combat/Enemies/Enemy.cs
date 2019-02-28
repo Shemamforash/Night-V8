@@ -37,13 +37,6 @@ namespace Game.Combat.Enemies
             GenerateWeapon();
         }
 
-        public override XmlNode Save(XmlNode doc)
-        {
-            doc = base.Save(doc);
-            doc.CreateChild("EnemyType", Template.EnemyType);
-            return doc;
-        }
-
         private void GenerateWeapon()
         {
             if (!Template.HasWeapon) return;
@@ -223,7 +216,7 @@ namespace Game.Combat.Enemies
 
         private Loot DropNightmareLoot(Vector2 position)
         {
-            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Rite) return null;
+            if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Rite) return null;
             if (!CanDropInscription())
             {
                 if (Random.Range(0f, 1f) < Template.DropRate) EssenceCloudBehaviour.Create(position);
@@ -255,7 +248,7 @@ namespace Game.Combat.Enemies
 
         public Loot DropLoot(Vector2 position)
         {
-            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tutorial) return null;
+            if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Tutorial) return null;
             switch (Template.DropResource)
             {
                 case "Salt":

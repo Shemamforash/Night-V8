@@ -18,7 +18,7 @@ public class Mine : MonoBehaviour
 
     public void Update()
     {
-        if (!CombatManager.IsCombatActive()) return ;
+        if (!CombatManager.Instance().IsCombatActive()) return ;
         if (_inactiveTime > 0)
         {
             _inactiveTime -= Time.deltaTime;
@@ -26,7 +26,7 @@ public class Mine : MonoBehaviour
         }
 
         float blinkTimeModifier = 1f;
-        CanTakeDamage nearestCharacter = CombatManager.NearestCharacter(transform.position);
+        CanTakeDamage nearestCharacter = CombatManager.Instance().NearestCharacter(transform.position);
         float nearestCharacterDistance = nearestCharacter.transform.Distance(transform);
         if (nearestCharacterDistance < 2f)
         {

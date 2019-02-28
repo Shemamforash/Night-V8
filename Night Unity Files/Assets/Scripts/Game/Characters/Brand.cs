@@ -77,7 +77,7 @@ namespace Game.Characters
         public void UpdateValue(int amount)
         {
             if (_ready) return;
-            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Rite) return;
+            if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Rite) return;
             _counter += amount;
             if (_counter < _counterTarget)
             {

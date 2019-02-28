@@ -66,7 +66,7 @@ public class UiWillController : UiInventoryMenuController, IInputListener
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
-        if (isHeld || axis != InputAxis.Menu) return;
+        if (isHeld || axis != InputAxis.Cancel) return;
         UiGearMenuController.Close();
     }
 

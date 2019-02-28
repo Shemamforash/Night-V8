@@ -12,7 +12,7 @@ namespace Game.Combat.Ui
         public void Update()
         {
             if (PlayerCombat.Instance == null) return;
-            List<CanTakeDamage> chars = CombatManager.GetEnemiesInRange(PlayerCombat.Position(), 5f);
+            List<CanTakeDamage> chars = CombatManager.Instance().GetEnemiesInRange(PlayerCombat.Position(), 5f);
             Vector2 playerDir = PlayerCombat.Instance.transform.up;
             float nearestAngle = 360;
             CanTakeDamage nearestCharacter = null;

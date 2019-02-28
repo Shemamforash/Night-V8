@@ -29,25 +29,14 @@ namespace Game.Combat.Enemies.Humans
         private void SummonEnemies()
         {
             int reinforcementSize = WorldState.Difficulty() / 10 + 2;
-            List<EnemyTemplate> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
-            allowedEnemies.RemoveAll(t => t.EnemyType == EnemyType.Warlord);
-            List<EnemyType> enemiesToSpawn = new List<EnemyType>();
-            while (reinforcementSize > 0)
-            {
-                allowedEnemies.Shuffle();
-                foreach (EnemyTemplate template in allowedEnemies)
-                {
-                    if (template.Value > reinforcementSize) continue;
-                    enemiesToSpawn.Add(template.EnemyType);
-                    reinforcementSize -= template.Value;
-                    break;
-                }
-            }
-
+            List<EnemyType> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
+            allowedEnemies.RemoveAll(t => t == EnemyType.Warlord);
+            List<EnemyType> enemiesToSpawn = EnemyTemplate.RandomiseEnemiesToSize(allowedEnemies, reinforcementSize);
+            Vector3 position = transform.position;
             enemiesToSpawn.ForEach(type =>
             {
-                Vector2 spawnPosition = WorldGrid.GetCellNearMe(transform.position, 3).Position;
-                SpawnTrailController.Create(transform.position, spawnPosition, type);
+                Vector2 spawnPosition = WorldGrid.GetCellNearMe(position, 3).Position;
+                SpawnTrailController.Create(position, spawnPosition, type);
             });
 
             TryFire();

@@ -23,7 +23,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         
         public virtual void Update()
         {
-            if (Paused || !CombatManager.IsCombatActive()) return;
+            if (Paused || !CombatManager.Instance().IsCombatActive()) return;
             _currentTimer += Time.deltaTime;
             if (_currentTimer < _targetTime) return;
             Attack();

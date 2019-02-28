@@ -40,7 +40,7 @@ namespace Game.Combat.Generation.Shrines
 
         private void SpawnChaser()
         {
-            CombatManager.SpawnEnemy(EnemyType.Shadow, WorldGrid.GetCellNearMe(WorldGrid.WorldToCellPosition(transform.position), 5f, 2f).Position);
+            CombatManager.Instance().SpawnEnemy(EnemyType.Shadow, WorldGrid.GetCellNearMe(WorldGrid.WorldToCellPosition(transform.position), 5f, 2f).Position);
         }
 
         private IEnumerator StartSpawning()
@@ -54,7 +54,7 @@ namespace Game.Combat.Generation.Shrines
             float spawnChaserTime = 0f;
             while (_pickupsLeft > 0 && currentTime > 0f)
             {
-                if (!CombatManager.IsCombatActive()) yield return null;
+                if (!CombatManager.Instance().IsCombatActive()) yield return null;
                 EventTextController.SetOverrideText(_pickupsLeft + " pure essence remains");
                 if (_currentPickup == null) SpawnPickup();
                 spawnChaserTime -= Time.deltaTime;
@@ -116,7 +116,7 @@ namespace Game.Combat.Generation.Shrines
             float currentTime = maxTime;
             while (currentTime > 0)
             {
-                if (!CombatManager.IsCombatActive()) yield return null;
+                if (!CombatManager.Instance().IsCombatActive()) yield return null;
                 _pickupGlow.color = new Color(1, 1, 1, currentTime / maxTime);
                 currentTime -= Time.deltaTime;
                 yield return null;

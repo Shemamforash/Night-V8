@@ -9,7 +9,7 @@ public class LoadSaveMenu : Menu
     private SaveUiController _autoSaveUi, _manualSaveUi;
     private Save _autoSave, _manualSave;
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _autoSaveUi = gameObject.FindChildWithName<SaveUiController>("Auto Slot");

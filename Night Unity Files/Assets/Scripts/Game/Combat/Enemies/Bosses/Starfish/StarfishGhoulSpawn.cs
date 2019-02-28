@@ -36,8 +36,8 @@ namespace Game.Combat.Enemies.Bosses.Starfish
             if (_ghouls.Count == MaxGhouls) return;
             _timeToNextGhoul -= Time.deltaTime;
             if (_timeToNextGhoul > 0f) return;
-            EnemyType typeToSpawn = WorldState.GetAllowedNightmareEnemyTypes().RandomElement().EnemyType;
-            EnemyBehaviour enemy = CombatManager.SpawnEnemy(typeToSpawn, AdvancedMaths.RandomDirection() * 9);
+            EnemyType typeToSpawn = WorldState.GetAllowedNightmareEnemyTypes().RandomElement();
+            EnemyBehaviour enemy = CombatManager.Instance().SpawnEnemy(typeToSpawn, AdvancedMaths.RandomDirection() * 9);
             _ghouls.Add(enemy);
             if (_timeAlive > 60 && Helper.RollDie(0, 3))
             {

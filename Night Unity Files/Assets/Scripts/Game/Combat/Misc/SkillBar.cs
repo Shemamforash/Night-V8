@@ -40,7 +40,7 @@ namespace Game.Combat.Misc
 
         public void Start()
         {
-            if (CombatManager.GetCurrentRegion().GetRegionType() != RegionType.Tutorial) return;
+            if (CharacterManager.CurrentRegion().GetRegionType() != RegionType.Tutorial) return;
             gameObject.FindChildWithName<CanvasGroup>("Skills Left").alpha = 0;
             gameObject.FindChildWithName<CanvasGroup>("Skills Right").alpha = 0;
         }

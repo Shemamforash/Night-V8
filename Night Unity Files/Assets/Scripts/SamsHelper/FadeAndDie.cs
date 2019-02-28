@@ -39,7 +39,7 @@ namespace SamsHelper
         {
             while (_age > 0)
             {
-                if (!CombatManager.IsCombatActive()) yield return null;
+                if (!CombatManager.Instance().IsCombatActive()) yield return null;
                 float normalisedLifeTime = _age / LifeTime;
                 _spriteRenderer.color = new Color(1f, 1f, 1f, normalisedLifeTime * _fullOpacity);
                 _age -= Time.deltaTime;

@@ -61,7 +61,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             while (currentTime < AttackTime)
             {
                 Debug.Log("Feeding");
-                if (!CombatManager.IsCombatActive()) yield return null;
+                if (!CombatManager.Instance().IsCombatActive()) yield return null;
                 currentTime += Time.deltaTime;
                 UpdateFeedParticles();
                 SetEmissionRate(currentTime <= 1 ? currentTime : 1);

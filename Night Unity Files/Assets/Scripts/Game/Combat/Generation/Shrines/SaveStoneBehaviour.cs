@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
@@ -21,14 +22,14 @@ public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
         points.Add(new Vector2(-0.2f, -0.2f));
         Polygon b = new Polygon(points, Vector2.zero);
         WorldGrid.AddBarrier(b);
-        if (CombatManager.GetCurrentRegion().MonumentUsed) return;
+        if (CharacterManager.CurrentRegion().MonumentUsed) return;
         ParticleSystem[] particles = _instance.transform.GetComponentsInChildren<ParticleSystem>();
         Array.ForEach(particles, p => p.Play());
     }
 
     public static void SetUsed()
     {
-        CombatManager.GetCurrentRegion().MonumentUsed = true;
+        CharacterManager.CurrentRegion().MonumentUsed = true;
         ParticleSystem[] particles = _instance.transform.GetComponentsInChildren<ParticleSystem>();
         Array.ForEach(particles, p => p.Stop());
     }

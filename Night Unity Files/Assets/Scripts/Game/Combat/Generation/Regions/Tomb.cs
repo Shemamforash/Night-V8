@@ -135,7 +135,7 @@ namespace Game.Combat.Generation
             sequence.Insert(maxTime - 59, DOTween.To(invertColour.CurrentValue, invertColour.Set, 1f, 59f).SetEase(Ease.InExpo));
             while (currentTime > 0f)
             {
-                if (!CombatManager.IsCombatActive()) yield return null;
+                if (!CombatManager.Instance().IsCombatActive()) yield return null;
                 AudioController.SetAmbientVolume(1f - currentTime / maxTime);
                 currentTime -= Time.deltaTime;
                 CheckToIncreaseMaxEnemies();
@@ -146,8 +146,8 @@ namespace Game.Combat.Generation
             }
 
             AudioController.SetAmbientVolume(1f);
-            CombatManager.SetInCombat(false);
-            CombatManager.ExitCombat(false);
+            CombatManager.Instance().LeaveCombat();
+            CombatManager.Instance().ExitCombat(false);
             EnvironmentManager.NextLevel(false, false);
             StoryController.Show();
         }
@@ -173,11 +173,11 @@ namespace Game.Combat.Generation
         private void CheckToSpawnEnemy()
         {
             _timeToNextEnemy -= Time.deltaTime;
-            if (_timeToNextEnemy > 0 || CombatManager.Enemies().Count >= _maxEnemies) return;
+            if (_timeToNextEnemy > 0 || CombatManager.Instance().Enemies().Count >= _maxEnemies) return;
             _timeToNextEnemy = Random.Range(1f, 2f);
             EnemyType enemyType = _allowedEnemyTypes.RandomElement();
             Vector2 position = AdvancedMaths.RandomDirection() * Random.Range(2f, 6f) + (Vector2) PlayerCombat.Position();
-            CombatManager.SpawnEnemy(enemyType, position);
+            CombatManager.Instance().SpawnEnemy(enemyType, position);
         }
     }
 }

@@ -13,7 +13,7 @@ public class HelpMenuController : Menu
     private ListController _tutorialList;
     private static EnhancedText _tutorialText;
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _tutorialList = gameObject.FindChildWithName<ListController>("List");

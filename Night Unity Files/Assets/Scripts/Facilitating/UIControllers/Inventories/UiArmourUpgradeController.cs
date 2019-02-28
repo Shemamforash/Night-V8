@@ -132,7 +132,7 @@ namespace Facilitating.UIControllers
             if (isHeld) return;
             switch (axis)
             {
-                case InputAxis.Menu:
+                case InputAxis.Cancel:
                     UiGearMenuController.Close();
                     break;
             }

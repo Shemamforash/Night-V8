@@ -15,7 +15,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
         private CanvasGroup _canvasGroup;
 
-        public virtual void Awake()
+        protected virtual void Awake()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
             if (_canvasGroup == null) Debug.Log(gameObject.name);

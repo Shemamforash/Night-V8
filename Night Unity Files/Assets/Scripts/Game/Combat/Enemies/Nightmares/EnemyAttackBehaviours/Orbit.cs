@@ -47,7 +47,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
         public void Update()
         {
-            if (!CombatManager.IsCombatActive()) return;
+            if (!CombatManager.Instance().IsCombatActive()) return;
             _targetPosition = _targetTransform == null ? _targetPosition : (Vector2) _targetTransform.position;
             Vector2 currentPosition = transform.position;
             Vector2 dirToTarget = _targetPosition - currentPosition;

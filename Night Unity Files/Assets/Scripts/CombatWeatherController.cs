@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Characters;
 using Game.Combat.Enemies.Misc;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
@@ -17,7 +18,7 @@ public class CombatWeatherController : MonoBehaviour
 
     public void Awake()
     {
-        if (!CombatManager.Region().IsDynamic())
+        if (!CharacterManager.CurrentRegion().IsDynamic())
         {
             Destroy(this);
             return;
@@ -53,10 +54,10 @@ public class CombatWeatherController : MonoBehaviour
     private void Update()
     {
         if (_weatherAttributes.WindAmount == 0f) return;
-        if (!CombatManager.IsCombatActive()) return;
+        if (!CombatManager.Instance().IsCombatActive()) return;
         Vector2 windForce = Vector2.up * Mathf.PerlinNoise(Time.timeSinceLevelLoad, 0);
         windForce *= _weatherAttributes.WindAmount * 0.5f;
-        List<CanTakeDamage> charactersInRange = CombatManager.GetCharactersInRange(PlayerCombat.Position(), 10);
+        List<CanTakeDamage> charactersInRange = CombatManager.Instance().GetCharactersInRange(PlayerCombat.Position(), 10);
         charactersInRange.ForEach(c =>
         {
             if (!(c is CharacterCombat character)) return;

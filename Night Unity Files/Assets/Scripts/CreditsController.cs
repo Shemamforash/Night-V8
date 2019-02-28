@@ -14,7 +14,7 @@ public class CreditsController : Menu, IInputListener
     private static Sequence _creditsSequence;
     private static bool _paused;
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _paused = false;

@@ -14,7 +14,7 @@ public class BrandReplaceMenuController : Menu
     private CharacterBrandUIController _brandUi;
     private BrandManager _brandManager;
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _brandUi = gameObject.FindChildWithName<CharacterBrandUIController>("Brands");

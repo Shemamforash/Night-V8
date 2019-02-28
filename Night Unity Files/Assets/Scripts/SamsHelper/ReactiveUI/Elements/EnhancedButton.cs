@@ -27,7 +27,7 @@ namespace SamsHelper.ReactiveUI.Elements
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
             if (_button == null || !IsSelected()) return;
-            if (axis != InputAxis.Fire) return;
+            if (axis != InputAxis.Accept) return;
             if (!isHeld)
             {
                 _onHoldActions.ForEach(a => a.Reset());

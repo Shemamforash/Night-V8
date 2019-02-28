@@ -50,14 +50,14 @@ namespace Game.Combat.Generation
             ResourceItem item = ResourceTemplate.Create("Cooked Meat");
             Vector2 position = AdvancedMaths.RandomDirection() * Random.Range(2f, 5f);
             Loot loot = new Loot(position);
-            CombatManager.GetCurrentRegion().Containers.Add(loot);
+            CharacterManager.CurrentRegion().Containers.Add(loot);
             loot.SetResource(item);
             loot.CreateObject();
 
             item = ResourceTemplate.Create("Water");
             position = AdvancedMaths.RandomDirection() * Random.Range(2f, 5f);
             loot = new Loot(position);
-            CombatManager.GetCurrentRegion().Containers.Add(loot);
+            CharacterManager.CurrentRegion().Containers.Add(loot);
             loot.SetResource(item);
             loot.CreateObject();
         }
@@ -95,7 +95,7 @@ namespace Game.Combat.Generation
         {
             _player.UpdateAdrenaline(10000);
             _player.HealthController.TakeDamage(_player.HealthController.GetMaxHealth() * 0.6f);
-            CombatManager.SetForceShowHud(true);
+            CombatManager.Instance().SetForceShowHud(true);
             yield return new WaitForSeconds(0.5f);
             TutorialManager.TryOpenTutorial(7, new List<TutorialOverlay> {new TutorialOverlay(RageBarController.AdrenalineRect())});
             while (TutorialManager.IsTutorialVisible()) yield return null;
@@ -120,9 +120,9 @@ namespace Game.Combat.Generation
             yield return new WaitForSeconds(5);
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
-            while (!CombatManager.ClearOfEnemies())
+            while (!CombatManager.Instance().ClearOfEnemies())
             {
-                if (!_seenAccuracyTutorial && CombatManager.InactiveEnemyCount() == 0 && PlayerCombat.Instance.GetTarget() != null)
+                if (!_seenAccuracyTutorial && CombatManager.Instance().InactiveEnemyCount() == 0 && PlayerCombat.Instance.GetTarget() != null)
                 {
                     TutorialOverlay overlay = new TutorialOverlay(EnemyUi.Instance.UiHitController.GetComponent<RectTransform>());
                     TutorialManager.TryOpenTutorial(8, overlay);
@@ -178,7 +178,7 @@ namespace Game.Combat.Generation
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
 
-            while (CombatManager.GetCurrentRegion().Containers.Count > 0) yield return null;
+            while (CharacterManager.CurrentRegion().Containers.Count > 0) yield return null;
 
             EventTextController.SetOverrideText("Consume food and water to stave off dehydration and thirst");
             yield return new WaitForSeconds(3);
@@ -199,7 +199,7 @@ namespace Game.Combat.Generation
 
         private IEnumerator ShowLeaveTutorial()
         {
-            CombatManager.SetForceShowHud(false);
+            CombatManager.Instance().SetForceShowHud(false);
             RiteStarter.GenerateTutorialStarter();
             EventTextController.SetOverrideText("Walk into the portal to begin your journey");
             yield return new WaitForSeconds(2);
@@ -227,14 +227,14 @@ namespace Game.Combat.Generation
 
         private void CreateEnemies()
         {
-            List<Enemy> inactiveEnemies = new List<Enemy>();
-            inactiveEnemies.Add(new Enemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Brawler)));
-            inactiveEnemies.Add(new Enemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Brawler)));
-            inactiveEnemies.Add(new Enemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Sentinel)));
-            inactiveEnemies.Add(new Enemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Brawler)));
-            inactiveEnemies.Add(new Enemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Sentinel)));
-            CombatManager.OverrideMaxSize(2);
-            CombatManager.OverrideInactiveEnemies(inactiveEnemies);
+            List<EnemyType> inactiveEnemies = new List<EnemyType>();
+            inactiveEnemies.Add(EnemyType.Brawler);
+            inactiveEnemies.Add(EnemyType.Brawler);
+            inactiveEnemies.Add(EnemyType.Sentinel);
+            inactiveEnemies.Add(EnemyType.Brawler);
+            inactiveEnemies.Add(EnemyType.Sentinel);
+            CombatManager.Instance().OverrideMaxSize(2);
+            CombatManager.Instance().OverrideInactiveEnemies(inactiveEnemies);
         }
     }
 }

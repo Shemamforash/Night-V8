@@ -78,13 +78,13 @@ namespace Game.Combat.Misc
         {
             while (_shardParticles.particleCount > 0)
             {
-                bool active = CombatManager.IsCombatActive();
-                if (!CombatManager.IsCombatActive() && active)
+                bool active = CombatManager.Instance().IsCombatActive();
+                if (!CombatManager.Instance().IsCombatActive() && active)
                 {
                     _shardParticles.PauseParticles();
                     _burstParticles.PauseParticles();
                 }
-                else if (CombatManager.IsCombatActive() && !active)
+                else if (CombatManager.Instance().IsCombatActive() && !active)
                 {
                     _shardParticles.ResumeParticles();
                     _burstParticles.ResumeParticles();

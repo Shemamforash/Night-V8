@@ -51,7 +51,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             }
         }
 
-        private void TryLoadSprite(string spriteName)
+        private static Sprite TryLoadSprite(string spriteName)
         {
             if (!_resourceSprites.ContainsKey(spriteName))
             {
@@ -59,11 +59,15 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 _resourceSprites.Add(spriteName, sprite);
             }
 
-            Sprite = _resourceSprites[spriteName];
+            return _resourceSprites[spriteName];
         }
 
-        public static Sprite GetSprite(string spriteName) => _resourceSprites[spriteName];
-
+        public static Sprite GetSprite(string spriteName)
+        {
+            TryLoadSprite(spriteName);
+            if (!_resourceSprites.ContainsKey(spriteName)) Debug.Log(spriteName);
+            return _resourceSprites[spriteName];
+        }
 
         private static ResourceTemplate StringToTemplate(string templateString)
         {
@@ -81,26 +85,26 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 case "Water":
                     ResourceType = ResourceType.Water;
                     Water.Add(this);
-                    TryLoadSprite("Water");
+                    Sprite = TryLoadSprite("Water");
                     break;
                 case "Meat":
                     ResourceType = ResourceType.Meat;
                     Meat.Add(this);
-                    TryLoadSprite("Meat");
+                    Sprite = TryLoadSprite("Meat");
                     break;
                 case "Resource":
                     ResourceType = ResourceType.Resource;
                     OtherResources.Add(this);
-                    TryLoadSprite("Loot");
+                    Sprite = TryLoadSprite("Loot");
                     break;
                 case "Plant":
                     ResourceType = ResourceType.Plant;
                     Plant.Add(this);
-                    TryLoadSprite("Plants/" + Name);
+                    Sprite = TryLoadSprite("Plants/" + Name);
                     break;
                 case "Potion":
                     ResourceType = ResourceType.Potion;
-                    TryLoadSprite("Potion");
+                    Sprite = TryLoadSprite("Potion");
                     break;
                 case "Armour":
                     ResourceType = ResourceType.Armour;

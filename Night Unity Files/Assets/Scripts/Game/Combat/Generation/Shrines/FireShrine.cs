@@ -48,17 +48,15 @@ namespace Game.Combat.Generation.Shrines
             int numberOfEnemies = WorldState.ScaleValue(6);
             _maxEnemies = numberOfEnemies / 3;
 
-            List<Enemy> inactiveEnemies = new List<Enemy>();
+            List<EnemyType> inactiveEnemies = new List<EnemyType>();
             for (int i = 0; i < numberOfEnemies; ++i)
             {
                 EnemyType spawnType = Helper.RollDie(0, 2) ? EnemyType.Maelstrom : EnemyType.Shadow;
-                EnemyTemplate template = EnemyTemplate.GetEnemyTemplate(spawnType);
-                Enemy enemy = new Enemy(template);
-                inactiveEnemies.Add(enemy);
+                inactiveEnemies.Add(spawnType);
             }
 
-            CombatManager.OverrideInactiveEnemies(inactiveEnemies);
-            CombatManager.OverrideMaxSize(_maxEnemies);
+            CombatManager.Instance().OverrideInactiveEnemies(inactiveEnemies);
+            CombatManager.Instance().OverrideMaxSize(_maxEnemies);
 
             float roundTime = numberOfEnemies * 10;
             float currentTime = roundTime;
@@ -67,11 +65,11 @@ namespace Game.Combat.Generation.Shrines
 
             while (currentTime > 0)
             {
-                if (!CombatManager.IsCombatActive()) yield return null;
+                if (!CombatManager.Instance().IsCombatActive()) yield return null;
                 currentTime -= Time.deltaTime;
                 TryCreateFireBurst();
                 UpdateCountdown(currentTime, roundTime);
-                if (CombatManager.ClearOfEnemies())
+                if (CombatManager.Instance().ClearOfEnemies())
                 {
                     Succeed();
                     break;
@@ -86,7 +84,7 @@ namespace Game.Combat.Generation.Shrines
         protected override void EndChallenge()
         {
             _fires.ForEach(f => f.LetDie());
-            if (!CombatManager.ClearOfEnemies()) Fail();
+            if (!CombatManager.Instance().ClearOfEnemies()) Fail();
             base.EndChallenge();
         }
 

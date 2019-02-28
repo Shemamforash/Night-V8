@@ -56,7 +56,7 @@ public class SerpentBehaviour : Boss
         float time = 1f;
         while (time > 0f)
         {
-            if (!CombatManager.IsCombatActive()) yield return null;
+            if (!CombatManager.Instance().IsCombatActive()) yield return null;
             time -= Time.deltaTime;
             yield return null;
         }
@@ -66,7 +66,7 @@ public class SerpentBehaviour : Boss
         time = 5f;
         while (time > 0f)
         {
-            if (!CombatManager.IsCombatActive()) yield return null;
+            if (!CombatManager.Instance().IsCombatActive()) yield return null;
             time -= Time.deltaTime;
             yield return null;
         }
@@ -143,7 +143,7 @@ public class SerpentBehaviour : Boss
 
     public void Update()
     {
-        if (!CombatManager.IsCombatActive()) return;
+        if (!CombatManager.Instance().IsCombatActive()) return;
         UpdateBeamTimer();
         UpdatePush();
     }
@@ -182,7 +182,7 @@ public class SerpentBehaviour : Boss
 
     public void FixedUpdate()
     {
-        if (!CombatManager.IsCombatActive()) return;
+        if (!CombatManager.Instance().IsCombatActive()) return;
         if (!_gettingInPosition)
         {
             if (_firing) _targetPosition = PlayerCombat.Position();

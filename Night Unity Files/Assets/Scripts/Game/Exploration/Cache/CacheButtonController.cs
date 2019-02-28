@@ -65,7 +65,7 @@ public class CacheButtonController : MonoBehaviour
         _spawnTween = _spawnGlow.DOFade(0f, 1f);
         Transform spawnTransform = _spawnGlow.transform;
         Vector2 spawnLocation = spawnTransform.position - spawnTransform.forward * 0.1f;
-        CombatManager.SpawnEnemy(enemyType, spawnLocation);
+        CombatManager.Instance().SpawnEnemy(enemyType, spawnLocation);
     }
 
     private void KillTweens()

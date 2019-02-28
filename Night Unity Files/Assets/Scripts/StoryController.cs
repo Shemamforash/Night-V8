@@ -35,7 +35,7 @@ public class StoryController : Menu
     public static bool StorySeen;
     private PostProcessInvertColour _invertColour;
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _invertColour = Camera.main.GetComponent<PostProcessInvertColour>();
@@ -50,7 +50,7 @@ public class StoryController : Menu
         _closeButton = _skipCanvas.GetComponent<CloseButtonController>();
         _closeButton.SetCallback(Skip);
         _closeButton.SetOnClick(Skip);
-        _closeButton.UseFireInput();
+        _closeButton.UseAcceptInput();
         _audioSource = Camera.main.GetComponent<AudioSource>();
         _audioSource.volume = 0f;
         _audioSource.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);

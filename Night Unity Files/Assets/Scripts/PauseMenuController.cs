@@ -107,7 +107,7 @@ public class PauseMenuController : MonoBehaviour
                 CreditsController.Pause();
                 break;
             case "Combat":
-                CombatManager.Pause();
+                CombatManager.Instance().Pause();
                 break;
         }
     }
@@ -123,7 +123,7 @@ public class PauseMenuController : MonoBehaviour
                 CreditsController.Unpause();
                 break;
             case "Combat":
-                CombatManager.Resume();
+                CombatManager.Instance().Resume();
                 break;
         }
     }

@@ -133,7 +133,7 @@ namespace Game.Combat.Misc
             _age = 0f;
             while (_age < ExplosionWarmUpTime)
             {
-                if (!CombatManager.IsCombatActive()) yield return null;
+                if (!CombatManager.Instance().IsCombatActive()) yield return null;
                 _warningRing.transform.Rotate(0, 0, 5 * Time.deltaTime);
                 _warningRing.color = new Color(1, 0, 0, _age / ExplosionWarmUpTime);
                 _age += Time.deltaTime;
@@ -152,7 +152,7 @@ namespace Game.Combat.Misc
             _warningRing.color = UiAppearanceController.InvisibleColour;
             while (_age < ExplodeTime + FadeTime)
             {
-                if (!CombatManager.IsCombatActive()) yield return null;
+                if (!CombatManager.Instance().IsCombatActive()) yield return null;
                 if (!shownWarning && _age < ExplodeTime / 2f)
                 {
                     _light.Colour = UiAppearanceController.FadedColour;

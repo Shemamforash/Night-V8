@@ -60,7 +60,7 @@ namespace Game.Global
             _environmentText.text = _timeString + " in the " + _environmentString + ". It is " + _temperatureString + " and " + _weatherString + ". " + templeString;
         }
 
-        public override void Awake()
+        protected override void Awake()
         {
             base.Awake();
             PauseOnOpen = false;

@@ -60,18 +60,18 @@ public abstract class ContainerController
             switch (resourceTemplate.ResourceType)
             {
                 case ResourceType.Water:
-                    --CombatManager.GetCurrentRegion().WaterSourceCount;
+                    --CharacterManager.CurrentRegion().WaterSourceCount;
                     player.BrandManager.IncreaseWaterFound();
                     break;
                 case ResourceType.Plant:
-                    --CombatManager.GetCurrentRegion().FoodSourceCount;
+                    --CharacterManager.CurrentRegion().FoodSourceCount;
                     player.BrandManager.IncreaseFoodFound();
                     break;
                 case ResourceType.Meat:
                     player.BrandManager.IncreaseFoodFound();
                     break;
                 case ResourceType.Resource:
-                    --CombatManager.GetCurrentRegion().ResourceSourceCount;
+                    --CharacterManager.CurrentRegion().ResourceSourceCount;
                     player.BrandManager.IncreaseResourceFound();
                     break;
             }
@@ -100,7 +100,7 @@ public abstract class ContainerController
 
     public virtual void Take()
     {
-        CombatManager.GetCurrentRegion().Containers.Remove(this);
+        CharacterManager.CurrentRegion().Containers.Remove(this);
         Player player = CharacterManager.SelectedCharacter;
         switch (Item)
         {

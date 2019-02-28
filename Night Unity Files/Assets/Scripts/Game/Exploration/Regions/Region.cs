@@ -68,7 +68,7 @@ namespace Game.Exploration.Regions
         public void CheckForRegionExplored()
         {
             if (!_justDiscovered) return;
-            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tutorial) return;
+            if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Tutorial) return;
             PlayerCombat.Instance.Player.BrandManager.IncreaseRegionsExplored();
         }
 
@@ -219,40 +219,27 @@ namespace Game.Exploration.Regions
             _mapNode.SetRegion(this);
         }
 
-        private List<EnemyTemplate> GenerateEncounter(List<EnemyTemplate> allowedTypes)
+        private List<EnemyType> GenerateEncounter(List<EnemyType> allowedTypes)
         {
-            List<EnemyTemplate> templates = new List<EnemyTemplate>();
+            List<EnemyType> templates = new List<EnemyType>();
             if (Claimed() || !IsDynamic()) return templates;
             if (ShouldGenerateEncounter) _size = WorldState.Difficulty() + 4;
-            templates.AddRange(CombatManager.GenerateEnemies(_size, allowedTypes));
+            templates = EnemyTemplate.RandomiseEnemiesToSize(allowedTypes, _size);
             _size = 0;
             return templates;
         }
 
-        private List<EnemyTemplate> GenerateAnimalEncounter()
+        private List<EnemyType> GenerateAnimalEncounter()
         {
-            List<EnemyTemplate> templates = new List<EnemyTemplate>();
-            if (Claimed()) return templates;
-            List<EnemyTemplate> animalTypes = new List<EnemyTemplate>
+            if (Claimed()) return new List<EnemyType>();
+            List<EnemyType> animalTypes = new List<EnemyType>
             {
-                EnemyTemplate.GetEnemyTemplate(EnemyType.Grazer),
-                EnemyTemplate.GetEnemyTemplate(EnemyType.Watcher),
-                EnemyTemplate.GetEnemyTemplate(EnemyType.Curio)
+                EnemyType.Grazer,
+                EnemyType.Watcher,
+                EnemyType.Curio
             };
             if (ShouldGenerateEncounter) _size = WorldState.Difficulty() / 10 + 5;
-            while (_size > 0)
-            {
-                animalTypes.Shuffle();
-                foreach (EnemyTemplate e in animalTypes)
-                {
-                    if (e.Value > _size) continue;
-                    templates.Add(e);
-                    _size -= e.Value;
-                    break;
-                }
-            }
-
-            return templates;
+            return EnemyTemplate.RandomiseEnemiesToSize(animalTypes, _size);
         }
 
         private void CheckIsDynamic()
@@ -306,33 +293,28 @@ namespace Game.Exploration.Regions
             return _discovered;
         }
 
-        public List<Enemy> GetEnemies()
+        public List<EnemyType> GetEnemies()
         {
-            List<Enemy> enemies = new List<Enemy>();
-            List<EnemyTemplate> templates;
+            List<EnemyType> enemyTypes = new List<EnemyType>();
             switch (_regionType)
             {
                 case RegionType.Danger:
-                    templates = GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
+                    enemyTypes = GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
                     break;
                 case RegionType.Fountain:
-                    templates = GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
+                    enemyTypes = GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
                     break;
                 case RegionType.Monument:
-                    templates = GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
+                    enemyTypes = GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
                     break;
                 case RegionType.Shrine:
-                    templates = GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
+                    enemyTypes = GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
                     break;
                 case RegionType.Animal:
-                    templates = GenerateAnimalEncounter();
+                    enemyTypes = GenerateAnimalEncounter();
                     break;
-                default:
-                    return enemies;
             }
-
-            templates.ForEach(t => enemies.Add(t.Create()));
-            return enemies;
+            return enemyTypes;
         }
 
         public bool Seen() => _seen;
@@ -347,11 +329,25 @@ namespace Game.Exploration.Regions
 
         public RegionType GetRegionType() => _regionType;
 
-        public void RestoreSize(int size) => _size += size;
+        public void RestoreSize(EnemyType enemyType)
+        {
+            int size = EnemyTemplate.GetEnemyValue(enemyType);
+            _size += size;
+        }
+
+        public void RestoreSize(CanTakeDamage takeDamage)
+        {
+            EnemyBehaviour enemyBehaviour = takeDamage as EnemyBehaviour;
+            if (enemyBehaviour == null) return;
+            if (enemyBehaviour.Enemy == null) return;
+            _size += enemyBehaviour.Enemy.Template.Value;
+        }
 
         public bool IsTempleCleansed()
         {
             return _templeCleansed;
         }
+
+        
     }
 }

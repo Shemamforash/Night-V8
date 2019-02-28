@@ -40,7 +40,7 @@ public class VortexBehaviour : MonoBehaviour
         float time = 0.75f;
         while (time > 0f)
         {
-            List<CanTakeDamage> charactersInRange = CombatManager.GetCharactersInRange(_position, 2f);
+            List<CanTakeDamage> charactersInRange = CombatManager.Instance().GetCharactersInRange(_position, 2f);
             charactersInRange.Remove(PlayerCombat.Instance);
             charactersInRange.ForEach(c =>
             {

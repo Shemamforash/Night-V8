@@ -160,7 +160,7 @@ namespace Game.Characters
 
         private void IncreaseTimeSurvived()
         {
-            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tutorial) return;
+            if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Tutorial) return;
             ++_daysSurvived;
             _showJournal = true;
             TryUnlockCharacterSkill(true);
@@ -246,7 +246,7 @@ namespace Game.Characters
             base.EquipWeapon(weapon);
             if (_characterView != null) _characterView.WeaponController.UpdateWeapon();
             if (PlayerCombat.Instance == null) return;
-            PlayerCombat.Instance.EquipWeapon(weapon);
+            PlayerCombat.Instance.EquipWeapon();
         }
 
         public override void EquipAccessory(Accessory accessory)
@@ -257,7 +257,7 @@ namespace Game.Characters
 
         public void IncreaseKills()
         {
-            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tutorial) return;
+            if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Tutorial) return;
             BrandManager.IncreaseEnemiesKilled();
             WeaponType weaponType = EquippedWeapon.WeaponType();
             _weaponKills[weaponType] = _weaponKills[weaponType] + 1;

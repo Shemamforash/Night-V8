@@ -16,7 +16,7 @@ public class SerpentBombAttack : MonoBehaviour
     public void Update()
     {
         if (_minTimeToBomb == -1) return;
-        if (!CombatManager.IsCombatActive()) return;
+        if (!CombatManager.Instance().IsCombatActive()) return;
         _timeToNextBomb -= Time.deltaTime;
         if (_timeToNextBomb > 0) return;
         _timeToNextBomb = Random.Range(_minTimeToBomb, _minTimeToBomb * 2f);

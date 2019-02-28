@@ -73,20 +73,20 @@ namespace Game.Combat.Generation.Shrines
         private IEnumerator SpawnEnemies()
         {
             int daysSpent = WorldState.GetDaysSpentHere() + 5;
-            List<EnemyTemplate> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
+            List<EnemyType> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
             float timeToSpawn = 0f;
             for (int i = 0; i < Random.Range(daysSpent / 2f, daysSpent); ++i)
             {
-                if (!CombatManager.IsCombatActive()) yield return null;
+                if (!CombatManager.Instance().IsCombatActive()) yield return null;
                 while (timeToSpawn > 0f)
                 {
-                    if (!CombatManager.IsCombatActive()) yield return null;
+                    if (!CombatManager.Instance().IsCombatActive()) yield return null;
                     timeToSpawn -= Time.deltaTime;
                     yield return null;
                 }
 
                 Vector2 spawnPosition = WorldGrid.GetCellNearMe(transform.position, 5).Position;
-                SpawnTrailController.Create(transform.position, spawnPosition, allowedEnemies.RandomElement().EnemyType);
+                SpawnTrailController.Create(transform.position, spawnPosition, allowedEnemies.RandomElement());
                 timeToSpawn = Random.Range(0.5f, 1f);
                 yield return null;
             }
@@ -95,7 +95,7 @@ namespace Game.Combat.Generation.Shrines
         public void Update()
         {
             if (!Triggered || _allEnemiesDead) return;
-            if (!CombatManager.ClearOfEnemies()) return;
+            if (!CombatManager.Instance().ClearOfEnemies()) return;
             Succeed();
             _allEnemiesDead = true;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -8,19 +9,19 @@ using UnityEngine;
 
 public class RadianceController : MonoBehaviour, ICombatEvent
 {
-    private static bool _active;
+    private bool _active;
     private static GameObject _stonePrefab;
     private int _radianceAvailable;
     private static RadianceController _instance;
-    private static bool _activated;
+    private bool _activated;
 
     public void Awake()
     {
         _instance = this;
         _radianceAvailable = Inventory.GetResourceQuantity("Radiance");
-        _activated = CombatManager.GetCurrentRegion().Claimed();
+        _activated = CharacterManager.CurrentRegion().Claimed();
         if (!_activated) return;
-        Vector2? existingRadianceStone = CombatManager.GetCurrentRegion().RadianceStonePosition;
+        Vector2? existingRadianceStone = CharacterManager.CurrentRegion().RadianceStonePosition;
         CreateRadianceStone(existingRadianceStone.Value, false);
     }
 
@@ -48,9 +49,10 @@ public class RadianceController : MonoBehaviour, ICombatEvent
     {
         if (_activated) return -1;
         if (_radianceAvailable == 0) return -1;
-        if (!CombatManager.AllEnemiesDead()) return -1;
-        if (!CombatManager.Region().IsDynamic()) return -1;
+        if (!CharacterManager.CurrentRegion().IsDynamic()) return -1;
         if (CacheController.Active()) return -1;
+        bool allEnemiesDead = CombatManager.Instance().Enemies().Count == 0 && CombatManager.Instance().InactiveEnemyCount() == 0;
+        if (!allEnemiesDead) return -1;
         return 1;
     }
 
