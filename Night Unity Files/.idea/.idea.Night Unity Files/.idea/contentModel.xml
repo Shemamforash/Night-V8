@@ -277,6 +277,7 @@
             <e p="Impact Shader.shader" t="Include" />
           </e>
         </e>
+        <e p="inputtest.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="DarkTonic" t="Include">
             <e p="MasterAudio" t="Include">

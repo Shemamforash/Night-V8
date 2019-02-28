@@ -1,58 +1,46 @@
-﻿using System.Collections;
-using SamsHelper.Libraries;
+﻿using DG.Tweening;
+using Game.Global;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EndGameAudioController : MonoBehaviour
 {
-    private const float Duration = 30f;
-    private AudioSource _boom, _beep;
-    private float _beepVolume, _boomVolume, _timeToNextBeep;
-    private float _normalisedTime;
+    private AudioSource _audioSource;
+    private static EndGameAudioController _instance;
+    private static bool _active;
 
     public void Awake()
     {
-        _boom = gameObject.FindChildWithName<AudioSource>("Boom");
-        _beep = gameObject.FindChildWithName<AudioSource>("Beep");
-        StartCoroutine(StartBeep());
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.clip = AudioClips.AtTheEnd;
+        _audioSource.Play();
+        _active = true;
+        DontDestroyOnLoad(this);
+        Stop();
+        _instance = this;
+        SceneManager.sceneLoaded += OnSceneLoad;
     }
 
-    private float GetBoomVolume()
+    private void OnSceneLoad(Scene scene, LoadSceneMode loadMode)
     {
-        if (_normalisedTime < 0.6f) return _normalisedTime / 0.6f;
-        if (_normalisedTime < 0.8f) return 1f;
-        return (1 - _normalisedTime) / 0.2f;
+        if (scene.name == "Story") return;
+        Stop();
     }
 
-    private float GetBeepVolume()
+    private void OnDestroy()
     {
-        if (_normalisedTime < 0.6f) return 0f;
-        return 1 - (1 - _normalisedTime) / 0.4f;
+        SceneManager.sceneLoaded -= OnSceneLoad;
     }
 
-    private IEnumerator StartBeep()
+    private static void Stop()
     {
-        float elapsedTime = 0f;
-        _timeToNextBeep = -1;
-
-        while (elapsedTime < Duration)
-        {
-            elapsedTime += Time.deltaTime;
-            _normalisedTime = elapsedTime / Duration;
-            _boomVolume = GetBoomVolume();
-            _beepVolume = GetBeepVolume();
-            Beep();
-            yield return null;
-        }
+        if (_instance == null) return;
+        Sequence sequence = DOTween.Sequence();
+        EndGameAudioController endGameAudio = _instance;
+        sequence.Append(endGameAudio._audioSource.DOFade(0f, 1f));
+        sequence.AppendCallback(() => Destroy(endGameAudio.gameObject));
+        _active = false;
     }
 
-    private void Beep()
-    {
-        _timeToNextBeep -= Time.deltaTime;
-        if (_timeToNextBeep > 0) return;
-        _timeToNextBeep = 1;
-        _boom.volume = _boomVolume;
-        _beep.volume = _beepVolume;
-        _boom.Play();
-        _beep.Play();
-    }
+    public static bool Active() => _active;
 }

@@ -171,7 +171,7 @@ namespace Game.Combat.Misc
                 {
                     if (!emitted)
                     {
-                        _audioSource.volume = Random.Range(0.9f, 1f);
+                        _audioSource.volume = Random.Range(0.8f, 0.9f);
                         _audioSource.pitch = Random.Range(0.9f, 1.1f);
                         _audioSource.Play();
                         AddConditions();

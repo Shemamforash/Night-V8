@@ -16,10 +16,9 @@ public class PostProcessInvertColour : MonoBehaviour
         DOTween.To(() => Material.GetFloat(_invertLevel), f => Material.SetFloat(_invertLevel, f), value, duration);
     }
 
-    public void Set(int val)
-    {
-        Material.SetFloat(_invertLevel, val);
-    }
+    public void Set(float val) => Material.SetFloat(_invertLevel, val);
 
     private void OnDestroy() => Set(0);
+
+    public float CurrentValue() => Material.GetFloat(_invertLevel);
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using SamsHelper.Libraries;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace SamsHelper.Input
@@ -15,6 +17,8 @@ namespace SamsHelper.Input
         private static readonly List<IInputListener> ListenersToRemove = new List<IInputListener>();
         private static IInputListener _currentInputListener;
         private static bool _listenersInterrupted;
+        private static bool _joyStickDetected;
+        private string[] _joystickNames;
 
         public void Awake()
         {
@@ -35,6 +39,8 @@ namespace SamsHelper.Input
 
         public void Update()
         {
+            _joystickNames = UnityEngine.Input.GetJoystickNames();
+            _joyStickDetected = _joystickNames.Length != 0 && _joystickNames.All(j => j != "");
             if (ListenersToAdd.Count != 0)
             {
                 InputListeners.AddRange(ListenersToAdd);

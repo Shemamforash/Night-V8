@@ -3439,6 +3439,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 225887079187452636, guid: b3eae0f9d0f47c140868cc9aba3d3fec,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3eae0f9d0f47c140868cc9aba3d3fec, type: 3}
 --- !u!1 &1173811453
@@ -9259,6 +9264,7 @@ GameObject:
   - component: {fileID: 1829455900}
   - component: {fileID: 1829455899}
   - component: {fileID: 1829455898}
+  - component: {fileID: 1829455895}
   m_Layer: 17
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -9266,6 +9272,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1829455895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1829455894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49c547039e527b6449ae8bed8690b324, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Material: {fileID: 2100000, guid: a4b7eb6fa1034304abc1aa667213dc0a, type: 2}
 --- !u!4 &1829455897
 Transform:
   m_ObjectHideFlags: 0

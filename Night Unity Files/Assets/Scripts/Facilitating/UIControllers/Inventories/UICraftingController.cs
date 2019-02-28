@@ -7,7 +7,6 @@ using Facilitating.Persistence;
 using Facilitating.UIControllers;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
-using Game.Combat.Player;
 using Game.Global;
 using Game.Global.Tutorial;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -27,6 +26,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
     private static bool _unlocked;
     private List<TutorialOverlay> _overlays;
     private bool _seenTutorial;
+    private static Sprite _upgradeSprite, _craftSprite, _cookSprite, _boilSprite;
 
     public static void Load(XmlNode root)
     {
@@ -108,8 +108,18 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         _craftingList.Show();
     }
 
+    private void LoadSprites()
+    {
+        if (_upgradeSprite != null) return;
+        _upgradeSprite = Resources.Load<Sprite>("Images/Container Symbols/Upgrade");
+        _craftSprite = Resources.Load<Sprite>("Images/Container Symbols/Craft");
+        _cookSprite = Resources.Load<Sprite>("Images/Container Symbols/Meat");
+        _boilSprite = Resources.Load<Sprite>("Images/Container Symbols/Water");
+    }
+
     protected override void Initialise()
     {
+        LoadSprites();
         List<ListElement> listElements = new List<ListElement>();
         listElements.Add(new CraftingElement());
         listElements.Add(new CraftingElement());
@@ -200,6 +210,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
     {
         private EnhancedText _craftableText, _nameText, _costText;
         private Image _icon;
+        private Recipe _recipe;
 
         protected override void UpdateCentreItemEmpty()
         {
@@ -211,25 +222,47 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
 
         protected override void Update(object o, bool isCentreItem)
         {
-            Recipe recipe = (Recipe) o;
-            string productString = recipe.GetProductQuantity() > 1 ? recipe.Name + " x" + recipe.GetProductQuantity() : recipe.Name;
-            _nameText.SetText(productString);
+            _recipe = (Recipe) o;
+            SetNameText();
+            SetCostText();
+            SetCraftableText();
+            SetIcon();
+        }
 
+        private void SetIcon()
+        {
+            if (_recipe.RecipeType == RecipeType.Upgrade) _icon.sprite = _upgradeSprite;
+            else if (_recipe.RecipeAudio == Recipe.RecipeAudioType.Cook) _icon.sprite = _cookSprite;
+            else if (_recipe.RecipeAudio == Recipe.RecipeAudioType.BoilWater) _icon.sprite = _boilSprite;
+            else _icon.sprite = _craftSprite;
+        }
+
+        private void SetCraftableText()
+        {
             string craftableString = "";
-            if (recipe.RecipeType == RecipeType.Building)
+            if (_recipe.RecipeType == RecipeType.Building)
             {
-                int builtCount = recipe.Built();
-                if (builtCount != 0) craftableString += "Built " + recipe.Built() + "   ";
+                int builtCount = _recipe.Built();
+                if (builtCount != 0) craftableString += "Built " + _recipe.Built() + "   ";
             }
 
-            if (!recipe.CanCraft()) craftableString += "Need Resources";
+            if (!_recipe.CanCraft()) craftableString += "Need Resources";
             _craftableText.SetText(craftableString);
+        }
 
-            string ingredient1String = GetIngredientString(recipe.Ingredient1, recipe.Ingredient1Quantity);
-            string ingredient2String = GetIngredientString(recipe.Ingredient2, recipe.Ingredient2Quantity);
+        private void SetCostText()
+        {
+            string ingredient1String = GetIngredientString(_recipe.Ingredient1, _recipe.Ingredient1Quantity);
+            string ingredient2String = GetIngredientString(_recipe.Ingredient2, _recipe.Ingredient2Quantity);
             string fullString = ingredient1String;
             if (ingredient2String != "") fullString += "\n" + ingredient2String;
             _costText.SetText(fullString);
+        }
+
+        private void SetNameText()
+        {
+            string productString = _recipe.GetProductQuantity() > 1 ? _recipe.Name + " x" + _recipe.GetProductQuantity() : _recipe.Name;
+            _nameText.SetText(productString);
         }
 
         private string GetIngredientString(string ingredientName, int requiredQuantity)

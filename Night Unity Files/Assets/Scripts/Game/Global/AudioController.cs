@@ -121,7 +121,7 @@ namespace Game.Global
         private void UpdateInGameVolumes()
         {
             float ambientVolumeModifier = 1 - _combatTargetVolume;
-//            if (CombatManager.GetCurrentRegion().GetRegionType() == RegionType.Tomb) ambientVolumeModifier = 0f;
+            if (EndGameAudioController.Active()) ambientVolumeModifier = 0f;
             if (ambientVolumeModifier < _minAmbientVolume) ambientVolumeModifier = _minAmbientVolume;
             _ambient.volume = _ambientVolume * ambientVolumeModifier;
             if (_combatTargetVolume > _maxCombatVolume) _combatTargetVolume = _maxCombatVolume;

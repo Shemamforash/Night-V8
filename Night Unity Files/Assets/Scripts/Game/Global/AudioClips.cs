@@ -27,7 +27,7 @@ namespace Game.Global
         public static AudioClip LightWind, MediumWind, HeavyWind;
         public static AudioClip PistolClipIn, PistolClipOut, ShotgunClipIn, ShotgunClipOut, RifleClipIn, RifleClipOut, SMGClipIn, SMGClipOut;
         public static AudioClip BrawlerSlash, BulletHit, ShieldHit, BodyHit;
-        public static AudioClip GodsAreDead, AbandonedLands;
+        public static AudioClip GodsAreDead, AbandonedLands, AtTheEnd;
         public static AudioClip FireExplosion, ShatterExplosion, TombBreak, TombRing, ActiveSkill, PassiveSkill;
         public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Channel, Infuse, Craft, OpenJournal, CloseJournal, Tick, CookMeat, Furnace, BoilWater;
         public static AudioClip EatWater, EatMeat, EatPlant, EatPotion, LightFire;
@@ -141,6 +141,7 @@ namespace Game.Global
             Debug.Log("loading music");
             yield return StartCoroutine(LoadClip(a => GodsAreDead = a, "music/combat", "The Gods Are Dead"));
             yield return StartCoroutine(LoadClip(a => AbandonedLands = a, "music/combat", "Abandoned Lands"));
+            yield return StartCoroutine(LoadClip(a => AtTheEnd = a, "music/misc", "At The End"));
 
             Debug.Log("loading misc audio");
             yield return StartCoroutine(LoadAllClipsFromBundle(a => Chimes = a, "misc/chimes"));

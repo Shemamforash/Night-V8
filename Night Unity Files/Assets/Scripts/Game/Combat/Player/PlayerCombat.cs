@@ -122,6 +122,7 @@ namespace Game.Combat.Player
         //input
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
+            if (gameObject == null) return;
             if (isHeld)
             {
                 switch (axis)

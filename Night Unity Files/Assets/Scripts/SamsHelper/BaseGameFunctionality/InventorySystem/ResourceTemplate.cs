@@ -100,8 +100,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                     break;
                 case "Potion":
                     ResourceType = ResourceType.Potion;
-                    //todo
-                    TryLoadSprite("Water");
+                    TryLoadSprite("Potion");
                     break;
                 case "Armour":
                     ResourceType = ResourceType.Armour;

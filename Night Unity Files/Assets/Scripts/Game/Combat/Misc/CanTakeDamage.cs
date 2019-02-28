@@ -81,7 +81,7 @@ namespace Game.Combat.Misc
 
         protected int GetBurnDamage()
         {
-            int burnDamage = Mathf.FloorToInt(HealthController.GetMaxHealth() * 0.01f);
+            int burnDamage = Mathf.FloorToInt(HealthController.GetMaxHealth() * 0.05f);
             if (burnDamage < 1) burnDamage = 1;
             return burnDamage;
         }

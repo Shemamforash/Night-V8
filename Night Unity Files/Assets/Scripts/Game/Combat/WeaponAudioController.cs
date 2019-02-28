@@ -98,7 +98,7 @@ public class WeaponAudioController : MonoBehaviour
         AudioClip[] casings = null;
         WeaponType weaponType = weapon.WeaponAttributes.WeaponType;
         float maxVolume = 0.8f;
-        float minDistance = 0.5f;
+        float minDistance = 1f;
         switch (weaponType)
         {
             case WeaponType.Pistol:
@@ -109,13 +109,13 @@ public class WeaponAudioController : MonoBehaviour
                 shots = new[] {AudioClips.RifleShots[0]};
                 casings = AudioClips.RifleCasings;
                 maxVolume = 1f;
-                minDistance = 1f;
+                minDistance = 2f;
                 break;
             case WeaponType.Shotgun:
                 shots = AudioClips.ShotgunShots;
                 casings = AudioClips.ShotgunCasings;
                 maxVolume = 0.9f;
-                minDistance = 0.75f;
+                minDistance = 1.5f;
                 break;
             case WeaponType.SMG:
                 shots = AudioClips.SMGShots;
