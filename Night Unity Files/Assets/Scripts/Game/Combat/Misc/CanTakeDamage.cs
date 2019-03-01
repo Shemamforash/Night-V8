@@ -12,12 +12,13 @@ namespace Game.Combat.Misc
         protected BloodSpatter _bloodSpatter;
         public ArmourController ArmourController = new ArmourController();
         public readonly HealthController HealthController = new HealthController();
-        private const float SicknessDurationMax = 5f;
-        private const int SicknessTargetTicks = 5;
+        private const float VoidDurationMax = 5f;
+        private const int VoidTargetTicks = 5;
         private float _timeSinceLastBurn;
-        protected int SicknessStacks;
-        private float _sicknessDuration;
+        protected int VoidStacks;
+        private float _voidDuration;
         public bool IsPlayer;
+        protected float BurnDamagePercent = 0.05f;
 
         private void TakeArmourDamage(int damage)
         {
@@ -46,13 +47,15 @@ namespace Game.Combat.Misc
 
         public abstract string GetDisplayName();
 
-        public virtual bool Burn()
+        public virtual int Burn()
         {
-            if (_timeSinceLastBurn < 0.5f) return false;
+            if (_timeSinceLastBurn < 0.5f) return -1;
             _timeSinceLastBurn = 0f;
             SpriteFlash.FlashSprite();
-            HealthController.TakeDamage(GetBurnDamage());
-            return true;
+            int burnDamage = Mathf.FloorToInt(HealthController.GetMaxHealth() * BurnDamagePercent);
+            if (burnDamage < 1) burnDamage = 1;
+            HealthController.TakeDamage(burnDamage);
+            return burnDamage;
         }
 
         public virtual void Decay()
@@ -60,65 +63,53 @@ namespace Game.Combat.Misc
             TakeArmourDamage(10000);
         }
 
-        public virtual bool Sicken(int stacks = 1)
+        public virtual bool Void(int stacks = 1)
         {
             bool tookDamage = false;
-            SicknessStacks += stacks;
-            if (SicknessStacks >= GetSicknessTargetTicks())
+            VoidStacks += stacks;
+            if (VoidStacks >= GetVoidTargetTicks())
             {
                 SpriteFlash.FlashSprite();
                 float damage = HealthController.GetMaxHealth() / 10f;
                 HealthController.TakeDamage(damage);
-                SicknessStacks = 0;
+                VoidStacks = 0;
                 tookDamage = true;
             }
 
-            _sicknessDuration = 0;
+            _voidDuration = 0;
             return tookDamage;
         }
 
-        public bool IsSick() => SicknessStacks > 0;
+        public bool IsVoided() => VoidStacks > 0;
 
-        protected int GetBurnDamage()
-        {
-            int burnDamage = Mathf.FloorToInt(HealthController.GetMaxHealth() * 0.05f);
-            if (burnDamage < 1) burnDamage = 1;
-            return burnDamage;
-        }
 
-        protected int GetSicknessTargetTicks()
-        {
-            return SicknessTargetTicks;
-        }
+        private int GetVoidTargetTicks() => VoidTargetTicks;
 
-        public float GetSicknessLevel()
-        {
-            return (float) SicknessStacks / GetSicknessTargetTicks();
-        }
+        public float GetVoid() => (float) VoidStacks / GetVoidTargetTicks();
 
         private void UpdateBurn()
         {
             _timeSinceLastBurn += Time.deltaTime;
         }
 
-        private void UpdateSickness()
+        private void UpdateVoid()
         {
-            if (SicknessStacks == 0) return;
-            if (_sicknessDuration > SicknessDurationMax)
+            if (VoidStacks == 0) return;
+            if (_voidDuration > VoidDurationMax)
             {
-                _sicknessDuration = 0;
-                --SicknessStacks;
+                _voidDuration = 0;
+                --VoidStacks;
             }
             else
             {
-                _sicknessDuration += Time.deltaTime;
+                _voidDuration += Time.deltaTime;
             }
         }
 
         private void UpdateConditions()
         {
             UpdateBurn();
-            UpdateSickness();
+            UpdateVoid();
         }
 
         public virtual void TakeShotDamage(Shot shot)

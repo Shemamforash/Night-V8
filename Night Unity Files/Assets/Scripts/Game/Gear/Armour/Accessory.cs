@@ -110,7 +110,7 @@ namespace Game.Gear.Armour
                 _modifierValue = accessoryNode.FloatFromNode("Bonus");
                 _accessoryTemplates.Add(this);
                 ModifiesCondition = TargetAttribute == AttributeType.Shatter ||
-                                    TargetAttribute == AttributeType.Sickness ||
+                                    TargetAttribute == AttributeType.Void ||
                                     TargetAttribute == AttributeType.Burn;
             }
 

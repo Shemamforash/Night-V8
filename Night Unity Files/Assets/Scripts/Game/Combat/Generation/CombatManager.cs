@@ -179,9 +179,10 @@ namespace Game.Combat.Generation
             if (_enemies.Count >= _maxSize) return;
             _timeSinceLastSpawn -= Time.deltaTime;
             if (_timeSinceLastSpawn > 0 && _enemies.Count > 0) return;
-            _timeSinceLastSpawn = Random.Range(1f, 3f);
+            _timeSinceLastSpawn = Random.Range(0.5f, 1f);
             EnemyType e = _inactiveEnemies.RemoveLast();
-            EnemyTemplate.Create(e);
+            EnemyBehaviour enemy = EnemyTemplate.Create(e);
+            TeleportInOnly.TeleportIn(enemy.transform.position);
         }
 
         private void PlaceAnimals()
@@ -246,6 +247,7 @@ namespace Game.Combat.Generation
             {
                 CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(Rite.GetLastRegion());
             }
+
             SceneChanger.GoToGameScene();
             MapMenuController.IsReturningFromCombat = true;
             InputHandler.SetCurrentListener(null);

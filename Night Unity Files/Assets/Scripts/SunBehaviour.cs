@@ -16,13 +16,13 @@ public class SunBehaviour : MonoBehaviour
         Sequence sunSequence = DOTween.Sequence();
         sunSequence.Append(sunTransform.DOAnchorPos(new Vector2(-radius, -height), time).SetEase(Ease.InOutSine));
         sunTransform.DOAnchorPos(new Vector2(-radius, -height), time).SetEase(Ease.InOutSine);
-        sunSequence.InsertCallback(time, () => sunCanvas.sortingOrder = sunCanvas.sortingOrder == -8 ? -10 : -8);
+        sunSequence.InsertCallback(time, () => sunCanvas.sortingOrder = sunCanvas.sortingOrder == -16 ? -14 : -16);
         sunSequence.SetLoops(-1, LoopType.Yoyo);
     }
 
     public void Awake()
     {
-        StartOrbit("Second Sun", SecondSunRadius, SecondSunHeight, 20f);
-        StartOrbit("Third Sun", -ThirdSunRadius, -ThirdSunHeight, 30f);
+        StartOrbit("Second Sun", SecondSunRadius, SecondSunHeight, 60f);
+        StartOrbit("Third Sun", -ThirdSunRadius, -ThirdSunHeight, 180f);
     }
 }

@@ -12,7 +12,9 @@ namespace Game.Combat.Generation.Shrines
     {
         private readonly List<FireBehaviour> _fires = new List<FireBehaviour>();
         private int _maxEnemies;
-        private float _timeToNextBurst;
+        private float _fireAngle;
+        private float _fireRadiusModifier;
+        private float _fireRingTimer;
 
         protected override void StartChallenge()
         {
@@ -27,19 +29,12 @@ namespace Game.Combat.Generation.Shrines
             for (int i = 0; i < fireCount; ++i)
             {
                 Vector2 firePosition = AdvancedMaths.CalculatePointOnCircle(360f / fireCount * i, 6.5f, transform.position);
-                _fires.Add(FireBehaviour.Create(firePosition));
+                FireBehaviour fire = FireBehaviour.Create(firePosition);
+                fire.gameObject.AddComponent<FireDamageDeal>();
+                _fires.Add(fire);
             }
         }
 
-        private void TryCreateFireBurst()
-        {
-            _timeToNextBurst -= Time.deltaTime;
-            if (_timeToNextBurst < 0)
-            {
-                _timeToNextBurst = Random.Range(0.5f, 2f);
-                MakeFireBurst();
-            }
-        }
 
         private IEnumerator SpawnFire()
         {
@@ -61,13 +56,11 @@ namespace Game.Combat.Generation.Shrines
             float roundTime = numberOfEnemies * 10;
             float currentTime = roundTime;
 
-            _timeToNextBurst = Random.Range(1f, 3f);
-
             while (currentTime > 0)
             {
                 if (!CombatManager.Instance().IsCombatActive()) yield return null;
                 currentTime -= Time.deltaTime;
-                TryCreateFireBurst();
+                UpdateFireRing();
                 UpdateCountdown(currentTime, roundTime);
                 if (CombatManager.Instance().ClearOfEnemies())
                 {
@@ -81,25 +74,32 @@ namespace Game.Combat.Generation.Shrines
             EndChallenge();
         }
 
+        private void UpdateFireRing()
+        {
+            _fireRingTimer -= Time.deltaTime;
+            if (_fireRingTimer > 0f) return;
+            _fireRingTimer = 0.1f;
+            _fireRadiusModifier = Mathf.Sin(Time.timeSinceLevelLoad / 5f);
+            _fireRadiusModifier += 1f;
+            _fireRadiusModifier /= 2f;
+            float angleDiff = 2.5f * _fireRadiusModifier + 7.5f;
+            _fireAngle += angleDiff;
+            if (_fireAngle > 360f) _fireAngle -= 360f;
+            float radius = 6.5f * _fireRadiusModifier;
+            Vector2 position = AdvancedMaths.CalculatePointOnCircle(_fireAngle, radius, Vector2.zero);
+            FireBehaviour.Create(position).SetLifeTime(1.5f);
+
+            position = AdvancedMaths.CalculatePointOnCircle(_fireAngle + 180f, radius, Vector2.zero);
+            FireBehaviour fire = FireBehaviour.Create(position);
+            fire.gameObject.AddComponent<FireDamageDeal>();
+            fire.SetLifeTime(1.5f);
+        }
+
         protected override void EndChallenge()
         {
             _fires.ForEach(f => f.LetDie());
             if (!CombatManager.Instance().ClearOfEnemies()) Fail();
             base.EndChallenge();
-        }
-
-        private void MakeFireBurst()
-        {
-            float angleFrom = Random.Range(0, 360);
-            float angleTo = angleFrom + Random.Range(90, 270);
-            if (angleFrom > 360) angleFrom -= 360;
-            Vector2 from = AdvancedMaths.CalculatePointOnCircle(angleFrom, 7.5f, transform.position);
-            Vector2 to = AdvancedMaths.CalculatePointOnCircle(angleTo, 7.5f, transform.position);
-            for (float pos = 0; pos <= 1; pos += 0.025f)
-            {
-                Vector2 position = AdvancedMaths.PointAlongLine(from, to, pos);
-                TrailFireBehaviour.Create(position);
-            }
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Game.Combat.Ui
             SetAlpha(1);
             _healthBarController.SetValue(Character.HealthController.GetHealth(), Character == _lastCharacter);
             _armourController.UpdateArmour(Character.ArmourController);
-            _healthBarController.SetSicknessLevel(Character.GetSicknessLevel());
+            _healthBarController.SetVoidLevel(Character.GetVoid());
             _lastCharacter = Character;
         }
 

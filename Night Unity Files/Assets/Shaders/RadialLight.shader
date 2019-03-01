@@ -61,7 +61,7 @@ Shader "LOS/Radial Light" {
                 float texRGBAverage = (_MainTex_var.r + _MainTex_var.g + _MainTex_var.b) / 3;
                 fixed4 color = fixed4(i.color.rgb * _intensity, texRGBAverage * i.color.a);
                 color *= _Color;
-                float r = rand(i.pos) / 255;
+                float r = rand(i.pos) / 511;
                 color += r;
                 if(i.color.r > color.r) {
                     color.r = i.color.r;

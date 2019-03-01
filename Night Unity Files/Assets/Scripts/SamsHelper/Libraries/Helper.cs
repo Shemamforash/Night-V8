@@ -30,6 +30,12 @@ namespace SamsHelper.Libraries
 
         private static Transform _dynamicParent;
 
+        public static string Pluralise(this string str, int count)
+        {
+            if (count <= 1) return str;
+            return str + "s";
+        }
+        
         public static string[] SplitOnCamelCase(this string str)
         {
             return Regex.Split(str, @"(?<!^)(?=[A-Z])");

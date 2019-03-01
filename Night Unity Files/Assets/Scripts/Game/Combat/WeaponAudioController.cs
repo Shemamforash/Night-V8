@@ -181,4 +181,9 @@ public class WeaponAudioController : MonoBehaviour
     {
         _audioPool.Create().Play(AudioClips.ActiveSkill, Random.Range(0.8f, 1f), Random.Range(0.75f, 1f));
     }
+
+    public void PlaySaltTake()
+    {
+        _audioPool.Create().Play(AudioClips.SaltTake, Random.Range(0.8f, 1f), Random.Range(0.9f, 1f));
+    }
 }

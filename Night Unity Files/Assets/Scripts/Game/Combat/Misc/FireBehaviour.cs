@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System.Collections;
+using DG.Tweening;
 using Fastlights;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
@@ -34,7 +35,7 @@ namespace Game.Combat.Misc
             float brightness = Mathf.PerlinNoise(Time.time * 2, _randomSeed) * 0.25f + 0.05f;
             _light.SetAlpha(brightness);
         }
-        
+
         private void Initialise(Vector3 position)
         {
             transform.position = position;
@@ -54,6 +55,22 @@ namespace Game.Combat.Misc
         private void OnDestroy()
         {
             _firePool.Dispose(this);
+        }
+
+        public void SetLifeTime(float lifeTime)
+        {
+            StartCoroutine(WaitThenDie(lifeTime));
+        }
+
+        private IEnumerator WaitThenDie(float lifeTime)
+        {
+            while (lifeTime > 0)
+            {
+                lifeTime -= Time.deltaTime;
+                yield return null;
+            }
+
+            LetDie();
         }
     }
 }

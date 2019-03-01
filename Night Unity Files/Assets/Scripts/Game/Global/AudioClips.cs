@@ -26,7 +26,7 @@ namespace Game.Global
         public static AudioClip LightRain, MediumRain, HeavyRain;
         public static AudioClip LightWind, MediumWind, HeavyWind;
         public static AudioClip PistolClipIn, PistolClipOut, ShotgunClipIn, ShotgunClipOut, RifleClipIn, RifleClipOut, SMGClipIn, SMGClipOut;
-        public static AudioClip BrawlerSlash, BulletHit, ShieldHit, BodyHit;
+        public static AudioClip BrawlerSlash, BulletHit, ShieldHit, BodyHit, SaltTake;
         public static AudioClip GodsAreDead, AbandonedLands, AtTheEnd;
         public static AudioClip FireExplosion, ShatterExplosion, TombBreak, TombRing, ActiveSkill, PassiveSkill;
         public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Channel, Infuse, Craft, OpenJournal, CloseJournal, Tick, CookMeat, Furnace, BoilWater;
@@ -37,6 +37,7 @@ namespace Game.Global
         public static AudioClip MagazineEffect;
         private static readonly List<AssetBundle> _loadedBundles = new List<AssetBundle>();
         private static bool _loaded;
+        
 
         public void Awake()
         {
@@ -125,6 +126,8 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => StarfishAttack = a, "combat/misc", "Starfish Attack"));
             yield return StartCoroutine(LoadClip(a => ActiveSkill = a, "combat/misc", "Skill Active"));
             yield return StartCoroutine(LoadClip(a => PassiveSkill = a, "combat/misc", "Skill Passive"));
+            yield return StartCoroutine(LoadClip(a => SaltTake = a, "combat/misc", "Salt Take"));
+
 
             Debug.Log("loading weather audio");
             yield return StartCoroutine(LoadAllClipsFromBundle(a => ThunderSounds = a, "thunder"));

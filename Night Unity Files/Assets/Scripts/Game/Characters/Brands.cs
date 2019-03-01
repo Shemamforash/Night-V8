@@ -208,20 +208,20 @@ namespace Game.Characters.Brands
         }
     }
 
-    public class SicknessBrand : Brand
+    public class VoidBrand : Brand
     {
-        public SicknessBrand(Player player) : base(player, "Sickness")
+        public VoidBrand(Player player) : base(player, "Void")
         {
         }
 
         protected override void OnSucceed()
         {
-            Player.Attributes.SpreadSickness = true;
+            Player.Attributes.SpreadVoid = true;
         }
 
         protected override string GetProgressSubstring()
         {
-            return "Taken sickness damage " + Progress() + " times";
+            return "Taken Void damage " + Progress() + " times";
         }
     }
 

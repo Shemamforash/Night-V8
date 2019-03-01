@@ -45,51 +45,40 @@ namespace Facilitating
             _smoke3 = gameObject.FindChildWithName<ParticleSystem>("Smoke 3");
             _smoke4 = gameObject.FindChildWithName<ParticleSystem>("Smoke 4");
             _fireLightImage = GetComponent<Image>();
-            Restart();
+            UpdateRates();
         }
 
-        private void Restart()
+        private void SetEmission(ParticleSystem p, int emissionRate, float duration = -1)
         {
-            UpdateRates();
-            _fire.Clear();
-            _smoke1.Clear();
-            _smoke2.Clear();
-            _smoke3.Clear();
-            _smoke4.Clear();
+            ParticleSystem.EmissionModule emission = p.emission;
+            emission.rateOverTime = emissionRate;
+            if (duration == -1) return;
+            ParticleSystem.MainModule main = p.main;
+            main.startLifetime = duration;
         }
 
         private void UpdateRates()
         {
-            if (_tending)
-            {
-                ParticleSystem.EmissionModule fireEmission = _fire.emission;
-                float fireEmissionLevel = _fireLevel - FireBurnOutPoint;
-                if (fireEmissionLevel < 0) fireEmissionLevel = 0;
-                fireEmissionLevel /= 1 - FireBurnOutPoint;
-                fireEmission.rateOverTime = FireEmissionRateMax * fireEmissionLevel;
+            float fireEmissionLevel = _fireLevel - FireBurnOutPoint;
+            fireEmissionLevel /= 1 - FireBurnOutPoint;
+            if (fireEmissionLevel < 0) fireEmissionLevel = 0;
 
-                ParticleSystem.MainModule _smoke1Main = _smoke1.main;
-                _smoke1Main.startLifetime = Smoke1DurationMax * _fireLevel;
-                ParticleSystem.MainModule _smoke2Main = _smoke2.main;
-                _smoke2Main.startLifetime = Smoke2DurationMax * _fireLevel;
-                ParticleSystem.MainModule _smoke3Main = _smoke3.main;
-                _smoke3Main.startLifetime = Smoke3DurationMax * _fireLevel;
-                ParticleSystem.MainModule _smoke4Main = _smoke4.main;
-                _smoke4Main.startLifetime = Smoke4DurationMax * _fireLevel;
-            }
+            SetEmission(_fire, (int) (FireEmissionRateMax * fireEmissionLevel));
+
+            int smokeEmissionRate = _fireLevel == 0 ? 0 : 1;
+            SetEmission(_smoke1, smokeEmissionRate, Smoke1DurationMax * _fireLevel);
+            SetEmission(_smoke2, smokeEmissionRate, Smoke2DurationMax * _fireLevel);
+            SetEmission(_smoke3, smokeEmissionRate, Smoke3DurationMax * _fireLevel);
+            SetEmission(_smoke4, smokeEmissionRate, Smoke4DurationMax * _fireLevel);
 
             _fireLightImage.color = Color.Lerp(Color.black, Color.white, _fireLevel);
         }
 
         public static void Tend()
         {
-            if (!_tending)
-            {
-                _crackling.FadeIn(6f);
-            }
-
+            if (!_tending) _crackling.FadeIn(6f);
             _tending = true;
-            _fireLevel += 0.2f;
+            _fireLevel += 0.333f;
             if (_fireLevel > 1) _fireLevel = 1;
             _instance.UpdateRates();
         }
@@ -106,19 +95,11 @@ namespace Facilitating
             if (_fireLevel < 0) _fireLevel = 0;
             _instance.UpdateRates();
             if (_fireLevel > 0) return;
-            _instance._fire.Stop();
-            _instance._smoke1.Stop();
-            _instance._smoke2.Stop();
-            _instance._smoke3.Stop();
-            _instance._smoke4.Stop();
             _crackling.FadeOut(1f);
             _fireLevel = 0;
         }
 
-        public static bool IsLit()
-        {
-            return _fireLevel > FireBurnOutPoint;
-        }
+        public static bool IsLit() => _fireLevel > FireBurnOutPoint;
 
         public static void Save(XmlNode root)
         {

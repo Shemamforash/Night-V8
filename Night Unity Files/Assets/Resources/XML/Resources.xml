@@ -273,7 +273,7 @@
 		<Name>Blightberry</Name>
 		<Type>Plant</Type>
 		<Consumable>True</Consumable>
-		<Attribute>Sickness</Attribute>
+		<Attribute>Void</Attribute>
 		<Modifier>1</Modifier>
 		<Permanent>True</Permanent>
 		<DesertDropRate>0</DesertDropRate>

@@ -145,6 +145,6 @@ namespace Game.Gear.Weapons
 
         public float CalculateBurnChance() => CalculateConditionChance(AttributeType.Burn);
 
-        public float CalculateSicknessChance() => CalculateConditionChance(AttributeType.Sickness);
+        public float CalculateVoidChance() => CalculateConditionChance(AttributeType.Void);
     }
 }

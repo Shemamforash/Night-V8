@@ -39,7 +39,7 @@ namespace Game.Characters
         public float FreeSkillChance;
         public bool ReloadOnEmptyMag;
         public bool ReloadOnFatalShot;
-        public bool SpreadSickness;
+        public bool SpreadVoid;
 
         public CharacterAttributes(Player player)
         {

@@ -57,6 +57,7 @@ public class SaltBehaviour : MonoBehaviour
         if (!other.gameObject.CompareTag("Player")) return;
         Inventory.IncrementResource("Salt", 1);
         CombatLogController.PostLog("Picked up some salt");
+        PlayerCombat.Instance.WeaponAudio.PlaySaltTake();
         _saltPool.Return(this);
     }
 

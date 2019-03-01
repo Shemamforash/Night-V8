@@ -13,7 +13,7 @@ namespace Game.Combat.Enemies.Misc
         private static readonly float ThrowForce = 200f;
         private static readonly ObjectPool<Grenade> _grenadePool = new ObjectPool<Grenade>("Grenades", "Prefabs/Combat/Enemies/Grenade");
         private Action<List<EnemyBehaviour>> OnDetonate;
-        private bool _incendiary, _decaying, _sickening;
+        private bool _incendiary, _decaying, _void;
         private float _radius = 1;
         private Rigidbody2D _rb2d;
         private bool _isPlayerGrenade;
@@ -45,7 +45,7 @@ namespace Game.Combat.Enemies.Misc
         {
             _incendiary = false;
             _decaying = false;
-            _sickening = false;
+            _void = false;
             _radius = 1;
         }
 
@@ -76,10 +76,10 @@ namespace Game.Combat.Enemies.Misc
             g._decaying = true;
         }
 
-        public static void CreateSickness(Vector2 origin, Vector2 target, bool isPlayerGrenade)
+        public static void CreateVoid(Vector2 origin, Vector2 target, bool isPlayerGrenade)
         {
             Grenade g = CreateBasic(origin, target, isPlayerGrenade);
-            g._sickening = true;
+            g._void = true;
         }
 
         public void Update()
@@ -106,7 +106,7 @@ namespace Game.Combat.Enemies.Misc
             explosion.AddOnDetonate(OnDetonate);
             if (_incendiary) explosion.SetBurn();
             if (_decaying) explosion.SetDecay();
-            if (_sickening) explosion.SetSicken();
+            if (_void) explosion.SetSicken();
             explosion.InstantDetonate();
             _grenadePool.Return(this);
         }

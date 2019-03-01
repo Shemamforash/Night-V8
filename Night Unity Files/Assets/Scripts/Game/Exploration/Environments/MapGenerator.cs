@@ -317,7 +317,6 @@ namespace Game.Exploration.Environment
             _regionsDiscovered = -1;
             _regionOrder.Clear();
             _addedShelter = false;
-            AddRegionTypes(false);
             SetJournalQuantities();
             SetWaterQuantities();
             SetFoodQuantities();

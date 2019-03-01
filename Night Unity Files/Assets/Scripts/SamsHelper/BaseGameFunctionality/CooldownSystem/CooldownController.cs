@@ -61,7 +61,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
             }
         }
 
-        public Skill Skill() => _skill;
+        public Skill Skill() => _isSkillUnlocked() ? _skill : null;
 
         public void SetSkill(Skill skill, Func<bool> isSkillUnlocked, Func<Tuple<string, float>> getProgress)
         {

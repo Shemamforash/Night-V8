@@ -212,6 +212,7 @@
         </e>
         <e p="BossDeathController.cs" t="Include" />
         <e p="BossRingController.cs" t="Include" />
+        <e p="CombatAudioController.cs" t="Include" />
         <e p="CombatStoryController.cs" t="Include" />
         <e p="ConsolePro" t="Include">
           <e p="ConsoleProDebug.cs" t="Include" />

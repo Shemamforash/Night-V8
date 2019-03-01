@@ -55,6 +55,7 @@ namespace Game.Characters
             _effect = root.StringFromNode("Effect");
             SuccessModifier = root.FloatFromNode("Modifier");
             _requiresSkillUnlock = root.BoolFromNode("RequiresSkill");
+            if (_minLevel != 0) return;
             _minLevel = root.IntFromNode("MinLevel");
         }
 

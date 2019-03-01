@@ -5,7 +5,7 @@ namespace Facilitating.UIControllers
         Thirst,
         Hunger,
         Fire,
-        Sickness,
+        Void,
         Standard
     }
 }

@@ -8,7 +8,7 @@ namespace Game.Combat.Misc
 {
     public class SickenBehaviour : MonoBehaviour
     {
-        private static readonly ObjectPool<SickenBehaviour> _sicknessPool = new ObjectPool<SickenBehaviour>("Sicken Effects", "Prefabs/Combat/Visuals/Sicken Effect");
+        private static readonly ObjectPool<SickenBehaviour> _voidPool = new ObjectPool<SickenBehaviour>("Sicken Effects", "Prefabs/Combat/Visuals/Sicken Effect");
         private ParticleSystem[] _particleSystems;
         private List<CanTakeDamage> _ignoreTargets;
         private AudioSource _audioSource;
@@ -25,33 +25,33 @@ namespace Game.Combat.Misc
             characters.ForEach(c =>
             {
                 if (ignoreTargets.Contains(c)) return;
-                c.Sicken(stacks);
-                SickenBehaviour sickness = _sicknessPool.Create();
-                sickness.StartCoroutine(sickness.Sicken(c.transform.position));
+                c.Void(stacks);
+                SickenBehaviour voidBehaviour = _voidPool.Create();
+                voidBehaviour.StartCoroutine(voidBehaviour.Void(c.transform.position));
             });
             return characters;
         }
 
         public static void Create(Vector2 position, CanTakeDamage target)
         {
-            SickenBehaviour sickness = _sicknessPool.Create();
-            sickness.StartCoroutine(sickness.Sicken(position));
-            target.Sicken();
+            SickenBehaviour voidBehaviour = _voidPool.Create();
+            voidBehaviour.StartCoroutine(voidBehaviour.Void(position));
+            target.Void();
         }
 
-        private IEnumerator Sicken(Vector2 position)
+        private IEnumerator Void(Vector2 position)
         {
             _audioSource.pitch = Random.Range(0.9f, 1.1f);
             _audioSource.Play();
             transform.position = position;
             foreach (ParticleSystem system in _particleSystems) system.Play();
             yield return new WaitForSeconds(2f);
-            _sicknessPool.Return(this);
+            _voidPool.Return(this);
         }
 
         public void OnDestroy()
         {
-            _sicknessPool.Dispose(this);
+            _voidPool.Dispose(this);
         }
     }
 }

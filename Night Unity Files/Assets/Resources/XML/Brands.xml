@@ -55,10 +55,10 @@
         <Name>Shattering</Name><Description>All armour is only as strong as it's weakest part</Description><Requirement>Lose num points of armour</Requirement><TargetValue>10</TargetValue>
         <Effect>Occasionally explode with decay on taking damage</Effect><Modifier>0.02</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>3</MinLevel>
     </Shattering>
-    <Sickness>
-        <Name>Sickness</Name><Description>1</Description><Requirement>Take sickness damage num times</Requirement><TargetValue>10</TargetValue>
+    <Void>
+        <Name>Void</Name><Description>1</Description><Requirement>Take Void damage num times</Requirement><TargetValue>10</TargetValue>
         <Effect>Killing sick enemies spreads it to nearby enemies</Effect><Modifier>0.02</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>3</MinLevel>
-    </Sickness>
+    </Void>
     <Mastery>
         <Name>Mastery</Name><Description>Wisdom is but knowledge tempered by years of experience</Description><Requirement>Consume num adrenaline</Requirement><TargetValue>5000</TargetValue>
         <Effect>Small chance for free skill activation</Effect><Modifier>0.05</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>2</MinLevel>

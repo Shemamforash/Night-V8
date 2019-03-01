@@ -235,7 +235,7 @@ namespace Game.Characters
         {
             new IgniteBrand(_player);
             new DecayBrand(_player);
-            new SicknessBrand(_player);
+            new VoidBrand(_player);
         }
 
         private void UpdateBrandValue(Type type, int amount)
@@ -263,7 +263,7 @@ namespace Game.Characters
         public void IncreaseAdrenalineUsed(int amount) => UpdateBrandValue(typeof(AdrenalineUsedBrand), amount);
         public void IncreaseBurnCount(int damage) => UpdateBrandValue(typeof(IgniteBrand), damage);
         public void IncreaseDecayCount() => UpdateBrandValue(typeof(DecayBrand), 1);
-        public void IncreaseSickenCount() => UpdateBrandValue(typeof(SicknessBrand), 1);
+        public void IncreaseVoidCount() => UpdateBrandValue(typeof(VoidBrand), 1);
 
         public void UpdateBrandStatus(Brand brand)
         {

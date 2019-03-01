@@ -104,6 +104,7 @@ namespace Game.Combat.Player
         {
             IsPlayer = true;
             base.Awake();
+            BurnDamagePercent = 0.025f;
             Instance = this;
             _mainCamera = Camera.main;
         }
@@ -243,19 +244,20 @@ namespace Game.Combat.Player
             return "Leave region [T]";
         }
 
-        public override bool Burn()
+        public override int Burn()
         {
-            if (!base.Burn()) return false;
-            Player.BrandManager.IncreaseBurnCount(GetBurnDamage());
+            int burnDamage = base.Burn();
+            if (burnDamage == -1) return -1;
+            Player.BrandManager.IncreaseBurnCount(burnDamage);
             _currentDeathReason = DeathReason.Fire;
-            return true;
+            return burnDamage;
         }
 
-        public override bool Sicken(int stacks = 1)
+        public override bool Void(int stacks = 1)
         {
-            if (!base.Sicken(stacks)) return false;
-            _currentDeathReason = DeathReason.Sickness;
-            Instance.Player.BrandManager.IncreaseSickenCount();
+            if (!base.Void(stacks)) return false;
+            _currentDeathReason = DeathReason.Void;
+            Instance.Player.BrandManager.IncreaseVoidCount();
             return true;
         }
 

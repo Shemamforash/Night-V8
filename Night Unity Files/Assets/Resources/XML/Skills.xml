@@ -60,14 +60,14 @@
 		<RequiresTarget>True</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>2</Cooldown>
-		<Description>Apply sickness to everything around you, heal a small amount</Description>
+		<Description>Apply Void to everything around you, heal a small amount</Description>
 	</Skill>
 	<Skill>
 		<Name>Defile</Name>
 		<RequiresTarget>True</RequiresTarget>
 		<AppliesToMagazine>False</AppliesToMagazine>
 		<Cooldown>6</Cooldown>
-		<Description>Apply sickness to everything around you, if they die, they explode</Description>
+		<Description>Apply Void to everything around you, if they die, they explode</Description>
 	</Skill>
 	<Skill>
 		<Name>Immolate</Name>

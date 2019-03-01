@@ -9,6 +9,7 @@ using Game.Combat.Player;
 using Game.Combat.Ui;
 using Game.Global.Tutorial;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -66,27 +67,27 @@ namespace Game.Combat.Generation
         {
             yield return new WaitForSeconds(2f);
             EventTextController.SetOverrideText("Move using [WASD]");
-            while (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) yield return null;
+            while (!InputHandler.InputAxisWasPressed(InputAxis.Horizontal) && !InputHandler.InputAxisWasPressed(InputAxis.Vertical)) yield return null;
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
 
             EventTextController.SetOverrideText("Rotate using [J] and [L]");
-            while (Input.GetAxis("SwitchTab") == 0) yield return null;
+            while (!InputHandler.InputAxisWasPressed(InputAxis.SwitchTab)) yield return null;
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
 
             EventTextController.SetOverrideText("You can also aim with the mouse, and rotate the camera by holding [RMB]");
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(5);
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
 
             EventTextController.SetOverrideText("Press [K], or [LMB] to Fire");
-            while (Input.GetAxis("Fire") == 0 && Input.GetAxis("Mouse") == 0) yield return null;
+            while (!InputHandler.InputAxisWasPressed(InputAxis.Fire)) yield return null;
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
 
             EventTextController.SetOverrideText("Reload with [R]");
-            while (Input.GetAxis("Reload") == 0) yield return null;
+            while (!InputHandler.InputAxisWasPressed(InputAxis.Reload)) yield return null;
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
         }
@@ -100,12 +101,12 @@ namespace Game.Combat.Generation
             TutorialManager.TryOpenTutorial(7, new List<TutorialOverlay> {new TutorialOverlay(RageBarController.AdrenalineRect())});
             while (TutorialManager.IsTutorialVisible()) yield return null;
             EventTextController.SetOverrideText("Dash with [SPACE], this consumes some adrenaline");
-            while (Input.GetAxis("Sprint") == 0) yield return null;
+            while (!InputHandler.InputAxisWasPressed(InputAxis.Sprint)) yield return null;
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
 
             EventTextController.SetOverrideText("You gain adrenaline by dealing damage to enemies");
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(4);
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
         }
@@ -136,17 +137,17 @@ namespace Game.Combat.Generation
         private IEnumerator ShowAttributeTutorial()
         {
             EventTextController.SetOverrideText("Will can be used to restore attributes in and out of combat");
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(5);
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
 
             EventTextController.SetOverrideText("Restoring your Fettle attribute will recover health in combat");
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(5);
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
 
             UiGearMenuController.SetOpenAllowed(true);
-            EventTextController.SetOverrideText("Open your inventory with [I] and navigate to the Meditate tab to restore your health");
+            EventTextController.SetOverrideText("Open your inventory with [I] and navigate to the Meditate tab to restore your Fettle");
             while (!UiGearMenuController.IsOpen()) yield return null;
             UiGearMenuController.SetCloseAllowed(false);
             EventTextController.CloseOverrideText();
@@ -157,7 +158,7 @@ namespace Game.Combat.Generation
             yield return new WaitForSeconds(1);
 
             EventTextController.SetOverrideText("Attributes can also be restored by sleeping");
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(5);
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
         }
@@ -166,7 +167,7 @@ namespace Game.Combat.Generation
         {
             CreateFoodAndWater();
             EventTextController.SetOverrideText("Use your compass with [E]");
-            while (Input.GetAxis("Compass") == 0) yield return null;
+            while (!InputHandler.InputAxisWasPressed(InputAxis.Compass)) yield return null;
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
 
@@ -174,14 +175,14 @@ namespace Game.Combat.Generation
             while (TutorialManager.IsTutorialVisible()) yield return null;
 
             EventTextController.SetOverrideText("Collect the revealed items with [T] or [MMB]");
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(5);
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
 
             while (CharacterManager.CurrentRegion().Containers.Count > 0) yield return null;
 
             EventTextController.SetOverrideText("Consume food and water to stave off dehydration and thirst");
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(5);
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
 

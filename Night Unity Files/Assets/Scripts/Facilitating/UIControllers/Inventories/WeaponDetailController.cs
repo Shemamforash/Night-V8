@@ -9,8 +9,8 @@ using UnityEngine;
 public class WeaponDetailController : MonoBehaviour
 {
     private EnhancedText _nameText, _inscriptionNameText, _inscriptionEffectText, _typeText;
-    private EnhancedText _damageText, _fireRateText, _reloadSpeedText, _accuracyText, _recoilText, _dpsText, _capacityText, _shatterText, _burnText, _sicknessText;
-    private GameObject _shatterObject, _burnObject, _sicknessObject;
+    private EnhancedText _damageText, _fireRateText, _reloadSpeedText, _accuracyText, _recoilText, _dpsText, _capacityText, _shatterText, _burnText, _voidText;
+    private GameObject _shatterObject, _burnObject, _voidObject;
 
     private Weapon _weapon;
     private DurabilityBarController _durabilityBar;
@@ -41,8 +41,8 @@ public class WeaponDetailController : MonoBehaviour
         _burnObject = conditionObject.FindChildWithName("Burn");
         _burnText = _burnObject.FindChildWithName<EnhancedText>("Text");
 
-        _sicknessObject = conditionObject.FindChildWithName("Sickness");
-        _sicknessText = _sicknessObject.FindChildWithName<EnhancedText>("Text");
+        _voidObject = conditionObject.FindChildWithName("Sickness");
+        _voidText = _voidObject.FindChildWithName<EnhancedText>("Text");
     }
 
     public void SetWeapon(Weapon weapon)
@@ -105,14 +105,14 @@ public class WeaponDetailController : MonoBehaviour
         WeaponAttributes attributes = _weapon?.WeaponAttributes;
         float shatterChance = attributes.CalculateShatterChance();
         float burnChance = attributes.CalculateBurnChance();
-        float sicknessChance = attributes.CalculateSicknessChance();
+        float voidChance = attributes.CalculateVoidChance();
 
         _shatterObject.SetActive(shatterChance != 0);
         _burnObject.SetActive(burnChance != 0);
-        _sicknessObject.SetActive(sicknessChance != 0);
+        _voidObject.SetActive(voidChance != 0);
         _shatterText.SetText(shatterChance == 0 ? "" : shatterChance + " Shatter");
         _burnText.SetText(burnChance == 0 ? "" : burnChance + " Burn");
-        _sicknessText.SetText(sicknessChance == 0 ? "" : sicknessChance + " Sickness");
+        _voidText.SetText(voidChance == 0 ? "" : voidChance + " Void");
     }
 
     public void UpdateWeaponInfo()

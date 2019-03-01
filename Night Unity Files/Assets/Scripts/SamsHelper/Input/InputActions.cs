@@ -91,9 +91,9 @@ namespace SamsHelper.Input
 
             Fire.AddDefaultBinding(Key.K);
             Fire.AddDefaultBinding(InputControlType.RightBumper);
+            Fire.AddDefaultBinding(Mouse.LeftButton);
 
             Reload.AddDefaultBinding(Key.R);
-            TakeItem.AddDefaultBinding(Mouse.LeftButton);
             Reload.AddDefaultBinding(InputControlType.Action3);
 
             Sprint.AddDefaultBinding(Key.Space);

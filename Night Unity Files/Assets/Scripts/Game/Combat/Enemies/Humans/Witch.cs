@@ -34,7 +34,7 @@ namespace Game.Combat.Enemies.Humans
                         Grenade.CreateDecay(currentPosition, targetPosition, false);
                         break;
                     case 3:
-                        Grenade.CreateSickness(currentPosition, targetPosition, false);
+                        Grenade.CreateVoid(currentPosition, targetPosition, false);
                         break;
                 }
 

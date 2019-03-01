@@ -20,7 +20,7 @@
         Recoil,
         Pellets,
         Capacity,
-        Sickness,
+        Void,
         Shatter,
         Burn,
         CompassBonus

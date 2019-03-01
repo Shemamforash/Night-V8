@@ -1,13 +1,6 @@
-using System.Collections.Generic;
-using System.Linq;
 using DG.Tweening;
 using Game.Characters;
-using Game.Combat.Enemies.Nightmares;
-using Game.Combat.Generation;
-using Game.Combat.Misc;
-using Game.Combat.Player;
 using Game.Exploration.Regions;
-using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -20,15 +13,11 @@ namespace Game.Global
         private static AudioController _instance;
         private static AudioMixer _audioMixer;
         private static float _fogMuffle;
-        private float _combatTargetVolume;
-        private const float ThresholdCombatMusicDistance = 10f;
-        private const float MusicFadeDuration = 5f;
-        private float _timeNearEnemies;
+        private float _minAmbientVolume;
 
         [SerializeField] private AudioSource _windLight, _windMedium, _windHeavy;
         [SerializeField] private AudioSource _rainLight, _rainMedium, _rainHeavy;
         [SerializeField] private AudioSource _ambient;
-        [SerializeField] private AudioSource _layer1, _layer2;
         [SerializeField] private AudioSource _night;
 
         public void Awake()
@@ -60,77 +49,27 @@ namespace Game.Global
             _night.clip = AudioClips.Night;
             _night.Play();
 
-            float layer1StartTime = Random.Range(0f, AudioClips.AbandonedLands.length);
-            float layer2StartTime = Random.Range(0f, AudioClips.GodsAreDead.length);
-            _layer1.clip = AudioClips.AbandonedLands;
-            _layer2.clip = AudioClips.GodsAreDead;
-
-            SetInitialVolume(_layer1, 0, layer1StartTime);
-            SetInitialVolume(_layer2, 0, layer2StartTime);
-
             DontDestroyOnLoad(this);
         }
 
-        private void SetInitialVolume(AudioSource source, float volume, float startTime)
-        {
-            source.volume = volume;
-            source.time = startTime;
-            source.Play();
-        }
-
-        private int GetEnemiesInRange()
-        {
-            if (PlayerCombat.Instance == null) return -1;
-            if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Tomb) return Tomb.TombActive ? 1 : 0;
-            Vector2 playerPosition = PlayerCombat.Position();
-            List<CanTakeDamage> enemies = CombatManager.Instance().Enemies();
-            if (enemies.Count == 0) return -1;
-            int enemiesInRange = enemies.Count(e => e.transform.Distance(playerPosition) <= ThresholdCombatMusicDistance && !(e is AnimalBehaviour));
-            return enemiesInRange;
-        }
-
-        private void UpdateTimeNearEnemies()
-        {
-            int enemiesInRange = GetEnemiesInRange();
-            float timeChange = Time.deltaTime / 5f;
-            if (enemiesInRange == -1) timeChange *= -MusicFadeDuration;
-            if (enemiesInRange == 0) timeChange *= -1;
-            _timeNearEnemies = Mathf.Clamp(_timeNearEnemies + timeChange, 0, 1);
-        }
-
-        private float _minAmbientVolume, _maxCombatVolume;
-        private bool _useAlternateCombatMusic;
 
         private void UpdateMinMaxVolumes(bool isCombatScene)
         {
             if (!isCombatScene) return;
             Region currentRegion = CharacterManager.CurrentRegion();
-            if (currentRegion.IsDynamic())
-            {
-                _minAmbientVolume = 0.25f;
-                _maxCombatVolume = 0.75f;
-            }
-            else
-            {
-                _minAmbientVolume = 0f;
-                _maxCombatVolume = 1f;
-            }
-
-            _useAlternateCombatMusic = currentRegion.GetRegionType() == RegionType.Tomb;
+            _minAmbientVolume = currentRegion.IsDynamic() ? 0.25f : 0f;
         }
 
         private void UpdateInGameVolumes()
         {
-            float ambientVolumeModifier = 1 - _combatTargetVolume;
+            float ambientVolumeModifier = 1 - CombatAudioController.GetTargetVolume();
             if (EndGameAudioController.Active()) ambientVolumeModifier = 0f;
             if (ambientVolumeModifier < _minAmbientVolume) ambientVolumeModifier = _minAmbientVolume;
             _ambient.volume = _ambientVolume * ambientVolumeModifier;
-            if (_combatTargetVolume > _maxCombatVolume) _combatTargetVolume = _maxCombatVolume;
         }
 
         private void UpdateOutOfGameVolumes()
         {
-            _combatTargetVolume = 0;
             _ambientVolume -= Time.deltaTime;
             if (_ambientVolume < 0) _ambientVolume = 0f;
             _ambient.volume = _ambientVolume;
@@ -139,29 +78,10 @@ namespace Game.Global
         public void Update()
         {
             string currentScene = SceneManager.GetActiveScene().name;
-            bool isGameScene = currentScene == "Game";
-            bool isCombatScene = currentScene == "Combat";
-            UpdateMinMaxVolumes(isCombatScene);
-            UpdateTimeNearEnemies();
-
-            _combatTargetVolume = _timeNearEnemies;
-
-            if (!isGameScene && !isCombatScene) UpdateOutOfGameVolumes();
-            else UpdateInGameVolumes();
-
-            float layer1TargetVolume = _useAlternateCombatMusic ? 0f : _combatTargetVolume;
-            float layer2TargetVolume = _useAlternateCombatMusic ? _combatTargetVolume : 0f;
-            UpdateLayerVolume(layer1TargetVolume, _layer1);
-            UpdateLayerVolume(layer2TargetVolume, _layer2);
-        }
-
-        private void UpdateLayerVolume(float targetVolume, AudioSource layer)
-        {
-            float layerDifference = targetVolume - layer.volume;
-            float incrementAmount = 1f;
-            if (incrementAmount > Mathf.Abs(layerDifference)) incrementAmount = Mathf.Abs(layerDifference);
-            if (layerDifference < 0) incrementAmount = -incrementAmount;
-            layer.volume += incrementAmount * Time.deltaTime;
+            UpdateMinMaxVolumes(currentScene == "Combat");
+            bool isInGame = currentScene == "Game" || currentScene == "Combat" || currentScene == "Combat Story";
+            if (isInGame) UpdateInGameVolumes();
+            else UpdateOutOfGameVolumes();
         }
 
         private static void Fade(float to, float duration, AudioSource source) => source.DOFade(to, duration).SetUpdate(UpdateType.Normal, true);

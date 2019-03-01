@@ -113,7 +113,9 @@ public class TutorialManager : MonoBehaviour
         if (!_alreadyHidden && _hideResouces) ResourcesUiController.Hide();
         _showingTutorial = true;
         DOTween.defaultTimeScaleIndependent = true;
-        _alreadyPaused = CombatManager.Instance().IsCombatActive() ? !CombatManager.Instance().IsCombatActive() : WorldState.Paused();
+        bool combatPaused = CombatManager.Instance() == null || !CombatManager.Instance().IsCombatActive();
+        bool gamePaused = WorldState.Paused();
+        _alreadyPaused = combatPaused || gamePaused;
         _tutorialCanvas.blocksRaycasts = true;
         if (!_alreadyPaused) WorldState.Pause();
         _tutorialCanvas.DOFade(1f, 0.5f);

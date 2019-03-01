@@ -67,22 +67,22 @@ namespace Game.Combat.Generation.Shrines
             if (_brandChoice.Count < 3) StopCandles(_collider3);
             if (_brandChoice.Count < 2) StopCandles(_collider2);
             if (_brandChoice.Count != 0) return;
-            GetComponent<CompassItem>().Die();
             StopCandles(_collider1);
             Destroy(this);
         }
 
-        private void StopCandles(RiteColliderBehaviour candleParent)
+        private void StopCandles(RiteColliderBehaviour riteColliderBehaviour)
         {
-            candleParent.GetComponent<ParticleSystem>().Stop();
-            foreach (ParticleSystem candle in candleParent.transform.Find("Candles").GetComponentsInChildren<ParticleSystem>())
+            riteColliderBehaviour.GetComponent<ParticleSystem>().Stop();
+            foreach (ParticleSystem candle in riteColliderBehaviour.transform.Find("Candles").GetComponentsInChildren<ParticleSystem>())
             {
                 candle.Stop();
                 candle.Clear();
             }
 
-            _colliders.Remove(_collider3);
-            Destroy(_collider3);
+            GetComponent<CompassItem>().Die();
+            _colliders.Remove(riteColliderBehaviour);
+            Destroy(riteColliderBehaviour);
         }
 
         public void EnterShrineCollider(RiteColliderBehaviour riteColliderBehaviour)
@@ -109,6 +109,7 @@ namespace Game.Combat.Generation.Shrines
                 foreach (ParticleSystem candle in riteTransform.Find("Candles").GetComponentsInChildren<ParticleSystem>())
                     StartCoroutine(FadeCandle(candle));
             });
+            GetComponent<CompassItem>().Die();
         }
 
         private IEnumerator FadeCandle(ParticleSystem candle)

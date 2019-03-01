@@ -176,34 +176,30 @@ namespace Game.Characters
                 Attributes.UnlockCharacterSkillTwo(showScreen);
         }
 
-        public Tuple<string, float> GetCharacterSkillOneProgress()
+        public Tuple<string, float> GetCharacterSkillOneProgress() => GetCharacterSkillProgress(CharacterSkillOneTarget);
+
+        public Tuple<string, float> GetCharacterSkillTwoProgress() => GetCharacterSkillProgress(CharacterSkillTwoTarget);
+
+        private Tuple<string, float> GetCharacterSkillProgress(int target)
         {
-            string progress = "Survive " + (CharacterSkillOneTarget - _daysSurvived) + " days";
-            float normalisedProgress = (float) _daysSurvived / CharacterSkillOneTarget;
-            return Tuple.Create(progress, normalisedProgress);
+            int progress = CharacterSkillOneTarget - _daysSurvived;
+            string progressString = "Survive " + progress + " day".Pluralise(progress);
+            float normalisedProgress = (float) _daysSurvived / target;
+            return Tuple.Create(progressString, normalisedProgress);
         }
 
-        public Tuple<string, float> GetCharacterSkillTwoProgress()
-        {
-            string progress = "Survive " + (CharacterSkillTwoTarget - _daysSurvived) + " days";
-            float normalisedProgress = (float) _daysSurvived / CharacterSkillTwoTarget;
-            return Tuple.Create(progress, normalisedProgress);
-        }
+        public Tuple<string, float> GetWeaponSkillOneProgress() => GetWeaponProgress(WeaponSkillOneTarget);
 
-        public Tuple<string, float> GetWeaponSkillOneProgress()
+        public Tuple<string, float> GetWeaponSkillTwoProgress() => GetWeaponProgress(WeaponSkillTwoTarget);
+
+        private Tuple<string, float> GetWeaponProgress(int target)
         {
             WeaponType weaponType = EquippedWeapon.WeaponType();
-            string progress = "Kill " + (WeaponSkillOneTarget - _weaponKills[weaponType]) + " enemies";
-            float normalisedProgress = (float) _weaponKills[weaponType] / WeaponSkillOneTarget;
-            return Tuple.Create(progress, normalisedProgress);
-        }
-
-        public Tuple<string, float> GetWeaponSkillTwoProgress()
-        {
-            WeaponType weaponType = EquippedWeapon.WeaponType();
-            string progress = "Kill " + (WeaponSkillTwoTarget - _weaponKills[weaponType]) + " enemies";
-            float normalisedProgress = (float) _weaponKills[weaponType] / WeaponSkillTwoTarget;
-            return Tuple.Create(progress, normalisedProgress);
+            int progress = target - _weaponKills[weaponType];
+            string pluralisedEnemy = progress <= 1 ? " enemy" : " enemies";
+            string progressString = "Kill " + progress + pluralisedEnemy;
+            float normalisedProgress = (float) _weaponKills[weaponType] / target;
+            return Tuple.Create(progressString, normalisedProgress);
         }
 
         public void SetCharacterView(CharacterView characterView)

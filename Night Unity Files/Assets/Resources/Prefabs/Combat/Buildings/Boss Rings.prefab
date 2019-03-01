@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 835844578178602594}
   - component: {fileID: 9175814701558715238}
   - component: {fileID: 1291290040197253396}
-  m_Layer: 0
+  - component: {fileID: 7484689732588874612}
+  m_Layer: 13
   m_Name: Ring 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -192,6 +193,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!58 &7484689732588874612
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 448960511155666243}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 4
 --- !u!1 &1107505599079028668
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +219,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8043619989594084692}
   - component: {fileID: 138372699194232778}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -331,7 +348,8 @@ GameObject:
   - component: {fileID: 4244765165950693382}
   - component: {fileID: 6046736643824443004}
   - component: {fileID: 818755993011712616}
-  m_Layer: 0
+  - component: {fileID: 8241284167640960726}
+  m_Layer: 13
   m_Name: Ring 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -511,6 +529,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!58 &8241284167640960726
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2062158452397540514}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 8
 --- !u!1 &2334865387373492147
 GameObject:
   m_ObjectHideFlags: 0
@@ -521,7 +555,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8565513347255403828}
   - component: {fileID: 5054357979934373205}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -602,7 +636,8 @@ GameObject:
   - component: {fileID: 3056961789952487353}
   - component: {fileID: 486936957875182093}
   - component: {fileID: 8194905243036532785}
-  m_Layer: 0
+  - component: {fileID: 3885094932695989412}
+  m_Layer: 13
   m_Name: Ring 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -782,6 +817,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!58 &3885094932695989412
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2569477363496398694}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 10
 --- !u!1 &3464626255202182269
 GameObject:
   m_ObjectHideFlags: 0
@@ -794,7 +845,8 @@ GameObject:
   - component: {fileID: 2882419567382823586}
   - component: {fileID: 5540859568283363629}
   - component: {fileID: 8719798724188674532}
-  m_Layer: 0
+  - component: {fileID: 2975205997429612806}
+  m_Layer: 13
   m_Name: Ring 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -974,6 +1026,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!58 &2975205997429612806
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3464626255202182269}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 6.26
 --- !u!1 &4920559776010780518
 GameObject:
   m_ObjectHideFlags: 0
@@ -986,7 +1054,8 @@ GameObject:
   - component: {fileID: 3824632969000551200}
   - component: {fileID: 4932986837956518866}
   - component: {fileID: 6704877764338046001}
-  m_Layer: 0
+  - component: {fileID: 376816148350273210}
+  m_Layer: 13
   m_Name: Ring 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1166,6 +1235,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!58 &376816148350273210
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4920559776010780518}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 2.5
 --- !u!1 &6718982119081107073
 GameObject:
   m_ObjectHideFlags: 0
@@ -1176,7 +1261,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7218131654307815593}
   - component: {fileID: 2623184248073772535}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1255,7 +1340,7 @@ GameObject:
   m_Component:
   - component: {fileID: 174818286896555525}
   - component: {fileID: 5434290322254070375}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1334,7 +1419,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1840029737604537882}
   - component: {fileID: 4416315719494282492}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

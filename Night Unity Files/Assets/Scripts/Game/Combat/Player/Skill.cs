@@ -143,5 +143,6 @@ namespace Game.Combat.Player
         {
             return _skillValue.AdrenalineCost;
         }
+
     }
 }

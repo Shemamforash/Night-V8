@@ -26,11 +26,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             if (Menu.PauseOnOpen) WorldState.Pause();
             if (Menu.DefaultSelectable == null) return;
             GameObject current = EventSystem.current.currentSelectedGameObject;
-            if (current != null && current.activeInHierarchy)
-            {
-                Debug.Log(current.gameObject.name);
-                return;
-            }
+            if (current != null && current.activeInHierarchy) return;
             Menu.DefaultSelectable.Select();
         }
 

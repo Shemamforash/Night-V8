@@ -10,14 +10,14 @@ namespace Game.Combat.Ui
     public class UIHealthBarController : MonoBehaviour
     {
         private SteppedProgressBar _healthBar;
-        private Image _sicknessImage;
+        private Image _voidImage;
         private bool _cached;
         private RectTransform _rect;
 
         public void Awake()
         {
             _healthBar = gameObject.FindChildWithName<SteppedProgressBar>("Fill");
-            _sicknessImage = gameObject.FindChildWithName<Image>("Sickness");
+            _voidImage = gameObject.FindChildWithName<Image>("Sickness");
             _rect = GetComponent<RectTransform>();
         }
 
@@ -28,9 +28,9 @@ namespace Game.Combat.Ui
             _healthBar.SetValue(health.Normalised(), doFade);
         }
 
-        public void SetSicknessLevel(float normalisedValue)
+        public void SetVoidLevel(float normalisedValue)
         {
-            _sicknessImage.DOFillAmount(normalisedValue, 0.1f);
+            _voidImage.DOFillAmount(normalisedValue, 0.1f);
         }
     }
 }

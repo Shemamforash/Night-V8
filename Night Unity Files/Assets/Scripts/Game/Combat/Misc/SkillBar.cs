@@ -138,6 +138,7 @@ namespace Game.Combat.Misc
         {
             if (!_skillsReady) return;
             Skill skill = _skillControllers[skillNo].Skill();
+            if (skill == null) return;
             bool freeSkill = IsSkillFree();
             if (!skill.Activate(freeSkill || SkillsAreFree)) return;
             if (freeSkill) return;

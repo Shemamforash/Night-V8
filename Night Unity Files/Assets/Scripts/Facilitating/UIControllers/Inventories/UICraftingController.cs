@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using DefaultNamespace;
 using DG.Tweening;
+using Facilitating;
 using Facilitating.Persistence;
 using Facilitating.UIControllers;
 using Facilitating.UIControllers.Inventories;
@@ -300,7 +301,9 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
 
     private static List<object> GetAvailableRecipes()
     {
-        return Recipe.Recipes().ToObjectList();
+        List<Recipe> recipes = Recipe.Recipes();
+        if (Campfire.IsLit()) recipes.RemoveAll(r => r.RecipeType == RecipeType.Fire);
+        return recipes.ToObjectList();
     }
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)

@@ -25,6 +25,8 @@ namespace SamsHelper.Input
             _instance = this;
         }
 
+        public static bool InputAxisWasPressed(InputAxis inputAxis) => _instance._inputPressList[inputAxis].WasPressed();
+
         public void Start()
         {
             _inputActions = new InputActions();
@@ -248,7 +250,7 @@ namespace SamsHelper.Input
                 if (isPressed)
                 {
                     _held = _currentInputValue.HasSameSignAs(_lastInputValue);
-                    BroadcastInputDown(_axis, _held, _currentInputValue);//.Polarity());
+                    BroadcastInputDown(_axis, _held, _currentInputValue); //.Polarity());
                     if (!_held) CheckDoubleTap();
                 }
                 else if (_lastInputValue != 0f)
@@ -258,6 +260,11 @@ namespace SamsHelper.Input
                 }
 
                 _lastInputValue = _currentInputValue;
+            }
+
+            public bool WasPressed()
+            {
+                return _playerAction?.IsPressed ?? _playerAxis.IsPressed;
             }
         }
 

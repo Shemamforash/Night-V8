@@ -91,7 +91,7 @@ namespace Facilitating.UIControllers
                 MarkerState newState;
                 if (i < current)
                     newState = MarkerState.Active;
-                else if (i < current + offset)
+                else if (i < current + Mathf.Abs(offset))
                     newState = MarkerState.ActiveOffset;
                 else if (i < max)
                     newState = MarkerState.Faded;

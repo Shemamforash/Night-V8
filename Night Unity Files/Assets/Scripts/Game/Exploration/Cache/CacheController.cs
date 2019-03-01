@@ -20,6 +20,7 @@ public class CacheController : MonoBehaviour
     private CacheButtonController _lastButton;
     private UiSkillUpgradeEffectController _successEffect;
     private bool _active = true;
+    private bool _started;
 
     private void Awake()
     {
@@ -89,6 +90,7 @@ public class CacheController : MonoBehaviour
         });
         _cacheRings.ForEach(r => r.Activate());
         StartCoroutine(SpawnEnemies());
+        _started = true;
     }
 
     private void Deactivate()
@@ -114,7 +116,7 @@ public class CacheController : MonoBehaviour
             --enemyCount;
             ++currentButton;
             if (currentButton == _orderedButtons.Count) currentButton = 0;
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(3f);
         }
 
         while (CombatManager.Instance().Enemies().Count > 0) yield return null;
@@ -148,5 +150,10 @@ public class CacheController : MonoBehaviour
     public static bool Active()
     {
         return _instance != null && _instance._active;
+    }
+
+    public static bool Started()
+    {
+        return _instance != null && _instance._started;
     }
 }

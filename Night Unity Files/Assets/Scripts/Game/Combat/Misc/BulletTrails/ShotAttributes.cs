@@ -23,7 +23,7 @@ namespace Game.Combat.Misc
         private Weapon _weapon;
         private event Action OnHitAction;
 
-        private float _speed, _burnChance, _shatterChance, _sicknessChance, _accuracy, _knockBackForce, _knockBackModifier, _age, _seekModifier = 1;
+        private float _speed, _burnChance, _shatterChance, _voidChance, _accuracy, _knockBackForce, _knockBackModifier, _age, _seekModifier = 1;
         private float _finalDamageModifier = 1f;
         private bool _seekTarget;
         private int _damage, _damageDealt;
@@ -73,11 +73,11 @@ namespace Game.Combat.Misc
             _accuracy = 1 - attributes.Val(AttributeType.Accuracy);
             _shatterChance = attributes.CalculateShatterChance();
             _burnChance = attributes.CalculateBurnChance();
-            _sicknessChance = attributes.CalculateSicknessChance();
+            _voidChance = attributes.CalculateVoidChance();
             if (!(_origin is PlayerCombat)) return;
             _shatterChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Shatter);
             _burnChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Burn);
-            _sicknessChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Sickness);
+            _voidChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Void);
         }
 
         public float CalculateAccuracy()
@@ -149,11 +149,11 @@ namespace Game.Combat.Misc
             float conditionModifier = _weapon.GetAttributeValue(AttributeType.Pellets) * _weapon.GetAttributeValue(AttributeType.Capacity);
             bool canDecay = random < _shatterChance / conditionModifier;
             bool canBurn = random < _burnChance / conditionModifier;
-            bool canSicken = random < _sicknessChance / conditionModifier;
+            bool canVoid = random < _voidChance / conditionModifier;
             List<int> conditions = new List<int>();
             if (canDecay) conditions.Add(0);
             if (canBurn) conditions.Add(1);
-            if (canSicken) conditions.Add(2);
+            if (canVoid) conditions.Add(2);
             if (conditions.Count == 0) return;
             _condition = conditions.RandomElement();
         }

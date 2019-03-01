@@ -120,6 +120,7 @@ namespace Game.Exploration.Environment
             if (region.GetRegionType() == RegionType.Gate) CharacterManager.SelectedCharacter.TravelAction.ReturnToHomeInstant();
             else CharacterManager.SelectedCharacter.TravelAction.TravelToInstant(region);
             IsReturningFromCombat = false;
+            Exit();
         }
 
         public void FadeTeleportText()
