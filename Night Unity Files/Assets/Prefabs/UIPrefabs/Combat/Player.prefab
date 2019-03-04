@@ -4600,6 +4600,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4056376915780633095}
   - component: {fileID: 4165728844664076867}
+  - component: {fileID: 2771641689884744199}
   m_Layer: 17
   m_Name: Radiance
   m_TagString: Untagged
@@ -4631,6 +4632,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26d62e684eb0b294ca37a4ad74bddb23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2771641689884744199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4060487905667673555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de6028132504506814e9bb0957f29c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &4060502833291656869
@@ -42256,6 +42269,7 @@ GameObject:
   - component: {fileID: 4165579172749268285}
   - component: {fileID: 4165655282088830721}
   - component: {fileID: 4074235305644927251}
+  - component: {fileID: 1441329766321287466}
   m_Layer: 17
   m_Name: Player
   m_TagString: Player
@@ -42432,6 +42446,18 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.15
+--- !u!114 &1441329766321287466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4061870439297697131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de6028132504506814e9bb0957f29c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4061870560993359415
 GameObject:
   m_ObjectHideFlags: 0

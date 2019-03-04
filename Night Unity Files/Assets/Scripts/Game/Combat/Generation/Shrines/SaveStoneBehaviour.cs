@@ -4,6 +4,7 @@ using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
 {
     private static GameObject _saveStonePrefab;
     private static SaveStoneBehaviour _instance;
+    private string _controlText;
 
     public void Awake()
     {
@@ -25,6 +27,17 @@ public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
         if (CharacterManager.CurrentRegion().MonumentUsed) return;
         ParticleSystem[] particles = _instance.transform.GetComponentsInChildren<ParticleSystem>();
         Array.ForEach(particles, p => p.Play());
+    }
+
+    public void Start()
+    {
+        ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
+        controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
+    }
+
+    private void UpdateText()
+    {
+        _controlText = InputHandler.GetBindingForKey(InputAxis.TakeItem);
     }
 
     public static void SetUsed()
@@ -63,7 +76,7 @@ public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
 
     public string GetEventText()
     {
-        return "Make an offering upon the alter [T]";
+        return "Make an offering upon the alter [" + _controlText + "]";
     }
 
     public void Activate()

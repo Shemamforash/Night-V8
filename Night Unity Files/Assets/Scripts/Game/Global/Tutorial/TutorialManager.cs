@@ -40,10 +40,14 @@ public class TutorialManager : MonoBehaviour
         _contentText = top.FindChildWithName<EnhancedText>("Text");
         _overlayController = gameObject.GetComponent<TutorialOverlayController>();
         _closeButton = top.FindChildWithName<CloseButtonController>("Close Button");
-        _closeButton.UseAcceptInput();
         _tutorialCanvas = GetComponent<CanvasGroup>();
         _tutorialCanvas.alpha = 0f;
         _mainCanvasRaycaster = GameObject.Find("Canvas").GetComponent<GraphicRaycaster>();
+    }
+
+    private void Start()
+    {
+        _closeButton.UseAcceptInput();
     }
 
     public static bool TryOpenTutorial(int tutorialPart, TutorialOverlay overlay, bool hideResources = true)
@@ -113,10 +117,11 @@ public class TutorialManager : MonoBehaviour
         if (!_alreadyHidden && _hideResouces) ResourcesUiController.Hide();
         _showingTutorial = true;
         DOTween.defaultTimeScaleIndependent = true;
-        bool combatPaused = CombatManager.Instance() == null || !CombatManager.Instance().IsCombatActive();
-        bool gamePaused = WorldState.Paused();
+        bool combatPaused = CombatManager.Instance() != null && !CombatManager.Instance().IsCombatActive();
+        bool gamePaused = CombatManager.Instance() == null && WorldState.Paused();
         _alreadyPaused = combatPaused || gamePaused;
         _tutorialCanvas.blocksRaycasts = true;
+        Debug.Log(combatPaused + " " + gamePaused);
         if (!_alreadyPaused) WorldState.Pause();
         _tutorialCanvas.DOFade(1f, 0.5f);
     }

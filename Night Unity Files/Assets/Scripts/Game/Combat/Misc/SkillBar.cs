@@ -45,10 +45,7 @@ namespace Game.Combat.Misc
             gameObject.FindChildWithName<CanvasGroup>("Skills Right").alpha = 0;
         }
 
-        private void OnDestroy()
-        {
-            _instance = null;
-        }
+        private void OnDestroy() => _instance = null;
 
         private void UpdateCooldownControllers(float normalisedDuration)
         {

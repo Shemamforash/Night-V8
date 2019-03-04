@@ -4,6 +4,7 @@ using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ public class RadianceController : MonoBehaviour, ICombatEvent
     private int _radianceAvailable;
     private static RadianceController _instance;
     private bool _activated;
+    private string _controlText;
 
     public void Awake()
     {
@@ -23,6 +25,17 @@ public class RadianceController : MonoBehaviour, ICombatEvent
         if (!_activated) return;
         Vector2? existingRadianceStone = CharacterManager.CurrentRegion().RadianceStonePosition;
         CreateRadianceStone(existingRadianceStone.Value, false);
+    }
+
+    public void Start()
+    {
+        ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
+        controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
+    }
+
+    private void UpdateText()
+    {
+        _controlText = InputHandler.GetBindingForKey(InputAxis.TakeItem);
     }
 
     private class RadianceBehaviour : MonoBehaviour
@@ -58,7 +71,7 @@ public class RadianceController : MonoBehaviour, ICombatEvent
 
     public string GetEventText()
     {
-        return "Claim region [T] (" + _radianceAvailable + " radiance left)";
+        return "Claim region [" + _controlText + "] (" + _radianceAvailable + " radiance left)";
     }
 
     private static void CreateRadianceStone(Vector2 position, bool playPulse)

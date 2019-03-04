@@ -1,5 +1,6 @@
 ﻿using System;
 using DG.Tweening;
+using InControl;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -19,10 +20,19 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
     private Action _callback;
     private bool _usingFireInput;
 
-    public void Awake()
+    public void Start()
     {
         if (!_usingFireInput) UseDefaultInput();
         else _targetAxis = InputAxis.Sprint;
+        ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
+        controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
+    }
+
+    private void UpdateText()
+    {
+        string text = InputHandler.GetBindingForKey(_targetAxis);
+        if (text.Length > 4) text = "C";
+        _buttonText.SetText(text);
     }
 
     public void SetOnClick(UnityAction a)
@@ -39,14 +49,14 @@ public class CloseButtonController : MonoBehaviour, IInputListener, IPointerEnte
     public void UseAcceptInput()
     {
         _targetAxis = InputAxis.Accept;
-        _buttonText.SetText("OK");
+        UpdateText();
         _usingFireInput = true;
     }
 
     private void UseDefaultInput()
     {
         _targetAxis = InputAxis.Cancel;
-        _buttonText.SetText("X");
+        UpdateText();
         _usingFireInput = false;
     }
 

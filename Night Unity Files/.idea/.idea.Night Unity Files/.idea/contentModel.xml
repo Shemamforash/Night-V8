@@ -1473,6 +1473,7 @@
             <e p="FadeAndDie.cs" t="Include" />
             <e p="FadeAndDieTrailRenderer.cs" t="Include" />
             <e p="Input" t="Include">
+              <e p="ControlTypeChangeListener.cs" t="Include" />
               <e p="IInputListener.cs" t="Include" />
               <e p="InputActions.cs" t="Include" />
               <e p="InputAxis.cs" t="Include" />

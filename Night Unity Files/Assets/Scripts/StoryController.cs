@@ -38,28 +38,14 @@ public class StoryController : Menu
     protected override void Awake()
     {
         base.Awake();
-        _invertColour = Camera.main.GetComponent<PostProcessInvertColour>();
-        if (EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.End) _invertColour.Set(1);
-        _actCanvas = GameObject.Find("Act").GetComponent<CanvasGroup>();
-        _actAudio = _actCanvas.GetComponent<AudioSource>();
-        _actTitle = _actCanvas.gameObject.FindChildWithName<TextMeshProUGUI>("Title");
-        _actSubtitle = _actCanvas.gameObject.FindChildWithName<TextMeshProUGUI>("Subtitle");
-        _storyText = GetComponent<TextMeshProUGUI>();
-        _storyText.color = UiAppearanceController.InvisibleColour;
-        _skipCanvas = GameObject.Find("Skip").GetComponent<CanvasGroup>();
-        _closeButton = _skipCanvas.GetComponent<CloseButtonController>();
-        _closeButton.SetCallback(Skip);
-        _closeButton.SetOnClick(Skip);
+        CacheComponents();
+        InitialiseComponents();
+        SetEndGameValues();
+    }
+
+    private void Start()
+    {
         _closeButton.UseAcceptInput();
-        _audioSource = Camera.main.GetComponent<AudioSource>();
-        _audioSource.volume = 0f;
-        _audioSource.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
-        _skipCanvas.alpha = 0f;
-        _paused = false;
-        if (!_goToCredits) return;
-        _waitTime = Random.Range(2f, 4f);
-        _lightningSystem = GameObject.Find("Lightning System").GetComponent<ParticleSystem>();
-        _shaker = GameObject.Find("Shaker").GetComponent<CameraShaker>();
     }
 
     public void Update()
@@ -82,6 +68,41 @@ public class StoryController : Menu
         float totalDuration = inDuration + outDuration;
         _waitTime = Random.Range(totalDuration * 4f, totalDuration * 8f);
     }
+
+    private void CacheComponents()
+    {
+        _invertColour = Camera.main.GetComponent<PostProcessInvertColour>();
+        _actCanvas = GameObject.Find("Act").GetComponent<CanvasGroup>();
+        _actAudio = _actCanvas.GetComponent<AudioSource>();
+        _actTitle = _actCanvas.gameObject.FindChildWithName<TextMeshProUGUI>("Title");
+        _actSubtitle = _actCanvas.gameObject.FindChildWithName<TextMeshProUGUI>("Subtitle");
+        _storyText = GetComponent<TextMeshProUGUI>();
+        _storyText.color = UiAppearanceController.InvisibleColour;
+        _skipCanvas = GameObject.Find("Skip").GetComponent<CanvasGroup>();
+        _closeButton = _skipCanvas.GetComponent<CloseButtonController>();
+        _audioSource = Camera.main.GetComponent<AudioSource>();
+    }
+
+    private void InitialiseComponents()
+    {
+        _closeButton.SetCallback(Skip);
+        _closeButton.SetOnClick(Skip);
+        _audioSource.volume = 0f;
+        _audioSource.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
+        _skipCanvas.alpha = 0f;
+        _paused = false;
+        if (EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.End) _invertColour.Set(1);
+    }
+
+    private void SetEndGameValues()
+    {
+        if (!_goToCredits) return;
+        _waitTime = Random.Range(2f, 4f);
+        _lightningSystem = GameObject.Find("Lightning System").GetComponent<ParticleSystem>();
+        _shaker = GameObject.Find("Shaker").GetComponent<CameraShaker>();
+        transform.parent.FindChildWithName<AudioSource>("Act").volume = 0;
+    }
+
 
     public override void Enter()
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using InControl;
 using SamsHelper.Libraries;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -19,16 +20,24 @@ namespace SamsHelper.Input
         private static IInputListener _currentInputListener;
         private static bool _listenersInterrupted;
         private static InputHandler _instance;
+        private static BindingSourceType _lastInputType;
+        private bool _needInputUpdate;
+        private static List<ControlTypeChangeListener> _controlTypeChangeListeners = new List<ControlTypeChangeListener>();
+        private bool _initialised;
 
         public void Awake()
         {
             _instance = this;
         }
 
+        public static bool ListenersInterrupted => _listenersInterrupted;
+
         public static bool InputAxisWasPressed(InputAxis inputAxis) => _instance._inputPressList[inputAxis].WasPressed();
 
-        public void Start()
+        private void Initialise()
         {
+            if (_initialised) return;
+            _initialised = true;
             _inputActions = new InputActions();
             _inputActions.BindActions();
             foreach (InputAxis axis in Enum.GetValues(typeof(InputAxis)))
@@ -95,6 +104,12 @@ namespace SamsHelper.Input
             }
         }
 
+        public void Start()
+        {
+            Initialise();
+            _needInputUpdate = true;
+        }
+
         public static bool BindInputModule(KeyboardInputModule inputModule)
         {
             if (_instance == null) return false;
@@ -116,6 +131,8 @@ namespace SamsHelper.Input
 
         public void Update()
         {
+            UpdateInputType();
+
             if (ListenersToAdd.Count != 0)
             {
                 InputListeners.AddRange(ListenersToAdd);
@@ -133,15 +150,7 @@ namespace SamsHelper.Input
 
         private static bool ListenerIsValid(IInputListener inputListener)
         {
-            bool valid = true;
-            switch (inputListener)
-            {
-                case MonoBehaviour m when m.gameObject == null:
-                case null:
-                    valid = false;
-                    break;
-            }
-
+            bool valid = !(inputListener is MonoBehaviour m && m.gameObject == null || inputListener == null);
             if (valid) return true;
             ListenersToRemove.Add(inputListener);
             return false;
@@ -207,6 +216,25 @@ namespace SamsHelper.Input
             if (_currentInputListener == inputListener) _currentInputListener = null;
         }
 
+        private void UpdateInputType()
+        {
+            BindingSourceType currentInputType = _inputActions.LastInputType;
+            if (currentInputType == BindingSourceType.None
+                || currentInputType == BindingSourceType.MouseBindingSource
+                || currentInputType == BindingSourceType.UnknownDeviceBindingSource) currentInputType = BindingSourceType.KeyBindingSource;
+            if (!_needInputUpdate && currentInputType == _lastInputType) return;
+            if (!_needInputUpdate) _lastInputType = currentInputType;
+            _needInputUpdate = false;
+            _controlTypeChangeListeners.ForEach(l => l.Execute());
+        }
+
+        public static string GetBindingForKey(InputAxis inputAxis)
+        {
+            _instance.Initialise();
+            InputPress input = _instance._inputPressList[inputAxis];
+            return input.GetCurrentKey(_lastInputType);
+        }
+
         private class InputPress
         {
             private readonly InputAxis _axis;
@@ -266,11 +294,59 @@ namespace SamsHelper.Input
             {
                 return _playerAction?.IsPressed ?? _playerAxis.IsPressed;
             }
+
+            public string GetCurrentKey(BindingSourceType lastInputType)
+            {
+                if (_playerAction != null) return ActionToString(_playerAction, lastInputType);
+                Tuple<PlayerAction, PlayerAction> actions = _instance._inputActions.AxisToActions(_playerAxis);
+                string negativeAxis = ActionToString(actions.Item1, lastInputType);
+                string positiveAxis = ActionToString(actions.Item2, lastInputType);
+                return negativeAxis + " - " + positiveAxis;
+            }
+
+            private string ActionToString(PlayerAction action, BindingSourceType lastInputType)
+            {
+                List<string> actionKeys = new List<string>();
+                foreach (BindingSource bindingSource in action.Bindings)
+                {
+                    if (bindingSource.BindingSourceType != lastInputType) continue;
+                    string name = bindingSource.Name;
+                    switch (name)
+                    {
+                        case "Cross":
+                            name = ((char) 210).ToString();
+                            break;
+                        case "Triangle":
+                            name = ((char) 211).ToString();
+                            break;
+                        case "Square":
+                            name = ((char) 212).ToString();
+                            break;
+                        case "Circle":
+                            name = ((char) 213).ToString();
+                            break;
+                    }
+
+                    actionKeys.Add(name);
+                }
+
+                return string.Join(" or ", actionKeys);
+            }
         }
 
         public static void InterruptListeners(bool interrupted)
         {
             _listenersInterrupted = interrupted;
+        }
+
+        public static void RegisterControlTypeChangeListener(ControlTypeChangeListener controlTypeChangeListener)
+        {
+            _controlTypeChangeListeners.Add(controlTypeChangeListener);
+        }
+
+        public static void UnregisterControlTypeChangeListener(ControlTypeChangeListener controlTypeChangeListener)
+        {
+            _controlTypeChangeListeners.Remove(controlTypeChangeListener);
         }
     }
 }

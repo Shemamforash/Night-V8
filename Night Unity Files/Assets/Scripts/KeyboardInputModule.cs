@@ -1,7 +1,5 @@
-﻿using System;
-using InControl;
+﻿using InControl;
 using SamsHelper.Input;
-using UnityEngine.Serialization;
 
 namespace UnityEngine.EventSystems
 {
@@ -40,8 +38,9 @@ namespace UnityEngine.EventSystems
 
         public override void Process()
         {
-            base.Process();
             Cursor.visible = _isMouseInputAccepted;
+            if (InputHandler.ListenersInterrupted) return;
+            base.Process();
         }
     }
 }

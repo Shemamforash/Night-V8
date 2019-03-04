@@ -30222,6 +30222,7 @@ GameObject:
   - component: {fileID: 8758087338860265231}
   - component: {fileID: 8880712272474906551}
   - component: {fileID: 8880368569254273181}
+  - component: {fileID: 2144651361568564377}
   m_Layer: 5
   m_Name: Player Ui
   m_TagString: Untagged
@@ -30285,6 +30286,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 162614e4a552465685a4c3bf23a7c0b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2144651361568564377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8839644873190137643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de6028132504506814e9bb0957f29c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8839654736850050711

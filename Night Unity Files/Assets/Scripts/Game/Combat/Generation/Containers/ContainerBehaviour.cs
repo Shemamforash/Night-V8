@@ -4,6 +4,7 @@ using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -24,6 +25,7 @@ namespace Game.Combat.Generation
         private float _currentAlpha;
         private ParticleSystem _puddleDrops;
         private bool _hideOutline;
+        private string _controlText;
 
         public void Awake()
         {
@@ -33,6 +35,17 @@ namespace Game.Combat.Generation
             _glowSprite.color = UiAppearanceController.InvisibleColour;
             _selectSprite = gameObject.FindChildWithName<SpriteRenderer>("Select");
             _selectSprite.color = UiAppearanceController.InvisibleColour;
+        }
+
+        public void Start()
+        {
+            ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
+            controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
+        }
+
+        private void UpdateText()
+        {
+            _controlText = InputHandler.GetBindingForKey(InputAxis.TakeItem);
         }
 
         public void SetContainerController(ContainerController containerController)
@@ -110,7 +123,7 @@ namespace Game.Combat.Generation
 
         public string GetEventText()
         {
-            return "Take " + ContainerController.GetContents() + " [T]";
+            return "Take " + ContainerController.GetContents() + " [" + _controlText + "]";
         }
 
         public void Activate()

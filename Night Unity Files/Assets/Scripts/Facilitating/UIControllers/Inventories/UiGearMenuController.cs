@@ -157,6 +157,27 @@ namespace Facilitating.UIControllers
             UpdateTabs();
         }
 
+        private void Start()
+        {
+            ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
+            controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
+        }
+
+        private void UpdateText()
+        {
+            string text = InputHandler.GetBindingForKey(InputAxis.SwitchTab);
+            string leftText = "J";
+            string rightText = "L";
+            if (text != "J - L")
+            {
+                leftText = "<";
+                rightText = ">";
+            }
+
+            _leftTab.SetText(leftText);
+            _rightTab.SetText(rightText);
+        }
+
         public static void SetCloseButtonAction(UnityAction a)
         {
             _instance._closeButton.SetOnClick(a);

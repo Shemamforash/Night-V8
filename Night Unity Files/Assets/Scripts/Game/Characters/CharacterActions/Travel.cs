@@ -54,7 +54,8 @@ namespace Game.Characters.CharacterActions
             CurrentRegion = MapGenerator.GetInitialNode();
             _inTransit = false;
             PlayerCharacter.RestAction.Enter();
-            CombatManager.Instance().ExitCombat(false);
+            CombatManager combatManager = CombatManager.Instance();
+            if (combatManager != null) combatManager.ExitCombat(false);
             SceneChanger.GoToGameScene();
         }
 

@@ -9,6 +9,7 @@ using Game.Combat.Player;
 using Game.Exploration.Regions;
 using Game.Global.Tutorial;
 using NUnit.Framework;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -24,6 +25,7 @@ namespace Game.Combat.Generation.Shrines
         private static RiteShrineBehaviour _instance;
         private Region _region;
         private bool _seenTutorial;
+        private string _controlText;
 
         public void Awake()
         {
@@ -37,6 +39,17 @@ namespace Game.Combat.Generation.Shrines
             List<Vector2> points = col.points.ToList();
             Polygon b = new Polygon(points, Vector2.zero);
             WorldGrid.AddBarrier(b);
+        }
+
+        public void Start()
+        {
+            ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
+            controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
+        }
+
+        private void UpdateText()
+        {
+            _controlText = InputHandler.GetBindingForKey(InputAxis.TakeItem);
         }
 
         public static RiteShrineBehaviour Instance()
@@ -151,7 +164,7 @@ namespace Game.Combat.Generation.Shrines
         public string GetEventText()
         {
             Brand brand = _brandChoice[_targetBrand];
-            return "Accept the " + brand.GetDisplayName() + " [T]\n<size=30>" + brand.GetRequirementText() + "</size>";
+            return "Accept the " + brand.GetDisplayName() + " [" + _controlText + "]\n<size=30>" + brand.GetRequirementText() + "</size>";
         }
 
         public void Activate()

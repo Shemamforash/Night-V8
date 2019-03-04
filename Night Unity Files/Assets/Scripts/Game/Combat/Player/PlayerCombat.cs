@@ -43,8 +43,6 @@ namespace Game.Combat.Player
 
         public float MuzzleFlashOpacity;
 
-        private bool _dashPressed;
-
         private const float RotateSpeedMax = 150f;
         private float _rotateSpeedCurrent;
         private const float RotateAcceleration = 400f;
@@ -60,6 +58,7 @@ namespace Game.Combat.Player
         private bool _swivelling;
         private float _swivelAmount;
         public static bool Alive;
+        private string _controlText;
 
         public static Vector3 Position()
         {
@@ -88,16 +87,7 @@ namespace Game.Combat.Player
 
         private void Move(Vector2 direction)
         {
-            if (CanDash())
-            {
-                MovementController.Dash(direction);
-                _dashCooldown = StartCoroutine(Dash());
-                _dashPressed = false;
-            }
-            else
-            {
-                MovementController.Move(direction);
-            }
+            MovementController.Move(direction);
         }
 
         protected override void Awake()
@@ -107,6 +97,17 @@ namespace Game.Combat.Player
             BurnDamagePercent = 0.025f;
             Instance = this;
             _mainCamera = Camera.main;
+        }
+
+        public void Start()
+        {
+            ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
+            controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
+        }
+
+        private void UpdateText()
+        {
+            _controlText = InputHandler.GetBindingForKey(InputAxis.TakeItem);
         }
 
         private void MoveVertical(float direction = 0)
@@ -163,7 +164,7 @@ namespace Game.Combat.Player
                         SkillBar.Instance().ActivateSkill(3);
                         break;
                     case InputAxis.Sprint:
-                        _dashPressed = true;
+                        TryDash();
                         break;
                     case InputAxis.Inventory:
                         UiGearMenuController.ShowInventories();
@@ -179,6 +180,13 @@ namespace Game.Combat.Player
                         break;
                 }
             }
+        }
+
+        private void TryDash()
+        {
+            if (!CanDash()) return;
+            MovementController.Dash();
+            _dashCooldown = StartCoroutine(Dash());
         }
 
         private void TryEmitPulse()
@@ -200,9 +208,6 @@ namespace Game.Combat.Player
                 case InputAxis.SwitchTab:
                     _rotateSpeedCurrent = 0f;
                     break;
-                case InputAxis.Sprint:
-                    _dashPressed = false;
-                    break;
                 case InputAxis.Swivel:
                     _swivelling = false;
                     break;
@@ -216,7 +221,8 @@ namespace Game.Combat.Player
         private void Rotate(float direction)
         {
             _useKeyboardMovement = true;
-            _rotateSpeedCurrent += RotateAcceleration * Time.deltaTime;
+            direction = Mathf.Clamp(direction, -1, 1);
+            _rotateSpeedCurrent += RotateAcceleration * Time.deltaTime * Mathf.Abs(direction);
             if (_rotateSpeedCurrent > RotateSpeedMax) _rotateSpeedCurrent = RotateSpeedMax;
             transform.Rotate(Vector3.forward, _rotateSpeedCurrent * Time.deltaTime * (-direction).Polarity());
         }
@@ -241,7 +247,7 @@ namespace Game.Combat.Player
 
         public string GetEventText()
         {
-            return "Leave region [T]";
+            return "Leave region [" + _controlText + "]";
         }
 
         public override int Burn()
@@ -500,7 +506,7 @@ namespace Game.Combat.Player
 
         private bool CanDash()
         {
-            return _dashCooldown == null && _dashPressed && ConsumeAdrenaline(1);
+            return _dashCooldown == null && ConsumeAdrenaline(1);
         }
 
         public override Weapon Weapon() => Player.EquippedWeapon;

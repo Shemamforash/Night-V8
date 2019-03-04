@@ -1,4 +1,6 @@
+using System;
 using InControl;
+using UnityEngine;
 
 namespace SamsHelper.Input
 {
@@ -57,6 +59,21 @@ namespace SamsHelper.Input
             Compass = CreatePlayerAction("Compass");
             TakeItem = CreatePlayerAction("Take Item");
             Swivel = CreatePlayerAction("Swivel");
+        }
+
+        public Tuple<PlayerAction, PlayerAction> AxisToActions(PlayerOneAxisAction axis)
+        {
+            if (axis == Horizontal)
+            {
+                return Tuple.Create(Left, Right);
+            }
+
+            if (axis == Vertical)
+            {
+                return Tuple.Create(Up, Down);
+            }
+
+            return Tuple.Create(LeftTab, RightTab);
         }
 
         public void BindActions()

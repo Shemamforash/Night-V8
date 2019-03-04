@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Facilitating;
@@ -7,17 +8,21 @@ using Game.Combat.Enemies;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Player;
 using Game.Combat.Ui;
+using Game.Exploration.Environment;
 using Game.Global.Tutorial;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Generation
 {
     public class Tutorial : RegionGenerator
     {
         private PlayerCombat _player;
+        private bool _seenAccuracyTutorial;
+        private bool _updateText;
 
         protected override void Generate()
         {
@@ -27,6 +32,17 @@ namespace Game.Combat.Generation
             CreateRocks();
             CharacterManager.SelectedCharacter.Attributes.SetTutorialValues();
             StartCoroutine(ShowTutorial());
+        }
+
+        private void Start()
+        {
+            ControlTypeChangeListener controlTypeChangeListener = gameObject.AddComponent<ControlTypeChangeListener>();
+            controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
+        }
+
+        private void UpdateText()
+        {
+            _updateText = true;
         }
 
         private void CreateRocks()
@@ -63,33 +79,58 @@ namespace Game.Combat.Generation
             loot.CreateObject();
         }
 
+        private void DisplayEventText()
+        {
+            EventTextController.SetOverrideText("");
+            _updateText = true;
+        }
+
+        private IEnumerator WaitForControl(Func<bool> condition, Func<string> text)
+        {
+            DisplayEventText();
+            float timer = 5f;
+            bool pressed = false;
+            while (!pressed || timer > 0f)
+            {
+                timer -= Time.deltaTime;
+                if (!pressed)
+                {
+                    pressed = condition();
+                    _updateText = false;
+                }
+
+                EventTextController.UpdateOverrideText(text());
+                yield return null;
+            }
+
+            EventTextController.CloseOverrideText();
+            yield return new WaitForSeconds(1);
+        }
+
         private IEnumerator ShowBasicControls()
         {
-            yield return new WaitForSeconds(2f);
-            EventTextController.SetOverrideText("Move using [WASD]");
-            while (!InputHandler.InputAxisWasPressed(InputAxis.Horizontal) && !InputHandler.InputAxisWasPressed(InputAxis.Vertical)) yield return null;
-            EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
+            yield return StartCoroutine(WaitForControl(() => InputHandler.InputAxisWasPressed(InputAxis.Horizontal) || InputHandler.InputAxisWasPressed(InputAxis.Vertical), () =>
+            {
+                string text = InputHandler.GetBindingForKey(InputAxis.Horizontal) + InputHandler.GetBindingForKey(InputAxis.Vertical);
+                text = text == "A - DW - S" ? "WASD" : "Left Stick";
+                return "Move using [" + text + "]";
+            }));
 
-            EventTextController.SetOverrideText("Rotate using [J] and [L]");
-            while (!InputHandler.InputAxisWasPressed(InputAxis.SwitchTab)) yield return null;
-            EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
 
-            EventTextController.SetOverrideText("You can also aim with the mouse, and rotate the camera by holding [RMB]");
-            yield return new WaitForSeconds(5);
-            EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
+            yield return StartCoroutine(WaitForControl(() => InputHandler.InputAxisWasPressed(InputAxis.SwitchTab), () =>
+            {
+                string text = InputHandler.GetBindingForKey(InputAxis.SwitchTab);
+                if (text != "J - L") text = "Right Stick";
+                return "Rotate using [" + text + "]";
+            }));
 
-            EventTextController.SetOverrideText("Press [K], or [LMB] to Fire");
-            while (!InputHandler.InputAxisWasPressed(InputAxis.Fire)) yield return null;
-            EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
+            yield return StartCoroutine(WaitForControl(() => true, () => "You can also aim with the mouse, and rotate the camera by holding [RMB]"));
 
-            EventTextController.SetOverrideText("Reload with [R]");
-            while (!InputHandler.InputAxisWasPressed(InputAxis.Reload)) yield return null;
-            EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
+            yield return StartCoroutine(WaitForControl(() => InputHandler.InputAxisWasPressed(InputAxis.Fire),
+                () => "Press [" + InputHandler.GetBindingForKey(InputAxis.Fire) + "] to Fire"));
+
+            yield return StartCoroutine(WaitForControl(() => InputHandler.InputAxisWasPressed(InputAxis.Reload),
+                () => "Reload with [" + InputHandler.GetBindingForKey(InputAxis.Reload) + "]"));
         }
 
         private IEnumerator ShowAdrenalineTutorial()
@@ -100,8 +141,10 @@ namespace Game.Combat.Generation
             yield return new WaitForSeconds(0.5f);
             TutorialManager.TryOpenTutorial(7, new List<TutorialOverlay> {new TutorialOverlay(RageBarController.AdrenalineRect())});
             while (TutorialManager.IsTutorialVisible()) yield return null;
-            EventTextController.SetOverrideText("Dash with [SPACE], this consumes some adrenaline");
-            while (!InputHandler.InputAxisWasPressed(InputAxis.Sprint)) yield return null;
+
+            yield return StartCoroutine(WaitForControl(() => InputHandler.InputAxisWasPressed(InputAxis.Sprint),
+                () => "Dash with [" + InputHandler.GetBindingForKey(InputAxis.Sprint) + "], this consumes some adrenaline"));
+
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
 
@@ -110,8 +153,6 @@ namespace Game.Combat.Generation
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
         }
-
-        private bool _seenAccuracyTutorial;
 
         private IEnumerator ShowHealthTutorial()
         {
@@ -147,10 +188,10 @@ namespace Game.Combat.Generation
             yield return new WaitForSeconds(1);
 
             UiGearMenuController.SetOpenAllowed(true);
-            EventTextController.SetOverrideText("Open your inventory with [I] and navigate to the Meditate tab to restore your Fettle");
-            while (!UiGearMenuController.IsOpen()) yield return null;
+            yield return StartCoroutine(WaitForControl(UiGearMenuController.IsOpen,
+                () => "Open your inventory with [" + InputHandler.GetBindingForKey(InputAxis.Inventory) + "] and navigate to the Meditate tab to restore your Fettle"));
             UiGearMenuController.SetCloseAllowed(false);
-            EventTextController.CloseOverrideText();
+
             while (_player.HealthController.GetNormalisedHealthValue() < 0.5f) yield return null;
             UiGearMenuController.SetCloseAllowed(true);
             while (UiGearMenuController.IsOpen()) yield return null;
@@ -166,18 +207,15 @@ namespace Game.Combat.Generation
         private IEnumerator ShowCompassTutorial()
         {
             CreateFoodAndWater();
-            EventTextController.SetOverrideText("Use your compass with [E]");
-            while (!InputHandler.InputAxisWasPressed(InputAxis.Compass)) yield return null;
-            EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
+
+            yield return StartCoroutine(WaitForControl(() => InputHandler.InputAxisWasPressed(InputAxis.Compass),
+                () => "Use your compass with [" + InputHandler.GetBindingForKey(InputAxis.Compass) + "]"));
 
             TutorialManager.TryOpenTutorial(3, new List<TutorialOverlay> {new TutorialOverlay(UiCompassPulseController.CompassRect())});
             while (TutorialManager.IsTutorialVisible()) yield return null;
 
-            EventTextController.SetOverrideText("Collect the revealed items with [T] or [MMB]");
-            yield return new WaitForSeconds(5);
-            EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
+            yield return StartCoroutine(WaitForControl(() => true,
+                () => "Collect the revealed items with [" + InputHandler.GetBindingForKey(InputAxis.TakeItem) + "]"));
 
             while (CharacterManager.CurrentRegion().Containers.Count > 0) yield return null;
 
@@ -185,10 +223,11 @@ namespace Game.Combat.Generation
             yield return new WaitForSeconds(5);
             EventTextController.CloseOverrideText();
             yield return new WaitForSeconds(1);
-
             UiGearMenuController.SetOpenAllowed(true);
-            EventTextController.SetOverrideText("Open your inventory with [I] and navigate to the consume tab");
-            while (!UiGearMenuController.IsOpen()) yield return null;
+
+            yield return StartCoroutine(WaitForControl(() => UiGearMenuController.IsOpen(),
+                () => "Open your inventory with [" + InputHandler.GetBindingForKey(InputAxis.Inventory) + "] and navigate to the consume tab"));
+
             UiGearMenuController.SetCloseAllowed(false);
             EventTextController.CloseOverrideText();
             while (Inventory.GetResourceQuantity("Water") > 0 && Inventory.GetResourceQuantity("Cooked Meat") > 0) yield return null;
@@ -203,10 +242,11 @@ namespace Game.Combat.Generation
             CombatManager.Instance().SetForceShowHud(false);
             RiteStarter.GenerateTutorialStarter();
             EventTextController.SetOverrideText("Walk into the portal to begin your journey");
+            CharacterManager.SelectedCharacter.Attributes.ResetValues();
+            CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(MapGenerator.GetInitialNode());
+            UiGearMenuController.SetOpenAllowed(true);
             yield return new WaitForSeconds(2);
             EventTextController.CloseOverrideText();
-            CharacterManager.SelectedCharacter.Attributes.ResetValues();
-            UiGearMenuController.SetOpenAllowed(true);
         }
 
         private IEnumerator ShowTutorial()

@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using SamsHelper.Libraries;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,12 +10,14 @@ public class TabController : MonoBehaviour
     private Image _glowImage;
     private Tweener _tabTween;
     private Tweener _glowTween;
+    private TextMeshProUGUI _text;
 
     private void Awake()
     {
         _tabCanvas = GetComponent<CanvasGroup>();
         _glowImage = gameObject.FindChildWithName<Image>("Glow");
         _glowImage.SetAlpha(0);
+        _text = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
     }
 
     public void InstantFade()
@@ -43,5 +46,10 @@ public class TabController : MonoBehaviour
         if (_tabCanvas.alpha == 1f) return;
         _tabTween?.Kill();
         _tabTween = _tabCanvas.DOFade(1f, 1.5f).SetUpdate(UpdateType.Normal, true);
+    }
+
+    public void SetText(string keyBinding)
+    {
+        _text.SetText(keyBinding);
     }
 }

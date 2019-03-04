@@ -15,13 +15,14 @@ namespace Facilitating.UIControllers
 {
     public class UiArmourUpgradeController : UiInventoryMenuController, IInputListener
     {
-        private bool _upgradingAllowed;
-        private static bool _unlocked;
         private static UiArmourUpgradeController _instance;
+        private static bool _unlocked;
+
         private GameObject _armourObject, _upgradeObject;
-        private EnhancedText _nameText, _bonusText, _nextLevelText, _upgradeText, _upgradeMessage;
         private ArmourController _armourController;
         private EnhancedButton _upgradeButton, _acceptButton;
+        private EnhancedText _nameText, _bonusText, _nextLevelText, _upgradeText, _upgradeMessage;
+        private bool _upgradingAllowed;
         private bool _seenTutorial;
 
         public override void Awake()
@@ -30,22 +31,13 @@ namespace Facilitating.UIControllers
             _instance = this;
         }
 
-        public static void Load(XmlNode root)
-        {
-            _unlocked = root.BoolFromNode("Armour");
-        }
-
-        public static void Save(XmlNode root)
-        {
-            root.CreateChild("Armour", _unlocked);
-        }
-
-        private void OnDestroy()
-        {
-            _instance = null;
-        }
+        private void OnDestroy() => _instance = null;
 
         public static UiArmourUpgradeController Instance() => _instance;
+
+        public static void Load(XmlNode root) => _unlocked = root.BoolFromNode("Armour");
+
+        public static void Save(XmlNode root) => root.CreateChild("Armour", _unlocked);
 
         public static void Unlock() => _unlocked = true;
 
@@ -61,13 +53,13 @@ namespace Facilitating.UIControllers
             _upgradeText = _armourObject.gameObject.FindChildWithName<EnhancedText>("Upgrade Text");
             _upgradeMessage = _upgradeObject.gameObject.FindChildWithName<EnhancedText>("Message");
             _upgradeButton = _armourObject.gameObject.FindChildWithName<EnhancedButton>("Upgrade");
-            _upgradeButton.AddOnClick(Upgrade);
             _acceptButton = _upgradeObject.gameObject.FindChildWithName<EnhancedButton>("Accept");
-            _acceptButton.AddOnClick(OnShow);
         }
 
         protected override void Initialise()
         {
+            _upgradeButton.AddOnClick(Upgrade);
+            _acceptButton.AddOnClick(OnShow);
         }
 
         protected override void OnShow()
@@ -78,16 +70,7 @@ namespace Facilitating.UIControllers
             InputHandler.RegisterInputListener(this);
             _armourObject.SetActive(true);
             _upgradeObject.SetActive(false);
-            if (_armourController.GetCurrentLevel() == 10)
-            {
-                _upgradeButton.gameObject.SetActive(false);
-            }
-            else
-            {
-                _upgradeButton.Select();
-                _upgradeButton.Button().enabled = _armourController.CanUpgrade();
-            }
-
+            CheckArmourComplete();
             ShowArmourTutorial();
         }
 
@@ -101,6 +84,18 @@ namespace Facilitating.UIControllers
             };
             TutorialManager.TryOpenTutorial(13, overlays);
             _seenTutorial = true;
+        }
+        
+        private void CheckArmourComplete()
+        {
+            if (_armourController.GetCurrentLevel() == 10)
+            {
+                _upgradeButton.gameObject.SetActive(false);
+                return;
+            }
+
+            _upgradeButton.Select();
+            _upgradeButton.Button().enabled = _armourController.CanUpgrade();
         }
 
         private void Upgrade()

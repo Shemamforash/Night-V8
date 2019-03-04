@@ -38,6 +38,7 @@ namespace Game.Exploration.Environment
         private bool _canTeleport;
         private static MapMenuController _instance;
         private Region _nearestRegion;
+        private string _controlText;
 
         protected override void Awake()
         {
@@ -55,6 +56,13 @@ namespace Game.Exploration.Environment
         public void Start()
         {
             MenuStateMachine.RegisterMenu(this);
+            ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
+            controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
+        }
+
+        private void UpdateText()
+        {
+            _controlText = InputHandler.GetBindingForKey(InputAxis.TakeItem);
         }
 
         private void OnDestroy()
@@ -107,7 +115,7 @@ namespace Game.Exploration.Environment
             int stoneQuantity = Inventory.GetResourceQuantity("Mystic Shard");
             _canTeleport = stoneQuantity > 0;
             string teleportString = "No Mystic Shards";
-            if (_canTeleport) teleportString = "Teleport [T] (Consumes 1 Mystics Shard)";
+            if (_canTeleport) teleportString = "Teleport [" + _controlText + "] (Consumes 1 Mystics Shard)";
             _teleportText.SetText(teleportString);
         }
 

@@ -20,7 +20,6 @@ public class CombatStoryController : MonoBehaviour
         _closeButton = _storyCanvas.gameObject.FindChildWithName<CloseButtonController>("Close Button");
         _closeButton.SetCallback(FadeOut);
         _closeButton.SetOnClick(FadeOut);
-        _closeButton.UseAcceptInput();
         _titleText = _storyCanvas.gameObject.FindChildWithName<EnhancedText>("Title");
         _contentText = _storyCanvas.gameObject.FindChildWithName<EnhancedText>("Content");
         _titleText.SetText(_journalHere.Title);
@@ -29,6 +28,11 @@ public class CombatStoryController : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
         sequence.Append(_storyCanvas.DOFade(1f, 1f));
         sequence.AppendCallback(_closeButton.Enable);
+    }
+
+    public void Start()
+    {
+        _closeButton.UseAcceptInput();
     }
 
     private void FadeOut()

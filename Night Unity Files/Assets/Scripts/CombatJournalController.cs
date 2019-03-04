@@ -20,10 +20,14 @@ public class CombatJournalController : Menu, IInputListener
         _title = gameObject.FindChildWithName<TextMeshProUGUI>("Title");
         _body = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
-        _closeButton.UseAcceptInput();
         _closeButton.SetOnClick(Close);
         _closeButton.SetCallback(Close);
         _audioSource = GetComponent<AudioSource>();
+    }
+
+    private void Start()
+    {
+        _closeButton.UseAcceptInput();
     }
 
     public static void ShowJournal(JournalEntry journal)

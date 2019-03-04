@@ -52,6 +52,7 @@ public class UIActionListController : MonoBehaviour
 
     private void UpdateExploreButton()
     {
+        Debug.Log(_atHome + " " + _resting + " " + _player.Attributes.Val(AttributeType.Grit));
         _exploreEnabled = _atHome && _resting && _player.Attributes.Val(AttributeType.Grit) > 0;
         _exploreButton.gameObject.SetActive(_exploreEnabled);
     }

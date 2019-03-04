@@ -3,12 +3,32 @@ using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Global.Tutorial;
+using SamsHelper.Input;
+using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
+using TMPro;
 using UnityEngine;
 
 namespace Game.Combat.Ui
 {
     public class PlayerUi : CharacterUi
     {
+        private TextMeshProUGUI _reloadKeyText, _compassKeyText;
+
+        public void Start()
+        {
+            _reloadKeyText = gameObject.FindChildWithName("Reload Key").FindChildWithName<TextMeshProUGUI>("Text");
+            _compassKeyText = gameObject.FindChildWithName("Compass Key").FindChildWithName<TextMeshProUGUI>("Text");
+            ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
+            controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
+        }
+
+        private void UpdateText()
+        {
+            _reloadKeyText.SetText(InputHandler.GetBindingForKey(InputAxis.Reload));
+            _compassKeyText.SetText(InputHandler.GetBindingForKey(InputAxis.Compass));
+        }
+
         public void Update()
         {
             if (PlayerCombat.Instance == null) return;

@@ -16,6 +16,7 @@ namespace Game.Combat.Enemies.Bosses
         {
             gameObject.layer = 24;
             RigidBody = GetComponent<Rigidbody2D>();
+            Tomb.TombActive = true;
         }
 
         public void RegisterSection(BossSectionHealthController section)
@@ -38,6 +39,7 @@ namespace Game.Combat.Enemies.Bosses
             Destroy(gameObject);
             BossDeathController.Create(transform.position);
             RiteStarter.GenerateNextEnvironmentPortal();
+            Tomb.TombActive = false;
         }
 
         protected int SectionCount()

@@ -15,10 +15,11 @@ namespace Facilitating.UIControllers
 {
     public class UiAccessoryController : UiInventoryMenuController
     {
+        private static UiAccessoryController _instance;
+        private static bool _unlocked;
+
         private ListController _accessoryList;
         private EnhancedText _name, _bonus, _description;
-        private static bool _unlocked;
-        private static UiAccessoryController _instance;
         private bool _seenTutorial;
 
         public override void Awake()
@@ -27,12 +28,17 @@ namespace Facilitating.UIControllers
             _instance = this;
         }
 
-        private void OnDestroy()
-        {
-            _instance = null;
-        }
+        private void OnDestroy() => _instance = null;
 
         public static UiAccessoryController Instance() => _instance;
+
+        public static void Load(XmlNode root) => _unlocked = root.BoolFromNode("Accessories");
+
+        public static void Save(XmlNode root) => root.CreateChild("Accessories", _unlocked);
+
+        public static void Unlock() => _unlocked = true;
+
+        public override bool Unlocked() => _unlocked;
 
         protected override void CacheElements()
         {
@@ -43,6 +49,26 @@ namespace Facilitating.UIControllers
             _description = equipped.FindChildWithName<EnhancedText>("Description");
         }
 
+        protected override void Initialise()
+        {
+            _accessoryList.Initialise(typeof(AccessoryElement), Equip, UiGearMenuController.Close, GetAvailableAccessories);
+        }
+
+        protected override void OnShow()
+        {
+            UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
+            _accessoryList.Show();
+            UpdateEquipped();
+            ShowAccessoryTutorial();
+        }
+
+        private void ShowAccessoryTutorial()
+        {
+            if (_seenTutorial || !TutorialManager.Active()) return;
+            TutorialManager.TryOpenTutorial(14, new TutorialOverlay());
+            _seenTutorial = true;
+        }
+        
         private void UpdateEquipped()
         {
             Accessory equippedAccessory = CharacterManager.SelectedCharacter.EquippedAccessory;
@@ -59,25 +85,6 @@ namespace Facilitating.UIControllers
                 _description.SetText(equippedAccessory.Description());
             }
         }
-
-        protected override void Initialise()
-        {
-            _accessoryList.Initialise(typeof(AccessoryElement), Equip, UiGearMenuController.Close, GetAvailableAccessories);
-        }
-
-        public static void Load(XmlNode root)
-        {
-            _unlocked = root.BoolFromNode("Accessories");
-        }
-
-        public static void Save(XmlNode root)
-        {
-            root.CreateChild("Accessories", _unlocked);
-        }
-
-        public static void Unlock() => _unlocked = true;
-
-        public override bool Unlocked() => _unlocked;
 
         private void Equip(object accessoryObject)
         {
@@ -105,24 +112,6 @@ namespace Facilitating.UIControllers
             }
         }
 
-        protected override void OnShow()
-        {
-            UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
-            UpdateEquipped();
-            ShowAccessoryTutorial();
-            _accessoryList.Show();
-        }
-
-        private void ShowAccessoryTutorial()
-        {
-            if (_seenTutorial || !TutorialManager.Active()) return;
-            TutorialManager.TryOpenTutorial(14, new TutorialOverlay());
-            _seenTutorial = true;
-        }
-
-        private static List<object> GetAvailableAccessories()
-        {
-            return Inventory.GetAvailableAccessories().ToObjectList();
-        }
+        private static List<object> GetAvailableAccessories() => Inventory.GetAvailableAccessories().ToObjectList();
     }
 }

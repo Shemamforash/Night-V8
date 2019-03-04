@@ -35,7 +35,7 @@ public class BossRingController : MonoBehaviour
 
         public void Awake()
         {
-            _ring = gameObject.FindChildWithName<SpriteRenderer>(name);
+            _ring = GetComponent<SpriteRenderer>();
             _glow = _ring.gameObject.FindChildWithName<SpriteRenderer>("Glow");
             _ring.SetAlpha(0.2f);
             _glow.SetAlpha(0f);

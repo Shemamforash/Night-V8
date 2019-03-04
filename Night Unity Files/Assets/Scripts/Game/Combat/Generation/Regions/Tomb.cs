@@ -39,9 +39,10 @@ namespace Game.Combat.Generation
         {
 #if UNITY_EDITOR
             Inventory.IncrementResource("Essence", 200);
-            Inventory.Move(WeaponGenerator.GenerateWeapon(ItemQuality.Shining));
-            Inventory.Move(Accessory.Generate(ItemQuality.Shining));
-            Inventory.Move(Inscription.Generate(ItemQuality.Shining));
+            Inventory.Move(WeaponGenerator.GenerateWeapon());
+            Inventory.Move(Accessory.Generate());
+            Inventory.Move(Inscription.Generate());
+            WorldState.OverrideDifficulty(((int) EnvironmentManager.CurrentEnvironmentType() + 1) * 10);
 #endif
 
             BossRingController.Create();

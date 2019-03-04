@@ -217,31 +217,6 @@ namespace Game.Global
             ++DaysSpentHere;
         }
 
-        public static string TimeToHours(int duration)
-        {
-            int hours = Mathf.FloorToInt((float) duration / MinutesPerHour);
-            int minutes = duration - hours * MinutesPerHour;
-            string timeString = "";
-            if (hours != 0)
-            {
-                if (hours == 1)
-                {
-                    timeString += hours + "hr";
-                }
-                else
-                {
-                    timeString += hours + "hrs ";
-                }
-            }
-
-            if (minutes != 0)
-            {
-                timeString += minutes * IntervalSize + "mins";
-            }
-
-            return timeString;
-        }
-
         public static int Difficulty() => _difficulty;
 
         public static int NormalisedDifficulty() => _difficulty / MaxDifficulty;
@@ -409,6 +384,11 @@ namespace Game.Global
         public static int ScaleValue(int value)
         {
             return (int) (value + value * _difficulty / 25f);
+        }
+
+        public static void OverrideDifficulty(object difficulty)
+        {
+            _difficulty = (int) difficulty;
         }
     }
 }

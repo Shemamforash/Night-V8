@@ -9,6 +9,7 @@ using Game.Combat.Player;
 using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -24,6 +25,7 @@ namespace Game.Combat.Generation.Shrines
         private ParticleSystem[] _particleSystems;
         private AudioSource _audioSource;
         private bool _allEnemiesDead;
+        private string _controlText;
 
         public void Awake()
         {
@@ -41,6 +43,13 @@ namespace Game.Combat.Generation.Shrines
 
             Polygon b = new Polygon(points, Vector2.zero);
             WorldGrid.AddBarrier(b);
+            ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
+            controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
+        }
+
+        private void UpdateText()
+        {
+            _controlText = InputHandler.GetBindingForKey(InputAxis.TakeItem);
         }
 
         private void OnDestroy()
@@ -118,12 +127,12 @@ namespace Game.Combat.Generation.Shrines
 
         public float InRange()
         {
-            return (IsInRange && !Triggered) ? 1 : -1;
+            return IsInRange && !Triggered ? 1 : -1;
         }
 
         public string GetEventText()
         {
-            return "Drink from the fountain... [T]";
+            return "Drink from the fountain... [" + _controlText + "]";
         }
 
         public void Activate()

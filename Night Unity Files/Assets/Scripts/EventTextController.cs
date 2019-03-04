@@ -4,6 +4,7 @@ using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using TMPro;
 using UnityEngine;
@@ -146,5 +147,10 @@ public class EventTextController : MonoBehaviour
         if (shrine.InRange() < 0) return false;
         SetCurrentCombatEvent(shrine);
         return true;
+    }
+
+    public static void UpdateOverrideText(string overrideString)
+    {
+        _instance._eventText.text = overrideString;
     }
 }

@@ -32,9 +32,9 @@ namespace Game.Combat.Enemies
             _speed = speed;
         }
 
-        public void Dash(Vector2 direction)
+        public void Dash()
         {
-            _forceToadd += direction * DashForce;
+            _forceToadd += _rigidbody.velocity.normalized * DashForce;
         }
 
         public void Move(Vector2 direction)

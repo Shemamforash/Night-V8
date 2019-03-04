@@ -21,6 +21,8 @@ public class RegionClearController : MonoBehaviour
         if (_cleared) return;
         if (!CharacterManager.CurrentRegion().IsDynamic()) return;
         if (ContainerController.Containers.Count > 0) return;
+        if (CacheController.Active()) return;
+        if (RescueRingController.Active()) return;
         if (!CombatManager.Instance().ClearOfEnemies()) return;
         _cleared = true;
         _canvasGroup.DOFade(1f, 1f);

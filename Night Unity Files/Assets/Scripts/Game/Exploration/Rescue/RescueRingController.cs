@@ -19,6 +19,7 @@ public class RescueRingController : MonoBehaviour
     private Sequence _waitTween;
     private UiSkillUpgradeEffectController _successEffect;
     private AudioSource _rotateAudio, _finishAudio;
+    public bool _active = true;
 
     private void Awake()
     {
@@ -41,7 +42,7 @@ public class RescueRingController : MonoBehaviour
         AddButton("Clockwise A", () => RotateGroupA(-1));
         AddButton("Clockwise B", () => RotateGroupB(-1));
         AddButton("Clockwise C", () => RotateGroupC(-1));
-        if (CharacterManager.CurrentRegion().CharacterHere == null) SetComplete();
+        if (CharacterManager.CurrentRegion().CharacterHere == null) SetComplete(0f);
         else RandomiseLock();
     }
 
@@ -121,26 +122,26 @@ public class RescueRingController : MonoBehaviour
         StartWaitTween();
     }
 
+    public static bool Active() => Instance() != null && Instance()._active;
+    
     private void CheckAligned()
     {
         if (_ringRotations.Values.Any(v => v != 0)) return;
-        _buttons.ForEach(b => b.DisableButton());
-        _ringRotations.Keys.ToList().ForEach(g => { g.GetComponent<SpriteRenderer>().DOFade(0.25f, 1.5f); });
         _successEffect.Activate();
         ShelterCharacterBehaviour.Instance().Free();
         _lockPoints.SetAlpha(1f);
         _lockPoints.DOFade(0f, 2f);
-        Destroy(gameObject.FindChildWithName("Centre"));
-        Destroy(this);
+        SetComplete(1.5f);
         _finishAudio.Play();
     }
 
-    private void SetComplete()
+    private void SetComplete(float duration)
     {
         _buttons.ForEach(b => b.DisableButton());
-        _ringRotations.Keys.ToList().ForEach(g => { g.GetComponent<SpriteRenderer>().SetAlpha(0.25f); });
+        _ringRotations.Keys.ToList().ForEach(g => { g.GetComponent<SpriteRenderer>().DOFade(0.25f, duration); });
         Destroy(gameObject.FindChildWithName("Centre"));
         Destroy(this);
+        _active = false;
     }
 
     private void AddButton(string buttonName, Action onPress)

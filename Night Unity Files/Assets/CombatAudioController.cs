@@ -38,7 +38,7 @@ public class CombatAudioController : MonoBehaviour
     private void PlayClip(Region currentRegion)
     {
         _useAlternateCombatMusic = currentRegion.GetRegionType() == RegionType.Tomb;
-        AudioClip audioClip = _useAlternateCombatMusic ? AudioClips.AbandonedLands : AudioClips.GodsAreDead;
+        AudioClip audioClip = _useAlternateCombatMusic ? AudioClips.GodsAreDead : AudioClips.AbandonedLands;
         float startTime = Random.Range(0f, audioClip.length);
         _audioSource.clip = audioClip;
         _audioSource.volume = 0;

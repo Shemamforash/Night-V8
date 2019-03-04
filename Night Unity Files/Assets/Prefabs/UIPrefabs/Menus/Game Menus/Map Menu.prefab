@@ -85,6 +85,7 @@ GameObject:
   - component: {fileID: 224456092005644274}
   - component: {fileID: 225101158655552400}
   - component: {fileID: 114581652140349414}
+  - component: {fileID: 3816305176973380126}
   m_Layer: 23
   m_Name: Map Menu
   m_TagString: Untagged
@@ -140,6 +141,18 @@ MonoBehaviour:
   DefaultSelectable: {fileID: 0}
   PauseOnOpen: 1
   MapTransform: {fileID: 0}
+--- !u!114 &3816305176973380126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1669419312224998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de6028132504506814e9bb0957f29c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1814046770386992
 GameObject:
   m_ObjectHideFlags: 0
