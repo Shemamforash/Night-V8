@@ -42,7 +42,7 @@ namespace Game.Characters
         public bool PlayerRequirementsMet(Player player)
         {
             if (_requiresSkillUnlock && player.CharacterSkillOne != null) return false;
-            return _minLevel <= (int) EnvironmentManager.CurrentEnvironmentType();
+            return _minLevel <= (int) EnvironmentManager.CurrentEnvironmentType;
         }
 
         public void ReadData(XmlNode root)
@@ -80,13 +80,7 @@ namespace Game.Characters
             if (_ready) return;
             if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Rite) return;
             _counter += amount;
-            if (_counter < _counterTarget)
-            {
-                CombatLogController.PostLog(GetDisplayName() + " - " + GetProgressString());
-                return;
-            }
-
-            CombatLogController.PostLog("Completed The " + GetDisplayName());
+            if (_counter < _counterTarget) return;
             _ready = true;
         }
 
@@ -112,11 +106,11 @@ namespace Game.Characters
 
         private void LoseAttributes()
         {
-            CharacterAttribute fettle = Player.Attributes.Get(AttributeType.Fettle);
+            CharacterAttribute life = Player.Attributes.Get(AttributeType.Life);
             CharacterAttribute grit = Player.Attributes.Get(AttributeType.Grit);
             CharacterAttribute will = Player.Attributes.Get(AttributeType.Will);
             CharacterAttribute focus = Player.Attributes.Get(AttributeType.Focus);
-            if (fettle.CurrentValue() > 1) fettle.SetCurrentValue(1);
+            if (life.CurrentValue() > 1) life.SetCurrentValue(1);
             if (grit.CurrentValue() > 1) grit.SetCurrentValue(1);
             if (will.CurrentValue() > 1) will.SetCurrentValue(1);
             if (focus.CurrentValue() > 1) focus.SetCurrentValue(1);
@@ -131,7 +125,8 @@ namespace Game.Characters
 
         public string GetProgressString()
         {
-            return "Rite of " + _riteName + ": " + GetProgressSubstring();
+            if(_counter < _counterTarget) return "Rite of " + _riteName + ": " + GetProgressSubstring();
+            return "Completed The " + GetDisplayName();
         }
 
         protected abstract string GetProgressSubstring();
@@ -141,7 +136,7 @@ namespace Game.Characters
             _counter = doc.IntFromNode("Counter");
             Status = (BrandStatus) doc.IntFromNode("Status");
             if (Status == BrandStatus.Active && _counter >= _counterTarget) _ready = true;
-            if (this is FettleBrand || this is GritBrand || this is FocusBrand || this is WillBrand) return;
+            if (this is LifeBrand || this is GritBrand || this is FocusBrand || this is WillBrand) return;
             if (Status == BrandStatus.Succeeded) OnSucceed();
         }
 

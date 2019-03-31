@@ -4,16 +4,18 @@ using DG.Tweening.Core.Easing;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Characters.CharacterActions;
+using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Generation.Shrines
 {
-    public class RiteStarter : MonoBehaviour
+    public class RiteStarter : MonoBehaviour, ICombatEvent
     {
         private Brand _brand;
         private static GameObject _prefab;
@@ -22,6 +24,7 @@ namespace Game.Combat.Generation.Shrines
         private SpriteRenderer _flashSprite, _dullFlashSprite;
         private AudioSource _audioSource;
         private bool _isTutorial;
+        private bool _inRange;
 
         public void Awake()
         {
@@ -77,32 +80,26 @@ namespace Game.Combat.Generation.Shrines
             return WorldGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 5, 1).Position;
         }
 
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (!other.CompareTag("Player")) return;
+            _inRange = false;
+        }
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!other.CompareTag("Player")) return;
-            if (_brand == null)
-            {
-                if (_isTutorial)
-                {
-                    CombatManager.Instance().ExitCombat(false);
-                    StoryController.Show();
-                    TutorialManager.FinishIntroTutorial();
-                    UiGearMenuController.SetOpenAllowed(true);
-                }
-                else Return();
-            }
-            else
-                GoToRite();
-
-            Flash();
-            Destroy(this);
+            _inRange = true;
         }
+
+        public static RiteStarter Instance() => _instance;
 
         private void Flash()
         {
             _audioSource.Play();
             _dullFlashSprite.SetAlpha(1);
             _flashSprite.SetAlpha(1);
+            if (PlayerCombat.Instance != null) PlayerCombat.Instance.gameObject.GetComponent<SpriteRenderer>().SetAlpha(0f);
             _dullFlashSprite.DOFade(0f, 2f).SetEase(Ease.OutQuad);
             _flashSprite.DOFade(0f, 2f).SetEase(Ease.OutQuad);
         }
@@ -129,6 +126,7 @@ namespace Game.Combat.Generation.Shrines
 
             CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(Rite.GetLastRegion());
             SceneChanger.GoToCombatScene();
+            CombatManager.Instance().LeaveCombat();
         }
 
         public static void GenerateTutorialStarter()
@@ -138,6 +136,42 @@ namespace Game.Combat.Generation.Shrines
             riteObject.transform.position = Vector2.zero;
             RiteStarter riteStarter = riteObject.GetComponent<RiteStarter>();
             riteStarter._isTutorial = true;
+        }
+
+        public float InRange()
+        {
+            return _inRange ? 1 : -1;
+        }
+
+        public string GetEventText()
+        {
+            return "Use portal [" + InputHandler.GetBindingForKey(InputAxis.TakeItem) + "]";
+        }
+
+        public void Activate()
+        {
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendCallback(Flash);
+            sequence.AppendInterval(1f);
+            sequence.AppendCallback(Teleport);
+            Destroy(this);
+        }
+
+        private void Teleport()
+        {
+            if (_brand == null)
+            {
+                if (_isTutorial)
+                {
+                    CombatManager.Instance().ExitCombat(false);
+                    StoryController.Show();
+                    TutorialManager.FinishIntroTutorial();
+                    UiGearMenuController.SetOpenAllowed(true);
+                }
+                else Return();
+            }
+            else
+                GoToRite();
         }
     }
 }

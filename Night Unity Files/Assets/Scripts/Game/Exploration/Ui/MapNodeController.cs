@@ -15,15 +15,10 @@ namespace Game.Exploration.Ui
 {
     public class MapNodeController : MonoBehaviour
     {
-        private const float LetterFadeInDuration = 0.5f;
         private static Sprite _animalSprite, _dangerSprite, _gateSprite, _fountainSprite, _monumentSprite, _shelterSprite, _shrineSprite, _templeSprite, _cacheSprite, _noneSprite;
-
-        private readonly List<Letter> _letters = new List<Letter>();
-        private string _completeWord;
-        private int _currentLetter;
         private float _currentTime;
-        private bool _doneFading;
         private TextMeshProUGUI _nameText, _costText, _claimText;
+        private TextReveal _textReveal;
 
         private Image _icon, _selectedImage, _claimedSprite, _cleansedSprite;
         private float _targetCentreAlpha, _targetNodeAlpha;
@@ -58,6 +53,8 @@ namespace Game.Exploration.Ui
 
             _ringCanvas = gameObject.FindChildWithName<CanvasGroup>("Rings");
             _ringCanvas.alpha = 0;
+
+            _textReveal = GetComponent<TextReveal>();
         }
 
         private void SetGritText()
@@ -68,6 +65,7 @@ namespace Game.Exploration.Ui
             else if (!_canAfford) gritString = "Not Enough Grit";
             else if (_gritCost == 0) gritString = "Travel to Temple";
             else gritString = _gritCost + " Grit";
+            gritString += _region.IsCleared() ? " - Region Cleared" : "";
             _costText.text = gritString;
         }
 
@@ -107,15 +105,9 @@ namespace Game.Exploration.Ui
         public void SetRegion(Region region)
         {
             _region = region;
-            string nameText = region.GetRegionType() == RegionType.None ? "Unknown Region" : region.Name;
-            for (int i = 0; i < nameText.Length; ++i)
-            {
-                _letters.Add(new Letter(nameText[i].ToString()));
-                if (i > 0) _letters[i - 1].SetNextLetter(_letters[i]);
-            }
-
+            string nameString = region.GetRegionType() == RegionType.None ? "Unknown Region" : region.Name;
+            _nameText.text = nameString;
             LoseFocus(0f);
-            _letters[0]?.StartFade();
             if (gameObject.activeInHierarchy) StartCoroutine(FadeInLetters());
             AssignSprite(region.GetRegionType());
         }
@@ -202,14 +194,7 @@ namespace Game.Exploration.Ui
 
             _costText.color = UiAppearanceController.InvisibleColour;
             _costText.DOColor(UiAppearanceController.FadedColour, 1f);
-            while (_doneFading == false)
-            {
-                _doneFading = true;
-                _completeWord = "";
-                _letters.ForEach(l => l.Update(this));
-                _nameText.text = _completeWord;
-                yield return null;
-            }
+            yield return _textReveal.Reveal(_nameText.text, s => _nameText.text = s);
         }
 
         public void GainFocus()
@@ -229,62 +214,6 @@ namespace Game.Exploration.Ui
             _border.SetActive();
             transform.DOScale(Vector2.one, time).SetUpdate(UpdateType.Normal, true);
             MapMenuController.Instance().UpdateGrit(0);
-        }
-
-        private class Letter
-        {
-            private readonly string _letter;
-            private float _age;
-            private bool _fading;
-            private Letter _nextLetter;
-
-            public Letter(string letter)
-            {
-                _letter = letter;
-            }
-
-            public void SetNextLetter(Letter nextLetter)
-            {
-                _nextLetter = nextLetter;
-            }
-
-            public void StartFade()
-            {
-                _fading = true;
-            }
-
-            public void Update(MapNodeController fadeIn)
-            {
-                string letterWithAlpha = "";
-                if (_fading)
-                {
-                    if (_age > LetterFadeInDuration / 4) _nextLetter?.StartFade();
-
-                    if (_age > LetterFadeInDuration)
-                    {
-                        letterWithAlpha = _letter;
-                    }
-                    else
-                    {
-                        float alpha = _age / LetterFadeInDuration;
-                        _age += Time.deltaTime;
-                        letterWithAlpha += LetterToHex(alpha);
-                        fadeIn._doneFading = false;
-                    }
-                }
-                else
-                {
-                    letterWithAlpha = LetterToHex(0f);
-                }
-
-                fadeIn._completeWord += letterWithAlpha;
-            }
-
-            private string LetterToHex(float alpha)
-            {
-                string hexString = "<color=#FFFFFF" + ((int) (alpha * 255)).ToString("X2") + ">" + _letter + "</color>";
-                return hexString;
-            }
         }
     }
 }

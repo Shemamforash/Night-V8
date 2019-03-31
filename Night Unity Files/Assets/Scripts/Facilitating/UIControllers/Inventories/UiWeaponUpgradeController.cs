@@ -32,8 +32,9 @@ namespace Facilitating.UIControllers
         private GameObject _infoGameObject;
         private Weapon _equippedWeapon;
         private bool _seenAttributeTutorial, _seenChannelTutorial, _seenInfuseTutorial;
-
-        public override bool Unlocked() => true;
+        public static bool Locked;
+        
+        public override bool Unlocked() => !Locked;
 
         protected override void CacheElements()
         {

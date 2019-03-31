@@ -93,7 +93,8 @@ namespace Facilitating.Audio
         {
             _waitingForThunder = true;
             float pause = 4 - WeatherManager.CurrentWeather().Thunder;
-            float pauseMultiplier = CombatManager.Instance().IsCombatActive() ? 15f : 5f;
+            bool combatActive = CombatManager.Instance() != null && CombatManager.Instance().IsCombatActive();
+            float pauseMultiplier = combatActive ? 15f : 5f;
             pause *= pauseMultiplier;
             pause = Random.Range(0.75f * pause, 1.25f * pause);
             while (pause > 0f)

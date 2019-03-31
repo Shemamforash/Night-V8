@@ -167,7 +167,7 @@ namespace Game.Global
 
         private bool Available()
         {
-            bool validLevel = _levelNo <= (int) EnvironmentManager.CurrentEnvironmentType();
+            bool validLevel = _levelNo <= (int) EnvironmentManager.CurrentEnvironmentType;
             if (!validLevel) return false;
             if (RecipeType == RecipeType.Fire) return true;
             if (!Campfire.IsLit()) return false;

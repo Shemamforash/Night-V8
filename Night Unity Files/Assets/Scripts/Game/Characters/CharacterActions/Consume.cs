@@ -4,9 +4,9 @@ namespace Game.Characters.CharacterActions
 {
     public class Consume : BaseCharacterAction
     {
-        public Consume(Player playerCharacter) : base("Consume", playerCharacter)
+        public Consume(Player playerCharacter) : base("Inventory", playerCharacter)
         {
-            DisplayName = "Consume";
+            DisplayName = "Inventory";
             HourCallback = Exit;
         }
 

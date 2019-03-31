@@ -7,11 +7,11 @@ namespace Facilitating.UIControllers
 {
     public class UIAttributeController : MonoBehaviour
     {
-        private UIAttributeMarkerController _fettleMarker, _focusMarker, _gritMarker, _willMarker;
+        private UIAttributeMarkerController _lifeMarker, _focusMarker, _gritMarker, _willMarker;
 
         public void Awake()
         {
-            _fettleMarker = CacheAttributeElement("Fettle");
+            _lifeMarker = CacheAttributeElement("Life");
             _focusMarker = CacheAttributeElement("Focus");
             _gritMarker = CacheAttributeElement("Grit");
             _willMarker = CacheAttributeElement("Will");
@@ -24,7 +24,7 @@ namespace Facilitating.UIControllers
 
         public void UpdateAttributesOffset(Player player, AttributeType attributeType, float offset)
         {
-            UpdateMarker(_fettleMarker, player, AttributeType.Fettle, attributeType == AttributeType.Fettle ? offset : 0);
+            UpdateMarker(_lifeMarker, player, AttributeType.Life, attributeType == AttributeType.Life ? offset : 0);
             UpdateMarker(_gritMarker, player, AttributeType.Grit, attributeType == AttributeType.Grit ? offset : 0);
             UpdateMarker(_focusMarker, player, AttributeType.Focus, attributeType == AttributeType.Focus ? offset : 0);
             UpdateMarker(_willMarker, player, AttributeType.Will, attributeType == AttributeType.Will ? offset : 0);
@@ -39,7 +39,7 @@ namespace Facilitating.UIControllers
 
         public void UpdateAttributes(Player player)
         {
-            UpdateMarker(_fettleMarker, player, AttributeType.Fettle);
+            UpdateMarker(_lifeMarker, player, AttributeType.Life);
             UpdateMarker(_gritMarker, player, AttributeType.Grit);
             UpdateMarker(_focusMarker, player, AttributeType.Focus);
             UpdateMarker(_willMarker, player, AttributeType.Will);

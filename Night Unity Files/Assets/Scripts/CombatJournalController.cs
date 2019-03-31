@@ -21,7 +21,6 @@ public class CombatJournalController : Menu, IInputListener
         _body = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
         _closeButton.SetOnClick(Close);
-        _closeButton.SetCallback(Close);
         _audioSource = GetComponent<AudioSource>();
     }
 

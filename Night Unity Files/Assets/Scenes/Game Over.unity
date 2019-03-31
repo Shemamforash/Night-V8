@@ -345,7 +345,7 @@ GameObject:
 --- !u!199 &61394212
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 199087537104947766, guid: 3d9c923524d61514a91db00f7cf36d89,
     type: 3}
   m_PrefabInstance: {fileID: 0}
@@ -4966,7 +4966,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 4
+    m_Mode: 3
     m_SelectOnUp: {fileID: 1878027305}
     m_SelectOnDown: {fileID: 1962239331}
     m_SelectOnLeft: {fileID: 0}
@@ -5768,7 +5768,7 @@ MonoBehaviour:
 --- !u!199 &644047470
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 199087537104947766, guid: 3d9c923524d61514a91db00f7cf36d89,
     type: 3}
   m_PrefabInstance: {fileID: 0}
@@ -11204,6 +11204,7 @@ GameObject:
   - component: {fileID: 1369750285}
   - component: {fileID: 1369750284}
   - component: {fileID: 1369750283}
+  - component: {fileID: 1369750287}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -11284,6 +11285,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1369750287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369750282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f508cf123bb40b8429637d03dda75e2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1568553877
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11900,7 +11913,7 @@ GameObject:
 --- !u!199 &1835747076
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -16672,7 +16685,7 @@ Transform:
 --- !u!199 &1862734087
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 199087537104947766, guid: 3d9c923524d61514a91db00f7cf36d89,
     type: 3}
   m_PrefabInstance: {fileID: 0}
@@ -21536,7 +21549,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 4
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 63100628}
     m_SelectOnLeft: {fileID: 0}
@@ -22086,7 +22099,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 4
+    m_Mode: 3
     m_SelectOnUp: {fileID: 63100628}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}

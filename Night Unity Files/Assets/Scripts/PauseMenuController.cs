@@ -31,7 +31,6 @@ public class PauseMenuController : MonoBehaviour
         _background.blocksRaycasts = false;
         _background.interactable = false;
         _closeButton.Disable();
-        _closeButton.SetCallback(CloseClicked);
         _closeButton.SetOnClick(CloseClicked);
     }
 

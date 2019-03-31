@@ -345,8 +345,8 @@ class LoreImporter(XMLWriter):
 
     def read_story_part(self, row):
         write_single_value(self, "Title", get_value(self, "A", row))
-        write_single_value(self, "Group", get_value(self, "B", row))
-        write_single_value(self, "PartNumber", get_value(self, "C", row))
+        write_single_value(self, "Unique", get_value(self, "B", row))
+        write_single_value(self, "Environment", get_value(self, "C", row))
         write_single_value(self, "Text", get_value(self, "D", row))
 
 
@@ -423,15 +423,15 @@ def write_single_value(xml_writer, stat_name, value):
 
 
 # WeaponImporter()
-GearImporter()
+# GearImporter()
 # WeatherImporter()
 # WeatherProbabilityImporter()
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
-# RecipeImporter()
+RecipeImporter()
 ResourceImporter()
-InscriptionImporter()
+# InscriptionImporter()
 # SkillImporter()
 # EnvironmentImporter()
 # BrandImporter()
@@ -439,4 +439,4 @@ InscriptionImporter()
 # NecromancerImporter()
 # CharacterStoryImporter()
 # LoreImporter()
-# TutorialImporter()
+TutorialImporter()

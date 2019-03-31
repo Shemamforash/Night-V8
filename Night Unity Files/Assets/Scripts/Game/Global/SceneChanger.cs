@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using DG.Tweening;
-using DG.Tweening.Core;
-using DG.Tweening.Plugins.Options;
 using Facilitating.UIControllers;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -17,7 +14,6 @@ namespace Game.Global
         private static bool _fadeInAudio;
         private Tweener _volumeTweener;
         private static bool _changingScene;
-        private static Action _onSceneEnd;
         private const float DefaultFadeTime = 0.5f;
 
         public void Awake()
@@ -57,8 +53,6 @@ namespace Game.Global
 
             Time.timeScale = 1f;
             yield return ScreenFaderController.FadeIn(DefaultFadeTime).WaitForCompletion();
-            _onSceneEnd?.Invoke();
-            _onSceneEnd = null;
             StartCoroutine(LoadNextScene());
         }
 
@@ -75,9 +69,8 @@ namespace Game.Global
             ChangeScene("Story");
         }
 
-        public static void GoToCombatScene(Action onSceneEnd = null)
+        public static void GoToCombatScene()
         {
-            _onSceneEnd = onSceneEnd;
             ChangeScene("Combat");
         }
 
@@ -95,6 +88,7 @@ namespace Game.Global
 
         public static void GoToGameScene()
         {
+            if (SceneManager.GetActiveScene().name != "Combat") FadeInAudio();
             ChangeScene("Game");
         }
 
@@ -117,6 +111,11 @@ namespace Game.Global
         public static void GoToCombatStoryScene()
         {
             ChangeScene("Combat Story");
+        }
+
+        public static void GoToEndBetaScreen()
+        {
+            ChangeScene("Beta Finished");
         }
     }
 }

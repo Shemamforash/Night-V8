@@ -5,6 +5,7 @@ using EZCameraShake;
 using Facilitating.Audio;
 using Facilitating.Persistence;
 using Game.Exploration.Environment;
+using Game.Exploration.Ui;
 using Game.Global;
 using NUnit.Framework;
 using SamsHelper.Libraries;
@@ -18,11 +19,11 @@ using Random = UnityEngine.Random;
 public class StoryController : Menu
 {
     private const float _timePerWord = 0.3f;
-    private TextMeshProUGUI _storyText, _actTitle, _actSubtitle;
+    private TextMeshProUGUI _storyText, _actTitle, _actSubtitle, _pageCountText;
     private static bool _goToCredits;
     private static bool _paused;
     private bool _skipParagraph;
-    private CanvasGroup _skipCanvas, _actCanvas;
+    private CanvasGroup _skipCanvas, _actCanvas, _storyCanvas;
     private CloseButtonController _closeButton;
     private AudioSource _audioSource;
     private bool _canSkip;
@@ -76,22 +77,24 @@ public class StoryController : Menu
         _actAudio = _actCanvas.GetComponent<AudioSource>();
         _actTitle = _actCanvas.gameObject.FindChildWithName<TextMeshProUGUI>("Title");
         _actSubtitle = _actCanvas.gameObject.FindChildWithName<TextMeshProUGUI>("Subtitle");
+        _storyCanvas = GetComponent<CanvasGroup>();
         _storyText = GetComponent<TextMeshProUGUI>();
-        _storyText.color = UiAppearanceController.InvisibleColour;
-        _skipCanvas = GameObject.Find("Skip").GetComponent<CanvasGroup>();
+        _pageCountText = _storyText.FindChildWithName<TextMeshProUGUI>("Page Count");
+        _pageCountText.text = "";
+        _skipCanvas = GameObject.Find("Skip").AddComponent<CanvasGroup>();
+        _skipCanvas.alpha = 0f;
         _closeButton = _skipCanvas.GetComponent<CloseButtonController>();
         _audioSource = Camera.main.GetComponent<AudioSource>();
     }
 
     private void InitialiseComponents()
     {
-        _closeButton.SetCallback(Skip);
         _closeButton.SetOnClick(Skip);
         _audioSource.volume = 0f;
         _audioSource.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
         _skipCanvas.alpha = 0f;
         _paused = false;
-        if (EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.End) _invertColour.Set(1);
+        if (EnvironmentManager.CurrentEnvironmentType == EnvironmentType.End) _invertColour.Set(1);
     }
 
     private void SetEndGameValues()
@@ -103,7 +106,6 @@ public class StoryController : Menu
         transform.parent.FindChildWithName<AudioSource>("Act").volume = 0;
     }
 
-
     public override void Enter()
     {
         StartCoroutine(DisplayParagraph());
@@ -113,7 +115,7 @@ public class StoryController : Menu
     {
         StorySeen = false;
         _journalEntries = JournalEntry.GetStoryText();
-        _goToCredits = EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.End;
+        _goToCredits = EnvironmentManager.CurrentEnvironmentType == EnvironmentType.End;
         SceneChanger.GoToStoryScene();
     }
 
@@ -128,12 +130,15 @@ public class StoryController : Menu
     {
         yield return StartCoroutine(DisplayAct());
         Tweener skipTween = null;
-        foreach (JournalEntry entry in _journalEntries)
+        for (int i = 0; i < _journalEntries.Count; i++)
         {
-            //fade in
+            JournalEntry entry = _journalEntries[i];
+//fade in
             _storyText.text = entry.Text + "\n\n    - <i>The Necromancer</i>";
-            _storyText.color = UiAppearanceController.InvisibleColour;
-            yield return _storyText.DOFade(1f, 1f).WaitForCompletion();
+            int pageNo = i + 1;
+            _pageCountText.text = pageNo + "/" + _journalEntries.Count;
+
+            yield return _storyCanvas.DOFade(1f, 1f).WaitForCompletion();
 
             skipTween?.Kill();
             skipTween = _skipCanvas.DOFade(0.5f, 1f);
@@ -154,9 +159,7 @@ public class StoryController : Menu
             skipTween?.Kill();
             skipTween = _skipCanvas.DOFade(0, 1f);
 
-            //fade out
-            _storyText.color = Color.white;
-            yield return _storyText.DOFade(0f, 1f).WaitForCompletion();
+            yield return _storyCanvas.DOFade(0f, 1f).WaitForCompletion();
         }
 
         _invertColour.FadeTo(0f, 0.5f);
@@ -166,8 +169,8 @@ public class StoryController : Menu
 
     private IEnumerator DisplayAct()
     {
-        _storyText.alpha = 0;
-        EnvironmentType currentEnvironmentType = EnvironmentManager.CurrentEnvironmentType();
+        _storyCanvas.alpha = 0;
+        EnvironmentType currentEnvironmentType = EnvironmentManager.CurrentEnvironmentType;
         _actTitle.text = _actNames[(int) currentEnvironmentType];
         _actSubtitle.text = Environment.EnvironmentTypeToName(currentEnvironmentType);
         _actAudio.Play();

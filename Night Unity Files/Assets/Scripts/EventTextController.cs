@@ -73,7 +73,6 @@ public class EventTextController : MonoBehaviour
         _revealSequence.Append(_canvasGroup.DOFade(1, 0.5f));
     }
 
-    //shelter
     //container
     //shrine
     //outer ring
@@ -81,6 +80,7 @@ public class EventTextController : MonoBehaviour
     private void DoCheckForPointsOfInterest()
     {
         if (CheckForNearbyContainer()) return;
+        if (CheckForNearbyRite()) return;
         if (CheckForNearbyShrines()) return;
         if (CheckForOuterRing()) return;
         if (CheckForRadiance()) return;
@@ -146,6 +146,15 @@ public class EventTextController : MonoBehaviour
         if (shrine == null) return false;
         if (shrine.InRange() < 0) return false;
         SetCurrentCombatEvent(shrine);
+        return true;
+    }
+
+    private bool CheckForNearbyRite()
+    {
+        ICombatEvent riteStarter = RiteStarter.Instance();
+        if (riteStarter == null) return false;
+        if (riteStarter.InRange() < 0) return false;
+        SetCurrentCombatEvent(riteStarter);
         return true;
     }
 

@@ -107,7 +107,7 @@ namespace Game.Exploration.Environment
             LoadRegionNames();
             _regions.Clear();
 
-            int regionCount = (2 + (int) EnvironmentManager.CurrentEnvironmentType()) * BaseRegionCount;
+            int regionCount = (2 + (int) EnvironmentManager.CurrentEnvironmentType) * BaseRegionCount;
             int numberOfRegions = regionCount + 1;
             while (numberOfRegions > 0)
             {
@@ -257,7 +257,7 @@ namespace Game.Exploration.Environment
                 case RegionType.Tutorial:
                     return "";
                 case RegionType.Tomb:
-                    switch (EnvironmentManager.CurrentEnvironmentType())
+                    switch (EnvironmentManager.CurrentEnvironmentType)
                     {
                         case EnvironmentType.Desert:
                             return "The Tomb of Eo";
@@ -275,7 +275,7 @@ namespace Game.Exploration.Environment
                 case RegionType.Rite:
                     return "Chamber of Rites";
                 case RegionType.Gate:
-                    switch (EnvironmentManager.CurrentEnvironmentType())
+                    switch (EnvironmentManager.CurrentEnvironmentType)
                     {
                         case EnvironmentType.Desert:
                             return "Eo's Gate";
@@ -326,7 +326,7 @@ namespace Game.Exploration.Environment
 
         private static void SetRegionOrder()
         {
-            int environmentNumber = (int) EnvironmentManager.CurrentEnvironmentType();
+            int environmentNumber = (int) EnvironmentManager.CurrentEnvironmentType;
             AddRegionTypes(false);
             for (int i = 0; i < environmentNumber + 1; ++i)
             {
@@ -350,12 +350,12 @@ namespace Game.Exploration.Environment
 
         private static void CheckToMoveCache()
         {
-            if (EnvironmentManager.CurrentEnvironmentType() != EnvironmentType.Desert) return;
+            if (EnvironmentManager.CurrentEnvironmentType != EnvironmentType.Desert) return;
             int cacheIndex = _regionOrder.FindIndex(t => t.Item1 == RegionType.Cache);
             Tuple<RegionType, bool> cache = _regionOrder[cacheIndex];
             Tuple<RegionType, bool> other = _regionOrder[10];
-            _regionOrder[10] = cache;
-            _regionOrder[cacheIndex] = other;
+            _regionOrder[10] = Tuple.Create(cache.Item1, other.Item2);
+            _regionOrder[cacheIndex] = Tuple.Create(other.Item1, cache.Item2);
         }
 
         private static bool _addedShelter;
@@ -374,7 +374,7 @@ namespace Game.Exploration.Environment
             validTypes.Add(RegionType.Animal);
             for (int i = 0; i < 5; ++i) validTypes.Add(RegionType.Danger);
 
-            bool isDesert = EnvironmentManager.CurrentEnvironmentType() == EnvironmentType.Desert;
+            bool isDesert = EnvironmentManager.CurrentEnvironmentType == EnvironmentType.Desert;
             bool includeBonusRegions = isDesert && includeTemple || !isDesert;
             if (includeBonusRegions)
             {

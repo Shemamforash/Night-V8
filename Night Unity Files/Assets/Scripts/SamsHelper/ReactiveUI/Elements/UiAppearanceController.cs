@@ -7,7 +7,7 @@ namespace SamsHelper.ReactiveUI.Elements
     {
         public static readonly Color FadedColour = new Color(1f, 1f, 1f, 0.4f);
         public static readonly Color InvisibleColour = new Color(1f, 1f, 1f, 0f);
-        private const int SmallFontSize = 12, MediumFontSize = 18, LargeFontSize = 30, TitleFontSize = 45;
+        private const int SmallFontSize = 15, MediumFontSize = 20, LargeFontSize = 32, TitleFontSize = 48;
         private static TMP_FontAsset UppercaseFont;
         private static TMP_FontAsset LowercaseFont;
 

@@ -86,15 +86,13 @@ namespace Game.Combat.Enemies
         {
             if(gameObject == null) return;
             Characters.Player player = PlayerCombat.Instance.Player;
-            if (player.Attributes.SpreadVoid && IsVoided())
+            if (player.Attributes.SpreadVoid && VoidStacks > 0)
             {
-                int voidStacks = VoidStacks;
-                if (voidStacks > 5) voidStacks = 5;
                 CombatManager.Instance().GetCharactersInRange(transform.position, 3).ForEach(c =>
                 {
                     EnemyBehaviour b = c as EnemyBehaviour;
                     if (b == null) return;
-                    b.Void(voidStacks);
+                    b.Void();
                 });
             }
 

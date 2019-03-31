@@ -20,9 +20,8 @@ public class HelpMenuController : Menu
         _tutorialText = gameObject.FindChildWithName<EnhancedText>("Help Text");
     }
 
-    public override void Enter()
+    public override void PreEnter()
     {
-        base.Enter();
         _tutorialList.Initialise(typeof(TutorialElement), o => { }, () => { }, GetAvailableTutorials);
         _tutorialList.SetOnItemHover(UpdateTutorialShown);
         _tutorialList.Show();
@@ -36,13 +35,16 @@ public class HelpMenuController : Menu
         {
             string fullTutorial = "";
             List<TutorialPart> parts = tutorialParts[section];
+            bool show = false;
             for (int i = 0; i < parts.Count; ++i)
             {
                 if (!parts[i].IsViewable()) continue;
+                show = true;
                 if (i > 0) fullTutorial += "\n\n";
                 fullTutorial += parts[i].Content;
             }
 
+            if (!show) continue;
             visibleTutorialParts.Add(Tuple.Create(parts[0].SectionName, fullTutorial));
         }
 

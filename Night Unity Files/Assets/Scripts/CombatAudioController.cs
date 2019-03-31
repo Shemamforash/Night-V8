@@ -18,7 +18,6 @@ public class CombatAudioController : MonoBehaviour
     private AudioSource _audioSource;
     private static CombatAudioController _instance;
     private float _maxCombatVolume;
-    private bool _useAlternateCombatMusic;
     private float _combatTargetVolume;
     private const float ThresholdCombatMusicDistance = 10f;
     private const float MusicFadeDuration = 5f;
@@ -37,8 +36,10 @@ public class CombatAudioController : MonoBehaviour
 
     private void PlayClip(Region currentRegion)
     {
-        _useAlternateCombatMusic = currentRegion.GetRegionType() == RegionType.Tomb;
-        AudioClip audioClip = _useAlternateCombatMusic ? AudioClips.GodsAreDead : AudioClips.AbandonedLands;
+        bool useBossCombatMusic = currentRegion.GetRegionType() == RegionType.Tomb;
+        AudioClip audioClip;
+        if (useBossCombatMusic) audioClip = AudioClips.GodsAreDead;
+        else audioClip = Helper.RollDie(0, 2) ? AudioClips.AbandonedLands : AudioClips.Slain;
         float startTime = Random.Range(0f, audioClip.length);
         _audioSource.clip = audioClip;
         _audioSource.volume = 0;
@@ -56,7 +57,7 @@ public class CombatAudioController : MonoBehaviour
     private void SetReverbZone()
     {
         AudioReverbZone reverbZone = GetComponent<AudioReverbZone>();
-        switch (EnvironmentManager.CurrentEnvironmentType())
+        switch (EnvironmentManager.CurrentEnvironmentType)
         {
             case EnvironmentType.Desert:
                 reverbZone.reverbPreset = AudioReverbPreset.Plain;
@@ -78,10 +79,12 @@ public class CombatAudioController : MonoBehaviour
 
     private void OnDestroy() => _instance = null;
 
-    private int GetEnemiesInRange()
+    private int GetCombatVolume()
     {
         if (PlayerCombat.Instance == null) return -1;
-        RegionType regionType = CharacterManager.CurrentRegion().GetRegionType();
+        Region currentRegion = CharacterManager.CurrentRegion();
+
+        RegionType regionType = currentRegion?.GetRegionType() ?? RegionType.Tutorial;
         switch (regionType)
         {
             case RegionType.Tomb:
@@ -89,8 +92,13 @@ public class CombatAudioController : MonoBehaviour
             case RegionType.Cache:
                 bool canPlay = CacheController.Active() && CacheController.Started();
                 return canPlay ? 1 : 0;
+            default:
+                return GetEnemiesInRange();
         }
+    }
 
+    private int GetEnemiesInRange()
+    {
         Vector2 playerPosition = PlayerCombat.Position();
         List<CanTakeDamage> enemies = CombatManager.Instance().Enemies();
         if (enemies.Count == 0) return -1;
@@ -100,9 +108,9 @@ public class CombatAudioController : MonoBehaviour
 
     private void UpdateTargetVolume()
     {
-        int enemiesInRange = GetEnemiesInRange();
+        int combatVolume = GetCombatVolume();
         float timeChange = Time.deltaTime / 5f;
-        switch (enemiesInRange)
+        switch (combatVolume)
         {
             case -1:
                 timeChange *= -MusicFadeDuration;

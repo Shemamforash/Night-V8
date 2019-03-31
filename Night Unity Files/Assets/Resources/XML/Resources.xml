@@ -11,7 +11,7 @@
 		<SeaDropRate>0.5</SeaDropRate>
 		<RuinsDropRate>0.3</RuinsDropRate>
 		<WastelandDropRate>0.1</WastelandDropRate>
-		<Description>Fresh and clear, not yet tainted by the earth</Description>
+		<Description>Fresh water, untainted by the earth</Description>
 		<Effect>Slightly quenches Thirst</Effect>
 	</Resource>
 	<Resource>
@@ -26,7 +26,7 @@
 		<SeaDropRate>0.35</SeaDropRate>
 		<RuinsDropRate>0.55</RuinsDropRate>
 		<WastelandDropRate>0.6</WastelandDropRate>
-		<Description>Black and bubbling, passes straight through you</Description>
+		<Description>Black foetid liquid. The stench stings my nostrils</Description>
 		<Effect>Increases Thirst</Effect>
 	</Resource>
 	<Resource>
@@ -56,7 +56,7 @@
 		<SeaDropRate>0.35</SeaDropRate>
 		<RuinsDropRate>0.55</RuinsDropRate>
 		<WastelandDropRate>0.6</WastelandDropRate>
-		<Description>Grey sinew and hollow bone, not good for you</Description>
+		<Description>Foul smelling and grey, I cannot eat this</Description>
 		<Effect>Increases Hunger</Effect>
 	</Resource>
 	<Resource>
@@ -78,30 +78,30 @@
 		<Name>Meat</Name>
 		<Type>Meat</Type>
 		<Consumable>FALSE</Consumable>
-		<Attribute>Hunger</Attribute>
-		<Modifier>1</Modifier>
+		<Attribute></Attribute>
+		<Modifier></Modifier>
 		<Permanent>TRUE</Permanent>
 		<DesertDropRate>0.9</DesertDropRate>
 		<MountainsDropRate>0.7</MountainsDropRate>
 		<SeaDropRate>0.5</SeaDropRate>
 		<RuinsDropRate>0.3</RuinsDropRate>
 		<WastelandDropRate>0.1</WastelandDropRate>
-		<Description>Gristly meat- tough, but manageable</Description>
+		<Description>Gristly and tough, this will have to be cooked before I can eat it</Description>
 		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Blubber</Name>
 		<Type>Meat</Type>
 		<Consumable>False</Consumable>
-		<Attribute>Hunger</Attribute>
-		<Modifier>3</Modifier>
+		<Attribute></Attribute>
+		<Modifier></Modifier>
 		<Permanent>TRUE</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0.1</MountainsDropRate>
 		<SeaDropRate>0.15</SeaDropRate>
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.3</WastelandDropRate>
-		<Description>Thick fatty meat, even tastes good raw</Description>
+		<Description>Thick fatty meat, delicious when cooked</Description>
 		<Effect></Effect>
 	</Resource>
 	<Resource>
@@ -124,7 +124,7 @@
 		<Type>Meat</Type>
 		<Consumable>True</Consumable>
 		<Attribute>Hunger</Attribute>
-		<Modifier>5</Modifier>
+		<Modifier>4</Modifier>
 		<Permanent>TRUE</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
@@ -138,7 +138,7 @@
 		<Name>Deathbloom</Name>
 		<Type>Plant</Type>
 		<Consumable>True</Consumable>
-		<Attribute>Fettle</Attribute>
+		<Attribute>Life</Attribute>
 		<Modifier>1</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
@@ -147,13 +147,13 @@
 		<RuinsDropRate>0.05</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description>Helps to heal wounds when rubbed into the skin</Description>
-		<Effect>Recover 1 Fettle</Effect>
+		<Effect>Recover 1 Life</Effect>
 	</Resource>
 	<Resource>
 		<Name>Hollowroot</Name>
 		<Type>Plant</Type>
 		<Consumable>True</Consumable>
-		<Attribute>Fettle</Attribute>
+		<Attribute>Life</Attribute>
 		<Modifier>2</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
@@ -162,7 +162,7 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.2</WastelandDropRate>
 		<Description>Restores even deep wounds, but won't numb the pain</Description>
-		<Effect>Recover 2 Fettle</Effect>
+		<Effect>Recover 2 Life</Effect>
 	</Resource>
 	<Resource>
 		<Name>Shaman Frond</Name>
@@ -281,7 +281,7 @@
 		<SeaDropRate>0.03</SeaDropRate>
 		<RuinsDropRate>0.04</RuinsDropRate>
 		<WastelandDropRate>0.04</WastelandDropRate>
-		<Description>A small berry, heavy to hold, reeking of sickness</Description>
+		<Description>A small berry, heavy to hold and black as night</Description>
 		<Effect>Increases Void</Effect>
 	</Resource>
 	<Resource>
@@ -330,7 +330,7 @@
 		<Effect>Increases Adrenaline Gain</Effect>
 	</Resource>
 	<Resource>
-		<Name>Fuel</Name>
+		<Name>Wood</Name>
 		<Type>Resource</Type>
 		<Consumable>FALSE</Consumable>
 		<Attribute></Attribute>
@@ -588,7 +588,7 @@
 		<Name>Tonic of Fettle</Name>
 		<Type>Potion</Type>
 		<Consumable>TRUE</Consumable>
-		<Attribute>Fettle</Attribute>
+		<Attribute>Life</Attribute>
 		<Modifier>1</Modifier>
 		<Permanent>TRUE</Permanent>
 		<DesertDropRate>0</DesertDropRate>
@@ -596,8 +596,8 @@
 		<SeaDropRate>0</SeaDropRate>
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
-		<Description>A ghastly tonic that increases your Fettle</Description>
-		<Effect>Increases Maximum Fettle</Effect>
+		<Description>A ghastly tonic that increases your Life</Description>
+		<Effect>Increases Maximum Life</Effect>
 	</Resource>
 	<Resource>
 		<Name>Elixir of Will</Name>

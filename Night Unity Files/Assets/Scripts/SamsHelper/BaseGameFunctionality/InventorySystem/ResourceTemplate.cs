@@ -143,7 +143,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public static ResourceItem GetMeat()
         {
             float rand = Random.Range(0f, 1f);
-            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
+            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType;
             foreach (ResourceTemplate meatTemplate in Meat)
             {
                 if (!meatTemplate._dropRates[currentEnvironment].ValueWithinRange(rand)) continue;
@@ -156,7 +156,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public static ResourceTemplate GetResource()
         {
             float rand = Random.Range(0f, 1f);
-            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
+            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType;
             foreach (ResourceTemplate resourceTemplate in OtherResources)
             {
                 if (!resourceTemplate._dropRates[currentEnvironment].ValueWithinRange(rand)) continue;
@@ -169,7 +169,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public static ResourceTemplate GetWater()
         {
             float rand = Random.Range(0f, 1f);
-            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
+            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType;
             foreach (ResourceTemplate waterTemplate in Water)
             {
                 if (!waterTemplate._dropRates[currentEnvironment].ValueWithinRange(rand)) continue;
@@ -182,7 +182,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public static ResourceTemplate GetPlant()
         {
             float rand = Random.Range(0f, 1f);
-            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
+            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType;
             foreach (ResourceTemplate plantTemplate in Plant)
             {
                 if (!plantTemplate._dropRates[currentEnvironment].ValueWithinRange(rand)) continue;

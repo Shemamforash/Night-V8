@@ -7,6 +7,7 @@ using Game.Exploration.WorldEvents;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 
@@ -15,10 +16,7 @@ namespace Game.Characters
     public class CharacterAttributes : DesolationAttributes
     {
         public const int PlayerHealthChunkSize = 100;
-        private readonly string[] _dehydrationLevels = {"Slaked", "Thirsty", "Parched"};
         private readonly Player _player;
-        private readonly string[] _starvationLevels = {"Sated", "Hungry", "Starved"};
-        private readonly float[] _toleranceThresholds = {0, 0.6f, 0.3f};
 
         public readonly HashSet<WeaponType> WeaponSkillOneUnlocks = new HashSet<WeaponType>();
         public readonly HashSet<WeaponType> WeaponSkillTwoUnlocks = new HashSet<WeaponType>();
@@ -75,38 +73,29 @@ namespace Game.Characters
 
         public void ChangeGritMax(int polarity)
         {
-            if (!IncreaseAttribute(AttributeType.Grit, polarity)) return;
-            string message = polarity > 0 ? "My body will endure" : "My body weakens";
-            WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
+            IncreaseAttribute(AttributeType.Grit, polarity);
         }
 
-        private bool IncreaseAttribute(AttributeType attributeType, int polarity)
+        private void IncreaseAttribute(AttributeType attributeType, int polarity)
         {
             int newMax = (int) (Max(attributeType) + polarity);
-            if (newMax > 20 || newMax <= 0) return false;
+            if (newMax > 20 || newMax <= 0) return;
             SetMax(attributeType, newMax);
-            return true;
         }
 
-        public void ChangeFettleMax(int polarity)
+        public void ChangeLifeMax(int polarity)
         {
-            if (!IncreaseAttribute(AttributeType.Fettle, polarity)) return;
-            string message = polarity > 0 ? "My fettle grows" : "My fettle wains";
-            WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
+            IncreaseAttribute(AttributeType.Life, polarity);
         }
 
         public void ChangeFocusMax(int polarity)
         {
-            if (!IncreaseAttribute(AttributeType.Focus, polarity)) return;
-            string message = polarity > 0 ? "My eyes become keener" : "My vision blurs";
-            WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
+            IncreaseAttribute(AttributeType.Focus, polarity);
         }
 
         public void ChangeWillMax(int polarity)
         {
-            if (!IncreaseAttribute(AttributeType.Will, polarity)) return;
-            string message = polarity > 0 ? "My mind is clearer now" : "My mind is clouded";
-            WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
+            IncreaseAttribute(AttributeType.Will, polarity);
         }
 
         public float CalculateAdrenalineRecoveryRate()
@@ -123,12 +112,12 @@ namespace Game.Characters
 
         public int CalculateMaxHealth()
         {
-            return (int) (Max(AttributeType.Fettle) * PlayerHealthChunkSize);
+            return (int) (Max(AttributeType.Life) * PlayerHealthChunkSize);
         }
 
         public int CalculateInitialHealth()
         {
-            int startingHealth = (int) (Val(AttributeType.Fettle) * PlayerHealthChunkSize);
+            int startingHealth = (int) (Val(AttributeType.Life) * PlayerHealthChunkSize);
             return startingHealth;
         }
 
@@ -166,49 +155,55 @@ namespace Game.Characters
             float thirstIncrementAmount = thirstTemperatureModifier / DehydrateDeathTime;
             float hungerIncrementAmount = hungerTemperatureModifier / StarvationDeathTime;
 
-            if (!_player.IsConsuming())
-            {
-                thirstIncrementAmount = 0;
-                hungerIncrementAmount = 0;
-            }
+            IncreaseHunger(hungerIncrementAmount);
+            IncreaseThirst(thirstIncrementAmount);
+        }
 
+        private void IncreaseHunger(float hungerIncrementAmount)
+        {
+            if (_player.IsDead) return;
             CharacterAttribute hunger = Get(AttributeType.Hunger);
+            float hungerBefore = hunger.Normalised();
             hunger.Increment(hungerIncrementAmount);
-            if (hunger.ReachedMax())
+            float hungerAfter = hunger.Normalised();
+            if (hungerBefore >= 0.25f && hungerAfter < 0.25f)
             {
-                _player.Kill(DeathReason.Hunger);
-                return;
+                WorldEventManager.GenerateEvent(new CharacterMessage(_hungerEvents.RandomElement(), _player));
             }
 
+            if (!hunger.ReachedMax()) return;
+            _player.Kill(DeathReason.Hunger);
+        }
+
+        private void IncreaseThirst(float thirstIncrementAmount)
+        {
+            if (_player.IsDead) return;
             CharacterAttribute thirst = Get(AttributeType.Thirst);
+            float thirstBefore = thirst.Normalised();
             thirst.Increment(thirstIncrementAmount);
-            if (thirst.ReachedMax())
+            float thirstAfter = thirst.Normalised();
+            if (thirstBefore >= 0.25f && thirstAfter < 0.25f)
             {
-                _player.Kill(DeathReason.Thirst);
+                WorldEventManager.GenerateEvent(new CharacterMessage(_thirstEvents.RandomElement(), _player));
             }
+
+            if (!thirst.ReachedMax()) return;
+            _player.Kill(DeathReason.Thirst);
         }
 
-        private string GetAttributeStatus(Number characterAttribute, string[] levels)
+        private readonly string[] _hungerEvents =
         {
-            float tolerancePercentage = characterAttribute.Normalised();
-            for (int i = 1; i < _toleranceThresholds.Length; ++i)
-            {
-                float threshold = _toleranceThresholds[i];
-                if (tolerancePercentage <= threshold) return levels[i - 1];
-            }
+            "I have to get something to eat",
+            "My stomach has been empty for too long",
+            "I can't go on if I don't get any food"
+        };
 
-            return levels[_toleranceThresholds.Length - 1];
-        }
-
-        public string GetHungerStatus()
+        private readonly string[] _thirstEvents =
         {
-            if (Val(AttributeType.Hunger) == 8)
-            {
-                WorldEventManager.GenerateEvent(new CharacterMessage("I might starve", _player));
-            }
-
-            return GetAttributeStatus(Get(AttributeType.Hunger), _starvationLevels);
-        }
+            "I'm going to die if I don't get any water",
+            "I'm so thirsty, it's been so long since I had a drink",
+            "I need to get some water soon"
+        };
 
         public void SetTutorialValues()
         {
@@ -218,18 +213,10 @@ namespace Game.Characters
 
         public void ResetValues()
         {
-            Get(AttributeType.Hunger).SetCurrentValue(0);
-            Get(AttributeType.Thirst).SetCurrentValue(0);
-        }
-
-        public string GetThirstStatus()
-        {
-            if (Val(AttributeType.Thirst) == 8)
-            {
-                WorldEventManager.GenerateEvent(new CharacterMessage("I feel parched", _player));
-            }
-
-            return GetAttributeStatus(Get(AttributeType.Thirst), _dehydrationLevels);
+            Get(AttributeType.Grit).SetToMax();
+            Get(AttributeType.Life).SetToMax();
+            Get(AttributeType.Focus).SetToMax();
+            Get(AttributeType.Will).SetToMax();
         }
 
         public void Drink(int thirstRecovery)
@@ -244,10 +231,10 @@ namespace Game.Characters
             Get(AttributeType.Hunger).Decrement(hungerLoss);
         }
 
-        public void CalculateNewFettle(float health)
+        public void CalculateNewLife(float health)
         {
-            float newFettle = Mathf.CeilToInt(health / PlayerHealthChunkSize);
-            SetVal(AttributeType.Fettle, newFettle);
+            float newLife = Mathf.CeilToInt(health / PlayerHealthChunkSize);
+            SetVal(AttributeType.Life, newLife);
         }
 
         public void UnlockWeaponSkillTwo(WeaponType weaponType, bool showScreen)
@@ -255,7 +242,7 @@ namespace Game.Characters
             if (WeaponSkillTwoUnlocks.Contains(weaponType)) return;
             WeaponSkillTwoUnlocks.Add(weaponType);
             if (!showScreen) return;
-            UiBrandMenu.ShowWeaponSkillUnlock(weaponType, _player.EquippedWeapon.WeaponSkillTwo);
+            UiBrandMenu.ShowWeaponSkillUnlock(weaponType, _player.EquippedWeapon.WeaponSkillTwo, 4);
         }
 
         public void UnlockWeaponSkillOne(WeaponType weaponType, bool showScreen)
@@ -263,7 +250,7 @@ namespace Game.Characters
             if (WeaponSkillOneUnlocks.Contains(weaponType)) return;
             WeaponSkillOneUnlocks.Add(weaponType);
             if (!showScreen) return;
-            UiBrandMenu.ShowWeaponSkillUnlock(weaponType, _player.EquippedWeapon.WeaponSkillOne);
+            UiBrandMenu.ShowWeaponSkillUnlock(weaponType, _player.EquippedWeapon.WeaponSkillOne, 3);
         }
 
         public void UnlockCharacterSkillOne(bool showScreen)
@@ -271,7 +258,7 @@ namespace Game.Characters
             if (SkillOneUnlocked) return;
             SkillOneUnlocked = true;
             if (!showScreen) return;
-            UiBrandMenu.ShowCharacterSkillUnlock(_player.CharacterSkillOne);
+            UiBrandMenu.ShowCharacterSkillUnlock(_player.CharacterSkillOne, 1);
         }
 
         public void UnlockCharacterSkillTwo(bool showScreen)
@@ -279,7 +266,9 @@ namespace Game.Characters
             if (SkillTwoUnlocked) return;
             SkillTwoUnlocked = true;
             if (!showScreen) return;
-            UiBrandMenu.ShowCharacterSkillUnlock(_player.CharacterSkillTwo);
+            UiBrandMenu.ShowCharacterSkillUnlock(_player.CharacterSkillTwo, 2);
         }
+
+        public float CalculateDashCooldown() => 5f - Max(AttributeType.Grit) * 0.2f;
     }
 }

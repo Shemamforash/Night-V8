@@ -41,7 +41,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
     {
         _visible = true;
         _player = CharacterManager.SelectedCharacter;
-        InputHandler.SetCurrentListener(_instance);
+        InputHandler.RegisterInputListener(this);
         _audioSource.DOFade(1f, 3f);
         _currentRegion = _player.TravelAction.GetCurrentRegion();
         MapCamera.DOOrthoSize(6, 1f);
@@ -51,7 +51,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
     public void Exit()
     {
         _visible = false;
-        InputHandler.SetCurrentListener(null);
+        InputHandler.UnregisterInputListener(this);
         _audioSource.DOFade(0f, 3f);
         MapCamera.DOOrthoSize(3, 1f);
         _player = null;
@@ -114,7 +114,6 @@ public class MapMovementController : MonoBehaviour, IInputListener
     {
         if (!_visible) return;
         if (_player == null) return;
-        if (InputHandler.GetCurrentListener() != this) return;
         if (!_pressed && _nearestRegion != null) LocateToNearestRegion();
         _direction.Normalize();
         _direction *= CurrentSpeed;
@@ -124,6 +123,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     private void MoveWithMouse()
     {
+        if (InputHandler.ListenersInterrupted) return;
         Vector2 mousePosition = Input.mousePosition;
         float screenRadius = Mathf.Min(Screen.height / 2f, Screen.width / 2f);
         mousePosition.x -= Screen.width / 2f;
@@ -154,6 +154,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     private void SetNearestRegion(Region newNearestRegion)
     {
+        if (InputHandler.ListenersInterrupted) return;
         if (_nearestRegion == newNearestRegion) return;
         _nearestRegion?.MapNode().LoseFocus();
         _nearestRegion = newNearestRegion;

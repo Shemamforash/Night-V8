@@ -23,18 +23,15 @@ namespace Game.Characters.CharacterActions
             DisplayName = "Travelling";
             MinuteCallback = () =>
             {
-                if (Duration == 0)
-                {
-                    if (_inTransit) ReachTarget();
-                    return;
-                }
-
                 --Duration;
                 ++_travelTime;
-                if (_travelTime != MinutesPerGritPoint) return;
-                _travelTime = 0;
-                if (_target.GetRegionType() == RegionType.Gate) return;
-                playerCharacter.Tire();
+                if (_travelTime == MinutesPerGritPoint)
+                {
+                    _travelTime = 0;
+                    if (_target.GetRegionType() != RegionType.Gate) playerCharacter.Tire();
+                }
+
+                if (Duration == 0 && _inTransit) ReachTarget();
             };
         }
 
@@ -62,12 +59,11 @@ namespace Game.Characters.CharacterActions
         private void ReachTarget()
         {
             _inTransit = false;
-            _target.ShouldGenerateEncounter = _target != CurrentRegion;
             CurrentRegion = _target;
             if (AtHome())
             {
-                PlayerCharacter.CharacterView().ShowAttributeTutorial();
                 PlayerCharacter.RestAction.Enter();
+                PlayerCharacter.CharacterView().ShowAttributeTutorial();
             }
             else
             {
@@ -94,9 +90,10 @@ namespace Game.Characters.CharacterActions
 
         public void TravelTo(Region target, int distance)
         {
-            if (target == CurrentRegion && CurrentRegion.GetRegionType() != RegionType.Gate)
+            if (target == CurrentRegion)
             {
-                EnterRegion();
+                if (CurrentRegion.GetRegionType() != RegionType.Gate) EnterRegion();
+                else ReachTarget();
                 return;
             }
 
@@ -123,7 +120,6 @@ namespace Game.Characters.CharacterActions
             CurrentRegion = MapGenerator.GetRegionById(doc.IntFromNode("CurrentRegion"));
             _inTransit = true;
             _travelTime = doc.IntFromNode("TravelTime");
-            _target.ShouldGenerateEncounter = _target != CurrentRegion;
             return doc;
         }
 

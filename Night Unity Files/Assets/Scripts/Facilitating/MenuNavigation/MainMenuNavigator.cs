@@ -109,27 +109,6 @@ namespace Facilitating.MenuNavigation
             continueButton.SetActive(false);
         }
 
-        public void Update()
-        {
-            if (_skipping) return;
-            if (Input.GetKeyDown(KeyCode.Alpha1)) SkipToPoint(1);
-            else if (Input.GetKeyDown(KeyCode.Alpha2)) SkipToPoint(2);
-            else if (Input.GetKeyDown(KeyCode.Alpha3)) SkipToPoint(3);
-            else if (Input.GetKeyDown(KeyCode.Alpha4)) SkipToPoint(4);
-            else if (Input.GetKeyDown(KeyCode.Alpha5)) SkipToPoint(5);
-        }
-
-        private void SkipToPoint(int num)
-        {
-            SaveController.ClearSave();
-            WorldState.ResetWorld(true, (num - 1) * 10);
-            if (num > 2) CharacterManager.AddCharacter(CharacterManager.GenerateRandomCharacter(CharacterClass.Protector));
-            if (num > 4) CharacterManager.AddCharacter(CharacterManager.GenerateRandomCharacter());
-            SaveController.ManualSave();
-            GameController.StartGame(true);
-            _skipping = true;
-        }
-
         public void StartNewGame()
         {
             _fadeInSequence.Complete();

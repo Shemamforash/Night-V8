@@ -26,7 +26,7 @@ namespace Game.Exploration.Weather
         {
             _fog = new FogSystem(gameObject.FindChildWithName("Fog"), _fogMax);
             _rain = new RainSystem(gameObject.FindChildWithName("Rain"), _rainMax);
-            _hail = new WeatherSystem(gameObject.FindChildWithName("Hail"), _hailMax);
+            _hail = new HailSystem(gameObject.FindChildWithName("Hail"), _hailMax);
             _dust = new WeatherSystem(gameObject.FindChildWithName("Dust"), _dustMax);
             _wind = new WindSystem(gameObject.FindChildWithName("Wind"), _windMax);
             _sun = gameObject.FindChildWithName<ParticleSystem>("Sun");
@@ -143,6 +143,19 @@ namespace Game.Exploration.Weather
             }
         }
 
+        private class HailSystem : WeatherSystem
+        {
+            public HailSystem(GameObject weatherObject, float maxEmission) : base(weatherObject, maxEmission)
+            {
+            }
+
+            public override void ChangeWeather(float amount, bool instant)
+            {
+                base.ChangeWeather(amount, instant);
+                AudioController.FadeHail(amount, Duration);
+            }
+        }
+        
         private class WindSystem : WeatherSystem
         {
             public WindSystem(GameObject weatherObject, float maxEmission) : base(weatherObject, maxEmission)

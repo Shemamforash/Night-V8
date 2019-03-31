@@ -16,7 +16,7 @@ namespace Game.Gear.Armour
         private int _currentLevel;
         private const int MaxLevel = 10;
         private const int ProtectionPerLevel = 25;
-        private const float BaseRechargeTime = 5f;
+        private const float BaseRechargeTime = 7.5f;
         private float _currentRechargeTime;
         private readonly Number _currentHealth = new Number();
         private bool _justTookDamage;

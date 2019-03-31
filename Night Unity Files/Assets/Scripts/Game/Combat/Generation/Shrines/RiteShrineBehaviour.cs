@@ -84,20 +84,6 @@ namespace Game.Combat.Generation.Shrines
             Destroy(this);
         }
 
-        private void StopCandles(RiteColliderBehaviour riteColliderBehaviour)
-        {
-            riteColliderBehaviour.GetComponent<ParticleSystem>().Stop();
-            foreach (ParticleSystem candle in riteColliderBehaviour.transform.Find("Candles").GetComponentsInChildren<ParticleSystem>())
-            {
-                candle.Stop();
-                candle.Clear();
-            }
-
-            GetComponent<CompassItem>().Die();
-            _colliders.Remove(riteColliderBehaviour);
-            Destroy(riteColliderBehaviour);
-        }
-
         public void EnterShrineCollider(RiteColliderBehaviour riteColliderBehaviour)
         {
             if (riteColliderBehaviour == _collider1)
@@ -113,6 +99,21 @@ namespace Game.Combat.Generation.Shrines
             _targetBrand = -1;
         }
 
+        private void StopCandles(RiteColliderBehaviour riteColliderBehaviour)
+        {
+            riteColliderBehaviour.GetComponent<ParticleSystem>().Stop();
+            foreach (ParticleSystem candle in riteColliderBehaviour.transform.Find("Candles").GetComponentsInChildren<ParticleSystem>())
+            {
+                candle.Stop();
+                candle.Clear();
+            }
+
+            CompassItem compass = GetComponent<CompassItem>();
+            if (compass != null) compass.Die();
+            _colliders.Remove(riteColliderBehaviour);
+            Destroy(riteColliderBehaviour);
+        }
+        
         private void FadeCandles()
         {
             _colliders.ForEach(c =>
@@ -121,8 +122,11 @@ namespace Game.Combat.Generation.Shrines
                 riteTransform.GetComponent<ParticleSystem>().Stop();
                 foreach (ParticleSystem candle in riteTransform.Find("Candles").GetComponentsInChildren<ParticleSystem>())
                     StartCoroutine(FadeCandle(candle));
+                Destroy(c);
             });
-            GetComponent<CompassItem>().Die();
+            _colliders.Clear();
+            CompassItem compass = GetComponent<CompassItem>();
+            if(compass != null) compass.Die();
         }
 
         private IEnumerator FadeCandle(ParticleSystem candle)
@@ -152,12 +156,7 @@ namespace Game.Combat.Generation.Shrines
         {
             if (_seenTutorial || !TutorialManager.Active()) return;
             if (_targetBrand == -1) return;
-            List<TutorialOverlay> overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(transform, 4, 4),
-                new TutorialOverlay()
-            };
-            TutorialManager.TryOpenTutorial(16, overlays);
+            TutorialManager.TryOpenTutorial(16, new TutorialOverlay());
             _seenTutorial = true;
         }
 
@@ -183,12 +182,14 @@ namespace Game.Combat.Generation.Shrines
 
         public void ActivateBrand()
         {
+            if (Triggered) return;
             Triggered = true;
             FadeCandles();
             _region.RitesRemain = false;
             CombatLogController.PostLog("Accepted the " + _brandChoice[_targetBrand].GetDisplayName());
             _brandChoice[_targetBrand] = null;
             _targetBrand = -1;
+            GetComponent<AudioSource>().Play();
             if (_brandChoice.TrueForAll(b => b == null)) GetComponent<CompassItem>().Die();
         }
 

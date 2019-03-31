@@ -8,11 +8,11 @@ public class BossRingController : MonoBehaviour
 
     private void Awake()
     {
-        AddBossRing("Ring 5", 0.7f);
-        AddBossRing("Ring 4", 0.75f);
+        AddBossRing("Ring 5", 0.9f);
+        AddBossRing("Ring 4", 0.85f);
         AddBossRing("Ring 3", 0.8f);
-        AddBossRing("Ring 2", 0.85f);
-        AddBossRing("Ring 1", 0.9f);
+        AddBossRing("Ring 2", 0.75f);
+        AddBossRing("Ring 1", 0.7f);
     }
 
     public static void Create()

@@ -29,10 +29,8 @@ public class ActionProgressController : MonoBehaviour
         if (_lastState == state && !state.ForceViewUpdate) return;
         state.ForceViewUpdate = false;
         _barCanvas.DOFade(state is Rest ? 0f : 1f, 0.5f);
-        float initialDuration = state.GetInitialDuration();
-        float remainingDuration = state.GetRemainingDuration();
-        float timeToComplete = remainingDuration * WorldState.MinuteInSeconds;
-        float startFill = remainingDuration / initialDuration;
+        float timeToComplete = state.GetRealTimeRemaining();
+        float startFill = state.GetNormalisedProgress();
         _left.fillAmount = startFill;
         _right.fillAmount = startFill;
         _leftTween?.Kill();

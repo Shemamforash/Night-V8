@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FastLights;
 using NUnit.Framework;
 using SamsHelper.Libraries;
@@ -69,25 +70,15 @@ namespace Game.Combat.Generation
         private Vector3[] CreateMesh()
         {
             Mesh mesh = _barrierObject.GetComponent<MeshFilter>().mesh;
-            Vector3[] meshVerts = new Vector3[Vertices.Count];
-            for (int i = 0; i < Vertices.Count; ++i) meshVerts[i] = Vertices[i];
-            mesh.vertices = meshVerts;
-            try
-            {
-                int[] tris = Triangulator.Triangulate(meshVerts);
-                mesh.triangles = tris;
-            }
-            catch
-            {
-                return null;
-            }
+            Triangulator.Triangulate(Vertices, ref mesh);
+            int vertCount = mesh.vertices.Length;
 
-            Vector3[] normals = new Vector3[meshVerts.Length];
+            Vector3[] normals = new Vector3[vertCount];
             for (int i = 0; i < normals.Length; i++) normals[i] = -Vector3.forward;
             mesh.normals = normals;
             _barrierObject.GetComponent<LightObstructor>().UpdateMesh();
 //            Draw();
-            return meshVerts;
+            return mesh.vertices;
         }
 
         private void AddCollider(Vector3[] meshVerts)

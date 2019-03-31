@@ -65,7 +65,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
                 currentTime += Time.deltaTime;
                 UpdateFeedParticles();
                 SetEmissionRate(currentTime <= 1 ? currentTime : 1);
-                PlayerCombat.Instance.ReduceAdrenaline(1 * Time.deltaTime);
+                PlayerCombat.Instance.ConsumeAdrenaline((int) (1 * Time.deltaTime));
                 if (_distanceToPlayer > MinDistanceToAttack) break;
                 yield return null;
             }

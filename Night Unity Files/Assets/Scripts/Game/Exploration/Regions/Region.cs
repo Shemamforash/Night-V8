@@ -33,7 +33,7 @@ namespace Game.Exploration.Regions
         private RegionType _regionType;
         private string _claimBenefit = "";
         private int _size, _claimQuantity, _remainingTimeToGenerateResource;
-        private bool _discovered, _seen, _generated, _templeCleansed, _isDynamicRegion, _justDiscovered;
+        private bool _discovered, _seen, _generated, _templeCleansed, _isDynamicRegion, _justDiscovered, _cleared;
 
         public readonly List<EnemyCampfire> Fires = new List<EnemyCampfire>();
         public readonly List<ContainerController> Containers = new List<ContainerController>();
@@ -41,7 +41,7 @@ namespace Game.Exploration.Regions
         public Player CharacterHere;
         public Vector2? RadianceStonePosition;
         public string Name;
-        public bool MonumentUsed, ShouldGenerateEncounter, FountainVisited, IsWeaponHere = true, RitesRemain = true, JournalIsHere;
+        public bool MonumentUsed, FountainVisited, IsWeaponHere = true, RitesRemain = true, JournalIsHere;
         public int RegionID, WaterSourceCount, FoodSourceCount, ResourceSourceCount;
 
         public Region() : base(Vector2.zero)
@@ -49,7 +49,6 @@ namespace Game.Exploration.Regions
             RegionID = _currentId;
             ++_currentId;
         }
-
 
         public void SetTempleCleansed()
         {
@@ -142,6 +141,8 @@ namespace Game.Exploration.Regions
             region._regionType = (RegionType) doc.IntFromNode("Type");
             region._discovered = doc.BoolFromNode("Discovered");
             region._seen = doc.BoolFromNode("Seen");
+            region._cleared = doc.BoolFromNode("Cleared");
+
             region._size = doc.IntFromNode("Size");
             region._justDiscovered = doc.BoolFromNode("JustDiscovered");
             region._templeCleansed = doc.BoolFromNode("TempleCleansed");
@@ -177,6 +178,7 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("Discovered", _discovered);
             regionNode.CreateChild("JustDiscovered", _justDiscovered);
             regionNode.CreateChild("Seen", _seen);
+            regionNode.CreateChild("Cleared", _cleared);
             regionNode.CreateChild("Size", _size);
             regionNode.CreateChild("TempleCleansed", _templeCleansed);
             regionNode.CreateChild("RadianceStonePosition", RadianceStonePosition == null ? "" : RadianceStonePosition.Value.ToString());
@@ -198,6 +200,7 @@ namespace Game.Exploration.Regions
         public void HideNode()
         {
             if (!_seen) return;
+            if (_mapNode == null) return;
             _mapNode.Hide();
         }
 
@@ -223,7 +226,7 @@ namespace Game.Exploration.Regions
         {
             List<EnemyType> templates = new List<EnemyType>();
             if (Claimed() || !IsDynamic()) return templates;
-            if (ShouldGenerateEncounter) _size = WorldState.Difficulty() + 4;
+            if (!_cleared && _size == 0) _size = WorldState.Difficulty() + 4;
             templates = EnemyTemplate.RandomiseEnemiesToSize(allowedTypes, _size);
             _size = 0;
             return templates;
@@ -238,7 +241,7 @@ namespace Game.Exploration.Regions
                 EnemyType.Watcher,
                 EnemyType.Curio
             };
-            if (ShouldGenerateEncounter) _size = WorldState.Difficulty() / 10 + 5;
+            if (!_cleared && _size == 0) _size = WorldState.Difficulty() / 10 + 5;
             return EnemyTemplate.RandomiseEnemiesToSize(animalTypes, _size);
         }
 
@@ -314,6 +317,7 @@ namespace Game.Exploration.Regions
                     enemyTypes = GenerateAnimalEncounter();
                     break;
             }
+
             return enemyTypes;
         }
 
@@ -348,6 +352,16 @@ namespace Game.Exploration.Regions
             return _templeCleansed;
         }
 
-        
+        public void SetCleared()
+        {
+            _cleared = true;
+        }
+
+        public bool IsCleared() => _cleared;
+
+        public bool ShouldDrawInnerRing()
+        {
+            return _isDynamicRegion || _regionType == RegionType.Temple;
+        }
     }
 }

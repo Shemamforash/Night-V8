@@ -12,7 +12,7 @@ namespace Facilitating.UIControllers
 {
     public class UIPlayerWeaponController : MonoBehaviour
     {
-        private EnhancedText _nameText, _infusionText;
+        private EnhancedText _nameText, _inscriptionText;
         private GameObject _equippedObject;
         public EnhancedButton EnhancedButton;
         private Player _player;
@@ -22,7 +22,7 @@ namespace Facilitating.UIControllers
             EnhancedButton = GetComponent<EnhancedButton>();
             _equippedObject = gameObject.FindChildWithName("Equipped");
             _nameText = _equippedObject.FindChildWithName<EnhancedText>("Weapon Name");
-            _infusionText = _equippedObject.FindChildWithName<EnhancedText>("Bonus");
+            _inscriptionText = _equippedObject.FindChildWithName<EnhancedText>("Bonus");
             EnhancedButton.AddOnClick(UiGearMenuController.ShowWeaponMenu);
             GlowButtonBehaviour glow = GetComponent<GlowButtonBehaviour>();
             EnhancedButton.AddOnClick(glow.Select);
@@ -48,10 +48,10 @@ namespace Facilitating.UIControllers
             if (weapon != null) weaponName = weapon.Quality() + " " + weapon.WeaponAttributes.GetWeaponClass();
             _nameText.SetText(weaponName);
 
-            string infusionText = "No Infusion";
+            string inscriptionText = "No Inscription";
             Inscription inscription = weapon?.GetInscription();
-            if (inscription != null) infusionText = inscription.Name;
-            _infusionText.SetText(infusionText);
+            if (inscription != null) inscriptionText = inscription.Name;
+            _inscriptionText.SetText(inscriptionText);
         }
     }
 }

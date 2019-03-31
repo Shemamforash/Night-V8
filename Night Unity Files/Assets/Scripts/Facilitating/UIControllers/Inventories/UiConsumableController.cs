@@ -37,22 +37,22 @@ public class UiConsumableController : UiInventoryMenuController
         return _unlocked;
     }
 
-    private static void UpdateConditions(Consumable consumable = null)
+    private static void UpdateConditions(ResourceItem resource = null)
     {
         float hungerOffset = 0f;
         float waterOffset = 0f;
         float attributeOffset = 0;
-        if (consumable != null)
+        if (resource != null)
         {
-            hungerOffset = consumable.Template.ResourceType == ResourceType.Meat ? consumable.Template.EffectBonus : 0;
-            waterOffset = consumable.Template.ResourceType == ResourceType.Water ? consumable.Template.EffectBonus : 0;
-            if (consumable.Template.ResourceType == ResourceType.Plant) attributeOffset = consumable.Template.EffectBonus;
+            hungerOffset = resource.Template.ResourceType == ResourceType.Meat ? resource.Template.EffectBonus : 0;
+            waterOffset = resource.Template.ResourceType == ResourceType.Water ? resource.Template.EffectBonus : 0;
+            if (resource.Template.ResourceType == ResourceType.Plant) attributeOffset = resource.Template.EffectBonus;
         }
 
         _hungerController.UpdateHunger(CharacterManager.SelectedCharacter, -hungerOffset);
         _thirstController.UpdateThirst(CharacterManager.SelectedCharacter, -waterOffset);
         if (attributeOffset == 0) _uiAttributeController.UpdateAttributes(CharacterManager.SelectedCharacter);
-        else _uiAttributeController.UpdateAttributesOffset(CharacterManager.SelectedCharacter, consumable.Template.AttributeType, attributeOffset);
+        else _uiAttributeController.UpdateAttributesOffset(CharacterManager.SelectedCharacter, resource.Template.AttributeType, attributeOffset);
     }
 
     protected override void CacheElements()
@@ -73,17 +73,17 @@ public class UiConsumableController : UiInventoryMenuController
     protected override void Initialise()
     {
         List<ListElement> listElements = new List<ListElement>();
-        listElements.Add(new ConsumableElement());
-        listElements.Add(new ConsumableElement());
-        listElements.Add(new ConsumableElement());
-        listElements.Add(new CentreConsumableElement());
-        listElements.Add(new ConsumableElement());
-        listElements.Add(new ConsumableElement());
-        listElements.Add(new ConsumableElement());
-        _consumableList.Initialise(listElements, Consume, UiGearMenuController.Close, GetAvailableConsumables);
+        listElements.Add(new InventoryElement());
+        listElements.Add(new InventoryElement());
+        listElements.Add(new InventoryElement());
+        listElements.Add(new CentreInventoryElement());
+        listElements.Add(new InventoryElement());
+        listElements.Add(new InventoryElement());
+        listElements.Add(new InventoryElement());
+        _consumableList.Initialise(listElements, Consume, UiGearMenuController.Close, GetAvailableItems);
     }
 
-    private class CentreConsumableElement : ConsumableElement
+    private class CentreInventoryElement : InventoryElement
     {
         private EnhancedText _descriptionText;
 
@@ -96,9 +96,9 @@ public class UiConsumableController : UiInventoryMenuController
         protected override void Update(object o, bool isCentreItem)
         {
             base.Update(o, isCentreItem);
-            Consumable consumable = (Consumable) o;
-            _descriptionText.SetText(consumable.Template.Description);
-            UpdateConditions(consumable);
+            ResourceItem resource = (ResourceItem) o;
+            _descriptionText.SetText(resource.Template.Description);
+            UpdateConditions(resource);
         }
 
         protected override void SetVisible(bool visible)
@@ -121,7 +121,7 @@ public class UiConsumableController : UiInventoryMenuController
         }
     }
 
-    private class ConsumableElement : ListElement
+    private class InventoryElement : ListElement
     {
         private EnhancedText _consumableText, _nameText, _effectText;
         private Image _icon;
@@ -129,20 +129,26 @@ public class UiConsumableController : UiInventoryMenuController
         protected override void UpdateCentreItemEmpty()
         {
             _consumableText.SetText("");
-            _nameText.SetText("No Consumables Available");
+            _nameText.SetText("Inventory is Empty");
             _effectText.SetText("");
             _icon.SetAlpha(0f);
         }
 
         protected override void Update(object o, bool isCentreItem)
         {
-            Consumable consumable = (Consumable) o;
-            string nameText = consumable.Quantity() > 1 ? consumable.Name + " x" + consumable.Quantity() : consumable.Name;
+            ResourceItem resource = (ResourceItem) o;
+            string nameText = resource.Quantity() > 1 ? resource.Name + " x" + resource.Quantity() : resource.Name;
             _nameText.SetText(nameText);
-            _consumableText.SetText(consumable.CanConsume() ? "" : "Cannot Consume");
-            _effectText.SetText(consumable.Template.EffectString);
+            string consumableText = "";
+            if (resource is Consumable consumable)
+                consumableText = !consumable.CanConsume() ? "Cannot Consume" : "Consumable";
+            else
+                consumableText = "Crafting Resource";
+
+            _consumableText.SetText(consumableText);
+            _effectText.SetText(resource.Template.EffectString);
             _icon.SetAlpha(1f);
-            _icon.sprite = consumable.Template.Sprite;
+            _icon.sprite = resource.Template.Sprite;
         }
 
         protected override void SetVisible(bool visible)
@@ -170,14 +176,15 @@ public class UiConsumableController : UiInventoryMenuController
         }
     }
 
-    private List<object> GetAvailableConsumables()
+    private List<object> GetAvailableItems()
     {
         return Inventory.Consumables().ToObjectList();
     }
 
     private void Consume(object consumableObject)
     {
-        Consumable consumable = (Consumable) consumableObject;
+        Consumable consumable = consumableObject as Consumable;
+        if (consumable == null) return;
         if (!consumable.CanConsume()) return;
         consumable.Consume();
         switch (consumable.Template.ResourceType)

@@ -2,42 +2,42 @@
 	<Class>
 		<Name>Villain</Name>
 		<Grit>2</Grit>
-		<Fettle>3</Fettle>
+		<Life>3</Life>
 		<Will>5</Will>
 		<Focus>2</Focus>
 	</Class>
 	<Class>
 		<Name>Beast</Name>
 		<Grit>2</Grit>
-		<Fettle>5</Fettle>
+		<Life>5</Life>
 		<Will>2</Will>
 		<Focus>3</Focus>
 	</Class>
 	<Class>
 		<Name>Survivor</Name>
 		<Grit>4</Grit>
-		<Fettle>2</Fettle>
+		<Life>2</Life>
 		<Will>4</Will>
 		<Focus>2</Focus>
 	</Class>
 	<Class>
 		<Name>Protector</Name>
 		<Grit>3</Grit>
-		<Fettle>4</Fettle>
+		<Life>4</Life>
 		<Will>3</Will>
 		<Focus>2</Focus>
 	</Class>
 	<Class>
 		<Name>Hunter</Name>
 		<Grit>5</Grit>
-		<Fettle>2</Fettle>
+		<Life>2</Life>
 		<Will>2</Will>
 		<Focus>3</Focus>
 	</Class>
 	<Class>
 		<Name>Wanderer</Name>
 		<Grit>4</Grit>
-		<Fettle>4</Fettle>
+		<Life>4</Life>
 		<Will>4</Will>
 		<Focus>4</Focus>
 	</Class>

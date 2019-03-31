@@ -22,7 +22,6 @@ namespace Game.Combat.Generation
     {
         private PlayerCombat _player;
         private bool _seenAccuracyTutorial;
-        private bool _updateText;
 
         protected override void Generate()
         {
@@ -32,17 +31,6 @@ namespace Game.Combat.Generation
             CreateRocks();
             CharacterManager.SelectedCharacter.Attributes.SetTutorialValues();
             StartCoroutine(ShowTutorial());
-        }
-
-        private void Start()
-        {
-            ControlTypeChangeListener controlTypeChangeListener = gameObject.AddComponent<ControlTypeChangeListener>();
-            controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
-        }
-
-        private void UpdateText()
-        {
-            _updateText = true;
         }
 
         private void CreateRocks()
@@ -82,29 +70,23 @@ namespace Game.Combat.Generation
         private void DisplayEventText()
         {
             EventTextController.SetOverrideText("");
-            _updateText = true;
         }
 
-        private IEnumerator WaitForControl(Func<bool> condition, Func<string> text)
+        private IEnumerator WaitForControl(Func<bool> condition, Func<string> text, bool wait = true)
         {
             DisplayEventText();
             float timer = 5f;
             bool pressed = false;
             while (!pressed || timer > 0f)
             {
-                timer -= Time.deltaTime;
-                if (!pressed)
-                {
-                    pressed = condition();
-                    _updateText = false;
-                }
-
+                timer -= Time.unscaledDeltaTime;
+                if (!pressed) pressed = condition();
                 EventTextController.UpdateOverrideText(text());
                 yield return null;
             }
 
             EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
+            if (wait) yield return new WaitForSecondsRealtime(1);
         }
 
         private IEnumerator ShowBasicControls()
@@ -130,7 +112,9 @@ namespace Game.Combat.Generation
                 () => "Press [" + InputHandler.GetBindingForKey(InputAxis.Fire) + "] to Fire"));
 
             yield return StartCoroutine(WaitForControl(() => InputHandler.InputAxisWasPressed(InputAxis.Reload),
-                () => "Reload with [" + InputHandler.GetBindingForKey(InputAxis.Reload) + "]"));
+                () => "Hold [" + InputHandler.GetBindingForKey(InputAxis.Reload) + "] to Reload"));
+
+            yield return StartCoroutine(WaitForControl(() => true, () => "You can view the control scheme at any time through the pause menu"));
         }
 
         private IEnumerator ShowAdrenalineTutorial()
@@ -138,20 +122,15 @@ namespace Game.Combat.Generation
             _player.UpdateAdrenaline(10000);
             _player.HealthController.TakeDamage(_player.HealthController.GetMaxHealth() * 0.6f);
             CombatManager.Instance().SetForceShowHud(true);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSecondsRealtime(0.5f);
             TutorialManager.TryOpenTutorial(7, new List<TutorialOverlay> {new TutorialOverlay(RageBarController.AdrenalineRect())});
             while (TutorialManager.IsTutorialVisible()) yield return null;
 
             yield return StartCoroutine(WaitForControl(() => InputHandler.InputAxisWasPressed(InputAxis.Sprint),
-                () => "Dash with [" + InputHandler.GetBindingForKey(InputAxis.Sprint) + "], this consumes some adrenaline"));
+                () => "Dash with [" + InputHandler.GetBindingForKey(InputAxis.Sprint) + "]"));
 
             EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
-
-            EventTextController.SetOverrideText("You gain adrenaline by dealing damage to enemies");
-            yield return new WaitForSeconds(4);
-            EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSecondsRealtime(1);
         }
 
         private IEnumerator ShowHealthTutorial()
@@ -159,9 +138,9 @@ namespace Game.Combat.Generation
             CreateEnemies();
 
             EventTextController.SetOverrideText("Defeat all enemies");
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSecondsRealtime(5);
             EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSecondsRealtime(1);
             while (!CombatManager.Instance().ClearOfEnemies())
             {
                 if (!_seenAccuracyTutorial && CombatManager.Instance().InactiveEnemyCount() == 0 && PlayerCombat.Instance.GetTarget() != null)
@@ -178,30 +157,32 @@ namespace Game.Combat.Generation
         private IEnumerator ShowAttributeTutorial()
         {
             EventTextController.SetOverrideText("Will can be used to restore attributes in and out of combat");
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSecondsRealtime(5);
             EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSecondsRealtime(1);
 
-            EventTextController.SetOverrideText("Restoring your Fettle attribute will recover health in combat");
-            yield return new WaitForSeconds(5);
+            EventTextController.SetOverrideText("Restoring your Life attribute will recover health in combat");
+            yield return new WaitForSecondsRealtime(5);
             EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSecondsRealtime(1);
 
             UiGearMenuController.SetOpenAllowed(true);
-            yield return StartCoroutine(WaitForControl(UiGearMenuController.IsOpen,
-                () => "Open your inventory with [" + InputHandler.GetBindingForKey(InputAxis.Inventory) + "] and navigate to the Meditate tab to restore your Fettle"));
             UiGearMenuController.SetCloseAllowed(false);
 
+            yield return StartCoroutine(WaitForControl(UiGearMenuController.IsOpen,
+                () => "Open your inventory with [" + InputHandler.GetBindingForKey(InputAxis.Inventory) + "] to meditate and restore your Life", false));
+
             while (_player.HealthController.GetNormalisedHealthValue() < 0.5f) yield return null;
+
             UiGearMenuController.SetCloseAllowed(true);
             while (UiGearMenuController.IsOpen()) yield return null;
             UiGearMenuController.SetOpenAllowed(false);
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSecondsRealtime(1);
 
-            EventTextController.SetOverrideText("Attributes can also be restored by sleeping");
-            yield return new WaitForSeconds(5);
+            EventTextController.SetOverrideText("Attributes slowly restore when Resting");
+            yield return new WaitForSecondsRealtime(5);
             EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSecondsRealtime(1);
         }
 
         private IEnumerator ShowCompassTutorial()
@@ -220,21 +201,24 @@ namespace Game.Combat.Generation
             while (CharacterManager.CurrentRegion().Containers.Count > 0) yield return null;
 
             EventTextController.SetOverrideText("Consume food and water to stave off dehydration and thirst");
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSecondsRealtime(5);
             EventTextController.CloseOverrideText();
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSecondsRealtime(1);
+
+            UiWillController.Locked = true;
             UiGearMenuController.SetOpenAllowed(true);
-
-            yield return StartCoroutine(WaitForControl(() => UiGearMenuController.IsOpen(),
-                () => "Open your inventory with [" + InputHandler.GetBindingForKey(InputAxis.Inventory) + "] and navigate to the consume tab"));
-
             UiGearMenuController.SetCloseAllowed(false);
+
+            yield return StartCoroutine(WaitForControl(UiGearMenuController.IsOpen,
+                () => "Open your inventory with [" + InputHandler.GetBindingForKey(InputAxis.Inventory) + "] and restore your hunger and thirst", false));
+
             EventTextController.CloseOverrideText();
             while (Inventory.GetResourceQuantity("Water") > 0 && Inventory.GetResourceQuantity("Cooked Meat") > 0) yield return null;
+
             UiGearMenuController.SetCloseAllowed(true);
             while (UiGearMenuController.IsOpen()) yield return null;
             UiGearMenuController.SetOpenAllowed(false);
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSecondsRealtime(1);
         }
 
         private IEnumerator ShowLeaveTutorial()
@@ -245,12 +229,13 @@ namespace Game.Combat.Generation
             CharacterManager.SelectedCharacter.Attributes.ResetValues();
             CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(MapGenerator.GetInitialNode());
             UiGearMenuController.SetOpenAllowed(true);
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSecondsRealtime(2);
             EventTextController.CloseOverrideText();
         }
 
         private IEnumerator ShowTutorial()
         {
+            UiWeaponUpgradeController.Locked = true;
             UiGearMenuController.SetOpenAllowed(false);
             yield return StartCoroutine(ShowBasicControls());
             yield return StartCoroutine(ShowAdrenalineTutorial());
@@ -258,6 +243,14 @@ namespace Game.Combat.Generation
             yield return StartCoroutine(ShowAttributeTutorial());
             yield return StartCoroutine(ShowCompassTutorial());
             yield return StartCoroutine(ShowLeaveTutorial());
+        }
+
+        private void OnDestroy()
+        {
+            UiWillController.Locked = false;
+            UiWeaponUpgradeController.Locked = false;
+            UiGearMenuController.SetCloseAllowed(true);
+            UiGearMenuController.SetOpenAllowed(true);
         }
 
         private void Update()

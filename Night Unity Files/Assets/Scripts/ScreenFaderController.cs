@@ -40,9 +40,19 @@ public class ScreenFaderController : MonoBehaviour
         _textCanvas.alpha = 1;
     }
 
+    public static void ShowText(string text)
+    {
+        _text.text = text;
+        _textCanvas.alpha = 1;
+        _faderCanvas.alpha = 1;
+        _faderImage.color = new Color(1, 1, 1, 0f);
+        _faderCanvas.DOFade(0f, 5f);
+    }
+
     public static Sequence FadeIn(float duration)
     {
         ResetFader();
+        _faderImage.SetAlpha(1f);
         _sequence = DOTween.Sequence();
         _sequence.Append(_faderCanvas.DOFade(1, duration).SetUpdate(UpdateType.Normal, true));
         return _sequence;

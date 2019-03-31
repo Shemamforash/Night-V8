@@ -33,7 +33,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             if (Template.IsEffectPermanent) ApplyPermanentEffect();
             else ApplyImpermanentEffect();
 
-            if (Template.AttributeType == AttributeType.Fettle && PlayerCombat.Instance != null) PlayerCombat.Instance.RecalculateHealth();
+            if (Template.AttributeType == AttributeType.Life && PlayerCombat.Instance != null) PlayerCombat.Instance.RecalculateHealth();
             if (Template.AttributeType == AttributeType.Focus && PlayerCombat.Instance != null) PlayerCombat.Instance.ResetCompass();
         }
 
@@ -49,8 +49,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
             switch (Template.AttributeType)
             {
-                case AttributeType.Fettle:
-                    _player.Attributes.ChangeFettleMax((int) Template.EffectBonus);
+                case AttributeType.Life:
+                    _player.Attributes.ChangeLifeMax((int) Template.EffectBonus);
                     break;
                 case AttributeType.Grit:
                     _player.Attributes.ChangeGritMax((int) Template.EffectBonus);

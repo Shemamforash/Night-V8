@@ -34,6 +34,7 @@ namespace Game.Combat.Generation
 
         private static Region _currentRegion;
         private float _visibilityRange;
+        private bool _playerReachedCentre;
 
         protected override void Awake()
         {
@@ -122,7 +123,7 @@ namespace Game.Combat.Generation
         private void SetUpDynamicRegion()
         {
             GameObject worldObject = GameObject.Find("World");
-            switch (EnvironmentManager.CurrentEnvironmentType())
+            switch (EnvironmentManager.CurrentEnvironmentType)
             {
                 case EnvironmentType.Desert:
                     worldObject.AddComponent<Desert>().Initialise();
@@ -173,8 +174,18 @@ namespace Game.Combat.Generation
             _visibilityRange = Mathf.Lerp(3f, 8f, visibilityModifier);
         }
 
+        private bool HasPlayerReachedCentre()
+        {
+            if (_playerReachedCentre) return true;
+            if (PlayerCombat.Instance == null) return false;
+            if (PlayerCombat.Instance.transform.position.magnitude > 8) return false;
+            _playerReachedCentre = true;
+            return true;
+        }
+
         private void TrySpawnNewEnemy()
         {
+            if (!HasPlayerReachedCentre()) return;
             if (_inactiveEnemies.Empty()) return;
             if (_enemies.Count >= _maxSize) return;
             _timeSinceLastSpawn -= Time.deltaTime;

@@ -22,7 +22,7 @@ namespace SamsHelper.Input
         private static InputHandler _instance;
         private static BindingSourceType _lastInputType;
         private bool _needInputUpdate;
-        private static List<ControlTypeChangeListener> _controlTypeChangeListeners = new List<ControlTypeChangeListener>();
+        private static readonly List<ControlTypeChangeListener> _controlTypeChangeListeners = new List<ControlTypeChangeListener>();
         private bool _initialised;
 
         public void Awake()
@@ -127,6 +127,7 @@ namespace SamsHelper.Input
             ListenersToRemove.Clear();
             _inputActions.Destroy();
             _instance = null;
+            _listenersInterrupted = false;
         }
 
         public void Update()
@@ -150,8 +151,8 @@ namespace SamsHelper.Input
 
         private static bool ListenerIsValid(IInputListener inputListener)
         {
-            bool valid = !(inputListener is MonoBehaviour m && m.gameObject == null || inputListener == null);
-            if (valid) return true;
+            if (inputListener == null) return false;
+            if (inputListener is MonoBehaviour m && m.gameObject != null) return true;
             ListenersToRemove.Add(inputListener);
             return false;
         }
@@ -281,7 +282,7 @@ namespace SamsHelper.Input
                     BroadcastInputDown(_axis, _held, _currentInputValue); //.Polarity());
                     if (!_held) CheckDoubleTap();
                 }
-                else if (_lastInputValue != 0f)
+                else if (_lastInputValue != 0f || _lastInputValue == 0f && _held)
                 {
                     _held = false;
                     BroadcastInputUp(_axis);
@@ -336,6 +337,7 @@ namespace SamsHelper.Input
 
         public static void InterruptListeners(bool interrupted)
         {
+            foreach (InputAxis inputAxis in _instance._inputPressList.Keys) BroadcastInputUp(inputAxis);
             _listenersInterrupted = interrupted;
         }
 

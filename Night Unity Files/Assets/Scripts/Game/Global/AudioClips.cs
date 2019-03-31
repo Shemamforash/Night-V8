@@ -25,9 +25,10 @@ namespace Game.Global
         public static AudioClip Ambient, Night, Campfire, TakeItem;
         public static AudioClip LightRain, MediumRain, HeavyRain;
         public static AudioClip LightWind, MediumWind, HeavyWind;
+        public static AudioClip Hail;
         public static AudioClip PistolClipIn, PistolClipOut, ShotgunClipIn, ShotgunClipOut, RifleClipIn, RifleClipOut, SMGClipIn, SMGClipOut;
         public static AudioClip BrawlerSlash, BulletHit, ShieldHit, BodyHit, SaltTake;
-        public static AudioClip GodsAreDead, AbandonedLands, AtTheEnd;
+        public static AudioClip GodsAreDead, AbandonedLands, Slain, AtTheEnd;
         public static AudioClip FireExplosion, ShatterExplosion, TombBreak, TombRing, ActiveSkill, PassiveSkill;
         public static AudioClip TabChange, EquipAccessory, EquipArmour, EquipWeapon, Channel, Infuse, Craft, OpenJournal, CloseJournal, Tick, CookMeat, Furnace, BoilWater;
         public static AudioClip EatWater, EatMeat, EatPlant, EatPotion, LightFire;
@@ -140,10 +141,12 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => LightWind = a, "wind", "Light"));
             yield return StartCoroutine(LoadClip(a => MediumWind = a, "wind", "Medium"));
             yield return StartCoroutine(LoadClip(a => HeavyWind = a, "wind", "Heavy"));
+            yield return StartCoroutine(LoadClip(a => Hail = a, "hail", "Hail"));
 
             Debug.Log("loading music");
             yield return StartCoroutine(LoadClip(a => GodsAreDead = a, "music/combat", "The Gods Are Dead"));
             yield return StartCoroutine(LoadClip(a => AbandonedLands = a, "music/combat", "Abandoned Lands"));
+            yield return StartCoroutine(LoadClip(a => Slain = a, "music/combat", "Slain"));
             yield return StartCoroutine(LoadClip(a => AtTheEnd = a, "music/misc", "At The End"));
 
             Debug.Log("loading misc audio");

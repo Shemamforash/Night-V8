@@ -14,7 +14,7 @@ namespace Game.Characters.CharacterActions
         protected readonly Player PlayerCharacter;
         private int _timeToNextHour;
         protected int Duration;
-        private int InitialDuration;
+        protected int InitialDuration;
         protected Action HourCallback;
         protected Action MinuteCallback;
         protected string DisplayName;
@@ -90,8 +90,8 @@ namespace Game.Characters.CharacterActions
             return DisplayName;
         }
 
-        public virtual float GetRemainingDuration() => Duration;
+        public virtual float GetNormalisedProgress() => Duration / (float)InitialDuration;
 
-        public float GetInitialDuration() => InitialDuration;
+        public float GetRealTimeRemaining() => Duration * WorldState.MinuteInSeconds;
     }
 }

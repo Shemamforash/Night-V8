@@ -2,7 +2,7 @@
 {
     public enum AttributeType
     {
-        Fettle,
+        Life,
         Grit,
         Focus,
         Will,

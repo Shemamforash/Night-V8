@@ -21,7 +21,7 @@
 		<PartNumber>3</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
 		<Title>Saving Progress</Title>
-		<Text>Progress must be saved manually. Be warned- Beyond the Veil uses only a single save slot.</Text>
+		<Text>Your progress is autosaved periodically, but you can save manually from the pause screen when out of combat.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>2</SectionNumber>
@@ -29,7 +29,7 @@
 		<PartNumber>1</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
 		<Title>The Map</Title>
-		<Text>The Map allows you to discover and revisit regions. The grit required to travel to a region is shown below it's name. Returning to the gate is always free.</Text>
+		<Text>The Map allows you to discover and revisit regions. The Grit required to travel to a region is shown below the region name. Returning to the gate is always free.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>3</SectionNumber>
@@ -80,28 +80,12 @@
 		<Text>Your current accuracy is also shown at the top of the screen. Continuous fire decreases your accuracy, so fire in short bursts for maximum effectiveness.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>9</SectionNumber>
-		<SectionName>Salt and Radiance</SectionName>
-		<PartNumber>1</PartNumber>
-		<AutoUnlock>False</AutoUnlock>
-		<Title>Salt</Title>
-		<Text>Human enemies have a chance to drop Salt. Unlike other loot, Salt will automatically be collected when you are near to it.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>9</SectionNumber>
-		<SectionName>1</SectionName>
-		<PartNumber>2</PartNumber>
-		<AutoUnlock>False</AutoUnlock>
-		<Title>Radiance</Title>
-		<Text>Salt can be used to craft Radiance. Radiance can be used to claim regions. Over time, these regions add either food, water, or resources to your supply.</Text>
-	</TutorialPart>
-	<TutorialPart>
 		<SectionNumber>10</SectionNumber>
 		<SectionName>Attributes</SectionName>
 		<PartNumber>1</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
 		<Title>Attributes</Title>
-		<Text>Characters have 4 attributes- 2 Physical, and 2 Mental:</Text>
+		<Text>You have 4 attributes- 2 Physical, and 2 Mental:</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>10</SectionNumber>
@@ -109,7 +93,7 @@
 		<PartNumber>2</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
 		<Title>Physical</Title>
-		<Text>Fettle increases your maximum health in combat. Grit increases movement speed and map travel distance.</Text>
+		<Text>Life increases your maximum health in combat. Grit increases movement speed and map travel distance.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>10</SectionNumber>
@@ -221,15 +205,7 @@
 		<PartNumber>1</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
 		<Title>Shrines</Title>
-		<Text>Some areas contain shrines where you can show your devotion to the gods. To do so you can accept Rites, each of which have different requirements to complete.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>16</SectionNumber>
-		<SectionName>1</SectionName>
-		<PartNumber>2</PartNumber>
-		<AutoUnlock>False</AutoUnlock>
-		<Title>Trials</Title>
-		<Text>When the requirements are met, you must partake in a final trial, the outcome of which will either provide you with a blessing or a curse.</Text>
+		<Text>Some areas contain shrines where you can show your devotion to the gods. These shrines provide challenges that, when complete, can improve your character.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>17</SectionNumber>
@@ -241,11 +217,11 @@
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>18</SectionNumber>
-		<SectionName>Infusions</SectionName>
+		<SectionName>Inscriptions</SectionName>
 		<PartNumber>1</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
-		<Title>Infusions</Title>
-		<Text>Infusions can be used to grant large, passive bonuses to weapons. Applying Infusions requires Essence, and replaces any Infusions already applied.</Text>
+		<Title>Inscriptions</Title>
+		<Text>Inscriptions can be used to grant large, passive bonuses to weapons. Applying Inscriptions requires Essence, and replaces any Inscription already applied.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>19</SectionNumber>

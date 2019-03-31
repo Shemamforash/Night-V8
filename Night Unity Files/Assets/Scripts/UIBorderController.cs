@@ -1,13 +1,15 @@
 ﻿using DG.Tweening;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
+using Steamworks;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UIBorderController : MonoBehaviour
 {
-    private Image _activeTop;
-    private CanvasGroup _inactiveTop, _highlightCanvas;
+//    private Image _activeTop, _activeBottom;
+//    private CanvasGroup _inactiveTop, _inactiveBottom, _highlightCanvasTop, _highlightCanvasBottom;
+    private CanvasGroup _canvasGroup;
     private const float FadeTime = 0.25f;
     [SerializeField] private BorderState _currentState;
     private bool _needsUpdate;
@@ -22,11 +24,8 @@ public class UIBorderController : MonoBehaviour
 
     private void Awake()
     {
-        GameObject top = gameObject.FindChildWithName("Top");
-        _activeTop = top.FindChildWithName<Image>("Active");
-        _inactiveTop = top.FindChildWithName<CanvasGroup>("Inactive");
-        _highlightCanvas = gameObject.FindChildWithName<CanvasGroup>("Highlight");
-        SetActive();
+        _canvasGroup = GetComponent<CanvasGroup>();
+        SetDisabled();
     }
 
     private void SetState(BorderState state)
@@ -45,7 +44,7 @@ public class UIBorderController : MonoBehaviour
 
     private void OnDisable()
     {
-        _currentState = BorderState.Active;
+        _currentState = BorderState.Disabled;
         UpdateBorder(true);
     }
 
@@ -72,33 +71,19 @@ public class UIBorderController : MonoBehaviour
     private void Disable(bool instant = false)
     {
         float time = instant ? 0 : FadeTime;
-        _activeTop.DOColor(UiAppearanceController.InvisibleColour, time);
-        _inactiveTop.DOFade(0, time);
-        _highlightCanvas.DOFade(0, time);
+        _canvasGroup.DOFade(0, time);
     }
 
     private void Active(bool instant = false)
     {
         float time = instant ? 0 : FadeTime;
-        _activeTop.DOColor(UiAppearanceController.InvisibleColour, time);
-        _inactiveTop.DOFade(0.4f, time);
-        _highlightCanvas.DOFade(0.15f, time);
+        _canvasGroup.DOFade(0.4f, time);
     }
 
     private void Select(bool instant = false)
     {
         float time = instant ? 0 : FadeTime;
-        if (_button == null || _button.IsEnabled())
-        {
-            _activeTop.DOColor(Color.white, time);
-            _inactiveTop.DOFade(1, time);
-            _highlightCanvas.DOFade(0.75f, time);
-            return;
-        }
-
-        _activeTop.DOColor(UiAppearanceController.FadedColour, time);
-        _inactiveTop.DOFade(0.4f, time);
-        _highlightCanvas.DOFade(0f, time);
+        _canvasGroup.DOFade(1f, time);
     }
 
     public void SetDisabled()

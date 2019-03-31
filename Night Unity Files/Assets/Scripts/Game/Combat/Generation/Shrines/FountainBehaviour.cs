@@ -26,6 +26,7 @@ namespace Game.Combat.Generation.Shrines
         private AudioSource _audioSource;
         private bool _allEnemiesDead;
         private string _controlText;
+        private bool _shownText;
 
         public void Awake()
         {
@@ -75,7 +76,7 @@ namespace Game.Combat.Generation.Shrines
             transform.position = Vector2.zero;
             WorldGrid.AddBlockingArea(Vector2.zero, 1.5f);
             if (!_region.FountainVisited) return;
-            GetComponent<CompassItem>().Die();
+            StopEffects();
             Destroy(this);
         }
 
@@ -103,6 +104,12 @@ namespace Game.Combat.Generation.Shrines
 
         public void Update()
         {
+            if (!_shownText && PlayerCombat.Instance != null && PlayerCombat.Instance.transform.position.magnitude < 6)
+            {
+                CombatLogController.PostLog("The fountain beckons");
+                _shownText = true;
+            }
+
             if (!Triggered || _allEnemiesDead) return;
             if (!CombatManager.Instance().ClearOfEnemies()) return;
             Succeed();
@@ -111,8 +118,8 @@ namespace Game.Combat.Generation.Shrines
 
         protected override void Succeed()
         {
-            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Thirst).Decrement(10);
-            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Hunger).Decrement(10);
+            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Thirst).Decrement(5);
+            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Hunger).Decrement(5);
             PlayerCombat.Instance.HealthController.Heal(1000000);
             PlayerCombat.Instance.ResetCompass();
             CombatLogController.PostLog("Health recovered");
@@ -135,12 +142,17 @@ namespace Game.Combat.Generation.Shrines
             return "Drink from the fountain... [" + _controlText + "]";
         }
 
-        public void Activate()
+        private void StopEffects()
         {
-            if (Triggered) return;
             _region.FountainVisited = true;
             GetComponent<CompassItem>().Die();
             Triggered = true;
+        }
+
+        public void Activate()
+        {
+            if (Triggered) return;
+            StopEffects();
             StartCoroutine(SpawnEnemies());
         }
     }

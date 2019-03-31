@@ -18,7 +18,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     public static class Inventory
     {
         private static readonly Dictionary<string, ResourceItem> _resources = new Dictionary<string, ResourceItem>();
-        private static readonly List<Consumable> _consumables = new List<Consumable>();
         private static readonly List<Weapon> _weapons = new List<Weapon>();
         private static readonly List<Accessory> _accessories = new List<Accessory>();
         public static readonly List<Inscription> Inscriptions = new List<Inscription>();
@@ -40,7 +39,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             LoadResources();
             _resources.Clear();
-            _consumables.Clear();
             _weapons.Clear();
             _accessories.Clear();
             Inscriptions.Clear();
@@ -65,9 +63,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return _attributeTypes.Find(t => t.ToString() == attributeString);
         }
 
-        public static List<Consumable> Consumables()
+        public static List<ResourceItem> Consumables()
         {
-            return _consumables.Where(c => c.Quantity() != 0).ToList();
+            return _resources.Values.ToList().Where(c => c.Quantity() != 0).ToList();
         }
 
         private static void LoadResources()
@@ -118,7 +116,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private static ResourceItem AddResource(string name)
         {
             ResourceItem newResourceItem = ResourceTemplate.Create(name);
-            if (newResourceItem is Consumable consumable) _consumables.Add(consumable);
             _resources.Add(name, newResourceItem);
             return newResourceItem;
         }
@@ -242,6 +239,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private static void LoadResource(XmlNode root)
         {
             string type = root.StringFromNode("Template");
+            if (type == "Fuel") type = "Wood";
             int quantity = root.IntFromNode("Quantity");
             IncrementResource(type, quantity);
         }

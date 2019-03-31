@@ -115,6 +115,10 @@ namespace Game.Combat.Generation
                 JoinNeighbors(newPaths, existingEdges);
                 paths = newPaths;
                 radius += originalRadius * Mathf.Pow(radiusMultiplier, iterations);
+                if (radius > WorldGrid.CombatMovementDistance / 2f && radius < WorldGrid.CombatMovementDistance / 2f + 1)
+                {
+                    radius += 3f;
+                }
                 ++iterations;
             }
 

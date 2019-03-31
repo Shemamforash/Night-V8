@@ -45,7 +45,6 @@ namespace Game.Exploration.WorldEvents
             UpdateEvent("");
         }
 
-
         private static readonly string[] _saveStrings =
         {
             "I should remember this place if I ever want to return",

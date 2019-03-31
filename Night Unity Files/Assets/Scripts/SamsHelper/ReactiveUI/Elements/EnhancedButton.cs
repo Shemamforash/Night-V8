@@ -68,7 +68,7 @@ namespace SamsHelper.ReactiveUI.Elements
             OnDeselectActions?.Invoke();
             _isSelected = false;
             if (_hideBorder) return;
-            if (_enabled) _border.SetActive();
+//            if (_enabled) _border.SetActive();
             else _border.SetDisabled();
         }
 

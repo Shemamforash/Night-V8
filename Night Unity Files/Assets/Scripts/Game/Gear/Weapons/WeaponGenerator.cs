@@ -37,7 +37,7 @@ namespace Game.Gear.Weapons
             return GenerateWeapon(WorldState.GenerateGearLevel());
         }
 
-        private static void LoadBaseWeapons()
+        public static void LoadBaseWeapons()
         {
             if (_readWeapons) return;
             XmlNode classesNode = Helper.OpenRootNode("WeaponClasses", "Weapons");

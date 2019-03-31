@@ -19,13 +19,13 @@ namespace Game.Combat.Misc
             _audioSource = GetComponent<AudioSource>();
         }
 
-        public static List<CanTakeDamage> Create(Vector2 position, List<CanTakeDamage> ignoreTargets, int stacks = 1)
+        public static List<CanTakeDamage> Create(Vector2 position, List<CanTakeDamage> ignoreTargets)
         {
             List<CanTakeDamage> characters = CombatManager.Instance().GetCharactersInRange(position, 1);
             characters.ForEach(c =>
             {
                 if (ignoreTargets.Contains(c)) return;
-                c.Void(stacks);
+                c.Void();
                 SickenBehaviour voidBehaviour = _voidPool.Create();
                 voidBehaviour.StartCoroutine(voidBehaviour.Void(c.transform.position));
             });

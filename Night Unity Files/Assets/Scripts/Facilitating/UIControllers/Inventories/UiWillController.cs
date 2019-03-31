@@ -10,17 +10,15 @@ using SamsHelper.ReactiveUI.Elements;
 public class UiWillController : UiInventoryMenuController, IInputListener
 {
     private UIAttributeController _uiAttributeController;
-    private EnhancedButton _fettleButton, _gritButton, _focusButton;
+    private EnhancedButton _lifeButton, _gritButton, _focusButton;
+    public static bool Locked;
 
-    public override bool Unlocked()
-    {
-        return true;
-    }
+    public override bool Unlocked() => !Locked;
 
     protected override void CacheElements()
     {
         _uiAttributeController = GetComponent<UIAttributeController>();
-        _fettleButton = gameObject.FindChildWithName("Fettle").GetComponent<EnhancedButton>();
+        _lifeButton = gameObject.FindChildWithName("Life").GetComponent<EnhancedButton>();
         _gritButton = gameObject.FindChildWithName("Grit").GetComponent<EnhancedButton>();
         _focusButton = gameObject.FindChildWithName("Focus").GetComponent<EnhancedButton>();
     }
@@ -30,7 +28,7 @@ public class UiWillController : UiInventoryMenuController, IInputListener
         UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
         InputHandler.RegisterInputListener(this);
         UpdateValues();
-        _fettleButton.Select();
+        _lifeButton.Select();
     }
 
     protected override void OnHide()
@@ -40,7 +38,7 @@ public class UiWillController : UiInventoryMenuController, IInputListener
 
     protected override void Initialise()
     {
-        _fettleButton.AddOnClick(() => TryRestoreAttribute(AttributeType.Fettle));
+        _lifeButton.AddOnClick(() => TryRestoreAttribute(AttributeType.Life));
         _gritButton.AddOnClick(() => TryRestoreAttribute(AttributeType.Grit));
         _focusButton.AddOnClick(() => TryRestoreAttribute(AttributeType.Focus));
     }
@@ -60,7 +58,7 @@ public class UiWillController : UiInventoryMenuController, IInputListener
         will.Decrement();
         targetAttribute.Increment();
         UpdateValues();
-        if (attributeType == AttributeType.Fettle && PlayerCombat.Instance != null) PlayerCombat.Instance.RecalculateHealth();
+        if (attributeType == AttributeType.Life && PlayerCombat.Instance != null) PlayerCombat.Instance.RecalculateHealth();
         if (attributeType == AttributeType.Focus && PlayerCombat.Instance != null) PlayerCombat.Instance.ResetCompass();
     }
 

@@ -15,6 +15,18 @@ namespace Game.Exploration.Environment
         private static Environment _currentEnvironment;
         private static TemperatureCategory _temperatureCategory;
         private static EnvironmentType _currentEnvironmentType;
+        private static bool _skippingToBeta = false;
+
+        public static bool SkippingToBeta
+        {
+            get
+            {
+                bool skipping = _skippingToBeta;
+                _skippingToBeta = false;
+                return skipping;
+            }
+            set => _skippingToBeta = value;
+        }
 
         public static void Start()
         {
@@ -30,28 +42,44 @@ namespace Game.Exploration.Environment
 
         public static Environment CurrentEnvironment => _currentEnvironment;
 
+        public static EnvironmentType CurrentEnvironmentType
+        {
+            get => _currentEnvironmentType;
+            private set
+            {
+                if ((int) value >= 2 && WorldState.IsBetaVersion())
+                {
+                    SceneChanger.GoToEndBetaScreen();
+                    SkippingToBeta = true;
+                    return;
+                }
+
+                _currentEnvironmentType = value;
+            }
+        }
+
         public static void NextLevel(bool reset, bool isLoading)
         {
             LoadEnvironments();
-            if (reset) _currentEnvironmentType = EnvironmentType.Desert;
+            if (reset) CurrentEnvironmentType = EnvironmentType.Desert;
             else
             {
                 switch (_currentEnvironment.EnvironmentType)
                 {
                     case EnvironmentType.Desert:
-                        _currentEnvironmentType = EnvironmentType.Mountains;
+                        CurrentEnvironmentType = EnvironmentType.Mountains;
                         break;
                     case EnvironmentType.Mountains:
-                        _currentEnvironmentType = EnvironmentType.Sea;
+                        CurrentEnvironmentType = EnvironmentType.Sea;
                         break;
                     case EnvironmentType.Sea:
-                        _currentEnvironmentType = EnvironmentType.Ruins;
+                        CurrentEnvironmentType = EnvironmentType.Ruins;
                         break;
                     case EnvironmentType.Ruins:
-                        _currentEnvironmentType = EnvironmentType.Wasteland;
+                        CurrentEnvironmentType = EnvironmentType.Wasteland;
                         break;
                     case EnvironmentType.Wasteland:
-                        _currentEnvironmentType = EnvironmentType.End;
+                        CurrentEnvironmentType = EnvironmentType.End;
                         return;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -65,16 +93,15 @@ namespace Game.Exploration.Environment
         private static void SetCurrentEnvironment()
         {
             LoadEnvironments();
-            if (_currentEnvironmentType == EnvironmentType.End)
+            if (CurrentEnvironmentType == EnvironmentType.End)
             {
                 _currentEnvironment = null;
                 return;
             }
 
-            _currentEnvironment = _environments[_currentEnvironmentType];
+            _currentEnvironment = _environments[CurrentEnvironmentType];
         }
 
-        public static EnvironmentType CurrentEnvironmentType() => _currentEnvironmentType;
 
         private static void LoadEnvironments()
         {
@@ -126,7 +153,7 @@ namespace Game.Exploration.Environment
         public static void Save(XmlNode doc)
         {
             if (_currentEnvironment == null) return;
-            doc.CreateChild("CurrentEnvironment", _currentEnvironmentType.ToString());
+            doc.CreateChild("CurrentEnvironment", CurrentEnvironmentType.ToString());
         }
 
         public static void Load(XmlNode doc)
@@ -136,7 +163,7 @@ namespace Game.Exploration.Environment
             foreach (EnvironmentType environmentType in Enum.GetValues(typeof(EnvironmentType)))
             {
                 if (environmentType.ToString() != currentEnvironmentText) continue;
-                _currentEnvironmentType = environmentType;
+                CurrentEnvironmentType = environmentType;
                 SetCurrentEnvironment();
                 break;
             }

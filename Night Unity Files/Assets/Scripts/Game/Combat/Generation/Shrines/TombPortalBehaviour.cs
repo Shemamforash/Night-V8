@@ -19,7 +19,8 @@ public class TombPortalBehaviour : CanTakeDamage
         SpriteFlash = gameObject.FindChildWithName<DamageSpriteFlash>("Shadow 5");
         _bloodSpatter = GetComponent<BloodSpatter>();
         gameObject.layer = 24;
-        HealthController.SetInitialHealth(WorldState.ScaleValue(400), this);
+        int health = ((int) EnvironmentManager.CurrentEnvironmentType + 1) * 200;
+        HealthController.SetInitialHealth(health, this);
     }
 
     public override void Kill()
@@ -44,7 +45,7 @@ public class TombPortalBehaviour : CanTakeDamage
         instancedAudio.SetMinMaxDistance(1, 100);
         instancedAudio.Play(AudioClips.TombBreak, Random.Range(0.6f, 7f), Random.Range(0.9f, 1f));
         ThunderController.Instance().Strike(true);
-        switch (EnvironmentManager.CurrentEnvironmentType())
+        switch (EnvironmentManager.CurrentEnvironmentType)
         {
             case EnvironmentType.Desert:
                 SerpentBehaviour.Create();

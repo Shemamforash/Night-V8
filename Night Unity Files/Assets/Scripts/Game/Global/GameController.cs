@@ -2,6 +2,7 @@
 using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Generation;
+using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.Input;
@@ -27,23 +28,46 @@ public class GameController : MonoBehaviour
     {
         _starting = true;
         InputHandler.SetCurrentListener(null);
-        if (TutorialManager.Active() && !TutorialManager.FinishedIntroTutorial())
-        {
-            Region region = new Region();
-            region.SetRegionType(RegionType.Tutorial);
-            CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(region);
-            SceneChanger.GoToCombatScene();
-            return;
-        }
+        TryFadeMusic();
+        if (TrySkipToBeta()) return;
+        if (TryContinueFromTutorial()) return;
+        if (TryContinueFromStory(newGame)) return;
+        ContinueFromGame();
+    }
 
-        if (newGame || !StoryController.StorySeen) StoryController.Show();
-        else
-        {
-            SceneChanger.GoToGameScene();
-            SceneChanger.FadeInAudio();
-        }
+    private static void TryFadeMusic()
+    {
+        GameObject musicAudio = GameObject.Find("Music Audio");
+        if (musicAudio == null) return;
+        musicAudio.GetComponent<AudioSource>().DOFade(0f, 0.5f).SetUpdate(true);
+    }
 
-        GameObject.Find("Music Audio").GetComponent<AudioSource>().DOFade(0f, 0.5f).SetUpdate(true);
+    private static bool TrySkipToBeta()
+    {
+        return EnvironmentManager.SkippingToBeta;
+    }
+
+    private static void ContinueFromGame()
+    {
+        SceneChanger.GoToGameScene();
+        SceneChanger.FadeInAudio();
+    }
+
+    private static bool TryContinueFromStory(bool newGame)
+    {
+        if (!newGame && StoryController.StorySeen) return false;
+        StoryController.Show();
+        return true;
+    }
+
+    private static bool TryContinueFromTutorial()
+    {
+        if (!TutorialManager.Active() || TutorialManager.FinishedIntroTutorial()) return false;
+        Region region = new Region();
+        region.SetRegionType(RegionType.Tutorial);
+        CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(region);
+        SceneChanger.GoToCombatScene();
+        return true;
     }
 
     public void ContinueGame()

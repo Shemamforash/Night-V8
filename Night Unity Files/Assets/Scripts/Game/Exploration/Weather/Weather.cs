@@ -1,5 +1,7 @@
-﻿using System.Xml;
+﻿using System.Collections.Generic;
+using System.Xml;
 using Facilitating.Persistence;
+using Game.Exploration.WorldEvents;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
@@ -14,6 +16,7 @@ namespace Game.Exploration.Weather
         private int _timeRemaining;
         private readonly string _displayName;
         public readonly WeatherAttributes Attributes;
+        private readonly List<string> _weatherEventStrings;
 
         public Weather(StateMachine weatherStates, XmlNode weatherNode) : base(weatherStates, weatherNode.StringFromNode("Name"))
         {
@@ -23,6 +26,7 @@ namespace Game.Exploration.Weather
             Thunder = weatherNode.IntFromNode("Thunder");
             _duration = weatherNode.IntFromNode("Duration");
             Attributes = new WeatherAttributes(weatherNode);
+//            _weatherEventStrings = weatherNode.StringFromNode("Events").Split(',').ToList();
         }
 
         public float GetVisibility()
@@ -36,6 +40,14 @@ namespace Game.Exploration.Weather
             WorldView.SetWeatherText(_displayName);
             _timeRemaining = _duration * WorldState.MinutesPerHour;
             WeatherSystemController.SetWeather(this, false);
+            TryShowWeatherEvent();
+        }
+
+        private void TryShowWeatherEvent()
+        {
+            if (!Helper.RollDie(0, 3)) return;
+            return;
+            WorldEventManager.GenerateEvent(new WorldEvent(_weatherEventStrings.RandomElement()));
         }
 
         public int Temperature()

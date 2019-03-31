@@ -42,7 +42,7 @@ namespace Game.Combat.Generation
             Inventory.Move(WeaponGenerator.GenerateWeapon());
             Inventory.Move(Accessory.Generate());
             Inventory.Move(Inscription.Generate());
-            WorldState.OverrideDifficulty(((int) EnvironmentManager.CurrentEnvironmentType() + 1) * 10);
+            WorldState.OverrideDifficulty(((int) EnvironmentManager.CurrentEnvironmentType + 1) * 10);
 #endif
 
             BossRingController.Create();
@@ -53,7 +53,7 @@ namespace Game.Combat.Generation
 
         private bool GenerateJournals()
         {
-            if (EnvironmentManager.CurrentEnvironmentType() != EnvironmentType.Wasteland) return false;
+            if (EnvironmentManager.CurrentEnvironmentType != EnvironmentType.Wasteland) return false;
             List<JournalEntry> journals = JournalEntry.GetCorypthosLore();
             int entryNo = 0;
             for (int angle = 0; angle < 360; angle += 120)

@@ -13,6 +13,7 @@ public class VolumeController : MonoBehaviour, ISelectHandler, IDeselectHandler
     private static float _masterVolume = 1;
     private static float _modifiedVolume;
     private Slider _volumeSlider;
+    private static bool _loaded;
 
 
     private void OnEnable()
@@ -23,13 +24,25 @@ public class VolumeController : MonoBehaviour, ISelectHandler, IDeselectHandler
     private void Awake()
     {
         _volumeSlider = GetComponent<Slider>();
+        _volumeSlider.value = _masterVolume;
         _volumeSlider.onValueChanged.AddListener(f => SetMasterVolume(_volumeSlider.value));
+    }
+
+    private void Start()
+    {
+        _volumeSlider.value = _masterVolume;
     }
 
     public static void Load(XmlNode root)
     {
+        _loaded = true;
         float volume = root.FloatFromNode("Volume");
         SetMasterVolume(volume);
+    }
+
+    private void OnDestroy()
+    {
+        _loaded = false;
     }
 
     public static void Save(XmlNode root)
@@ -44,6 +57,7 @@ public class VolumeController : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     private static void SetMasterVolume(float volumeLevel)
     {
+        if (!_loaded) return;
         _masterVolume = volumeLevel;
         AudioController.SetMasterVolume(_masterVolume);
         SaveController.SaveSettings();
@@ -62,5 +76,10 @@ public class VolumeController : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public void OnDeselect(BaseEventData eventData)
     {
+    }
+
+    public static void SetToDefaultVolume()
+    {
+        SetMasterVolume(1);
     }
 }

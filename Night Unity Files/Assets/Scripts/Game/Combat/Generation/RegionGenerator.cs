@@ -31,7 +31,7 @@ namespace Game.Combat.Generation
             _region = CharacterManager.CurrentRegion();
             Random.InitState(_region.RegionID + WorldState.Seed);
             SetRegionWidth();
-            WorldGrid.InitialiseGrid(_region.IsDynamic());
+            WorldGrid.InitialiseGrid(_region.ShouldDrawInnerRing());
             GenerateFreshEnvironment();
             GenerateObjects();
             GenerateEdges();
@@ -55,21 +55,23 @@ namespace Game.Combat.Generation
 
         private void SetRegionWidth()
         {
-            if (_region.GetRegionType() == RegionType.Rite)
+            int width;
+            switch (_region.GetRegionType())
             {
-                WorldGrid.SetCombatAreaWidth(15);
-                return;
+                case RegionType.Rite:
+                    width = 15;
+                    break;
+                case RegionType.Temple:
+                    width = 30;
+                    break;
+                case RegionType.Tomb:
+                    width = 30;
+                    break;
+                default:
+                    width = 20;
+                    break;
             }
 
-            bool mustBeFullSize = _region.GetRegionType() == RegionType.Temple || _region.GetRegionType() == RegionType.Tomb;
-            if (mustBeFullSize)
-            {
-                WorldGrid.SetCombatAreaWidth(30);
-                return;
-            }
-
-            int difficulty = WorldState.Difficulty();
-            int width = (int) (20 + difficulty / 5f);
             WorldGrid.SetCombatAreaWidth(width);
         }
 
@@ -110,7 +112,7 @@ namespace Game.Combat.Generation
             Generate();
             RemoveBlockedArea();
             _region.Barriers = barriers;
-            WorldGrid.InitialiseGrid(_region.IsDynamic());
+            WorldGrid.InitialiseGrid(_region.ShouldDrawInnerRing());
             _region.MarkGenerated();
         }
 

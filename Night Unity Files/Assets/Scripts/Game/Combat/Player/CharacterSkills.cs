@@ -84,7 +84,7 @@ namespace Game.Combat.Player
         protected override void InstantEffect()
         {
             PlayerCombat player = Player();
-            List<CanTakeDamage> sickened = SickenBehaviour.Create(player.transform.position, new List<CanTakeDamage> {player}, 5);
+            List<CanTakeDamage> sickened = SickenBehaviour.Create(player.transform.position, new List<CanTakeDamage> {player});
             sickened.ForEach(e =>
             {
                 if (e.HealthController.GetHealth().CurrentValue() != 0) return;

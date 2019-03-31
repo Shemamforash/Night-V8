@@ -21,11 +21,12 @@ namespace Game.Combat.Generation
         private SpriteRenderer _iconSprite, _glowSprite, _selectSprite;
         private InsectBehaviour _insectBehaviour;
         private bool _fading;
-        private float _targetAlpha;
         private float _currentAlpha;
         private ParticleSystem _puddleDrops;
         private bool _hideOutline;
         private string _controlText;
+        private float _targetAlpha;
+        private bool _taken;
 
         public void Awake()
         {
@@ -88,6 +89,11 @@ namespace Game.Combat.Generation
             if (PlayerCombat.Instance == null) return;
             transform.rotation = Quaternion.Euler(0, 0, PlayerCombat.Instance.transform.rotation.z);
             if (!_revealed || _fading) return;
+            TryFadeInOutline();
+        }
+
+        private void TryFadeInOutline()
+        {
             if (_currentAlpha == _targetAlpha) return;
             if (_currentAlpha > _targetAlpha) _currentAlpha -= Time.deltaTime;
             else _currentAlpha += Time.deltaTime;
@@ -128,6 +134,8 @@ namespace Game.Combat.Generation
 
         public void Activate()
         {
+            if (_taken) return;
+            _taken = true;
             if (_puddleDrops != null) _puddleDrops.Stop();
             ContainerController.Take();
             PlayerCombat.Instance.WeaponAudio.PlayTakeItem();

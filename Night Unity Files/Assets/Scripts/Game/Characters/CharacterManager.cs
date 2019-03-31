@@ -159,19 +159,19 @@ namespace Game.Characters
             CharacterAttributes attributes = playerCharacter.Attributes;
 
             attributes.SetMax(AttributeType.Grit, playerCharacter.CharacterTemplate.Grit);
-            attributes.SetMax(AttributeType.Fettle, playerCharacter.CharacterTemplate.Fettle);
+            attributes.SetMax(AttributeType.Life, playerCharacter.CharacterTemplate.Life);
             attributes.SetMax(AttributeType.Focus, playerCharacter.CharacterTemplate.Focus);
             attributes.SetMax(AttributeType.Will, playerCharacter.CharacterTemplate.Will);
 
 #if UNITY_EDITOR
 //            attributes.SetMax(AttributeType.Grit, Random.Range(6, 12));
-//            attributes.SetMax(AttributeType.Fettle, Random.Range(6, 12));
+//            attributes.SetMax(AttributeType.Life, Random.Range(6, 12));
 //            attributes.SetMax(AttributeType.Focus, Random.Range(6, 12));
 //            attributes.SetMax(AttributeType.Will, Random.Range(6, 12));
 #endif
 
             attributes.Get(AttributeType.Grit).SetToMax();
-            attributes.Get(AttributeType.Fettle).SetToMax();
+            attributes.Get(AttributeType.Life).SetToMax();
             attributes.Get(AttributeType.Focus).SetToMax();
             attributes.Get(AttributeType.Will).SetToMax();
         }

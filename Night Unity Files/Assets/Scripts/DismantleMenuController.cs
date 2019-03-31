@@ -81,7 +81,6 @@ public class DismantleMenuController : Menu
         }
 
         _closeButton.SetOnClick(Close);
-        _closeButton.SetCallback(Close);
         SaveStoneBehaviour.SetUsed();
         Close();
     }
@@ -89,7 +88,6 @@ public class DismantleMenuController : Menu
     private void ShowDismantledScreen(object o)
     {
         _closeButton.SetOnClick(ShowDismantleList);
-        _closeButton.SetCallback(ShowDismantleList);
         _gearToDismantle = (GearItem) o;
         _dismantleRewards = _gearToDismantle.GetDismantleRewards();
         _dismantledScreen.SetActive(true);
@@ -109,7 +107,6 @@ public class DismantleMenuController : Menu
     {
         base.Enter();
         _closeButton.SetOnClick(Close);
-        _closeButton.SetCallback(Close);
         WorldState.Pause();
         DOTween.defaultTimeScaleIndependent = true;
         _closeButton.Enable();

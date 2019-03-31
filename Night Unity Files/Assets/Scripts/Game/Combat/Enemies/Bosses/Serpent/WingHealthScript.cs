@@ -7,9 +7,12 @@ using UnityEngine;
 
 public class WingHealthScript : BossSectionHealthController
 {
+    private SpriteRenderer _sprite;
+
     protected override void Awake()
     {
         base.Awake();
+        _sprite = GetComponent<SpriteRenderer>();
         ArmourController.AutoGenerateArmour();
     }
 
@@ -40,5 +43,11 @@ public class WingHealthScript : BossSectionHealthController
         Destroy(damageSpriteFlash);
         Destroy(this);
         GetComponent<SpriteRenderer>().DOColor(new Color(1, 1, 1, 0.2f), 1f);
+    }
+
+    protected override void TakeDamage(int damage, Vector2 direction)
+    {
+        if (_sprite.GetAlpha() < 0.99f) return;
+        base.TakeDamage(damage, direction);
     }
 }

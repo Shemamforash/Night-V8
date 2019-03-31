@@ -14,7 +14,8 @@ namespace Game.Global
         private static readonly Dictionary<CharacterClass, List<JournalEntry>> CharacterStories = new Dictionary<CharacterClass, List<JournalEntry>>();
         private static readonly Dictionary<EnvironmentType, List<JournalEntry>> WandererStories = new Dictionary<EnvironmentType, List<JournalEntry>>();
         private static readonly Dictionary<EnvironmentType, List<JournalEntry>> NecromancerStories = new Dictionary<EnvironmentType, List<JournalEntry>>();
-        private static readonly Dictionary<int, List<JournalEntry>> LoreStories = new Dictionary<int, List<JournalEntry>>();
+        private static readonly Dictionary<EnvironmentType, List<JournalEntry>> LoreStories = new Dictionary<EnvironmentType, List<JournalEntry>>();
+
         private static readonly List<JournalEntry> AllEntries = new List<JournalEntry>();
         private static readonly List<JournalEntry> UnlockedEntries = new List<JournalEntry>();
         private static bool _loaded;
@@ -22,7 +23,6 @@ namespace Game.Global
         private readonly int _partNumber;
         public readonly string Title;
         public readonly string Text;
-        private CharacterClass _characterClass = CharacterClass.None;
         private int _groupNumber;
         private bool _locked = true;
 
@@ -49,7 +49,7 @@ namespace Game.Global
 
         private string ConvertTitle(string title, int partNumber)
         {
-            return title + " " + ToRoman(partNumber - 1);
+            return title + " " + ToRoman(partNumber);
         }
 
         public void Unlock()
@@ -96,13 +96,13 @@ namespace Game.Global
         public static List<JournalEntry> GetCorypthosLore()
         {
             ReadJournals();
-            return LoreStories[17];
+            return LoreStories[EnvironmentType.End];
         }
 
         public static JournalEntry GetStoryEntry()
         {
             ReadJournals();
-            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
+            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType;
             return WandererStories[currentEnvironment].First(j => j._locked);
         }
 
@@ -122,8 +122,8 @@ namespace Game.Global
             validEntries.AddRange(characterEntries.FindAll(j => j._locked));
             if (validEntries.Count == 0)
             {
-                List<int> keys = LoreStories.Keys.ToList();
-                keys.ForEach(k => validEntries.AddRange(LoreStories[k].FindAll(j => j._locked)));
+                List<JournalEntry> entries = LoreStories[EnvironmentManager.CurrentEnvironmentType];
+                validEntries.AddRange(entries.FindAll(j => j._locked));
             }
 
             if (validEntries.Count == 0) return null;
@@ -207,16 +207,17 @@ namespace Game.Global
         private static void LoadLoreEntries()
         {
             XmlNode root = Helper.OpenRootNode("Lore", "Lore");
-            foreach (XmlNode dreamNode in root.GetNodesWithName("StoryPart"))
+            foreach (XmlNode loreNode in root.GetNodesWithName("StoryPart"))
             {
-                string title = dreamNode.StringFromNode("Title");
-                int group = dreamNode.IntFromNode("Group");
-                int partNumber = dreamNode.IntFromNode("PartNumber");
-                string text = dreamNode.StringFromNode("Text");
-                JournalEntry entry = new JournalEntry(title, text, partNumber, group, false);
-                if (!LoreStories.ContainsKey(group)) LoreStories.Add(group, new List<JournalEntry>());
-                LoreStories[group].Add(entry);
-                LoreStories[group].Sort((a, b) => a._partNumber.CompareTo(b._partNumber));
+                string title = loreNode.StringFromNode("Title");
+                string environmentString = loreNode.StringFromNode("Environment");
+                EnvironmentType environmentType = Environment.StringToEnvironmentType(environmentString);
+                bool unique = loreNode.BoolFromNode("Unique");
+                string text = loreNode.StringFromNode("Text");
+                if (!unique) title = title + " " + ToRoman((int) environmentType + 1);
+                JournalEntry entry = new JournalEntry(title, text, 1, (int) environmentType, false);
+                if (!LoreStories.ContainsKey(environmentType)) LoreStories.Add(environmentType, new List<JournalEntry>());
+                LoreStories[environmentType].Add(entry);
             }
         }
 
@@ -231,14 +232,14 @@ namespace Game.Global
         public static List<JournalEntry> GetStoryText()
         {
             ReadJournals();
-            EnvironmentType currentLevel = EnvironmentManager.CurrentEnvironmentType();
+            EnvironmentType currentLevel = EnvironmentManager.CurrentEnvironmentType;
             return NecromancerStories[currentLevel];
         }
 
         public static int GetStoryCount()
         {
             ReadJournals();
-            return WandererStories[EnvironmentManager.CurrentEnvironmentType()].Count;
+            return WandererStories[EnvironmentManager.CurrentEnvironmentType].Count;
         }
     }
 }

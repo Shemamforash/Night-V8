@@ -13,7 +13,7 @@ namespace Game.Combat.Misc
         public ArmourController ArmourController = new ArmourController();
         public readonly HealthController HealthController = new HealthController();
         private const float VoidDurationMax = 5f;
-        private const int VoidTargetTicks = 5;
+        private const int VoidTargetStacks = 3;
         private float _timeSinceLastBurn;
         protected int VoidStacks;
         private float _voidDuration;
@@ -63,11 +63,11 @@ namespace Game.Combat.Misc
             TakeArmourDamage(10000);
         }
 
-        public virtual bool Void(int stacks = 1)
+        public virtual bool Void()
         {
             bool tookDamage = false;
-            VoidStacks += stacks;
-            if (VoidStacks >= GetVoidTargetTicks())
+            ++VoidStacks;
+            if (VoidStacks >= VoidTargetStacks)
             {
                 SpriteFlash.FlashSprite();
                 float damage = HealthController.GetMaxHealth() / 10f;
@@ -80,12 +80,7 @@ namespace Game.Combat.Misc
             return tookDamage;
         }
 
-        public bool IsVoided() => VoidStacks > 0;
-
-
-        private int GetVoidTargetTicks() => VoidTargetTicks;
-
-        public float GetVoid() => (float) VoidStacks / GetVoidTargetTicks();
+        public float GetVoid() => (float) VoidStacks / VoidTargetStacks;
 
         private void UpdateBurn()
         {
@@ -99,11 +94,10 @@ namespace Game.Combat.Misc
             {
                 _voidDuration = 0;
                 --VoidStacks;
+                return;
             }
-            else
-            {
-                _voidDuration += Time.deltaTime;
-            }
+
+            _voidDuration += Time.deltaTime;
         }
 
         private void UpdateConditions()

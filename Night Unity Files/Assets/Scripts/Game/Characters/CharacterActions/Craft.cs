@@ -70,7 +70,9 @@ namespace Game.Characters.CharacterActions
         public override XmlNode Load(XmlNode doc)
         {
             doc = base.Load(doc);
-            _recipe = Recipe.FindRecipe(doc.StringFromNode("Recipe"));
+            string recipeName = doc.StringFromNode("Recipe");
+            if (recipeName == "") return doc;
+            _recipe = Recipe.FindRecipe(recipeName);
             if (_recipe.Name == "Fire") LightFire();
             else CraftThing();
             return doc;
@@ -79,7 +81,8 @@ namespace Game.Characters.CharacterActions
         public override XmlNode Save(XmlNode doc)
         {
             doc = base.Save(doc);
-            doc.CreateChild("Recipe", _recipe.Name);
+            string recipeName = _recipe == null ? "" : _recipe.Name;
+            doc.CreateChild("Recipe", recipeName);
             return doc;
         }
 

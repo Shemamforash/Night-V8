@@ -19,11 +19,10 @@ public class TempleBehaviour : BasicShrineBehaviour
     private ParticleSystem _vortex, _explosion, _altar, _flames, _dust;
     private GameObject _cleansedObject;
     private SpriteRenderer _glow;
-    private AudioSource _audioSource, _cleansedAudio;
+    private AudioSource _audioSource, _cleansedAudio, _burstAudio;
     private SpriteRenderer _templeSprite;
 
     private int _bossCount;
-    private List<FireBehaviour> _fires = new List<FireBehaviour>();
 
     public void Awake()
     {
@@ -37,6 +36,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         ringPulse2.SetAlphaMultiplier(0);
         _vortex = gameObject.FindChildWithName<ParticleSystem>("Vortex");
         _explosion = gameObject.FindChildWithName<ParticleSystem>("Explosion");
+        _burstAudio = _explosion.GetComponent<AudioSource>();
         _altar = gameObject.FindChildWithName<ParticleSystem>("Altar");
         _glow = gameObject.FindChildWithName<SpriteRenderer>("Glow");
         _flames = gameObject.FindChildWithName<ParticleSystem>("Flames");
@@ -60,7 +60,6 @@ public class TempleBehaviour : BasicShrineBehaviour
         Triggered = true;
         _flames.Play();
         _dust.Play();
-        StartLights();
         StartCoroutine(FadeInRing(ringPulse1, 3f));
         StartCoroutine(FadeInRing(ringPulse2, 3f));
         StartCoroutine(Activate());
@@ -99,6 +98,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         _altar.Clear();
         _altar.Stop();
         _explosion.Emit(200);
+        _burstAudio.Play();
         _templeSprite.SetAlpha(0.75f);
         _templeSprite.DOFade(0.4f, 2f);
 
@@ -162,15 +162,11 @@ public class TempleBehaviour : BasicShrineBehaviour
     protected override void Succeed()
     {
         _templeSprite.DOFade(0f, 1f);
-        _fires.ForEach(f => f.LetDie());
         _cleansedObject.SetActive(true);
         _cleansedAudio.Play();
         _explosion.Play();
         _flames.Stop();
-        EventTextController.SetOverrideText("The Temple seal has been broken");
-        Sequence sequence = DOTween.Sequence();
-        sequence.AppendInterval(3f);
-        sequence.AppendCallback(EventTextController.CloseOverrideText);
+        ScreenFaderController.ShowText("Temple Cleansed");
     }
 
     private IEnumerator CheckAllEnemiesDead()
@@ -180,15 +176,6 @@ public class TempleBehaviour : BasicShrineBehaviour
         Succeed();
         WorldState.ActivateTemple();
         CharacterManager.CurrentRegion().SetTempleCleansed();
-    }
-
-    private void StartLights()
-    {
-        LightFires(0);
-        LightFires(72);
-        LightFires(144);
-        LightFires(216);
-        LightFires(288);
     }
 
     private IEnumerator FadeInRing(ColourPulse ring, float duration)
@@ -203,15 +190,5 @@ public class TempleBehaviour : BasicShrineBehaviour
         }
 
         ring.SetAlphaMultiplier(1);
-    }
-
-    private void LightFires(int startAngle)
-    {
-        for (int i = -2; i <= 2; ++i)
-        {
-            float angle = startAngle + 15 * (i + 1);
-            Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, 5.5f, transform.position);
-            _fires.Add(FireBehaviour.Create(position));
-        }
     }
 }

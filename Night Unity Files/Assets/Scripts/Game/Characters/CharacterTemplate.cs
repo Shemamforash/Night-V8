@@ -9,7 +9,7 @@ namespace Game.Characters
     public class CharacterTemplate
     {
         public readonly CharacterClass CharacterClass;
-        public readonly int Fettle, Grit, Will, Focus;
+        public readonly int Life, Grit, Will, Focus;
         private static readonly List<CharacterClass> _characterClasses = new List<CharacterClass>();
 
         public CharacterTemplate(XmlNode classNode, List<CharacterTemplate> templates)
@@ -17,7 +17,7 @@ namespace Game.Characters
             CharacterClass = StringToClass(classNode.StringFromNode("Name"));
             Grit = classNode.IntFromNode("Grit");
             Will = classNode.IntFromNode("Will");
-            Fettle = classNode.IntFromNode("Fettle");
+            Life = classNode.IntFromNode("Life");
             Focus = classNode.IntFromNode("Focus");
             templates.Add(this);
         }

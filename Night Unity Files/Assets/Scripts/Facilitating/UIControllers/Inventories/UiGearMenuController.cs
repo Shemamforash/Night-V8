@@ -141,7 +141,7 @@ namespace Facilitating.UIControllers
             _armourUpgradeController = gearObject.FindChildWithName<UiArmourUpgradeController>("Armour");
             _weaponUpgradeController = gearObject.FindChildWithName<UiWeaponUpgradeController>("Weapon");
             _craftingController = gearObject.FindChildWithName<UICraftingController>("Crafting");
-            _consumableController = gearObject.FindChildWithName<UiConsumableController>("Consumables");
+            _consumableController = gearObject.FindChildWithName<UiConsumableController>("Inventory");
             _journalController = gearObject.FindChildWithName<UiJournalController>("Journals");
             _willController = gearObject.FindChildWithName<UiWillController>("Will Recovery");
 
@@ -151,7 +151,7 @@ namespace Facilitating.UIControllers
             CreateTab("Weapons", _weaponUpgradeController);
             if (!isCombat) CreateTab("Crafting", _craftingController);
             else _tabParent.FindChildWithName("Crafting").SetActive(false);
-            CreateTab("Consumables", _consumableController);
+            CreateTab("Inventory", _consumableController);
             CreateTab("Journals", _journalController);
             CreateTab("Will Recovery", _willController);
             UpdateTabs();
@@ -248,6 +248,7 @@ namespace Facilitating.UIControllers
             for (int i = 0; i < _instance._tabs.Count; i++)
             {
                 InventoryTab tab = _instance._tabs[i];
+                tab.UpdateActive();
                 if (!tab.Active()) continue;
                 SelectTab(i);
                 break;
@@ -289,6 +290,7 @@ namespace Facilitating.UIControllers
         public static bool IsOpen() => MenuStateMachine.CurrentMenu() == _instance;
 
         public static void SetCloseAllowed(bool allowed) => _closeAllowed = allowed;
+
         public static void SetOpenAllowed(bool allowed) => _openAllowed = allowed;
     }
 }

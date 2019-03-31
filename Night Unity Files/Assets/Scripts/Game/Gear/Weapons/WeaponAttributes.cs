@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
+using Game.Exploration.WorldEvents;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -23,6 +24,13 @@ namespace Game.Gear.Weapons
         public bool Automatic = true;
         private WeaponClassType WeaponClassType;
         public WeaponType WeaponType;
+
+        private readonly string[] _durabilityEvents =
+        {
+            "My weapon feels weak",
+            "My weapon feels too light",
+            "The power of my weapon is waning"
+        };
 
         public WeaponAttributes(Weapon weapon, WeaponClass weaponClass)
         {
@@ -111,8 +119,16 @@ namespace Game.Gear.Weapons
         {
             float durabilityLossPerShot = 0.02f / Val(AttributeType.Pellets);
             float durabilityLoss = durabilityLossPerShot * shots * durabilityModifier;
+            float durabilityBefore = _durability.Normalised();
             _durability.Decrement(durabilityLoss);
+            float durabilityAfter = _durability.Normalised();
+            if (durabilityBefore >= 0.25 && durabilityAfter < 0.25f) GenerateDurabilityEvent();
             RecalculateAttributeValues();
+        }
+
+        private void GenerateDurabilityEvent()
+        {
+            WorldEventManager.GenerateEvent(new WorldEvent(_durabilityEvents.RandomElement()));
         }
 
         public void IncreaseDurability(int durabilityGain)

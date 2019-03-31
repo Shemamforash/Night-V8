@@ -1,4 +1,5 @@
 ﻿using System;
+using DG.Tweening;
 using Game.Characters;
 using Game.Combat.Generation;
 using Game.Global;

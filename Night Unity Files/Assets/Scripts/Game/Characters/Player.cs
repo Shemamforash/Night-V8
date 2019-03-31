@@ -33,7 +33,6 @@ namespace Game.Characters
         public Rest RestAction;
         public Travel TravelAction;
         public Meditate MeditateAction;
-        public Sleep SleepAction;
 
         private readonly Dictionary<WeaponType, int> _weaponKills = new Dictionary<WeaponType, int>();
         private int _daysSurvived;
@@ -84,7 +83,8 @@ namespace Game.Characters
             switch (currentActionName)
             {
                 case "Sleep":
-                    currentAction = SleepAction;
+                    //todo remove me i am a compatibility option
+                    currentAction = RestAction;
                     break;
                 case "Meditate":
                     currentAction = MeditateAction;
@@ -138,7 +138,6 @@ namespace Game.Characters
             RestAction = new Rest(this);
             TravelAction = new Travel(this);
             MeditateAction = new Meditate(this);
-            SleepAction = new Sleep(this);
             CraftAction = new Craft(this);
             ConsumeAction = new Consume(this);
             States.SetDefaultState(RestAction);
@@ -182,7 +181,7 @@ namespace Game.Characters
 
         private Tuple<string, float> GetCharacterSkillProgress(int target)
         {
-            int progress = CharacterSkillOneTarget - _daysSurvived;
+            int progress = target - _daysSurvived;
             string progressString = "Survive " + progress + " day".Pluralise(progress);
             float normalisedProgress = (float) _daysSurvived / target;
             return Tuple.Create(progressString, normalisedProgress);
@@ -207,13 +206,20 @@ namespace Game.Characters
             _characterView = characterView;
         }
 
+        private readonly string[] _tireEvents =
+        {
+            "I'm so tired, I need to rest",
+            "If only I could close my eyes for a moment",
+            "I can't remember when I last had some sleep"
+        };
+
         public void Tire()
         {
+            int gritBefore = (int) Attributes.Val(AttributeType.Grit);
             Attributes.Get(AttributeType.Grit).Decrement();
-            if (Attributes.Val(AttributeType.Grit) <= 1)
-            {
-                WorldEventManager.GenerateEvent(new CharacterMessage("I really need some rest", this));
-            }
+            int gritAfter = (int) Attributes.Val(AttributeType.Grit);
+            if (gritBefore == 0 || gritAfter != 0) return;
+            WorldEventManager.GenerateEvent(new CharacterMessage(_tireEvents.RandomElement(), this));
         }
 
         public bool CanAffordTravel(int gritCost = 1)
@@ -222,20 +228,27 @@ namespace Game.Characters
             return gritRemaining >= gritCost;
         }
 
-        public void Sleep()
+        public void Rest()
         {
-            CharacterAttribute fettle = Attributes.Get(AttributeType.Fettle);
+            if (!CanRest()) return;
+            CharacterAttribute life = Attributes.Get(AttributeType.Life);
             CharacterAttribute grit = Attributes.Get(AttributeType.Grit);
             CharacterAttribute focus = Attributes.Get(AttributeType.Focus);
             CharacterAttribute will = Attributes.Get(AttributeType.Will);
             focus.Increment();
             will.Increment();
-            fettle.Increment();
+            life.Increment();
             grit.Increment();
-            if (!(fettle.ReachedMax() && grit.ReachedMax() && focus.ReachedMax() && will.ReachedMax())) return;
-            WorldEventManager.GenerateEvent(new CharacterMessage("My mind is clear, I can focus now", this));
-            RestAction.Enter();
+            if (CanRest()) return;
+            WorldEventManager.GenerateEvent(new CharacterMessage(_restEvents.RandomElement(), this));
         }
+
+        private readonly string[] _restEvents =
+        {
+            "Awake again, or am I still dreaming?",
+            "Rested, yet something is not right",
+            "Dark day follows dark night, when will it end?"
+        };
 
         public override void EquipWeapon(Weapon weapon)
         {
@@ -268,9 +281,9 @@ namespace Game.Characters
                 Attributes.UnlockWeaponSkillTwo(weaponType, showScreen);
         }
 
-        public bool CanSleep()
+        private bool CanRest()
         {
-            return Attributes.Val(AttributeType.Fettle) < Attributes.Max(AttributeType.Fettle) ||
+            return Attributes.Val(AttributeType.Life) < Attributes.Max(AttributeType.Life) ||
                    Attributes.Val(AttributeType.Grit) < Attributes.Max(AttributeType.Grit) ||
                    Attributes.Val(AttributeType.Focus) < Attributes.Max(AttributeType.Focus) ||
                    Attributes.Val(AttributeType.Will) < Attributes.Max(AttributeType.Will);
@@ -279,33 +292,6 @@ namespace Game.Characters
         public CharacterView CharacterView()
         {
             return _characterView;
-        }
-
-        public int GetMaxSleepTime()
-        {
-            int grit = Mathf.CeilToInt(Attributes.Val(AttributeType.Grit));
-            int gritMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Grit));
-            int gritLoss = gritMax - grit;
-
-            int fettle = Mathf.CeilToInt(Attributes.Val(AttributeType.Fettle));
-            int fettleMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Fettle));
-            int fettleLoss = fettleMax - fettle;
-
-            int will = Mathf.CeilToInt(Attributes.Val(AttributeType.Will));
-            int willMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Will));
-            int willLoss = willMax - will;
-
-            int focus = Mathf.CeilToInt(Attributes.Val(AttributeType.Focus));
-            int focusMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Focus));
-            int focusLoss = focusMax - focus;
-
-            return Mathf.Max(gritLoss, fettleLoss, focusLoss, willLoss);
-        }
-
-        public bool IsConsuming()
-        {
-            State currentState = States.GetCurrentState();
-            return currentState != MeditateAction && currentState != SleepAction;
         }
 
         public void ApplyModifier(AttributeType target, AttributeModifier modifier)

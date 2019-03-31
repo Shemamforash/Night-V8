@@ -80,12 +80,15 @@ namespace Facilitating.Persistence
 
         public static void LoadSettings()
         {
-            if (!File.Exists(SettingsSaveLocation)) return;
+            if (!File.Exists(SettingsSaveLocation))
+            {
+                VolumeController.SetToDefaultVolume();
+                return;
+            }
             _saveDoc = new XmlDocument();
             _saveDoc.Load(SettingsSaveLocation);
             XmlNode root = _saveDoc.GetNode("Settings");
             VolumeController.Load(root);
-            FullScreenController.Load(root);
         }
 
         public static void SaveSettings()
@@ -94,7 +97,6 @@ namespace Facilitating.Persistence
             _saveDoc = new XmlDocument();
             XmlNode root = _saveDoc.CreateChild("Settings");
             VolumeController.Save(root);
-            FullScreenController.Save(root);
             _saveDoc.Save(SettingsSaveLocation);
         }
     }

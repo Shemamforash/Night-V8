@@ -39,7 +39,6 @@ namespace UnityEngine.EventSystems
         public override void Process()
         {
             Cursor.visible = _isMouseInputAccepted;
-            if (InputHandler.ListenersInterrupted) return;
             base.Process();
         }
     }

@@ -17,6 +17,7 @@ namespace Game.Global
 
         [SerializeField] private AudioSource _windLight, _windMedium, _windHeavy;
         [SerializeField] private AudioSource _rainLight, _rainMedium, _rainHeavy;
+        [SerializeField] private AudioSource _hail;
         [SerializeField] private AudioSource _ambient;
         [SerializeField] private AudioSource _night;
 
@@ -48,10 +49,12 @@ namespace Game.Global
             _ambient.Play();
             _night.clip = AudioClips.Night;
             _night.Play();
+            _hail.clip = AudioClips.Hail;
+            _hail.Play();
+            _ambientVolume = 1;
 
             DontDestroyOnLoad(this);
         }
-
 
         private void UpdateMinMaxVolumes(bool isCombatScene)
         {
@@ -101,6 +104,8 @@ namespace Game.Global
         public static void FadeRainMedium(float to, float duration = 1f) => Fade(to * 0.5f, duration, _instance._rainMedium);
 
         public static void FadeRainHeavy(float to, float duration = 1f) => Fade(to * 0.5f, duration, _instance._rainHeavy);
+
+        public static void FadeHail(float to, float duration = 1f) => Fade(to * 0.5f, duration, _instance._hail);
 
         public static void FadeFog(float to, float duration = 1f)
         {

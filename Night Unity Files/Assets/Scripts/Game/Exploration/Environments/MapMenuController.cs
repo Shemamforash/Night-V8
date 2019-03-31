@@ -32,13 +32,13 @@ namespace Game.Exploration.Environment
         private readonly List<RingDrawer> _rings = new List<RingDrawer>();
         public static bool IsReturningFromCombat;
         private UIAttributeMarkerController _gritMarker, _willMarker;
-        private EnhancedText _teleportText;
+        private EnhancedText _teleportText, _willText;
         private bool _seenTutorial;
         private Tweener _teleportTween;
         private bool _canTeleport;
         private static MapMenuController _instance;
         private Region _nearestRegion;
-        private string _controlText;
+        private string _teleportControlText, _willControlText;
 
         protected override void Awake()
         {
@@ -46,6 +46,7 @@ namespace Game.Exploration.Environment
             _gritMarker = gameObject.FindChildWithName("Grit").FindChildWithName<UIAttributeMarkerController>("Bar");
             _willMarker = gameObject.FindChildWithName("Will").FindChildWithName<UIAttributeMarkerController>("Bar");
             _teleportText = gameObject.FindChildWithName<EnhancedText>("Teleport");
+            _willText = _willMarker.transform.parent.FindChildWithName<EnhancedText>("Text");
             _nextRouteTime = 2f / MapGenerator.Regions().Count;
             MapTransform = GameObject.Find("Nodes").transform;
             _instance = this;
@@ -62,7 +63,8 @@ namespace Game.Exploration.Environment
 
         private void UpdateText()
         {
-            _controlText = InputHandler.GetBindingForKey(InputAxis.TakeItem);
+            _teleportControlText = InputHandler.GetBindingForKey(InputAxis.Compass);
+            _willControlText = InputHandler.GetBindingForKey(InputAxis.Reload);
         }
 
         private void OnDestroy()
@@ -115,8 +117,9 @@ namespace Game.Exploration.Environment
             int stoneQuantity = Inventory.GetResourceQuantity("Mystic Shard");
             _canTeleport = stoneQuantity > 0;
             string teleportString = "No Mystic Shards";
-            if (_canTeleport) teleportString = "Teleport [" + _controlText + "] (Consumes 1 Mystics Shard)";
+            if (_canTeleport) teleportString = "Teleport [" + _teleportControlText + "] (Consumes 1 Mystic Shard)";
             _teleportText.SetText(teleportString);
+            _willText.SetText("Use Will [" + _willControlText + "]");
         }
 
         private void TryTeleport()

@@ -34,8 +34,6 @@ namespace Game.Combat.Player
         private Quaternion _lastTargetRotation;
         private int _compassPulses;
 
-        private Coroutine _reloadingCoroutine;
-
         public Characters.Player Player;
         public FastLight _playerLight;
 
@@ -59,6 +57,7 @@ namespace Game.Combat.Player
         private float _swivelAmount;
         public static bool Alive;
         private string _controlText;
+        private float _dashCooldownTime;
 
         public static Vector3 Position()
         {
@@ -140,7 +139,11 @@ namespace Game.Combat.Player
                         MoveVertical(direction);
                         break;
                     case InputAxis.SwitchTab:
+                        _rotatingWithKeyboard = true;
                         Rotate(direction);
+                        break;
+                    case InputAxis.Reload:
+                        Reload();
                         break;
                 }
             }
@@ -148,9 +151,6 @@ namespace Game.Combat.Player
             {
                 switch (axis)
                 {
-                    case InputAxis.Reload:
-                        Reload();
-                        break;
                     case InputAxis.SkillOne:
                         SkillBar.Instance().ActivateSkill(0);
                         break;
@@ -176,10 +176,17 @@ namespace Game.Combat.Player
                         TryEmitPulse();
                         break;
                     case InputAxis.Swivel:
-                        _swivelling = true;
+                        StartSwivelling();
                         break;
                 }
             }
+        }
+
+        private void StartSwivelling()
+        {
+            if (_swivelling) return;
+            _swivelling = true;
+            transform.rotation = Quaternion.Euler(0, 0, _mainCamera.transform.rotation.z);
         }
 
         private void TryDash()
@@ -207,6 +214,7 @@ namespace Game.Combat.Player
                     break;
                 case InputAxis.SwitchTab:
                     _rotateSpeedCurrent = 0f;
+                    _rotatingWithKeyboard = false;
                     break;
                 case InputAxis.Swivel:
                     _swivelling = false;
@@ -229,6 +237,7 @@ namespace Game.Combat.Player
 
         private void UpdateRotation()
         {
+            if (_rotatingWithKeyboard) return;
             Vector2 mouseScreenPosition = Input.mousePosition;
             bool ignoreMouseRotation = _lastMousePosition == null || _useKeyboardMovement && mouseScreenPosition == _lastMousePosition.Value || _swivelling;
             _lastMousePosition = mouseScreenPosition;
@@ -259,9 +268,9 @@ namespace Game.Combat.Player
             return burnDamage;
         }
 
-        public override bool Void(int stacks = 1)
+        public override bool Void()
         {
-            if (!base.Void(stacks)) return false;
+            if (!base.Void()) return false;
             _currentDeathReason = DeathReason.Void;
             Instance.Player.BrandManager.IncreaseVoidCount();
             return true;
@@ -283,7 +292,6 @@ namespace Game.Combat.Player
             Alive = false;
             InputHandler.UnregisterInputListener(this);
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            StopReloading();
         }
 
         public override void Kill()
@@ -326,6 +334,17 @@ namespace Game.Combat.Player
             CheckBrandUnlock();
         }
 
+        private void CheckBrandUnlock()
+        {
+            if (!RiteStarter.Available()) return;
+            Region currentRegion = CharacterManager.CurrentRegion();
+            if (currentRegion == null) return;
+            if (!currentRegion.IsDynamic()) return;
+            Brand unlocked = Player.BrandManager.GetActiveBrands().FirstOrDefault(b => b != null && b.Ready());
+            if (unlocked == null) return;
+            RiteStarter.Generate(unlocked);
+        }
+
         private void TrySwivel()
         {
             if (!_swivelling) return;
@@ -336,15 +355,6 @@ namespace Game.Combat.Player
             float maxAngle = 10;
             _swivelAmount = Mathf.Clamp(_swivelAmount, -maxAngle, maxAngle);
             transform.Rotate(Vector3.forward, _swivelAmount);
-        }
-
-        private void CheckBrandUnlock()
-        {
-            if (!RiteStarter.Available()) return;
-            if (!CharacterManager.CurrentRegion().IsDynamic()) return;
-            Brand unlocked = Player.BrandManager.GetActiveBrands().FirstOrDefault(b => b != null && b.Ready());
-            if (unlocked == null) return;
-            RiteStarter.Generate(unlocked);
         }
 
         public override string GetDisplayName()
@@ -392,7 +402,7 @@ namespace Game.Combat.Player
             else WeaponAudio.PlayBodyHit();
             base.TakeDamage(damage, direction);
             TryExplode();
-            Player.Attributes.CalculateNewFettle(HealthController.GetCurrentHealth());
+            Player.Attributes.CalculateNewLife(HealthController.GetCurrentHealth());
         }
 
         private void TryExplode()
@@ -432,6 +442,7 @@ namespace Game.Combat.Player
             MovementController.SetSpeed(Player.Attributes.CalculateSpeed());
             SkillBar.UpdateSkills();
             _adrenalineRecoveryRate = Player.Attributes.CalculateAdrenalineRecoveryRate();
+            _dashCooldownTime = Player.Attributes.CalculateDashCooldown();
         }
 
         private void EquipArmour()
@@ -451,12 +462,13 @@ namespace Game.Combat.Player
 
         private IEnumerator Dash()
         {
-            float duration = 1f;
+            float duration = _dashCooldownTime;
             while (duration > 0f)
             {
                 duration -= Time.deltaTime;
                 if (duration < 0f) duration = 0f;
-                RageBarController.UpdateDashTimer(duration);
+                float normalisedTime = 1f - duration / _dashCooldownTime;
+                RageBarController.UpdateDashTimer(normalisedTime);
                 yield return null;
             }
 
@@ -506,61 +518,65 @@ namespace Game.Combat.Player
 
         private bool CanDash()
         {
-            return _dashCooldown == null && ConsumeAdrenaline(1);
+            return _dashCooldown == null;
         }
 
         public override Weapon Weapon() => Player.EquippedWeapon;
 
+
+        private float _reloadDuration, _currentReloadTime;
+        private bool _rotatingWithKeyboard;
+
         //RELOADING
         private void Reload()
         {
-            if (_reloadingCoroutine != null) return;
-            if (_weaponBehaviour.FullyLoaded()) return;
             if (!_weaponBehaviour.CanReload()) return;
-            if (_weaponBehaviour.Empty() && CombatManager.Instance().GetEnemiesInRange(transform.position, 5).Count > 0) Player.BrandManager.IncreasePerfectReloadCount();
-            _reloadingCoroutine = StartCoroutine(StartReloading());
+            if (!_reloading) StartReloading();
+            UpdateReloading();
+        }
+
+        private void StartReloading()
+        {
+            _reloading = true;
+            _reloadDuration = Player.EquippedWeapon.GetAttributeValue(AttributeType.ReloadSpeed);
+            _currentReloadTime = 0f;
+            WeaponAudio.StartReload(Weapon());
+            OnFireAction = null;
+            UIMagazineController.EmptyMagazine();
+            ReloadController.Instance().Show();
+        }
+
+        private void UpdateReloading()
+        {
+            _currentReloadTime += Time.deltaTime;
+            float normalisedTime = _currentReloadTime / _reloadDuration;
+            if (_currentReloadTime > _reloadDuration)
+            {
+                StopReloading();
+                return;
+            }
+
+            ReloadController.Instance().SetProgress(normalisedTime);
+            UIMagazineController.UpdateReloadTime(normalisedTime);
             _dryFireTimer = 0f;
         }
 
         private void StopReloading()
         {
-            if (_reloadingCoroutine != null) StopCoroutine(_reloadingCoroutine);
-            _reloadingCoroutine = null;
+            ReloadController.Instance().Complete();
+            _weaponBehaviour.Reload();
+            ActiveSkillController.Stop();
+            WeaponAudio.StopReload(Weapon());
             UIMagazineController.UpdateMagazineUi();
             _reloading = false;
         }
 
         //COOLDOWNS
 
-        public void InstantReload()
+        private void InstantReload()
         {
-            _weaponBehaviour.Reload();
             StopReloading();
         }
-
-        private IEnumerator StartReloading()
-        {
-            float duration = Player.EquippedWeapon.GetAttributeValue(AttributeType.ReloadSpeed);
-            UIMagazineController.EmptyMagazine();
-            _reloading = true;
-            WeaponAudio.StartReload(Weapon());
-            OnFireAction = null;
-
-            float age = 0;
-            while (age < duration)
-            {
-                age += Time.deltaTime;
-                float t = age / duration;
-                UIMagazineController.UpdateReloadTime(t);
-                yield return null;
-            }
-
-            _weaponBehaviour.Reload();
-            ActiveSkillController.Stop();
-            WeaponAudio.StopReload(Weapon());
-            StopReloading();
-        }
-
 
         public override void ApplyShotEffects(Shot s)
         {
@@ -570,13 +586,13 @@ namespace Game.Combat.Player
         }
 
         //FIRING
-        public void FireWeapon()
+        private void FireWeapon()
         {
             if (_reloading) return;
             if (_weaponBehaviour.Empty())
             {
                 if (Player.Attributes.ReloadOnEmptyMag) Reload();
-                else TryDryFire();
+                else if (!_reloading) StartReloading();
                 return;
             }
 
@@ -607,11 +623,6 @@ namespace Game.Combat.Player
         }
 
         //MISC
-
-        public void ReduceAdrenaline(float amount)
-        {
-            _adrenalineLevel.Decrement(amount);
-        }
 
         public bool IsKeyboardBeingUsed() => _useKeyboardMovement || (_swivelling && _swivelAmount != 0);
     }

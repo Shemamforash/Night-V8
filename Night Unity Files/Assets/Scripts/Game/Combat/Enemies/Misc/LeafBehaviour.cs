@@ -8,15 +8,12 @@ public class LeafBehaviour : MonoBehaviour
 {
     private Rigidbody2D _rb2d;
     private static readonly ObjectPool<LeafBehaviour> _leafPool = new ObjectPool<LeafBehaviour>("Dust", "Prefabs/Combat/Dust");
+    private SpriteRenderer _sprite;
 
     private void Awake()
     {
         _rb2d = GetComponent<Rigidbody2D>();
-        Sequence sequence = DOTween.Sequence();
-        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-        sprite.color = Color.white;
-        sequence.Append(sprite.DOColor(UiAppearanceController.InvisibleColour, 8f));
-        sequence.AppendCallback(() => _leafPool.Return(this));
+        _sprite = GetComponent<SpriteRenderer>();
     }
 
     private void OnDestroy()
@@ -39,6 +36,10 @@ public class LeafBehaviour : MonoBehaviour
         transform.position = position;
         transform.localScale = Random.Range(0.05f, 0.1f) * Vector2.one;
         gameObject.GetComponent<Rigidbody2D>().velocity = direction * Random.Range(2f, 4f);
+        Sequence sequence = DOTween.Sequence();
+        _sprite.color = Color.white;
+        sequence.Append(_sprite.DOColor(UiAppearanceController.InvisibleColour, 8f));
+        sequence.AppendCallback(() => _leafPool.Return(this));
     }
 
     public static void CreateLeaves(Vector2 origin)
@@ -50,14 +51,5 @@ public class LeafBehaviour : MonoBehaviour
             LeafBehaviour leafObject = _leafPool.Create();
             leafObject.Initialise(position, direction);
         }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.layer == 8) return;
-        Vector3 velocity = other.transform.parent.GetComponent<Rigidbody2D>().velocity;
-        float distance = other.transform.Distance(transform);
-        distance /= 0.5f;
-        _rb2d.AddForce(velocity * 2 * distance * Random.Range(0.8f, 1.1f));
     }
 }

@@ -17,7 +17,7 @@ namespace Game.Characters
         private readonly List<Brand> _completedBrands = new List<Brand>();
         private Brand _activeBrandOne, _activeBrandTwo, _activeBrandThree;
         private bool _gritBrandsAllowed;
-        private bool _fettleBrandsAllowed;
+        private bool _lifeBrandsAllowed;
         private bool _willBrandsAllowed;
         private bool _focusBrandsAllowed;
 
@@ -65,14 +65,14 @@ namespace Game.Characters
         private void ResetAllowedBrands()
         {
             _gritBrandsAllowed = true;
-            _fettleBrandsAllowed = true;
+            _lifeBrandsAllowed = true;
             _willBrandsAllowed = true;
             _focusBrandsAllowed = true;
             List<Brand> activeBrands = GetActiveBrands();
             activeBrands.ForEach(b =>
             {
                 if (b is GritBrand) _gritBrandsAllowed = false;
-                if (b is FettleBrand) _fettleBrandsAllowed = false;
+                if (b is LifeBrand) _lifeBrandsAllowed = false;
                 if (b is WillBrand) _willBrandsAllowed = false;
                 if (b is FocusBrand) _focusBrandsAllowed = false;
             });
@@ -90,7 +90,7 @@ namespace Game.Characters
                 possibleBrands.Add(b);
             });
             if (!_gritBrandsAllowed) possibleBrands.RemoveAll(b => b is GritBrand);
-            if (!_fettleBrandsAllowed) possibleBrands.RemoveAll(b => b is FettleBrand);
+            if (!_lifeBrandsAllowed) possibleBrands.RemoveAll(b => b is LifeBrand);
             if (!_willBrandsAllowed) possibleBrands.RemoveAll(b => b is WillBrand);
             if (!_focusBrandsAllowed) possibleBrands.RemoveAll(b => b is FocusBrand);
             possibleBrands.Shuffle();
@@ -186,11 +186,11 @@ namespace Game.Characters
 
         private void CreateAttributeBrands()
         {
-            new FettleBrand(_player);
-            new FettleBrand(_player).SetMinLevel(1);
-            new FettleBrand(_player).SetMinLevel(2);
-            new FettleBrand(_player).SetMinLevel(3);
-            new FettleBrand(_player).SetMinLevel(4);
+            new LifeBrand(_player);
+            new LifeBrand(_player).SetMinLevel(1);
+            new LifeBrand(_player).SetMinLevel(2);
+            new LifeBrand(_player).SetMinLevel(3);
+            new LifeBrand(_player).SetMinLevel(4);
 
             new FocusBrand(_player);
             new FocusBrand(_player).SetMinLevel(1);
@@ -247,7 +247,7 @@ namespace Game.Characters
             });
         }
 
-        public void IncreaseDamageDealt(int damage) => UpdateBrandValue(typeof(FettleBrand), damage);
+        public void IncreaseDamageDealt(int damage) => UpdateBrandValue(typeof(LifeBrand), damage);
         public void IncreaseItemsFound() => UpdateBrandValue(typeof(FocusBrand), 1);
         public void IncreaseSkillsUsed() => UpdateBrandValue(typeof(WillBrand), 1);
         public void IncreaseRegionsExplored() => UpdateBrandValue(typeof(GritBrand), 1);

@@ -24,8 +24,6 @@ namespace Game.Combat.Misc
         private Characters.Player _player;
         private static bool _needsUpdate;
         private static SkillBar _instance;
-        private bool _hasSkill;
-        private bool _seenTutorial;
 
         public void Awake()
         {
@@ -54,7 +52,6 @@ namespace Game.Combat.Misc
 
         public void Update()
         {
-            ShowSkillTutorial();
             TryUpdateSkills();
             if (_skillsReady) return;
             _cooldownRemaining -= Time.deltaTime;
@@ -70,21 +67,6 @@ namespace Game.Combat.Misc
             UpdateCooldownControllers(normalisedTime);
         }
 
-        private void ShowSkillTutorial()
-        {
-            if (_seenTutorial || !TutorialManager.Active()) return;
-            if (!_hasSkill) return;
-            RectTransform skillBarRect = GetComponent<RectTransform>();
-            List<TutorialOverlay> overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(skillBarRect),
-                new TutorialOverlay(skillBarRect),
-                new TutorialOverlay(skillBarRect),
-                new TutorialOverlay(skillBarRect)
-            };
-            TutorialManager.TryOpenTutorial(15, overlays);
-            _seenTutorial = true;
-        }
 
         private bool IsCharacterSkillOneUnlocked() => _player.Attributes.SkillOneUnlocked;
         private bool IsCharacterSkillTwoUnlocked() => _player.Attributes.SkillTwoUnlocked;
@@ -101,7 +83,6 @@ namespace Game.Combat.Misc
             Skill characterSkillTwo = _player.CharacterSkillTwo;
             Skill weaponSkillOne = _player.EquippedWeapon.WeaponSkillOne;
             Skill weaponSkillTwo = _player.EquippedWeapon.WeaponSkillTwo;
-            _hasSkill = IsCharacterSkillOneUnlocked() || IsCharacterSkillTwoUnlocked() || IsWeaponSkillOneUnlocked() || IsWeaponSkillTwoUnlocked();
 
 #if UNITY_EDITOR
             SkillsAreFree = true;

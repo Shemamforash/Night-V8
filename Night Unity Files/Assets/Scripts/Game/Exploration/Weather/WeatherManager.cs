@@ -61,7 +61,7 @@ namespace Game.Exploration.Weather
 
         public static void GoToWeather()
         {
-            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType();
+            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironmentType;
             string currentWeather = _weatherStates.GetCurrentState()?.Name ?? "";
             string nextWeatherName = _regionWeatherProbabilities[currentEnvironment].NextWeather(currentWeather);
             _weatherStates.GetState(nextWeatherName).Enter();

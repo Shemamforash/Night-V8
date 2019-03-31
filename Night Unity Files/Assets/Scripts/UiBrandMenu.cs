@@ -1,8 +1,10 @@
-﻿using Game.Characters;
+﻿using System;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
 using Game.Global;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -55,7 +57,6 @@ public class UiBrandMenu : Menu
         _closeButton.UseAcceptInput();
         _closeButton.Enable();
         _closeButton.SetOnClick(ShowDetail);
-        _closeButton.SetCallback(ShowDetail);
     }
 
     private void ShowDetail()
@@ -67,7 +68,6 @@ public class UiBrandMenu : Menu
         _overviewCanvas.alpha = 0;
         _detailCanvas.alpha = 1;
         _closeButton.SetOnClick(Hide);
-        _closeButton.SetCallback(Hide);
     }
 
     public static void ShowBrand(Brand brand)
@@ -94,28 +94,60 @@ public class UiBrandMenu : Menu
         _instance.Show();
     }
 
-    public static void ShowWeaponSkillUnlock(WeaponType weaponType, Skill weaponSkill) => _instance.ShowWeaponSkill(weaponType, weaponSkill);
+    public static void ShowWeaponSkillUnlock(WeaponType weaponType, Skill weaponSkill, int skillNum) => _instance.ShowWeaponSkill(weaponType, weaponSkill, skillNum);
 
-    public static void ShowCharacterSkillUnlock(Skill characterSkill) => _instance.ShowCharacterSkill(characterSkill);
+    public static void ShowCharacterSkillUnlock(Skill characterSkill, int skillNum) => _instance.ShowCharacterSkill(characterSkill, skillNum);
 
-    private void ShowCharacterSkill(Skill characterSkill)
+    private void ShowCharacterSkill(Skill characterSkill, int skillNum)
     {
         _overviewString = "Character Skill Unlocked";
         _descriptionString = "The " + CharacterManager.SelectedCharacter.Name + "'s wisdom has grown with the passing of time";
-        ShowSkill(characterSkill);
+        ShowSkill(characterSkill, skillNum);
     }
 
-    private void ShowWeaponSkill(WeaponType weaponType, Skill weaponSkill)
+    private string GetSkillUsageString(Skill skill, int skillNum)
+    {
+        string binding = GetBindingForSkill(skillNum);
+        string requirements = "Requires " + skill.AdrenalineCost() + " Adrenaline - " + skill.AdrenalineCost() + " second".Pluralise(skill.AdrenalineCost()) + " Cooldown";
+        return binding + " - " + requirements;
+    }
+
+    private string GetBindingForSkill(int skillNum)
+    {
+        string keyName;
+        switch (skillNum)
+        {
+            case 1:
+                keyName = InputHandler.GetBindingForKey(InputAxis.SkillOne);
+                break;
+            case 2:
+                keyName = InputHandler.GetBindingForKey(InputAxis.SkillTwo);
+                break;
+            case 3:
+                keyName = InputHandler.GetBindingForKey(InputAxis.SkillThree);
+                break;
+            case 4:
+                keyName = InputHandler.GetBindingForKey(InputAxis.SkillFour);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException("Invalid skill number passed " + skillNum);
+        }
+
+        return "Press [" + keyName + "] to use";
+    }
+
+    private void ShowWeaponSkill(WeaponType weaponType, Skill weaponSkill, int skillNum)
     {
         _overviewString = "Weapon Skill Unlocked";
         _descriptionString = CharacterManager.SelectedCharacter.Name + "'s proficiency with " + weaponType + "s grows";
-        ShowSkill(weaponSkill);
+        ShowSkill(weaponSkill, skillNum);
     }
 
-    private void ShowSkill(Skill skill)
+    private void ShowSkill(Skill skill, int skillNum)
     {
         _titleString = skill.Name;
         _benefitString = skill.Description();
+        _quoteString = GetSkillUsageString(skill, skillNum);
         _instance.Show();
     }
 }

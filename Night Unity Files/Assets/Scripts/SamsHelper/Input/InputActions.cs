@@ -63,16 +63,8 @@ namespace SamsHelper.Input
 
         public Tuple<PlayerAction, PlayerAction> AxisToActions(PlayerOneAxisAction axis)
         {
-            if (axis == Horizontal)
-            {
-                return Tuple.Create(Left, Right);
-            }
-
-            if (axis == Vertical)
-            {
-                return Tuple.Create(Up, Down);
-            }
-
+            if (axis == Horizontal) return Tuple.Create(Left, Right);
+            if (axis == Vertical) return Tuple.Create(Up, Down);
             return Tuple.Create(LeftTab, RightTab);
         }
 
@@ -131,10 +123,10 @@ namespace SamsHelper.Input
             Inventory.AddDefaultBinding(Key.I);
             Inventory.AddDefaultBinding(InputControlType.Action4);
 
-            Compass.AddDefaultBinding(Key.T);
+            Compass.AddDefaultBinding(Key.Q);
             Compass.AddDefaultBinding(InputControlType.Action2);
 
-            TakeItem.AddDefaultBinding(Key.E);
+            TakeItem.AddDefaultBinding(Key.F);
             TakeItem.AddDefaultBinding(Mouse.MiddleButton);
             TakeItem.AddDefaultBinding(InputControlType.Action1);
 

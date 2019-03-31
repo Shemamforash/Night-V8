@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Xml;
@@ -29,7 +31,6 @@ namespace Game.Global
     public class WorldState : MonoBehaviour
     {
         public const int MinutesPerHour = 12;
-        private const int IntervalSize = 60 / MinutesPerHour;
         public const float MinuteInSeconds = 1f;
         private const float DayLengthInSeconds = 24f * MinutesPerHour * MinuteInSeconds;
         private const int MinuteInterval = 60 / MinutesPerHour;
@@ -49,6 +50,7 @@ namespace Game.Global
         private static int _templesActivated;
         private static int _timeAtLastSave;
         private const int MaxDifficulty = 50;
+        private static bool _isBetaVersion = true;
 
         private enum DifficultySetting
         {
@@ -79,7 +81,7 @@ namespace Game.Global
         {
             if (_difficultySetting == DifficultySetting.Easy)
             {
-                EnemyDamageModifier = 0.2f;
+                EnemyDamageModifier = 0.15f;
                 EnemyHealthModifier = 0.8f;
                 return;
             }
@@ -136,7 +138,7 @@ namespace Game.Global
             worldStateValues.CreateChild("Minutes", Minutes);
             worldStateValues.CreateChild("MinutesPassed", MinutesPassed);
             worldStateValues.CreateChild("Difficulty", _difficulty);
-            worldStateValues.CreateChild("RealTime", System.DateTime.Now.ToString("MMMM dd '-' hh:mm tt"));
+            worldStateValues.CreateChild("RealTime", DateTime.Now.ToString("MMMM dd '-' hh:mm tt", CultureInfo.InvariantCulture));
             worldStateValues.CreateChild("DifficultySetting", (int) _difficultySetting);
             Inventory.Save(doc);
             Building.SaveBuildings(doc);
@@ -231,6 +233,7 @@ namespace Game.Global
             _gateActive = false;
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel(false, false);
+            if (EnvironmentManager.SkippingToBeta) return;
             CharacterManager.Characters.ForEach(c => { c.TravelAction.ReturnToHomeInstant(); });
             StoryController.Show();
         }
@@ -389,6 +392,11 @@ namespace Game.Global
         public static void OverrideDifficulty(object difficulty)
         {
             _difficulty = (int) difficulty;
+        }
+
+        public static bool IsBetaVersion()
+        {
+            return _isBetaVersion;
         }
     }
 }

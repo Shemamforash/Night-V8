@@ -18,7 +18,6 @@ public class CombatStoryController : MonoBehaviour
     {
         _storyCanvas = gameObject.FindChildWithName<CanvasGroup>("Foreground");
         _closeButton = _storyCanvas.gameObject.FindChildWithName<CloseButtonController>("Close Button");
-        _closeButton.SetCallback(FadeOut);
         _closeButton.SetOnClick(FadeOut);
         _titleText = _storyCanvas.gameObject.FindChildWithName<EnhancedText>("Title");
         _contentText = _storyCanvas.gameObject.FindChildWithName<EnhancedText>("Content");

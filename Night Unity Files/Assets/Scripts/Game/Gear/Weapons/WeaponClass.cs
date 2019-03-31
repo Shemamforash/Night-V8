@@ -54,11 +54,13 @@ namespace Game.Gear.Weapons
 
         public static WeaponClass IntToWeaponClass(int weaponClassString)
         {
-            return _weaponClasses.First(w => (int)w.Name == weaponClassString);
+            WeaponGenerator.LoadBaseWeapons();
+            return _weaponClasses.First(w => (int) w.Name == weaponClassString);
         }
-        
+
         public static WeaponClass GetRandomClass()
         {
+            WeaponGenerator.LoadBaseWeapons();
             return _weaponClasses.RandomElement();
         }
     }

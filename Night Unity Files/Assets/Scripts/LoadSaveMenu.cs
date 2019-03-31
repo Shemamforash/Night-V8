@@ -8,12 +8,14 @@ public class LoadSaveMenu : Menu
     private bool _loading;
     private SaveUiController _autoSaveUi, _manualSaveUi;
     private Save _autoSave, _manualSave;
+    private CloseButtonController _closeButton;
 
     protected override void Awake()
     {
         base.Awake();
         _autoSaveUi = gameObject.FindChildWithName<SaveUiController>("Auto Slot");
         _manualSaveUi = gameObject.FindChildWithName<SaveUiController>("Manual Slot");
+        _closeButton = gameObject.FindChildWithName<CloseButtonController>("Back Button");
     }
 
     public override void PreEnter()
@@ -24,6 +26,13 @@ public class LoadSaveMenu : Menu
         SetMostRecentSave();
         _autoSaveUi.SetSave(_autoSave);
         _manualSaveUi.SetSave(_manualSave);
+        _closeButton.Enable();
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        _closeButton.Disable();
     }
 
     private void SetMostRecentSave()

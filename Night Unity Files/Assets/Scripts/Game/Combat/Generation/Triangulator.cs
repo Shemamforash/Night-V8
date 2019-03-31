@@ -14,12 +14,12 @@ namespace Game.Combat.Generation
     {
         private static List<Vector3> m_points;
 
-        public static int[] Triangulate(Vector3[] points)
+        public static void Triangulate(List<Vector2> points, ref Mesh mesh)
         {
             Polygon p = new Polygon();
             List<Vertex> verts = points.Select(vector3 => new Vertex(vector3.x, vector3.y)).ToList();
             p.Add(new Contour(verts));
-            
+
             IMesh m = p.Triangulate();
             int[] triangles = new int[m.Triangles.Count * 3];
             int current = 0;
@@ -30,7 +30,9 @@ namespace Game.Combat.Generation
                 triangles[current + 2] = mTriangle.GetVertexID(1);
                 current += 3;
             }
-            return triangles;
+
+            mesh.vertices = m.Vertices.Select(v => new Vector3((float) v.x, (float) v.y, 0)).ToArray();
+            mesh.triangles = triangles;
         }
     }
 }

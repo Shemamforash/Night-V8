@@ -31,7 +31,7 @@ public class TutorialManager : MonoBehaviour
 
     private static List<TutorialOverlay> _overlays;
     private static bool _hideResouces, _finishedIntroTutorial;
-    private static GraphicRaycaster _mainCanvasRaycaster;
+    private static GameObject _lastSelectedObject;
 
     public void Awake()
     {
@@ -42,7 +42,6 @@ public class TutorialManager : MonoBehaviour
         _closeButton = top.FindChildWithName<CloseButtonController>("Close Button");
         _tutorialCanvas = GetComponent<CanvasGroup>();
         _tutorialCanvas.alpha = 0f;
-        _mainCanvasRaycaster = GameObject.Find("Canvas").GetComponent<GraphicRaycaster>();
     }
 
     private void Start()
@@ -58,6 +57,7 @@ public class TutorialManager : MonoBehaviour
     public static bool TryOpenTutorial(int tutorialPart, List<TutorialOverlay> overlays, bool hideResources = true)
     {
         if (!_tutorialActive || _showingTutorial) return false;
+        if (PauseMenuController.IsOpen()) PauseMenuController.ToggleOpen();
         _overlays = overlays;
         _hideResouces = hideResources;
         ReadTutorialParts();
@@ -71,19 +71,19 @@ public class TutorialManager : MonoBehaviour
 
     private static void EnableButton()
     {
+        _lastSelectedObject = EventSystem.current.currentSelectedGameObject;
+        EventSystem.current.SetSelectedGameObject(_closeButton.Button().gameObject);
+        SetCurrentSelectableActive(false);
         _lastListener = InputHandler.GetCurrentListener();
         InputHandler.InterruptListeners(true);
         InputHandler.SetCurrentListener(_closeButton);
-        _closeButton.SetCallback(ShowTutorialPart);
         _closeButton.SetOnClick(ShowTutorialPart);
-        SetCurrentSelectableActive(false);
     }
 
     private static void SetCurrentSelectableActive(bool active)
     {
-        GameObject selectedObject = EventSystem.current.currentSelectedGameObject;
-        if (selectedObject == null) return;
-        selectedObject.GetComponent<Selectable>().enabled = active;
+        if (_lastSelectedObject == null) return;
+        _lastSelectedObject.GetComponent<Selectable>().enabled = active;
     }
 
     public static Dictionary<int, List<TutorialPart>> GetTutorialParts()
@@ -102,7 +102,6 @@ public class TutorialManager : MonoBehaviour
         _currentTutorialPart.MarkComplete();
         if (_currentTutorialPart.NextPart() == null)
         {
-            _closeButton.SetCallback(Close);
             _closeButton.SetOnClick(Close);
         }
         else _currentTutorialPart = _currentTutorialPart.NextPart();
@@ -110,7 +109,6 @@ public class TutorialManager : MonoBehaviour
 
     private static void Enter()
     {
-        _mainCanvasRaycaster.enabled = false;
         _tutorialCanvas.blocksRaycasts = true;
         _tutorialCanvas.interactable = true;
         _alreadyHidden = ResourcesUiController.Hidden();
@@ -120,8 +118,6 @@ public class TutorialManager : MonoBehaviour
         bool combatPaused = CombatManager.Instance() != null && !CombatManager.Instance().IsCombatActive();
         bool gamePaused = CombatManager.Instance() == null && WorldState.Paused();
         _alreadyPaused = combatPaused || gamePaused;
-        _tutorialCanvas.blocksRaycasts = true;
-        Debug.Log(combatPaused + " " + gamePaused);
         if (!_alreadyPaused) WorldState.Pause();
         _tutorialCanvas.DOFade(1f, 0.5f);
     }
@@ -129,10 +125,10 @@ public class TutorialManager : MonoBehaviour
     private static void Close()
     {
         if (!_alreadyHidden) ResourcesUiController.Show();
-        _mainCanvasRaycaster.enabled = true;
         _tutorialCanvas.blocksRaycasts = false;
         _tutorialCanvas.interactable = false;
-        _closeButton.SetCallback(null);
+        _closeButton.SetOnClick(null);
+        _closeButton.Disable();
         Sequence sequence = DOTween.Sequence();
         sequence.Append(_tutorialCanvas.DOFade(0f, 0.5f));
         sequence.AppendCallback(() =>
@@ -147,6 +143,13 @@ public class TutorialManager : MonoBehaviour
         InputHandler.InterruptListeners(false);
     }
 
+    private void Update()
+    {
+        if (!IsTutorialVisible()) return;
+        if (EventSystem.current.currentSelectedGameObject == _closeButton.Button().gameObject) return;
+        _closeButton.Button().Select();
+    }
+    
     public static void Load(XmlNode root)
     {
         ReadTutorialParts(true);

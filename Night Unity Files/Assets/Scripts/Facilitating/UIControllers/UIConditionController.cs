@@ -13,24 +13,16 @@ namespace Facilitating.UIControllers
     public class UIConditionController : MonoBehaviour
     {
         private Image _fillImage, _offsetImage;
-        private EnhancedText _conditionText;
 
         public void Awake()
         {
-            if (transform.parent.parent.name == "Simple")
-            {
-                _conditionText = GetComponent<EnhancedText>();
-                return;
-            }
-
-            _conditionText = gameObject.FindChildWithName<EnhancedText>("Text");
+            if (transform.parent.parent.name == "Simple") return;
             _offsetImage = gameObject.FindChildWithName<Image>("Offset");
             _fillImage = gameObject.FindChildWithName<Image>("Fill");
         }
 
         public void UpdateThirst(Player player, float offset = 0)
         {
-            _conditionText.SetText(player.Attributes.GetThirstStatus());
             if (_fillImage == null) return;
             UpdateSlider(AttributeType.Thirst, player, offset);
         }
@@ -46,7 +38,6 @@ namespace Facilitating.UIControllers
 
         public void UpdateHunger(Player player, float offset = 0)
         {
-            _conditionText.SetText(player.Attributes.GetHungerStatus());
             if (_fillImage == null) return;
             UpdateSlider(AttributeType.Hunger, player, offset);
         }

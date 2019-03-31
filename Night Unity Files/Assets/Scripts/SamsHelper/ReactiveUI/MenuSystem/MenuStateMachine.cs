@@ -110,7 +110,12 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         {
             if (isHeld || axis != InputAxis.Menu) return;
             if (!(CurrentMenu() is WorldView) && !(CurrentMenu() is CombatManager)) return;
-            if (UiGearMenuController.IsOpen()) return;
+            if (!PauseMenuController.IsOpen())
+            {
+                if (UiGearMenuController.IsOpen()) return;
+                if (TutorialManager.IsTutorialVisible()) return;
+            }
+
             PauseMenuController.ToggleOpen();
         }
 
@@ -121,6 +126,5 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         public void OnDoubleTap(InputAxis axis, float direction)
         {
         }
-
     }
 }

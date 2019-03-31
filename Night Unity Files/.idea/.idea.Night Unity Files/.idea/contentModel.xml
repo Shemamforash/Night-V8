@@ -210,10 +210,7 @@
           </e>
           <e p="readme.txt" t="Include" />
         </e>
-        <e p="BossDeathController.cs" t="Include" />
-        <e p="BossRingController.cs" t="Include" />
-        <e p="CombatAudioController.cs" t="Include" />
-        <e p="CombatStoryController.cs" t="Include" />
+        <e p="BasicMenuController.cs" t="Include" />
         <e p="ConsolePro" t="Include">
           <e p="ConsoleProDebug.cs" t="Include" />
           <e p="Remote" t="Include">
@@ -974,7 +971,6 @@
             </e>
           </e>
         </e>
-        <e p="PostProcessInvertColour.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="XML" t="Include">
             <e p="Brands.xml" t="Include" />
@@ -1004,12 +1000,17 @@
         <e p="Scripts" t="Include">
           <e p="ActionProgressController.cs" t="Include" />
           <e p="ActiveSkillController.cs" t="Include" />
+          <e p="BetaController.cs" t="Include" />
+          <e p="BossDeathController.cs" t="Include" />
+          <e p="BossRingController.cs" t="Include" />
           <e p="BrandReplaceMenuController.cs" t="Include" />
           <e p="CameraFollow.cs" t="Include" />
           <e p="CharacterBrandUIController.cs" t="Include" />
           <e p="CloseButtonController.cs" t="Include" />
+          <e p="CombatAudioController.cs" t="Include" />
           <e p="CombatJournalController.cs" t="Include" />
           <e p="CombatLogController.cs" t="Include" />
+          <e p="CombatStoryController.cs" t="Include" />
           <e p="CombatWeatherController.cs" t="Include" />
           <e p="ContainerTextBehaviour.cs" t="Include" />
           <e p="Crackling.cs" t="Include" />
@@ -1089,7 +1090,6 @@
           <e p="FireBurstBehaviour.cs" t="Include" />
           <e p="FireDamageDeal.cs" t="Include" />
           <e p="Flicker.cs" t="Include" />
-          <e p="FullScreenController.cs" t="Include" />
           <e p="Game" t="Include">
             <e p="Characters" t="Include">
               <e p="AttributeModifier.cs" t="Include" />
@@ -1104,7 +1104,6 @@
                 <e p="Craft.cs" t="Include" />
                 <e p="Meditate.cs" t="Include" />
                 <e p="Rest.cs" t="Include" />
-                <e p="Sleep.cs" t="Include" />
                 <e p="Travel.cs" t="Include" />
               </e>
               <e p="CharacterAttributes.cs" t="Include" />
@@ -1344,6 +1343,7 @@
               <e p="UI" t="Include">
                 <e p="MapMovementController.cs" t="Include" />
                 <e p="MapNodeController.cs" t="Include" />
+                <e p="TextReveal.cs" t="Include" />
               </e>
               <e p="Weather" t="Include">
                 <e p="TemperatureCategory.cs" t="Include" />
@@ -1431,8 +1431,10 @@
           <e p="MarkController.cs" t="Include" />
           <e p="NeedleBehaviour.cs" t="Include" />
           <e p="PauseMenuController.cs" t="Include" />
+          <e p="PostProcessInvertColour.cs" t="Include" />
           <e p="RadianceController.cs" t="Include" />
           <e p="RegionClearController.cs" t="Include" />
+          <e p="ReloadController.cs" t="Include" />
           <e p="SamsHelper" t="Include">
             <e p="AudioPoolController.cs" t="Include" />
             <e p="BaseGameFunctionality" t="Include">
@@ -1478,6 +1480,7 @@
               <e p="InputActions.cs" t="Include" />
               <e p="InputAxis.cs" t="Include" />
               <e p="InputHandler.cs" t="Include" />
+              <e p="KeyBindListener.cs" t="Include" />
             </e>
             <e p="Libraries" t="Include">
               <e p="AdvancedMaths.cs" t="Include" />
@@ -1637,6 +1640,7 @@
             </e>
           </e>
           <e p="UIBorderController.cs" t="Include" />
+          <e p="UIBrandDisplayController.cs" t="Include" />
           <e p="UiBrandMenu.cs" t="Include" />
           <e p="UiSkillUpgradeEffectController.cs" t="Include" />
         </e>

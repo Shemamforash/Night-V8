@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -72,17 +73,14 @@ namespace Game.Global.Tutorial
         private void CalculateWorldCornersForRectTransform(RectTransform rectTransform)
         {
             rectTransform.GetWorldCorners(_worldCorners);
-            _worldCorners[0].x -= 0.1f;
-            _worldCorners[0].y -= 0.1f;
-
-            _worldCorners[1].x -= 0.1f;
-            _worldCorners[1].y += 0.1f;
-
-            _worldCorners[2].x += 0.1f;
-            _worldCorners[2].y += 0.1f;
-
-            _worldCorners[3].x += 0.1f;
-            _worldCorners[3].y -= 0.1f;
+            Vector3 centrePoint = _worldCorners.Aggregate(Vector3.zero, (current, t) => current + t);
+            centrePoint /= _worldCorners.Length;
+            float scale = 0.1f;
+            for (int i = 0; i < _worldCorners.Length; ++i)
+            {
+                Vector3 dirToCentre = (_worldCorners[i] - centrePoint).normalized;
+                _worldCorners[i] += dirToCentre * scale;
+            }
         }
 
         public Tuple<Vector2, Vector2> GetMinMaxOffset(Canvas canvas)

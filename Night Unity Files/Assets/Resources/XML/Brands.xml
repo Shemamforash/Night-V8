@@ -1,7 +1,7 @@
 <Brands>
     <Power>
         <Name>Power</Name><Description>True power is that which is exerted over others</Description><Requirement>Deal num damage to enemies</Requirement><TargetValue>5000</TargetValue>
-        <Effect>Fettle increased</Effect><Modifier>1</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>0</MinLevel>
+        <Effect>Life increased</Effect><Modifier>1</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>0</MinLevel>
     </Power>
     <Vigilance>
         <Name>Vigilance</Name><Description>Our world is dictated by what our mind will allow us to see</Description><Requirement>Find num items</Requirement><TargetValue>5</TargetValue>

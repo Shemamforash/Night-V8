@@ -1,4 +1,5 @@
-﻿using Game.Combat.Misc;
+﻿using Game.Combat.Generation;
+using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Combat.Ui;
 using SamsHelper;
@@ -62,7 +63,7 @@ namespace Game.Gear.Weapons
 
         public bool CanReload()
         {
-            return !_fired || Empty();
+            return !_fired && !FullyLoaded();
         }
 
         protected void Fire()
@@ -81,6 +82,7 @@ namespace Game.Gear.Weapons
             _origin.WeaponAudio.Fire(_weapon);
             ConsumeAmmo(1);
             if (!(_origin is PlayerCombat)) return;
+            if (Empty() && CombatManager.Instance().GetEnemiesInRange(transform.position, 5).Count > 0) PlayerCombat.Instance.Player.BrandManager.IncreasePerfectReloadCount();
             PlayerCombat.Instance.MuzzleFlashOpacity = 0.2f;
             UIMagazineController.UpdateMagazineUi();
         }

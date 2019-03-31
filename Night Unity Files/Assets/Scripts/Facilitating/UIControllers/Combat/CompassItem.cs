@@ -9,6 +9,7 @@ namespace Facilitating.UIControllers
     {
         private static GameObject _glowPrefab;
         private SpriteRenderer _glow;
+        private bool _revealed;
 
         private void Awake()
         {
@@ -18,6 +19,7 @@ namespace Facilitating.UIControllers
             glowObject.transform.localPosition = Vector2.zero;
             _glow = glowObject.GetComponent<SpriteRenderer>();
             _glow.color = UiAppearanceController.InvisibleColour;
+            _revealed = false;
         }
 
         public void Start()
@@ -41,7 +43,10 @@ namespace Facilitating.UIControllers
         public void Pulse()
         {
             _glow.color = new Color(1, 1, 1, 0.5f);
-            _glow.DOFade(0.25f, 2f);
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(_glow.DOFade(0.25f, 1f));
+            sequence.Append(_glow.DOFade(0.5f, 1f));
+            sequence.SetLoops(-1);
         }
     }
 }

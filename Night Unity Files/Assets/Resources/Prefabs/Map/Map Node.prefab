@@ -357,6 +357,7 @@ GameObject:
   - component: {fileID: 2014594609114593990}
   - component: {fileID: 1795911159407047184}
   - component: {fileID: 1903977613698332096}
+  - component: {fileID: 2356677844265617484}
   m_Layer: 23
   m_Name: Map Node
   m_TagString: Untagged
@@ -397,6 +398,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8775a810aea95494793d39cbae943db9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2356677844265617484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2016519604546703442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad2a0d5494de47388fbf220dd6252d16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2016546555376551970
@@ -1449,7 +1462,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: -45}
-  m_SizeDelta: {x: 0, y: 30}
+  m_SizeDelta: {x: 120, y: 30}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1793264452097366834
 CanvasRenderer:

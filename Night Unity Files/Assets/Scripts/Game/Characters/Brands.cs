@@ -1,14 +1,14 @@
 namespace Game.Characters.Brands
 {
-    public class FettleBrand : Brand
+    public class LifeBrand : Brand
     {
-        public FettleBrand(Player player) : base(player, "Power")
+        public LifeBrand(Player player) : base(player, "Power")
         {
         }
 
         protected override void OnSucceed()
         {
-            Player.Attributes.ChangeFettleMax(1);
+            Player.Attributes.ChangeLifeMax(1);
         }
 
 

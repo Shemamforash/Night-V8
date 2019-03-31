@@ -1,178 +1,173 @@
 <Lore>
 	<StoryPart>
-		<Title>Essentia: Eo</Title>
-		<Group>1</Group>
-		<PartNumber>1</PartNumber>
-		<Text>The Corruption of Eo, which now resides somewhere in the veil, takes the form of an enormous skeletal serpent. The form of a serpent is interesting as Eo, goddess of hope, was often represented as an owl swooping down upon the supposed manifestations of despair, generally depicted as a snake. The implications of this form indicate that either Essence has some will of its own, or more likely, that it�s shape is influenced by the strongest emotions within a being. In almost every case these emotions are negative- suppressed anger, primordial fear, greed, and others. Given this knowledge, we have at least some advantage over essence, furthering my hopes that we might one day channel it, and slowly return our world to how it was.</Text>
+		<Title>The Mystics</Title>
+		<Unique>False</Unique>
+		<Environment>Desert</Environment>
+		<Text>My fingers tremble as I begin to write this. I look at my hands and I do not recognise them. Where did the years go? My youth is gone, it has passed with the change of the seasons. Now I am left, alone, enfeebled, waiting for my time to come. My friends, my family, they have all passed too. The Necromancer is nowhere to be found. So I am alone, so I write. I will tell you about the Mystics, the once united people seeking to save mankind, now dispersed, now dead. Scholars, craftsmen, doctors, mechanics- all came together as our civilisations began to fall. We saw the madness start, we watched it spread, and we knew why it was so. Our historians and our priests had monitored the gods over the years, watched them retreat into the wildernesses of the world as our kingdoms grew in prosperity. We saw as they left, without a word, and we did nothing. My fingers tremble as I write, I look in the mirror on my desk, and I see an old man looking back- a stranger who is not me.</Text>
 	</StoryPart>
 	<StoryPart>
-		<Title>Essentia: Hythinea</Title>
-		<Group>1</Group>
-		<PartNumber>2</PartNumber>
-		<Text>Hythinea, the warrior queen, and her kingdom Hythia, can all be found deep in the great mountain ranges of the north. In the days of old these lands were renowned for their fertility, and in the infancy of our civilisations were protected by Hythinea herself. Ferocious but fair, her traits were soon idolised by the people of her kingdom, who built their society around her values. Soon Hythia became the dominant kingdom of the five, and became infamous for their strength in the great war that precipitated the end of our world. Little is know about her Corruption, it has never been seen outside of the veil, or the world between the gates. However, given our knowledge of the other Corruptions, we can assume that personifies the opposite of her personality, most likely injustice, bloodlust, ignorance, and hostility.</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Essentia: Rhallos</Title>
-		<Group>1</Group>
-		<PartNumber>3</PartNumber>
-		<Text>The god Rhallos imbued solidity, determination, and resolve. It is not unexpected then, that the form of his corruption is that of a disparate hive of flying things. Some have seen it in our world, like a living cloud that passes over the land devouring any living thing with its hundreds of tiny jaws. Although not the most terrifying of the Corruptions, it instills feelings of absolute hopelessness in those who see it. Thankfully I have only heard this from third parties, or I fear I would not be able to write this down for even recollecting the events caused most of my sources to break down in tears, and in one case, turn completely rigid and unresponsive to anything around them.</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Essentia: Vidium</Title>
-		<Group>1</Group>
-		<PartNumber>4</PartNumber>
-		<Text>Vidium, or Moonmetal as it is sometimes known, is a peculiar alloy found only in meteorites. It is unknown if it could be found naturally before the Absence, but can now be found in relative abundance (for a rare metal) due to increased cosmic activity. Although essence appears to affect all things in at least some degree, Vidium has a strong focussing effect that apparently draws essence towards itself. For this reason alone Vidium is extremely difficult to gather, and even more so to manipulate. The properties of this pitch black metal are extremely desirable however, and is now highly coveted in the manufacturing of war machines and weaponry.</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Tome of Mystics: Essence</Title>
-		<Group>2</Group>
-		<PartNumber>1</PartNumber>
-		<Text>The effects of Essence are always sudden, but not always apparent. The subtleties of its nature mean that rather than a sudden outburst against all nearby, or an immediate and incurable fear that causes a man to gouge out his own eyes rather than face the world, the influence of Essence can go unnoticed for extremely long periods of time. Sometimes the effect is so subtle, given a host of good character and strong will, that it never manifests outwardly (though it is extremely where). In other cases it grows over time, embeds itself in the subconscious, ultimately leading to betrayal, desertion, sedition, and murder. I believe this clearly demonstrates it is the hosts will that gives form to the Essence, and that the Essence itself has no ability to decide whether its manifestation is benign or malign.</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Tome of Mystics: The Order I</Title>
-		<Group>3</Group>
-		<PartNumber>1</PartNumber>
-		<Text>I will document, for the purposes of posterity, the details of our order. After it became clear that the world was dying through no fault of our own, the learned people of the five kingdoms came together to form the Order of Mystics. Initially the group was loosely defined, it�s members came and went as the Essence exerted its influence across the world. I, and a few others, formed a small band dedicated to understanding the Essence, and how it came to be. It did not take us long to draw the conclusion that it was the absence of the gods that gave rise to the calamity that was before us, and that it was their presence that maintained some sort of balance in the Essence that exists within our world. At that time we were aware of the existence of Essence, but its nature was foreign to us, and we were not unanimously convinced of its existence at first.</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Tome of Mystics: The Order II</Title>
-		<Group>3</Group>
-		<PartNumber>2</PartNumber>
-		<Text>
-			Over the years our order watched the kingdoms of our world fight against each other, and one by one each fell. Whether in the tracks and weaponry of the battlefield, or by the slow decline of authority they all fell. It was becoming apparent that a great collapse was coming soon. It could be felt all around like the acrid taste on the tongue before lightning strikes. We resolved that our efforts to manipulate the Essence were paramount, that we must find a way to use it, or our entire world would unravel around us. We could see that the borders between the kingdoms were fading, the scars of war filled in slowly by the sands of encroaching deserts. Eventually, we knew, it would be impossible to cross between the kingdoms. It was then that the idea of the gates was born, we would utilise our technology and research on Essence to create a portal in each kingdom. Each portal would allow free travel to another kingdom, forming a spine, if you will, across the world. What we did not realise at the time, however, was that without a body capable of channelling essence, these gates would be useless to us.
-		</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Tome of Mystics: The Order III</Title>
-		<Group>3</Group>
-		<PartNumber>3</PartNumber>
-		<Text>
-			The Necromancer was an idea that arose over a period of months, after we realised that the now complete gates were all but useless to us. Many of us gave up, threw our hands in the air in anguish, and simply disappeared into the wastes. Those that remained, myself included, resolved to find a solution. Though I cannot speak for the motives of the other Mystics, I resolved to do all I could because the alternatives were simply too bleak to consider. Without the ability to pass between the gates we would be without the ability to communicate with the now isolated communities scattered amongst the five kingdoms, and without the ability to restore the world. It is worth noting that our studies at this point had turned to what could at best be considered arcane and at worst sorcery. Manipulating essence is no simple matter. Through various testing methods we found that the most effective, yet unpleasant, way of channelling essence was through pain. I am sure that to whoever reads this account, assuming anyone is left to read it, will think us as sun-scorched mad men, making blood pacts and casting magic spells into the darkness. How I wish this were not so.
-		</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Tome of Mystics: The Order IV</Title>
-		<Group>3</Group>
-		<PartNumber>4</PartNumber>
-		<Text>It was in the Autumn of the year 3346 that we made our ultimate choice. We did not force anyone to stay, those who were in the dark were informed of our intentions, and given the opportunity to leave. Few did, some stayed out of loyalty, others because leaving was simply no better than what was ahead. One of our order was chosen, a young woman- an acolyte from the mountain kingdom. There has been no protest over what we are about to do, because there are no other options. We grew weak with every day that passed, and every day the essence spread further, rooted deeper, hung heavier in the air around us. I am sorry, reader, that we could not do more. This will be the last entry in my histories, if they can be called that. I do hope that there will be enough future to fill the remaining pages of this book.[br][br]With hope, Oranos.</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Court Memorandum</Title>
-		<Group>4</Group>
-		<PartNumber>1</PartNumber>
-		<Text>The King has given his orders, the captains have gone to relay them into the city. We are left here together, the rulers of this kingdom. The king sits upon his throne at the head of the room, alone and brooding. We are left to discuss our options, it is clear we are at war, whether it is in the best interests of our land or not, we are at war. My peers seem excited by the prospect, as if the encroaching bloodshed has somehow been expected and deserved. I have no doubts that the courts of the four other great kingdoms are issuing their own orders, and that their Kings and Queens have withdrawn into the same solitude as our own. I will not lie my own thoughts have been darkened of late. I fear there has been a change in us, all of us, across this entire world.</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Tattered Journal Entry I</Title>
-		<Group>5</Group>
-		<PartNumber>1</PartNumber>
-		<Text>Today we are marching on the great mountain kingdom of Hispella. Like my fellow soldiers, I have never seen war. I do not know if this world has seen war before. We have seen skirmishes aplenty, peacekeeping missions, suppression of dissidents, but never war. I am proud to serve my country, and my Queen. I will remember looking out from our battlements onto a sea of gleaming metal, and a sky streaked by the trails of our warships, what a glorious sight. I hear people say our Kingdom cannot be defeated, that our lands are too great and our military too vast. If they are right then the coming war may also be the last war, for we will reign eternally after our victory![br][br]-Optio</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Tattered Journal Entry II</Title>
-		<Group>5</Group>
-		<PartNumber>2</PartNumber>
-		<Text>What a battlefield, what a battle. Our guns blazed unending for two nights, illuminating the retreating Hispellites. To think these men and women who called themselves our brothers and sisters would declare war on us. Now they understand their mistake. We have lost many, but they have lost more. Tomorrow I will take what remains of our armour and breach the walls of their keeps. By dawn we will have our victory, and stand alone in triumph in this great war.[br][br]-Optio</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Tattered Journal Entry III</Title>
-		<Group>5</Group>
-		<PartNumber>3</PartNumber>
-		<Text>
-			Today we broke into the city of Hispellum, infantry following the path of our siege engines straight into their main square. Only to find the resistance we expected was absent. The city was silent, the defenders on the walls were silent now- dead or dying. But here there was nothing, no signs of flight, banners taken from their polls. It is as if it had been abandoned for years. We searched house after house, looked in the warehouses, the armouries, the keeps, all the way up to the court and even the monarch�s tombs. It was then, as we stood in the court of Hispellum, before the throne of the King, that a strange feeling came over me. It has been at least a decade since I left our fair city. A decade that me and my men have lived in the great battlefields that now scar the space between our lands. I worry that if I were to return home, that I would find our halls empty, I would find my family fled and my house deserted. We have fulfilled our duty, we have taken the city. But now we are without orders and there are now none to issue them. It is bitter sweet, this victory, for on the very day of our victory, we are turning about, and returning home.[br][br]-Optio
-		</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Tattered Journal Entry IV</Title>
-		<Group>5</Group>
-		<PartNumber>4</PartNumber>
-		<Text>We did not make it home. As we crested the horizon, and the great towers of Pyrrha came into view, a cry of despair rose up. For we could see, even at this great distance, that our city was ruined and deserted. There was no life on the charred plain before us. Some of my brothers and sisters fell to their knees and would not be moved. Some ran for the city, others away. I did not stop anyone. There was no reason. It was clear my instinct was right- somehow over all these years, through all the battles and the roaring of thunder, we have destroyed ourselves. Our kingdoms have fallen, where our people are I do not know. What will become of us I do not know. What I do know, that I predicted all those years ago, and that has now been confirmed by the horrifying sight ahead, is that this war was indeed the last war of our world.[br][br]-Optio</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Stained note</Title>
-		<Group>6</Group>
-		<PartNumber>1</PartNumber>
-		<Text>It�s inside me. In my brain. I feel it ticking- tick, tick, tick, on the inside of my skull. It�s trying to make a hole in me, to let the darkness in. Tick, tick, tick. Constant. I�m alone now. Alone out here, amongst the rocks and dirt. High above them now. I hear the wind calling to me. �Come� it says. �Come with me�. It can�t get me, no, no it can�t, I�m too high, I�m too far from everything. Tick, tick, tick. It�s inside me.</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Unsigned Letter</Title>
-		<Group>7</Group>
-		<PartNumber>1</PartNumber>
-		<Text>It�s been so long that I fear I won�t be able to remember your face, I do hope you can remember mine. You�ve been gone for five years now, we hear this and that about the front lines, about how everything keeps changing and we don�t even know who we are fighting. If you do come home, if you find this note, please come to us. The city isn�t a safe place any more, there is violence in the streets, and the guard turns a blind eye at every opportunity. We�re going into the forests, others are coming with us. We�re going to start a new life together, all of us. I will wait for you forever. I love you.</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Wall Etchings</Title>
-		<Group>8</Group>
-		<PartNumber>1</PartNumber>
-		<Text>Fear us, you who reads these words. These lands are under control of our lord. Any scrap searchers or wandering merchants must come to Black Dell to pay a tribute for safe passage. Anyone who thinks they can pass through without paying the tribute will be dragged by their ankles across the salt flats until the tribute is paid with their blood.</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Ritual Marking</Title>
-		<Group>9</Group>
-		<PartNumber>1</PartNumber>
-		<Text>On the 333rd day of the 333rd year, we, those who remain loyal to the order of mystics, convene to pay homage to the great sacrifice of our prophet the Necromancer. We commend our flesh on this stone to her, that we may be reborn in her image and cleanse this land of the sinful and the wanting.</Text>
-	</StoryPart>
-	<StoryPart>
-		<Title>Inventory on Animal Skin</Title>
-		<Group>10</Group>
-		<PartNumber>1</PartNumber>
-		<Text>- Broken engines- 10[br]- Repairable engines- 5[br]- Working engines- 2[br]- 3 jammed annihilators[br]- 1 deepdriver[br]- 4 vials of essence[br]- 23 vidium rocks[br]- 17 slaves, 1 pregnant[br][br]Must requisition for thick oil and weapon kits to mend engines and weapons. Broken engines can be cannibalised for parts. Slaves sent to ore pits for work. Pregnant slave kept, child will be useful to clean under the machines when older, mother can be sent to his lordship.</Text>
+		<Title>The Triumph of Pyrrha</Title>
+		<Unique>False</Unique>
+		<Environment>Desert</Environment>
+		<Text>Today we march on the great mountain kingdom of Hispella. Like my fellow soldiers, I have not seen war. I do not know if anyone in this world has seen war before. We have seen skirmishes and been on peacekeeping missions, but never war. I am proud to serve my country, and my King. I will remember today, as I look out from our battlements to see a sea of gleaming metal and a sky streaked by the trails of our warships. What a glorious sight- banners streaming in the wind and lines people throwing flowers at the feet of our soldiers. They say our Kingdom cannot be defeated, that our lands are too great and our military too vast. If this is true then this war, the first war of our world, may well be the last war, for our empire will surely last until the very ends of time!</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Sister's Diary</Title>
-		<Group>11</Group>
-		<PartNumber>1</PartNumber>
-		<Text>We took in a young girl today, her arms were cut to pieces, and her skin awfully pale. It�s a wonder she found our priory in time. We bandaged her as best we could, but she is so weak it�s impossible to tell if she is already beyond the point of no return. She is safe now, deep in the mountain. The other sisters are caring for her now. If she recovers I am not sure how we will be able to look after her, we barely grow enough for us alone, never mind enough for a growing child. But then the alternative is unthinkable, to take her back out into the wasteland to eek out her life amongst marauders and devils? I will pray for answers tonight, the goddess always provides for her followers.</Text>
+		<Unique>False</Unique>
+		<Environment>Desert</Environment>
+		<Text>We took in a young girl today, her arms were cut to pieces, and her skin awfully pale. It's a wonder she found our priory in time. We bandaged her as best we could, but she is so weak it's impossible to tell if she is already beyond the point of no return. She is safe now, deep in the mountain. The other sisters are caring for her now. If she recovers I am not sure how we will be able to look after her, we barely grow enough for us alone, never mind enough for a growing child. But then the alternative is unthinkable, to take her back out into the wasteland to eek out her life amongst marauders and devils? I will pray for answers tonight, the goddess always provides for her followers.</Text>
 	</StoryPart>
 	<StoryPart>
-		<Title>Soiled Pages</Title>
-		<Group>12</Group>
-		<PartNumber>1</PartNumber>
-		<Text>Ma said not to go out onto the plains after nightfall, she says there are monsters out there. I told her of course there aren�t any monsters, that�s just a something scary they tell kiddies to stop them going out where there might be mines or bombs or other dangerous detritus from the war. But now I�m not so sure. When the sun is setting, and the line of the hill behind the house is black against the orange sky, I sometimes see things. Like inky shadows rising up from the ground and sinking back into it a moment later. Howls too, not like dogs, no, these are shallow, hoarse- like a dying man�s croak. Sometimes an animals gone by morning, no traces left, not even footprints, almost like they just vanished. I�ll be keeping the door bolted from now on, and nothing could persuade me to go out after dark to find out what�s been making that awful din.</Text>
+		<Title>Passage from the Book of Earth</Title>
+		<Unique>True</Unique>
+		<Environment>Desert</Environment>
+		<Text>Eo, wandering mother, where are you going, and where have you gone? Why do you walk alone in wild lands? When you are gone the flowers wilt, and the grasses die. The trees turn red, and drop their fruit to the floor, their leaves soon to follow. Then the land forgets you were ever here- the lakes turn to ice, and the frozen ground will accept no seed. The sky itself mourns your absence, weeping frozen tears onto the ground below. So we hide, we hide and we pray, and we wait for you, and we ready ourselves for the joy of your return. We wait for the time when the golden glow of your hair signals the thaw, and the animals and plants of the earth follow in your fertile footsteps.</Text>
 	</StoryPart>
 	<StoryPart>
-		<Title>Wrinkled Letter</Title>
-		<Group>13</Group>
-		<PartNumber>1</PartNumber>
-		<Text>
-			One of the priests came by the village today, said we had to leave, said that these lands weren�t safe any more. He told us that things would be coming, that they had been spreading across the world like a disease. Some of our neighbours scoffed and ignored him, busy with their own troubles. But he cried out to them, said that their crops would turn black, that their animals would either run, or die, or turn into unrecognisable things. He�s said many things over the years, not sure his head is even screwed on right. Still, he does hear a lot from passers by, and our fruits have been souring lately. My sister lives out beyond the woods, close to the deserts, though desert has probably reached her by now. I�m going to leave the animals with our Aunt and go out there for a few weeks, just in case. Going to see if I can borrow a gun from a neighbour too, see if they want to join me maybe. Either way, if you feel like coming to stay with us, you know where we�ll be.[br][br]- Your Brother
+		<Title>The Mystics</Title>
+		<Unique>False</Unique>
+		<Environment>Mountains</Environment>
+		<Text>The light through my window dims as the sun sets. Soon I will have to write by candle light. The sky reddens day by day, the sun's light wanes, and the world grows darker. Soon I fear there will be no light at all, only a red gloom to light the horizon. I return to my paper, and I shall write with haste. As the war came to a close, the borders between our kingdoms began to retreat. At first we were separated by the great stretches of wasted earth left by marching armies, but as time went on the no man's land was replaced by desert. Ever did the desert expand, separating the elements of our order, until one day we were bound to our own lands. But we had already begun to prepare. We would build five great gates, one in each kingdom, drawing upon our collective knowledge, and the arcane powers of the essence, so that our great kingdoms might still stay in contact. But it was not to be. We had the skill to build them, but we had not the knowledge of how to use them. No matter how hard we tried, we could not open them. By then it was too late. We had borne too much upon the success of the gates, we had no more options left. Our lands were divided, and so our order began to dissolve.
 		</Text>
 	</StoryPart>
 	<StoryPart>
-		<Title>Warning</Title>
-		<Group>14</Group>
-		<PartNumber>1</PartNumber>
-		<Text>Take heed traveller- stay away from the dead cities. Those places are home to none but ghosts now. Though the call of ancient treasure might be great, it must be ignored. You will find only death if you dare to tread the ruined streets of the old world.</Text>
+		<Title>The Triumph of Pyrrha</Title>
+		<Unique>False</Unique>
+		<Environment>Mountains</Environment>
+		<Text>For seven days and seven nights our guns have blazed. Their thunderous roar like the great lion emblazoned on our armour. Yet we wait patiently behind them, waiting for them to cease, for the signal to be signed and for our battle to begin. In the distance I can see the men and women who called themselves our brothers and sisters, but who now fight against us. They will see their mistake in time. Though we may lose many, they will lose more. By week's end we will have our victory, and the weaker kingdoms will lay down their arms in awe of our might.</Text>
 	</StoryPart>
 	<StoryPart>
-		<Title>Child's Letter</Title>
-		<Group>15</Group>
-		<PartNumber>1</PartNumber>
-		<Text>Dear Mummy,[br][br]Daddy says we have to leave home to find a new place to live in the countryside. He says we will be safe there. I told Daddy you are keeping us safe. Will you know where to find us when we move? I hope you will come home soon. I packed some of your things so that you won�t have to carry as much when you come. I took your bracelets and your picture of us and the stuffed pig that sits in the window because I know you think he is funny. I don�t want to move. Lots of my friends are still here. Daddy says they are silly to stay. He hasn�t been in a good mood since you left. It will be my birthday soon, so I hope you will be home by then.[br]Love you lots and lots,[br]Phoebe[br][br]PS I didn�t pack the dress grandma bought me because I hate it.</Text>
+		<Title>Sister's Diary</Title>
+		<Unique>False</Unique>
+		<Environment>Mountains</Environment>
+		<Text>The girl is doing well. Her wounds are healing quickly. She can be thankful that, though bloody, they were quite superficial. She is drinking, but is not yet lucid enough to eat. Sister Atena alone cares for her now, the rest of us can go back to our regular duties. We have not seen anyone follow her from our lookouts. It is unlikely they ever will. The Sisters are calling for me, I will write more when I can.</Text>
 	</StoryPart>
 	<StoryPart>
-		<Title>Soldier's Poem</Title>
-		<Group>16</Group>
-		<PartNumber>1</PartNumber>
-		<Text>When the trees of the forest have lost their leaves,And the only the crow call can be heard,When the banners of war are still,And the horns of battle go silent,Will you come home to me?[br]When the peals of thunder have rung out,And the grass takes root in the muddy tracks,When I have waited ten years and a day,And the days of death are only a memory,Will you come home to me?</Text>
+		<Title>Oath of the Hythinean Guard</Title>
+		<Unique>True</Unique>
+		<Environment>Mountains</Environment>
+		<Text>Oh great goddess, grant me strength! Oh Hythinea, queen of war, stalwart and heroic, bastion of the brave, hear me now. As you protected us when we were but children upon this green earth, protect us now from our aggressors. Bless this city that you have built, that bears your name, whose walls have never fallen. Mighty Hythinea, guardian of liberty, protect your people through dark times and light, and may your grace be seen in the glint of our spears, and the thunder of our arms. May the crown of your kingdom reign over the whole world for one thousand years, and let all who see the black walls of our city know your supremacy over The Five.</Text>
 	</StoryPart>
 	<StoryPart>
-		<Title>Shadowy Paper</Title>
-		<Group>17</Group>
-		<PartNumber>1</PartNumber>
-		<Text>He is not here, he is gone, you will never find him.</Text>
+		<Title>Court Memorandum</Title>
+		<Unique>True</Unique>
+		<Environment>Mountains</Environment>
+		<Text>The orders have been given, the captains have been dispatched. We are left here together, the rulers of this kingdom. The King sits upon his throne at the head of this vaulted room, alone and brooding. We are left to squabble without him. We are at war now, for betterment of our people or not, we are at war. Many of my peers seem excited by the prospect, gushing about 'just war' and 'righteous causes' as if the encroaching bloodshed is somehow deserved. I have no doubts that the courts of the four other kingdoms are the same as ours- their Kings and Queens withdrawn into solitude and their governments frothing at the thought of their potential empire. My thoughts have turned dark of late, I fear that we have changed, all of us, across this entire world, and there is no turning back.</Text>
 	</StoryPart>
 	<StoryPart>
-		<Title>Shadowy Paper</Title>
-		<Group>17</Group>
-		<PartNumber>2</PartNumber>
-		<Text>Somewhere, Beyond the Veil, there sits an aged king upon an aged throne, and he weeps for you all.</Text>
+		<Title>Letter from the Forgemaster</Title>
+		<Unique>True</Unique>
+		<Environment>Mountains</Environment>
+		<Text>I have worked the forge for as long as I can remember. My whole life I have known nothing but the hammer, the anvil, and the heavy strike of metal on metal. I know all there is to know about my art, every alloy, and every method. Yet something has been changing over the years. Our ore is heavier, darker. The slag from the furnace bubbles and burns with peculiar hues. Even as I work the metal seems to shimmer and move. It is not just me, I have spoken to other smiths, and they see it too. But the metal is good, the alloys strong, and malleable. I have heard stories of armour once pierced seemingly heal itself come morning, as if new. 'Living metal' we have begun to call it. I will work it harder, draw the life from it, to enhance these new properties. Then they will come to us, they will buy only from our workshop, and my legacy will be confirmed.</Text>
 	</StoryPart>
 	<StoryPart>
-		<Title>Shadowy Paper</Title>
-		<Group>17</Group>
-		<PartNumber>3</PartNumber>
-		<Text>In the realm of shadow and blackness we all go. Our arrival goes unannounced, for you see, there is no light in the land of the dead.</Text>
+		<Title>The Mystics</Title>
+		<Unique>False</Unique>
+		<Environment>Sea</Environment>
+		<Text>The sun is down, and the candles are lit. I have shut the window and pulled the blinds for fear of attracting unwanted attention. The Necromancer, as she is now known, came from our side of the order. What the other fragments did I do not know, perhaps they achieved more, or perhaps they faded away as we have done. When the gates failed we did not immediately give up. We had another plan- dangerous, and sinful, but it was all we had left. A new god, created from one of us to control the essence. To you this may sound like the realm of cultists and mad priests, but we had an idea of how to do it. Our god would not return the world to how it was. Instead they would act as a sentinel, to watch over the world, to find those who might be able to activate the gates, and to wait for the return of the old gods.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Triumph of Pyrrha</Title>
+		<Unique>False</Unique>
+		<Environment>Sea</Environment>
+		<Text>Today we breached the city. We beat at the walls from the south, until there were no barricades left to stop us. And from the north we fell too, like a hammer on an anvil we struck the city. But when we had cleared out the remaining defences we found the city empty. Not ruined, not sacked, simply empty. We searched the armories for supplies, we searched the factories, and the houses, and the keep, but there was nothing. It was as if the city had been swept clean. All had left, bringing with them their valuables, leaving only that which was too large or too worthless. It was when I stood in the court of their queen and I looked upon an empty throne that I felt it. It was a wave of emptiness, of worthlessness. What had we accomplished? I had not seen my fair city, or my loving family, in 3 long years. We had all done terrible things, and what for? We had conquered an empty land, a kingdom of ghosts. We have no orders, there are no officers left, there are so few of us left. The only thing I could think of, on this day of great victory, was to return home.
+		</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Sister's Diary</Title>
+		<Unique>False</Unique>
+		<Environment>Sea</Environment>
+		<Text>The girl seems happy. I can see her in the courtyard below. She is a curious one, and loves the plants and flowers in our garden. It is no wonder, I have not seen anything growing outside of our sanctuary, to her this must seem like heaven. I have spoken to the other sisters, and we have decided that she may join us, if she wishes. We all have grown fond of her stories, and, well, the world out there is no place for a child.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Aspects of Rha</Title>
+		<Unique>True</Unique>
+		<Environment>Sea</Environment>
+		<Text>I am the mason, and Rha is my hammer, through him our buildings are strong and our paths sure. I am the smith, and Rha is my anvil, by his will our steel is tempered and our machines run true. I am the cook, and Ra is my pot, through him our stews are fulfilling and warm. I am the hunter, and Ra is my cloak, by him we are hidden and our prey remains unaware. He is the god of the four aspects, he is the life of our culture. We channel him in our labour and our love, and through him our toil is worthy and our love is pure.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>To My Sister</Title>
+		<Unique>True</Unique>
+		<Environment>Sea</Environment>
+		<Text>A priest walked through the village today. They said we had to leave, that our town wasn't safe. She said she had fled from an army of nightmares and darkness. Just another holy-woman at the end of her tether we said. But she would not go on. She would leave the village at night and return in the morning, ranting and raving about approaching evil. My neighbors threw rocks at her, but she would not be deterred. She said she had seen fields of rotting crops, empty houses, and bloodied corpses. She said our animals would flee or they would die. I have noticed the animals acting strange of late. Entire herds facing the same direction, milk soured but fresh from the teat, foul smelling eggs with yellowed shells. My sister lives out beyond the scrub. I think we'll go stay with her for a while. The animals are coming with us. I'll see if our neighbors might lend us a shell or two, just in case of course. It might all be a load of nonsense. Either way, if you came here looking for us, you know where we are.
+		</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Unsigned Letter</Title>
+		<Unique>True</Unique>
+		<Environment>Sea</Environment>
+		<Text>It's been so long that I fear I won't be able to remember your face, I do hope you can remember mine. You've been gone for five years now, we hear this and that about the front lines, about how everything keeps. The reserves don't know where our men are, or who they are fighting. If you do come home, if you find this note, please come to us. The city isn't a safe place any more. Every day there is violence in the street, and the guards turn a blind eye at every opportunity. We're going into the forests, others are coming with us. We're going to start a new life together, all of us. Do not forget me, my love.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Etched Metal</Title>
+		<Unique>True</Unique>
+		<Environment>Sea</Environment>
+		<Text>The Lord of Black Dell demands a tribute. Any vagrant who thinks they can pass through these lands untolled with pay with their flesh and their blood. All scrap, treasure, or other valuables are to be surrendered to Black Dell as tribute. Fanatics, pilgrims, and preachers will be shot on sight- NO EXCEPTIONS.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Mystics</Title>
+		<Unique>False</Unique>
+		<Environment>Ruins</Environment>
+		<Text>As the light of my candle sputters and threatens to go out, I conclude my tale. I pray it will be useful to you, whoever you might be, and may it shed light upon the strange things that now live in our world. I will not be here when you read this. I doubt there will be any who know of the Mystics, or of the five kingdoms. In the autumn of the year of the solar equinox a volunteer rose to our call. A trustful young girl, full of hope. We did not say what her fate would be. Some things, you see, are good, but are not necessary, whilst others, are evil, and are the only course of action. From the blood of our order The Necromancer was born. Horrified by the ritual she fled, her skin now black and shadowy, immortal but intangible. Only I was left, now alone, to document our research and our achievements, so that all may know what we tried to do. My fingers tremble. I cap my inkwell, for our story has been told, and my voice is no longer needed.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Triumph of Pyrrha</Title>
+		<Unique>False</Unique>
+		<Environment>Ruins</Environment>
+		<Text>We did not make it home. As we crested the horizon, and the great towers of Pyrrha came into view, a great wail of despair rose up from our diminished ranks. For we could see, even at this great distance, that our fair city was no more. The once fertile fields that sprawled before the city had been reduced to cinders. The great walls had fallen, the watchtowers gone, and there was not a soul in sight. Some of us fell to our knees and would not be moved. Others ran towards the city, crying out for their loved ones. Some even threw down their banners and abandoned us. I did not try to stop them- there was no reason to. We had nowhere to go, no home to return to, and nowhere to find sanctuary. I am reminded of something I said many years ago, that this war would be our last. How foolish we have been, how blind. We have destroyed our own world for what? For Pride, Greed, and Vanity. For nothing.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Sister's Diary</Title>
+		<Unique>False</Unique>
+		<Environment>Ruins</Environment>
+		<Text>Sister Atena came to me today, she said the girl had been stealing things from her. I asked if she had seen her do it, and predictably, she said no. 'But' she said 'Who else would steal here? We know each other too well, we have been together our whole lives. But she is an outsider.' For this I admonished her. She should not speak ill of a girl to whom the world had been so cruel, not least without evidence of her crime. I told her to look out for her things, for it could be that they were misplaced, or someone borrowed them without asking. I am sure there is a sensible explanation for their disappearance.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>A Warning</Title>
+		<Unique>True</Unique>
+		<Environment>Ruins</Environment>
+		<Text>Take heed traveller- stay away from the cities. Those places are home to none but ghosts. Though the call of the ancient ones is tempting indeed, it must be ignored. Only misfortune, injury, and death will befall those who set foot in the ruins of the old world. There are strange things out there, uncaring things, sightless, loveless, and hungry.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Doctor's Notes</Title>
+		<Unique>True</Unique>
+		<Environment>Ruins</Environment>
+		<Text>I have been confined to my laboratory for too long. Watching patients day in and day out, observing their changes, the subtleties in their mood. I look out of my window now and I yearn for the world outside. Oh how would it be to run through the forest, to feel the grass through my toes and be youthful again. But I am old, too old, I fear, to enjoy such childish delights once again. Instead I turn to my work again, to this substance, this 'Essence'. We had another bad one today, a young man, apparently unaffected this morning, flew into such a rage that he set fire to his own house. Had to be restrained by five men they say. He is calm now, but you can see the inky blackness in his eyes. Of course we will try to turn him back, but to me he seems too far gone. We have lost others to much less, and we have cured so few... so few indeed.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Soiled Pages</Title>
+		<Unique>True</Unique>
+		<Environment>Ruins</Environment>
+		<Text>Mum always said not to go out onto the plains after nightfall. Whenever I would ask why she would say 'there are monsters'. Even when I was tiny I didn't believe her. 'Monsters?' I would say 'Don't be silly Mummy, there are no monsters'. She would always be silent. Of course I would still listen to her, I never went out after the sun had set. I figured it was something adults say to stop children wandering off after dark. But now I'm not so sure. Sometimes when the suns are setting, and the orange fire of the sky lights up the horizon, I see' things. Strange black silhouettes dance across the dark curves of the hills. Noises I have heard too- horrible, gargling, moans, and deathly wails. Now I keep the door bolted at night and the windows shuttered. I tell my children to be careful. I tell them it is no joke. We keep our families close out here, and our arms ready. But nothing, nothing on the gods earth, could persuade me to go out after dark, not now.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Balance</Title>
+		<Unique>True</Unique>
+		<Environment>Ruins</Environment>
+		<Text>It is the nature of things that every event should be balanced by another. Where there is force, there is friction. Where there is unity, there is discord. Where there is love there is hate. Where there is light there is darkness. And where there is life, there is also death. All must accustom themselves to these laws. Balance must be found, for without it only madness remains.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Epitaph</Title>
+		<Unique>True</Unique>
+		<Environment>Ruins</Environment>
+		<Text>Here lies a dead man, once loved, now forgotten. One whose fleeting life touched the world so briefly and is now gone. His shallow footprints in the sand washed away by the tide. We are nothing but godless animals, cursed to spend our days seeking that which does not exist.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Mystics</Title>
+		<Unique>False</Unique>
+		<Environment>Wasteland</Environment>
+		<Text>To whoever finds this book, please ignore all you have read so far. My father was a confused man, especially in his old age. The Mystics were not real, the gates were built long before my father was born. As for the Necromancer- we believe it was mother. She died when I was young, and he became increasingly despondent over her loss as he grew old. It was hard to watch him turn to someone we did not recognise. But this book was all he had, and so we let him be. Remember that.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Triumph of Pyrrha</Title>
+		<Unique>False</Unique>
+		<Environment>Wasteland</Environment>
+		<Text>My armour is tarnished. My sword is broken. I have not seen my men in years. I have trekked across the great wasteland to the other cities, but they are all empty. The tracks of long-departed caravans sprout from the ruins like roots from a tree. I followed the grave-marked trails to their end, only to find more paths and footprints. I found the note left me by my family, but it led nowhere. The village her parents once lived in is but a field of burning rafters and shattered foundations. It seems I will never find them. We have all lost our old lives.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Sister's Diary</Title>
+		<Unique>False</Unique>
+		<Environment>Wasteland</Environment>
+		<Text>I was wrong. It is on my head. I allowed compassion to cloud my vision. She is gone, of course, fled into the night. I was woken to the peal of bells and the acrid smell of smoke. The garden had been set aflame. We rushed to put it out, but it was too late. The plants we had nurtured for so long were gone, maybe forever. I ran to the entrance to look for her, but it was too dark. Instead I found Atena's books, cookware, pens, ink, and more, broken and strewn across the sand. She had dropped them from the towers. I do not know why she did it. We tried to help her. But she was beyond help.</Text>
 	</StoryPart>
 </Lore>
