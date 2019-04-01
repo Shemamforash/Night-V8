@@ -124,6 +124,7 @@ namespace Facilitating.UIControllers.Inventories
 
         public void OnSelect(BaseEventData eventData)
         {
+            if (TutorialManager.Instance.IsTutorialVisible()) return;
             Select();
         }
 

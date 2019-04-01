@@ -82,7 +82,7 @@ namespace Facilitating.UIControllers
                 new TutorialOverlay(_armourObject.GetComponent<RectTransform>()),
                 new TutorialOverlay(_upgradeButton.GetComponent<RectTransform>())
             };
-            TutorialManager.TryOpenTutorial(13, overlays);
+            TutorialManager.Instance.TryOpenTutorial(13, overlays);
             _seenTutorial = true;
         }
         

@@ -145,7 +145,7 @@ namespace Game.Exploration.Environment
         {
             if (_seenTutorial || !TutorialManager.Active()) return;
             TutorialOverlay overlay = new TutorialOverlay(MapGenerator.GetInitialNode().MapNode().transform, 3, 3);
-            TutorialManager.TryOpenTutorial(2, overlay);
+            TutorialManager.Instance.TryOpenTutorial(2, overlay);
             _seenTutorial = true;
         }
 
@@ -278,7 +278,7 @@ namespace Game.Exploration.Environment
         {
             if (_nearestRegion == null) return;
             if (!CanAffordToTravel()) return;
-            if (TutorialManager.IsTutorialVisible()) return;
+            if (TutorialManager.Instance.IsTutorialVisible()) return;
             Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
             travelAction.TravelTo(_nearestRegion, _nearestRegion.MapNode().GetDistance());
             IsReturningFromCombat = false;
@@ -336,7 +336,7 @@ namespace Game.Exploration.Environment
                     TryRestoreGrit();
                     break;
                 case InputAxis.Cancel:
-                    if (!IsReturningFromCombat && !TutorialManager.IsTutorialVisible())
+                    if (!IsReturningFromCombat && !TutorialManager.Instance.IsTutorialVisible())
                         MenuStateMachine.ShowMenu("Game Menu");
                     break;
             }

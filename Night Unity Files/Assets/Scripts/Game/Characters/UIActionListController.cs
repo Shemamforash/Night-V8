@@ -107,7 +107,7 @@ public class UIActionListController : MonoBehaviour
 
     private bool CheckIfButtonNeedsSelecting()
     {
-        if (TutorialManager.IsTutorialVisible()) return false;
+        if (TutorialManager.Instance.IsTutorialVisible()) return false;
         if (_player != CharacterManager.SelectedCharacter) return false;
         GameObject currentObject = EventSystem.current.currentSelectedGameObject;
         if (currentObject != null && currentObject.activeInHierarchy) return false;

@@ -65,7 +65,7 @@ namespace Facilitating.UIControllers
         private void ShowAccessoryTutorial()
         {
             if (_seenTutorial || !TutorialManager.Active()) return;
-            TutorialManager.TryOpenTutorial(14, new TutorialOverlay());
+            TutorialManager.Instance.TryOpenTutorial(14, new TutorialOverlay());
             _seenTutorial = true;
         }
         

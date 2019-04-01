@@ -149,9 +149,9 @@ namespace Facilitating.UIControllers
                 new TutorialOverlay(_weaponDetail.DurabilityRect()),
                 new TutorialOverlay(_weaponDetail.DurabilityRect())
             };
-            if (TutorialManager.TryOpenTutorial(12, startingOverlays))
+            if (TutorialManager.Instance.TryOpenTutorial(12, startingOverlays))
             {
-                while (TutorialManager.IsTutorialVisible()) yield return null;
+                while (TutorialManager.Instance.IsTutorialVisible()) yield return null;
             }
 
             _seenAttributeTutorial = true;
@@ -162,9 +162,9 @@ namespace Facilitating.UIControllers
             if (_seenChannelTutorial) yield break;
             if (!_channelButton.gameObject.activeInHierarchy) yield break;
             TutorialOverlay overlay = new TutorialOverlay(_channelButton.GetComponent<RectTransform>());
-            if (TutorialManager.TryOpenTutorial(17, overlay))
+            if (TutorialManager.Instance.TryOpenTutorial(17, overlay))
             {
-                while (TutorialManager.IsTutorialVisible()) yield return null;
+                while (TutorialManager.Instance.IsTutorialVisible()) yield return null;
             }
 
             _seenChannelTutorial = true;
@@ -175,9 +175,9 @@ namespace Facilitating.UIControllers
             if (_seenInfuseTutorial) yield break;
             if (!_infuseButton.gameObject.activeInHierarchy) yield break;
             TutorialOverlay overlay = new TutorialOverlay(_infuseButton.GetComponent<RectTransform>());
-            if (TutorialManager.TryOpenTutorial(18, overlay))
+            if (TutorialManager.Instance.TryOpenTutorial(18, overlay))
             {
-                while (TutorialManager.IsTutorialVisible()) yield return null;
+                while (TutorialManager.Instance.IsTutorialVisible()) yield return null;
             }
 
             _seenInfuseTutorial = true;

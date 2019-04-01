@@ -52,6 +52,18 @@ namespace Game.Global
             return title + " " + ToRoman(partNumber);
         }
 
+        public static void Reset()
+        {
+            _loaded = false;
+            AllEntries.Clear();
+            UnlockedEntries.Clear();
+            CharacterStories.Clear();
+            WandererStories.Clear();
+            NecromancerStories.Clear();
+            LoreStories.Clear();
+            ReadJournals();
+        }
+        
         public void Unlock()
         {
             ReadJournals();

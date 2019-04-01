@@ -126,7 +126,7 @@ namespace Game.Characters
                 new TutorialOverlay(physical),
                 new TutorialOverlay(mental)
             };
-            TutorialManager.TryOpenTutorial(10, overlays);
+            TutorialManager.Instance.TryOpenTutorial(10, overlays);
             _seenTutorial = true;
         }
     }

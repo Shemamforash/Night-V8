@@ -29,13 +29,13 @@ public class ResourcesUiController : MonoBehaviour
     public static void Show()
     {
         _hidden = false;
-        _canvas.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
+//        _canvas.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
     }
 
     public static void Hide()
     {
         _hidden = true;
-        _canvas.DOFade(0f, 1f).SetUpdate(UpdateType.Normal, true);
+//        _canvas.DOFade(0f, 1f).SetUpdate(UpdateType.Normal, true);
     }
 
     public static bool Hidden()
@@ -64,7 +64,7 @@ public class ResourcesUiController : MonoBehaviour
         int quantity = (int) Inventory.Consumables().Sum(c =>
         {
             ResourceTemplate template = c.Template;
-            float thirstOffset = template.ResourceType == ResourceType.Water ? template.EffectBonus : 0; 
+            float thirstOffset = template.ResourceType == ResourceType.Water ? template.EffectBonus : 0;
             return thirstOffset * c.Quantity();
         });
         _water.UpdateTab("Water", quantity);

@@ -191,7 +191,7 @@ namespace Facilitating.UIControllers
         public static void Close()
         {
             if (!_closeAllowed) return;
-            if (TutorialManager.IsTutorialVisible()) return;
+            if (TutorialManager.Instance.IsTutorialVisible()) return;
             FlashCloseButton();
             InventoryTab.ClearActiveTab();
             _instance._currentMenuController.Hide();

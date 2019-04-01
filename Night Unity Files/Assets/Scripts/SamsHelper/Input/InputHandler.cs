@@ -151,10 +151,16 @@ namespace SamsHelper.Input
 
         private static bool ListenerIsValid(IInputListener inputListener)
         {
-            if (inputListener == null) return false;
-            if (inputListener is MonoBehaviour m && m.gameObject != null) return true;
-            ListenersToRemove.Add(inputListener);
-            return false;
+            switch (inputListener)
+            {
+                case null:
+                    return false;
+                case MonoBehaviour behaviour when behaviour.gameObject != null:
+                    return true;
+                default:
+                    ListenersToRemove.AddOnce(inputListener);
+                    return false;
+            }
         }
 
         private static void BroadcastInputDown(InputAxis axis, bool isHeld, float lastInputValue)

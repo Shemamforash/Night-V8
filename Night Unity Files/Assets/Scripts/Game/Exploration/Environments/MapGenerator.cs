@@ -96,7 +96,7 @@ namespace Game.Exploration.Environment
             SetRegionTypes();
             initialNode.Discover();
 #if UNITY_EDITOR
-            _regions.ForEach(r => r.Discover());
+//            _regions.ForEach(r => r.Discover());
 #endif
         }
 

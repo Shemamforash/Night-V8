@@ -156,7 +156,7 @@ namespace Game.Combat.Generation.Shrines
         {
             if (_seenTutorial || !TutorialManager.Active()) return;
             if (_targetBrand == -1) return;
-            TutorialManager.TryOpenTutorial(16, new TutorialOverlay());
+            TutorialManager.Instance.TryOpenTutorial(16, new TutorialOverlay());
             _seenTutorial = true;
         }
 

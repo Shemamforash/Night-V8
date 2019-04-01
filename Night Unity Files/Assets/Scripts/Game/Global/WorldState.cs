@@ -159,6 +159,8 @@ namespace Game.Global
         {
             Inventory.Reset();
             CharacterManager.Reset(clearSave);
+            JournalEntry.Reset();
+            TutorialManager.ResetTutorial();
             DaysSpentHere = 0;
             Days = 0;
             Hours = 6;
@@ -195,7 +197,7 @@ namespace Game.Global
                 new TutorialOverlay(WorldView.GetEnvironmentRect()),
                 new TutorialOverlay()
             };
-            TutorialManager.TryOpenTutorial(1, overlays);
+            TutorialManager.Instance.TryOpenTutorial(1, overlays);
             _seenTutorial = true;
         }
 

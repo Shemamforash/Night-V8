@@ -123,8 +123,8 @@ namespace Game.Combat.Generation
             _player.HealthController.TakeDamage(_player.HealthController.GetMaxHealth() * 0.6f);
             CombatManager.Instance().SetForceShowHud(true);
             yield return new WaitForSecondsRealtime(0.5f);
-            TutorialManager.TryOpenTutorial(7, new List<TutorialOverlay> {new TutorialOverlay(RageBarController.AdrenalineRect())});
-            while (TutorialManager.IsTutorialVisible()) yield return null;
+            TutorialManager.Instance.TryOpenTutorial(7, new List<TutorialOverlay> {new TutorialOverlay(RageBarController.AdrenalineRect())});
+            while (TutorialManager.Instance.IsTutorialVisible()) yield return null;
 
             yield return StartCoroutine(WaitForControl(() => InputHandler.InputAxisWasPressed(InputAxis.Sprint),
                 () => "Dash with [" + InputHandler.GetBindingForKey(InputAxis.Sprint) + "]"));
@@ -146,7 +146,7 @@ namespace Game.Combat.Generation
                 if (!_seenAccuracyTutorial && CombatManager.Instance().InactiveEnemyCount() == 0 && PlayerCombat.Instance.GetTarget() != null)
                 {
                     TutorialOverlay overlay = new TutorialOverlay(EnemyUi.Instance.UiHitController.GetComponent<RectTransform>());
-                    TutorialManager.TryOpenTutorial(8, overlay);
+                    TutorialManager.Instance.TryOpenTutorial(8, overlay);
                     _seenAccuracyTutorial = true;
                 }
 
@@ -192,8 +192,8 @@ namespace Game.Combat.Generation
             yield return StartCoroutine(WaitForControl(() => InputHandler.InputAxisWasPressed(InputAxis.Compass),
                 () => "Use your compass with [" + InputHandler.GetBindingForKey(InputAxis.Compass) + "]"));
 
-            TutorialManager.TryOpenTutorial(3, new List<TutorialOverlay> {new TutorialOverlay(UiCompassPulseController.CompassRect())});
-            while (TutorialManager.IsTutorialVisible()) yield return null;
+            TutorialManager.Instance.TryOpenTutorial(3, new List<TutorialOverlay> {new TutorialOverlay(UiCompassPulseController.CompassRect())});
+            while (TutorialManager.Instance.IsTutorialVisible()) yield return null;
 
             yield return StartCoroutine(WaitForControl(() => true,
                 () => "Collect the revealed items with [" + InputHandler.GetBindingForKey(InputAxis.TakeItem) + "]"));

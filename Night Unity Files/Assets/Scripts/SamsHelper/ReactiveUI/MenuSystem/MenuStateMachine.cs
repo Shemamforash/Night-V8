@@ -113,7 +113,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             if (!PauseMenuController.IsOpen())
             {
                 if (UiGearMenuController.IsOpen()) return;
-                if (TutorialManager.IsTutorialVisible()) return;
+                if (TutorialManager.Instance.IsTutorialVisible()) return;
             }
 
             PauseMenuController.ToggleOpen();

@@ -77,10 +77,10 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         if (_seenTutorial || !TutorialManager.Active()) return;
         List<TutorialOverlay> overlays = new List<TutorialOverlay>
         {
-            new TutorialOverlay(ResourcesUiController.ResourceRect()),
+            new TutorialOverlay(),
             new TutorialOverlay()
         };
-        TutorialManager.TryOpenTutorial(11, overlays, false);
+        TutorialManager.Instance.TryOpenTutorial(11, overlays, false);
         _seenTutorial = true;
     }
 
