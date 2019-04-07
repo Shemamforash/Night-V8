@@ -6,13 +6,11 @@ using UnityEngine;
 
 public class LeafBehaviour : MonoBehaviour
 {
-    private Rigidbody2D _rb2d;
     private static readonly ObjectPool<LeafBehaviour> _leafPool = new ObjectPool<LeafBehaviour>("Dust", "Prefabs/Combat/Dust");
     private SpriteRenderer _sprite;
 
     private void Awake()
     {
-        _rb2d = GetComponent<Rigidbody2D>();
         _sprite = GetComponent<SpriteRenderer>();
     }
 

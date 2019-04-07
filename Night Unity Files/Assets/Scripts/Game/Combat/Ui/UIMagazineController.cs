@@ -2,6 +2,7 @@
 using Game.Combat.Player;
 using Game.Gear.Weapons;
 using SamsHelper.Libraries;
+using TMPro;
 using UnityEngine;
 
 namespace Game.Combat.Ui
@@ -10,6 +11,7 @@ namespace Game.Combat.Ui
     {
         private static GameObject _ammoPrefab;
         private static Transform _magazineContent;
+        private static TextMeshProUGUI _fireTypeText;
         private static readonly List<Ammo> MagazineAmmo = new List<Ammo>();
         private static int _capacity;
         private static BaseWeaponBehaviour _weapon;
@@ -19,6 +21,7 @@ namespace Game.Combat.Ui
         {
             _magazineContent = transform;
             _ammoPrefab = Resources.Load("Prefabs/Combat/Ammo Prefab") as GameObject;
+            _fireTypeText = gameObject.FindChildWithName<TextMeshProUGUI>("Firetype");
         }
 
         public static void UpdateMagazineUi()
@@ -30,7 +33,7 @@ namespace Game.Combat.Ui
         private static void UpdateMagazine(int remaining = -1)
         {
             if (remaining == -1) remaining = _weapon.GetRemainingAmmo();
-            for (int i = 0; i < MagazineAmmo.Count; ++i) MagazineAmmo[i].SetUnspent(i < remaining);
+            for (int i = 0; i < MagazineAmmo.Count; ++i) MagazineAmmo[MagazineAmmo.Count - i - 1].SetUnspent(i < remaining);
             _empty = false;
         }
 
@@ -47,11 +50,12 @@ namespace Game.Combat.Ui
             UpdateMagazine(newCapacity);
         }
 
-        public static void SetWeapon(BaseWeaponBehaviour weapon)
+        public static void SetWeapon(BaseWeaponBehaviour weaponBehaviour)
         {
-            _weapon = weapon;
-            if (weapon == null) return;
-            _capacity = weapon.Capacity();
+            _weapon = weaponBehaviour;
+            if (weaponBehaviour == null) return;
+            _capacity = weaponBehaviour.Capacity();
+            _fireTypeText.text = weaponBehaviour.Weapon.WeaponAttributes.FireType;
             MagazineAmmo.ForEach(a => a.Destroy());
             MagazineAmmo.Clear();
             for (int i = 0; i < _capacity; ++i)
@@ -60,6 +64,7 @@ namespace Game.Combat.Ui
                 MagazineAmmo.Add(newRound);
             }
 
+            _fireTypeText.transform.SetAsFirstSibling();
             UpdateMagazine();
         }
 

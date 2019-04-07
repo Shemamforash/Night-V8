@@ -20,7 +20,8 @@ namespace Game.Gear.Weapons
         private readonly AttributeModifier _reloadSpeedDurabilityModifier;
         private readonly AttributeModifier _accuracyDurabilityModifier;
         private readonly Weapon _weapon;
-        private string Description;
+        private readonly string Description;
+        public string FireType;
         public bool Automatic = true;
         private WeaponClassType WeaponClassType;
         public WeaponType WeaponType;
@@ -76,6 +77,7 @@ namespace Game.Gear.Weapons
             WeaponType = weaponClass.Type;
             Automatic = weaponClass.Automatic;
             WeaponClassType = weaponClass.Name;
+            FireType = weaponClass.FireType;
             RecalculateAttributeValues();
         }
 

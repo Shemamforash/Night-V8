@@ -108,7 +108,7 @@ public class UiBrandMenu : Menu
     private string GetSkillUsageString(Skill skill, int skillNum)
     {
         string binding = GetBindingForSkill(skillNum);
-        string requirements = "Requires " + skill.AdrenalineCost() + " Adrenaline - " + skill.AdrenalineCost() + " second".Pluralise(skill.AdrenalineCost()) + " Cooldown";
+        string requirements = "Requires " + skill.Cost() + " Adrenaline - " + skill.Cost() + " second".Pluralise(skill.Cost()) + " Cooldown";
         return binding + " - " + requirements;
     }
 

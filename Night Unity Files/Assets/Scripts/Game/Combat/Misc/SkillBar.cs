@@ -120,7 +120,7 @@ namespace Game.Combat.Misc
             bool freeSkill = IsSkillFree();
             if (!skill.Activate(freeSkill || SkillsAreFree)) return;
             if (freeSkill) return;
-            StartCooldown(skill.AdrenalineCost());
+            StartCooldown(skill.Cost());
         }
 
         private void StartCooldown(int duration)

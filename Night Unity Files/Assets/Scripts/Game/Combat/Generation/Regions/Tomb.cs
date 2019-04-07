@@ -101,7 +101,7 @@ namespace Game.Combat.Generation
 
         private void AddNextEnemyType()
         {
-            _timeToNextEnemyType = 17f;
+            _timeToNextEnemyType = 15f;
             if (TryAddEnemyType(EnemyType.Ghoul)) return;
             if (TryAddEnemyType(EnemyType.Brawler)) return;
             if (TryAddEnemyType(EnemyType.Ghast)) return;
@@ -120,20 +120,21 @@ namespace Game.Combat.Generation
         private IEnumerator StartSpawningEnemies()
         {
             TombActive = true;
-            float maxTime = 90f; //60f * 5f;
+            float maxTime = 90f;//60f * 5f;
             float currentTime = maxTime;
             _timeToIncreaseMaxEnemies = 20f;
+            float endAudioOffset = 58f;
             Sequence seq = DOTween.Sequence();
-            seq.AppendInterval(maxTime - 59f);
+            seq.AppendInterval(maxTime - endAudioOffset);
             seq.AppendCallback(SpawnEndGameAudio);
             _timeToNextShake = 10f;
             _maxEnemies = 2;
             AddNextEnemyType();
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(_secondaryCamera.DOColor(new Color(0.7f, 0.4f, 0.4f), maxTime - 59).SetEase(Ease.InSine));
-            sequence.Append(_secondaryCamera.DOColor(new Color(0f, 0f, 0f), 59).SetEase(Ease.InExpo));
+            sequence.Append(_secondaryCamera.DOColor(new Color(0.7f, 0.4f, 0.4f), maxTime - endAudioOffset).SetEase(Ease.OutExpo));
+            sequence.Append(_secondaryCamera.DOColor(new Color(0.1f, 0.1f, 0.1f), endAudioOffset).SetEase(Ease.OutExpo));
             PostProcessInvertColour invertColour = Camera.main.GetComponent<PostProcessInvertColour>();
-            sequence.Insert(maxTime - 59, DOTween.To(invertColour.CurrentValue, invertColour.Set, 1f, 59f).SetEase(Ease.InExpo));
+            sequence.Insert(maxTime - endAudioOffset, DOTween.To(invertColour.CurrentValue, invertColour.Set, 1f, 20f).SetEase(Ease.InOutSine));
             while (currentTime > 0f)
             {
                 if (!CombatManager.Instance().IsCombatActive()) yield return null;

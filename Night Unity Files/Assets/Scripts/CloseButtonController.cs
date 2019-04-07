@@ -13,20 +13,31 @@ public class CloseButtonController : ControlTypeChangeListener, IInputListener
     [SerializeField] private Image _glowImage;
 
     private InputAxis _targetAxis = InputAxis.Cancel;
-    private bool _usingFireInput;
 
     public void Start()
     {
         _button.targetGraphic = _glowImage;
-        if (!_usingFireInput) UseDefaultInput();
-        else _targetAxis = InputAxis.Accept;
+        switch (_targetAxis)
+        {
+            case InputAxis.Cancel:
+                UseDefaultInput();
+                break;
+            case InputAxis.Accept:
+                UseAcceptInput();
+                break;
+            case InputAxis.Sprint:
+                UseSpaceInput();
+                break;
+        }
+
         SetOnControllerInputChange(UpdateText);
     }
 
     private void UpdateText()
     {
         string text = InputHandler.GetBindingForKey(_targetAxis);
-        if (text.Length > 4) text = "C";
+        if (text.Length > 4 && _targetAxis == InputAxis.Cancel) text = "C";
+        if (text.Length > 4 && _targetAxis == InputAxis.Sprint) text = "SPC";
         _buttonText.SetText(text);
     }
 
@@ -40,14 +51,18 @@ public class CloseButtonController : ControlTypeChangeListener, IInputListener
     {
         _targetAxis = InputAxis.Accept;
         UpdateText();
-        _usingFireInput = true;
+    }
+
+    public void UseSpaceInput()
+    {
+        _targetAxis = InputAxis.Sprint;
+        UpdateText();
     }
 
     private void UseDefaultInput()
     {
         _targetAxis = InputAxis.Cancel;
         UpdateText();
-        _usingFireInput = false;
     }
 
     public void Enable()

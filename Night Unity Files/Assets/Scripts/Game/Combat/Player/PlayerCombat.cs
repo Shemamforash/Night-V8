@@ -68,6 +68,7 @@ namespace Game.Combat.Player
         {
             Alive = false;
             Instance = null;
+            InputHandler.UnregisterInputListener(this);
         }
 
         public bool ConsumeAdrenaline(int amount)
@@ -142,9 +143,6 @@ namespace Game.Combat.Player
                         _rotatingWithKeyboard = true;
                         Rotate(direction);
                         break;
-                    case InputAxis.Reload:
-                        Reload();
-                        break;
                 }
             }
             else
@@ -177,6 +175,9 @@ namespace Game.Combat.Player
                         break;
                     case InputAxis.Swivel:
                         StartSwivelling();
+                        break;
+                    case InputAxis.Reload:
+                        Reload();
                         break;
                 }
             }
@@ -332,6 +333,16 @@ namespace Game.Combat.Player
             TrySwivel();
             UpdateRotation();
             CheckBrandUnlock();
+            UpdateActiveSkill();
+        }
+
+        private void UpdateActiveSkill()
+        {
+            if (_activeSkillDuration < 0f) return;
+            _activeSkillDuration -= Time.deltaTime;
+            if (_activeSkillDuration > 0f) return;
+            OnFireAction = null;
+            ActiveSkillController.Stop();
         }
 
         private void CheckBrandUnlock()
@@ -424,6 +435,8 @@ namespace Game.Combat.Player
         {
             Destroy(_weaponBehaviour);
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
+            _reloadDuration = Player.EquippedWeapon.GetAttributeValue(AttributeType.ReloadSpeed);
+            _capacity = _weaponBehaviour.Capacity();
             UIMagazineController.SetWeapon(_weaponBehaviour);
             RecalculateAttributes();
         }
@@ -524,48 +537,62 @@ namespace Game.Combat.Player
         public override Weapon Weapon() => Player.EquippedWeapon;
 
 
-        private float _reloadDuration, _currentReloadTime;
         private bool _rotatingWithKeyboard;
+
+        private Coroutine _reloadCoroutine;
+        private float _reloadProgress, _initialReloadProgress;
 
         //RELOADING
         private void Reload()
         {
-            if (!_weaponBehaviour.CanReload()) return;
-            if (!_reloading) StartReloading();
-            UpdateReloading();
+            if (_weaponBehaviour.FullyLoaded()) return;
+            if (_reloading) return;
+            _weaponBehaviour.StopFiring();
+            _reloadCoroutine = StartCoroutine(DoReload());
         }
 
-        private void StartReloading()
+        private float _currentReloadTime, _reloadDuration;
+        private int _capacity;
+
+        private void StartReload()
         {
             _reloading = true;
-            _reloadDuration = Player.EquippedWeapon.GetAttributeValue(AttributeType.ReloadSpeed);
-            _currentReloadTime = 0f;
+            float currentShots = _weaponBehaviour.GetRemainingAmmo();
+            float fillAmount = currentShots / _capacity;
+            _currentReloadTime = _reloadDuration * fillAmount;
             WeaponAudio.StartReload(Weapon());
-            OnFireAction = null;
             UIMagazineController.EmptyMagazine();
             ReloadController.Instance().Show();
+            _initialReloadProgress = _currentReloadTime / _reloadDuration;
+            _reloadProgress = _initialReloadProgress;
         }
 
-        private void UpdateReloading()
+        private IEnumerator DoReload()
         {
-            _currentReloadTime += Time.deltaTime;
-            float normalisedTime = _currentReloadTime / _reloadDuration;
-            if (_currentReloadTime > _reloadDuration)
+            StartReload();
+            while (_currentReloadTime < _reloadDuration)
             {
-                StopReloading();
-                return;
+                _currentReloadTime += Time.deltaTime;
+                if (_currentReloadTime > _reloadDuration) _currentReloadTime = _reloadDuration;
+                _reloadProgress = _currentReloadTime / _reloadDuration;
+                UIMagazineController.UpdateReloadTime(_reloadProgress);
+                float normalisedProgress = 1f - (1f - _reloadProgress) / (1f - _initialReloadProgress);
+                ReloadController.Instance().SetProgress(normalisedProgress);
+                _dryFireTimer = 0f;
+                yield return null;
             }
 
-            ReloadController.Instance().SetProgress(normalisedTime);
-            UIMagazineController.UpdateReloadTime(normalisedTime);
-            _dryFireTimer = 0f;
+            _reloadProgress = 1f;
+            StopReloading();
         }
 
         private void StopReloading()
         {
+            if (_reloadCoroutine != null) StopCoroutine(_reloadCoroutine);
             ReloadController.Instance().Complete();
-            _weaponBehaviour.Reload();
-            ActiveSkillController.Stop();
+            int shotsNow = Mathf.CeilToInt(_reloadProgress * _capacity);
+            if (shotsNow > _capacity) shotsNow = _capacity;
+            _weaponBehaviour.Reload(shotsNow);
             WeaponAudio.StopReload(Weapon());
             UIMagazineController.UpdateMagazineUi();
             _reloading = false;
@@ -575,6 +602,7 @@ namespace Game.Combat.Player
 
         private void InstantReload()
         {
+            _reloadProgress = 1f;
             StopReloading();
         }
 
@@ -588,17 +616,20 @@ namespace Game.Combat.Player
         //FIRING
         private void FireWeapon()
         {
-            if (_reloading) return;
+            if (_reloading)
+            {
+                StopReloading();
+            }
+
             if (_weaponBehaviour.Empty())
             {
                 if (Player.Attributes.ReloadOnEmptyMag) Reload();
-                else if (!_reloading) StartReloading();
+                else ReloadController.Instance().Show();
                 return;
             }
 
             if (!_weaponBehaviour.CanFire()) return;
             _weaponBehaviour.StartFiring();
-            if (_weaponBehaviour.Empty()) ActiveSkillController.Stop();
         }
 
         private void TryDryFire()
@@ -625,5 +656,14 @@ namespace Game.Combat.Player
         //MISC
 
         public bool IsKeyboardBeingUsed() => _useKeyboardMovement || (_swivelling && _swivelAmount != 0);
+
+        public void SetPassiveSkill(Action<Shot> passiveEffect, float duration)
+        {
+            OnFireAction = passiveEffect;
+            _activeSkillDuration = duration;
+            ActiveSkillController.Play();
+        }
+
+        private float _activeSkillDuration;
     }
 }

@@ -19,6 +19,7 @@ namespace Game.Combat.Misc
         private float _voidDuration;
         public bool IsPlayer;
         protected float BurnDamagePercent = 0.05f;
+        private bool _voided;
 
         private void TakeArmourDamage(int damage)
         {
@@ -69,6 +70,7 @@ namespace Game.Combat.Misc
             ++VoidStacks;
             if (VoidStacks >= VoidTargetStacks)
             {
+                _voided = true;
                 SpriteFlash.FlashSprite();
                 float damage = HealthController.GetMaxHealth() / 10f;
                 HealthController.TakeDamage(damage);
@@ -81,6 +83,13 @@ namespace Game.Combat.Misc
         }
 
         public float GetVoid() => (float) VoidStacks / VoidTargetStacks;
+
+        public bool WasJustVoided()
+        {
+            if (!_voided) return false;
+            _voided = false;
+            return true;
+        }
 
         private void UpdateBurn()
         {

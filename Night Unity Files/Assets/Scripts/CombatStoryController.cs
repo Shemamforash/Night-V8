@@ -31,7 +31,7 @@ public class CombatStoryController : MonoBehaviour
 
     public void Start()
     {
-        _closeButton.UseAcceptInput();
+        _closeButton.UseSpaceInput();
     }
 
     private void FadeOut()

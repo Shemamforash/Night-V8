@@ -340,7 +340,7 @@ class LoreImporter(XMLWriter):
         write_tag(self, "Lore", self.read_story)
 
     def read_story(self):
-        for row in range(2, 30):
+        for row in range(2, 41):
             write_tag(self, "StoryPart", self.read_story_part, [row])
 
     def read_story_part(self, row):
@@ -361,10 +361,9 @@ class SkillImporter(XMLWriter):
 
     def read_skill(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
-        write_single_value(self, "RequiresTarget", get_value(self, "D", row))
-        write_single_value(self, "AppliesToMagazine", get_value(self, "E", row))
-        write_single_value(self, "Cooldown", get_value(self, "F", row))
-        write_single_value(self, "Description", get_value(self, "G", row))
+        write_single_value(self, "Duration", get_value(self, "C", row))
+        write_single_value(self, "Cost", get_value(self, "D", row))
+        write_single_value(self, "Description", get_value(self, "E", row))
 
 
 class WeatherProbabilityImporter(XMLWriter):
@@ -429,8 +428,8 @@ def write_single_value(xml_writer, stat_name, value):
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
-RecipeImporter()
-ResourceImporter()
+# RecipeImporter()
+# ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()
 # EnvironmentImporter()
@@ -438,5 +437,5 @@ ResourceImporter()
 # WandererImporter()
 # NecromancerImporter()
 # CharacterStoryImporter()
-# LoreImporter()
-TutorialImporter()
+LoreImporter()
+# TutorialImporter()

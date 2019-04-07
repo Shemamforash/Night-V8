@@ -26,10 +26,15 @@ namespace Game.Gear.Weapons
             Reload();
         }
 
+        public void Reload(int shotsNow)
+        {
+            _ammoInMagazine = shotsNow;
+            _fired = false;
+        }
+
         public void Reload()
         {
-            _ammoInMagazine = (int) _weaponAttributes.Val(AttributeType.Capacity);
-            _fired = false;
+            Reload((int) _weaponAttributes.Val(AttributeType.Capacity));
         }
 
         public bool FullyLoaded() => GetRemainingAmmo() == (int) _weaponAttributes.Val(AttributeType.Capacity);
@@ -61,11 +66,6 @@ namespace Game.Gear.Weapons
             _fired = false;
         }
 
-        public bool CanReload()
-        {
-            return !_fired && !FullyLoaded();
-        }
-
         protected void Fire()
         {
             if (Empty()) return;
@@ -87,6 +87,8 @@ namespace Game.Gear.Weapons
             UIMagazineController.UpdateMagazineUi();
         }
 
+        public Weapon Weapon => _weapon;
+        
         public void ConsumeAmmo(int amount = -1)
         {
             float durabilityModifier = 1;

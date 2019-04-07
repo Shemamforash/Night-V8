@@ -170,4 +170,70 @@
 		<Environment>Wasteland</Environment>
 		<Text>I was wrong. It is on my head. I allowed compassion to cloud my vision. She is gone, of course, fled into the night. I was woken to the peal of bells and the acrid smell of smoke. The garden had been set aflame. We rushed to put it out, but it was too late. The plants we had nurtured for so long were gone, maybe forever. I ran to the entrance to look for her, but it was too dark. Instead I found Atena's books, cookware, pens, ink, and more, broken and strewn across the sand. She had dropped them from the towers. I do not know why she did it. We tried to help her. But she was beyond help.</Text>
 	</StoryPart>
+	<StoryPart>
+		<Title>A Priest's Request</Title>
+		<Unique>True</Unique>
+		<Environment>Wasteland</Environment>
+		<Text>Your children need you, father. We are scattered, and your siblings do not answer our calls. We beg you, descend from your throne, and bring peace back to our world. Our Kings and Queens think themselves gods, but they only want to incite hatred against each other. Please, you must show them what it means to be a god- to be a teacher, not a ruler. Forgive me father, I must leave your temple, for there are others coming- ones who may wish me harm. But I will continue to pray, for as long as I can. I am forever in your service. Your humble servant, Ptolemy.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Widow's Poem</Title>
+		<Unique>True</Unique>
+		<Environment>Wasteland</Environment>
+		<Text>When ice laden branches hang low,|br|And silence broken by call of crow,|br|When bright banners of war are still,|br|And the horns of battle are silent,|br|Will you come home to me?|br||br|When the peals of artillery thunder have rung out,|br|And in muddy tracks grasses sprout,|br|When I have waited ten years and a day,|br|And the the glow of my youth turned grey,|br|Will you come home to me?</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Burned Note</Title>
+		<Unique>True</Unique>
+		<Environment>Wasteland</Environment>
+		<Text>It's inside me. In my head. I feel it tick, tick, ticking inside my skull. It's trying to make a hole in me, to let the darkness in. Tick, tick, tick. Constant. All alone now. Alone out here, amongst the rocks and dirt. High above them now. I hear the wind calling to me. 'Come' it says. 'Come with me'. It can't get me, no, no it can't, I'm too high up, if I follow it I will fall. Please, don't let me fall. Don't let me die.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Message on Animal Skin</Title>
+		<Unique>True</Unique>
+		<Environment>Wasteland</Environment>
+		<Text>Settlement abandoned some time ago. Found little of use; ten sacks full of usable scrap, broken weapons- possibly with salvageable parts, several canisters of fuel, assorted rags. Small metal hatch in centre of village, seized shut. Will need to return with blasting powder to open. We should not explore this region any further. Our supplies are low. Sending message-boy ahead. Do not send help if we do not return.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Ritualistic Markings</Title>
+		<Unique>True</Unique>
+		<Environment>Wasteland</Environment>
+		<Text>On the 75th day of Winter we who remain loyal to the mystics observe the 100th sun cycle since the founding of the order. We offer our bodies upon this stone to the one who sacrificed her blood to guide us. Hear our pleas, Necromancer, that we may be reborn in your image- eternal and undying.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>A Child's Letter</Title>
+		<Unique>True</Unique>
+		<Environment>Wasteland</Environment>
+		<Text>Dear Mummy,|br||br|Daddy says we have to leave home. He says we will be safe in the countryside, but I like it here and I don't want to go. I told Daddy you are keeping us safe and that's why you've been gone so long. Will you know where to find us when we move? I hope you will come home soon. I packed some of your things so that you won't have to carry as much when you come. I took your bracelets and your picture of us and the stuffed pig that sits in the window because I know you like him. I don't want to move. Lots of my friends are still here. Daddy says they will be moving too, but they won't be coming with us. He hasn't been in a good mood since you left. It will be my birthday soon, so I hope you will be home by then.|br|Love you lots and lots,|br|Phoebe|br||br|PS I didn't pack the dress grandma bought me because I hate it.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>King's Lament</Title>
+		<Unique>True</Unique>
+		<Environment>Wasteland</Environment>
+		<Text>I have failed my people. The wreaths upon my statue wither with nobody to tend them. My guards have fled, and I am left to rule an empty kingdom. What outcome could I have expected? Either to rule over a scorched wasteland, or to have another kingdom do the same to us. I tell myself it was in defence of our lands, but I lie to myself. It was vainglory conjured up from an unknown place, that drove me to this fate. I cannot ask what remains of my people to forgive me. I know they will not. But I hope that I can find redemption out there, with the ones who have suffered in my stead. I pray I can redeem myself, so that when I go to the halls of my fathers they do not look away in shame.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Shadow of the Candle</Title>
+		<Unique>True</Unique>
+		<Environment>Wasteland</Environment>
+		<Text>As the glow of the candle grows, so too do the shadows cast by the flame. I say to those who stare too long into the candles bright fire, do not look away, and to those who know only darkness, do not approach too close to the flame. Those who know only light can but despair at the depths of darkness. Meanwhile those who wrap themselves in shadow will do all they can to dim the light when it is cast upon them.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Corypthos' Tomb I</Title>
+		<Unique>True</Unique>
+		<Environment>End</Environment>
+		<Text>He is not here, he is gone, you will never find him.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Corypthos' Tomb II</Title>
+		<Unique>True</Unique>
+		<Environment>End</Environment>
+		<Text>Somewhere, Beyond the Veil, there sits an aged king upon an aged throne, and he weeps for you all.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Corypthos' Tomb III</Title>
+		<Unique>True</Unique>
+		<Environment>End</Environment>
+		<Text>In the realm of shadow and blackness we all go. Our arrival goes unannounced, for you see, there is no light in the land of the dead.</Text>
+	</StoryPart>
 </Lore>

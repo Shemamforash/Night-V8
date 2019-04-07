@@ -11,7 +11,7 @@
 		</Subtype>
 		<Subtype name="Shortshooter" automatic="False">
 			<Damage>13</Damage>
-			<FireRate>5</FireRate>
+			<FireRate>2</FireRate>
 			<ReloadSpeed>0.7</ReloadSpeed>
 			<Accuracy>60</Accuracy>
 			<Recoil>20</Recoil>

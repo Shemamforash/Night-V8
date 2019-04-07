@@ -83,7 +83,7 @@ public class TutorialManager : MonoBehaviour
         _lastSelectedObject = EventSystem.current.currentSelectedGameObject;
         SetCurrentSelectableActive(false);
 
-        Assert.IsTrue(_lastSelectedObject != _closeButton.Button().gameObject);
+//        Assert.IsTrue(_lastSelectedObject != _closeButton.Button().gameObject);
         EventSystem.current.SetSelectedGameObject(_closeButton.Button().gameObject);
 
         _lastListener = InputHandler.GetCurrentListener();

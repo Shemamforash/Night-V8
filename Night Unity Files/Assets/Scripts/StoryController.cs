@@ -25,16 +25,18 @@ public class StoryController : Menu
     private bool _skipParagraph;
     private CanvasGroup _skipCanvas, _actCanvas, _storyCanvas;
     private CloseButtonController _closeButton;
-    private AudioSource _audioSource;
+    private AudioSource _droneAudioSource;
     private bool _canSkip;
     private ParticleSystem _lightningSystem;
     private CameraShaker _shaker;
     private float _waitTime;
     private static List<JournalEntry> _journalEntries;
-    private static readonly string[] _actNames = {"Act I", "Act II", "Act III", "Act IV", "Act V", "Epilogue"};
+    private static readonly string[] _actNames = {"Act I", "Act II", "Act III", "Act IV", "Act V", "The End"};
     private AudioSource _actAudio;
     public static bool StorySeen;
     private PostProcessInvertColour _invertColour;
+    private float _thunderVolumeOffset = 0f;
+    private bool _showLightning = false;
 
     protected override void Awake()
     {
@@ -46,12 +48,19 @@ public class StoryController : Menu
 
     private void Start()
     {
-        _closeButton.UseAcceptInput();
+        if (EnvironmentManager.CurrentEnvironmentType == EnvironmentType.End)
+        {
+            _closeButton.gameObject.SetActive(false);
+            return;
+        }
+
+        _closeButton.UseSpaceInput();
     }
 
     public void Update()
     {
         if (!_goToCredits) return;
+        if (!_showLightning) return;
         _waitTime -= Time.deltaTime;
         if (_waitTime > 0f) return;
         float magnitude = Random.Range(4, 8);
@@ -60,10 +69,10 @@ public class StoryController : Menu
         float outDuration = Random.Range(0.25f, 0.5f);
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() => _lightningSystem.Emit(1));
-        sequence.AppendInterval(3f);
+        sequence.AppendInterval(2f);
         sequence.AppendCallback(() =>
         {
-            ThunderController.Instance().Thunder();
+            ThunderController.Instance().Thunder(_thunderVolumeOffset);
             _shaker.ShakeOnce(magnitude, roughness, inDuration, outDuration);
         });
         float totalDuration = inDuration + outDuration;
@@ -84,17 +93,22 @@ public class StoryController : Menu
         _skipCanvas = GameObject.Find("Skip").AddComponent<CanvasGroup>();
         _skipCanvas.alpha = 0f;
         _closeButton = _skipCanvas.GetComponent<CloseButtonController>();
-        _audioSource = Camera.main.GetComponent<AudioSource>();
+        _droneAudioSource = Camera.main.GetComponent<AudioSource>();
     }
 
     private void InitialiseComponents()
     {
         _closeButton.SetOnClick(Skip);
-        _audioSource.volume = 0f;
-        _audioSource.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
+        _droneAudioSource.volume = 0f;
         _skipCanvas.alpha = 0f;
         _paused = false;
-        if (EnvironmentManager.CurrentEnvironmentType == EnvironmentType.End) _invertColour.Set(1);
+        if (EnvironmentManager.CurrentEnvironmentType == EnvironmentType.End)
+        {
+            _invertColour.Set(1);
+            return;
+        }
+
+        _droneAudioSource.DOFade(1f, 1f).SetUpdate(UpdateType.Normal, true);
     }
 
     private void SetEndGameValues()
@@ -108,7 +122,8 @@ public class StoryController : Menu
 
     public override void Enter()
     {
-        StartCoroutine(DisplayParagraph());
+        if (EnvironmentManager.CurrentEnvironmentType == EnvironmentType.End) StartCoroutine(DisplayEpilogue());
+        else StartCoroutine(DisplayParagraph());
     }
 
     public static void Show()
@@ -124,6 +139,30 @@ public class StoryController : Menu
         int wordCount = paragraph.Split(' ').Length;
         float timeToRead = _timePerWord * wordCount;
         return timeToRead;
+    }
+
+    private IEnumerator DisplayEpilogue()
+    {
+        DOTween.To(() => _thunderVolumeOffset, f => _thunderVolumeOffset = f, 0f, _journalEntries.Count * 20f);
+        for (int i = 0; i < _journalEntries.Count; i++)
+        {
+            if (i == _journalEntries.Count - 2) _showLightning = false;
+            JournalEntry entry = _journalEntries[i];
+            //fade in
+            _storyText.text = entry.Text + "\n\n    - <i>The Wanderer</i>";
+            int pageNo = i + 1;
+            _pageCountText.text = pageNo + "/" + _journalEntries.Count;
+
+            yield return _storyCanvas.DOFade(1f, 1f).WaitForCompletion();
+            yield return new WaitForSeconds(18f);
+            yield return _storyCanvas.DOFade(0f, 1f).WaitForCompletion();
+        }
+
+        yield return StartCoroutine(DisplayAct());
+
+        _invertColour.FadeTo(0f, 0.5f);
+        _droneAudioSource.DOFade(0f, 0.5f).SetUpdate(UpdateType.Normal, true);
+        End();
     }
 
     private IEnumerator DisplayParagraph()
@@ -163,7 +202,7 @@ public class StoryController : Menu
         }
 
         _invertColour.FadeTo(0f, 0.5f);
-        _audioSource.DOFade(0f, 0.5f).SetUpdate(UpdateType.Normal, true);
+        _droneAudioSource.DOFade(0f, 0.5f).SetUpdate(UpdateType.Normal, true);
         End();
     }
 
@@ -173,7 +212,7 @@ public class StoryController : Menu
         EnvironmentType currentEnvironmentType = EnvironmentManager.CurrentEnvironmentType;
         _actTitle.text = _actNames[(int) currentEnvironmentType];
         _actSubtitle.text = Environment.EnvironmentTypeToName(currentEnvironmentType);
-        _actAudio.Play();
+        if (currentEnvironmentType != EnvironmentType.End) _actAudio.Play();
         yield return _actCanvas.DOFade(1, 1f).WaitForCompletion();
         yield return new WaitForSeconds(2f);
         yield return _actCanvas.DOFade(0f, 1f).WaitForCompletion();

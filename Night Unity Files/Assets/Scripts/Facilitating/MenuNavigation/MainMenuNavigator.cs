@@ -17,7 +17,7 @@ namespace Facilitating.MenuNavigation
     {
         private CanvasGroup _menuCanvasGroup;
         private static bool _shownSplashScreen;
-        private CanvasGroup _logo, _latin, _english;
+        private CanvasGroup _logo, _latin, _english, _loading;
         private static bool _seenIntro;
         private bool _skipping;
         private Sequence _fadeInSequence;
@@ -29,6 +29,8 @@ namespace Facilitating.MenuNavigation
             _latin = gameObject.FindChildWithName<CanvasGroup>("Latin");
             _english = gameObject.FindChildWithName<CanvasGroup>("English");
             _logo = gameObject.FindChildWithName<CanvasGroup>("Logo");
+            _loading = gameObject.FindChildWithName<CanvasGroup>("Loading");
+            _loading.alpha =0f;
             _english.alpha = 0f;
             _latin.alpha = 0f;
             _logo.alpha = 0f;
@@ -54,6 +56,7 @@ namespace Facilitating.MenuNavigation
 
             if (!_seenIntro)
             {
+                _loading.DOFade(0.5f, 2f);
                 _fadeInSequence.Append(_logo.DOFade(1f, 2f)); //2
                 _fadeInSequence.AppendInterval(2f); //5
                 _fadeInSequence.Append(_logo.DOFade(0f, 2f)); //6
@@ -68,6 +71,7 @@ namespace Facilitating.MenuNavigation
                 _fadeInSequence.Insert(6, latinText.DOFontSize(finalLatinTextSize, 10));
                 _fadeInSequence.Insert(10, englishText.DOFontSize(finalEnglishTextSize, 6));
                 _fadeInSequence.Insert(16, _english.DOFade(0f, 1f));
+                _fadeInSequence.Insert(16, _loading.DOFade(0f, 1f));
 
                 _seenIntro = true;
             }

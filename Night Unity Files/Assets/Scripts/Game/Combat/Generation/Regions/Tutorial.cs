@@ -112,7 +112,7 @@ namespace Game.Combat.Generation
                 () => "Press [" + InputHandler.GetBindingForKey(InputAxis.Fire) + "] to Fire"));
 
             yield return StartCoroutine(WaitForControl(() => InputHandler.InputAxisWasPressed(InputAxis.Reload),
-                () => "Hold [" + InputHandler.GetBindingForKey(InputAxis.Reload) + "] to Reload"));
+                () => "Press [" + InputHandler.GetBindingForKey(InputAxis.Reload) + "] to Reload"));
 
             yield return StartCoroutine(WaitForControl(() => true, () => "You can view the control scheme at any time through the pause menu"));
         }

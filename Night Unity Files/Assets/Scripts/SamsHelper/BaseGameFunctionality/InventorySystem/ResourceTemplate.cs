@@ -108,6 +108,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                     break;
                 case "Armour":
                     ResourceType = ResourceType.Armour;
+                    Sprite = TryLoadSprite("Armour");
                     break;
             }
 

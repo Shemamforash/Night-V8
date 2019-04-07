@@ -151,6 +151,7 @@ namespace SamsHelper.Input
 
         private static bool ListenerIsValid(IInputListener inputListener)
         {
+            if(ListenersToRemove.Contains(inputListener)) return false;
             switch (inputListener)
             {
                 case null:

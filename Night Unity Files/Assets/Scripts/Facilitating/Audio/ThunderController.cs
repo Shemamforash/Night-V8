@@ -31,10 +31,10 @@ namespace Facilitating.Audio
             _inCombat = SceneManager.GetActiveScene().name == "Combat";
         }
 
-        public void Thunder()
+        public void Thunder(float volOffset = 0f)
         {
             if (thunderSource == null) return;
-            thunderSource.volume = Random.Range(0.9f, 1f);
+            thunderSource.volume = Random.Range(0.9f - volOffset, 1f - volOffset);
             thunderSource.pitch = Random.Range(0.8f, 1f);
             thunderSource.PlayOneShot(AudioClips.ThunderSounds.RandomElement(), Random.Range(0.6f, 1f));
         }

@@ -12,7 +12,7 @@ namespace Facilitating
     {
         private static float _barFillAmount;
         private static List<Image> RoseProngs;
-        private static Image _dashFlash;
+        private static Image _dashFlash, _dashIcon;
         private static RageBarController _instance;
         private static float _currentTime;
         private static readonly float _dashFlashTime = 1f;
@@ -24,6 +24,7 @@ namespace Facilitating
             RoseProngs = new List<Image>();
             _instance = this;
             _dashFlash = gameObject.FindChildWithName<Image>("Ready");
+            _dashIcon = gameObject.FindChildWithName<Image>("Icon");
             _dashRing = gameObject.FindChildWithName<Image>("Ring");
             _adrenalineRect = GetComponent<RectTransform>();
         }
@@ -50,12 +51,13 @@ namespace Facilitating
                 else if (i == completeProngs)
                     alpha = normalisedRemainder;
 
-                RoseProngs[i].color = new Color(1, 1, 1, alpha);
+                RoseProngs[i].SetAlpha(alpha);
             }
         }
 
         public static void UpdateDashTimer(float amount)
         {
+            _dashIcon.SetAlpha(0.6f);
             _dashRing.fillAmount = amount;
         }
 
@@ -63,6 +65,7 @@ namespace Facilitating
         {
             _currentTime = _dashFlashTime;
             _instance.StartCoroutine(_instance.Flash());
+            _dashIcon.SetAlpha(1f);
         }
 
         private IEnumerator Flash()
@@ -71,7 +74,7 @@ namespace Facilitating
             {
                 float normalisedTime = _currentTime / _dashFlashTime;
                 normalisedTime *= 0.8f;
-                _dashFlash.color = new Color(1, 1, 1, normalisedTime);
+                _dashFlash.SetAlpha(normalisedTime);
                 _currentTime -= Time.deltaTime;
                 yield return null;
             }

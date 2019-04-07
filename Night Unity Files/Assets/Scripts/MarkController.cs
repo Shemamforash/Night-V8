@@ -6,7 +6,7 @@ public class MarkController : MonoBehaviour
 {
     private static List<MarkController> _marks = new List<MarkController>();
     private static GameObject _prefab;
-    private float _lifeTime = 5f;
+    private float _lifeTime = 10f;
 
     public static void Create(Vector2 position)
     {

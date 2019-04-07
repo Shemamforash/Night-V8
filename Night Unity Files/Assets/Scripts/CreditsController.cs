@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 public class CreditsController : Menu, IInputListener
 {
     private readonly List<TextMeshProUGUI> _texts = new List<TextMeshProUGUI>();
+    private AudioSource _creditsAudio;
     private static Sequence _creditsSequence;
     private static bool _paused;
 
@@ -18,6 +19,7 @@ public class CreditsController : Menu, IInputListener
     {
         base.Awake();
         _paused = false;
+        _creditsAudio = GetComponent<AudioSource>();
         int childCount = transform.childCount;
         for (int i = 0; i < childCount; ++i)
         {
@@ -41,13 +43,14 @@ public class CreditsController : Menu, IInputListener
             _creditsSequence.Append(text.DOColor(UiAppearanceController.InvisibleColour, 1f));
         }
 
+        _creditsSequence.Append(_creditsAudio.DOFade(0f, 1f));
         _creditsSequence.AppendCallback(SceneChanger.GoToMainMenuScene);
     }
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
         if (isHeld || axis == InputAxis.Menu || _paused) return;
-        _creditsSequence.Complete(true);
+//        _creditsSequence.Complete(true);
     }
 
     public void OnInputUp(InputAxis axis)

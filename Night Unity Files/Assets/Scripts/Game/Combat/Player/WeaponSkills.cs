@@ -15,7 +15,7 @@ namespace Game.Combat.Player
             switch (weapon.WeaponType())
             {
                 case WeaponType.Rifle:
-                    return new Void();
+                    return new Implode();
                 case WeaponType.Shotgun:
                     return new Shockwave();
                 case WeaponType.SMG:
@@ -61,9 +61,9 @@ namespace Game.Combat.Player
         }
     }
 
-    public class Void : Skill
+    public class Implode : Skill
     {
-        public Void() : base(nameof(Void))
+        public Implode() : base(nameof(Implode))
         {
         }
 
@@ -122,7 +122,7 @@ namespace Game.Combat.Player
         {
         }
 
-        protected override void MagazineEffect(Shot s)
+        protected override void PassiveEffect(Shot s)
         {
             s.Attributes().Seek();
         }
@@ -134,7 +134,7 @@ namespace Game.Combat.Player
         {
         }
 
-        protected override void MagazineEffect(Shot s)
+        protected override void PassiveEffect(Shot s)
         {
             s.Attributes().AddOnHit(() =>
             {
@@ -177,10 +177,12 @@ namespace Game.Combat.Player
         {
         }
 
-        protected override void MagazineEffect(Shot s)
+        protected override void PassiveEffect(Shot s)
         {
             float normalisedHealth = PlayerCombat.Instance.HealthController.GetNormalisedHealthValue();
-            s.Attributes().SetDamageModifier(1 + 1 - normalisedHealth);
+            float damageModifier = 1 + 1 - normalisedHealth;
+            damageModifier *= damageModifier;
+            s.Attributes().SetDamageModifier(damageModifier);
         }
     }
 }

@@ -52,44 +52,19 @@ namespace Game.Combat.Player
             _loaded = true;
         }
 
-        protected static CanTakeDamage Target()
-        {
-            return PlayerCombat.Instance.GetTarget();
-        }
-
-        private static void KnockbackSingleTarget(Vector2 position, CanTakeDamage c, float force)
-        {
-            CharacterCombat character = c as CharacterCombat;
-            if (character == null) return;
-            float distance = Vector2.Distance(character.transform.position, position);
-            if (distance < 0f) distance = 1;
-            float scaledForce = force / distance;
-            Vector2 direction = (position - (Vector2) character.transform.position).normalized;
-            character.MovementController.KnockBack(direction, scaledForce);
-        }
-
-        protected List<CanTakeDamage> KnockbackInRange(float range, float force)
-        {
-            Vector2 position = PlayerCombat.Position();
-            List<CanTakeDamage> enemiesInRange = CombatManager.Instance().GetEnemiesInRange(position, range);
-            enemiesInRange.ForEach(e => { KnockbackSingleTarget(position, e, force); });
-            return enemiesInRange;
-        }
-
         protected PlayerCombat Player() => _player;
         protected Transform PlayerTransform() => _playerTransform;
         protected Vector2 PlayerPosition() => _playerTransform.position;
 
         public bool Activate(bool freeSkill)
         {
-            if (Target() == null && _skillValue.NeedsTarget) return false;
-            if (!freeSkill && !PlayerCombat.Instance.ConsumeAdrenaline(AdrenalineCost())) return false;
+            if (!freeSkill && !PlayerCombat.Instance.ConsumeAdrenaline(Cost())) return false;
             _player = PlayerCombat.Instance;
             _playerTransform = _player.transform;
             InstantEffect();
-            if (_skillValue.AppliesToMagazine)
+            if (_skillValue.Duration != -1)
             {
-                _player.OnFireAction = MagazineEffect;
+                _player.SetPassiveSkill(PassiveEffect, _skillValue.Duration);
                 ActiveSkillController.Play();
             }
             else
@@ -104,16 +79,16 @@ namespace Game.Combat.Player
 
         public bool CanAfford()
         {
-            return PlayerCombat.Instance.CanAffordSkill(AdrenalineCost());
+            return PlayerCombat.Instance.CanAffordSkill(Cost());
         }
 
         protected void Heal(float percent)
         {
-            int healAmount = Mathf.FloorToInt(percent * PlayerCombat.Instance.HealthController.GetMaxHealth());
+            int healAmount = Mathf.CeilToInt(percent * PlayerCombat.Instance.HealthController.GetMaxHealth());
             PlayerCombat.Instance.HealthController.Heal(healAmount);
         }
 
-        protected virtual void MagazineEffect(Shot s)
+        protected virtual void PassiveEffect(Shot s)
         {
         }
 
@@ -123,26 +98,23 @@ namespace Game.Combat.Player
 
         private class SkillValue
         {
-            public readonly int AdrenalineCost;
+            public readonly int Cost;
             public readonly string Description;
-            public readonly bool NeedsTarget;
-            public readonly bool AppliesToMagazine;
+            public readonly float Duration;
 
             public SkillValue(XmlNode skillNode)
             {
                 string name = skillNode.StringFromNode("Name");
-                AdrenalineCost = skillNode.IntFromNode("Cooldown");
+                Duration = skillNode.FloatFromNode("Duration");
+                Cost = skillNode.IntFromNode("Cost");
                 Description = skillNode.StringFromNode("Description");
-                NeedsTarget = skillNode.BoolFromNode("RequiresTarget");
-                AppliesToMagazine = skillNode.BoolFromNode("AppliesToMagazine");
                 _skillValues[name] = this;
             }
         }
 
-        public int AdrenalineCost()
+        public int Cost()
         {
-            return _skillValue.AdrenalineCost;
+            return _skillValue.Cost;
         }
-
     }
 }

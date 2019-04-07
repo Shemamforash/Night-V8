@@ -69,7 +69,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
             _skill = skill;
             _getProgress = getProgress;
             _skillNameText.SetText(_skill.Name);
-            SetCost(_skill.AdrenalineCost());
+            SetCost(_skill.Cost());
         }
 
         public void Reset()

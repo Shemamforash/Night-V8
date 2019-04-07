@@ -7,6 +7,7 @@ using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Gear.Armour;
+using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace Game.Combat.Player
                 case CharacterClass.Beast:
                     return new Immolate();
                 case CharacterClass.Survivor:
-                    return new Refill();
+                    return new Scour();
                 case CharacterClass.Protector:
                     return new Regenerate();
                 case CharacterClass.Hunter:
@@ -52,7 +53,7 @@ namespace Game.Combat.Player
                 case CharacterClass.Hunter:
                     return new Mark();
                 case CharacterClass.Wanderer:
-                    return new Afflict();
+                    return new Fracture();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -68,10 +69,10 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            Heal(0.15f);
-            List<CanTakeDamage> playerList = new List<CanTakeDamage>();
-            playerList.Add(PlayerCombat.Instance);
-            SickenBehaviour.Create(PlayerPosition(), playerList);
+            List<CanTakeDamage> characters = CombatManager.Instance().GetCharactersInRange(PlayerPosition(), 1);
+            characters.Remove(Player());
+            List<CanTakeDamage> sickened = SickenBehaviour.Create(PlayerPosition(), new List<CanTakeDamage> {Player()});
+            Heal(sickened.Count * 0.025f);
         }
     }
 
@@ -83,13 +84,12 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            PlayerCombat player = Player();
-            List<CanTakeDamage> sickened = SickenBehaviour.Create(player.transform.position, new List<CanTakeDamage> {player});
+            List<CanTakeDamage> sickened = SickenBehaviour.Create(PlayerPosition(), new List<CanTakeDamage> {Player()});
             sickened.ForEach(e =>
             {
                 if (e.HealthController.GetHealth().CurrentValue() != 0) return;
                 Explosion explosion = Explosion.CreateExplosion(e.transform.position, 0.5f);
-                explosion.AddIgnoreTarget(player);
+                explosion.AddIgnoreTarget(Player());
                 explosion.InstantDetonate();
             });
         }
@@ -108,6 +108,7 @@ namespace Game.Combat.Player
             VortexBehaviour.Create(PlayerPosition(), () =>
             {
                 Explosion explosion = Explosion.CreateExplosion(PlayerPosition());
+                explosion.AddIgnoreTarget(Player());
                 explosion.SetBurn();
                 explosion.InstantDetonate();
             });
@@ -122,34 +123,37 @@ namespace Game.Combat.Player
         {
         }
 
-        protected override void MagazineEffect(Shot s)
+        protected override void PassiveEffect(Shot s)
         {
-            if (CombatManager.Instance().GetEnemiesInRange(PlayerPosition(), 1.5f).Count == 0) return;
+            List<CanTakeDamage> enemiesNearby = CombatManager.Instance().GetEnemiesInRange(PlayerPosition(), 1.5f);
+            enemiesNearby.Remove(Player());
+            int enemyCount = enemiesNearby.Count;
             _timePassed += Time.deltaTime;
-            if (_timePassed < 0.25f) return;
-            _timePassed = 0f;
-            int healAmount = WorldState.ScaleValue(5);
-            Player().HealthController.Heal(healAmount);
+            if (_timePassed < 1f) return;
+            _timePassed -= 1f;
+            float healAmount = enemyCount * 0.005f;
+            Heal(healAmount);
         }
     }
 
 
     //Survivor
 
-    public class Refill : Skill
+    public class Scour : Skill
     {
-        public Refill() : base(nameof(Refill))
+        public Scour() : base(nameof(Scour))
         {
         }
 
-        protected override void MagazineEffect(Shot s)
+        protected override void PassiveEffect(Shot s)
         {
             s.Attributes().AddOnHit(() =>
             {
-                if (!Helper.RollDie(0, 2)) return;
+                int refillProbability = 2;
+                if (s._origin.Weapon().WeaponType() == WeaponType.Shotgun) refillProbability = 10;
+                if (!Helper.RollDie(0, refillProbability)) return;
                 Player()._weaponBehaviour.IncreaseAmmo(1);
-                int healAmount = WorldState.ScaleValue(5);
-                Player().HealthController.Heal(healAmount);
+                Heal(0.01f);
             });
         }
     }
@@ -229,7 +233,7 @@ namespace Game.Combat.Player
             }
 
             _sequence = DOTween.Sequence();
-            _sequence.AppendInterval(5f);
+            _sequence.AppendInterval(10f);
             _sequence.AppendCallback(() =>
             {
                 if (Player() == null) return;
@@ -251,7 +255,7 @@ namespace Game.Combat.Player
             Vector3 playerPosition = PlayerPosition();
             Vector2 targetPosition = playerPosition + PlayerTransform().up;
             Grenade g = Grenade.CreateBasic(playerPosition, targetPosition, true);
-            g.AddOnDetonate(enemies => { Heal(enemies.Count * 0.05f); });
+            g.AddOnDetonate(enemies => { Heal(enemies.Count * 0.025f); });
         }
     }
 
@@ -277,13 +281,13 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            Heal(0.5f);
+            Heal(0.25f);
         }
     }
 
-    public class Afflict : Skill
+    public class Fracture : Skill
     {
-        public Afflict() : base(nameof(Afflict))
+        public Fracture() : base(nameof(Fracture))
         {
         }
 

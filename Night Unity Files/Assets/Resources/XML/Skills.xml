@@ -1,142 +1,122 @@
 <Skills>
 	<Skill>
-		<Name>Void</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>6</Cooldown>
-		<Description>Create a vortex that draws enemies together</Description>
+		<Name>Implode</Name>
+		<Duration>-1</Duration>
+		<Cost>6</Cost>
+		<Description>Create a vortex that draws enemies in before exploding</Description>
 	</Skill>
 	<Skill>
 		<Name>Ignite</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>4</Cooldown>
-		<Description>Launch fire shot</Description>
+		<Duration>-1</Duration>
+		<Cost>4</Cost>
+		<Description>Launch a firey shot that explodes on impact</Description>
 	</Skill>
 	<Skill>
 		<Name>Shockwave</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>3</Cooldown>
-		<Description>Release a shockwave, pushing enemies back</Description>
+		<Duration>-1</Duration>
+		<Cost>4</Cost>
+		<Description>Release a shockwave pushing away nearby enemies</Description>
 	</Skill>
 	<Skill>
 		<Name>Swarm</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>3</Cooldown>
-		<Description>Release a burst of bullets in a circle around you</Description>
+		<Duration>-1</Duration>
+		<Cost>4</Cost>
+		<Description>Release a ring of bullets around you</Description>
 	</Skill>
 	<Skill>
 		<Name>Seek</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>True</AppliesToMagazine>
-		<Cooldown>8</Cooldown>
-		<Description>Shots seek nearby enemies for the rest of the magazine</Description>
+		<Duration>10</Duration>
+		<Cost>8</Cost>
+		<Description>For a short while your shots will seek nearby enemies</Description>
 	</Skill>
 	<Skill>
 		<Name>Impact</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>True</AppliesToMagazine>
-		<Cooldown>6</Cooldown>
-		<Description>Remaining shots in magazine explode.</Description>
+		<Duration>10</Duration>
+		<Cost>8</Cost>
+		<Description>For a short while your shots will explode on impact</Description>
 	</Skill>
 	<Skill>
 		<Name>Needle</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>1</Cooldown>
-		<Description>Launches 3 fast moving shards</Description>
+		<Duration>-1</Duration>
+		<Cost>2</Cost>
+		<Description>Launch three fast moving shards in front of you</Description>
 	</Skill>
 	<Skill>
 		<Name>Revenge</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>True</AppliesToMagazine>
-		<Cooldown>4</Cooldown>
-		<Description>Deals more damage when your health is low</Description>
+		<Duration>10</Duration>
+		<Cost>6</Cost>
+		<Description>For a short while deal more damage when your health is low</Description>
 	</Skill>
 	<Skill>
 		<Name>Drain</Name>
-		<RequiresTarget>True</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>2</Cooldown>
-		<Description>Apply Void to everything around you, heal a small amount</Description>
+		<Duration>-1</Duration>
+		<Cost>4</Cost>
+		<Description>Deal Void damage to nearby enemies and heal for each enemy hit</Description>
 	</Skill>
 	<Skill>
 		<Name>Defile</Name>
-		<RequiresTarget>True</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>6</Cooldown>
-		<Description>Apply Void to everything around you, if they die, they explode</Description>
+		<Duration>-1</Duration>
+		<Cost>6</Cost>
+		<Description>Deal Void damage to nearby enemies, if they die, they explode</Description>
 	</Skill>
 	<Skill>
 		<Name>Immolate</Name>
-		<RequiresTarget>True</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>3</Cooldown>
-		<Description>Draw enemies in, explode with fire</Description>
+		<Duration>-1</Duration>
+		<Cost>4</Cost>
+		<Description>Draw enemies towards you, then explode with Fire</Description>
 	</Skill>
 	<Skill>
 		<Name>Leach</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>True</AppliesToMagazine>
-		<Cooldown>6</Cooldown>
-		<Description>Being near enemies heals you</Description>
+		<Duration>10</Duration>
+		<Cost>6</Cost>
+		<Description>For a short while being near enemies heals you</Description>
 	</Skill>
 	<Skill>
-		<Name>Refill</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>3</Cooldown>
-		<Description>Chance to regain ammo + heal on connecting shot</Description>
+		<Name>Scour</Name>
+		<Duration>10</Duration>
+		<Cost>4</Cost>
+		<Description>For a short while hitting enemies can refill your magazine and heal you</Description>
 	</Skill>
 	<Skill>
 		<Name>Erupt</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>3</Cooldown>
-		<Description>Release a cluster of bombs</Description>
+		<Duration>-1</Duration>
+		<Cost>6</Cost>
+		<Description>Release a ring of explosive bombs around you</Description>
 	</Skill>
 	<Skill>
 		<Name>Regenerate</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>1</Cooldown>
-		<Description>Heal 1%/s until hit</Description>
+		<Duration>-1</Duration>
+		<Cost>4</Cost>
+		<Description>Heal a small amount every second until you are hit</Description>
 	</Skill>
 	<Skill>
 		<Name>Wake</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>True</AppliesToMagazine>
-		<Cooldown>5</Cooldown>
-		<Description>Drop fire trial</Description>
+		<Duration>10</Duration>
+		<Cost>4</Cost>
+		<Description>For a short while leave a trail of fire as you move</Description>
 	</Skill>
 	<Skill>
 		<Name>Lacerate</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>5</Cooldown>
-		<Description>Launch explosive grenade, heal 5% per enemy hit</Description>
+		<Duration>-1</Duration>
+		<Cost>4</Cost>
+		<Description>Launch an explosive bomb that heals you for every enemy hit</Description>
 	</Skill>
 	<Skill>
-		<Name>Mark</Name>
-		<RequiresTarget>True</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>4</Cooldown>
-		<Description>All targets in range take 2x damage</Description>
+		<Name>Curse</Name>
+		<Duration>-1</Duration>
+		<Cost>8</Cost>
+		<Description>Mark an area on the ground, enemies within this area take more damage</Description>
 	</Skill>
 	<Skill>
 		<Name>Staunch</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>4</Cooldown>
-		<Description>Heal 40%</Description>
+		<Duration>-1</Duration>
+		<Cost>4</Cost>
+		<Description>Heal a large portion of health</Description>
 	</Skill>
 	<Skill>
-		<Name>Afflict</Name>
-		<RequiresTarget>False</RequiresTarget>
-		<AppliesToMagazine>False</AppliesToMagazine>
-		<Cooldown>4</Cooldown>
-		<Description>Launch decay grenade</Description>
+		<Name>Fracture</Name>
+		<Duration>-1</Duration>
+		<Cost>4</Cost>
+		<Description>Launch a grenade that explodes with Shatter damage</Description>
 	</Skill>
 </Skills>
