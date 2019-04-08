@@ -12,6 +12,7 @@ using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UIActionListController : MonoBehaviour
 {
@@ -110,7 +111,7 @@ public class UIActionListController : MonoBehaviour
         if (TutorialManager.Instance.IsTutorialVisible()) return false;
         if (_player != CharacterManager.SelectedCharacter) return false;
         GameObject currentObject = EventSystem.current.currentSelectedGameObject;
-        if (currentObject != null && currentObject.activeInHierarchy) return false;
+        if (currentObject != null && currentObject.activeInHierarchy && currentObject.GetComponent<Selectable>().interactable) return false;
         EnhancedButton firstButton = _buttons.FirstOrDefault(b => b.gameObject.activeInHierarchy && b.Button().interactable);
         if (firstButton == null) return true;
         firstButton.Select();

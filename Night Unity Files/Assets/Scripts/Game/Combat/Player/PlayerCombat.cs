@@ -590,7 +590,7 @@ namespace Game.Combat.Player
         {
             if (_reloadCoroutine != null) StopCoroutine(_reloadCoroutine);
             ReloadController.Instance().Complete();
-            int shotsNow = Mathf.CeilToInt(_reloadProgress * _capacity);
+            int shotsNow = Mathf.FloorToInt(_reloadProgress * _capacity);
             if (shotsNow > _capacity) shotsNow = _capacity;
             _weaponBehaviour.Reload(shotsNow);
             WeaponAudio.StopReload(Weapon());

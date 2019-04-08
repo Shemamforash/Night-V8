@@ -51,7 +51,7 @@ namespace Game.Combat.Player
                 case CharacterClass.Protector:
                     return new Wake();
                 case CharacterClass.Hunter:
-                    return new Mark();
+                    return new Curse();
                 case CharacterClass.Wanderer:
                     return new Fracture();
                 default:
@@ -259,9 +259,9 @@ namespace Game.Combat.Player
         }
     }
 
-    public class Mark : Skill
+    public class Curse : Skill
     {
-        public Mark() : base(nameof(Mark))
+        public Curse() : base(nameof(Curse))
         {
         }
 

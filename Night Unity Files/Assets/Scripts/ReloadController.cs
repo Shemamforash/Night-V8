@@ -12,6 +12,7 @@ public class ReloadController : MonoBehaviour
     private static ReloadController _instance;
     private ControlTypeChangeListener _controlTypeChangeListener;
     private TextMeshProUGUI _reloadText;
+    private Tweener _fadeTween;
 
     private void Awake()
     {
@@ -44,21 +45,24 @@ public class ReloadController : MonoBehaviour
 
     public void Show()
     {
+        _fadeTween?.Complete();
         _canvasGroup.alpha = 1f;
         _glow.SetAlpha(0.5f);
-        _glow.DOFade(0f, 1f);
+        _fadeTween = _glow.DOFade(0f, 1f);
         _progress.fillAmount = 0f;
     }
 
     public void SetProgress(float normalisedAmount)
     {
+        _fadeTween?.Complete();
         _progress.fillAmount = normalisedAmount;
     }
 
     public void Complete()
     {
+        _fadeTween?.Complete();
         _progress.fillAmount = 1f;
         _glow.SetAlpha(1f);
-        _canvasGroup.DOFade(0f, 1f);
+        _fadeTween = _canvasGroup.DOFade(0f, 1f);
     }
 }

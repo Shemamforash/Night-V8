@@ -112,5 +112,11 @@ namespace Game.Exploration.Environment
         {
             return _environmentRegionNames[regionType].Count == 0 ? null : _environmentRegionNames[regionType].RemoveRandom();
         }
+
+        public void RemoveExistingName(RegionType regionType, string name)
+        {
+            if (!_environmentRegionNames.ContainsKey(regionType)) return;
+            _environmentRegionNames[regionType].Remove(name);
+        }
     }
 }

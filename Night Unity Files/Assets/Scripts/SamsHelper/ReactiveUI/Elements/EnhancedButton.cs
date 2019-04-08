@@ -11,9 +11,8 @@ using UnityEngine.UI;
 namespace SamsHelper.ReactiveUI.Elements
 {
     [RequireComponent(typeof(Button))]
-    public class EnhancedButton : MonoBehaviour, ISelectHandler, IPointerEnterHandler, IInputListener
+    public class EnhancedButton : MonoBehaviour, ISelectHandler, IPointerEnterHandler
     {
-        private readonly List<HoldAction> _onHoldActions = new List<HoldAction>();
         private Button _button;
         private static GameObject _borderPrefab;
         [SerializeField] private bool _hideBorder;
@@ -24,18 +23,6 @@ namespace SamsHelper.ReactiveUI.Elements
         private bool _enabled = true;
         private static EnhancedButton _currentButton;
 
-        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
-            if (_button == null || !IsSelected()) return;
-            if (axis != InputAxis.Accept) return;
-            if (!isHeld)
-            {
-                _onHoldActions.ForEach(a => a.Reset());
-                return;
-            }
-
-            if (_button.gameObject == EventSystem.current.currentSelectedGameObject) _onHoldActions.ForEach(a => a.ExecuteIfDone());
-        }
 
         public Button Button()
         {
@@ -45,7 +32,6 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public void Awake()
         {
-            InputHandler.RegisterInputListener(this);
             _button = GetComponent<Button>();
             if (_borderPrefab == null) _borderPrefab = Resources.Load<GameObject>("Prefabs/Borders/Border");
             if (_hideBorder) return;
@@ -72,40 +58,9 @@ namespace SamsHelper.ReactiveUI.Elements
             else _border.SetDisabled();
         }
 
-        private void OnDestroy()
-        {
-            InputHandler.UnregisterInputListener(this);
-        }
-
         public static void DeselectCurrent()
         {
             _currentButton.Exit();
-        }
-
-        private class HoldAction
-        {
-            private readonly float _duration;
-            private readonly Action _holdAction;
-            private float _startTime;
-
-            public HoldAction(Action a, float duration)
-            {
-                _holdAction = a;
-                _duration = duration;
-                Reset();
-            }
-
-            public void Reset()
-            {
-                _startTime = Time.realtimeSinceStartup;
-            }
-
-            public void ExecuteIfDone()
-            {
-                if (!(Time.realtimeSinceStartup - _startTime > _duration)) return;
-                _holdAction();
-                Reset();
-            }
         }
 
         public void Select() => Button().Select();
@@ -118,17 +73,7 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public void AddOnDeselectEvent(Action a) => OnDeselectActions += a;
 
-        public void AddOnHold(Action a, float duration) => _onHoldActions.Add(new HoldAction(a, duration));
-
         private bool IsSelected() => _isSelected;
-
-        public void OnInputUp(InputAxis axis)
-        {
-        }
-
-        public void OnDoubleTap(InputAxis axis, float direction)
-        {
-        }
 
         public void OnPointerEnter(PointerEventData p) => Select();
 

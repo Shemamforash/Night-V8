@@ -18,7 +18,7 @@ public class WingHealthScript : BossSectionHealthController
 
     protected override int GetInitialHealth()
     {
-        return 75;
+        return 100;
     }
 
     public void Start()

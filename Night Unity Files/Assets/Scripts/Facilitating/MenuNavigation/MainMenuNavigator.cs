@@ -19,7 +19,6 @@ namespace Facilitating.MenuNavigation
         private static bool _shownSplashScreen;
         private CanvasGroup _logo, _latin, _english, _loading;
         private static bool _seenIntro;
-        private bool _skipping;
         private Sequence _fadeInSequence;
 
         private void CacheGameObjects()
@@ -30,7 +29,7 @@ namespace Facilitating.MenuNavigation
             _english = gameObject.FindChildWithName<CanvasGroup>("English");
             _logo = gameObject.FindChildWithName<CanvasGroup>("Logo");
             _loading = gameObject.FindChildWithName<CanvasGroup>("Loading");
-            _loading.alpha =0f;
+            _loading.alpha = 0f;
             _english.alpha = 0f;
             _latin.alpha = 0f;
             _logo.alpha = 0f;
@@ -95,7 +94,6 @@ namespace Facilitating.MenuNavigation
         public void Awake()
         {
             Application.targetFrameRate = 60;
-            _skipping = false;
             SaveController.LoadSettings();
             CacheGameObjects();
             CreateFadeInSequence();

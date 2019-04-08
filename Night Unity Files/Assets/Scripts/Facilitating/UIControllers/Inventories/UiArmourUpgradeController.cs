@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace Facilitating.UIControllers
 {
-    public class UiArmourUpgradeController : UiInventoryMenuController, IInputListener
+    public class UiArmourUpgradeController : UiInventoryMenuController
     {
         private static UiArmourUpgradeController _instance;
         private static bool _unlocked;
@@ -67,7 +67,6 @@ namespace Facilitating.UIControllers
             _armourController = CharacterManager.SelectedCharacter.ArmourController;
             UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
             UpdateArmourDescriptions();
-            InputHandler.RegisterInputListener(this);
             _armourObject.SetActive(true);
             _upgradeObject.SetActive(false);
             CheckArmourComplete();
@@ -115,30 +114,6 @@ namespace Facilitating.UIControllers
             _bonusText.SetText(_armourController.GetBonus());
             _nextLevelText.SetText(_armourController.GetNextLevelBonus());
             _upgradeText.SetText(_armourController.GetUpgradeRequirements());
-        }
-
-        protected override void OnHide()
-        {
-            InputHandler.UnregisterInputListener(this);
-        }
-
-        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
-            if (isHeld) return;
-            switch (axis)
-            {
-                case InputAxis.Cancel:
-                    UiGearMenuController.Close();
-                    break;
-            }
-        }
-
-        public void OnInputUp(InputAxis axis)
-        {
-        }
-
-        public void OnDoubleTap(InputAxis axis, float direction)
-        {
         }
     }
 }

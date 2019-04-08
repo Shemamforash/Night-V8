@@ -11,8 +11,8 @@
         Tutorial,
 
         //Dynamic
-        Shelter,
-        Temple,
+        Shelter, //5
+        Temple, //6
         Animal,
         Danger,
         Fountain,

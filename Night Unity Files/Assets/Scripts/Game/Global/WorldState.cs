@@ -50,7 +50,7 @@ namespace Game.Global
         private static int _templesActivated;
         private static int _timeAtLastSave;
         private const int MaxDifficulty = 50;
-        private static bool _isBetaVersion = false;
+        private static bool _isBetaVersion = true;
 
         private enum DifficultySetting
         {
@@ -116,10 +116,10 @@ namespace Game.Global
             Inventory.Load(doc);
             Building.LoadBuildings(doc);
             Recipe.Load(doc);
+            EnvironmentManager.Load(doc);
             MapGenerator.Load(doc);
             CharacterManager.Load(doc);
             WeatherManager.Load(doc);
-            EnvironmentManager.Load(doc);
             WorldEventManager.Load(doc);
             JournalEntry.Load(doc);
             TutorialManager.Load(doc);
@@ -288,7 +288,7 @@ namespace Game.Global
             Inventory.UpdateBuildings();
             ++_timeAtLastSave;
             if (_timeAtLastSave % 12 == 0) WorldEventManager.SuggestSave();
-            bool increaseDifficulty = Hours % 6 == 0;
+            bool increaseDifficulty = Hours % 4 == 0;
             if (!increaseDifficulty) return;
             ++_difficulty;
             SaveIconController.AutoSave();

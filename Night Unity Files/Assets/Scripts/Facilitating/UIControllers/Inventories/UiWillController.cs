@@ -7,7 +7,7 @@ using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 
-public class UiWillController : UiInventoryMenuController, IInputListener
+public class UiWillController : UiInventoryMenuController
 {
     private UIAttributeController _uiAttributeController;
     private EnhancedButton _lifeButton, _gritButton, _focusButton;
@@ -26,14 +26,8 @@ public class UiWillController : UiInventoryMenuController, IInputListener
     protected override void OnShow()
     {
         UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
-        InputHandler.RegisterInputListener(this);
         UpdateValues();
         _lifeButton.Select();
-    }
-
-    protected override void OnHide()
-    {
-        InputHandler.UnregisterInputListener(this);
     }
 
     protected override void Initialise()
@@ -60,19 +54,5 @@ public class UiWillController : UiInventoryMenuController, IInputListener
         UpdateValues();
         if (attributeType == AttributeType.Life && PlayerCombat.Instance != null) PlayerCombat.Instance.RecalculateHealth();
         if (attributeType == AttributeType.Focus && PlayerCombat.Instance != null) PlayerCombat.Instance.ResetCompass();
-    }
-
-    public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-    {
-        if (isHeld || axis != InputAxis.Cancel) return;
-        UiGearMenuController.Close();
-    }
-
-    public void OnInputUp(InputAxis axis)
-    {
-    }
-
-    public void OnDoubleTap(InputAxis axis, float direction)
-    {
     }
 }

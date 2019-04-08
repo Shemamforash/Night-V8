@@ -93,19 +93,19 @@ namespace Game.Global
 
         public static void SetNightVolume(float volume) => _instance._night.volume = volume;
 
-        public static void FadeWindLight(float to, float duration = 1f) => Fade(to * 0.5f, duration, _instance._windLight);
+        public static void FadeWindLight(float to, float duration = 1f) => Fade(to * 0.4f, duration, _instance._windLight);
 
-        public static void FadeWindMedium(float to, float duration = 1f) => Fade(to * 0.5f, duration, _instance._windMedium);
+        public static void FadeWindMedium(float to, float duration = 1f) => Fade(to * 0.4f, duration, _instance._windMedium);
 
-        public static void FadeWindHeavy(float to, float duration = 1f) => Fade(to * 0.5f, duration, _instance._windHeavy);
+        public static void FadeWindHeavy(float to, float duration = 1f) => Fade(to * 0.4f, duration, _instance._windHeavy);
 
-        public static void FadeRainLight(float to, float duration = 1f) => Fade(to * 0.5f, duration, _instance._rainLight);
+        public static void FadeRainLight(float to, float duration = 1f) => Fade(to * 0.4f, duration, _instance._rainLight);
 
-        public static void FadeRainMedium(float to, float duration = 1f) => Fade(to * 0.5f, duration, _instance._rainMedium);
+        public static void FadeRainMedium(float to, float duration = 1f) => Fade(to * 0.4f, duration, _instance._rainMedium);
 
-        public static void FadeRainHeavy(float to, float duration = 1f) => Fade(to * 0.5f, duration, _instance._rainHeavy);
+        public static void FadeRainHeavy(float to, float duration = 1f) => Fade(to * 0.4f, duration, _instance._rainHeavy);
 
-        public static void FadeHail(float to, float duration = 1f) => Fade(to * 0.5f, duration, _instance._hail);
+        public static void FadeHail(float to, float duration = 1f) => Fade(to * 0.4f, duration, _instance._hail);
 
         public static void FadeFog(float to, float duration = 1f)
         {

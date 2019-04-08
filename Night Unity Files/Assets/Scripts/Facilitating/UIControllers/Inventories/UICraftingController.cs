@@ -17,7 +17,7 @@ using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UICraftingController : UiInventoryMenuController, IInputListener
+public class UICraftingController : UiInventoryMenuController
 {
     private ListController _craftingList;
     private CanvasGroup _listCanvas, _currentCraftingCanvas;
@@ -64,11 +64,8 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
     protected override void OnShow()
     {
         UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
-        InputHandler.RegisterInputListener(this);
         if (CharacterManager.SelectedCharacter.CraftAction.IsCurrentState()) ShowCurrentlyCrafting();
         else ShowCraftingList();
-
-
         ShowCraftingTutorial();
     }
 
@@ -132,11 +129,6 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         _craftingList.Initialise(listElements, CreateRecipe, UiGearMenuController.Close, GetAvailableRecipes);
     }
 
-    protected override void OnHide()
-    {
-        InputHandler.UnregisterInputListener(this);
-    }
-
     private void CreateRecipe(object obj)
     {
         Recipe recipe = (Recipe) obj;
@@ -168,7 +160,6 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
 
         UiGearMenuController.PlayAudio(audioClip);
     }
-
 
     private class CentreCraftingElement : CraftingElement
     {
@@ -298,25 +289,10 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         }
     }
 
-
     private static List<object> GetAvailableRecipes()
     {
         List<Recipe> recipes = Recipe.Recipes();
         if (Campfire.IsLit()) recipes.RemoveAll(r => r.RecipeType == RecipeType.Fire);
         return recipes.ToObjectList();
-    }
-
-    public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-    {
-        if (isHeld || axis != InputAxis.Cancel) return;
-        UiGearMenuController.Close();
-    }
-
-    public void OnInputUp(InputAxis axis)
-    {
-    }
-
-    public void OnDoubleTap(InputAxis axis, float direction)
-    {
     }
 }

@@ -22,7 +22,7 @@ using UnityEngine;
 
 namespace Facilitating.UIControllers
 {
-    public class UiWeaponUpgradeController : UiInventoryMenuController, IInputListener
+    public class UiWeaponUpgradeController : UiInventoryMenuController
     {
         private EnhancedButton _infuseButton, _channelButton, _swapButton;
         private ListController _weaponList;
@@ -33,7 +33,7 @@ namespace Facilitating.UIControllers
         private Weapon _equippedWeapon;
         private bool _seenAttributeTutorial, _seenChannelTutorial, _seenInfuseTutorial;
         public static bool Locked;
-        
+
         public override bool Unlocked() => !Locked;
 
         protected override void CacheElements()
@@ -63,7 +63,6 @@ namespace Facilitating.UIControllers
                 if (!WeaponsAreAvailable()) return;
                 UiGearMenuController.SetCloseButtonAction(Show);
                 _weaponList.Show();
-                InputHandler.UnregisterInputListener(this);
                 _infoGameObject.SetActive(false);
             });
             _infuseButton.AddOnClick(() =>
@@ -71,11 +70,9 @@ namespace Facilitating.UIControllers
                 if (!InscriptionsAreAvailable()) return;
                 UiGearMenuController.SetCloseButtonAction(Show);
                 _inscriptionList.Show();
-                InputHandler.UnregisterInputListener(this);
                 _infoGameObject.SetActive(false);
             });
             _channelButton.AddOnClick(Channel);
-            _channelButton.AddOnHold(Channel, 0.5f);
         }
 
         protected override void Initialise()
@@ -134,7 +131,6 @@ namespace Facilitating.UIControllers
             _swapButton.gameObject.SetActive(WeaponsAreAvailable());
             SelectButton(_swapButton);
 
-            InputHandler.RegisterInputListener(this);
             SetWeapon();
             StartCoroutine(TryShowWeaponTutorial());
         }
@@ -190,11 +186,6 @@ namespace Facilitating.UIControllers
             yield return StartCoroutine(ShowWeaponAttributeTutorial());
             yield return StartCoroutine(ShowChannelTutorial());
             yield return StartCoroutine(ShowInfuseTutorial());
-        }
-
-        protected override void OnHide()
-        {
-            InputHandler.UnregisterInputListener(this);
         }
 
         private void Equip(object weaponObject)
@@ -315,20 +306,6 @@ namespace Facilitating.UIControllers
                 if (equippedWeapon == null) return;
 //                _detailController.CompareTo(equippedWeapon);
             }
-        }
-
-        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
-            if (isHeld || axis != InputAxis.Cancel) return;
-            UiGearMenuController.Close();
-        }
-
-        public void OnInputUp(InputAxis axis)
-        {
-        }
-
-        public void OnDoubleTap(InputAxis axis, float direction)
-        {
         }
     }
 }

@@ -245,10 +245,15 @@ namespace Facilitating.UIControllers
         public static void ShowInventories()
         {
             if (!_openAllowed) return;
+            _instance._tabs.ForEach(t => t.UpdateActive());
+            if (_instance._tabs[2].Active())
+            {
+                SelectTab(2);
+                return;
+            }
             for (int i = 0; i < _instance._tabs.Count; i++)
             {
                 InventoryTab tab = _instance._tabs[i];
-                tab.UpdateActive();
                 if (!tab.Active()) continue;
                 SelectTab(i);
                 break;

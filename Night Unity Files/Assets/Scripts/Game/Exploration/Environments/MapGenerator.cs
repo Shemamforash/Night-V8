@@ -55,14 +55,25 @@ namespace Game.Exploration.Environment
             return _regions.FindAll(n => n.Discovered());
         }
 
+        private static void RemoveExistingName(Region region)
+        {
+            EnvironmentManager.CurrentEnvironment.RemoveExistingName(region.GetRegionType(), region.Name);
+            if (!_genericNames.ContainsKey(region.GetRegionType())) return;
+            _genericNames[region.GetRegionType()].Remove(region.Name);
+        }
+
         public static void Load(XmlNode doc)
         {
             LoadRegionNames();
             _regions.Clear();
+            _regionOrder.Clear();
+            _regionsDiscovered = -1;
             XmlNode regionsNode = doc.SelectSingleNode("Regions");
             foreach (XmlNode regionNode in regionsNode.SelectNodes("Region"))
             {
                 Region region = Region.Load(regionNode);
+                if (region.Discovered()) ++_regionsDiscovered;
+                RemoveExistingName(region);
                 if (region.GetRegionType() == RegionType.Gate) initialNode = region;
                 _regions.Add(region);
             }
@@ -91,6 +102,7 @@ namespace Game.Exploration.Environment
 
         public static void Generate()
         {
+            Debug.Log("Generated");
             GenerateRegions();
             ConnectRegions();
             SetRegionTypes();

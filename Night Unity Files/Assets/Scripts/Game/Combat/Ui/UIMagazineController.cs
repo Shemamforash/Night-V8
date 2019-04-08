@@ -55,7 +55,7 @@ namespace Game.Combat.Ui
             _weapon = weaponBehaviour;
             if (weaponBehaviour == null) return;
             _capacity = weaponBehaviour.Capacity();
-            _fireTypeText.text = weaponBehaviour.Weapon.WeaponAttributes.FireType;
+            _fireTypeText.text = weaponBehaviour.Weapon.WeaponAttributes.FireMode;
             MagazineAmmo.ForEach(a => a.Destroy());
             MagazineAmmo.Clear();
             for (int i = 0; i < _capacity; ++i)

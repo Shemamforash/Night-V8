@@ -102,7 +102,6 @@ namespace Game.Exploration.Environment
             _currentEnvironment = _environments[CurrentEnvironmentType];
         }
 
-
         private static void LoadEnvironments()
         {
             if (_loaded) return;

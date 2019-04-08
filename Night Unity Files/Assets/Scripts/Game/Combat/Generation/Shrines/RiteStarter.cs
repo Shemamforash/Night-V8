@@ -46,6 +46,7 @@ namespace Game.Combat.Generation.Shrines
 
         public static void Generate(Brand brand)
         {
+            if (_instance != null) return;
             Vector2 position = brand == null ? Vector2.zero : GetPosition();
             if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Rite Starter");
             GameObject riteObject = Instantiate(_prefab);
@@ -154,7 +155,8 @@ namespace Game.Combat.Generation.Shrines
             sequence.AppendCallback(Flash);
             sequence.AppendInterval(1f);
             sequence.AppendCallback(Teleport);
-            Destroy(this);
+            Destroy(GetComponent<Collider2D>());
+            _inRange = false;
         }
 
         private void Teleport()

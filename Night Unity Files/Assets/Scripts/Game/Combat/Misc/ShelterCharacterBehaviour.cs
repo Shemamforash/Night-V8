@@ -15,6 +15,7 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Game.Combat.Misc
 {
@@ -94,7 +95,7 @@ namespace Game.Combat.Misc
         private void CheckToLeave()
         {
             if (_targetCell == null) return;
-            if (WorldGrid.WorldToCellPosition(transform.position) != _targetCell) return;
+            if (transform.position.Distance(_targetCell.Position) > 0.25f) return;
             _leaving = true;
             CombatManager.Instance().ClearInactiveEnemies();
             ResetEnemyTargets();
@@ -120,7 +121,7 @@ namespace Game.Combat.Misc
             CombatManager.Instance().Enemies().ForEach(e =>
             {
                 float distanceToPlayer = e.transform.Distance(PlayerCombat.Instance.transform);
-                CanTakeDamage target = distanceToPlayer < 2f ? PlayerCombat.Instance : (CanTakeDamage) this;
+                CanTakeDamage target = distanceToPlayer < 5f ? PlayerCombat.Instance : (CanTakeDamage) this;
                 ((EnemyBehaviour) e).SetTarget(target);
             });
         }

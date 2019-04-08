@@ -264,7 +264,7 @@ namespace Game.Combat.Generation
             InputHandler.SetCurrentListener(null);
         }
 
-        private bool IsPlayerInCombat() => _inCombat && PlayerCombat.Alive;
+        public bool IsPlayerInCombat() => _inCombat && PlayerCombat.Alive;
 
         public void ExitCombat(bool returnToMap = true)
         {

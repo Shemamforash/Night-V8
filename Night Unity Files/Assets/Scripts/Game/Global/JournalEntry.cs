@@ -6,6 +6,7 @@ using Facilitating.Persistence;
 using Game.Characters;
 using Game.Exploration.Environment;
 using SamsHelper.Libraries;
+using UnityEngine;
 
 namespace Game.Global
 {
@@ -63,7 +64,7 @@ namespace Game.Global
             LoreStories.Clear();
             ReadJournals();
         }
-        
+
         public void Unlock()
         {
             ReadJournals();
@@ -77,8 +78,7 @@ namespace Game.Global
             for (int i = 0; i < AllEntries.Count; i++)
             {
                 JournalEntry entry = AllEntries[i];
-                journalString += entry._groupNumber + ",";
-                journalString += entry._partNumber + ",";
+                journalString += entry.Title + ",";
                 journalString += entry._locked;
                 if (i < AllEntries.Count - 1) journalString += ",";
             }
@@ -92,13 +92,12 @@ namespace Game.Global
             ReadJournals();
             string journalString = root.StringFromNode("Journals");
             string[] journalArr = journalString.Split(',');
-            for (int i = 0; i < journalArr.Length; i += 3)
+            for (int i = 0; i < journalArr.Length; i += 2)
             {
-                int groupNumber = int.Parse(journalArr[i]);
-                int partNumber = int.Parse(journalArr[i + 1]);
-                bool locked = bool.Parse(journalArr[i + 2]);
+                string title = journalArr[i];
+                bool locked = bool.Parse(journalArr[i + 1]);
                 if (locked) continue;
-                JournalEntry entry = AllEntries.Find(j => j._groupNumber == groupNumber && j._partNumber == partNumber);
+                JournalEntry entry = AllEntries.Find(j => j.Title == title);
                 entry.Unlock();
             }
 

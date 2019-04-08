@@ -96,10 +96,7 @@ namespace Game.Combat.Generation
                 List<Edge> existingEdges = graph.GenerateEdges();
                 foreach (CrackNode parent in paths)
                 {
-                    int splitCount = (int) (radius / originalRadius);
-                    if (splitCount < 1) splitCount = 1;
-                    if (splitCount > 3) splitCount = 3;
-                    splitCount = Random.Range(1, splitCount);
+                    int splitCount = Helper.RollDie(0,2) ? 1 : 2;
                     float splitAngleRange = parent.AngleRange / splitCount;
 
                     for (int j = 0; j < splitCount; ++j)
@@ -115,7 +112,7 @@ namespace Game.Combat.Generation
                 JoinNeighbors(newPaths, existingEdges);
                 paths = newPaths;
                 radius += originalRadius * Mathf.Pow(radiusMultiplier, iterations);
-                if (radius > WorldGrid.CombatMovementDistance / 2f && radius < WorldGrid.CombatMovementDistance / 2f + 1)
+                if (radius > WorldGrid.CombatMovementDistance / 2f - 1f && radius < WorldGrid.CombatAreaWidth / 2f + 1)
                 {
                     radius += 3f;
                 }

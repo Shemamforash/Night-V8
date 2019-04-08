@@ -10487,6 +10487,7 @@ PrefabInstance:
     - {fileID: 82657994084396304, guid: d443343ee99f48749bc611a86d547f69, type: 3}
     - {fileID: 164219924972546104, guid: d443343ee99f48749bc611a86d547f69, type: 3}
     - {fileID: 114357818050315406, guid: d443343ee99f48749bc611a86d547f69, type: 3}
+    - {fileID: 114575773798109328, guid: d443343ee99f48749bc611a86d547f69, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d443343ee99f48749bc611a86d547f69, type: 3}
 --- !u!20 &368168995 stripped
 Camera:

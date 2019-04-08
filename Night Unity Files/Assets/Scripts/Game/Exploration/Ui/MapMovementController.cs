@@ -13,7 +13,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
     private Rigidbody2D _rigidBody2D;
     private Vector2 _direction;
     private const float PanSpeed = 40f;
-    private float CurrentSpeed;
+    private float _currentSpeed;
     private List<Region> _availableRegions;
     private Region _nearestRegion;
     private Region _currentRegion;
@@ -71,13 +71,14 @@ public class MapMovementController : MonoBehaviour, IInputListener
         if (distance < 0.01f)
         {
             Vector3 snappedPosition = _nearestRegion.Position;
-            snappedPosition.z = transform.position.z;
-            transform.position = snappedPosition;
+            Transform mapTransform = transform;
+            snappedPosition.z = mapTransform.position.z;
+            mapTransform.position = snappedPosition;
             return;
         }
 
         _direction = _nearestRegion.Position.Direction(transform.position);
-        CurrentSpeed = distance * Time.fixedDeltaTime * 400;
+        _currentSpeed = distance * Time.fixedDeltaTime * 400;
     }
 
     private Region FindNearestRegion(Vector2 point)
@@ -116,7 +117,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         if (_player == null) return;
         if (!_pressed && _nearestRegion != null) LocateToNearestRegion();
         _direction.Normalize();
-        _direction *= CurrentSpeed;
+        _direction *= _currentSpeed;
         _rigidBody2D.AddForce(_direction);
         _direction = Vector2.zero;
     }
@@ -133,8 +134,8 @@ public class MapMovementController : MonoBehaviour, IInputListener
         mousePosition.x /= screenRadius;
         mousePosition.y /= screenRadius;
         _direction = mousePosition;
-        if (mousePosition.magnitude < 0.25f) CurrentSpeed = 0f;
-        else CurrentSpeed = (mousePosition.magnitude - 0.25f) / 0.75f * PanSpeed / 2f;
+        if (mousePosition.magnitude < 0.25f) _currentSpeed = 0f;
+        else _currentSpeed = (mousePosition.magnitude - 0.25f) / 0.75f * PanSpeed / 2f;
         ClampDirection();
     }
 
@@ -180,7 +181,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         }
 
         ClampDirection();
-        CurrentSpeed = PanSpeed;
+        _currentSpeed = PanSpeed;
     }
 
     public void OnInputUp(InputAxis axis)

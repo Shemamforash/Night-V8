@@ -21,7 +21,7 @@ namespace Game.Gear.Weapons
         private readonly AttributeModifier _accuracyDurabilityModifier;
         private readonly Weapon _weapon;
         private readonly string Description;
-        public string FireType;
+        public string FireType, FireMode;
         public bool Automatic = true;
         private WeaponClassType WeaponClassType;
         public WeaponType WeaponType;
@@ -78,6 +78,7 @@ namespace Game.Gear.Weapons
             Automatic = weaponClass.Automatic;
             WeaponClassType = weaponClass.Name;
             FireType = weaponClass.FireType;
+            FireMode = weaponClass.FireMode;
             RecalculateAttributeValues();
         }
 
@@ -119,7 +120,7 @@ namespace Game.Gear.Weapons
 
         public void DecreaseDurability(float shots, float durabilityModifier)
         {
-            float durabilityLossPerShot = 0.02f / Val(AttributeType.Pellets);
+            float durabilityLossPerShot = 0.01f / Val(AttributeType.Pellets);
             float durabilityLoss = durabilityLossPerShot * shots * durabilityModifier;
             float durabilityBefore = _durability.Normalised();
             _durability.Decrement(durabilityLoss);

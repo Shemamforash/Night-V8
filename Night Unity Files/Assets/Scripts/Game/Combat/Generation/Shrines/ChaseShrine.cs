@@ -40,6 +40,7 @@ namespace Game.Combat.Generation.Shrines
 
         private void SpawnChaser()
         {
+            if (CombatManager.Instance().Enemies().Count == 4) return;
             CombatManager.Instance().SpawnEnemy(EnemyType.Shadow, WorldGrid.GetCellNearMe(WorldGrid.WorldToCellPosition(transform.position), 5f, 2f).Position);
         }
 
@@ -50,7 +51,7 @@ namespace Game.Combat.Generation.Shrines
             float currentTime = shrineTimeMax;
             float difficulty = 1 - WorldState.Difficulty() / 50f;
             difficulty = difficulty * 0.75f + 0.25f;
-            float spawnChaserTimeMax = 5f * difficulty;
+            float spawnChaserTimeMax = 7.5f * difficulty;
             float spawnChaserTime = 0f;
             while (_pickupsLeft > 0 && currentTime > 0f)
             {

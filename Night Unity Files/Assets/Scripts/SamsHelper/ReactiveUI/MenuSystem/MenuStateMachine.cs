@@ -35,6 +35,11 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             }
         }
 
+        private void OnDestroy()
+        {
+            InputHandler.UnregisterInputListener(this);
+        }
+
         public static void RegisterMenu(Menu t)
         {
             MenuState menu = new MenuState(States, t.name, t);

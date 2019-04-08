@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Player;
+using Game.Exploration.Regions;
 using SamsHelper.Libraries;
 using TMPro;
 using UnityEngine;
@@ -22,6 +23,10 @@ public class UIBrandDisplayController : MonoBehaviour
     public void Update()
     {
         if (PlayerCombat.Instance == null) return;
+        if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Rite)
+        {
+            gameObject.SetActive(false);
+        }
         Player player = PlayerCombat.Instance.Player;
         List<Brand> brands = player.BrandManager.GetActiveBrands().FindAll(b => b != null);
         if (brands.Count == 0)
