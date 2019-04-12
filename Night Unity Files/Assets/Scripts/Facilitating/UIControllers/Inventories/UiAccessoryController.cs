@@ -51,7 +51,7 @@ namespace Facilitating.UIControllers
 
         protected override void Initialise()
         {
-            _accessoryList.Initialise(typeof(AccessoryElement), Equip, UiGearMenuController.Close, GetAvailableAccessories);
+            _accessoryList.Initialise(typeof(AccessoryElement), Equip, null, GetAvailableAccessories);
         }
 
         protected override void OnShow()

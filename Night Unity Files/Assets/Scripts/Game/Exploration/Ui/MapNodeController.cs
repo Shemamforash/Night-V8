@@ -69,13 +69,13 @@ namespace Game.Exploration.Ui
             _costText.text = gritString;
         }
 
-        public void Show()
+        public void Show(Player player)
         {
             _hidden = false;
-            _distance = RoutePlotter.RouteBetween(_region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion()).Count - 1;
+            _distance = RoutePlotter.RouteBetween(_region, player.TravelAction.GetCurrentRegion()).Count - 1;
             _gritCost = _distance;
             if (_region.GetRegionType() == RegionType.Gate || (_region.GetRegionType() == RegionType.Temple && _region.IsTempleCleansed())) _gritCost = 0;
-            _canAfford = CharacterManager.SelectedCharacter.CanAffordTravel(_gritCost);
+            _canAfford = player.CanAffordTravel(_gritCost);
             SetGritText();
             _targetCentreAlpha = 0.6f;
             _targetNodeAlpha = _canAfford ? 1f : 0.5f;

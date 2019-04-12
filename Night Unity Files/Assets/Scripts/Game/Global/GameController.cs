@@ -66,7 +66,7 @@ public class GameController : MonoBehaviour
         Region region = new Region();
         region.SetRegionType(RegionType.Tutorial);
         CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(region);
-        SceneChanger.GoToCombatScene();
+        SceneChanger.GoToCombatScene(CharacterManager.SelectedCharacter);
         return true;
     }
 

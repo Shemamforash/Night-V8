@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using DG.Tweening;
 using Facilitating.UIControllers;
+using Game.Characters;
+using Game.Combat.Generation;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
@@ -69,8 +71,9 @@ namespace Game.Global
             ChangeScene("Story");
         }
 
-        public static void GoToCombatScene()
+        public static void GoToCombatScene(Player player)
         {
+            CombatManager.SetPlayer(player);
             ChangeScene("Combat");
         }
 

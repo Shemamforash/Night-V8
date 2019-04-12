@@ -17,15 +17,15 @@ namespace Game.Characters
     public static class CharacterManager
     {
         public static Player Wanderer;
+        public static Player AlternateCharacter;
         public static Player SelectedCharacter;
-        public static readonly List<Player> Characters = new List<Player>();
         private static readonly List<CharacterTemplate> Templates = new List<CharacterTemplate>();
         private static bool _loaded;
 
         public static void Reset(bool includeDriver = true)
         {
             SelectedCharacter = null;
-            Characters.Clear();
+            AlternateCharacter = null;
             if (!includeDriver) return;
             LoadTemplates(true);
             GenerateWanderer();
@@ -37,53 +37,58 @@ namespace Game.Characters
             LoadTemplates(true);
             Reset(false);
             XmlNode characterManagerNode = doc.GetNode("Characters");
-            foreach (XmlNode characterNode in characterManagerNode.GetNodesWithName("Character"))
+            XmlNodeList nodes = characterManagerNode.SelectNodes("Character");
+            foreach (XmlNode characterNode in nodes)
             {
-                string className = characterNode.StringFromNode("CharacterClass");
-                CharacterTemplate template = FindClass(className);
-                Templates.Remove(template);
-                Player player = new Player(template);
-                player.Load(characterNode);
-                AddCharacter(player);
-                if (player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer) Wanderer = player;
+                LoadCharacter(characterNode);
             }
 
             CharacterClass selectedCharacterClass = (CharacterClass) characterManagerNode.IntFromNode("SelectedCharacter");
-            SelectedCharacter = Characters.Find(c => c.CharacterTemplate.CharacterClass == selectedCharacterClass);
+            SelectedCharacter = selectedCharacterClass == CharacterClass.Wanderer ? Wanderer : AlternateCharacter;
 
             Assert.IsFalse(Templates.Any(t => t.CharacterClass == CharacterClass.Wanderer));
+        }
+
+        private static void LoadCharacter(XmlNode characterNode)
+        {
+            if (characterNode == null) return;
+            string className = characterNode.StringFromNode("CharacterClass");
+            CharacterTemplate template = FindClass(className);
+            Templates.Remove(template);
+            Player loadedCharacter = new Player(template);
+            loadedCharacter.Load(characterNode);
+            if (loadedCharacter.CharacterTemplate.CharacterClass == CharacterClass.Wanderer) Wanderer = loadedCharacter;
+            else AlternateCharacter = loadedCharacter;
         }
 
         public static void Save(XmlNode doc)
         {
             doc = doc.CreateChild("Characters");
-            foreach (Player c in Characters) c.Save(doc);
+            AlternateCharacter?.Save(doc);
+            Wanderer?.Save(doc);
             doc.CreateChild("SelectedCharacter", (int) SelectedCharacter.CharacterTemplate.CharacterClass);
         }
 
         public static void Start()
         {
             Transform characterAreaTransform = GameObject.Find("Character Section").transform;
-            for (int i = 0; i < 3; i++)
-            {
-                CharacterView characterView = characterAreaTransform.FindChildWithName<CharacterView>("Character " + i);
-                Player player = null;
-                if (i < Characters.Count) player = Characters[i];
-                characterView.SetPlayer(player);
-            }
-
-            Characters[0].CharacterView().SelectInitial();
+            CharacterView characterView = characterAreaTransform.FindChildWithName<CharacterView>("Character 0");
+            characterView.SetPlayer(Wanderer);
+            characterView = characterAreaTransform.FindChildWithName<CharacterView>("Character 1");
+            characterView.SetPlayer(AlternateCharacter);
+            Wanderer.CharacterView().SelectInitial();
         }
 
-        public static void AddCharacter(Player playerCharacter)
+        public static void SetAlternateCharacter(Player playerCharacter)
         {
-            Characters.Add(playerCharacter);
+            AlternateCharacter = playerCharacter;
         }
 
         public static void RemoveCharacter(Player playerCharacter)
         {
             if (playerCharacter.CharacterView() != null) playerCharacter.CharacterView().SetPlayer(null);
-            Characters.Remove(playerCharacter);
+            if (playerCharacter == Wanderer) Wanderer = null;
+            else AlternateCharacter = null;
         }
 
         public static void SelectCharacter(Player player)
@@ -124,7 +129,6 @@ namespace Game.Characters
             Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Dark, WeaponType.Pistol);
             Inventory.Move(weapon);
             Wanderer.EquipWeapon(weapon);
-            AddCharacter(Wanderer);
         }
 
         public static Player GenerateCharacter(CharacterClass characterClass)
@@ -176,16 +180,19 @@ namespace Game.Characters
             attributes.Get(AttributeType.Will).SetToMax();
         }
 
+        private static void UpdateCharacter(Player character)
+        {
+            if (character == null) return;
+            character.Update();
+            character.Attributes.UpdateThirstAndHunger();
+            if (character.IsDead)
+                RemoveCharacter(character);
+        }
+
         public static void Update()
         {
-            for (int i = Characters.Count - 1; i >= 0; --i)
-            {
-                Player c = Characters[i];
-                c.Update();
-                c.Attributes.UpdateThirstAndHunger();
-                if (c.IsDead)
-                    RemoveCharacter(c);
-            }
+            UpdateCharacter(Wanderer);
+            UpdateCharacter(AlternateCharacter);
         }
 
         public static Region CurrentRegion() => SelectedCharacter.TravelAction.GetCurrentRegion();

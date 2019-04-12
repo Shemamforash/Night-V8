@@ -20,8 +20,8 @@ namespace Game.Characters
 
         public readonly HashSet<WeaponType> WeaponSkillOneUnlocks = new HashSet<WeaponType>();
         public readonly HashSet<WeaponType> WeaponSkillTwoUnlocks = new HashSet<WeaponType>();
-        private const int DehydrateDeathTime = 24;
-        private const int StarvationDeathTime = 48;
+        private const int DehydrateDeathTime = 24; //time per drink = 2.4 hrs
+        private const int StarvationDeathTime = 48; //time per eat = 4.8 hrs
 
         public bool SkillOneUnlocked, SkillTwoUnlocked;
         private static readonly List<AttributeType> _attributeTypes = new List<AttributeType>();

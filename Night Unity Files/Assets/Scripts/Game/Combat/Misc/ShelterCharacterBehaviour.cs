@@ -100,7 +100,7 @@ namespace Game.Combat.Misc
             CombatManager.Instance().ClearInactiveEnemies();
             ResetEnemyTargets();
             Characters.Player character = CharacterManager.CurrentRegion().CharacterHere;
-            CharacterManager.AddCharacter(character);
+            CharacterManager.SetAlternateCharacter(character);
             CharacterManager.CurrentRegion().CharacterHere = null;
             TeleportInOnly.TeleportIn(transform.position);
             _sequence?.Kill();

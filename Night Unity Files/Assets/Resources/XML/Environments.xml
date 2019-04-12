@@ -8,7 +8,7 @@
 		<Shelters>0</Shelters>
 		<Animals>2</Animals>
 		<Danger>5</Danger>
-		<WaterSources>14</WaterSources>
+		<WaterSources>12</WaterSources>
 		<FoodSources>8</FoodSources>
 		<ResourceSources>10</ResourceSources>
 	</Desert>
@@ -21,8 +21,8 @@
 		<Shelters>1</Shelters>
 		<Animals>4</Animals>
 		<Danger>10</Danger>
-		<WaterSources>16</WaterSources>
-		<FoodSources>12</FoodSources>
+		<WaterSources>14</WaterSources>
+		<FoodSources>10</FoodSources>
 		<ResourceSources>15</ResourceSources>
 	</Mountains>
 	<Sea>
@@ -34,8 +34,8 @@
 		<Shelters>1</Shelters>
 		<Animals>6</Animals>
 		<Danger>15</Danger>
-		<WaterSources>20</WaterSources>
-		<FoodSources>16</FoodSources>
+		<WaterSources>16</WaterSources>
+		<FoodSources>12</FoodSources>
 		<ResourceSources>20</ResourceSources>
 	</Sea>
 	<Ruins>
@@ -47,8 +47,8 @@
 		<Shelters>1</Shelters>
 		<Animals>8</Animals>
 		<Danger>20</Danger>
-		<WaterSources>20</WaterSources>
-		<FoodSources>20</FoodSources>
+		<WaterSources>18</WaterSources>
+		<FoodSources>14</FoodSources>
 		<ResourceSources>25</ResourceSources>
 	</Ruins>
 	<Wasteland>
@@ -61,7 +61,7 @@
 		<Animals>10</Animals>
 		<Danger>25</Danger>
 		<WaterSources>20</WaterSources>
-		<FoodSources>24</FoodSources>
+		<FoodSources>16</FoodSources>
 		<ResourceSources>30</ResourceSources>
 	</Wasteland>
 </EnvironmentTypes>

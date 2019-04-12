@@ -13,6 +13,7 @@ public class ActionProgressController : MonoBehaviour
     private TextMeshProUGUI _text;
     private BaseCharacterAction _lastState;
     private Tweener _rightTween, _leftTween;
+    private Sequence _sequence;
 
     private void Awake()
     {
@@ -33,17 +34,21 @@ public class ActionProgressController : MonoBehaviour
         float startFill = state.GetNormalisedProgress();
         _left.fillAmount = startFill;
         _right.fillAmount = startFill;
-        _leftTween?.Kill();
-        _rightTween?.Kill();
-        _leftTween = _left.DOFillAmount(0f, timeToComplete).SetUpdate(UpdateType.Manual).SetEase(Ease.Linear);
-        _rightTween = _right.DOFillAmount(0f, timeToComplete).SetUpdate(UpdateType.Manual).SetEase(Ease.Linear);
+        _sequence?.Kill();
+        _sequence = DOTween.Sequence();
+        _sequence.Append(_left.DOFillAmount(0f, timeToComplete).SetEase(Ease.Linear));
+        _sequence.Insert(0, _right.DOFillAmount(0f, timeToComplete).SetEase(Ease.Linear));
+        _sequence.SetEase(Ease.Linear);
         _text.text = state.GetDisplayName();
         _lastState = state;
     }
 
     private void Update()
     {
-        if (WorldState.Paused()) return;
-        DOTween.ManualUpdate(Time.deltaTime, Time.unscaledTime);
+        if (_sequence == null) return;
+        if (WorldState.Paused() && _sequence.IsPlaying())
+            _sequence.Pause();
+        else if (!WorldState.Paused() && !_sequence.IsPlaying())
+            _sequence.Play();
     }
 }

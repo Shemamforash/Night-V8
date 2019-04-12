@@ -192,6 +192,7 @@ namespace Facilitating.UIControllers
         {
             if (!_closeAllowed) return;
             if (TutorialManager.Instance.IsTutorialVisible()) return;
+            _instance._closeButton.Disable();
             FlashCloseButton();
             InventoryTab.ClearActiveTab();
             _instance._currentMenuController.Hide();
@@ -206,9 +207,9 @@ namespace Facilitating.UIControllers
         public override void Enter()
         {
             base.Enter();
+            _closeButton.Enable();
             InputHandler.RegisterInputListener(this);
             DOTween.defaultTimeScaleIndependent = true;
-            WorldState.Pause();
             ButtonClickListener.SuppressClick();
             AudioController.FadeInMusicMuffle();
             AudioController.FadeOutCombat();
@@ -224,6 +225,7 @@ namespace Facilitating.UIControllers
         {
             if (!_instance._open)
             {
+                WorldState.Pause();
                 _instance._currentMenuController = menu;
                 MenuStateMachine.ShowMenu("Inventories", _instance._currentMenuController.Show);
                 _instance._open = true;

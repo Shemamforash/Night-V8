@@ -4,6 +4,8 @@
     <e p="C:\Users\Sam\.Rider2018.3\config\extensions" t="IncludeRecursive" />
     <e p="C:\Users\Sam\.Rider2018.3\system\extResources" t="IncludeRecursive" />
     <e p="C:\Users\Sam\.Rider2018.3\system\resharper-host\Local\Transient\ReSharperHost\v183\SolutionCaches\_Night Unity Files.-1407196519.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Sam\AppData\Local\Android\Sdk\platforms\android-28\Data\res" t="IncludeRecursive" />
+    <e p="C:\Users\Sam\AppData\Local\Android\Sdk\sources\android-28" t="IncludeRecursive" />
     <e p="C:\Users\Sam\Desktop\Desolation - The Last Road\Night-V8\Night Unity Files" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
@@ -1683,9 +1685,7 @@
       <e p="Night Unity Files.sln" t="IncludeFlat" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="packages" t="ExcludeRecursive" />
-      <e p="Temp" t="ExcludeRecursive">
-        <e p="bin" t="ExcludeRecursive" />
-      </e>
+      <e p="Temp\bin" t="ExcludeRecursive" />
     </e>
   </component>
   <component name="RiderRiderContentModelStore">

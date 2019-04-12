@@ -22,7 +22,7 @@ public class HelpMenuController : Menu
 
     public override void PreEnter()
     {
-        _tutorialList.Initialise(typeof(TutorialElement), o => { }, () => { }, GetAvailableTutorials);
+        _tutorialList.Initialise(typeof(TutorialElement), null, null, GetAvailableTutorials);
         _tutorialList.SetOnItemHover(UpdateTutorialShown);
         _tutorialList.Show();
     }

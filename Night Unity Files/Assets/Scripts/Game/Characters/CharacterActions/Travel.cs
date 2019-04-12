@@ -75,12 +75,12 @@ namespace Game.Characters.CharacterActions
         {
             CurrentRegion.Discover();
             CharacterManager.SelectedCharacter = PlayerCharacter;
-            CombatStoryController.TryEnter();
+            CombatStoryController.TryEnter(PlayerCharacter);
         }
 
         protected override void OnClick()
         {
-            MenuStateMachine.ShowMenu("Map Menu");
+            MapMenuController.Open(PlayerCharacter);
         }
 
         public Region GetCurrentRegion()

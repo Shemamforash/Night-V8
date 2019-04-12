@@ -93,10 +93,10 @@ namespace Game.Characters
         {
             CharacterManager.SelectCharacter(_player);
             _viewCanvas.DOFade(1f, 0.3f);
-            CharacterManager.Characters.ForEach(c =>
-            {
-                if (c != _player) c.CharacterView().DeselectCharacter();
-            });
+            bool isWanderer = _player == CharacterManager.Wanderer;
+            bool hasAlternateCharacter = CharacterManager.AlternateCharacter != null;
+            if (isWanderer && hasAlternateCharacter) CharacterManager.AlternateCharacter.CharacterView().DeselectCharacter();
+            else if (!isWanderer) CharacterManager.Wanderer.CharacterView().DeselectCharacter();
         }
 
         private void DeselectCharacter()

@@ -28,7 +28,7 @@ public class DismantleMenuController : Menu
     {
         base.Awake();
         _dismantleList = gameObject.FindChildWithName<ListController>("List");
-        _dismantleList.Initialise(typeof(DismantleElement), ShowDismantledScreen, Close, GetDismantleItems);
+        _dismantleList.Initialise(typeof(DismantleElement), ShowDismantledScreen, null, GetDismantleItems);
         _closeButton = gameObject.FindChildWithName<CloseButtonController>("Close Button");
 
 

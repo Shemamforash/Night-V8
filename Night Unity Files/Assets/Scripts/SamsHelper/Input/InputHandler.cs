@@ -147,21 +147,32 @@ namespace SamsHelper.Input
             }
 
             foreach (InputPress i in _inputPressList.Values) i.CheckPress();
+
+#if UNITY_EDITOR
+            if (!UnityEngine.Input.GetKeyDown("tab")) return;
+            ScreenCapture.CaptureScreenshot(Application.persistentDataPath + "Screen " + _screenNumber + ".png", 2);
+            ++_screenNumber;
+#endif
         }
+
+        private static int _screenNumber = 0;
 
         private static bool ListenerIsValid(IInputListener inputListener)
         {
-            if(ListenersToRemove.Contains(inputListener)) return false;
-            switch (inputListener)
+            if (ListenersToRemove.Contains(inputListener)) return false;
+            if (inputListener == null) return false;
+            try
             {
-                case null:
-                    return false;
-                case MonoBehaviour behaviour when behaviour.gameObject != null:
-                    return true;
-                default:
-                    ListenersToRemove.AddOnce(inputListener);
-                    return false;
+                MonoBehaviour monoBehaviour = inputListener as MonoBehaviour;
+                if (monoBehaviour == null) return false;
+                return monoBehaviour.gameObject != null;
             }
+            catch (NullReferenceException)
+            {
+            }
+
+            ListenersToRemove.Add(inputListener);
+            return false;
         }
 
         private static void BroadcastInputDown(InputAxis axis, bool isHeld, float lastInputValue)

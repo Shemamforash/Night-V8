@@ -30,7 +30,7 @@ namespace Game.Exploration.Environment
         private float _currentTime;
         private bool _isActive;
         private readonly List<RingDrawer> _rings = new List<RingDrawer>();
-        public static bool IsReturningFromCombat;
+        public static Player CharacterReturning;
         private UIAttributeMarkerController _gritMarker, _willMarker;
         private EnhancedText _teleportText, _willText;
         private bool _seenTutorial;
@@ -39,6 +39,7 @@ namespace Game.Exploration.Environment
         private static MapMenuController _instance;
         private Region _nearestRegion;
         private string _teleportControlText, _willControlText;
+        private static Player _player;
 
         protected override void Awake()
         {
@@ -75,7 +76,8 @@ namespace Game.Exploration.Environment
         private void ReturnFromCombat()
         {
             if (MenuStateMachine.CurrentMenu() == this) return;
-            MenuStateMachine.ShowMenu("Map Menu");
+            Open(CharacterReturning);
+            CharacterReturning = null;
         }
 
         public override void Enter()
@@ -86,8 +88,8 @@ namespace Game.Exploration.Environment
             UpdateTeleportText();
             UpdateWill();
             ResourcesUiController.Hide();
-            MapGenerator.Regions().ForEach(n => { n.ShowNode(); });
-            MapMovementController.Instance().Enter();
+            MapGenerator.Regions().ForEach(n => { n.ShowNode(_player); });
+            MapMovementController.Instance().Enter(_player);
             AudioController.FadeInMusicMuffle();
             InputHandler.RegisterInputListener(this);
             ShowMapTutorial();
@@ -104,6 +106,7 @@ namespace Game.Exploration.Environment
             AudioController.FadeOutMusicMuffle();
             InputHandler.UnregisterInputListener(this);
             ResourcesUiController.Show();
+            _player = null;
         }
 
         public override void PreEnter()
@@ -128,9 +131,9 @@ namespace Game.Exploration.Environment
             if (region == null) return;
             if (!_canTeleport) return;
             Inventory.DecrementResource("Mystic Shard", 1);
-            if (region.GetRegionType() == RegionType.Gate) CharacterManager.SelectedCharacter.TravelAction.ReturnToHomeInstant();
-            else CharacterManager.SelectedCharacter.TravelAction.TravelToInstant(region);
-            IsReturningFromCombat = false;
+            if (region.GetRegionType() == RegionType.Gate) _player.TravelAction.ReturnToHomeInstant();
+            else _player.TravelAction.TravelToInstant(region);
+            CharacterReturning = null;
             Exit();
         }
 
@@ -262,7 +265,7 @@ namespace Game.Exploration.Environment
 
         public void Update()
         {
-            if (IsReturningFromCombat) ReturnFromCombat();
+            if (CharacterReturning != null) ReturnFromCombat();
             if (!_isActive) return;
             DrawBasicRoutes();
             if (route == null || route.Count == 1) return;
@@ -271,7 +274,7 @@ namespace Game.Exploration.Environment
 
         public void SetRoute(Region to)
         {
-            route = RoutePlotter.RouteBetween(CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion(), to);
+            route = RoutePlotter.RouteBetween(_player.TravelAction.GetCurrentRegion(), to);
         }
 
         private void TravelToRegion()
@@ -279,16 +282,16 @@ namespace Game.Exploration.Environment
             if (_nearestRegion == null) return;
             if (!CanAffordToTravel()) return;
             if (TutorialManager.Instance.IsTutorialVisible()) return;
-            Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
+            Travel travelAction = _player.TravelAction;
             travelAction.TravelTo(_nearestRegion, _nearestRegion.MapNode().GetDistance());
-            IsReturningFromCombat = false;
+            CharacterReturning = null;
             MenuStateMachine.ShowMenu("Game Menu");
         }
 
         private bool CanAffordToTravel()
         {
             int gritCost = _nearestRegion.MapNode().GetGritCost();
-            bool canAfford = CharacterManager.SelectedCharacter.CanAffordTravel(gritCost);
+            bool canAfford = _player.CanAffordTravel(gritCost);
             bool travellingToGate = _nearestRegion.GetRegionType() == RegionType.Gate;
             bool canAffordToTravel = canAfford || travellingToGate;
             return canAffordToTravel;
@@ -296,25 +299,25 @@ namespace Game.Exploration.Environment
 
         private void TryRestoreGrit()
         {
-            CharacterAttribute grit = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Grit);
-            CharacterAttribute will = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Will);
+            CharacterAttribute grit = _player.Attributes.Get(AttributeType.Grit);
+            CharacterAttribute will = _player.Attributes.Get(AttributeType.Will);
             if (will.CurrentValue() == 0 || grit.ReachedMax()) return;
             will.Decrement();
             grit.Increment();
             _gritMarker.SetValue(grit.Max, grit.CurrentValue(), 0);
             _willMarker.SetValue(will.Max, will.CurrentValue(), 0);
-            MapGenerator.Regions().ForEach(n => { n.ShowNode(); });
+            MapGenerator.Regions().ForEach(n => { n.ShowNode(_player); });
         }
 
         public void UpdateGrit(int gritCost)
         {
-            CharacterAttribute grit = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Grit);
+            CharacterAttribute grit = _player.Attributes.Get(AttributeType.Grit);
             _gritMarker.SetValue(grit.Max, grit.CurrentValue(), -gritCost);
         }
 
         private void UpdateWill()
         {
-            CharacterAttribute will = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Will);
+            CharacterAttribute will = _player.Attributes.Get(AttributeType.Will);
             _willMarker.SetValue(will.Max, will.CurrentValue(), 0);
         }
 
@@ -336,7 +339,7 @@ namespace Game.Exploration.Environment
                     TryRestoreGrit();
                     break;
                 case InputAxis.Cancel:
-                    if (!IsReturningFromCombat && !TutorialManager.Instance.IsTutorialVisible())
+                    if (CharacterReturning == null && !TutorialManager.Instance.IsTutorialVisible())
                         MenuStateMachine.ShowMenu("Game Menu");
                     break;
             }
@@ -355,6 +358,12 @@ namespace Game.Exploration.Environment
         public void SetNearestRegion(Region nearestRegion)
         {
             _nearestRegion = nearestRegion;
+        }
+
+        public static void Open(Player playerCharacter)
+        {
+            _player = playerCharacter;
+            MenuStateMachine.ShowMenu("Map Menu");
         }
     }
 }

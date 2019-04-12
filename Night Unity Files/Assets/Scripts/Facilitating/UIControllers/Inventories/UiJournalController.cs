@@ -12,7 +12,7 @@ using UnityEngine;
 public class UiJournalController : UiInventoryMenuController
 {
     private ListController _journalList;
-    private static EnhancedText _journalDescription, _journalTitle;
+    private static EnhancedText _journalDescription;
     private CanvasGroup _noJournalGroup;
     private static bool _unlocked;
 
@@ -25,16 +25,16 @@ public class UiJournalController : UiInventoryMenuController
     {
         root.CreateChild("Journal", _unlocked);
     }
-    
+
     public override bool Unlocked()
     {
         if (!_unlocked) _unlocked = JournalEntry.GetUnlockedEntries().Count != 0;
         return _unlocked;
     }
-    
+
     protected override void Initialise()
     {
-        _journalList.Initialise(typeof(JournalElement), o => { }, UiGearMenuController.Close, GetAvailableJournalEntries);
+        _journalList.Initialise(typeof(JournalElement), o => { }, null, GetAvailableJournalEntries);
         _journalList.SetOnItemHover(UpdateJournalDescription);
     }
 
@@ -42,7 +42,6 @@ public class UiJournalController : UiInventoryMenuController
     {
         _journalList = gameObject.FindChildWithName<ListController>("List");
         _journalDescription = gameObject.FindChildWithName<EnhancedText>("Text");
-        _journalTitle = gameObject.FindChildWithName<EnhancedText>("Title");
         _noJournalGroup = gameObject.FindChildWithName<CanvasGroup>("No Journals");
     }
 
@@ -50,7 +49,6 @@ public class UiJournalController : UiInventoryMenuController
     {
         if (obj == null)
         {
-            _journalTitle.SetText("");
             _journalDescription.SetText("");
             _noJournalGroup.alpha = 1;
             return;
@@ -58,7 +56,6 @@ public class UiJournalController : UiInventoryMenuController
 
         JournalEntry entry = (JournalEntry) obj;
         _noJournalGroup.alpha = 0;
-        _journalTitle.SetText(entry.Title);
         _journalDescription.SetText(entry.Text);
     }
 
@@ -97,7 +94,6 @@ public class UiJournalController : UiInventoryMenuController
         {
             _nameText.SetText("");
             _journalDescription.SetText("No Journal Entries Found");
-            _journalTitle.SetText("");
         }
 
         public override void SetColour(Color c)

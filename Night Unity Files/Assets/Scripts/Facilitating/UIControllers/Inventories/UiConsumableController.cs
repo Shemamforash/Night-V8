@@ -80,7 +80,7 @@ public class UiConsumableController : UiInventoryMenuController
         listElements.Add(new InventoryElement());
         listElements.Add(new InventoryElement());
         listElements.Add(new InventoryElement());
-        _consumableList.Initialise(listElements, Consume, UiGearMenuController.Close, GetAvailableItems);
+        _consumableList.Initialise(listElements, Consume, null, GetAvailableItems);
     }
 
     private class CentreInventoryElement : InventoryElement

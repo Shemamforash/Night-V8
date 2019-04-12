@@ -137,6 +137,7 @@ public class ListController : MonoBehaviour, IInputListener
 
     public void Hide()
     {
+        InputHandler.UnregisterInputListener(this);
         gameObject.SetActive(false);
     }
 

@@ -72,7 +72,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description></Description>
-		<Effect>Slightly sates Hunger</Effect>
+		<Effect>Sates Hunger</Effect>
 	</Resource>
 	<Resource>
 		<Name>Meat</Name>
@@ -109,7 +109,7 @@
 		<Type>Meat</Type>
 		<Consumable>True</Consumable>
 		<Attribute>Hunger</Attribute>
-		<Modifier>3</Modifier>
+		<Modifier>1</Modifier>
 		<Permanent>TRUE</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
@@ -117,14 +117,14 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description>Very salty, very tasty</Description>
-		<Effect>Sates Hunger</Effect>
+		<Effect>Slightly sates Hunger</Effect>
 	</Resource>
 	<Resource>
 		<Name>Cooked Blubber</Name>
 		<Type>Meat</Type>
 		<Consumable>True</Consumable>
 		<Attribute>Hunger</Attribute>
-		<Modifier>4</Modifier>
+		<Modifier>2</Modifier>
 		<Permanent>TRUE</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
@@ -142,10 +142,10 @@
 		<Modifier>1</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
-		<MountainsDropRate>0.175</MountainsDropRate>
-		<SeaDropRate>0.1125</SeaDropRate>
-		<RuinsDropRate>0.05</RuinsDropRate>
-		<WastelandDropRate>0</WastelandDropRate>
+		<MountainsDropRate>0.225</MountainsDropRate>
+		<SeaDropRate>0.175</SeaDropRate>
+		<RuinsDropRate>0.15</RuinsDropRate>
+		<WastelandDropRate>0.08</WastelandDropRate>
 		<Description>Helps to heal wounds when rubbed into the skin</Description>
 		<Effect>Recover 1 Life</Effect>
 	</Resource>
@@ -157,10 +157,10 @@
 		<Modifier>2</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.05</MountainsDropRate>
-		<SeaDropRate>0.1</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
-		<WastelandDropRate>0.2</WastelandDropRate>
+		<MountainsDropRate>0</MountainsDropRate>
+		<SeaDropRate>0.05</SeaDropRate>
+		<RuinsDropRate>0.05</RuinsDropRate>
+		<WastelandDropRate>0.08</WastelandDropRate>
 		<Description>Restores even deep wounds, but won't numb the pain</Description>
 		<Effect>Recover 2 Life</Effect>
 	</Resource>
@@ -172,10 +172,10 @@
 		<Modifier>1</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
-		<MountainsDropRate>0.175</MountainsDropRate>
-		<SeaDropRate>0.1125</SeaDropRate>
-		<RuinsDropRate>0.05</RuinsDropRate>
-		<WastelandDropRate>0</WastelandDropRate>
+		<MountainsDropRate>0.225</MountainsDropRate>
+		<SeaDropRate>0.175</SeaDropRate>
+		<RuinsDropRate>0.15</RuinsDropRate>
+		<WastelandDropRate>0.08</WastelandDropRate>
 		<Description>Used in ancient times to calm the nerves</Description>
 		<Effect>Recover 1 Will</Effect>
 	</Resource>
@@ -187,10 +187,10 @@
 		<Modifier>2</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.05</MountainsDropRate>
-		<SeaDropRate>0.1</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
-		<WastelandDropRate>0.2</WastelandDropRate>
+		<MountainsDropRate>0</MountainsDropRate>
+		<SeaDropRate>0.05</SeaDropRate>
+		<RuinsDropRate>0.05</RuinsDropRate>
+		<WastelandDropRate>0.08</WastelandDropRate>
 		<Description>A strongly scented leaf, returns reality to the demented</Description>
 		<Effect>Recover 2 Will</Effect>
 	</Resource>
@@ -202,10 +202,10 @@
 		<Modifier>1</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
-		<MountainsDropRate>0.175</MountainsDropRate>
-		<SeaDropRate>0.1125</SeaDropRate>
-		<RuinsDropRate>0.05</RuinsDropRate>
-		<WastelandDropRate>0</WastelandDropRate>
+		<MountainsDropRate>0.225</MountainsDropRate>
+		<SeaDropRate>0.175</SeaDropRate>
+		<RuinsDropRate>0.15</RuinsDropRate>
+		<WastelandDropRate>0.08</WastelandDropRate>
 		<Description>Provides a little clarity in moments of darkness</Description>
 		<Effect>Recover 1 Focus</Effect>
 	</Resource>
@@ -217,10 +217,10 @@
 		<Modifier>2</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.05</MountainsDropRate>
-		<SeaDropRate>0.1</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
-		<WastelandDropRate>0.2</WastelandDropRate>
+		<MountainsDropRate>0</MountainsDropRate>
+		<SeaDropRate>0.05</SeaDropRate>
+		<RuinsDropRate>0.05</RuinsDropRate>
+		<WastelandDropRate>0.08</WastelandDropRate>
 		<Description>Clears the mind, and focuses the soul</Description>
 		<Effect>Recover 2 Focus</Effect>
 	</Resource>
@@ -232,10 +232,10 @@
 		<Modifier>1</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
-		<MountainsDropRate>0.175</MountainsDropRate>
-		<SeaDropRate>0.1125</SeaDropRate>
-		<RuinsDropRate>0.05</RuinsDropRate>
-		<WastelandDropRate>0</WastelandDropRate>
+		<MountainsDropRate>0.225</MountainsDropRate>
+		<SeaDropRate>0.175</SeaDropRate>
+		<RuinsDropRate>0.15</RuinsDropRate>
+		<WastelandDropRate>0.08</WastelandDropRate>
 		<Description>A sweet root, helps the legs go that bit further</Description>
 		<Effect>Recover 1 Grit</Effect>
 	</Resource>
@@ -247,10 +247,10 @@
 		<Modifier>2</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.05</MountainsDropRate>
-		<SeaDropRate>0.1</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
-		<WastelandDropRate>0.2</WastelandDropRate>
+		<MountainsDropRate>0</MountainsDropRate>
+		<SeaDropRate>0.05</SeaDropRate>
+		<RuinsDropRate>0.05</RuinsDropRate>
+		<WastelandDropRate>0.08</WastelandDropRate>
 		<Description>A fragile pouch protecting sugary liquid</Description>
 		<Effect>Recover 2 Grit</Effect>
 	</Resource>
@@ -262,10 +262,10 @@
 		<Modifier>1</Modifier>
 		<Permanent>True</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.02</MountainsDropRate>
-		<SeaDropRate>0.03</SeaDropRate>
-		<RuinsDropRate>0.04</RuinsDropRate>
-		<WastelandDropRate>0.04</WastelandDropRate>
+		<MountainsDropRate>0.04</MountainsDropRate>
+		<SeaDropRate>0.04</SeaDropRate>
+		<RuinsDropRate>0.08</RuinsDropRate>
+		<WastelandDropRate>0.09</WastelandDropRate>
 		<Description>A red berry- hot to the touch, spewing smoke and burning red</Description>
 		<Effect>Increases Burn</Effect>
 	</Resource>
@@ -277,10 +277,10 @@
 		<Modifier>1</Modifier>
 		<Permanent>True</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.02</MountainsDropRate>
-		<SeaDropRate>0.03</SeaDropRate>
-		<RuinsDropRate>0.04</RuinsDropRate>
-		<WastelandDropRate>0.04</WastelandDropRate>
+		<MountainsDropRate>0.04</MountainsDropRate>
+		<SeaDropRate>0.04</SeaDropRate>
+		<RuinsDropRate>0.08</RuinsDropRate>
+		<WastelandDropRate>0.09</WastelandDropRate>
 		<Description>A small berry, heavy to hold and black as night</Description>
 		<Effect>Increases Void</Effect>
 	</Resource>
@@ -292,42 +292,27 @@
 		<Modifier>1</Modifier>
 		<Permanent>True</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.02</MountainsDropRate>
-		<SeaDropRate>0.03</SeaDropRate>
-		<RuinsDropRate>0.04</RuinsDropRate>
-		<WastelandDropRate>0.04</WastelandDropRate>
+		<MountainsDropRate>0.04</MountainsDropRate>
+		<SeaDropRate>0.04</SeaDropRate>
+		<RuinsDropRate>0.08</RuinsDropRate>
+		<WastelandDropRate>0.09</WastelandDropRate>
 		<Description>A blue fruit, star shaped, bristling with thorns</Description>
 		<Effect>Increases Shatter</Effect>
 	</Resource>
 	<Resource>
-		<Name>Cerulean Bloom</Name>
+		<Name>Sanguine Bloom</Name>
 		<Type>Plant</Type>
 		<Consumable>True</Consumable>
 		<Attribute>SkillRechargeBonus</Attribute>
 		<Modifier>0.01</Modifier>
 		<Permanent>True</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.02</MountainsDropRate>
-		<SeaDropRate>0.03</SeaDropRate>
-		<RuinsDropRate>0.04</RuinsDropRate>
-		<WastelandDropRate>0.04</WastelandDropRate>
-		<Description>An iridescent silver flower, quickens your fingers and your thoughts</Description>
-		<Effect>Increases Skill Recharge</Effect>
-	</Resource>
-	<Resource>
-		<Name>Crimson Bloom</Name>
-		<Type>Plant</Type>
-		<Consumable>True</Consumable>
-		<Attribute>AdrenalineRechargeBonus</Attribute>
-		<Modifier>-0.01</Modifier>
-		<Permanent>True</Permanent>
-		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.02</MountainsDropRate>
-		<SeaDropRate>0.03</SeaDropRate>
-		<RuinsDropRate>0.04</RuinsDropRate>
-		<WastelandDropRate>0.04</WastelandDropRate>
+		<MountainsDropRate>0.04</MountainsDropRate>
+		<SeaDropRate>0.04</SeaDropRate>
+		<RuinsDropRate>0.08</RuinsDropRate>
+		<WastelandDropRate>0.09</WastelandDropRate>
 		<Description>A darkly glowing bloom, radiating with bloody rage</Description>
-		<Effect>Increases Adrenaline Gain</Effect>
+		<Effect>Increases Skill Recharge</Effect>
 	</Resource>
 	<Resource>
 		<Name>Wood</Name>

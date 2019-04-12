@@ -25,6 +25,7 @@ namespace Game.Combat.Generation.Shrines
         private AudioSource _audioSource;
         private bool _isTutorial;
         private bool _inRange;
+        private Characters.Player _player;
 
         public void Awake()
         {
@@ -110,9 +111,9 @@ namespace Game.Combat.Generation.Shrines
             if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Rite) return;
             Region r = new Region();
             r.SetRegionType(RegionType.Rite);
-            Rite.SetBrand(_brand, CharacterManager.SelectedCharacter.TravelAction.GetCurrentRegion());
-            CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(r);
-            SceneChanger.GoToCombatScene();
+            Rite.SetBrand(_brand, _player.TravelAction.GetCurrentRegion());
+            _player.TravelAction.SetCurrentRegion(r);
+            SceneChanger.GoToCombatScene(_player);
             CombatManager.Instance().LeaveCombat();
         }
 
@@ -125,8 +126,8 @@ namespace Game.Combat.Generation.Shrines
                 return;
             }
 
-            CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(Rite.GetLastRegion());
-            SceneChanger.GoToCombatScene();
+            _player.TravelAction.SetCurrentRegion(Rite.GetLastRegion());
+            SceneChanger.GoToCombatScene(_player);
             CombatManager.Instance().LeaveCombat();
         }
 
@@ -151,6 +152,7 @@ namespace Game.Combat.Generation.Shrines
 
         public void Activate()
         {
+            _player = PlayerCombat.Instance.Player;
             Sequence sequence = DOTween.Sequence();
             sequence.AppendCallback(Flash);
             sequence.AppendInterval(1f);

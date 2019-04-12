@@ -35,6 +35,7 @@ namespace Game.Combat.Generation
         private static Region _currentRegion;
         private float _visibilityRange;
         private bool _playerReachedCentre;
+        private static Characters.Player _player;
 
         protected override void Awake()
         {
@@ -256,11 +257,11 @@ namespace Game.Combat.Generation
         {
             if (_currentRegion.GetRegionType() == RegionType.Rite)
             {
-                CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(Rite.GetLastRegion());
+                _player.TravelAction.SetCurrentRegion(Rite.GetLastRegion());
             }
 
             SceneChanger.GoToGameScene();
-            MapMenuController.IsReturningFromCombat = true;
+            MapMenuController.CharacterReturning = _player;
             InputHandler.SetCurrentListener(null);
         }
 
@@ -378,5 +379,10 @@ namespace Game.Combat.Generation
         public bool IsCombatActive() => _instance != null && PlayerCombat.Alive && !_paused;
 
         public float VisibilityRange() => _visibilityRange;
+
+        public static void SetPlayer(Characters.Player player)
+        {
+            _player = player;
+        }
     }
 }

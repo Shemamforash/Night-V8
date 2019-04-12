@@ -31,14 +31,14 @@ namespace Game.Combat.Enemies.Nightmares
                     Decoy decoy = e as Decoy;
                     decoy.gameObject.AddComponent<Orbit>().Initialise(PlayerCombat.Instance.transform, v => MovementController.AddForce(v), 4, 2f, Random.Range(2.5f, 4f));
                     Heavyshot shot = decoy.gameObject.AddComponent<Heavyshot>();
-                    shot.Initialise(10f, 5f, 2, 0.2f);
+                    shot.Initialise(10f, 5f, 5f, 0.2f);
                     shot.SetDamageModifier(0.5f);
                 });
             }
 
             _shot = gameObject.AddComponent<Heavyshot>();
             _shot.Initialise(ShotTimeMax, ShotTimeMin, 2, 0.2f);
-            gameObject.AddComponent<Orbit>().Initialise(PlayerCombat.Instance.transform, v => MovementController.AddForce(v), 4, 2f, Random.Range(2.5f, 4f));
+            gameObject.AddComponent<Orbit>().Initialise(PlayerCombat.Instance.transform, v => MovementController.AddForce(v), 5f, 2f, Random.Range(2.5f, 4f));
         }
 
         public override void Kill()

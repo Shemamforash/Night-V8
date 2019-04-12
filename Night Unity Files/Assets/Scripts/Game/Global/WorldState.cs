@@ -23,6 +23,7 @@ using Game.Global.Tutorial;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 
@@ -108,6 +109,7 @@ namespace Game.Global
             DaysSpentHere = worldStateValues.IntFromNode("DaysSpentHere");
             Days = worldStateValues.IntFromNode("Days");
             Hours = worldStateValues.IntFromNode("Hours");
+            Assert.IsTrue(Hours <= 24);
             Minutes = worldStateValues.IntFromNode("Minutes");
             MinutesPassed = worldStateValues.IntFromNode("MinutesPassed");
             _difficulty = worldStateValues.IntFromNode("Difficulty");
@@ -236,7 +238,8 @@ namespace Game.Global
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel(false, false);
             if (EnvironmentManager.SkippingToBeta) return;
-            CharacterManager.Characters.ForEach(c => { c.TravelAction.ReturnToHomeInstant(); });
+            CharacterManager.Wanderer.TravelAction.ReturnToHomeInstant();
+            CharacterManager.AlternateCharacter?.TravelAction.ReturnToHomeInstant();
             StoryController.Show();
         }
 
@@ -298,7 +301,7 @@ namespace Game.Global
         {
             ++Hours;
             HourPasses();
-            if (Hours == 24)
+            if (Hours >= 24)
             {
                 IncrementDays();
                 Hours = 0;

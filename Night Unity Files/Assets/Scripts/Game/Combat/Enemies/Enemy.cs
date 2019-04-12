@@ -238,7 +238,9 @@ namespace Game.Combat.Enemies
             else
             {
                 item = ResourceTemplate.GetMeat();
-                item.Increment((int) (Template.DropRate));
+                int meatAmount = (int) Template.DropRate;
+                if (meatAmount > 1) --meatAmount;
+                item.Increment(meatAmount);
             }
 
             Loot loot = new Loot(position);

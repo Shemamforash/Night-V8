@@ -56,7 +56,7 @@ public class PauseMenuController : MonoBehaviour
             _fading = false;
             _open = true;
         });
-        Pause();
+        WorldState.Pause();
         _closeButton.Enable();
     }
 

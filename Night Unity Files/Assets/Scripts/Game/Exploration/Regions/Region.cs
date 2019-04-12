@@ -204,11 +204,11 @@ namespace Game.Exploration.Regions
             _mapNode.Hide();
         }
 
-        public void ShowNode()
+        public void ShowNode(Player player)
         {
             if (!_seen) return;
             if (_nodeObject == null) CreateNodeObject();
-            _mapNode.Show();
+            _mapNode.Show(player);
         }
 
         private void CreateNodeObject()
@@ -261,7 +261,7 @@ namespace Game.Exploration.Regions
             Name = MapGenerator.GenerateName(_regionType);
             SetClaimResource();
             if (_regionType != RegionType.Shelter) return;
-            if (CharacterManager.Characters.Count == 3) return;
+            if (CharacterManager.AlternateCharacter != null) return;
             CharacterHere = CharacterManager.GenerateRandomCharacter();
         }
 

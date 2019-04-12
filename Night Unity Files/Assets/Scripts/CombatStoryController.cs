@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Exploration.Regions;
 using Game.Global;
@@ -13,6 +14,7 @@ public class CombatStoryController : MonoBehaviour
     private CloseButtonController _closeButton;
     private static JournalEntry _journalHere;
     public static bool ShouldShow;
+    private static Player _player;
 
     public void Awake()
     {
@@ -39,20 +41,21 @@ public class CombatStoryController : MonoBehaviour
         _closeButton.Disable();
         _storyCanvas.DOFade(0f, 5f);
         ScreenFaderController.FadeIn(5f);
-        SceneChanger.GoToCombatScene();
+        SceneChanger.GoToCombatScene(_player);
     }
 
-    public static void TryEnter()
+    public static void TryEnter(Player player)
     {
         if (ShouldShow)
         {
+            _player = player;
             SceneChanger.GoToCombatStoryScene();
             _journalHere = JournalEntry.GetStoryEntry();
             ShouldShow = false;
         }
         else
         {
-            SceneChanger.GoToCombatScene();
+            SceneChanger.GoToCombatScene(player);
         }
     }
 }

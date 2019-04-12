@@ -123,7 +123,7 @@ namespace Game.Combat.Generation
             float maxTime = 90f;//60f * 5f;
             float currentTime = maxTime;
             _timeToIncreaseMaxEnemies = 20f;
-            float endAudioOffset = 58f;
+            float endAudioOffset = 61f;
             Sequence seq = DOTween.Sequence();
             seq.AppendInterval(maxTime - endAudioOffset);
             seq.AppendCallback(SpawnEndGameAudio);

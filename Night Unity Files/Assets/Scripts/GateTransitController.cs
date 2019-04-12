@@ -75,7 +75,7 @@ public class GateTransitController : Menu
         CharacterManager.SelectedCharacter = CharacterManager.Wanderer;
         ScreenFaderController.FlashWhite(3f, Color.black);
         yield return new WaitForSeconds(3f);
-        CharacterManager.SelectedCharacter.TravelAction.SetCurrentRegion(r);
-        SceneChanger.GoToCombatScene();
+        CharacterManager.Wanderer.TravelAction.SetCurrentRegion(r);
+        SceneChanger.GoToCombatScene(CharacterManager.Wanderer);
     }
 }

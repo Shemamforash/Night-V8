@@ -93,7 +93,9 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public void Load(XmlNode attributeNode)
         {
             Min = attributeNode.FloatFromNode("Min");
-            Max = attributeNode.FloatFromNode("Max");
+            string max = attributeNode.StringFromNode("Max");
+            if (max.Length > 10) max = "1000000";
+            Max = float.Parse(max);
             SetCurrentValue(attributeNode.FloatFromNode("Value"));
         }
 

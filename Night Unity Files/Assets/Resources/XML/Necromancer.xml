@@ -2,7 +2,7 @@
 	<StoryPart>
 		<Title>Desert</Title>
 		<PartNumber>1</PartNumber>
-		<Text>You wept. Alone, and in darkness. I watched you across the great cold distance and in you I saw myself. I have brought you here, to my world, so that we might both be saved. We both can look upon these desolate plains with unfamiliar gaze. But this was once my home. Long before the darkness fell these lands were green. I would walk amongst the trees with feel the grass beneath my feet. Now the groves are dead, and I pass like a shadow among them. Only the sun-scorched dirt remains.</Text>
+		<Text>You wept. Alone, and in darkness. I watched you across the great cold distance and in you I saw myself. I have brought you here, to my world, so that we might both be saved. We both can look upon these desolate plains with unfamiliar gaze. But this was once my home. Long before the darkness fell these lands were green. I would walk amongst the trees and feel the grass beneath my feet. Now the groves are dead, and I pass like a shadow among them. Only the sun-scorched dirt remains.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Desert</Title>
@@ -12,7 +12,7 @@
 	<StoryPart>
 		<Title>Desert</Title>
 		<PartNumber>3</PartNumber>
-		<Text>Ahead lies a dead world- a stagnant place where only barbarism and hopelessness remain. But I believe if we can bring back the gods we can restore it all. I know where they are. They sleep in the place between places, the dark realm beyond the veil of reality. There are five gates that lead to this realm, but they lie dormant, bound by seals set in eons past. I cannot break them, but I can guide you. Only together can the gods turn the tide of decay, and offer you the peace which you so dearly seek.</Text>
+		<Text>Ahead lies a dead world- a stagnant place where only barbarism and hopelessness remain. But I believe if we can bring back the gods we can restore it all. I know where they are. They sleep in the place between places, the dark realm beyond the veil of reality. There are five gates that lead to this realm, but they lie dormant, activated by temples long since fallen to the essence. I cannot cleanse the temples, but I can guide you to them. Only together can the gods turn the tide of decay, and offer you the peace which you so dearly seek.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Desert</Title>
@@ -27,7 +27,7 @@
 	<StoryPart>
 		<Title>Desert</Title>
 		<PartNumber>6</PartNumber>
-		<Text>I have brought you to the kingdom of Eo. Only one seal binds the gateway, and it lies hidden amongst the shifting desert sands. When it is broken return here and place your hands upon the stones. Be prepared, for I do not know what awaits you within. I will be waiting for you on the other side, no matter what happens.</Text>
+		<Text>I have brought you to the kingdom of Eo. Only one temple binds the gateway, and it lies hidden amongst the shifting desert sands. When it is broken return here and place your hands upon the stones. Be prepared, for I do not know what awaits you within. I will be waiting for you on the other side, no matter what happens.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Mountains</Title>
@@ -47,7 +47,7 @@
 	<StoryPart>
 		<Title>Mountains</Title>
 		<PartNumber>4</PartNumber>
-		<Text>Again and again I see your fate repeated in my dreams. I watch as the final seal is broken, and the last gate illuminated with life. Time and time again the gods reverse the wheel of time and raise our cities up from the dust. It has been prophesied, and so it will be. Go now, into the mountains where the cold winds blow and the sun dare not dwell. Find the one who sleeps and return her to us.</Text>
+		<Text>Again and again I see your fate repeated in my dreams. I watch as the final temple is cleansed, and the last gate illuminated with life. Time and time again I see the gods reverse the wheel of time and raise our cities up from the dust. It has been prophesied, and so it will be. Go now, into the mountains where the cold winds blow and the sun dare not dwell. Find the one who sleeps and return her to us.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Sea</Title>
@@ -92,7 +92,7 @@
 	<StoryPart>
 		<Title>Wasteland</Title>
 		<PartNumber>1</PartNumber>
-		<Text>The winds are changing, old currents blow once more, interrupting the monotonous cycle that has gone on for too long. The gods are waking, their spirits waking the world from it's terminal sleep. The essence grows agitated, pulling at invisible threads in the air. It resists their control, for now, but when Corypthos awakens it will relent- bound once more. The deserts will retreat, pushed back by the tide of life that yearns to spill across the barren earth.</Text>
+		<Text>The winds are changing, old currents blow once more, interrupting the monotonous cycle that has gone on for too long. The gods are waking, their spirits waking the world from its terminal sleep. The essence grows agitated, pulling at invisible threads in the air. It resists their control, for now, but when Corypthos awakens it will relent- bound once more. The deserts will retreat, pushed back by the tide of life that yearns to spill across the barren earth.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Wasteland</Title>
@@ -100,28 +100,28 @@
 		<Text>Our struggle is almost at an end, Wanderer. I see the trauma in your eyes grow with every moment that passes. You are remembering what it was you left behind, that I rescued you from. Yes, what you fear to be real is indeed so. Corpythos, lord of life, awaits you in the Wasteland. He can bring her back, Wanderer. So too can he free me, return me my body so that I may walk among the trees once again. And my people, he will return them too, oh how soon it will be. Oh, I am sorry, I cannot hide my elation. I know you suffer, but you cannot know how I have suffered, and how soon that suffering will come to an end. When it is done, when duty fulfilled and my vigil over, I will return home, and I will sit as my father sat, and I will watch the sun set as it did so many years ago.</Text>
 	</StoryPart>
 	<StoryPart>
-		<Title>Wasteland</Title>
-		<PartNumber>3</PartNumber>
-		<Text>I cannot tell you how it feels to know salvation will soon be at hand. We will be able to return to how we once were, and raise our civilisation to even greater heights.</Text>
-	</StoryPart>
-	<StoryPart>
 		<Title>End</Title>
 		<PartNumber>1</PartNumber>
-		<Text>It happened slowly at first, the suns swelled and grew brighter. The air grew still around us, and all noise faded away to nothing. Suddenly the light enveloped me, and a crack like thunder signalled the end of the silence. I held my breath and shut my eyes against the glare. It was as if the whole world was collapsing around me. I could hear the Necromancer's cries amidst a cacophony of quaking earth and screaming winds. The fifth tomb was empty. The five gods are were no more, and the long owed doom of the earth has finally come.</Text>
+		<Text>It happens slowly at first. The suns swell and grow bright. The air turns still and the noises of the earth and of battle fade away. Light envelops me, signaled by a peal of thunder so loud as to shake the foundations of heaven. I hold my breath in the bright void and shut my eyes against the glare. In the distance I can hear the Necromancer's cries. She is weeping, screaming, in sadness and in pain, but that too diminishes until I am left in utter silence.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>End</Title>
 		<PartNumber>2</PartNumber>
-		<Text>Then the light was replaced with darkness, and the noise with peace. I was in another world, my own world, staring up at a brilliant blue sky from a floor of soft grass. Memories once cloudy and vague returned with perfect clarity, but there was one that stood out in my mind. It was the memory of her, the woman with grey speckled eyes. I remembered her final moments, lying in a bed of soft white sheets. So weak she could not lift her hand to hold mine, so I held hers. I remember as she told me she was sorry that she had to leave me. I told her there was nothing to forgive. Instead I told her I was sorry that I could not go with her, and that she would always be with me. I told her of all the memories we shared, and that I now bear alone. Later, as the light from the sun began to wane, that her soft laughter at my stories grew silent. And then I knew that she had died, and I was alone.</Text>
+		<Text>It was never to be. The Necromancer's world could never be saved. The fifth tomb is empty, abandoned years ago. The gods are no more, and now the long awaited doom of her world has finally come. I feel my fate coalescing as the memories return. They are painful, breaching the surface of consciousness all at once. Among them is her face, eyes closed and silent.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>End</Title>
 		<PartNumber>3</PartNumber>
-		<Text>It was then that I saw her in my mind, as young and beautiful as she was on the day we first met.</Text>
+		<Text>Then I am in another world. My own world. I look up at a brilliant blue sky illuminated by the light of a single white star. Another change, and I am in a starkly white room. The only door into the room is shut, the walls reflect on the marble floor below. And then I see her, lying in a raised bed, wrapped in ivory sheets.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>End</Title>
 		<PartNumber>4</PartNumber>
-		<Text>But these are just memories.</Text>
+		<Text>I take her hand, hesitantly at first. As our hands touch the physical memory of her returns, and I take her up in my arms. She tells me she is sorry that she has to go. She chokes on the words as she tells me she does not want to leave me alone. I tell her there is nothing to forgive. I say I am sorry I cannot go with her, but that I would carry her forever with me.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>End</Title>
+		<PartNumber>5</PartNumber>
+		<Text>We brush away our tears and turn our talk to old times- our children and the places we have been. As the day turns to night she becomes ever quieter, so I draw her close and take up the conversation. Later, as the light of the sun breaks the horizon, her soft laughter at my stories grows silent. I knew then that she was gone, and that I was alone.|br||br|I still see her in my mind- as young and beautiful as she was on the day we first met.|br||br|But the memories will fade with me, and all will be borne away on the wind.</Text>
 	</StoryPart>
 </Necromancer>

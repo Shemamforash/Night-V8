@@ -11,7 +11,7 @@ namespace SamsHelper.ReactiveUI
         private Action _onMax;
         private Action _onMin;
 
-        public Number(float initialValue = 0, float min = 0, float max = float.MaxValue)
+        public Number(float initialValue = 0, float min = 0, float max = 1000000)
         {
             _currentValue = initialValue;
             _min = min;

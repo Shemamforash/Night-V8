@@ -60,6 +60,7 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public static void DeselectCurrent()
         {
+            if (_currentButton == null) return;
             _currentButton.Exit();
         }
 

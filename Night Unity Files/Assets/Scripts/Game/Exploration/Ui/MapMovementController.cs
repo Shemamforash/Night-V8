@@ -37,10 +37,10 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     public static MapMovementController Instance() => _instance;
 
-    public void Enter()
+    public void Enter(Player player)
     {
         _visible = true;
-        _player = CharacterManager.SelectedCharacter;
+        _player = player;
         InputHandler.RegisterInputListener(this);
         _audioSource.DOFade(1f, 3f);
         _currentRegion = _player.TravelAction.GetCurrentRegion();

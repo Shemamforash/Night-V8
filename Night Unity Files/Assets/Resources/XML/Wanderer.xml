@@ -3,7 +3,7 @@
 		<Title>A New World</Title>
 		<Environment>Desert</Environment>
 		<PartNumber>1</PartNumber>
-		<Text>The land before me is just as the Necromancer said- dark and dying. Even the dry ground seems to creak with hunger, eager to slake its thirst with my blood. There are others here. They are vague shapes on the horizon and subtle whispers on the wind. Purgatorial souls - 'fearful and wary. If I am to be alone in my journey, then that is the way it must be.</Text>
+		<Text>The land before me is just as the Necromancer said- dark and dying. Even the dry ground seems to creak with hunger, eager to slake its thirst with my blood. There are others here. They are vague shapes on the horizon and subtle whispers on the wind. Purgatorial souls - fearful and wary. If I am to be alone in my journey then that is the way it must be.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>A New World</Title>
@@ -15,13 +15,13 @@
 		<Title>A New World</Title>
 		<Environment>Desert</Environment>
 		<PartNumber>3</PartNumber>
-		<Text>What was once familiar is now foreign to me - the sky a deep shade of crimson, lit by the weak glow of three ailing suns, and the air heavy with dread expectation. At night the heavens glitter with the light of unknown constellations. I am not sure if I will ever share the Necromancer's faith, but if the alternative is a life of solitude and fear, well, then I will go wherever she bids.</Text>
+		<Text>What was once familiar is now foreign to me - the sky a deep shade of crimson, lit by the weak glow of three ailing suns, and the air heavy with dread expectation. At night the heavens glitter with the light of unknown constellations. I am not sure if I will ever share the Necromancer's faith, but if the alternative is a life of solitude and fear then I will go wherever she bids.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>A New World</Title>
 		<Environment>Desert</Environment>
 		<PartNumber>4</PartNumber>
-		<Text>Though the ground is arid and the air still the desert is not completely devoid of life. The gentle rustle of the breeze is broken by the coo of small birds and the churr of insects. The plants I have seen are as brittle and cracked as the dry sand they grow in. The few fruit they bear are wizened, and coloured with such evil hues I would not dare to touch them.</Text>
+		<Text>Though the ground is arid and the air still, the desert is not completely devoid of life. The gentle rustle of the breeze is broken by the coo of small birds and the churr of insects. The plants I have seen are as brittle and cracked as the dry sand they grow in. The few fruit they bear are wizened, and coloured with such evil hues I would not dare to touch them.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>A New World</Title>
@@ -57,7 +57,7 @@
 		<Title>A New World</Title>
 		<Environment>Desert</Environment>
 		<PartNumber>10</PartNumber>
-		<Text>I am not a man of faith, I do not believe in gods or demons, but I will do what I can to heal the wound inside me. I cannot live with it, and I fear it will only deepen with time. I have already seen so much that does not make sense, so I will find the gates, and perhaps I will find deliverance.</Text>
+		<Text>I am not a man of faith. I do not believe in gods or demons. But I will do what I can to heal the wound inside me. I cannot live with it, and I fear it will only deepen with time. I have already seen so much that does not make sense, so I will find the gates, and perhaps I will find deliverance.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ebb and Flow</Title>
@@ -69,13 +69,13 @@
 		<Title>Ebb and Flow</Title>
 		<Environment>Mountains</Environment>
 		<PartNumber>2</PartNumber>
-		<Text>The gently rolling dunes are gone. Scree clad mountains rise up in their stead. From abyssal floor to mist shrouded peaks they tower. The ground is steep, sharp, and treacherous underfoot. Darkness abounds - the light of the sun veiled by the mountains' long shadows. Beneath me the earth groans and strains, trembling at the forces at work deep below.</Text>
+		<Text>The gently rolling dunes are gone. Scree clad mountains rise up in their stead. From abyssal floor to mist shrouded peaks they tower. The ground is steep, sharp, and treacherous underfoot. Darkness abounds - the light of the sun veiled by the long shadows of the mountains. Beneath me the earth groans and strains, trembling at the forces at work deep below.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ebb and Flow</Title>
 		<Environment>Mountains</Environment>
 		<PartNumber>3</PartNumber>
-		<Text>Before coming here I would awaken violently, panting and covered in layer of sweat, white knuckled fists digging bloody nails into my palms. I know this, for I can see the scars in my hands, even if I cannot recall the memories. Instead I wander the hallways of my dreams. The cavernous hall in which I walk broken by monolithic pillar, whos trunks rise unbroken to the ceiling above.</Text>
+		<Text>Before coming here I would awaken violently, panting and covered in layer of sweat, white knuckled fists digging bloody nails into my palms. I know this, for I can see the scars in my hands, even if I cannot recall the memories. Instead I wander the hallways of my dreams. The cavernous hall in which I walk broken by monolithic pillar, whose trunks rise unbroken to the ceiling above.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ebb and Flow</Title>
@@ -105,7 +105,7 @@
 		<Title>Ebb and Flow</Title>
 		<Environment>Mountains</Environment>
 		<PartNumber>8</PartNumber>
-		<Text>Again I saw the woman in my dreams. This time she came to meet me, her long hair flowing with her robes as she walked. She sat upon her knees, and I saw the floor around us was no longer dark stone, but white marble, and the blackness around us lifted, revealing an infinite expanse of marbled pillars. There we sat together, waiting for' something. But something never came, and I woke confused, with only a greater sense of loss than before.</Text>
+		<Text>Again I saw the woman in my dreams. This time she came to meet me, her long hair flowing with her robes as she walked. She sat upon her knees, and I saw the floor around us was no longer dark stone, but white marble, and the blackness around us lifted, revealing an infinite expanse of marbled pillars. There we sat together, waiting for something. But something never came, and I woke confused, with only a greater sense of loss than before.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ebb and Flow</Title>
@@ -135,19 +135,19 @@
 		<Title>Ebb and Flow</Title>
 		<Environment>Mountains</Environment>
 		<PartNumber>13</PartNumber>
-		<Text>Day and night, hour after hour, ceaseless in their howling do the mountain winds blow. From the throaty gusts across the wide mountain passes, to the shrill cry through narrow crevasses. The call of the mountain lords echo between every stone and every wall. I have not seen but one flower growing upon the mountainside, only poisonous vines and rusted metal. How cruel time is to bring beauty to ruin, whilst leaving evil untouched.</Text>
+		<Text>Day and night, hour after hour, ceaseless in their howling do the mountain winds blow. From the throaty gusts across the wide mountain passes, to the shrill cry through narrow crevasses. The call of the mountain lords echo between every stone and every wall. I cannot see but one flower growing upon the mountainside, only poisonous vines and rusted metal. How cruel time is to bring beauty to ruin whilst leaving evil untouched.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ebb and Flow</Title>
 		<Environment>Mountains</Environment>
 		<PartNumber>14</PartNumber>
-		<Text>Now we spoke more freely, and her words sit firm in my memory. I must know who she is, whether she is a part of my psyche, or just another apparition in this wasted world. I asked her how she knew where we were, how she knew who I was. I asked gently at first, but my curiosity turned to frustration when she would not answer, and as it so easily does, my frustration turned to anger.</Text>
+		<Text>Now we speak more freely, and her words remain in my memory even after I wake. I must know who she is, whether she is a part of my psyche, or just another apparition in this wasted world. I ask her how she knows where we are, how she knows who I am. I ask gently at first, but my curiosity turns to frustration when she will not answer, and as it so easily does, my frustration turns to anger.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ebb and Flow</Title>
 		<Environment>Mountains</Environment>
 		<PartNumber>15</PartNumber>
-		<Text>She turned her face to hide, but I could see the tears upon her cheek. I knew then, that it did not matter who she was. She has not appeared to me to be my guide, to lead me to my fabled destiny, she is here to be a companion, to give me respite when I sleep and something to live for when my will is spent.</Text>
+		<Text>She turns her face to hide, but I can see the tears upon her cheek. I realise now that it does not matter who she is. She has not come to me to be my guide. She is not here to lead me to my fabled destiny. She is here to be with me, to give me respite when I sleep and to give me something to live for when my body is spent.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Twilight of the Gods</Title>
@@ -171,7 +171,7 @@
 		<Title>Twilight of the Gods</Title>
 		<Environment>Sea</Environment>
 		<PartNumber>4</PartNumber>
-		<Text>Sometimes I hear distant voices, muffled as if speaking from another room. It is as if the walls of the world are thinning, bringing the living and the dead close to each other. Some voices are louder than others, but they go silent as soon as I speak out to them, leaving me in silence once again.</Text>
+		<Text>Sometimes I hear distant voices, muffled as if speaking from another room. It is as if the walls of the world are thinning, bringing the living and the dead close to each other. Some voices are louder than others, but they go quiet as soon as I speak out to them, leaving me in silence once again.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Twilight of the Gods</Title>
@@ -183,7 +183,7 @@
 		<Title>Twilight of the Gods</Title>
 		<Environment>Sea</Environment>
 		<PartNumber>6</PartNumber>
-		<Text>The daytime sun bears down on me, burning my exposed skin. Even the salt seems to sizzle beneath its rays. So I am forced to walk in the shadows - my eyes accustomed now to the twilight gloom. The maze of salt hides the remains of the ancient sea - 'the bones of ancient creatures half buried in the walls, and the bleached wrecks of ships strewn across the seabed.</Text>
+		<Text>The daytime sun bears down on me, burning my exposed skin. Even the salt seems to sizzle beneath its rays. So I am forced to walk in the shadows - my eyes accustomed now to the twilight gloom. The maze of salt hides the remains of the ancient sea - the bones of ancient creatures half buried in the walls, and the bleached wrecks of ships strewn across the seabed.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Twilight of the Gods</Title>
@@ -213,7 +213,7 @@
 		<Title>Twilight of the Gods</Title>
 		<Environment>Sea</Environment>
 		<PartNumber>11</PartNumber>
-		<Text>Once again my feet disobey me. I am stuck, as if chained to the spot, but it is only my mind that holds me. 'Go on', I tell myself but will not listen. 'One more step' I say out loud, to no avail. For I know it to be a lie, there are many steps ahead, and for what? To what end am I journeying? The struggle is within me, not out there. Why do I desire so strongly to find the gods I do not believe in?</Text>
+		<Text>Once again my feet disobey me. I am stuck, as if chained to the spot, but it is only my mind that holds me. "Go on", I tell myself but will not listen. "One more step" I say out loud, to no avail. For I know it to be a lie, there are many steps ahead, and for what? To what end am I journeying? The struggle is within me, not out there. Why do I desire so strongly to find the gods I do not believe in?</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Twilight of the Gods</Title>
@@ -273,19 +273,19 @@
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>1</PartNumber>
-		<Text>A terrible sight is before me, a great city in ruins. Buildings that reach far into the heavens above now reduced to skeletons of twisted metal, broken glass buried in the ground below, foundations shattered and exposed. There is no life here, no birdsong on the breeze, nothing in the black pools of water in the roads. The trees here are dead, their brittle roots cling to furious earth.</Text>
+		<Text>A terrible sight is before me: a great city in ruins. Buildings that once reached far into the heavens above now reduced to skeletons of twisted metal, their foundations shattered and exposed. There is no life here- no birdsong on the breeze, only the hollow wail of the wind.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>2</PartNumber>
-		<Text>A red glow punches through the darkness. Her eyes stare unblinking at its source, though I cannot make it out in the gloom. 'Go' she says. So I do, cradling her light frame in my arms as we walk towards the light. A fountain, made of black stone, containing a pool of glowing red liquid. 'Drink' she said, touching her lips gently. I hesitate, then gently lower her to the pool so that she could drink. Just as the liquid touched her lips she fell unconscious, she slipped from my hands, and fell to the floor. The liquid pooled around her chest, and her breathing ceased.</Text>
+		<Text>A red glow punches through the darkness. Her eyes stare unblinking at its source, though I cannot make it out in the gloom. "Go" she says. So I do, cradling her light frame in my arms. As we approach I see a fountain made of black stone, and in it a pool of glowing red liquid. "Drink" she says, touching her lips gently. I hesitate before lowering her to the pool to drink. The moment the liquid touches her lips she falls limp. Her body slips from my hands to the marble floor. She takes two haggard breaths interspersed with bloody coughs. Then she grows still and will not wake.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>3</PartNumber>
-		<Text>She lay unmoving upon the floor. I tried all I could to bring her back. Then, just as I had given up hope, she jerked awake, spitting the red liquid upon herself. Before I had a chance to say anything, she pointed to the fountain, and to her lips. I shook my head, feeling the tears rolling down my cheeks. Again she pointed to her lips. So again I took her to drink from the fountain. This time I caught her as she went limp, and again I waited for her to wake.</Text>
+		<Text>She lies unmoving on the floor. I try all I can to bring her back to life. Just as I feel hope slipping away she jerks awake, eyes wide, spitting red and black liquid upon herself. Before I have a chance to say anything, she points to the fountain, and to her lips, and again she says "Drink". I shake my head, feeling the tears rolling down my cheeks. Again she points to her lips. I hang my head in despair, but I know it is what she needs.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
@@ -297,115 +297,121 @@
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>5</PartNumber>
-		<Text>Time passes imperceptibly slowly, and I cannot take my eyes from her. Truly this is hell, to watch, and wait, and not know what to do, until the hours of your life have wasted away. I wake slowly now, gazing at the sky and unable to rise. My body has betrayed me, muscles tug feebly at aching tendons. I fear I am losing myself to this world, and to her.</Text>
+		<Text>Time passes imperceptibly slowly, and I cannot take my eyes from her. Truly this is hell, to watch and not know what to do but wait. Wait until the hours of my life are spent. I wake slowly now, gazing at the sky and unable to rise. My body betrays me. Muscles tug feebly at aching tendons. I fear I am losing myself to this world, and to her.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>6</PartNumber>
-		<Text>Waiting, watching, pacing to and fro. Stuck in my dream prison, unable to help the one I love. Forced to watch her pale skin shiver. I can only watch when the spasms strike, her grey face contorted with pain. Yet still she remains asleep. Her eyes will not open. I speak to her as much as I can, but there are times when I cannot muster any words worth saying. Instead I brush her pale hair from her face, and I hold her cold hands in my lap. And despite everything I know, everything I have done, and everything I have seen, I pray for it to be over.</Text>
+		<Text>Waiting, watching, pacing to and fro. Every night stuck in my dream prison. Forced to watch her pale skin shiver. I can only watch when the spasms strike- the pain contorting her grey face. Yet still she sleeps. I talk to her when I can, but often I cannot find words worth saying. Instead I brush her pale hair and hold her cold hands in my lap. And despite everything I know, everything I have done, and everything I have seen, I pray for it to be over.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>7</PartNumber>
-		<Text>This has happened before, in another world. The painful wait for remission, and the fear of relapse. Why is my mind making me relive it? Could it be a warning I wonder, a warning to make haste to finish my quest. Or it could just be fever dreams, brought on by the gradual onset of the essence's affliction.</Text>
+		<Text>Why do I feel as though this has happened before, in another world. The painful wait for remission, and the fear of relapse. Is my mind playing tricks on me, or is this a part of the despair that has been hidden from me? Could it be a warning I wonder- to make haste to finish my quest. Or is just a fever dream brought on by the gradual onset of the essence's affliction.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>8</PartNumber>
-		<Text>I will never forget the pain on her face as she drank, or the pain I felt as I held her, thinking she would never wake again. Eventually she roused from her death sleep. She was calm again, the mania driven from her eyes. She lifted my hand to mine, and kissed my cheek. I carried her away from the vile fountain, and as I did the light began to return.</Text>
+		<Text>I will never forget the pain on her face as she drank, or the pain I felt as I held her, thinking she would never wake. But wake she did, rousing slowly from her death sleep. She looked well once again, her skin warm and the mania driven from her eyes. She lifted her hand to mine, and kissed my cheek. I carried her away from the vile fountain, and as I did the light began to return.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>9</PartNumber>
-		<Text>Finally things seem to have changed for the better. A warm glow replaces ghostly pallor. Her eyes bright once again, and her smile broad. I rejoiced, and said I thought she was lost. 'I'm sorry' she said. I told her not to be sorry, that she could not hold herself to blame. I told her of the things I had remembered since we last spoke- happy memories, places I had been. She nodded as if she recalled them too.</Text>
+		<Text>Finally things seem to have changed for the better. A warm glow replaces ghostly pallor and her eyes bright once again. I rejoice, and tell her I believed she was lost. "I'm sorry" she says. But I tell her not to be sorry, that she cannot hold herself to blame. I tell her of the things I had remembered since we last spoke- happy memories, places I had been. She nods and listens, though her thoughts seem far away.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>10</PartNumber>
-		<Text>How long has it been since the guards abandoned their posts. Was it the firey bellow of cannons that brought down the city walls or the inescapable force of time? Through it all The Necromancer has haunted the world. She seen sickness take hold of her world without the respite of recovery.</Text>
+		<Text>The city is ancient. How ancient I wonder? How long since the guards abandoned their posts. Was it the fire-laced breath of artillery that brought down the city's walls or merely the inescapable erosion of time? Through it all The Necromancer has haunted the world, or so she says. She watched the essence dig take ahold of her world, and not once has she seen its grip weaken.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>11</PartNumber>
-		<Text>Fierce have been the ravages of time upon this ancient city. Even now there remain signs of plight- dark craters, munition cases- rusted and spent, and the twisted carcasses of war machines, now long dead. But there are no bones, no bodies, no graves, no markers of human inhabitation to speak of.</Text>
+		<Text>Fierce have been the ravages of time upon this ancient city. Even now there remain signs of plight- dark craters, munition cases- tarnished and spent. Even the rusted carcasses of war machines litter the land. But there are no bones, no bodies, no graves, no markers of human inhabitation to speak of.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>12</PartNumber>
-		<Text>Today the angel came to me. At first I thought it a dream, that I had been struck unconscious in my journey. No, she was there, a vision still, but one that stood with me in the waking world. She looked better, her features full and no longer sunken, and her smile had returned. She was not near enough to speak, so I waved. For a moment I thought she could not see me, but then she waved back. Then as suddenly as it had begun, the vision ended.</Text>
+		<Text>At first I thought I was dreaming, but no, there she is, standing before me. A vision, but still with me here in the waking world. She looks better, her features full and no longer sunken, and her smile has returned. She is not near enough to hear me call out, so I wave to her instead. For a moment it seems as though she cannot see me, but she waves back. Then as suddenly as it began, the vision ends.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>13</PartNumber>
-		<Text>Everything that once lived here has been swept away. It is good the Necromancer is not with me. If she were to lay her eyes upon the ruin that has come to this place she would fall to her knees and weep. Perhaps that is why she whispers to me from the darkness - to shield herself from reality, to allow herself to have hope in a place where hope dies.</Text>
+		<Text>The old world has been swept away. It is good the Necromancer cannot be with me to see it. If she were to lay her eyes upon the ruins she surely would fall to her knees and weep. Perhaps that is why she whispers to me from the darkness - to shield herself from reality, to allow herself to have hope in a place where none can be found.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>14</PartNumber>
-		<Text>I cannot imagine the things The Necromancer has had to endure. Sometimes I think my burden insignificant compared to hers - 'after all what is one life against hundreds? No, that is not fair. I shall not trivialise my own grief, they cannot be compared. The more I stay here, the more I see what has been lost. When this is all over I will return to help her, if I can.</Text>
+		<Text>I cannot imagine the things The Necromancer has had to endure. Sometimes I think my burden insignificant compared to hers. After all what is the worth of one life against that of an entire civilisation? But we all have our own cross to bear. The more I stay here, the more I see what has been lost. When this is all over I will return to help her, if I can.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>15</PartNumber>
-		<Text>The pain inside grows unbearable, the shadow grows and presses against my skull. I feel my breathing become shallow and my heart rise into my throat. Panic, my vision tunnels, and I collapse to the floor. Then before me I see her, my angel, her hand upon my forehead. Memories explode within me, I see her pale face, flowers, white sheets. 'Breathe' she says. I close my eyes and breath deep, and slowly the dark thoughts fade away.</Text>
+		<Text>The shadow within grows, pressing against my skull. I feel despair well up uncontrollably. My breathing comes shallow and my heart rises into my throat. Panic. My vision tunnels and I collapse to the floor. Then before me I see her, my angel, her cool hand upon my forehead. Memories explode within me, I see her pale face, flowers, white sheets, blood. "Breathe" she says. I close my eyes and breath deep- once, twice, feeling the despair dissipate. Then I open them only to find her gone.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>16</PartNumber>
-		<Text>I do not think I could bear to watch my world fall away before me, to watch as the places and people I knew wither and age and eventually die. To have no one to speak to about such things, and be left with only my unquietable thoughts for company, reliving my past again and again. I would watch myself, and wish that I could change the mistakes I had once made, that I could go back and right the wrongs with those who are no longer with me.</Text>
+		<Text>I do not think I could bear to watch as the places I know fall into disrepair and the people I love age and die. I could not bear to be alone to be without someone to ease my pain. Left with only my unquietable thoughts for company, reliving my lost past over and over. I would watch my past self and wish that I could change the things that can never be changed. And I would wish to go back and spend one last moment with those who are gone.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>17</PartNumber>
-		<Text>Another vision. I saw her from the corner of my eye, she sat at the top of some steps. When I reached her I found her looking at the base of a broken statue. Atop the statues head was a crown, and in his arms a bouquet of flowers. Clearly this man was once well loved by his people. She pointed at the inscription at its base, but it was illegible, the raised stone letters worn away by the wind. None would ever know his name.</Text>
+		<Text>Another vision. I can see her in the corner of my eye. She sits at the top of a tall set of steps. As I reach the top I realise she is not looking at me, but at the base of a broken statue. Atop the statues' weathered head is a crown- tarnished but still golden. This man, a king, was once well loved by his people. So loved that even today it remained untouched by scavengers. She points at the inscription at its base but I cannot make out the words. The raised stone letters have been worn away by the wind. I will never know his name.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>18</PartNumber>
-		<Text>I remember a story I heard once, a long time ago. An old man lives in a rickety house. One day a child throws a rock at his window and it shatters. He cries, for he has not the strength to repair it, nor the money to pay another. But he moves on, after all, he has lived through worse. The wind blows through the hole, knocking over his belongings and making an awful din. Rain too comes through the broken window, and ruins his floor. Soon enough the season grows cold, and the snow builds up. But now the window cannot be repaired - the frame is too warped. And so sleeps in the deepening cold, until one day he does not wake up.</Text>
+		<Text>I remember a story I heard once, about an old man. He lived alone in an old cottage. Like him the building had not aged well, its walls were cracked and the roof fallen in. He was bitter, and set in his ways, and went out only to buy from the local village what he could not make himself. He had not always been bitter, he had not always been alone. One day there were children playing outside his window. He ignored them as best he could, but an errant ball missed its mark and came through his window with a crash. So he yelled at the children, and drove them back to the village. When he returned he cleared up the pieces of shattered glass, but could not repair the window. He did not want to return to the village, and so he left it- a gaping void in the side of his house.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>19</PartNumber>
-		<Text>Time heals all, and we can look back with fondness, not regret. We can find new love, love that does not replace the old but allows us to go on, and with it we may remember the old love without sadness. That is what I wish for The Necromancer, that she may find solace in a new world when our quest is over, and not pine for the old.</Text>
+		<Text>Time passed, and still the window remained broken. The old man could not repair it himself, and did not have the money to pay to have it mended. So the thought of it drifted from his mind, at least until Autumn came. Strong winds rocked the aged house whilst lashes of rain made their way in through the open window. Day after day it came through until not an inch of the house remained dry. But the old man ignored it- after all, he had endured worse.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>20</PartNumber>
-		<Text>I saw her once again. She sat outside a ruined building reclining on a small drift of sand. So I sat with her, and I asked her how she had escaped her dream prison, but she only gave me a knowing smile and changed the conversation. I do not belong to this world, yet I am growing comfortable here. I am afraid that if I leave I will lose her.</Text>
+		<Text>Then the cold weather came, bringing snow and frost and ice. The old man huddled for warmth in his broken home, his fire dwindling and his supplies low. Finally he relented, and went to the village to beg to have the window repaired. But it was too late, nobody had the tools to fix the window, as broken and warped as it was. They offered him shelter, but his pride took him back home. So there he slept, in the cold and the light of the dying fires, waiting for Spring to come. But there would be no Spring for him, only a deep sleep and a white light, followed by oblivion.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>21</PartNumber>
-		<Text>I asked her what would become of her when I return home, but she only smiled and held her fingers to her lips. I will not ask again. I told her I could not lose her, that she must stay, but as soon as I finished speaking I was struck by a flash of painful memories. I awoke with a jolt, confused by the bitter-sweet dream. It is not long until the journey is over.</Text>
+		<Text>I saw her once again. She sat outside a ruined building reclining on a small drift of sand. So I sat with her, and I asked her how she had escaped her dream prison, but she only gave me a knowing smile and changed the conversation. I do not belong to this world, yet I am growing comfortable here. I am afraid that if I leave I will lose her.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>22</PartNumber>
-		<Text>I have tried to listen, truly, I have. Still I cannot hear the gods, only the whisper of sand and the howl of wind. I want to hear them, even for a moment, to know they are there. Maybe The Necromancer, with her mystic ways, can hear what I cannot. The world does not feel any different to me.</Text>
+		<Text>I dream. I ask her where she will go when I return home, but she only smiles and holds her fingers to her lips. I do not pursue the question. I begin to tell her I do not want to lose her, that she must stay with me, but as the words start to leave my mouth I am struck by a flash of painful memories. I awake with a jolt, confused by the bitter-sweet dream. It will not be long before the journey is over.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Ruination of Man</Title>
 		<Environment>Ruins</Environment>
 		<PartNumber>23</PartNumber>
-		<Text>Do you see it when you sleep? Can you hear it in silent places? Do you catch glimpses of it when you blink, as if engraved on the lids of your eyes? It is there, everywhere, in all places, and in all times. Do you not know of what I speak? It is the cold in the pit of your stomach at night, the black thoughts when you are alone. It is the dread, the terrible thought that things will not always be. It is the fear that gives life brilliance. I feel it always, with every waking moment and every darkened sleep. I know you feel it too, we all do.</Text>
+		<Text>I turn my ear to the wind and I listen for the gods. I cry out for them, but the only response I find is in the whisper of the sand. I want to hear them, even for a moment, to know they are there. Maybe The Necromancer with her mystic ways is able to hear what I cannot. The world does not feel any different to me.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Ruination of Man</Title>
+		<Environment>Ruins</Environment>
+		<PartNumber>24</PartNumber>
+		<Text>I see it in my sleep. I hear it in silent places. I even catch glimpses of it when I speak. The darkness, the despair, the weight that lies inside. It is the cold in the pit in my stomach at night, the bleak thoughts when I am alone. The dread thought waxes- the terrible thought that things will not always be. It is the human fear that gives life brilliance. I realise now I have always felt it, but only now that I face the consequence of the fear do I recognise it.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The End of All Things</Title>
@@ -465,7 +471,7 @@
 		<Title>The End of All Things</Title>
 		<Environment>Wasteland</Environment>
 		<PartNumber>10</PartNumber>
-		<Text>When the time comes, as it does for all of us, when the dissonance in our mind comes to a crescendo, our lives change irreversibly. 'Either we succumb to the alluring voice of denial, or we accept the harsh voice of reality.</Text>
+		<Text>When the time comes, as it does for all of us, when the dissonance in our mind comes to a crescendo, our lives change irreversibly. Either we succumb to the alluring voice of denial, or we accept the harsh voice of reality.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The End of All Things</Title>

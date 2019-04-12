@@ -54,6 +54,28 @@ namespace Game.Global
             _ambientVolume = 1;
 
             DontDestroyOnLoad(this);
+
+            SceneManager.sceneLoaded += OnSceneChange;
+        }
+
+        private void FadeOutWeather()
+        {
+            FadeWindLight(0f);
+            FadeWindMedium(0f);
+            FadeWindHeavy(0f);
+            FadeRainLight(0f);
+            FadeRainMedium(0f);
+            FadeRainHeavy(0f);
+            FadeHail(0f);
+            FadeFog(0f);
+            SetNightVolume(0f);
+        }
+
+        private void OnSceneChange(Scene scene, LoadSceneMode loadSceneMode)
+        {
+            _currentScene = scene.name;
+            if (IsInGame) return;
+            FadeOutWeather();
         }
 
         private void UpdateMinMaxVolumes(bool isCombatScene)
@@ -71,6 +93,8 @@ namespace Game.Global
             _ambient.volume = _ambientVolume * ambientVolumeModifier;
         }
 
+        private string _currentScene;
+
         private void UpdateOutOfGameVolumes()
         {
             _ambientVolume -= Time.deltaTime;
@@ -78,12 +102,12 @@ namespace Game.Global
             _ambient.volume = _ambientVolume;
         }
 
+        private bool IsInGame => _currentScene == "Game" || _currentScene == "Combat" || _currentScene == "Combat Story";
+
         public void Update()
         {
-            string currentScene = SceneManager.GetActiveScene().name;
-            UpdateMinMaxVolumes(currentScene == "Combat");
-            bool isInGame = currentScene == "Game" || currentScene == "Combat" || currentScene == "Combat Story";
-            if (isInGame) UpdateInGameVolumes();
+            UpdateMinMaxVolumes(_currentScene == "Combat");
+            if (IsInGame) UpdateInGameVolumes();
             else UpdateOutOfGameVolumes();
         }
 

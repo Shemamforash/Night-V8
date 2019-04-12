@@ -239,6 +239,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private static void LoadResource(XmlNode root)
         {
             string type = root.StringFromNode("Template");
+            if (type == "Cerulean Bloom") return;
+            if (type == "Crimson Bloom") type = "Sanguine Bloom";
             if (type == "Fuel") type = "Wood";
             int quantity = root.IntFromNode("Quantity");
             IncrementResource(type, quantity);

@@ -14,7 +14,7 @@ namespace Game.Characters.CharacterActions
         protected readonly Player PlayerCharacter;
         private int _timeToNextHour;
         protected int Duration;
-        protected int InitialDuration;
+        private int _initialDuration;
         protected Action HourCallback;
         protected Action MinuteCallback;
         protected string DisplayName;
@@ -63,14 +63,14 @@ namespace Game.Characters.CharacterActions
         {
             if (duration == -1) Duration = WorldState.MinutesPerHour / 2;
             else Duration = duration;
-            InitialDuration = Duration;
+            _initialDuration = Duration;
         }
 
         public virtual XmlNode Save(XmlNode doc)
         {
             doc = doc.CreateChild("CurrentAction");
             doc.CreateChild("Name", GetType().Name);
-            doc.CreateChild("InitialDuration", InitialDuration);
+            doc.CreateChild("InitialDuration", _initialDuration);
             doc.CreateChild("Duration", Duration);
             doc.CreateChild("TimeRemaining", _timeToNextHour);
             return doc;
@@ -79,7 +79,7 @@ namespace Game.Characters.CharacterActions
         public virtual XmlNode Load(XmlNode doc)
         {
             doc = doc.SelectSingleNode("CurrentAction");
-            InitialDuration = doc.IntFromNode("InitialDuration");
+            _initialDuration = doc.IntFromNode("InitialDuration");
             Duration = doc.IntFromNode("Duration");
             _timeToNextHour = doc.IntFromNode("TimeRemaining");
             return doc;
@@ -90,7 +90,7 @@ namespace Game.Characters.CharacterActions
             return DisplayName;
         }
 
-        public virtual float GetNormalisedProgress() => Duration / (float)InitialDuration;
+        public virtual float GetNormalisedProgress() => Duration / (float)_initialDuration;
 
         public float GetRealTimeRemaining() => Duration * WorldState.MinuteInSeconds;
     }

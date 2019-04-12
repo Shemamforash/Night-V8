@@ -126,7 +126,7 @@ public class UICraftingController : UiInventoryMenuController
         listElements.Add(new CraftingElement());
         listElements.Add(new CraftingElement());
         listElements.Add(new CraftingElement());
-        _craftingList.Initialise(listElements, CreateRecipe, UiGearMenuController.Close, GetAvailableRecipes);
+        _craftingList.Initialise(listElements, CreateRecipe, null, GetAvailableRecipes);
     }
 
     private void CreateRecipe(object obj)

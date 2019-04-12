@@ -121,13 +121,16 @@ namespace Game.Global
         {
             ReadJournals();
             List<JournalEntry> characterEntries = new List<JournalEntry>();
-            CharacterManager.Characters.ForEach(c =>
+
+            Player alternateCharacter = CharacterManager.AlternateCharacter;
+            if (alternateCharacter != null)
             {
-                CharacterClass characterClass = c.CharacterTemplate.CharacterClass;
-                if (characterClass == CharacterClass.Wanderer) return;
-                if (!CharacterStories.ContainsKey(characterClass)) return;
-                characterEntries.AddRange(CharacterStories[characterClass]);
-            });
+                CharacterClass characterClass = alternateCharacter.CharacterTemplate.CharacterClass;
+                if (CharacterStories.ContainsKey(characterClass))
+                {
+                    characterEntries.AddRange(CharacterStories[characterClass]);
+                }
+            }
 
             List<JournalEntry> validEntries = new List<JournalEntry>();
             validEntries.AddRange(characterEntries.FindAll(j => j._locked));
@@ -237,7 +240,7 @@ namespace Game.Global
             inputString = inputString.Replace("\n", "");
             Regex compiledRegex = new Regex(@"\s+", RegexOptions.Compiled);
             inputString = compiledRegex.Replace(inputString, " ");
-            return inputString.Replace("[br]", "\n");
+            return inputString.Replace("|br|", "\n");
         }
 
         public static List<JournalEntry> GetStoryText()

@@ -48,6 +48,11 @@ namespace Game.Combat.Enemies
             if (_aimTime > 0f) _aimTime -= Time.deltaTime;
         }
 
+        public override string GetDisplayName()
+        {
+            return Enemy.Template.DisplayName;
+        }
+
         private void Reload()
         {
             float duration = Weapon().GetAttributeValue(AttributeType.ReloadSpeed) * 2f;
