@@ -18,7 +18,7 @@ namespace Game.Characters
         protected readonly Player Player;
 
         private int _counterTarget;
-        private string _description, _effect, _requirementString;
+        private string _effect, _requirementString;
         protected float SuccessModifier;
 
         private int _counter;
@@ -48,7 +48,6 @@ namespace Game.Characters
         public void ReadData(XmlNode root)
         {
             root = root.SelectSingleNode(_riteName);
-            _description = root.StringFromNode("Description");
             _requirementString = root.StringFromNode("Requirement");
             _counterTarget = root.IntFromNode("TargetValue");
             _requirementString = _requirementString.Replace("num", _counterTarget.ToString());
@@ -150,11 +149,6 @@ namespace Game.Characters
         public string GetRequirementText()
         {
             return _requirementString;
-        }
-
-        public string Description()
-        {
-            return _description;
         }
 
         public float NormalisedProgress()

@@ -37,7 +37,7 @@
 		<Mountains>Mountain's Memory,The Mind of The Earth</Mountains>
 		<Sea>Shrine of the Sea Lords,Demand of the Deep</Sea>
 		<Ruins>The Seat of Power,The Great Cenotaph</Ruins>
-		<Wasteland>The Proving Grounds,Warrior's Test</Wasteland>
+		<Wasteland>The Proving Grounds,Warrior's Test,The Sliver</Wasteland>
 	</Shrine>
 	<Monument>
 		<Generic>Shrine of Devotion,The Gathering Stone,The Tablet of Gifts,Believer's Atonement,The Altar of Dedication,Disciple's Shrine,Adherant's Calling,Heaven's Communion,The Place of Power,The God's Favour,The Altar of Appeal,Ancient Monument,Decrepit Stones,Praying Place,Mother's Offering,The Divine Channel,Seam of Worlds,Concourse of Heaven</Generic>
@@ -53,14 +53,14 @@
 		<Mountains>The Blood of the Earth,Lost Fountain</Mountains>
 		<Sea>Breath of the Sea,Exhausted Trickle</Sea>
 		<Ruins>The City Well,Pure Spring</Ruins>
-		<Wasteland>Township's Legacy,Grimy Well,Shadowy Spring</Wasteland>
+		<Wasteland>Township's Legacy,Grimy Well,Shadowy Spring, Immortal Blood</Wasteland>
 	</Fountain>
 	<Cache>
 		<Generic>Hoard of the Ancients,Ancient Cache,Sealed Cache,Venerated Chamber,Vault of the Old Ones,Pride of the Ones Before,Mystic Cache,Elders' Hoard,Vault of the Lost Age,Ark of the Great Light,Ancestor's Wealth,Forbearer's Treasure,Maker's Pride</Generic>
 		<Desert>Sandy Vault,Secret of the Dunes</Desert>
 		<Mountains>The Heart of The Mountain,The Veins of the Earth,The Smith's Trove</Mountains>
 		<Sea>Treasures of the Waves,Bounty of the Tide</Sea>
-		<Ruins>Forgotten Things,What Was Left Behind</Ruins>
+		<Ruins>Forgotten Things,What Was Left Behind, The Heretic's Hoard</Ruins>
 		<Wasteland>Lost Supplies,Abandoned Machinery,Burial Grounds</Wasteland>
 	</Cache>
 </Names>

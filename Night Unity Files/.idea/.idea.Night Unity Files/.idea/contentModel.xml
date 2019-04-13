@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\Sam\.Rider2018.3\config\extensions" t="IncludeRecursive" />
-    <e p="C:\Users\Sam\.Rider2018.3\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\Sam\.Rider2018.3\system\resharper-host\Local\Transient\ReSharperHost\v183\SolutionCaches\_Night Unity Files.-1407196519.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Sam\.Rider2019.1\config\extensions" t="IncludeRecursive" />
+    <e p="C:\Users\Sam\.Rider2019.1\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Sam\.Rider2019.1\system\resharper-host\Local\Transient\ReSharperHost\v191\SolutionCaches\_Night Unity Files.-1407196519.00" t="ExcludeRecursive" />
     <e p="C:\Users\Sam\AppData\Local\Android\Sdk\platforms\android-28\Data\res" t="IncludeRecursive" />
     <e p="C:\Users\Sam\AppData\Local\Android\Sdk\sources\android-28" t="IncludeRecursive" />
     <e p="C:\Users\Sam\Desktop\Desolation - The Last Road\Night-V8\Night Unity Files" t="IncludeRecursive">
@@ -1681,7 +1681,6 @@
       <e p="InControl.csproj" t="IncludeRecursive" />
       <e p="InControl.Editor.csproj" t="IncludeRecursive" />
       <e p="InControl.Examples.csproj" t="IncludeRecursive" />
-      <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="packages" t="ExcludeRecursive" />

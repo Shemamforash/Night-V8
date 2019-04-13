@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 using System.Xml;
 using Game.Characters.CharacterActions;
 using Game.Global;
@@ -66,10 +67,28 @@ namespace Facilitating.Persistence
             }
         }
 
-        public static void CreateChild<T>(this XmlNode parent, string tagName, T value)
+        public static void CreateChild(this XmlNode parent, string tagName, float value)
         {
             XmlNode newNode = parent.CreateChild(tagName);
-            newNode.InnerText = value == null ? "" : value.ToString();
+            newNode.InnerText = value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        public static void CreateChild(this XmlNode parent, string tagName, int value)
+        {
+            XmlNode newNode = parent.CreateChild(tagName);
+            newNode.InnerText = value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        public static void CreateChild(this XmlNode parent, string tagName, bool value)
+        {
+            XmlNode newNode = parent.CreateChild(tagName);
+            newNode.InnerText = value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        public static void CreateChild(this XmlNode parent, string tagName, string value)
+        {
+            XmlNode newNode = parent.CreateChild(tagName);
+            newNode.InnerText = value;
         }
 
         private static void TryCreateDirectory()

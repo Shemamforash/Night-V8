@@ -44,6 +44,11 @@ namespace SamsHelper.Libraries
         public static Vector2 Direction(this Vector2 from, Transform to) => Direction(from, (Vector2) to.position);
 
 
+        public static string ToNiceString(this Vector2 vector2)
+        {
+            return "(" + vector2.x.Round(5).ToString(CultureInfo.InvariantCulture) + ", " + vector2.y.Round(5).ToString(CultureInfo.InvariantCulture) + ")";
+        }
+
         public static float Distance(this Transform from, Transform to)
         {
             return from.position.Distance(to.position);

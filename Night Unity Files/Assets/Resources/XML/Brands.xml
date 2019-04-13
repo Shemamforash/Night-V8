@@ -1,66 +1,162 @@
 <Brands>
-    <Power>
-        <Name>Power</Name><Description>True power is that which is exerted over others</Description><Requirement>Deal num damage to enemies</Requirement><TargetValue>5000</TargetValue>
-        <Effect>Life increased</Effect><Modifier>1</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>0</MinLevel>
-    </Power>
-    <Vigilance>
-        <Name>Vigilance</Name><Description>Our world is dictated by what our mind will allow us to see</Description><Requirement>Find num items</Requirement><TargetValue>5</TargetValue>
-        <Effect>Focus increased</Effect><Modifier>1</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>0</MinLevel>
-    </Vigilance>
-    <Resolution>
-        <Name>Resolution</Name><Description>The only being to which we must prove our abilities is ourselves</Description><Requirement>Use skills num times</Requirement><TargetValue>25</TargetValue>
-        <Effect>Will increased</Effect><Modifier>1</Modifier><RequiresSkill>TRUE</RequiresSkill><MinLevel>1</MinLevel>
-    </Resolution>
-    <Stamina>
-        <Name>Stamina</Name><Description>It is not enough to will it, our bodies must be capable of doing to succeed</Description><Requirement>Discover num regions</Requirement>
-        <TargetValue>10</TargetValue><Effect>Grit increased</Effect><Modifier>1</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>0</MinLevel>
-    </Stamina>
-    <Insight>
-        <Name>Insight</Name><Description>Knowledge itself is useless without the insight to apply it</Description><Requirement>Gain num essence</Requirement><TargetValue>200</TargetValue>
-        <Effect>Essence recovers more durability on weapons</Effect><Modifier>1</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>1</MinLevel>
-    </Insight>
-    <Revival>
-        <Name>Revival</Name><Description>Know what it is like to look death in the eyes and command him to back down</Description><Requirement>Take num damage</Requirement>
-        <TargetValue>2500</TargetValue><Effect>Gain a second wind when you take fatal damage</Effect><Modifier>0.25</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>2</MinLevel>
-    </Revival>
-    <Apathy>
-        <Name>Apathy</Name><Description>When your life depends on the loss of another, you can begin to relish death</Description><Requirement>Kill num enemies</Requirement>
-        <TargetValue>100</TargetValue><Effect>Restore Will when using Radiance</Effect><Modifier>6</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>1</MinLevel>
-    </Apathy>
-    <Finesse>
-        <Name>Finesse</Name><Description>Mastering your tools is to take control of your fate</Description><Requirement>Reload on empty magazine num times</Requirement><TargetValue>25</TargetValue>
-        <Effect>Automatically reload when magazine is empty</Effect><Modifier>0</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>2</MinLevel>
-    </Finesse>
-    <Ingenuity>
-        <Name>Ingenuity</Name><Description>1</Description><Requirement>Kill num enemy with last round</Requirement><TargetValue>25</TargetValue>
-        <Effect>Instantly reload if the last round kills an enemy</Effect><Modifier>0</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>2</MinLevel>
-    </Ingenuity>
-    <Scavenging>
-        <Name>Scavenging</Name><Description>No land is barren to the eyes of the scavenger</Description><Requirement>Find num resources</Requirement><TargetValue>50</TargetValue>
-        <Effect>+1 Resource on finding resource</Effect><Modifier>1</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>1</MinLevel>
-    </Scavenging>
-    <Hunting>
-        <Name>Hunting</Name><Description>The greatest prey wait only for the worthy hunters</Description><Requirement>Find num food sources</Requirement><TargetValue>50</TargetValue>
-        <Effect>Food sates your hunger more</Effect><Modifier>1</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>1</MinLevel>
-    </Hunting>
-    <Divining>
-        <Name>Divining</Name><Description>To the diviners, the earth herself offers up her blood</Description><Requirement>Find num water sources</Requirement><TargetValue>50</TargetValue>
-        <Effect>Water quenches your thirst more</Effect><Modifier>1</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>1</MinLevel>
-    </Divining>
-    <Fire>
-        <Name>Fire</Name><Description>No other beast feeds off the life of another as fire</Description><Requirement>Take num burn damage</Requirement><TargetValue>1000</TargetValue>
-        <Effect>Occasionally explode with fire on taking damage</Effect><Modifier>0.02</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>3</MinLevel>
-    </Fire>
-    <Shattering>
-        <Name>Shattering</Name><Description>All armour is only as strong as it's weakest part</Description><Requirement>Lose num points of armour</Requirement><TargetValue>10</TargetValue>
-        <Effect>Occasionally explode with decay on taking damage</Effect><Modifier>0.02</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>3</MinLevel>
-    </Shattering>
-    <Void>
-        <Name>Void</Name><Description>1</Description><Requirement>Take Void damage num times</Requirement><TargetValue>10</TargetValue>
-        <Effect>Killing sick enemies spreads it to nearby enemies</Effect><Modifier>0.02</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>3</MinLevel>
-    </Void>
-    <Mastery>
-        <Name>Mastery</Name><Description>Wisdom is but knowledge tempered by years of experience</Description><Requirement>Consume num adrenaline</Requirement><TargetValue>5000</TargetValue>
-        <Effect>Small chance for free skill activation</Effect><Modifier>0.05</Modifier><RequiresSkill>FALSE</RequiresSkill><MinLevel>2</MinLevel>
-    </Mastery>
+	<Power>
+		<Name>Power</Name>
+		<Description>True power is that which is exerted over others</Description>
+		<Requirement>Deal num damage to enemies</Requirement>
+		<TargetValue>5000</TargetValue>
+		<Effect>Life increased</Effect>
+		<Modifier>1</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>0</MinLevel>
+	</Power>
+	<Vigilance>
+		<Name>Vigilance</Name>
+		<Description>Our world is dictated by what our mind will allow us to see</Description>
+		<Requirement>Find num resources</Requirement>
+		<TargetValue>15</TargetValue>
+		<Effect>Focus increased</Effect>
+		<Modifier>1</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>0</MinLevel>
+	</Vigilance>
+	<Resolution>
+		<Name>Resolution</Name>
+		<Description>The only being to which we must prove our abilities is ourselves</Description>
+		<Requirement>Use skills num times</Requirement>
+		<TargetValue>25</TargetValue>
+		<Effect>Will increased</Effect>
+		<Modifier>1</Modifier>
+		<RequiresSkill>TRUE</RequiresSkill>
+		<MinLevel>1</MinLevel>
+	</Resolution>
+	<Stamina>
+		<Name>Stamina</Name>
+		<Description>It is not enough to will it, our bodies must be capable of doing to succeed</Description>
+		<Requirement>Discover num regions</Requirement>
+		<TargetValue>10</TargetValue>
+		<Effect>Grit increased</Effect>
+		<Modifier>1</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>0</MinLevel>
+	</Stamina>
+	<Insight>
+		<Name>Insight</Name>
+		<Description>Knowledge itself is useless without the insight to apply it</Description>
+		<Requirement>Gain num essence</Requirement>
+		<TargetValue>200</TargetValue>
+		<Effect>Essence recovers more durability on weapons</Effect>
+		<Modifier>1</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>1</MinLevel>
+	</Insight>
+	<Revival>
+		<Name>Revival</Name>
+		<Description>Know what it is like to look death in the eyes and command him to back down</Description>
+		<Requirement>Take num damage</Requirement>
+		<TargetValue>2500</TargetValue>
+		<Effect>Gain a second wind when you take fatal damage</Effect>
+		<Modifier>0.25</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>2</MinLevel>
+	</Revival>
+	<Apathy>
+		<Name>Apathy</Name>
+		<Description>When your life depends on the loss of another, you can begin to relish death</Description>
+		<Requirement>Kill num enemies</Requirement>
+		<TargetValue>100</TargetValue>
+		<Effect>Restore Will when using Radiance</Effect>
+		<Modifier>6</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>1</MinLevel>
+	</Apathy>
+	<Finesse>
+		<Name>Finesse</Name>
+		<Description>Mastering your tools is to take control of your fate</Description>
+		<Requirement>Reload on empty magazine num times</Requirement>
+		<TargetValue>25</TargetValue>
+		<Effect>Automatically reload when magazine is empty</Effect>
+		<Modifier>0</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>2</MinLevel>
+	</Finesse>
+	<Perfection>
+		<Name>Perfection</Name>
+		<Description>1</Description>
+		<Requirement>Kill num enemy with last round</Requirement>
+		<TargetValue>25</TargetValue>
+		<Effect>Instantly reload if the last round kills an enemy</Effect>
+		<Modifier>0</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>2</MinLevel>
+	</Perfection>
+	<Scavenging>
+		<Name>Scavenging</Name>
+		<Description>No land is barren to the eyes of the scavenger</Description>
+		<Requirement>Find num resources</Requirement>
+		<TargetValue>50</TargetValue>
+		<Effect>+1 Resource on finding resource</Effect>
+		<Modifier>1</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>1</MinLevel>
+	</Scavenging>
+	<Hunting>
+		<Name>Hunting</Name>
+		<Description>The greatest prey wait only for the worthy hunters</Description>
+		<Requirement>Find num food sources</Requirement>
+		<TargetValue>50</TargetValue>
+		<Effect>Food sates your hunger more</Effect>
+		<Modifier>1</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>1</MinLevel>
+	</Hunting>
+	<Divining>
+		<Name>Divining</Name>
+		<Description>To the diviners, the earth herself offers up her blood</Description>
+		<Requirement>Find num water sources</Requirement>
+		<TargetValue>50</TargetValue>
+		<Effect>Water quenches your thirst more</Effect>
+		<Modifier>1</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>1</MinLevel>
+	</Divining>
+	<Fire>
+		<Name>Fire</Name>
+		<Description>No other beast feeds off the life of another as fire</Description>
+		<Requirement>Take num burn damage</Requirement>
+		<TargetValue>1000</TargetValue>
+		<Effect>Occasionally explode with fire on taking damage</Effect>
+		<Modifier>0.02</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>3</MinLevel>
+	</Fire>
+	<Shattering>
+		<Name>Shattering</Name>
+		<Description>All armour is only as strong as it's weakest part</Description>
+		<Requirement>Lose num points of armour</Requirement>
+		<TargetValue>10</TargetValue>
+		<Effect>Occasionally explode with decay on taking damage</Effect>
+		<Modifier>0.02</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>3</MinLevel>
+	</Shattering>
+	<Void>
+		<Name>Void</Name>
+		<Description>1</Description>
+		<Requirement>Take Void damage num times</Requirement>
+		<TargetValue>10</TargetValue>
+		<Effect>Killing sick enemies spreads it to nearby enemies</Effect>
+		<Modifier>0.02</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>3</MinLevel>
+	</Void>
+	<Mastery>
+		<Name>Mastery</Name>
+		<Description>Wisdom is but knowledge tempered by years of experience</Description>
+		<Requirement>Consume num adrenaline</Requirement>
+		<TargetValue>5000</TargetValue>
+		<Effect>Small chance for free skill activation</Effect>
+		<Modifier>0.05</Modifier>
+		<RequiresSkill>FALSE</RequiresSkill>
+		<MinLevel>2</MinLevel>
+	</Mastery>
 </Brands>

@@ -28,8 +28,6 @@ namespace Game.Gear.Weapons
 
         private readonly string[] _durabilityEvents =
         {
-            "My weapon feels weak",
-            "My weapon feels too light",
             "The power of my weapon is waning"
         };
 

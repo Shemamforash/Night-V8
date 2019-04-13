@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using Facilitating.Persistence;
 using Game.Exploration.Environment;
 using Game.Exploration.Weather;
@@ -6,23 +7,43 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using TriangleNet.Meshing;
-using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Global
 {
     public abstract class Building : NamedItem
     {
-        protected Building(string name) : base(name)
+        private int _counter;
+        private readonly int _counterTarget;
+
+        protected Building(string name, int counterTarget) : base(name)
         {
             Inventory.AddBuilding(this);
+            _counterTarget = counterTarget;
+            _counter = _counterTarget;
         }
 
-        public abstract void Update();
+        public void Update()
+        {
+            --_counter;
+            if (_counter > 0) return;
+            _counter = _counterTarget;
+            OnUpdate();
+        }
+
+        public void OverrideCounter(int counter)
+        {
+            _counter = counter + 1;
+            Update();
+        }
+
+        public abstract void OnUpdate();
 
         protected virtual XmlNode Save(XmlNode root)
         {
             root = root.CreateChild("Building");
             root.CreateChild("Name", Name);
+            root.CreateChild("Counter", _counter);
             return root;
         }
 
@@ -31,31 +52,38 @@ namespace Game.Global
             foreach (XmlNode buildingNode in root.SelectSingleNode("Buildings").ChildNodes)
             {
                 string name = buildingNode.StringFromNode("Name");
+                int counter = buildingNode.IntFromNode("Counter");
+                Building building;
                 switch (name)
                 {
                     case "Trap":
-                        Inventory.AddBuilding(new Trap());
+                        building = new Trap();
                         break;
                     case "Water Collector":
-                        Inventory.AddBuilding(new WaterCollector());
+                        building = new WaterCollector();
                         break;
                     case "Condenser":
-                        Inventory.AddBuilding(new Condenser());
+                        building = new Condenser();
                         break;
                     case "Essence Filter":
-                        Inventory.AddBuilding(new EssenceFilter());
+                        building = new EssenceFilter();
                         break;
                     case "Smoker":
                         Smoker smoker = new Smoker();
                         smoker.Load(root);
-                        Inventory.AddBuilding(smoker);
+                        building = smoker;
                         break;
                     case "Purifier":
                         Purifier purifier = new Purifier();
                         purifier.Load(root);
-                        Inventory.AddBuilding(purifier);
+                        building = purifier;
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
+
+                Inventory.AddBuilding(building);
+                building.OverrideCounter(counter);
             }
         }
 
@@ -68,11 +96,11 @@ namespace Game.Global
 
     public class WaterCollector : Building
     {
-        public WaterCollector() : base("Water Collector")
+        public WaterCollector() : base("Water Collector", 6)
         {
         }
 
-        public override void Update()
+        public override void OnUpdate()
         {
             string resource = EnvironmentManager.GetTemperature() <= 0 ? "Ice" : "Water";
             if (WeatherManager.CurrentWeather().Attributes.RainAmount > 0) Inventory.IncrementResource(resource, 1);
@@ -82,46 +110,36 @@ namespace Game.Global
 
     public class Trap : Building
     {
-        private int counter;
-
-        public Trap() : base("Trap")
+        public Trap() : base("Trap", 6)
         {
-            ResetCounter();
         }
 
-        private void ResetCounter()
+        public override void OnUpdate()
         {
-            counter = Random.Range(6, 12);
-        }
-
-        public override void Update()
-        {
-            --counter;
-            if (counter != 0) return;
             Inventory.IncrementResource("Meat", 1);
-            ResetCounter();
         }
     }
 
     public class Condenser : Building
     {
-        public Condenser() : base("Condenser")
+        public Condenser() : base("Condenser", 1)
         {
         }
 
-        public override void Update()
+        public override void OnUpdate()
         {
-            if (WeatherManager.CurrentWeather().Attributes.FogAmount > 0) Inventory.IncrementResource("Water", 1);
+            if (WeatherManager.CurrentWeather().Attributes.FogAmount == 0) return;
+            Inventory.IncrementResource("Water", 1);
         }
     }
 
     public class EssenceFilter : Building
     {
-        public EssenceFilter() : base("Essence Filter")
+        public EssenceFilter() : base("Essence Filter", 6)
         {
         }
 
-        public override void Update()
+        public override void OnUpdate()
         {
             Inventory.IncrementResource("Essence", 1);
         }
@@ -142,14 +160,14 @@ namespace Game.Global
         private readonly int _targetTime;
         private int _time;
 
-        protected Converter(string name, int time, string resourceFrom, string resourceTo) : base(name)
+        protected Converter(string name, int time, string resourceFrom, string resourceTo) : base(name, 1)
         {
             _targetTime = time;
             _resourceFrom = resourceFrom;
             _resourceTo = resourceTo;
         }
 
-        public override void Update()
+        public override void OnUpdate()
         {
             if (Inventory.GetResourceQuantity(_resourceFrom) == 0)
             {

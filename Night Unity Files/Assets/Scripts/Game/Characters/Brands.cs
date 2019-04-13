@@ -142,7 +142,7 @@ namespace Game.Characters.Brands
 
     public class InstantReloadBrand : Brand
     {
-        public InstantReloadBrand(Player player) : base(player, "Ingenuity")
+        public InstantReloadBrand(Player player) : base(player, "Perfection")
         {
         }
 

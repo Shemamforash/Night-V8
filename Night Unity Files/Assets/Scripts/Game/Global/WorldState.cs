@@ -51,7 +51,7 @@ namespace Game.Global
         private static int _templesActivated;
         private static int _timeAtLastSave;
         private const int MaxDifficulty = 50;
-        private static bool _isBetaVersion = true;
+        private static bool _isBetaVersion = false;
 
         private enum DifficultySetting
         {

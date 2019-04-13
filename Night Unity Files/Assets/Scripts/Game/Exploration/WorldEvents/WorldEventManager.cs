@@ -37,7 +37,7 @@ namespace Game.Exploration.WorldEvents
         {
             _eventLog = eventLog;
             if (_eventLogText == null) return;
-            _eventLogText.text = _eventLog;
+            _eventLogText.text = "<i>" + _eventLog + "</i>";
         }
 
         public static void Clear()

@@ -9,7 +9,7 @@
 		<Name>Ocean's Deep</Name>
 		<Attribute>Capacity</Attribute>
 		<Bonus>0.05</Bonus>
-		<Description>May it never run dry</Description>
+		<Description>One day even the ocean will run dry</Description>
 	</Gear>
 	<Gear>
 		<Name>Sigil of Darkness</Name>
@@ -33,24 +33,24 @@
 		<Name>Heavenly Amulet</Name>
 		<Attribute>Recoil</Attribute>
 		<Bonus>-0.05</Bonus>
-		<Description>Be stable, never falter</Description>
+		<Description>As above, so below</Description>
 	</Gear>
 	<Gear>
 		<Name>Embers of the Fire God</Name>
 		<Attribute>Burn</Attribute>
 		<Bonus>5</Bonus>
-		<Description>The forge embers can never be quenched</Description>
+		<Description>The embers can never be quenched</Description>
 	</Gear>
 	<Gear>
 		<Name>Taint of the Abyss</Name>
 		<Attribute>Shatter</Attribute>
 		<Bonus>5</Bonus>
-		<Description>Only dark things are found in dark places</Description>
+		<Description>Dark things found in dark places</Description>
 	</Gear>
 	<Gear>
 		<Name>Marrow of Cursed Bones</Name>
 		<Attribute>Void</Attribute>
 		<Bonus>5</Bonus>
-		<Description>Rotten souls leave restless remains</Description>
+		<Description>Rotten souls leave rotten remains</Description>
 	</Gear>
 </GearList>

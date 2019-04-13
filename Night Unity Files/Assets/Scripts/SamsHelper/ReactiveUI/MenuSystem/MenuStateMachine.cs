@@ -114,13 +114,14 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
             if (isHeld || axis != InputAxis.Menu) return;
-            if (!(CurrentMenu() is WorldView) && !(CurrentMenu() is CombatManager)) return;
-            if (!PauseMenuController.IsOpen())
-            {
-                if (UiGearMenuController.IsOpen()) return;
-                if (TutorialManager.Instance.IsTutorialVisible()) return;
-            }
+            bool isWorldView = CurrentMenu() is WorldView;
+            bool isCombatManager = CurrentMenu() is CombatManager;
+            bool isPauseMenuOpen = PauseMenuController.IsOpen();
+            bool isGearMenuOpen = UiGearMenuController.IsOpen();
+            bool isTutorialOpen = TutorialManager.Instance.IsTutorialVisible();
 
+            if (!isWorldView && !isCombatManager && !isPauseMenuOpen) return;
+            if (!isPauseMenuOpen && (isGearMenuOpen || isTutorialOpen)) return;
             PauseMenuController.ToggleOpen();
         }
 

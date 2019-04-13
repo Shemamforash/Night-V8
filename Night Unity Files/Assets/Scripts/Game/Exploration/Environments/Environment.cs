@@ -94,7 +94,7 @@ namespace Game.Exploration.Environment
                 case EnvironmentType.Wasteland:
                     return "The Eternal Wasteland";
                 default:
-                    return "";
+                    return "Dedicated to Yvonne Roberts";
             }
         }
 

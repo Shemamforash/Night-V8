@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using EZCameraShake;
 using Facilitating.Audio;
@@ -27,16 +28,11 @@ public class StoryController : Menu
     private CloseButtonController _closeButton;
     private AudioSource _droneAudioSource;
     private bool _canSkip;
-    private ParticleSystem _lightningSystem;
-    private CameraShaker _shaker;
-    private float _waitTime;
     private static List<JournalEntry> _journalEntries;
     private static readonly string[] _actNames = {"Act I", "Act II", "Act III", "Act IV", "Act V", "The End"};
     private AudioSource _actAudio;
     public static bool StorySeen;
     private PostProcessInvertColour _invertColour;
-    private float _thunderVolumeOffset = 0f;
-    private bool _showLightning = false;
 
     protected override void Awake()
     {
@@ -57,27 +53,6 @@ public class StoryController : Menu
         _closeButton.UseSpaceInput();
     }
 
-    public void Update()
-    {
-        if (!_goToCredits) return;
-        if (!_showLightning) return;
-        _waitTime -= Time.deltaTime;
-        if (_waitTime > 0f) return;
-        float magnitude = Random.Range(4, 8);
-        float roughness = Random.Range(10, 20);
-        float inDuration = Random.Range(0.25f, 0.5f);
-        float outDuration = Random.Range(0.25f, 0.5f);
-        Sequence sequence = DOTween.Sequence();
-        sequence.AppendCallback(() => _lightningSystem.Emit(1));
-        sequence.AppendInterval(2f);
-        sequence.AppendCallback(() =>
-        {
-            ThunderController.Instance().Thunder(_thunderVolumeOffset);
-            _shaker.ShakeOnce(magnitude, roughness, inDuration, outDuration);
-        });
-        float totalDuration = inDuration + outDuration;
-        _waitTime = Random.Range(totalDuration * 4f, totalDuration * 8f);
-    }
 
     private void CacheComponents()
     {
@@ -114,9 +89,6 @@ public class StoryController : Menu
     private void SetEndGameValues()
     {
         if (!_goToCredits) return;
-        _waitTime = Random.Range(2f, 4f);
-        _lightningSystem = GameObject.Find("Lightning System").GetComponent<ParticleSystem>();
-        _shaker = GameObject.Find("Shaker").GetComponent<CameraShaker>();
         transform.parent.FindChildWithName<AudioSource>("Act").volume = 0;
     }
 
@@ -143,22 +115,19 @@ public class StoryController : Menu
 
     private IEnumerator DisplayEpilogue()
     {
-        DOTween.To(() => _thunderVolumeOffset, f => _thunderVolumeOffset = f, 0f, _journalEntries.Count * 20f);
-        for (int i = 0; i < _journalEntries.Count; i++)
+        _pageCountText.text = "";
+        gameObject.FindChildWithName<AudioSource>("End Game Audio").Play();
+        foreach (JournalEntry entry in _journalEntries)
         {
-            if (i == _journalEntries.Count - 2) _showLightning = false;
-            JournalEntry entry = _journalEntries[i];
-            //fade in
-            _storyText.text = entry.Text + "\n\n    - <i>The Wanderer</i>";
-            int pageNo = i + 1;
-            _pageCountText.text = pageNo + "/" + _journalEntries.Count;
-
+            string storyText = entry.Text;
+            if (entry == _journalEntries.Last()) storyText += "\n\n    - <i>The Wanderer</i>";
+            _storyText.text = storyText;
             yield return _storyCanvas.DOFade(1f, 1f).WaitForCompletion();
             yield return new WaitForSeconds(18f);
             yield return _storyCanvas.DOFade(0f, 1f).WaitForCompletion();
         }
 
-        yield return StartCoroutine(DisplayAct());
+        yield return StartCoroutine(DisplayAct(4f));
 
         _invertColour.FadeTo(0f, 0.5f);
         _droneAudioSource.DOFade(0f, 0.5f).SetUpdate(UpdateType.Normal, true);
@@ -173,7 +142,10 @@ public class StoryController : Menu
         {
             JournalEntry entry = _journalEntries[i];
 //fade in
-            _storyText.text = entry.Text + "\n\n    - <i>The Necromancer</i>";
+            string storyText = entry.Text;
+            if (i == _journalEntries.Count - 1) storyText += "\n\n    - <i>The Necromancer</i>";
+            _storyText.text = storyText;
+            
             int pageNo = i + 1;
             _pageCountText.text = pageNo + "/" + _journalEntries.Count;
 
@@ -206,7 +178,7 @@ public class StoryController : Menu
         End();
     }
 
-    private IEnumerator DisplayAct()
+    private IEnumerator DisplayAct(float displayDuration = 2f)
     {
         _storyCanvas.alpha = 0;
         EnvironmentType currentEnvironmentType = EnvironmentManager.CurrentEnvironmentType;
@@ -214,14 +186,14 @@ public class StoryController : Menu
         _actSubtitle.text = Environment.EnvironmentTypeToName(currentEnvironmentType);
         if (currentEnvironmentType != EnvironmentType.End) _actAudio.Play();
         yield return _actCanvas.DOFade(1, 1f).WaitForCompletion();
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(displayDuration);
         yield return _actCanvas.DOFade(0f, 1f).WaitForCompletion();
     }
 
     private void End()
     {
         StorySeen = true;
-        SaveController.AutoSave();
+        if (!_goToCredits) SaveController.AutoSave();
         _closeButton.Disable();
         SceneChanger.FadeInAudio();
         if (_goToCredits) SceneChanger.GoToCreditsScene();

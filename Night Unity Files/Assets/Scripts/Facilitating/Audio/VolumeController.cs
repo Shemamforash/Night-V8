@@ -15,7 +15,6 @@ public class VolumeController : MonoBehaviour, ISelectHandler, IDeselectHandler
     private Slider _volumeSlider;
     private static bool _loaded;
 
-
     private void OnEnable()
     {
         _volumeSlider.value = _masterVolume;
@@ -38,11 +37,6 @@ public class VolumeController : MonoBehaviour, ISelectHandler, IDeselectHandler
         _loaded = true;
         float volume = root.FloatFromNode("Volume");
         SetMasterVolume(volume);
-    }
-
-    private void OnDestroy()
-    {
-        _loaded = false;
     }
 
     public static void Save(XmlNode root)

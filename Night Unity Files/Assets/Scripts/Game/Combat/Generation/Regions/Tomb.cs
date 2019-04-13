@@ -120,10 +120,10 @@ namespace Game.Combat.Generation
         private IEnumerator StartSpawningEnemies()
         {
             TombActive = true;
-            float maxTime = 90f;//60f * 5f;
+            float maxTime = 60f * 5f;
             float currentTime = maxTime;
             _timeToIncreaseMaxEnemies = 20f;
-            float endAudioOffset = 61f;
+            float endAudioOffset = 60f;
             Sequence seq = DOTween.Sequence();
             seq.AppendInterval(maxTime - endAudioOffset);
             seq.AppendCallback(SpawnEndGameAudio);

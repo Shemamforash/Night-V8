@@ -30,7 +30,7 @@ namespace Game.Exploration.Environment
         private float _currentTime;
         private bool _isActive;
         private readonly List<RingDrawer> _rings = new List<RingDrawer>();
-        public static Player CharacterReturning;
+        private static Player _characterReturning;
         private UIAttributeMarkerController _gritMarker, _willMarker;
         private EnhancedText _teleportText, _willText;
         private bool _seenTutorial;
@@ -40,6 +40,12 @@ namespace Game.Exploration.Environment
         private Region _nearestRegion;
         private string _teleportControlText, _willControlText;
         private static Player _player;
+
+        public static Player CharacterReturning
+        {
+            private get { return _characterReturning; }
+            set { _characterReturning = value; }
+        }
 
         protected override void Awake()
         {
@@ -77,7 +83,6 @@ namespace Game.Exploration.Environment
         {
             if (MenuStateMachine.CurrentMenu() == this) return;
             Open(CharacterReturning);
-            CharacterReturning = null;
         }
 
         public override void Enter()
@@ -107,6 +112,7 @@ namespace Game.Exploration.Environment
             InputHandler.UnregisterInputListener(this);
             ResourcesUiController.Show();
             _player = null;
+            CharacterReturning = null;
         }
 
         public override void PreEnter()
@@ -339,6 +345,7 @@ namespace Game.Exploration.Environment
                     TryRestoreGrit();
                     break;
                 case InputAxis.Cancel:
+                    Debug.Log((CharacterReturning == null) + " " + TutorialManager.Instance.IsTutorialVisible());
                     if (CharacterReturning == null && !TutorialManager.Instance.IsTutorialVisible())
                         MenuStateMachine.ShowMenu("Game Menu");
                     break;

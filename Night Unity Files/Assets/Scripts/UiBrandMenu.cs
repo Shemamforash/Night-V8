@@ -90,7 +90,7 @@ public class UiBrandMenu : Menu
         }
 
         _titleString = _titleString + " The " + brand.GetDisplayName();
-        _quoteString = brand.Description();
+        _quoteString = "";
         _instance.Show();
     }
 

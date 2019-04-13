@@ -9,7 +9,7 @@
 		<Name>Ignite</Name>
 		<Duration>-1</Duration>
 		<Cost>4</Cost>
-		<Description>Launch a firey shot that explodes on impact</Description>
+		<Description>Launch a burning shot that explodes on impact</Description>
 	</Skill>
 	<Skill>
 		<Name>Shockwave</Name>

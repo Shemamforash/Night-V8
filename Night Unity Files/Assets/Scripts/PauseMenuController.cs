@@ -12,13 +12,13 @@ using UnityEngine.SceneManagement;
 public class PauseMenuController : MonoBehaviour
 {
     private bool _open;
-    private static bool _fading;
     private static string _lastMenu;
     private static PauseMenuController _instance;
     private static TextMeshProUGUI _title;
     private static CloseButtonController _closeButton;
     private CanvasGroup _background;
     private bool _pauseShown;
+    private Sequence _sequence;
 
     public void Awake()
     {
@@ -48,14 +48,10 @@ public class PauseMenuController : MonoBehaviour
         AudioController.FadeOutCombat();
         _lastMenu = MenuStateMachine.CurrentMenu().gameObject.name;
         _instance.ShowPauseMenu();
-        _fading = true;
-        Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
-        sequence.Append(_background.DOFade(1f, 0.25f));
-        sequence.AppendCallback(() =>
-        {
-            _fading = false;
-            _open = true;
-        });
+        _sequence?.Complete(true);
+        _sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
+        _sequence.Append(_background.DOFade(1f, 0.25f));
+        _sequence.AppendCallback(() => { _open = true; });
         WorldState.Pause();
         _closeButton.Enable();
     }
@@ -78,12 +74,11 @@ public class PauseMenuController : MonoBehaviour
         AudioController.FadeOutGlobalMuffle();
         AudioController.FadeInCombat();
         MenuStateMachine.ShowMenu(_lastMenu);
-        _fading = true;
-        Sequence sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
-        sequence.Append(_background.DOFade(0f, 0.25f));
-        sequence.AppendCallback(() =>
+        _sequence?.Complete(true);
+        _sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
+        _sequence.Append(_background.DOFade(0f, 0.25f));
+        _sequence.AppendCallback(() =>
         {
-            _fading = false;
             _open = false;
             Resume();
         });
@@ -173,7 +168,7 @@ public class PauseMenuController : MonoBehaviour
 
     public static void ToggleOpen()
     {
-        if (_fading) return;
+        Debug.Log(_instance._open);
         _instance._open = !_instance._open;
         if (!_instance._open) _instance.Hide();
         else _instance.Show();

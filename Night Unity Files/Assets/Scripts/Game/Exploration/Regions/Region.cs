@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
@@ -170,7 +171,7 @@ namespace Game.Exploration.Regions
             XmlNode regionNode = doc.CreateChild("Region");
             regionNode.CreateChild("Name", Name);
             regionNode.CreateChild("RegionId", RegionID);
-            regionNode.CreateChild("Position", Position.ToString());
+            regionNode.CreateChild("Position", Position.ToNiceString());
             XmlNode neighborNode = regionNode.CreateChild("Neighbors");
             foreach (Node n in Neighbors())
                 neighborNode.CreateChild("ID", ((Region) n).RegionID);
@@ -181,7 +182,7 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("Cleared", _cleared);
             regionNode.CreateChild("Size", _size);
             regionNode.CreateChild("TempleCleansed", _templeCleansed);
-            regionNode.CreateChild("RadianceStonePosition", RadianceStonePosition == null ? "" : RadianceStonePosition.Value.ToString());
+            regionNode.CreateChild("RadianceStonePosition", RadianceStonePosition == null ? "" : RadianceStonePosition.Value.ToNiceString());
             regionNode.CreateChild("WaterSourceCount", WaterSourceCount);
             regionNode.CreateChild("FoodSourceCount", FoodSourceCount);
             regionNode.CreateChild("ResourceSourceCount", ResourceSourceCount);

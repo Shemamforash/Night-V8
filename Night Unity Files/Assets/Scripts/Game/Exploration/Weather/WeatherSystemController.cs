@@ -37,6 +37,7 @@ namespace Game.Exploration.Weather
 
         public static void TriggerLightning()
         {
+            if (_instance._lightning == null) return;
             _instance._lightning.Emit(1);
         }
 
