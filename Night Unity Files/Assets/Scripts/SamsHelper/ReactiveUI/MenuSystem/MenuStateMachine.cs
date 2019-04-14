@@ -85,6 +85,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             _sequence.AppendCallback(() =>
             {
                 EventSystem.current.sendNavigationEvents = true;
+                
                 nextState.Enter();
                 OnTransition?.Invoke();
             });

@@ -43,7 +43,7 @@ namespace Game.Exploration.Environment
 
         public static Player CharacterReturning
         {
-            private get { return _characterReturning; }
+            get { return _characterReturning; }
             set { _characterReturning = value; }
         }
 
@@ -369,6 +369,8 @@ namespace Game.Exploration.Environment
 
         public static void Open(Player playerCharacter)
         {
+            if (_player != null) return;
+            WorldState.Pause();
             _player = playerCharacter;
             MenuStateMachine.ShowMenu("Map Menu");
         }

@@ -23,6 +23,7 @@ namespace Facilitating.Persistence
         private static void SaveGame(string directory)
         {
             TryCreateDirectory();
+            if (File.Exists(directory)) File.Delete(directory);
             _saveDoc = new XmlDocument();
             XmlNode root = _saveDoc.CreateChild("BTVSave");
             WorldState.Save(root);
@@ -104,6 +105,7 @@ namespace Facilitating.Persistence
                 VolumeController.SetToDefaultVolume();
                 return;
             }
+
             _saveDoc = new XmlDocument();
             _saveDoc.Load(SettingsSaveLocation);
             XmlNode root = _saveDoc.GetNode("Settings");

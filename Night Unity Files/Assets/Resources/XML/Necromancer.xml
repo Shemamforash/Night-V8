@@ -2,12 +2,12 @@
 	<StoryPart>
 		<Title>Desert</Title>
 		<PartNumber>1</PartNumber>
-		<Text>You wept. Alone, and in darkness. I watched you across the great cold distance and in you I saw myself. I have brought you here, to my world, so that we might both be saved. We both can look upon these desolate plains with unfamiliar gaze. But this was once my home. Long before the darkness fell these lands were green. I would walk amongst the trees and feel the grass beneath my feet. Now the groves are dead, and I pass like a shadow among them. Only the sun-scorched dirt remains.</Text>
+		<Text>You wept. Alone, and in darkness. I watched you across the great cold distance and in you I saw myself. I have brought you here, to my world, so that we might both be saved. I look upon these desolate plains with an unfamiliar gaze, but this was once my home. These lands were green long before darkness fell upon them. I would walk amongst the trees and feel the grass beneath my feet. Now the groves are dead, and I pass like a shadow among them. Only the sun-scorched dirt remains.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Desert</Title>
 		<PartNumber>2</PartNumber>
-		<Text>There were once five gods who roamed the world. Around them five great kingdoms were founded. Our civilisations grew with time. Miracles became rote; our cities rose high into the heavens and our machines worked the earth. The gods saw they were no longer needed, and so they retreated from the world of man. One day, when we had all but forgotten our roots, they vanished. But the vacuum left by their absence was clear. Something changed, in the air, the earth, and the sea. The essence that binds the world turned on us. It soured the earth and awoke ceaseless winds. The gods are gone, and with them, our humanity.</Text>
+		<Text>There were once five great beings, gods to you, who roamed the world. Around them five great kingdoms were founded, and over time our civilisations grew. Miracles became rote; our cities rose high into the heavens as our machines worked the earth. The gods saw they were no longer needed, and so they retreated from the world of man. One day, when we had all but forgotten our roots, they vanished. But the vacuum left by their absence was clear. Something changed, in the air, the earth, and the sea. The essence that binds the world turned on us. It soured the earth and awoke ceaseless winds. The gods are gone, and with them, our humanity.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Desert</Title>
@@ -37,12 +37,12 @@
 	<StoryPart>
 		<Title>Mountains</Title>
 		<PartNumber>2</PartNumber>
-		<Text>We stand now in the kingdom of Hythinea, the warrior goddess, queen of motherhood. This was once the the backbone of the world. Atop the highest mountains her fortresses were built, and in deepest dells her cities. Gone are the grassy slopes with their grazing flock. Gone are the roads where merchants once ran their goods. Gone are the flowered pastures and gentle rivers. Now there is only dirt and rock amongst the shattered peaks. Dark shadows cast by black crags, and the eyes of evil looking out from dismal caves.</Text>
+		<Text>Before us is the kingdom of Hythinea, the warrior goddess, queen of motherhood. This was once the the backbone of the world. Atop the highest mountains her fortresses were built, and in deepest dells her cities. Gone are the grassy slopes and their grazing flock. Gone are the roads where merchants once ran their goods. Gone are the flowered pastures and gentle rivers. Now there is only sand and rock amongst the shattered peaks. Dark shadows cast by black crags, and the eyes of evil looking out from dismal caves.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Mountains</Title>
 		<PartNumber>3</PartNumber>
-		<Text>This was my home before I became The Necromancer. When I was a child the sun rose high above the horizon and the sky was still blue. I was there when the gates were built. I watched as the sands encroach upon our kingdoms, and with them our ties to our brothers and sisters disappear on the desert winds. I remember when the last flowers faded. I remember when the rivers dried up. I remember the day when the brave lost their voice, and the braying of animals was replaced by screams of the dying. I have kept my faith all these years, believing that I would find someone like you to save us. Long have I waited here, Wanderer, but I knew that you would come.</Text>
+		<Text>Before I was the Necromancer I was someone else, and this was my home. When I was a child the sun rose high above the horizon and the sky was still blue. I was there when the gates were built. I watched the sands encroach upon our kingdoms, and with them the ties to our brothers and sisters disappeared on the desert winds. I remember when the last flowers faded. I remember when the rivers dried up. I remember the day when the brave lost their voice, and the braying of animals was replaced by silence of the dead. I have kept my faith all these years believing that I would find someone like you to save us. Long have I waited here, Wanderer, but I knew that you would come.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Mountains</Title>
@@ -52,52 +52,57 @@
 	<StoryPart>
 		<Title>Sea</Title>
 		<PartNumber>1</PartNumber>
-		<Text>I can sense the question in your heart- who is the woman who you dream of? Yes, I have seen your dreams, and I know the dread that grows in your heart. She is your wife, Wanderer, and she is dying. I did not want to tell you before, for I thought that the knowledge would be too much for you to bear. I see now I was wrong, you are stronger than I ever could have thought. There is still time to save her, but you must be fast.</Text>
+		<Text>I sense the question in your heart- who is the woman of whom you dream? Yes, I have seen your dreams, and I know the dread that grows in your heart. You know who she is, Wanderer, and you know she is dying. I did not want to tell you before. I thought that the knowledge would be too much for you to bear. I see now I was wrong, you are stronger than I ever could have thought. There is still time to save her, but you must be fast.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Sea</Title>
 		<PartNumber>2</PartNumber>
-		<Text>We have come to the most desolate of all places- the sea of salt. There was once a great ocean here, one that spanned between the shores of the land, unbroken for thousands of miles. Now the water is gone, locked up in the frozen poles leaving only salt behind. Only the bones of dead leviathans can tell us what was here. Their harrowing echoes boom in the saline crevasses that criss cross the ancient seabed.</Text>
+		<Text>We have come to the most desolate of all places- the Sea of Salt. There was once a great ocean here, one that spanned between the shores of the land, unbroken for thousands of miles. Now the water is gone, locked up in the frozen poles leaving the salted plains in its stead. Only the bones of dead leviathans can tell us what was here. Their harrowing echoes boom in the saline crevasses that criss cross the ancient seabed.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Sea</Title>
 		<PartNumber>3</PartNumber>
-		<Text>When I was young, my father would talk of the ocean. We lived in the mountains, but his heart was with the sea. He would draw ships when his mind wandered, and we during the summer months we would often find him staring out towards the horizon, his soul somewhere far away. But life kept him from the sea. My mother worked in the city, I had my school, there we a myriad of reasons we could not go. Eventually the procession of time wore away at him, we all grew older, and as the winter of old age set in, the dream of the sea slipped away. My father was not an unhappy man, quite the opposite in fact, but there was always a part of him that was not with us, a part that belonged to the shore, and to the waters of the sea. He is gone now. They all are. Even the sea.</Text>
+		<Text>When I was young my father would talk of the ocean. We lived in the mountains, but his heart was with the sea. He would draw ships when his mind wandered, and during the summer months we would often find him staring out towards the east, his soul somewhere far away. But life kept him from the sea. My mother worked in the city, I had my school, there were a myriad of reasons we could not go. Eventually the procession of time wore away at him, and as the winter of old age set in the dream of the sea slipped away. My father was not an unhappy man but there was always a part of him that was not with us, a part that belonged to the shore, and to the water. He is gone now. They all are. Even the sea.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Sea</Title>
 		<PartNumber>4</PartNumber>
-		<Text>My family remains with me, watching down from the halls of heaven. They are among good people- my friends, other mystics I knew, and thousands of others. They watch me as I hold my vigil on earth, watching, wandering, writing, preserving their memory for those who will come later. My mother and father were not there when the sun tore itself into three, or when the foundations of our cities turned to dust and were borne away by the empty wind. When I die they will know, I will tell them everything I have seen, I will tell them of you, of what we have done. I know they will be proud. That is how my beliefs have remained strong, Wanderer. Not through madness or obsession, but because of my parents love. I do all I do so that those who have lost may love again.</Text>
+		<Text>My family remains with me, watching down from the halls of heaven. They are among good people- friends, lovers, and thousands of others. They watch me as I hold my vigil on earth, watching, wandering, writing, preserving their memory for those who will come later. My mother and father were not there when the sun tore itself into three, or when the foundations of our cities turned to dust and were carried away by the dry wind. When I die they will know, I will tell them everything I have seen, I will tell them of you, of what we have done. I know they will be proud. That is how I have remained resolute in my belief Wanderer. Not through madness or obsession, but because of my parents love. I do all I do so that those who have lost may love again.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ruins</Title>
 		<PartNumber>1</PartNumber>
-		<Text>The seasons blend together, winter and summer differentiated only by the height of the sun. The weather does not relent, nor the interminable march of time and the waste it brings. When my vigil began the wounds of war were still fresh in the earth. Slowly they healed, with every spring that passed more flowers would grow, and nature would claim what man had left behind. Soon enough there were no traces to be seen amongst the trees and wild things. Then the essence's influence set in. The flowers would not bloom, the grass wilted and died, and the soil turned to sand. Then the war machines were revealed again, like primordial beasts risen to walk upon the earth once more. Their rusty carcasses standing testament to the permanence of mankind's work. There they rest still, waiting for the end.</Text>
+		<Text>The seasons blend together, winter and summer differentiated only by the height of the sun. The weather does not relent, nor the interminable march of time and the waste it brings. When my vigil began the wounds of war were still fresh in the earth. Slowly they healed, with every spring that passed more flowers grew, and nature reclaimed what man had left behind. Soon enough there were no traces of the past amongst the trees and wild things. Then the essence began to take hold. The flowers would not bloom, the grass wilted and died, and the soil turned to sand. Then the war machines were revealed again, like primordial beasts risen to walk upon the earth once more. Their rusty carcasses standing testament to the permanence of mankind's work. There they rest still, waiting to be woken once more.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ruins</Title>
 		<PartNumber>2</PartNumber>
-		<Text>It is always darkest before the dawn, or so they say. There can be no triumph without sacrifice. Even as the sickness that pervades this world tightens its grip, there is still a chance for redemption. My people have known for a long time that our sacrifice must be paid in blood. There were many of us in the beginning. So many who gave their lives to halt the spread of evil. Scholars, teachers, students, clerics- all those who could dedicate their minds to our cause, these were my people. They called us the Mystics, a name we came to embrace as time went on. It was they who made me what I am today, incapable of death, but unable to exist with the living.</Text>
+		<Text>It is always darkest before the dawn, or so they say. There can be no triumph without sacrifice. Even as the sickness that pervades this world tightens its grip, there is still a chance for redemption. My people have known for a long time that our sacrifice must be paid in blood. There were many of us in the beginning. So many who gave their lives to halt the spread of evil. Scholars, teachers, students, clerics- all those who could dedicate their minds to our cause, these were my people. They called us the Mystics, a name we came to embrace as time went on. It was they who made me what I am today, incapable of death, but unable to exist among the living.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ruins</Title>
 		<PartNumber>3</PartNumber>
-		<Text>In the first days I did nothing but roam the earth, documenting what I saw. But the deserts spread faster than I could, the animals retreated and died, and a great pall was set upon the earth. Still I searched for pockets of life- a mountain tarn still teeming with fish, or a woodland hidden away in some far corner. Never did I find anything, and I came to realise I never would. 'But my hope has never waned.</Text>
+		<Text>In the first years of my new life I did nothing but walk the earth, documenting what I saw. But the deserts spread faster than I could, the animals retreated and died, and a great darkness was set upon the earth. Still I searched for pockets of life- a mountain tarn still teeming with fish, or a woodland hidden away in some far corner. Never have I found anything, but my hope has never waned.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ruins</Title>
 		<PartNumber>4</PartNumber>
-		<Text>We are nearing the end. I feel the air changing as you advance. It is lighter, as if a weight were lifting. Even the sun seems brighter to my eyes. Soon I will be able to show you the wonders of this world. When the gods return we will walk the ground together. I will give you the life you desire, and you will take my hand as we watch an ancient dawn become new once more. We are so close to the end, Wanderer. The next gate will take you to the ruins of our greatest city, where the lingering ghosts of the dead cry out for life.</Text>
+		<Text>We are nearing the end. I feel the air changing as you advance. It is lighter, as if a weight were lifting. Even the suns seem brighter to my eyes. Soon I will be able to show you the wonders of this world. When the gods return I will give you the life you desire we will bring her back to this world, and together we will watch an ancient dawn become anew. We are so close to the end, Wanderer. The next gate will take you to the ruins of our greatest city, where the lingering ghosts of the dead cry out for life.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Wasteland</Title>
 		<PartNumber>1</PartNumber>
-		<Text>The winds are changing, old currents blow once more, interrupting the monotonous cycle that has gone on for too long. The gods are waking, their spirits waking the world from its terminal sleep. The essence grows agitated, pulling at invisible threads in the air. It resists their control, for now, but when Corypthos awakens it will relent- bound once more. The deserts will retreat, pushed back by the tide of life that yearns to spill across the barren earth.</Text>
+		<Text>The winds are changing, old currents blow once more, interrupting the monotonous cycle that has gone on for too long. The gods are waking, their spirits rousing the world from its terminal sleep. The essence grows agitated, pulling at invisible threads in the air. It resists their control, for now, but when Corypthos awakens it will relent- bound once again. The deserts will retreat, pushed back by the tide of life that yearns to spill across the barren earth.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Wasteland</Title>
 		<PartNumber>2</PartNumber>
-		<Text>Our struggle is almost at an end, Wanderer. I see the trauma in your eyes grow with every moment that passes. You are remembering what it was you left behind, that I rescued you from. Yes, what you fear to be real is indeed so. Corpythos, lord of life, awaits you in the Wasteland. He can bring her back, Wanderer. So too can he free me, return me my body so that I may walk among the trees once again. And my people, he will return them too, oh how soon it will be. Oh, I am sorry, I cannot hide my elation. I know you suffer, but you cannot know how I have suffered, and how soon that suffering will come to an end. When it is done, when duty fulfilled and my vigil over, I will return home, and I will sit as my father sat, and I will watch the sun set as it did so many years ago.</Text>
+		<Text>Our struggle is almost at an end, Wanderer. I see the trauma in you grow with every moment that passes. You are remembering what it was you left behind, that I rescued you from. Yes, what you fear to be real is indeed so. Corpythos, lord of life, awaits you in the Wasteland. He can bring her back, Wanderer. So too can he free me, return me my body so that I may walk among the trees once again.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>Wasteland</Title>
+		<PartNumber>3</PartNumber>
+		<Text>And my people, he will return them too, oh how soon it will be. I am sorry, I cannot hide my elation. I know you suffer, but you cannot know how greatly I have suffered, and how soon that suffering will come to an end. When it is done, when my duty fulfilled and my vigil over, I will return home, and I will sit as my father sat, and I will watch the sun set as it did so many years ago.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>End</Title>
@@ -112,7 +117,7 @@
 	<StoryPart>
 		<Title>End</Title>
 		<PartNumber>3</PartNumber>
-		<Text>Then I am in another world. My own world. I look up at a brilliant blue sky illuminated by the light of a single white star. Another change, and I am in a starkly white room. The only door into the room is shut, the walls reflect on the marble floor below. And then I see her, lying in a raised bed, wrapped in ivory sheets.</Text>
+		<Text>Then I am in another world. My own world. I look up at a brilliant blue sky illuminated by the light of a single white star. Another change, and I am in a starkly white room. The only door into the room is shut, the walls reflect on the marble floor below. And then I see the white woman lying in a raised bed, wrapped in ivory sheets.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>End</Title>
@@ -122,6 +127,6 @@
 	<StoryPart>
 		<Title>End</Title>
 		<PartNumber>5</PartNumber>
-		<Text>We brush away our tears and turn our talk to old times- our children and the places we have been. As the day turns to night she becomes ever quieter, so I draw her close and take up the conversation. Later, as the light of the sun breaks the horizon, her soft laughter at my stories grows silent. I knew then that she was gone, and that I was alone.|br||br|I still see her in my mind- as young and beautiful as she was on the day we first met.|br||br|But the memories will fade with me, and all will be borne away on the wind.</Text>
+		<Text>We brush away our tears and talk of the past. As the day turns to night she becomes ever quieter, so I draw her close and take up the conversation. Later, as the light of the sun breaks the horizon, her soft laughter at my stories grows silent. I knew then that she was gone, and that I was alone.|br||br|I still see her in my mind- as young and beautiful as she was on the day we first met.|br||br|But the memories will fade with me, and all will be borne away on the wind.</Text>
 	</StoryPart>
 </Necromancer>

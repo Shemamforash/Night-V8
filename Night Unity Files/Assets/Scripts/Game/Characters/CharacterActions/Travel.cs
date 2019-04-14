@@ -14,7 +14,6 @@ namespace Game.Characters.CharacterActions
     {
         private Region _target;
         private Region CurrentRegion;
-        private bool _inTransit;
         private int _travelTime;
         private const int MinutesPerGritPoint = WorldState.MinutesPerHour / 2;
 
@@ -31,7 +30,7 @@ namespace Game.Characters.CharacterActions
                     if (_target.GetRegionType() != RegionType.Gate) playerCharacter.Tire();
                 }
 
-                if (Duration == 0 && _inTransit) ReachTarget();
+                if (Duration <= 0) ReachTarget();
             };
         }
 
@@ -49,7 +48,6 @@ namespace Game.Characters.CharacterActions
         public void ReturnToHomeInstant()
         {
             CurrentRegion = MapGenerator.GetInitialNode();
-            _inTransit = false;
             PlayerCharacter.RestAction.Enter();
             CombatManager combatManager = CombatManager.Instance();
             if (combatManager != null) combatManager.ExitCombat(false);
@@ -58,7 +56,6 @@ namespace Game.Characters.CharacterActions
 
         private void ReachTarget()
         {
-            _inTransit = false;
             CurrentRegion = _target;
             if (AtHome())
             {
@@ -98,7 +95,6 @@ namespace Game.Characters.CharacterActions
             }
 
             _travelTime = 0;
-            _inTransit = true;
             _target = target;
             int duration = distance * MinutesPerGritPoint;
             if (target.GetRegionType() == RegionType.Gate) duration /= 2;
@@ -118,7 +114,6 @@ namespace Game.Characters.CharacterActions
             doc = base.Load(doc);
             _target = MapGenerator.GetRegionById(doc.IntFromNode("Target"));
             CurrentRegion = MapGenerator.GetRegionById(doc.IntFromNode("CurrentRegion"));
-            _inTransit = true;
             _travelTime = doc.IntFromNode("TravelTime");
             return doc;
         }

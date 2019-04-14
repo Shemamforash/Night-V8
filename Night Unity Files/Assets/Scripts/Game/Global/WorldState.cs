@@ -328,6 +328,8 @@ namespace Game.Global
 //            Debug.Log(EventSystem.current.currentSelectedGameObject.name);
             UpdateScenery();
             if (_isPaused) return;
+            if (MapMenuController.CharacterReturning != null) return;
+            Debug.Log("time updated");
             IncrementWorldTime();
         }
 

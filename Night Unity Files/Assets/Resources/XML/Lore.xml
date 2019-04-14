@@ -83,7 +83,7 @@
 		<Title>The Aspects of Rha</Title>
 		<Unique>True</Unique>
 		<Environment>Sea</Environment>
-		<Text>I am the mason, and Rha is my hammer, through him our buildings are strong and our paths sure. I am the smith, and Rha is my anvil, by his will our steel is tempered and our machines run true. I am the cook, and Ra is my pot, through him our stews are fulfilling and warm. I am the hunter, and Ra is my cloak, by him we are hidden and our prey remains unaware. He is the god of the four aspects, he is the life of our culture. We channel him in our labour and our love, and through him our toil is worthy and our love is pure.</Text>
+		<Text>I am the mason and Rha is my hammer. It is by his keen eye that our buildings are strong and our paths sure. I am the smith and Rha is my anvil. By his will our steel is tempered and our machines run true. I am the cook and Ra is my pot. Through him our stews are filling and warm. I am the hunter and Ra is my cloak. His grace keeps me hidden and my prey unaware. He is the god of our culture. We channel him in our labour and our love, and through him our toil is worthy and our purpose pure.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>To My Sister</Title>
@@ -120,25 +120,25 @@
 		<Title>Sister's Diary</Title>
 		<Unique>False</Unique>
 		<Environment>Ruins</Environment>
-		<Text>Sister Atena came to me today, she said the girl had been stealing things from her. I asked if she had seen her do it, and predictably, she said no. 'But' she said 'Who else would steal here? We know each other too well, we have been together our whole lives. But she is an outsider.' For this I admonished her. She should not speak ill of a girl to whom the world had been so cruel, not least without evidence of her crime. I told her to look out for her things, for it could be that they were misplaced, or someone borrowed them without asking. I am sure there is a sensible explanation for their disappearance.</Text>
+		<Text>Sister Atena came to me today, she said the girl had been stealing things from her. I asked if she had seen her do it, and predictably, she said no. "But" she said "Who else would steal here? We know each other too well, we have been together our whole lives. But she is an outsider." For this I admonished her. She should not speak ill of a girl to whom the world had been so cruel, not least without evidence of her crime. I told her to look out for her things, for it could be that they were misplaced, or someone borrowed them without asking. I am sure there is a sensible explanation for their disappearance.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>A Warning</Title>
 		<Unique>True</Unique>
 		<Environment>Ruins</Environment>
-		<Text>Take heed traveller- stay away from the cities. Those places are home to none but ghosts. Though the call of the ancient ones is tempting indeed, it must be ignored. Only misfortune, injury, and death will befall those who set foot in the ruins of the old world. There are strange things out there, uncaring things, sightless, loveless, and hungry.</Text>
+		<Text>Take heed traveller- stay away from the cities. Those places are home to none but ghosts. Though the call of the ancient ones is tempting indeed, it must be ignored. Only misfortune and death will befall those who set foot in the ruins of the old world. There are strange things out there, uncaring things- sightless, loveless, and hungry.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Doctor's Notes</Title>
 		<Unique>True</Unique>
 		<Environment>Ruins</Environment>
-		<Text>I have been confined to my laboratory for too long. Watching patients day in and day out, observing their changes, the subtleties in their mood. I look out of my window now and I yearn for the world outside. Oh how would it be to run through the forest, to feel the grass through my toes and be youthful again. But I am old, too old, I fear, to enjoy such childish delights once again. Instead I turn to my work again, to this substance, this 'Essence'. We had another bad one today, a young man, apparently unaffected this morning, flew into such a rage that he set fire to his own house. Had to be restrained by five men they say. He is calm now, but you can see the inky blackness in his eyes. Of course we will try to turn him back, but to me he seems too far gone. We have lost others to much less, and we have cured so few... so few indeed.</Text>
+		<Text>I have been confined to my laboratory for too long. Watching patients day in and day out, observing their changes, the subtleties in their mood. I look out of my window now and I yearn for the world outside. I would dearly like to be able to go out, run, dance, and play. But I am old, too old, I fear, to enjoy such childish delights ever again. Instead I turn to my work again, to this substance, this 'Essence'. We had another bad one today, a young man, apparently unaffected this morning, flew into such a rage that he set fire to his own house. Had to be restrained by five men they say. He is calm now, but you can see the inky blackness in his eyes. Of course we will try to turn him back, but to me he seems too far gone. We have lost others to much less, and we have cured so few... so few indeed.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Soiled Pages</Title>
 		<Unique>True</Unique>
 		<Environment>Ruins</Environment>
-		<Text>Mum always said not to go out onto the plains after nightfall. Whenever I would ask why she would say 'there are monsters'. Even when I was tiny I didn't believe her. 'Monsters?' I would say 'Don't be silly Mummy, there are no monsters'. She would always be silent. Of course I would still listen to her, I never went out after the sun had set. I figured it was something adults say to stop children wandering off after dark. But now I'm not so sure. Sometimes when the suns are setting, and the orange fire of the sky lights up the horizon, I see' things. Strange black silhouettes dance across the dark curves of the hills. Noises I have heard too- horrible, gargling, moans, and deathly wails. Now I keep the door bolted at night and the windows shuttered. I tell my children to be careful. I tell them it is no joke. We keep our families close out here, and our arms ready. But nothing, nothing on the gods earth, could persuade me to go out after dark, not now.</Text>
+		<Text>Mum always said not to go out onto the plains after nightfall. Whenever I would ask why she would say 'there are monsters'. Even when I was tiny I didn't believe her. 'Monsters?' I would say 'Don't be silly Mummy, there are no monsters'. She would always be silent. Of course I would still listen to her, I never went out after the sun had set. I figured it was something adults say to stop children wandering off after dark. But now I'm not so sure. Sometimes when the suns are setting, and the orange fire of the sky lights up the horizon, I see... things. Strange black silhouettes dance across the dark curves of the hills. Noises I have heard too- horrible, gargling, moans, and deathly wails. Now I keep the door bolted at night and the windows shuttered. I tell my children to be careful. I tell them it is no joke. We keep our families close out here, and our arms ready. But nothing, nothing on the gods earth, could persuade me to go out after dark, not now.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Balance</Title>
@@ -150,7 +150,13 @@
 		<Title>Epitaph</Title>
 		<Unique>True</Unique>
 		<Environment>Ruins</Environment>
-		<Text>Here lies a dead man, once loved, now forgotten. One whose fleeting life touched the world so briefly and is now gone. His shallow footprints in the sand washed away by the tide. We are nothing but godless animals, cursed to spend our days seeking that which does not exist.</Text>
+		<Text>Here lies a dead man, once loved, now forgotten. One whose fleeting life touched the world so briefly and is now gone. His shallow footprints in the sand washed away by the tide. We are nothing but godless animals, cursed to spend our days seeking meaning where none can be found.</Text>
+	</StoryPart>
+	<StoryPart>
+		<Title>The Black Tome</Title>
+		<Unique>True</Unique>
+		<Environment>Ruins</Environment>
+		<Text>Look, there, see the shadow that lingers where he has passed. Speak softly in the crowd, and utter no words when alone. She can hear you always- the silent one, the figure in the mist- Ahna. She listens for our secrets, for she wants to know all. She is the deceiver- the mischievous one. She delights in subterfuge, in misdirection. Of the five she alone is to be maligned. Fallen from grace even before she was known to us. We are the few who follow in her footsteps, learning from her every step, but forever out of her sight.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>The Mystics</Title>
@@ -186,13 +192,13 @@
 		<Title>Burned Note</Title>
 		<Unique>True</Unique>
 		<Environment>Wasteland</Environment>
-		<Text>It's inside me. In my head. I feel it tick, tick, ticking inside my skull. It's trying to make a hole in me, to let the darkness in. Tick, tick, tick. Constant. All alone now. Alone out here, amongst the rocks and dirt. High above them now. I hear the wind calling to me. 'Come' it says. 'Come with me'. It can't get me, no, no it can't, I'm too high up, if I follow it I will fall. Please, don't let me fall. Don't let me die.</Text>
+		<Text>It's inside me. In my head. I feel it tick, tick, ticking inside my skull. It's trying to make a hole in me, to let the darkness in. Tick, tick, tick. Constant. All alone now. Alone out here, amongst the rocks and dirt. High above them now. I hear the wind calling to me. "Come" it says. "Come with me". It can't get me, no, no it can't, I'm too high up, if I follow it I will fall. Please, don't let me fall. Don't let me die.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Message on Animal Skin</Title>
 		<Unique>True</Unique>
 		<Environment>Wasteland</Environment>
-		<Text>Settlement abandoned some time ago. Found little of use; ten sacks full of usable scrap, broken weapons- possibly with salvageable parts, several canisters of fuel, assorted rags. Small metal hatch in centre of village, seized shut. Will need to return with blasting powder to open. We should not explore this region any further. Our supplies are low. Sending message-boy ahead. Do not send help if we do not return.</Text>
+		<Text>Settlement abandoned some time ago. Found little of use; ten sacks full of useable scrap, broken weapons- possibly with salvageable parts, several canisters of fuel, assorted rags. Small metal hatch in centre of village, seized shut. Will need to return with blasting powder to open. We should not explore this region any further. Our supplies are low. Sending message-boy ahead. Do not send help if we do not return.</Text>
 	</StoryPart>
 	<StoryPart>
 		<Title>Ritualistic Markings</Title>

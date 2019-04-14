@@ -6,6 +6,7 @@ using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
 using Game.Combat.Generation;
 using Game.Combat.Player;
+using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.WorldEvents;
 using Game.Gear.Armour;
@@ -145,6 +146,7 @@ namespace Game.Characters
 
         public void Update()
         {
+            if (MapMenuController.CharacterReturning != null) return;
             ((BaseCharacterAction) States.GetCurrentState()).UpdateAction();
             UpdateTimeAlive();
         }

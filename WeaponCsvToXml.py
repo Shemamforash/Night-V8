@@ -295,7 +295,7 @@ class WandererImporter(XMLWriter):
         write_tag(self, "Wanderer", self.read_story)
 
     def read_story(self):
-        for row in range(2, 84):
+        for row in range(2, 95):
             write_tag(self, "StoryPart", self.read_story_part, [row])
 
     def read_story_part(self, row):
@@ -311,7 +311,7 @@ class NecromancerImporter(XMLWriter):
         write_tag(self, "Necromancer", self.read_story)
 
     def read_story(self):
-        for row in range(2, 27):
+        for row in range(2, 28):
             write_tag(self, "StoryPart", self.read_story_part, [row])
 
     def read_story_part(self, row):
@@ -326,13 +326,13 @@ class CharacterStoryImporter(XMLWriter):
         write_tag(self, "Characters", self.read_story)
 
     def read_story(self):
-        for row in range(2, 20):
+        for row in range(2, 25):
             write_tag(self, "StoryPart", self.read_story_part, [row])
 
     def read_story_part(self, row):
         write_single_value(self, "Title", get_value(self, "A", row))
         write_single_value(self, "Character", get_value(self, "B", row))
-        write_single_value(self, "PartNumber", get_value(self, "C", row))
+        write_single_value(self, "PartNumber", get_value(self, "C", row))   
         write_single_value(self, "Text", get_value(self, "D", row))
 
 
@@ -342,7 +342,7 @@ class LoreImporter(XMLWriter):
         write_tag(self, "Lore", self.read_story)
 
     def read_story(self):
-        for row in range(2, 41):
+        for row in range(2, 42):
             write_tag(self, "StoryPart", self.read_story_part, [row])
 
     def read_story_part(self, row):
@@ -420,7 +420,11 @@ def get_value(xml_writer, column, row, default_value="1"):
 
 
 def write_single_value(xml_writer, stat_name, value):
-    xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
+    value = value.replace("’", "'")
+    value = value.replace("‘", "'")
+    value = value.replace("”", "\"")
+    value = value.replace("“", "\"")
+    xml_writer.output_file.write("<" + stat_name + ">" + str(value) + "</" + stat_name + ">")
 
 
 # WeaponImporter()
@@ -429,15 +433,15 @@ def write_single_value(xml_writer, stat_name, value):
 # WeatherProbabilityImporter()
 # RegionImporter()
 # CharacterImporter()
-EnemyImporter()
-RecipeImporter()
-ResourceImporter()
+# EnemyImporter()
+# RecipeImporter()
+# ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()
-EnvironmentImporter()
+# EnvironmentImporter()
 # BrandImporter()
 WandererImporter()
 NecromancerImporter()
-# CharacterStoryImporter()
-# LoreImporter()
+CharacterStoryImporter()
+LoreImporter()
 # TutorialImporter()
