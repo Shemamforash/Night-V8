@@ -32,7 +32,7 @@ namespace Game.Global
     public class WorldState : MonoBehaviour
     {
         public const int MinutesPerHour = 12;
-        public const float MinuteInSeconds = 1f;
+        public const float MinuteInSeconds = 1.5f;
         private const float DayLengthInSeconds = 24f * MinutesPerHour * MinuteInSeconds;
         private const int MinuteInterval = 60 / MinutesPerHour;
 
@@ -40,7 +40,6 @@ namespace Game.Global
 
         private static readonly List<EnemyType> _allowedHumanEnemies = new List<EnemyType>();
         private static readonly List<EnemyType> _allowedNightmareEnemies = new List<EnemyType>();
-        private static bool _gateActive;
 
         private static int MinutesPassed;
         private static float _currentTime;
@@ -82,12 +81,12 @@ namespace Game.Global
         {
             if (_difficultySetting == DifficultySetting.Easy)
             {
-                EnemyDamageModifier = 0.15f;
+                EnemyDamageModifier = 0.1f;
                 EnemyHealthModifier = 0.8f;
                 return;
             }
 
-            EnemyDamageModifier = 0.3f;
+            EnemyDamageModifier = 0.2f;
             EnemyHealthModifier = 1f;
         }
 
@@ -114,6 +113,7 @@ namespace Game.Global
             MinutesPassed = worldStateValues.IntFromNode("MinutesPassed");
             _difficulty = worldStateValues.IntFromNode("Difficulty");
             _difficultySetting = (DifficultySetting) worldStateValues.IntFromNode("DifficultySetting");
+            _templesActivated = worldStateValues.IntFromNode("TemplesActivated");
             SetDifficultyModifiers();
             Inventory.Load(doc);
             Building.LoadBuildings(doc);
@@ -142,6 +142,7 @@ namespace Game.Global
             worldStateValues.CreateChild("Difficulty", _difficulty);
             worldStateValues.CreateChild("RealTime", DateTime.Now.ToString("MMMM dd '-' hh:mm tt", CultureInfo.InvariantCulture));
             worldStateValues.CreateChild("DifficultySetting", (int) _difficultySetting);
+            worldStateValues.CreateChild("TemplesActivated", _templesActivated);
             Inventory.Save(doc);
             Building.SaveBuildings(doc);
             Recipe.Save(doc);
@@ -206,8 +207,6 @@ namespace Game.Global
         public static void ActivateTemple()
         {
             ++_templesActivated;
-            bool complete = _templesActivated == EnvironmentManager.CurrentEnvironment.Temples;
-            if (complete) _gateActive = true;
         }
 
         public static bool AllTemplesActive()
@@ -215,7 +214,7 @@ namespace Game.Global
 #if UNITY_EDITOR
             return true;
 #endif
-            return _gateActive;
+            return _templesActivated >= EnvironmentManager.CurrentEnvironment.Temples;
         }
 
         private void IncrementDaysSpentHere()
@@ -234,7 +233,6 @@ namespace Game.Global
         public static void TravelToNextEnvironment()
         {
             _templesActivated = 0;
-            _gateActive = false;
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel(false, false);
             if (EnvironmentManager.SkippingToBeta) return;
@@ -329,7 +327,6 @@ namespace Game.Global
             UpdateScenery();
             if (_isPaused) return;
             if (MapMenuController.CharacterReturning != null) return;
-            Debug.Log("time updated");
             IncrementWorldTime();
         }
 
@@ -354,11 +351,10 @@ namespace Game.Global
 
         private static void CheckEnemyUnlock()
         {
-            int difficulty = Mathf.FloorToInt(Difficulty() / 5f) + 1;
             List<EnemyTemplate> enemyTypes = EnemyTemplate.GetEnemyTypes();
             enemyTypes.ForEach(e =>
             {
-                if (e.Difficulty >= difficulty) return;
+                if (e.Difficulty > Difficulty()) return;
                 EnemyType enemyType = e.EnemyType;
                 switch (e.Species)
                 {

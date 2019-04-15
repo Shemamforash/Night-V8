@@ -29,6 +29,7 @@ namespace Game.Combat.Misc
         private int _damage, _damageDealt;
         public bool Piercing, Fired, HasHit;
         private int _condition = -1;
+        private bool _noAdrenaline;
 
         public ShotAttributes(CharacterCombat origin)
         {
@@ -55,6 +56,8 @@ namespace Game.Combat.Misc
                     _speed = 10f;
                     break;
             }
+
+            if (!(_origin is PlayerCombat)) _speed *= 0.75f;
         }
 
         public float GetSeekForce()
@@ -160,16 +163,20 @@ namespace Game.Combat.Misc
 
         public void ApplyConditions(Vector2 position)
         {
+            PlayerCombat player = _origin as PlayerCombat;
             switch (_condition)
             {
                 case 0:
                     DecayBehaviour.Create(position);
+                    if (player != null) player.Player.BrandManager.IncreaseVoidCount();
                     break;
                 case 1:
                     FireBurstBehaviour.Create(position);
+                    if (player != null) player.Player.BrandManager.IncreaseBurnCount();
                     break;
                 case 2:
                     SickenBehaviour.Create(position, new List<CanTakeDamage> {_origin});
+                    if (player != null) player.Player.BrandManager.IncreaseShatterCount();
                     break;
             }
         }
@@ -214,6 +221,16 @@ namespace Game.Combat.Misc
         {
             Fired = true;
             SetConditions();
+        }
+
+        public void NoAdrenaline()
+        {
+            _noAdrenaline = true;
+        }
+
+        public bool ShouldAddAdrenaline()
+        {
+            return !_noAdrenaline;
         }
     }
 }

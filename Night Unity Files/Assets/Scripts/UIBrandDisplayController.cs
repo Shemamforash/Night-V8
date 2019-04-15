@@ -23,10 +23,14 @@ public class UIBrandDisplayController : MonoBehaviour
     public void Update()
     {
         if (PlayerCombat.Instance == null) return;
-        if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Rite)
+        RegionType regionType = CharacterManager.CurrentRegion().GetRegionType();
+        if (regionType == RegionType.Rite || regionType == RegionType.Tomb || regionType == RegionType.Gate)
         {
             gameObject.SetActive(false);
+            Destroy(this);
+            return;
         }
+
         Player player = PlayerCombat.Instance.Player;
         List<Brand> brands = player.BrandManager.GetActiveBrands().FindAll(b => b != null);
         if (brands.Count == 0)

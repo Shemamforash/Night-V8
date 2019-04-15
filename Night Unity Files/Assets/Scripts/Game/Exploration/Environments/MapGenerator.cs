@@ -108,7 +108,7 @@ namespace Game.Exploration.Environment
             SetRegionTypes();
             initialNode.Discover();
 #if UNITY_EDITOR
-//            _regions.ForEach(r => r.Discover());
+            _regions.ForEach(r => r.Discover());
 #endif
         }
 
@@ -134,20 +134,19 @@ namespace Game.Exploration.Environment
         {
             _regions.ForEach(s => { s.Reset(); });
             int regionCount = _regions.Count - 1;
-            int ringNo = 0;
+            int ringNo = 1;
             int regionNo = 1;
             _regions[0].SetPosition(Vector2.zero);
 
             while (regionCount > 0)
             {
-                int maxRingSize = 3 * (ringNo + 1);
-                int regionsOnRing = Random.Range(ringNo + 1, maxRingSize);
+                int regionsOnRing = ringNo + 1;
                 if (regionsOnRing > regionCount) regionsOnRing = regionCount;
                 regionCount -= regionsOnRing;
 
-                float radius = (ringNo + 1) * MinRadius;
-                int[] slots = new int[maxRingSize];
-                for (int i = 0; i < maxRingSize; ++i)
+                float radius = ringNo * MinRadius;
+                int[] slots = new int[regionsOnRing];
+                for (int i = 0; i < regionsOnRing; ++i)
                 {
                     if (i < regionsOnRing) slots[i] = 1;
                     else slots[i] = 0;
@@ -155,9 +154,9 @@ namespace Game.Exploration.Environment
 
                 slots.Shuffle();
 
-                float angleInterval = 360f / maxRingSize;
+                float angleInterval = 360f / regionsOnRing;
 
-                for (int i = 0; i < maxRingSize; ++i)
+                for (int i = 0; i < regionsOnRing; ++i)
                 {
                     if (slots[i] == 0) continue;
                     float angleFrom = i * angleInterval;

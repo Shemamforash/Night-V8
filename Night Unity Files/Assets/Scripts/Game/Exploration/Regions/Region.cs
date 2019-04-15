@@ -27,7 +27,7 @@ namespace Game.Exploration.Regions
 
         private readonly List<int> _neighborIds = new List<int>();
 
-        private const int TimeToGenerateResource = 12 * WorldState.MinutesPerHour;
+        private const int TimeToGenerateResource = 8 * WorldState.MinutesPerHour;
 
         private GameObject _nodeObject;
         private MapNodeController _mapNode;
@@ -115,7 +115,7 @@ namespace Game.Exploration.Regions
         {
             RadianceStonePosition = position;
             _remainingTimeToGenerateResource = TimeToGenerateResource;
-            int willGain = Mathf.FloorToInt(PlayerCombat.Instance.Player.Attributes.ClaimRegionWillGainModifier);
+            int willGain = Mathf.FloorToInt(PlayerCombat.Instance.Player.Attributes.ClaimRegionWillGainModifier) > 0 ? 2 : 0;
             PlayerCombat.Instance.Player.Attributes.Get(AttributeType.Will).Increment(willGain);
         }
 
@@ -227,7 +227,12 @@ namespace Game.Exploration.Regions
         {
             List<EnemyType> templates = new List<EnemyType>();
             if (Claimed() || !IsDynamic()) return templates;
-            if (!_cleared && _size == 0) _size = WorldState.Difficulty() + 4;
+            if (!_cleared && _size == 0)
+            {
+                _size = Mathf.CeilToInt(WorldState.Difficulty() / 2.5f);
+                _size += 5;
+            }
+
             templates = EnemyTemplate.RandomiseEnemiesToSize(allowedTypes, _size);
             _size = 0;
             return templates;
@@ -242,7 +247,7 @@ namespace Game.Exploration.Regions
                 EnemyType.Watcher,
                 EnemyType.Curio
             };
-            if (!_cleared && _size == 0) _size = WorldState.Difficulty() / 10 + 5;
+            if (!_cleared && _size == 0) _size = 5;
             return EnemyTemplate.RandomiseEnemiesToSize(animalTypes, _size);
         }
 

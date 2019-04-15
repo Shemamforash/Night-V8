@@ -28,6 +28,7 @@ namespace Game.Characters.CharacterActions
             _recipe.Craft();
             _recipe = null;
             PlayerCharacter.RestAction.Enter();
+            ReopenMenu();
         }
 
         private void LightFire()
@@ -40,8 +41,15 @@ namespace Game.Characters.CharacterActions
                 if (Duration != 0) return;
                 Campfire.FinishTending();
                 PlayerCharacter.RestAction.Enter();
+                ReopenMenu();
             };
             _recipe = null;
+        }
+
+        private void ReopenMenu()
+        {
+            CharacterManager.SelectedCharacter = PlayerCharacter;
+            UiGearMenuController.ShowCraftingMenu();
         }
 
         private void CraftThing()

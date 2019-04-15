@@ -106,6 +106,7 @@ namespace Game.Combat.Player
                 float y = Mathf.Sin(angle);
                 Vector2 dir = new Vector2(x, y);
                 Shot s = ShotManager.Create(PlayerCombat.Instance);
+                s.Attributes().NoAdrenaline();
                 s.Attributes().SetDamageModifier(2);
                 s.OverrideDirection(dir);
                 s.Attributes().Seek();

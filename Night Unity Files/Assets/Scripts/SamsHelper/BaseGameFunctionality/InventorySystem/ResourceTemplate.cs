@@ -55,6 +55,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             if (!_resourceSprites.ContainsKey(spriteName))
             {
+                Debug.Log(spriteName);
                 Sprite sprite = Resources.Load<Sprite>("Images/Container Symbols/" + spriteName);
                 _resourceSprites.Add(spriteName, sprite);
             }
@@ -100,7 +101,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 case "Plant":
                     ResourceType = ResourceType.Plant;
                     Plant.Add(this);
-                    Sprite = TryLoadSprite("Plants/" + Name);
+                    Sprite = TryLoadSprite(Name);
                     break;
                 case "Potion":
                     ResourceType = ResourceType.Potion;

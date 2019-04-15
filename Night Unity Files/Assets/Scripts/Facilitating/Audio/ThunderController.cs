@@ -108,7 +108,7 @@ namespace Facilitating.Audio
                 yield return null;
             }
 
-            Strike(false);
+            if (WeatherManager.CurrentWeather().Thunder != 0) Strike(false);
             _waitingForThunder = false;
         }
     }

@@ -8,20 +8,29 @@ namespace Game.Combat.Enemies.Animals
 {
     public class Watcher : AnimalBehaviour
     {
+        private float _lastUsedSkill = 0f;
+
         protected override void UpdateDistanceToTarget()
         {
+            if (_lastUsedSkill > 0f) _lastUsedSkill -= Time.deltaTime;
             base.UpdateDistanceToTarget();
             bool outOfSight = Physics2D.Linecast(transform.position, PlayerCombat.Position(), 1 << 8).collider != null;
             if (outOfSight) return;
             float distanceToPlayer = PlayerCombat.Instance.transform.Distance(transform.position);
-            bool outOfRange = distanceToPlayer < DetectionRange;
+            bool outOfRange = distanceToPlayer > DetectionRange;
             if (outOfRange) return;
-            if (distanceToPlayer < 1f) PushController.Create(transform.position, 0, false, 360f);
+            if (distanceToPlayer < 2f && _lastUsedSkill <= 0f)
+            {
+                PushController.Create(transform.position, 0, false, 360f);
+                _lastUsedSkill = 5f;
+            }
+
             Alert();
         }
 
         public override void Alert()
         {
+            base.Alert();
             if (Alerted) return;
             Cell target = WorldGrid.GetEdgeCell(transform.position);
             MoveBehaviour.GoToCell(target);

@@ -235,7 +235,7 @@ public class UICraftingController : UiInventoryMenuController
             if (_recipe.RecipeType == RecipeType.Building)
             {
                 int builtCount = _recipe.Built();
-                if (builtCount != 0) craftableString += "Built " + _recipe.Built() + "   ";
+                if (builtCount != 0) craftableString += "Built " + _recipe.Built() + "\n";
             }
 
             if (!_recipe.CanCraft()) craftableString += "Need Resources";
@@ -293,6 +293,12 @@ public class UICraftingController : UiInventoryMenuController
     {
         List<Recipe> recipes = Recipe.Recipes();
         if (Campfire.IsLit()) recipes.RemoveAll(r => r.RecipeType == RecipeType.Fire);
+        recipes.Sort((a,b) =>
+        {
+            if ((int) a.RecipeType < (int) b.RecipeType) return -1;
+            if ((int) a.RecipeType > (int) b.RecipeType) return 1;
+            return string.Compare(a.Name, b.Name, StringComparison.InvariantCulture);
+        });
         return recipes.ToObjectList();
     }
 }

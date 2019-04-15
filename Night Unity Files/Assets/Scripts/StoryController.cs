@@ -142,8 +142,8 @@ public class StoryController : Menu
         {
             JournalEntry entry = _journalEntries[i];
 //fade in
-            string storyText = entry.Text;
-            if (i == _journalEntries.Count - 1) storyText += "\n\n    - <i>The Necromancer</i>";
+            string storyText = entry.Text + "\n\n";
+            if (i == _journalEntries.Count - 1) storyText += "    - <i>The Necromancer</i>";
             _storyText.text = storyText;
             
             int pageNo = i + 1;

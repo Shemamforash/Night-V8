@@ -84,7 +84,7 @@ namespace Game.Gear.Weapons
 
         public void RecalculateAttributeValues()
         {
-            float damageModifier = 0.08f * _durability.CurrentValue();
+            float damageModifier = 0.05f * _durability.CurrentValue();
             float fireRateModifier = 0.015f * _durability.CurrentValue();
             float reloadModifier = -0.01f * _durability.CurrentValue();
             float accuracyModifier = 0.01f * _durability.CurrentValue();
@@ -105,6 +105,13 @@ namespace Game.Gear.Weapons
 
         public float DPS() => _dps;
 
+        public void RandomiseDurability()
+        {
+            float newDurability = Random.Range(_durability.Min, _durability.Max);
+            _durability.SetCurrentValue(newDurability);
+            RecalculateAttributeValues();
+        }
+
         public string GetPrintMessage() => WeaponType + " " + WeaponClassType + " " + _weapon.Quality()
                                            + "\nDurability: " + _durability.CurrentValue() + " (" + _durability.Max + ")"
                                            + "\nDPS: " + DPS()
@@ -118,7 +125,7 @@ namespace Game.Gear.Weapons
 
         public void DecreaseDurability(float shots, float durabilityModifier)
         {
-            float durabilityLossPerShot = 0.01f / Val(AttributeType.Pellets);
+            float durabilityLossPerShot = 0.0075f / Val(AttributeType.Pellets);
             float durabilityLoss = durabilityLossPerShot * shots * durabilityModifier;
             float durabilityBefore = _durability.Normalised();
             _durability.Decrement(durabilityLoss);
@@ -129,7 +136,8 @@ namespace Game.Gear.Weapons
 
         private void GenerateDurabilityEvent()
         {
-            WorldEventManager.GenerateEvent(new WorldEvent(_durabilityEvents.RandomElement()));
+            if (!(_weapon.EquippedCharacter is Player player)) return;
+            WorldEventManager.GenerateEvent(new CharacterMessage(_durabilityEvents.RandomElement(), player));
         }
 
         public void IncreaseDurability(int durabilityGain)

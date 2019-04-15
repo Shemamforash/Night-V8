@@ -12,7 +12,7 @@ namespace Game.Combat.Enemies.Humans
 
         private void ResetCooldown()
         {
-            _powerShotCooldown = Random.Range(5, 10);
+            _powerShotCooldown = Random.Range(10, 20);
             _firing = false;
         }
 

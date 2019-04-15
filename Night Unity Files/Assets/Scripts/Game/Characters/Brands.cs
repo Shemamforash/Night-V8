@@ -32,7 +32,7 @@ namespace Game.Characters.Brands
 
         protected override string GetProgressSubstring()
         {
-            return "Explored " + Progress() + " regions";
+            return "Discovered " + Progress() + " regions";
         }
     }
 
@@ -85,7 +85,7 @@ namespace Game.Characters.Brands
 
         protected override string GetProgressSubstring()
         {
-            return "Infused " + Progress() + " essence";
+            return "Found " + Progress() + " essence";
         }
     }
 
@@ -136,7 +136,7 @@ namespace Game.Characters.Brands
 
         protected override string GetProgressSubstring()
         {
-            return "Used only skills in " + Progress() + " battles";
+            return "Consumed " + Progress() + " adrenaline";
         }
     }
 
@@ -170,7 +170,7 @@ namespace Game.Characters.Brands
 
         protected override string GetProgressSubstring()
         {
-            return "Used only bullets in " + Progress() + " battles";
+            return Progress() + " perfect reloads";
         }
     }
 
@@ -187,13 +187,13 @@ namespace Game.Characters.Brands
 
         protected override string GetProgressSubstring()
         {
-            return "Taken " + Progress() + " fire damage";
+            return "Burnt " + Progress() + " enemies";
         }
     }
 
     public class DecayBrand : Brand
     {
-        public DecayBrand(Player player) : base(player, "Shattering")
+        public DecayBrand(Player player) : base(player, "Shatter")
         {
         }
 
@@ -204,7 +204,7 @@ namespace Game.Characters.Brands
 
         protected override string GetProgressSubstring()
         {
-            return "Taken " + Progress() + " shatter damage";
+            return "Shattered " + Progress() + " enemies";
         }
     }
 
@@ -221,7 +221,7 @@ namespace Game.Characters.Brands
 
         protected override string GetProgressSubstring()
         {
-            return "Taken Void damage " + Progress() + " times";
+            return "Cursed " + Progress() + " enemies";
         }
     }
 

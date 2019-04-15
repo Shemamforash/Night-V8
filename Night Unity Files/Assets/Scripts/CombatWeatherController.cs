@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Enemies.Misc;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
-using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -56,7 +54,7 @@ public class CombatWeatherController : MonoBehaviour
         if (_weatherAttributes.WindAmount == 0f) return;
         if (!CombatManager.Instance().IsCombatActive()) return;
         Vector2 windForce = Vector2.up * Mathf.PerlinNoise(Time.timeSinceLevelLoad, 0);
-        windForce *= _weatherAttributes.WindAmount * 0.5f;
+        windForce *= _weatherAttributes.WindAmount * 0.4f;
         List<CanTakeDamage> charactersInRange = CombatManager.Instance().GetCharactersInRange(PlayerCombat.Position(), 10);
         charactersInRange.ForEach(c =>
         {

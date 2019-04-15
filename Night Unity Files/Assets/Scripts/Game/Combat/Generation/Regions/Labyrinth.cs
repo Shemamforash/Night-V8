@@ -114,7 +114,7 @@ namespace Game.Combat.Generation
                 radius += originalRadius * Mathf.Pow(radiusMultiplier, iterations);
                 if (radius > WorldGrid.CombatMovementDistance / 2f - 1f && radius < WorldGrid.CombatAreaWidth / 2f + 1)
                 {
-                    radius += 3f;
+                    radius += 6f;
                 }
                 ++iterations;
             }

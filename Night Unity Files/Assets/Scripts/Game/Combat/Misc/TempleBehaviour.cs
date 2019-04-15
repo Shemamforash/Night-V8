@@ -128,7 +128,7 @@ public class TempleBehaviour : BasicShrineBehaviour
     private Queue<EnemyType> GetEnemyTypesToSpawn()
     {
         List<EnemyType> allowedTypes = WorldState.GetAllowedNightmareEnemyTypes();
-        int size = (Mathf.FloorToInt(WorldState.Difficulty() / 10f) + 1) * 20;
+        int size = (Mathf.FloorToInt(WorldState.Difficulty() / 20f) + 1) * 15;
         List<EnemyType> enemyTypesToSpawn = EnemyTemplate.RandomiseEnemiesToSize(allowedTypes, size);
         Queue<EnemyType> typeQueue = new Queue<EnemyType>();
         enemyTypesToSpawn.ForEach(e => typeQueue.Enqueue(e));

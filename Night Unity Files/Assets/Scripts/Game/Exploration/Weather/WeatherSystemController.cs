@@ -11,24 +11,25 @@ namespace Game.Exploration.Weather
         private static WeatherSystemController _instance;
         private WeatherSystem _fog, _rain, _hail, _dust, _wind;
         private ParticleSystem _sun, _stars, _lightning;
-        [SerializeField] private float _fogMax;
-        [SerializeField] private float _hailMax;
-        [SerializeField] private float _rainMax;
-        [SerializeField] private float _dustMax;
-        [SerializeField] private float _windMax;
+        private const float FogMax = 30f;
+        private const float HailMax = 50f;
+        private const float RainMax = 300f;
+        private const float DustMax = 100f;
+        private const float WindMax = 50f;
         private const float StarsMax = 150;
-        [SerializeField] [Range(0, 1)] private float _sunMinBrightness, _sunMaxBrightness;
+        private const float SunMinBrightness = 0.692f;
+        private const float SunMaxBrightness = 1f;
         private float _time;
         private static Weather _currentWeather;
         private static float _sunLevel;
 
         public void Awake()
         {
-            _fog = new FogSystem(gameObject.FindChildWithName("Fog"), _fogMax);
-            _rain = new RainSystem(gameObject.FindChildWithName("Rain"), _rainMax);
-            _hail = new HailSystem(gameObject.FindChildWithName("Hail"), _hailMax);
-            _dust = new WeatherSystem(gameObject.FindChildWithName("Dust"), _dustMax);
-            _wind = new WindSystem(gameObject.FindChildWithName("Wind"), _windMax);
+            _fog = new FogSystem(gameObject.FindChildWithName("Fog"), FogMax);
+            _rain = new RainSystem(gameObject.FindChildWithName("Rain"), RainMax);
+            _hail = new HailSystem(gameObject.FindChildWithName("Hail"), HailMax);
+            _dust = new WeatherSystem(gameObject.FindChildWithName("Dust"), DustMax);
+            _wind = new WindSystem(gameObject.FindChildWithName("Wind"), WindMax);
             _sun = gameObject.FindChildWithName<ParticleSystem>("Sun");
             _stars = gameObject.FindChildWithName<ParticleSystem>("Stars");
             _lightning = gameObject.FindChildWithName<ParticleSystem>("Lightning Strikes");
@@ -60,15 +61,15 @@ namespace Game.Exploration.Weather
         }
 
         public static float SunLevel() => _sunLevel;
-        
+
         private void UpdateSun()
         {
             _sunLevel = (float) (-0.014f * Math.Pow(_time - 12, 2) + 1f);
             _sunLevel = Mathf.Clamp(_sunLevel, 0, 1);
             float ambientVolume = _time < 6 || _time > 18 ? 0.5f : _sunLevel;
             AudioController.SetAmbientVolume(ambientVolume);
-            float minBrightness = _sunMinBrightness * _sunLevel;
-            float maxBrightness = _sunMaxBrightness * _sunLevel;
+            float minBrightness = SunMinBrightness * _sunLevel;
+            float maxBrightness = SunMaxBrightness * _sunLevel;
             ParticleSystem.MainModule sunMain = _sun.GetComponent<ParticleSystem>().main;
             sunMain.startColor = new ParticleSystem.MinMaxGradient(new Color(1, 1, 1, maxBrightness), new Color(1, 1, 1, minBrightness));
         }
@@ -156,7 +157,7 @@ namespace Game.Exploration.Weather
                 AudioController.FadeHail(amount, Duration);
             }
         }
-        
+
         private class WindSystem : WeatherSystem
         {
             public WindSystem(GameObject weatherObject, float maxEmission) : base(weatherObject, maxEmission)

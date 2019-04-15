@@ -56,9 +56,12 @@ public class UIActionListController : MonoBehaviour
 
     private void UpdateExploreButton()
     {
-        _exploreEnabled = _atHome && _resting && _player.Attributes.Val(AttributeType.Grit) > 0;
+        bool canStartExploring = _atHome && _resting && _player.Attributes.Val(AttributeType.Grit) > 0;
+        bool arrivedAtDestination = _player.TravelAction.AtDestination;
+        _exploreEnabled = canStartExploring || arrivedAtDestination;
         _exploreButton.Button().interactable = _exploreEnabled;
         _exploreText.alpha = _exploreEnabled ? 1f : 0.4f;
+        _exploreText.text = arrivedAtDestination ? "Enter" : "Explore";
     }
 
     private void UpdateCraftButton()
@@ -116,6 +119,5 @@ public class UIActionListController : MonoBehaviour
         if (firstButton == null) return true;
         firstButton.Select();
         return false;
-
     }
 }

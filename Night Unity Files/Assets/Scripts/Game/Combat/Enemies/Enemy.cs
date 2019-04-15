@@ -52,6 +52,8 @@ namespace Game.Combat.Enemies
                     break;
                 case EnemyType.Sentinel:
                     possibleTypes.Add(WeaponType.SMG);
+                    possibleTypes.Add(WeaponType.Pistol);
+                    possibleTypes.Add(WeaponType.Shotgun);
                     break;
                 case EnemyType.Sniper:
                     possibleTypes.Add(WeaponType.Rifle);
@@ -68,6 +70,7 @@ namespace Game.Combat.Enemies
             }
 
             Weapon weapon = WeaponGenerator.GenerateWeapon(possibleTypes.RandomElement());
+            weapon.WeaponAttributes.RandomiseDurability();
             EquipWeapon(weapon);
             if (Helper.RollDie(0, 5)) weapon.SetInscription(Inscription.Generate());
         }
@@ -202,7 +205,7 @@ namespace Game.Combat.Enemies
         {
             _accessoryDropChance += DropChanceIncrement;
             bool drop = Random.Range(0f, 1f) < _accessoryDropChance;
-            if (drop) _accessoryDropChance = -0.25f;
+            if (drop) _accessoryDropChance = -0.4f;
             return drop;
         }
 
@@ -231,14 +234,14 @@ namespace Game.Combat.Enemies
         private Loot DropAnimalLoot(Vector2 position)
         {
             ResourceItem item;
-            if (Template.DropRate > 1 && Helper.RollDie(0, 2))
+            if (Helper.RollDie(0, 2) || Inventory.GetResourceQuantity("Grisly Remains") == 0)
             {
                 item = ResourceTemplate.Create("Grisly Remains");
             }
             else
             {
                 item = ResourceTemplate.GetMeat();
-                int meatAmount = (int) Template.DropRate;
+                int meatAmount = (int) Template.DropRate - 1;
                 if (meatAmount > 1) --meatAmount;
                 item.Increment(meatAmount);
             }

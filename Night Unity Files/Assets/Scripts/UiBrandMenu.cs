@@ -1,4 +1,5 @@
 ﻿using System;
+using DG.Tweening;
 using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Player;
@@ -18,6 +19,8 @@ public class UiBrandMenu : Menu
     private CloseButtonController _closeButton;
     private Menu _lastMenu;
     private static string _titleString, _benefitString, _quoteString, _overviewString, _descriptionString;
+    private float _waitToHideTime;
+    private bool _canHide;
 
     protected override void Awake()
     {
@@ -35,6 +38,7 @@ public class UiBrandMenu : Menu
 
     private void Hide()
     {
+        if (!_canHide) return;
         _closeButton.Disable();
         MenuStateMachine.ShowMenu(_lastMenu.name);
         WorldState.Resume();
@@ -67,6 +71,11 @@ public class UiBrandMenu : Menu
         _descriptionText.SetText(_descriptionString);
         _overviewCanvas.alpha = 0;
         _detailCanvas.alpha = 1;
+        _canHide = false;
+        Sequence sequence = DOTween.Sequence();
+        sequence.SetUpdate(true);
+        sequence.AppendInterval(1f);
+        sequence.AppendCallback(() => _canHide = true);
         _closeButton.SetOnClick(Hide);
     }
 

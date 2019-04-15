@@ -16,7 +16,7 @@ public class DecayDamageDeal : MonoBehaviour
         CharacterCombat character = other.GetComponent<CharacterCombat>();
         if (character == null) return;
         if (_ignoreTargets.Contains(other.GetComponent<CanTakeDamage>())) return;
-        character.Decay();
+        character.Shatter();
         _ignoreTargets.Add(character);
     }
 

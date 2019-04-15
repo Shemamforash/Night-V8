@@ -110,6 +110,11 @@ namespace Game.Characters
         {
             BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
             _actionProgress.UpdateCurrentAction(currentState);
+            UpdateActionList();
+        }
+
+        public void UpdateActionList()
+        {
             bool selectWeapon = _actionList.UpdateList();
             if (selectWeapon) WeaponController.EnhancedButton.Select();
         }

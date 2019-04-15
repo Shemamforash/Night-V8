@@ -252,7 +252,7 @@ namespace Game.Characters
         public void IncreaseSkillsUsed() => UpdateBrandValue(typeof(WillBrand), 1);
         public void IncreaseRegionsExplored() => UpdateBrandValue(typeof(GritBrand), 1);
 
-        public void IncreaseEssenceInfused() => UpdateBrandValue(typeof(EssenceChangeBrand), 1);
+        public void IncreaseEssenceFound() => UpdateBrandValue(typeof(EssenceChangeBrand), 1);
         public void IncreaseDamageTaken(int damage) => UpdateBrandValue(typeof(HealthRecoveryBrand), damage);
         public void IncreaseEnemiesKilled() => UpdateBrandValue(typeof(WillRecoveryBrand), 1);
         public void IncreasePerfectReloadCount() => UpdateBrandValue(typeof(AutomaticReloadBrand), 1);
@@ -261,8 +261,8 @@ namespace Game.Characters
         public void IncreaseFoodFound() => UpdateBrandValue(typeof(FoodBrand), 1);
         public void IncreaseWaterFound() => UpdateBrandValue(typeof(WaterBrand), 1);
         public void IncreaseAdrenalineUsed(int amount) => UpdateBrandValue(typeof(AdrenalineUsedBrand), amount);
-        public void IncreaseBurnCount(int damage) => UpdateBrandValue(typeof(IgniteBrand), damage);
-        public void IncreaseDecayCount() => UpdateBrandValue(typeof(DecayBrand), 1);
+        public void IncreaseBurnCount() => UpdateBrandValue(typeof(IgniteBrand), 1);
+        public void IncreaseShatterCount() => UpdateBrandValue(typeof(DecayBrand), 1);
         public void IncreaseVoidCount() => UpdateBrandValue(typeof(VoidBrand), 1);
 
         public void UpdateBrandStatus(Brand brand)

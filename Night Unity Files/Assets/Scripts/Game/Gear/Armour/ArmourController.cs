@@ -88,7 +88,6 @@ namespace Game.Gear.Armour
             return (_currentLevel + 1) % 2 == 0 ? 2 : 1;
         }
 
-
         public bool CanUpgrade()
         {
             if (_currentLevel == 10) return false;
@@ -98,7 +97,7 @@ namespace Game.Gear.Armour
         public void Upgrade()
         {
             if (!CanUpgrade()) return;
-            Inventory.DecrementResource(Armour.QualityToName(_targetQuality), 1);
+            Inventory.DecrementResource(Armour.QualityToName(_targetQuality), GetUpgradeQuantity());
             ++_currentLevel;
             CalculateMaxHealth();
         }

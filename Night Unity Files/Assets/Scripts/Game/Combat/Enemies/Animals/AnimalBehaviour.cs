@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Game.Combat.Generation;
+using Game.Combat.Player;
 using Game.Gear.Armour;
 using Game.Global;
 using SamsHelper.Libraries;
@@ -68,18 +70,21 @@ namespace Game.Combat.Enemies.Nightmares
         {
             base.MyUpdate();
             UpdateDistanceToTarget();
-            CheckToFade();
         }
 
-        private void CheckToFade()
+        public virtual void Alert()
         {
-            bool fade = CurrentCell().OutOfRange;
-            fade |= Fleeing && CurrentCell().IsEdgeCell;
-            if (!fade) return;
-            StartCoroutine(FadeOut());
+            Move();
         }
 
-        public abstract void Alert();
+        protected void Move()
+        {
+            Vector2 dir = (transform.position - PlayerCombat.Position()).normalized;
+            float distance = Random.Range(0.5f, 3f);
+            List<Cell> possibleCells = WorldGrid.GetCellsInFrontOfMe(CurrentCell(), dir, distance);
+            Cell target = possibleCells.Count == 0 ? WorldGrid.GetCellNearMe(CurrentCell(), distance * 1.5f, distance) : possibleCells.RandomElement();
+            MoveBehaviour.GoToCell(target);
+        }
 
         protected override void TakeDamage(int damage, Vector2 direction)
         {
@@ -89,22 +94,6 @@ namespace Game.Combat.Enemies.Nightmares
 
         protected override void UpdateTargetCell()
         {
-        }
-
-        private IEnumerator FadeOut()
-        {
-            Fleeing = true;
-            SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-            CombatManager.Instance().RemoveEnemy(this);
-            float currentTime = 2f;
-            while (currentTime > 0f)
-            {
-                currentTime -= Time.deltaTime;
-                sprite.color = Color.Lerp(Color.white, UiAppearanceController.InvisibleColour, 1 - currentTime / 2f);
-                yield return null;
-            }
-
-            Destroy(gameObject);
         }
     }
 }

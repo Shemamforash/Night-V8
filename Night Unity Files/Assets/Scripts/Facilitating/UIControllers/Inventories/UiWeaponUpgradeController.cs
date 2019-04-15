@@ -99,12 +99,28 @@ namespace Facilitating.UIControllers
 
         private static List<object> GetAvailableWeapons()
         {
-            return Inventory.GetAvailableWeapons().ToObjectList();
+            List<Weapon> weapons = Inventory.GetAvailableWeapons();
+            weapons.Sort((a, b) =>
+            {
+                if ((int) a.Quality() > (int) b.Quality()) return -1;
+                if ((int) a.Quality() < (int) b.Quality()) return 1;
+                if ((int) a.WeaponType() < (int) b.WeaponType()) return -1;
+                if ((int) a.WeaponType() > (int) b.WeaponType()) return 1;
+                return string.Compare(a.Name, b.Name, StringComparison.InvariantCulture);
+            });
+            return weapons.ToObjectList();
         }
 
         private static List<object> GetAvailableInscriptions()
         {
-            return Inventory.Inscriptions.ToObjectList();
+            List<Inscription> inscriptions = Inventory.Inscriptions;
+            inscriptions.Sort((a, b) =>
+            {
+                if ((int) a.Quality() > (int) b.Quality()) return -1;
+                if ((int) a.Quality() < (int) b.Quality()) return 1;
+                return string.Compare(a.Name, b.Name, StringComparison.InvariantCulture);
+            });
+            return inscriptions.ToObjectList();
         }
 
         private void Channel()
@@ -114,7 +130,6 @@ namespace Facilitating.UIControllers
             if (Inventory.GetResourceQuantity("Essence") == 0) return;
             UiGearMenuController.PlayAudio(AudioClips.Channel);
             Inventory.DecrementResource("Essence", 1);
-            CharacterManager.SelectedCharacter.BrandManager.IncreaseEssenceInfused();
             int durabilityGain = 1 + (int) CharacterManager.SelectedCharacter.Attributes.EssenceRecoveryModifier;
             CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.IncreaseDurability(durabilityGain);
             _weaponDetail.UpdateWeaponInfo();

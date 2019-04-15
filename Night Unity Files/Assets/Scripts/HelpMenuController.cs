@@ -24,6 +24,10 @@ public class HelpMenuController : Menu
     {
         _tutorialList.Initialise(typeof(TutorialElement), null, null, GetAvailableTutorials);
         _tutorialList.SetOnItemHover(UpdateTutorialShown);
+    }
+
+    public override void Enter()
+    {
         _tutorialList.Show();
     }
 

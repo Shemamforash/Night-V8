@@ -317,9 +317,20 @@ namespace Game.Combat.Generation
             for (int i = 0; i < _region.FoodSourceCount; ++i)
                 CreateContainer<FoodSource>();
 
+            bool placedWood = false;
             for (int i = 0; i < _region.ResourceSourceCount; ++i)
             {
-                ResourceItem resource = ResourceTemplate.GetResource().Create();
+                ResourceItem resource;
+                if (Inventory.GetResourceQuantity("Wood") == 0 && !placedWood)
+                {
+                    resource = ResourceTemplate.Create("Wood");
+                    placedWood = true;
+                }
+                else
+                {
+                    resource = ResourceTemplate.GetResource().Create();
+                }
+
                 CreateContainer<Loot>()?.SetResource(resource);
             }
         }

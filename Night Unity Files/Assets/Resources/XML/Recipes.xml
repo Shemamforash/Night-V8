@@ -92,7 +92,7 @@
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Salt</Ingredient1Name>
-		<Ingredient1Quantity>10</Ingredient1Quantity>
+		<Ingredient1Quantity>5</Ingredient1Quantity>
 		<Ingredient2Name>Essence</Ingredient2Name>
 		<Ingredient2Quantity>3</Ingredient2Quantity>
 		<ProductName>Radiance</ProductName>
@@ -118,7 +118,7 @@
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Rusty Scrap</Ingredient1Name>
-		<Ingredient1Quantity>5</Ingredient1Quantity>
+		<Ingredient1Quantity>3</Ingredient1Quantity>
 		<Ingredient2Name>Dried Meat</Ingredient2Name>
 		<Ingredient2Quantity>2</Ingredient2Quantity>
 		<ProductName>Trap</ProductName>
@@ -131,9 +131,9 @@
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Rusty Scrap</Ingredient1Name>
-		<Ingredient1Quantity>5</Ingredient1Quantity>
+		<Ingredient1Quantity>3</Ingredient1Quantity>
 		<Ingredient2Name>Grisly Remains</Ingredient2Name>
-		<Ingredient2Quantity>5</Ingredient2Quantity>
+		<Ingredient2Quantity>3</Ingredient2Quantity>
 		<ProductName>Water Collector</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
@@ -170,7 +170,7 @@
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Wood</Ingredient1Name>
-		<Ingredient1Quantity>5</Ingredient1Quantity>
+		<Ingredient1Quantity>4</Ingredient1Quantity>
 		<Ingredient2Name>None</Ingredient2Name>
 		<Ingredient2Quantity>0</Ingredient2Quantity>
 		<ProductName>Charcoal</ProductName>
@@ -185,7 +185,7 @@
 		<Ingredient1Name>Metal Shards</Ingredient1Name>
 		<Ingredient1Quantity>2</Ingredient1Quantity>
 		<Ingredient2Name>Rusty Scrap</Ingredient2Name>
-		<Ingredient2Quantity>5</Ingredient2Quantity>
+		<Ingredient2Quantity>3</Ingredient2Quantity>
 		<ProductName>Condenser</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
@@ -209,9 +209,9 @@
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Metal Shards</Ingredient1Name>
-		<Ingredient1Quantity>5</Ingredient1Quantity>
+		<Ingredient1Quantity>3</Ingredient1Quantity>
 		<Ingredient2Name>Grisly Remains</Ingredient2Name>
-		<Ingredient2Quantity>10</Ingredient2Quantity>
+		<Ingredient2Quantity>3</Ingredient2Quantity>
 		<ProductName>Purifier</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
@@ -222,9 +222,9 @@
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Metal Shards</Ingredient1Name>
-		<Ingredient1Quantity>5</Ingredient1Quantity>
+		<Ingredient1Quantity>3</Ingredient1Quantity>
 		<Ingredient2Name>Charcoal</Ingredient2Name>
-		<Ingredient2Quantity>5</Ingredient2Quantity>
+		<Ingredient2Quantity>3</Ingredient2Quantity>
 		<ProductName>Smoker</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
@@ -261,9 +261,9 @@
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Deathbloom</Ingredient1Name>
-		<Ingredient1Quantity>4</Ingredient1Quantity>
+		<Ingredient1Quantity>3</Ingredient1Quantity>
 		<Ingredient2Name>Hollowroot</Ingredient2Name>
-		<Ingredient2Quantity>2</Ingredient2Quantity>
+		<Ingredient2Quantity>1</Ingredient2Quantity>
 		<ProductName>Tonic of Life</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
@@ -274,9 +274,9 @@
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Mother's Tear</Ingredient1Name>
-		<Ingredient1Quantity>4</Ingredient1Quantity>
+		<Ingredient1Quantity>3</Ingredient1Quantity>
 		<Ingredient2Name>Glowcap</Ingredient2Name>
-		<Ingredient2Quantity>2</Ingredient2Quantity>
+		<Ingredient2Quantity>1</Ingredient2Quantity>
 		<ProductName>Dose of Focus</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
@@ -302,7 +302,7 @@
 		<Ingredient1Name>Celestial Fragments</Ingredient1Name>
 		<Ingredient1Quantity>1</Ingredient1Quantity>
 		<Ingredient2Name>Essence</Ingredient2Name>
-		<Ingredient2Quantity>20</Ingredient2Quantity>
+		<Ingredient2Quantity>10</Ingredient2Quantity>
 		<ProductName>Celestial Scale</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
@@ -313,9 +313,9 @@
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Shaman Frond</Ingredient1Name>
-		<Ingredient1Quantity>4</Ingredient1Quantity>
+		<Ingredient1Quantity>3</Ingredient1Quantity>
 		<Ingredient2Name>Sageleaf</Ingredient2Name>
-		<Ingredient2Quantity>2</Ingredient2Quantity>
+		<Ingredient2Quantity>1</Ingredient2Quantity>
 		<ProductName>Elixir of Will</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>
@@ -326,9 +326,9 @@
 	</Recipe>
 	<Recipe>
 		<Ingredient1Name>Fleetfoot</Ingredient1Name>
-		<Ingredient1Quantity>4</Ingredient1Quantity>
+		<Ingredient1Quantity>3</Ingredient1Quantity>
 		<Ingredient2Name>Aquiris</Ingredient2Name>
-		<Ingredient2Quantity>2</Ingredient2Quantity>
+		<Ingredient2Quantity>1</Ingredient2Quantity>
 		<ProductName>Concoction of Grit</ProductName>
 		<ProductQuantity>1</ProductQuantity>
 		<MakeAll>False</MakeAll>

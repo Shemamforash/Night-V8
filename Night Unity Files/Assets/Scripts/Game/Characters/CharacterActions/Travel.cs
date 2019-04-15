@@ -15,6 +15,7 @@ namespace Game.Characters.CharacterActions
         private Region _target;
         private Region CurrentRegion;
         private int _travelTime;
+        private bool _atDestination;
         private const int MinutesPerGritPoint = WorldState.MinutesPerHour / 2;
 
         public Travel(Player playerCharacter) : base("Travel", playerCharacter)
@@ -30,12 +31,17 @@ namespace Game.Characters.CharacterActions
                     if (_target.GetRegionType() != RegionType.Gate) playerCharacter.Tire();
                 }
 
-                if (Duration <= 0) ReachTarget();
+                if (Duration > 0) return;
+                if (_target.GetRegionType() == RegionType.Gate) ReachTarget();
+                else _atDestination = true;
             };
         }
 
+        public bool AtDestination => _atDestination;
+
         public override string GetDisplayName()
         {
+            if (_atDestination) return "Arrived At Region";
             return _target.GetRegionType() == RegionType.Gate ? "Returning Home" : base.GetDisplayName();
         }
 
@@ -57,9 +63,11 @@ namespace Game.Characters.CharacterActions
         private void ReachTarget()
         {
             CurrentRegion = _target;
+            _atDestination = false;
             if (AtHome())
             {
                 PlayerCharacter.RestAction.Enter();
+                PlayerCharacter.CharacterView().UpdateActionList();
                 PlayerCharacter.CharacterView().ShowAttributeTutorial();
             }
             else
@@ -77,7 +85,10 @@ namespace Game.Characters.CharacterActions
 
         protected override void OnClick()
         {
-            MapMenuController.Open(PlayerCharacter);
+            if (_atDestination)
+                ReachTarget();
+            else
+                MapMenuController.Open(PlayerCharacter);
         }
 
         public Region GetCurrentRegion()
@@ -87,15 +98,16 @@ namespace Game.Characters.CharacterActions
 
         public void TravelTo(Region target, int distance)
         {
+            _travelTime = 0;
+            _target = target;
+            
             if (target == CurrentRegion)
             {
                 if (CurrentRegion.GetRegionType() != RegionType.Gate) EnterRegion();
                 else ReachTarget();
                 return;
             }
-
-            _travelTime = 0;
-            _target = target;
+           
             int duration = distance * MinutesPerGritPoint;
             if (target.GetRegionType() == RegionType.Gate) duration /= 2;
             SetDuration(duration);

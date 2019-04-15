@@ -44,46 +44,40 @@ public abstract class ContainerController
     {
         ResourceItem resourceItem = (ResourceItem) Item;
         int resourceBonus = (int) PlayerCombat.Instance.Player.Attributes.ResourceFindModifier;
-        if (resourceBonus != 0)
-        {
-            ResourceTemplate resourceTemplate = resourceItem.Template;
-            Assert.IsNotNull(resourceTemplate);
-            Assert.IsTrue(resourceTemplate.ResourceType == ResourceType.Resource);
-            if (resourceBonus > 0) resourceItem.Increment(resourceBonus);
-            else
-            {
-                int quantity = resourceItem.Quantity();
-                if (quantity - resourceBonus <= 0) resourceBonus = quantity - 1;
-                resourceItem.Decrement(resourceBonus);
-            }
+        ResourceTemplate resourceTemplate = resourceItem.Template;
+        Assert.IsNotNull(resourceTemplate);
 
-            switch (resourceTemplate.ResourceType)
-            {
-                case ResourceType.Water:
-                    --CharacterManager.CurrentRegion().WaterSourceCount;
-                    player.BrandManager.IncreaseWaterFound();
-                    break;
-                case ResourceType.Plant:
-                    --CharacterManager.CurrentRegion().FoodSourceCount;
-                    player.BrandManager.IncreaseFoodFound();
-                    break;
-                case ResourceType.Meat:
-                    player.BrandManager.IncreaseFoodFound();
-                    break;
-                case ResourceType.Resource:
-                    --CharacterManager.CurrentRegion().ResourceSourceCount;
-                    player.BrandManager.IncreaseResourceFound();
-                    break;
-            }
+        if (resourceBonus != 0 && resourceTemplate.ResourceType == ResourceType.Resource)
+        {
+            resourceItem.Increment(resourceBonus);
         }
 
+        switch (resourceTemplate.ResourceType)
+        {
+            case ResourceType.Water:
+                --CharacterManager.CurrentRegion().WaterSourceCount;
+                player.BrandManager.IncreaseWaterFound();
+                break;
+            case ResourceType.Plant:
+                --CharacterManager.CurrentRegion().FoodSourceCount;
+                player.BrandManager.IncreaseFoodFound();
+                break;
+            case ResourceType.Meat:
+                player.BrandManager.IncreaseFoodFound();
+                break;
+            case ResourceType.Resource:
+                --CharacterManager.CurrentRegion().ResourceSourceCount;
+                player.BrandManager.IncreaseResourceFound();
+                break;
+        }
+
+        player.BrandManager.IncreaseItemsFound();
         Inventory.IncrementResource(resourceItem.Name, resourceItem.Quantity());
     }
 
     private void TakeItem(Player player)
     {
-        if (Item is GearItem) player.BrandManager.IncreaseItemsFound();
-
+        player.BrandManager.IncreaseItemsFound();
         switch (Item)
         {
             case Weapon weapon:

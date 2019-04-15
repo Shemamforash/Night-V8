@@ -74,7 +74,7 @@ namespace Game.Gear.Weapons
             {
                 Shot shot = ShotManager.Create(_origin);
                 _origin.ApplyShotEffects(shot);
-                if (this is HoldAndFire) shot.Attributes().Piercing = true;
+                if (_weapon.WeaponAttributes.GetWeaponClass() == WeaponClassType.Voidwalker) shot.Attributes().Piercing = true;
                 shot.Fire();
             }
 
@@ -88,7 +88,7 @@ namespace Game.Gear.Weapons
         }
 
         public Weapon Weapon => _weapon;
-        
+
         public void ConsumeAmmo(int amount = -1)
         {
             float durabilityModifier = 1;

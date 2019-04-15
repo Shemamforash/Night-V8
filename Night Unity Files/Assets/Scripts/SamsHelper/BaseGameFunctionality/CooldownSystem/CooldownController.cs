@@ -45,7 +45,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
         public void Update()
         {
             if (_isSkillUnlocked == null) return;
-            if (!_unlocked) _unlocked = _isSkillUnlocked();
+            _unlocked = _isSkillUnlocked();
             if (_unlocked)
             {
                 _unlockedCanvas.alpha = !_skill.CanAfford() ? 0.6f : 1f;

@@ -109,21 +109,27 @@ public class CacheController : MonoBehaviour
         int enemyCount = WorldState.ScaleValue(10);
         int currentButton = 0;
         List<EnemyType> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
+        int maxEnemies = WorldState.ScaleValue(3);
         while (enemyCount > 0)
         {
-            EnemyType enemyType = allowedEnemies.RandomElement();
-            _orderedButtons[currentButton].SpawnInEnemy(enemyType);
-            --enemyCount;
-            ++currentButton;
-            if (currentButton == _orderedButtons.Count) currentButton = 0;
-            yield return new WaitForSeconds(3f);
+            if (CombatManager.Instance().Enemies().Count < maxEnemies)
+            {
+                EnemyType enemyType = allowedEnemies.RandomElement();
+                _orderedButtons[currentButton].SpawnInEnemy(enemyType);
+                --enemyCount;
+                ++currentButton;
+                if (currentButton == _orderedButtons.Count) currentButton = 0;
+                yield return new WaitForSeconds(3f);
+            }
+
+            yield return null;
         }
 
         while (CombatManager.Instance().Enemies().Count > 0) yield return null;
         Deactivate();
         _successEffect.Activate();
         Loot loot = new Loot(Vector2.zero);
-        loot.SetItem(WeaponGenerator.GenerateWeapon());
+        loot.SetItem(WeaponGenerator.GenerateWeapon(true));
         loot.CreateObject(true);
         CombatLogController.PostLog("An artifact is revealed");
         CharacterManager.CurrentRegion().IsWeaponHere = false;

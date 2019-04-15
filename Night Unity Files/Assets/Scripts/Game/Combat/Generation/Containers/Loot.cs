@@ -46,11 +46,11 @@ namespace Game.Combat.Generation
             switch (Item)
             {
                 case Weapon _:
-                    return "Found a weapon";
+                    return "Found a Weapon";
                 case Accessory _:
-                    return "Found an accessory";
+                    return "Found an Accessory";
                 case Inscription _:
-                    return "Found an inscription";
+                    return "Found an Inscription";
                 case ResourceItem item:
                     return "Found " + item.Name;
             }

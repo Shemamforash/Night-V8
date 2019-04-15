@@ -71,7 +71,7 @@ namespace Game.Combat.Misc
             if (!_shotAttributes.Piercing) return;
             Vector2 newPosition = transform.position;
             ContactFilter2D cf = new ContactFilter2D();
-            cf.layerMask = 1 << 10;
+            cf.layerMask = 1 << 10 | 1 << 24;
             int hits = Physics2D.Linecast(_lastPosition, newPosition, cf, _collisions);
             for (int i = 0; i < hits; ++i)
             {
@@ -116,7 +116,7 @@ namespace Game.Combat.Misc
             if (_origin != null) _origin.IncreaseRecoil();
             _bulletTrail = _shotAttributes.GetBulletTrail();
             _conditionTrail = _shotAttributes.GetConditionTrail();
-            _rigidBody.velocity = _direction * _shotAttributes.GetSpeed() * Random.Range(0.9f, 1.1f);
+            _rigidBody.velocity = _shotAttributes.GetSpeed() * Random.Range(0.9f, 1.1f) * _direction;
             _lastPosition = transform.position;
             _bulletTrail.SetTarget(transform);
             if (_conditionTrail != null) _conditionTrail.SetTarget(transform);
@@ -148,8 +148,7 @@ namespace Game.Combat.Misc
             if (_shotAttributes.HasHit) return;
             if (_shotAttributes.Piercing)
             {
-                CanTakeDamage hit = other.GetComponent<CanTakeDamage>();
-                if (hit == null) DeactivateShot();
+                DeactivateShot();
                 return;
             }
 

@@ -127,9 +127,6 @@ namespace Game.Gear.Weapons
                 case WeaponClassType.Shortshooter:
                     weaponBehaviour = player.gameObject.AddComponent<DoubleFireDelay>();
                     break;
-                case WeaponClassType.Voidwalker:
-                    weaponBehaviour = player.gameObject.AddComponent<HoldAndFire>();
-                    break;
                 case WeaponClassType.Skullcrusher:
                     weaponBehaviour = player.gameObject.AddComponent<DoubleFireDelay>();
                     break;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using Game.Global;
 using SamsHelper.Libraries;
+using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
@@ -31,10 +32,13 @@ namespace Game.Gear.Weapons
             return weapon;
         }
 
-        public static Weapon GenerateWeapon()
+        public static Weapon GenerateWeapon(bool forceMaxGearLevel = false)
         {
             LoadBaseWeapons();
-            return GenerateWeapon(WorldState.GenerateGearLevel());
+            if (!forceMaxGearLevel) return GenerateWeapon(WorldState.GenerateGearLevel());
+            int qualityLevel = Mathf.FloorToInt(WorldState.Difficulty() / 10f);
+            return GenerateWeapon((ItemQuality) qualityLevel);
+
         }
 
         public static void LoadBaseWeapons()

@@ -2,10 +2,10 @@
 	<Enemy>
 		<Name>Sniper</Name>
 		<DisplayName>Longeye</DisplayName>
-		<Health>200</Health>
+		<Health>100</Health>
 		<Speed>5</Speed>
 		<Value>2</Value>
-		<Difficulty>8</Difficulty>
+		<Difficulty>12</Difficulty>
 		<DropRate>0.4</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -28,10 +28,10 @@
 	<Enemy>
 		<Name>Medic</Name>
 		<DisplayName>Mender</DisplayName>
-		<Health>250</Health>
+		<Health>300</Health>
 		<Speed>5</Speed>
 		<Value>3</Value>
-		<Difficulty>12</Difficulty>
+		<Difficulty>16</Difficulty>
 		<DropRate>0.6</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -41,7 +41,7 @@
 	<Enemy>
 		<Name>Sentinel</Name>
 		<DisplayName>Sentinel</DisplayName>
-		<Health>125</Health>
+		<Health>150</Health>
 		<Speed>6</Speed>
 		<Value>1</Value>
 		<Difficulty>0</Difficulty>
@@ -57,7 +57,7 @@
 		<Health>300</Health>
 		<Speed>5</Speed>
 		<Value>4</Value>
-		<Difficulty>16</Difficulty>
+		<Difficulty>20</Difficulty>
 		<DropRate>0.8</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -70,7 +70,7 @@
 		<Health>400</Health>
 		<Speed>4</Speed>
 		<Value>4</Value>
-		<Difficulty>24</Difficulty>
+		<Difficulty>30</Difficulty>
 		<DropRate>0.8</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -81,9 +81,9 @@
 		<Name>Martyr</Name>
 		<DisplayName>Martyr</DisplayName>
 		<Health>30</Health>
-		<Speed>10</Speed>
+		<Speed>7</Speed>
 		<Value>2</Value>
-		<Difficulty>4</Difficulty>
+		<Difficulty>8</Difficulty>
 		<DropRate>0.4</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -96,7 +96,7 @@
 		<Health>200</Health>
 		<Speed>7</Speed>
 		<Value>3</Value>
-		<Difficulty>20</Difficulty>
+		<Difficulty>25</Difficulty>
 		<DropRate>0.8</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -119,10 +119,10 @@
 	<Enemy>
 		<Name>GhoulMother</Name>
 		<DisplayName>Ghoul Mother</DisplayName>
-		<Health>250</Health>
+		<Health>300</Health>
 		<Speed>3</Speed>
 		<Value>2</Value>
-		<Difficulty>12</Difficulty>
+		<Difficulty>20</Difficulty>
 		<DropRate>0.25</DropRate>
 		<Drops>Essence</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -135,7 +135,7 @@
 		<Health>200</Health>
 		<Speed>5</Speed>
 		<Value>3</Value>
-		<Difficulty>4</Difficulty>
+		<Difficulty>10</Difficulty>
 		<DropRate>0.4</DropRate>
 		<Drops>Essence</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -158,10 +158,10 @@
 	<Enemy>
 		<Name>Revenant</Name>
 		<DisplayName>Revenant</DisplayName>
-		<Health>125</Health>
+		<Health>150</Health>
 		<Speed>5</Speed>
 		<Value>3</Value>
-		<Difficulty>16</Difficulty>
+		<Difficulty>20</Difficulty>
 		<DropRate>0</DropRate>
 		<Drops>Essence</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -174,7 +174,7 @@
 		<Health>400</Health>
 		<Speed>2</Speed>
 		<Value>4</Value>
-		<Difficulty>20</Difficulty>
+		<Difficulty>25</Difficulty>
 		<DropRate>1</DropRate>
 		<Drops>Essence</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -187,7 +187,7 @@
 		<Health>100</Health>
 		<Speed>5</Speed>
 		<Value>2</Value>
-		<Difficulty>8</Difficulty>
+		<Difficulty>15</Difficulty>
 		<DropRate>0.3</DropRate>
 		<Drops>Essence</Drops>
 		<HasWeapon>False</HasWeapon>
@@ -223,7 +223,7 @@
 	<Enemy>
 		<Name>Watcher</Name>
 		<DisplayName>Watcher</DisplayName>
-		<Health>200</Health>
+		<Health>150</Health>
 		<Speed>7</Speed>
 		<Value>4</Value>
 		<Difficulty>0</Difficulty>

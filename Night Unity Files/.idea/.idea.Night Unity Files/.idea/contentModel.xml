@@ -1375,7 +1375,6 @@
                   <e p="Burstfire.cs" t="Include" />
                   <e p="DefaultBehaviour.cs" t="Include" />
                   <e p="DoubleFireDelay.cs" t="Include" />
-                  <e p="HoldAndFire.cs" t="Include" />
                 </e>
                 <e p="Weapon.cs" t="Include" />
                 <e p="WeaponAttributes.cs" t="Include" />

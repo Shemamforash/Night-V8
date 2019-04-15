@@ -18,7 +18,6 @@ namespace Game.Global
 
         protected Building(string name, int counterTarget) : base(name)
         {
-            Inventory.AddBuilding(this);
             _counterTarget = counterTarget;
             _counter = _counterTarget;
         }

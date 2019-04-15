@@ -58,7 +58,7 @@
 	</Weather>
 	<Weather>
 		<Name>Haze</Name>
-		<DisplayName>there is a haze</DisplayName>
+		<DisplayName>it is hazy</DisplayName>
 		<Temperature>0</Temperature>
 		<Visibility>0.6</Visibility>
 		<Water>0</Water>
@@ -77,7 +77,7 @@
 	</Weather>
 	<Weather>
 		<Name>Mist</Name>
-		<DisplayName>there is a light mist</DisplayName>
+		<DisplayName>it is misty</DisplayName>
 		<Temperature>-5</Temperature>
 		<Visibility>0.4</Visibility>
 		<Water>0</Water>
@@ -96,7 +96,7 @@
 	</Weather>
 	<Weather>
 		<Name>Fog</Name>
-		<DisplayName>there is thick fog</DisplayName>
+		<DisplayName>it is foggy</DisplayName>
 		<Temperature>-5</Temperature>
 		<Visibility>0.2</Visibility>
 		<Water>0</Water>

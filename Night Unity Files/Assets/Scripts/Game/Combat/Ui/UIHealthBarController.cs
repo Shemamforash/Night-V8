@@ -1,9 +1,6 @@
-﻿using DG.Tweening;
-using SamsHelper.Libraries;
+﻿using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.Combat.Ui
 {

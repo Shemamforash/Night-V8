@@ -3,6 +3,7 @@ using System.Linq;
 using DefaultNamespace;
 using DG.Tweening;
 using Game.Combat.Generation;
+using Game.Combat.Player;
 using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
@@ -82,6 +83,7 @@ public class DismantleMenuController : Menu
 
         _closeButton.SetOnClick(Close);
         SaveStoneBehaviour.SetUsed();
+        PlayerCombat.Instance.WeaponAudio.PlaySaltTake();
         Close();
     }
 

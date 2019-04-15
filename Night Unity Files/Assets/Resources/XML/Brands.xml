@@ -12,7 +12,7 @@
 	<Vigilance>
 		<Name>Vigilance</Name>
 		<Description>Our world is dictated by what our mind will allow us to see</Description>
-		<Requirement>Find num resources</Requirement>
+		<Requirement>Collect num items</Requirement>
 		<TargetValue>15</TargetValue>
 		<Effect>Focus increased</Effect>
 		<Modifier>1</Modifier>
@@ -64,7 +64,7 @@
 		<Description>When your life depends on the loss of another, you can begin to relish death</Description>
 		<Requirement>Kill num enemies</Requirement>
 		<TargetValue>100</TargetValue>
-		<Effect>Restore Will when using Radiance</Effect>
+		<Effect>Restore Life when using Radiance</Effect>
 		<Modifier>6</Modifier>
 		<RequiresSkill>FALSE</RequiresSkill>
 		<MinLevel>1</MinLevel>
@@ -72,7 +72,7 @@
 	<Finesse>
 		<Name>Finesse</Name>
 		<Description>Mastering your tools is to take control of your fate</Description>
-		<Requirement>Reload on empty magazine num times</Requirement>
+		<Requirement>Reload on an empty magazine num times</Requirement>
 		<TargetValue>25</TargetValue>
 		<Effect>Automatically reload when magazine is empty</Effect>
 		<Modifier>0</Modifier>
@@ -81,8 +81,8 @@
 	</Finesse>
 	<Perfection>
 		<Name>Perfection</Name>
-		<Description>1</Description>
-		<Requirement>Kill num enemy with last round</Requirement>
+		<Description>Perfection is its own reward</Description>
+		<Requirement>Kill num enemies with the last round in the magazine</Requirement>
 		<TargetValue>25</TargetValue>
 		<Effect>Instantly reload if the last round kills an enemy</Effect>
 		<Modifier>0</Modifier>
@@ -93,7 +93,7 @@
 		<Name>Scavenging</Name>
 		<Description>No land is barren to the eyes of the scavenger</Description>
 		<Requirement>Find num resources</Requirement>
-		<TargetValue>50</TargetValue>
+		<TargetValue>20</TargetValue>
 		<Effect>+1 Resource on finding resource</Effect>
 		<Modifier>1</Modifier>
 		<RequiresSkill>FALSE</RequiresSkill>
@@ -103,7 +103,7 @@
 		<Name>Hunting</Name>
 		<Description>The greatest prey wait only for the worthy hunters</Description>
 		<Requirement>Find num food sources</Requirement>
-		<TargetValue>50</TargetValue>
+		<TargetValue>20</TargetValue>
 		<Effect>Food sates your hunger more</Effect>
 		<Modifier>1</Modifier>
 		<RequiresSkill>FALSE</RequiresSkill>
@@ -113,7 +113,7 @@
 		<Name>Divining</Name>
 		<Description>To the diviners, the earth herself offers up her blood</Description>
 		<Requirement>Find num water sources</Requirement>
-		<TargetValue>50</TargetValue>
+		<TargetValue>20</TargetValue>
 		<Effect>Water quenches your thirst more</Effect>
 		<Modifier>1</Modifier>
 		<RequiresSkill>FALSE</RequiresSkill>
@@ -122,28 +122,28 @@
 	<Fire>
 		<Name>Fire</Name>
 		<Description>No other beast feeds off the life of another as fire</Description>
-		<Requirement>Take num burn damage</Requirement>
-		<TargetValue>1000</TargetValue>
+		<Requirement>Deal burn damage num times</Requirement>
+		<TargetValue>20</TargetValue>
 		<Effect>Occasionally explode with fire on taking damage</Effect>
 		<Modifier>0.02</Modifier>
 		<RequiresSkill>FALSE</RequiresSkill>
 		<MinLevel>3</MinLevel>
 	</Fire>
-	<Shattering>
-		<Name>Shattering</Name>
+	<Shatter>
+		<Name>Shatter</Name>
 		<Description>All armour is only as strong as it's weakest part</Description>
-		<Requirement>Lose num points of armour</Requirement>
-		<TargetValue>10</TargetValue>
+		<Requirement>Deal shatter damage num times</Requirement>
+		<TargetValue>20</TargetValue>
 		<Effect>Occasionally explode with decay on taking damage</Effect>
 		<Modifier>0.02</Modifier>
 		<RequiresSkill>FALSE</RequiresSkill>
 		<MinLevel>3</MinLevel>
-	</Shattering>
+	</Shatter>
 	<Void>
 		<Name>Void</Name>
-		<Description>1</Description>
-		<Requirement>Take Void damage num times</Requirement>
-		<TargetValue>10</TargetValue>
+		<Description>Stare into the abyss</Description>
+		<Requirement>Deal void damage num times</Requirement>
+		<TargetValue>20</TargetValue>
 		<Effect>Killing sick enemies spreads it to nearby enemies</Effect>
 		<Modifier>0.02</Modifier>
 		<RequiresSkill>FALSE</RequiresSkill>
@@ -153,7 +153,7 @@
 		<Name>Mastery</Name>
 		<Description>Wisdom is but knowledge tempered by years of experience</Description>
 		<Requirement>Consume num adrenaline</Requirement>
-		<TargetValue>5000</TargetValue>
+		<TargetValue>200</TargetValue>
 		<Effect>Small chance for free skill activation</Effect>
 		<Modifier>0.05</Modifier>
 		<RequiresSkill>FALSE</RequiresSkill>

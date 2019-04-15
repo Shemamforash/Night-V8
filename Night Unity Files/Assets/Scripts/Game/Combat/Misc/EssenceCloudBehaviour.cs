@@ -41,6 +41,7 @@ public class EssenceCloudBehaviour : MonoBehaviour
         if (!other.gameObject.CompareTag("Player")) return;
         _triggered = true;
         Inventory.IncrementResource("Essence", 1);
+        PlayerCombat.Instance.Player.BrandManager.IncreaseEssenceFound();
         CombatLogController.PostLog("Gathered Essence");
         PlayerCombat.Instance.WeaponAudio.PlaySaltTake();
         StartCoroutine(Fade());

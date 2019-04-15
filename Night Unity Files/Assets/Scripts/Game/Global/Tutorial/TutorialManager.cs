@@ -35,6 +35,7 @@ public class TutorialManager : MonoBehaviour
     private bool _hideResouces;
     private List<TutorialOverlay> _overlays;
     private GameObject _lastSelectedObject;
+    private float _timeToWait;
 
     public void Awake()
     {
@@ -91,6 +92,7 @@ public class TutorialManager : MonoBehaviour
         _lastListener = InputHandler.GetCurrentListener();
         InputHandler.InterruptListeners(true);
         InputHandler.SetCurrentListener(_closeButton);
+        _timeToWait = 1f;
         if (_currentTutorialPart.NextPart() == null) _closeButton.SetOnClick(Close);
         else _closeButton.SetOnClick(ShowTutorialPart);
     }
@@ -116,6 +118,7 @@ public class TutorialManager : MonoBehaviour
         _contentText.SetText(content);
         _overlayController.SetTutorialArea(_overlays[_currentTutorialPart.PartNumber - 1]);
         _currentTutorialPart.MarkComplete();
+        _timeToWait = 1f;
         if (_currentTutorialPart.NextPart() == null)
         {
             _closeButton.SetOnClick(Close);
@@ -140,6 +143,7 @@ public class TutorialManager : MonoBehaviour
 
     private void Close()
     {
+        if (_timeToWait > 0f) return;
         if (!_alreadyHidden) ResourcesUiController.Show();
         _tutorialCanvas.blocksRaycasts = false;
         _tutorialCanvas.interactable = false;
@@ -162,6 +166,7 @@ public class TutorialManager : MonoBehaviour
     private void Update()
     {
         if (!IsTutorialVisible()) return;
+        if (_timeToWait > 0f) _timeToWait -= Time.unscaledDeltaTime;
         if (EventSystem.current.currentSelectedGameObject == _closeButton.Button().gameObject) return;
         _closeButton.Button().Select();
     }

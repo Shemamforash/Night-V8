@@ -142,9 +142,9 @@
 		<Modifier>1</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
-		<MountainsDropRate>0.225</MountainsDropRate>
-		<SeaDropRate>0.175</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
+		<MountainsDropRate>0.21</MountainsDropRate>
+		<SeaDropRate>0.16</SeaDropRate>
+		<RuinsDropRate>0.12</RuinsDropRate>
 		<WastelandDropRate>0.08</WastelandDropRate>
 		<Description>Helps to heal wounds when rubbed into the skin</Description>
 		<Effect>Recover 1 Life</Effect>
@@ -172,9 +172,9 @@
 		<Modifier>1</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
-		<MountainsDropRate>0.225</MountainsDropRate>
-		<SeaDropRate>0.175</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
+		<MountainsDropRate>0.21</MountainsDropRate>
+		<SeaDropRate>0.16</SeaDropRate>
+		<RuinsDropRate>0.12</RuinsDropRate>
 		<WastelandDropRate>0.08</WastelandDropRate>
 		<Description>Used in ancient times to calm the nerves</Description>
 		<Effect>Recover 1 Will</Effect>
@@ -202,9 +202,9 @@
 		<Modifier>1</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
-		<MountainsDropRate>0.225</MountainsDropRate>
-		<SeaDropRate>0.175</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
+		<MountainsDropRate>0.21</MountainsDropRate>
+		<SeaDropRate>0.16</SeaDropRate>
+		<RuinsDropRate>0.12</RuinsDropRate>
 		<WastelandDropRate>0.08</WastelandDropRate>
 		<Description>Provides a little clarity in moments of darkness</Description>
 		<Effect>Recover 1 Focus</Effect>
@@ -232,9 +232,9 @@
 		<Modifier>1</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
-		<MountainsDropRate>0.225</MountainsDropRate>
-		<SeaDropRate>0.175</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
+		<MountainsDropRate>0.21</MountainsDropRate>
+		<SeaDropRate>0.16</SeaDropRate>
+		<RuinsDropRate>0.12</RuinsDropRate>
 		<WastelandDropRate>0.08</WastelandDropRate>
 		<Description>A sweet root, helps the legs go that bit further</Description>
 		<Effect>Recover 1 Grit</Effect>
@@ -322,10 +322,10 @@
 		<Modifier></Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>1</DesertDropRate>
-		<MountainsDropRate>0.35</MountainsDropRate>
-		<SeaDropRate>0.2</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
-		<WastelandDropRate>0.15</WastelandDropRate>
+		<MountainsDropRate>0.2</MountainsDropRate>
+		<SeaDropRate>0.1</SeaDropRate>
+		<RuinsDropRate>0.1</RuinsDropRate>
+		<WastelandDropRate>0.1</WastelandDropRate>
 		<Description></Description>
 		<Effect></Effect>
 	</Resource>
@@ -337,9 +337,9 @@
 		<Modifier></Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.35</MountainsDropRate>
-		<SeaDropRate>0.25</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
+		<MountainsDropRate>0.4</MountainsDropRate>
+		<SeaDropRate>0.2</SeaDropRate>
+		<RuinsDropRate>0.1</RuinsDropRate>
 		<WastelandDropRate>0.15</WastelandDropRate>
 		<Description></Description>
 		<Effect></Effect>
@@ -352,7 +352,7 @@
 		<Modifier></Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.2</MountainsDropRate>
+		<MountainsDropRate>0.35</MountainsDropRate>
 		<SeaDropRate>0.2</SeaDropRate>
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.1</WastelandDropRate>
@@ -367,8 +367,8 @@
 		<Modifier></Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.1</MountainsDropRate>
-		<SeaDropRate>0.1</SeaDropRate>
+		<MountainsDropRate>0.05</MountainsDropRate>
+		<SeaDropRate>0.2</SeaDropRate>
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.15</WastelandDropRate>
 		<Description></Description>
@@ -383,7 +383,7 @@
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
-		<SeaDropRate>0.25</SeaDropRate>
+		<SeaDropRate>0.3</SeaDropRate>
 		<RuinsDropRate>0.2</RuinsDropRate>
 		<WastelandDropRate>0.15</WastelandDropRate>
 		<Description></Description>
@@ -399,7 +399,7 @@
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
 		<SeaDropRate>0</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
+		<RuinsDropRate>0.25</RuinsDropRate>
 		<WastelandDropRate>0.15</WastelandDropRate>
 		<Description></Description>
 		<Effect></Effect>
@@ -415,7 +415,7 @@
 		<MountainsDropRate>0</MountainsDropRate>
 		<SeaDropRate>0</SeaDropRate>
 		<RuinsDropRate>0.05</RuinsDropRate>
-		<WastelandDropRate>0.15</WastelandDropRate>
+		<WastelandDropRate>0.2</WastelandDropRate>
 		<Description></Description>
 		<Effect></Effect>
 	</Resource>

@@ -1,5 +1,6 @@
 ﻿using System.Xml;
 using Facilitating.Persistence;
+using Game.Characters;
 using SamsHelper.Libraries;
 using TMPro;
 using UnityEngine;
@@ -54,7 +55,8 @@ namespace Game.Exploration.WorldEvents
 
         public static void SuggestSave()
         {
-            GenerateEvent(new WorldEvent(_saveStrings.RandomElement()));
+            if (CharacterManager.Wanderer == null) return;
+            GenerateEvent(new CharacterMessage(_saveStrings.RandomElement(), CharacterManager.Wanderer));
         }
     }
 }

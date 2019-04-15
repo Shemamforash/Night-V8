@@ -10,6 +10,7 @@ using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Debug = UnityEngine.Debug;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Generation
 {
@@ -373,6 +374,7 @@ namespace Game.Combat.Generation
         public static Vector2 PlayerStartPosition()
         {
             if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Tutorial) return Vector2.zero;
+            Random.InitState((int) Time.realtimeSinceStartup);
             return _edgePositionList.RandomElement().Position;
         }
 

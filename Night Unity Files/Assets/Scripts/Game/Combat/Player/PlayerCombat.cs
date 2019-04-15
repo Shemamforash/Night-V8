@@ -11,6 +11,7 @@ using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
+using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Gear.Weapons;
 using Game.Global;
@@ -264,7 +265,6 @@ namespace Game.Combat.Player
         {
             int burnDamage = base.Burn();
             if (burnDamage == -1) return -1;
-            Player.BrandManager.IncreaseBurnCount(burnDamage);
             _currentDeathReason = DeathReason.Fire;
             return burnDamage;
         }
@@ -273,14 +273,7 @@ namespace Game.Combat.Player
         {
             if (!base.Void()) return false;
             _currentDeathReason = DeathReason.Void;
-            Instance.Player.BrandManager.IncreaseVoidCount();
             return true;
-        }
-
-        public override void Decay()
-        {
-            base.Decay();
-            if (ArmourController.CanAbsorbDamage()) Instance.Player.BrandManager.IncreaseDecayCount();
         }
 
         public void Activate()
@@ -375,7 +368,9 @@ namespace Game.Combat.Player
 
         public void UpdateAdrenaline(int damageDealt)
         {
-            _adrenalineLevel.Increment(damageDealt / 300f * _adrenalineRecoveryRate);
+            float environmentModifier = (float) EnvironmentManager.CurrentEnvironmentType + 1;
+            float dps = _weaponBehaviour.Weapon.WeaponAttributes.DPS() / environmentModifier;
+            _adrenalineLevel.Increment(dps / 1200f * _adrenalineRecoveryRate);
             Player.BrandManager.IncreaseDamageDealt(damageDealt);
             RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
         }

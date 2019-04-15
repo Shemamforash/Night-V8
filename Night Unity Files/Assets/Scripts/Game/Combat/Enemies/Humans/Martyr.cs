@@ -6,7 +6,7 @@ namespace Game.Combat.Enemies.Humans
 {
     public class Martyr : UnarmedBehaviour
     {
-        private const float ExplosionDamage = 50;
+        private const float ExplosionDamage = 25;
         private bool _detonated, _dontKill;
         private const float MinExplodeDistance = 0.5f;
 
@@ -49,8 +49,7 @@ namespace Game.Combat.Enemies.Humans
             if (_detonated) return;
             _detonated = true;
             Vector2 currentPosition = transform.position;
-            int damage = Mathf.CeilToInt(ExplosionDamage + WorldState.NormalisedDifficulty() * ExplosionDamage);
-            Explosion.CreateExplosion(currentPosition, 2).InstantDetonate();
+            Explosion.CreateExplosion(currentPosition).InstantDetonate();
         }
     }
 }

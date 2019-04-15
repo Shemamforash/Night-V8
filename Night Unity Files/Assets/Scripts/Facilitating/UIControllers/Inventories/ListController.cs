@@ -57,8 +57,8 @@ public class ListController : MonoBehaviour, IInputListener
             Color elementColour = new Color(1f, 1f, 1f, 1f / opacityDivider);
             element.SetColour(elementColour);
         }
+
         SetButtonBehaviour(onButtonDown, onReturn);
-        
     }
 
     private void SetButtonBehaviour(Action<object> onButtonDown, Action onReturn)
@@ -90,6 +90,7 @@ public class ListController : MonoBehaviour, IInputListener
             Color elementColour = new Color(1f, 1f, 1f, 1f / (Math.Abs(i - _centreItemIndex) + 1));
             _uiElements[i].SetColour(elementColour);
         }
+
         SetButtonBehaviour(onButtonDown, onReturn);
     }
 
