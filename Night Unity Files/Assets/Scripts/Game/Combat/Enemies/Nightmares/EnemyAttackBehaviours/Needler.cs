@@ -17,7 +17,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         {
             Vector3 dirToPlayer = transform.Direction(Enemy.GetTarget().transform);
             Action<Vector2> onHit = null;
-            if (WorldState.Difficulty() > 25) onHit = p => DecayBehaviour.Create(p);
+            if (WorldState.Difficulty() > 40) onHit = p => DecayBehaviour.Create(p);
             NeedleBehaviour.Create(transform.position + dirToPlayer * 0.25f, Enemy.GetTarget().transform.position, onHit);
         }
     }

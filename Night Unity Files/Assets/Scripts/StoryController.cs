@@ -53,7 +53,6 @@ public class StoryController : Menu
         _closeButton.UseSpaceInput();
     }
 
-
     private void CacheComponents()
     {
         _invertColour = Camera.main.GetComponent<PostProcessInvertColour>();

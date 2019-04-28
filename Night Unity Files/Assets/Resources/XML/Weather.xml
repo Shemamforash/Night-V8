@@ -46,7 +46,7 @@
 		<Fog>0</Fog>
 		<Ice>0</Ice>
 		<Duration>2</Duration>
-		<Thunder>1</Thunder>
+		<Thunder>0</Thunder>
 		<Particles>
 			<Rain>1</Rain>
 			<Fog>0</Fog>
@@ -179,7 +179,7 @@
 		<Fog>0</Fog>
 		<Ice>2</Ice>
 		<Duration>1</Duration>
-		<Thunder>1</Thunder>
+		<Thunder>0</Thunder>
 		<Particles>
 			<Rain>0</Rain>
 			<Fog>0</Fog>

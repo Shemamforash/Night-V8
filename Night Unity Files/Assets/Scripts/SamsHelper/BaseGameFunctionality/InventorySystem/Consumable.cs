@@ -77,7 +77,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             if (Template.Name == "Mystic Shard")
             {
                 Inventory.DecrementResource(Template.Name, 1);
-                _player.TravelAction.ReturnToHomeInstant();
+                _player.TravelAction.ReturnToHomeInstant(true);
                 return;
             }
 

@@ -35,6 +35,7 @@ public class JournalSource : ContainerController
         _journalEntry.Unlock();
         CombatJournalController.ShowJournal(_journalEntry);
         CharacterManager.CurrentRegion().JournalIsHere = false;
+        AchievementManager.Instance().IncreaseJournalsRead();
     }
 
     protected override string GetLogText() => null;

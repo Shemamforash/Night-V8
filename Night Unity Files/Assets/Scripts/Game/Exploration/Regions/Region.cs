@@ -230,7 +230,7 @@ namespace Game.Exploration.Regions
             if (!_cleared && _size == 0)
             {
                 _size = Mathf.CeilToInt(WorldState.Difficulty() / 2.5f);
-                _size += 5;
+                _size += 6;
             }
 
             templates = EnemyTemplate.RandomiseEnemiesToSize(allowedTypes, _size);

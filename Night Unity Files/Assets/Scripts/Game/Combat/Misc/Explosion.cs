@@ -5,6 +5,7 @@ using DG.Tweening;
 using Fastlights;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
+using Game.Combat.Player;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
@@ -35,7 +36,7 @@ namespace Game.Combat.Misc
 
         private bool _decay, _incendiary, _sicken;
         private List<CanTakeDamage> _targetsToIgnore;
-        private int BaseDamage = 25;
+        private int BaseDamage = 30;
         private static Collider2D[] _colliders = new Collider2D[200];
 
         public void Awake()
@@ -120,7 +121,8 @@ namespace Game.Combat.Misc
                 CanTakeDamage i = col.GetComponent<CanTakeDamage>();
                 if (i == null) continue;
                 if (_targetsToIgnore.Contains(i)) return;
-                i.TakeExplosionDamage(damage, transform.position, _explosionRadius);
+                int finalDamage = i is PlayerCombat ? Mathf.CeilToInt(damage / 2f) : damage;
+                i.TakeExplosionDamage(finalDamage, transform.position, _explosionRadius);
                 EnemyBehaviour behaviour = i as EnemyBehaviour;
                 if (behaviour != null) enemiesHit.Add(behaviour);
             }

@@ -275,7 +275,7 @@ namespace Game.Exploration.Environment
                         case EnvironmentType.Mountains:
                             return "The Tomb of Hythinea";
                         case EnvironmentType.Ruins:
-                            return "The Tomb of Rha";
+                            return "The Tomb of Rhallos";
                         case EnvironmentType.Sea:
                             return "The Tomb of Ahna";
                         case EnvironmentType.Wasteland:

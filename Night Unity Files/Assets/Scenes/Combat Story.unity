@@ -630,6 +630,7 @@ GameObject:
   - component: {fileID: 794901442}
   - component: {fileID: 794901446}
   - component: {fileID: 794901445}
+  - component: {fileID: 794901447}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -725,6 +726,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f508cf123bb40b8429637d03dda75e2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &794901447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794901441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8ef242130b87de4083c37c148aa3ab4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &815417506
 GameObject:
   m_ObjectHideFlags: 0
@@ -746,7 +759,7 @@ GameObject:
 --- !u!199 &815417507
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -5925,16 +5938,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 114890658197481628, guid: b3eae0f9d0f47c140868cc9aba3d3fec,
-        type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114890658197481628, guid: b3eae0f9d0f47c140868cc9aba3d3fec,
-        type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 224146213710020218, guid: b3eae0f9d0f47c140868cc9aba3d3fec,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -5943,6 +5946,16 @@ PrefabInstance:
     - target: {fileID: 225887079187452636, guid: b3eae0f9d0f47c140868cc9aba3d3fec,
         type: 3}
       propertyPath: m_Alpha
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114890658197481628, guid: b3eae0f9d0f47c140868cc9aba3d3fec,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114890658197481628, guid: b3eae0f9d0f47c140868cc9aba3d3fec,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -15946,7 +15959,7 @@ ParticleSystem:
 --- !u!199 &8477385666597648226
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -16008,7 +16021,7 @@ ParticleSystemRenderer:
 --- !u!199 &8596573835017928117
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}

@@ -70,8 +70,11 @@ namespace Game.Combat.Player
         protected override void InstantEffect()
         {
             Shot s = ShotManager.Create(PlayerCombat.Instance);
-            s.Attributes().AddOnHit(() => { VortexBehaviour.Create(s.transform.position, 
-                () => Explosion.CreateExplosion(s.transform.position, 0.5f).InstantDetonate()); });
+            s.Attributes().AddOnHit(() =>
+            {
+                VortexBehaviour.Create(s.transform.position,
+                    () => Explosion.CreateExplosion(s.transform.position, 0.5f).InstantDetonate());
+            });
             s.Fire();
         }
     }
@@ -95,6 +98,7 @@ namespace Game.Combat.Player
         public Swarm() : base(nameof(Swarm))
         {
         }
+
         protected override void InstantEffect()
         {
             int shots = 50;
@@ -181,7 +185,7 @@ namespace Game.Combat.Player
         protected override void PassiveEffect(Shot s)
         {
             float normalisedHealth = PlayerCombat.Instance.HealthController.GetNormalisedHealthValue();
-            float damageModifier = 1 + 1 - normalisedHealth;
+            float damageModifier = 1 + (1 - normalisedHealth) * 2;
             damageModifier *= damageModifier;
             s.Attributes().SetDamageModifier(damageModifier);
         }

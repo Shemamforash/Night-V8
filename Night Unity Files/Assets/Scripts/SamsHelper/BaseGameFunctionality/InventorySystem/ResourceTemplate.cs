@@ -55,7 +55,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             if (!_resourceSprites.ContainsKey(spriteName))
             {
-                Debug.Log(spriteName);
                 Sprite sprite = Resources.Load<Sprite>("Images/Container Symbols/" + spriteName);
                 _resourceSprites.Add(spriteName, sprite);
             }

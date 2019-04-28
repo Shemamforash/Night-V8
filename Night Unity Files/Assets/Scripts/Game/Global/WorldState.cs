@@ -32,7 +32,7 @@ namespace Game.Global
     public class WorldState : MonoBehaviour
     {
         public const int MinutesPerHour = 12;
-        public const float MinuteInSeconds = 1.5f;
+        public const float MinuteInSeconds = 1f;
         private const float DayLengthInSeconds = 24f * MinutesPerHour * MinuteInSeconds;
         private const int MinuteInterval = 60 / MinutesPerHour;
 
@@ -50,7 +50,6 @@ namespace Game.Global
         private static int _templesActivated;
         private static int _timeAtLastSave;
         private const int MaxDifficulty = 50;
-        private static bool _isBetaVersion = false;
 
         private enum DifficultySetting
         {
@@ -235,9 +234,8 @@ namespace Game.Global
             _templesActivated = 0;
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel(false, false);
-            if (EnvironmentManager.SkippingToBeta) return;
-            CharacterManager.Wanderer.TravelAction.ReturnToHomeInstant();
-            CharacterManager.AlternateCharacter?.TravelAction.ReturnToHomeInstant();
+            CharacterManager.Wanderer.TravelAction.ReturnToHomeInstant(false);
+            CharacterManager.AlternateCharacter?.TravelAction.ReturnToHomeInstant(false);
             StoryController.Show();
         }
 
@@ -291,7 +289,7 @@ namespace Game.Global
             if (_timeAtLastSave % 12 == 0) WorldEventManager.SuggestSave();
             bool increaseDifficulty = Hours % 4 == 0;
             if (!increaseDifficulty) return;
-            ++_difficulty;
+            if (_difficulty < ((int) EnvironmentManager.CurrentEnvironmentType + 1) * 10) ++_difficulty;
             SaveIconController.AutoSave();
         }
 
@@ -395,11 +393,6 @@ namespace Game.Global
         public static void OverrideDifficulty(object difficulty)
         {
             _difficulty = (int) difficulty;
-        }
-
-        public static bool IsBetaVersion()
-        {
-            return _isBetaVersion;
         }
     }
 }

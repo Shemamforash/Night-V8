@@ -59,6 +59,7 @@ namespace Game.Combat.Player
         public bool Activate(bool freeSkill)
         {
             if (!freeSkill && !PlayerCombat.Instance.ConsumeAdrenaline(Cost())) return false;
+            AchievementManager.Instance().IncreaseSkillsUsed();
             _player = PlayerCombat.Instance;
             _playerTransform = _player.transform;
             InstantEffect();

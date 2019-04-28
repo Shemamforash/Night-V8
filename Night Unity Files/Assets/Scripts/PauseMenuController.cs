@@ -168,7 +168,7 @@ public class PauseMenuController : MonoBehaviour
 
     public static void ToggleOpen()
     {
-        Debug.Log(_instance._open);
+        if (_instance == null) return;
         _instance._open = !_instance._open;
         if (!_instance._open) _instance.Hide();
         else _instance.Show();

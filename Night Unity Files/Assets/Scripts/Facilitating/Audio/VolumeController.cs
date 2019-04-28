@@ -74,6 +74,7 @@ public class VolumeController : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public static void SetToDefaultVolume()
     {
+        _loaded = true;
         SetMasterVolume(1);
     }
 }

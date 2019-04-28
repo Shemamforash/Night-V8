@@ -115,6 +115,7 @@ namespace Game.Combat.Generation.Shrines
             _player.TravelAction.SetCurrentRegion(r);
             SceneChanger.GoToCombatScene(_player);
             CombatManager.Instance().LeaveCombat();
+            CombatManager.Instance().RestoreEnemies();
         }
 
         private void Return()

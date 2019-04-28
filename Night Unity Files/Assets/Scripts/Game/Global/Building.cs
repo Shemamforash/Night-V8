@@ -69,12 +69,12 @@ namespace Game.Global
                         break;
                     case "Smoker":
                         Smoker smoker = new Smoker();
-                        smoker.Load(root);
+                        smoker.Load(buildingNode);
                         building = smoker;
                         break;
                     case "Purifier":
                         Purifier purifier = new Purifier();
-                        purifier.Load(root);
+                        purifier.Load(buildingNode);
                         building = purifier;
                         break;
                     default:

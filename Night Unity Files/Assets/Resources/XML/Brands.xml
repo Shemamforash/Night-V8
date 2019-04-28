@@ -39,16 +39,6 @@
 		<RequiresSkill>FALSE</RequiresSkill>
 		<MinLevel>0</MinLevel>
 	</Stamina>
-	<Insight>
-		<Name>Insight</Name>
-		<Description>Knowledge itself is useless without the insight to apply it</Description>
-		<Requirement>Gain num essence</Requirement>
-		<TargetValue>200</TargetValue>
-		<Effect>Essence recovers more durability on weapons</Effect>
-		<Modifier>1</Modifier>
-		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>1</MinLevel>
-	</Insight>
 	<Revival>
 		<Name>Revival</Name>
 		<Description>Know what it is like to look death in the eyes and command him to back down</Description>
@@ -97,7 +87,7 @@
 		<Effect>+1 Resource on finding resource</Effect>
 		<Modifier>1</Modifier>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>1</MinLevel>
+		<MinLevel>3</MinLevel>
 	</Scavenging>
 	<Hunting>
 		<Name>Hunting</Name>
@@ -107,7 +97,7 @@
 		<Effect>Food sates your hunger more</Effect>
 		<Modifier>1</Modifier>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>1</MinLevel>
+		<MinLevel>3</MinLevel>
 	</Hunting>
 	<Divining>
 		<Name>Divining</Name>
@@ -117,7 +107,7 @@
 		<Effect>Water quenches your thirst more</Effect>
 		<Modifier>1</Modifier>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>1</MinLevel>
+		<MinLevel>3</MinLevel>
 	</Divining>
 	<Fire>
 		<Name>Fire</Name>
@@ -157,6 +147,6 @@
 		<Effect>Small chance for free skill activation</Effect>
 		<Modifier>0.05</Modifier>
 		<RequiresSkill>FALSE</RequiresSkill>
-		<MinLevel>2</MinLevel>
+		<MinLevel>3</MinLevel>
 	</Mastery>
 </Brands>

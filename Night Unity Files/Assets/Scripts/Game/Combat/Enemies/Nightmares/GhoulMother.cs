@@ -8,8 +8,8 @@ namespace Game.Combat.Enemies.Nightmares
 {
     public class GhoulMother : NightmareEnemyBehaviour
     {
-        private const int MinGhoulsReleased = 3;
-        private const int MaxGhoulsReleased = 6;
+        private const int MinGhoulsReleased = 2;
+        private const int MaxGhoulsReleased = 4;
         private const float GhoulCooldownMax = 10f;
         private float _ghoulCooldown;
         private bool _pushAllowed;

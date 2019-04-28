@@ -36,7 +36,7 @@ namespace Game.Combat.Misc
 
         public virtual void Kill()
         {
-            CombatManager.Instance().RemoveEnemy(this);
+            CombatManager.Instance()?.RemoveEnemy(this);
             Destroy(gameObject);
         }
 

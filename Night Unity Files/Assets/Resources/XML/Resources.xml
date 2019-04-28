@@ -337,7 +337,7 @@
 		<Modifier></Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.4</MountainsDropRate>
+		<MountainsDropRate>0.45</MountainsDropRate>
 		<SeaDropRate>0.2</SeaDropRate>
 		<RuinsDropRate>0.1</RuinsDropRate>
 		<WastelandDropRate>0.15</WastelandDropRate>
@@ -352,7 +352,7 @@
 		<Modifier></Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.35</MountainsDropRate>
+		<MountainsDropRate>0.3</MountainsDropRate>
 		<SeaDropRate>0.2</SeaDropRate>
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.1</WastelandDropRate>

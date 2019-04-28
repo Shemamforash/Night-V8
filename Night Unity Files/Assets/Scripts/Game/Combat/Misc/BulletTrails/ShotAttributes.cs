@@ -57,7 +57,7 @@ namespace Game.Combat.Misc
                     break;
             }
 
-            if (!(_origin is PlayerCombat)) _speed *= 0.75f;
+            if (!(_origin is PlayerCombat)) _speed *= 0.6f;
         }
 
         public float GetSeekForce()
@@ -86,6 +86,7 @@ namespace Game.Combat.Misc
         public float CalculateAccuracy()
         {
             if (_origin == null) return 0;
+            if (_origin is EnemyBehaviour) _accuracy *= 1.25f;
             float minAccuracy = MinimumAccuracyOffsetInDegrees * _accuracy;
             float maxAccuracy = MaximumAccuracyOffsetInDegrees * _accuracy;
             float recoilModifier = _origin.GetRecoilModifier();
@@ -168,15 +169,27 @@ namespace Game.Combat.Misc
             {
                 case 0:
                     DecayBehaviour.Create(position);
-                    if (player != null) player.Player.BrandManager.IncreaseVoidCount();
+                    if (player != null)
+                    {
+                        player.Player.BrandManager.IncreaseVoidCount();
+                        AchievementManager.Instance().IncreaseElementTriggers();
+                    }
                     break;
                 case 1:
                     FireBurstBehaviour.Create(position);
-                    if (player != null) player.Player.BrandManager.IncreaseBurnCount();
+                    if (player != null)
+                    {
+                        player.Player.BrandManager.IncreaseBurnCount();
+                        AchievementManager.Instance().IncreaseElementTriggers();
+                    }
                     break;
                 case 2:
                     SickenBehaviour.Create(position, new List<CanTakeDamage> {_origin});
-                    if (player != null) player.Player.BrandManager.IncreaseShatterCount();
+                    if (player != null)
+                    {
+                        player.Player.BrandManager.IncreaseShatterCount();
+                        AchievementManager.Instance().IncreaseElementTriggers();
+                    }
                     break;
             }
         }
@@ -189,8 +202,9 @@ namespace Game.Combat.Misc
             if (hit == null) return;
             PlayerCombat player = _origin as PlayerCombat;
             CalculateKnockBackForce();
+            float previousHealth = hit.HealthController.GetCurrentHealth();
             hit.TakeShotDamage(shot);
-            if (player != null) player.OnShotConnects(hit);
+            if (player != null) player.OnShotConnects(hit, previousHealth);
             _damage = Mathf.CeilToInt(_damage * 0.5f);
         }
 

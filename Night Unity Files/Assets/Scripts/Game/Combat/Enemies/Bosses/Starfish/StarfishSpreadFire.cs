@@ -69,7 +69,7 @@ namespace Game.Combat.Enemies.Bosses.Starfish
             _radialAttackTimer -= Time.deltaTime;
             if (_radialAttackTimer > 0f) return;
             _radialAttackTimer = 1f;
-            int count = 20;
+            int count = 15;
             float angleInterval = 360f / count;
             for (int j = 0; j < count; ++j)
             {
@@ -97,7 +97,7 @@ namespace Game.Combat.Enemies.Bosses.Starfish
         private IEnumerator DoBurstAttack()
         {
             _attacking = true;
-            int count = 25;
+            int count = 20;
             float angleInterval = 360f / count;
             float startAngle = 0f;
 
@@ -125,7 +125,7 @@ namespace Game.Combat.Enemies.Bosses.Starfish
         private IEnumerator DoSpinAttack()
         {
             _attacking = true;
-            int count = 50;
+            int count = 40;
             float angleInterval = 180f / count;
             while (count > 0f)
             {

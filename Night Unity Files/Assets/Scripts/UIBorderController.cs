@@ -1,14 +1,9 @@
 ﻿using DG.Tweening;
-using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
-using Steamworks;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class UIBorderController : MonoBehaviour
 {
-//    private Image _activeTop, _activeBottom;
-//    private CanvasGroup _inactiveTop, _inactiveBottom, _highlightCanvasTop, _highlightCanvasBottom;
     private CanvasGroup _canvasGroup;
     private const float FadeTime = 0.25f;
     [SerializeField] private BorderState _currentState;

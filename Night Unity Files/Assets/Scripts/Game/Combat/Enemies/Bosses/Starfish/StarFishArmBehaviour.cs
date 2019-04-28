@@ -26,7 +26,7 @@ public class StarFishArmBehaviour : BossSectionHealthController
 
     protected override int GetInitialHealth()
     {
-        return (int) (20f * (20 - _distance) / 2f);
+        return (int) (15f * (20 - _distance) / 2f);
     }
 
     public bool Dead() => _dead;

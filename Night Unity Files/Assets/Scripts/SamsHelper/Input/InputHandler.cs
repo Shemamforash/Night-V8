@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using Game.Global;
 using InControl;
 using SamsHelper.Libraries;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -33,6 +32,14 @@ namespace SamsHelper.Input
         public static bool ListenersInterrupted => _listenersInterrupted;
 
         public static bool InputAxisWasPressed(InputAxis inputAxis) => _instance._inputPressList[inputAxis].WasPressed();
+
+        public void OnApplicationFocus(bool hasFocus)
+        {
+            if (hasFocus)
+                WorldState.Resume();
+            else
+                WorldState.Pause();
+        }
 
         private void Initialise()
         {
@@ -122,10 +129,10 @@ namespace SamsHelper.Input
 
         private void OnDestroy()
         {
-            InputListeners.Clear();
-            ListenersToAdd.Clear();
-            ListenersToRemove.Clear();
-            _inputActions.Destroy();
+            InputListeners?.Clear();
+            ListenersToAdd?.Clear();
+            ListenersToRemove?.Clear();
+            _inputActions?.Destroy();
             _instance = null;
             _listenersInterrupted = false;
         }

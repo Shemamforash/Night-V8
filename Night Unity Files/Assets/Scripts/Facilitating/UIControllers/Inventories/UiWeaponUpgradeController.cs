@@ -22,305 +22,309 @@ using UnityEngine;
 
 namespace Facilitating.UIControllers
 {
-    public class UiWeaponUpgradeController : UiInventoryMenuController
-    {
-        private EnhancedButton _infuseButton, _channelButton, _swapButton;
-        private ListController _weaponList;
-        private ListController _inscriptionList;
-        private bool _upgradingAllowed;
-        private WeaponDetailController _weaponDetail;
-        private GameObject _infoGameObject;
-        private Weapon _equippedWeapon;
-        private bool _seenAttributeTutorial, _seenChannelTutorial, _seenInfuseTutorial;
-        public static bool Locked;
+	public class UiWeaponUpgradeController : UiInventoryMenuController
+	{
+		private       EnhancedButton         _infuseButton, _channelButton, _swapButton;
+		private       ListController         _weaponList;
+		private       ListController         _inscriptionList;
+		private       bool                   _upgradingAllowed;
+		private       WeaponDetailController _weaponDetail;
+		private       GameObject             _infoGameObject;
+		private       Weapon                 _equippedWeapon;
+		private       bool                   _seenAttributeTutorial, _seenChannelTutorial, _seenInfuseTutorial;
+		public static bool                   Locked;
 
-        public override bool Unlocked() => !Locked;
+		public override bool Unlocked() => !Locked;
 
-        protected override void CacheElements()
-        {
-            _weaponList = gameObject.FindChildWithName<ListController>("Weapon List");
-            _inscriptionList = gameObject.FindChildWithName<ListController>("Inscription List");
-            _weaponDetail = gameObject.FindChildWithName<WeaponDetailController>("Stats");
-            _infuseButton = gameObject.FindChildWithName<EnhancedButton>("Inscribe");
-            _swapButton = gameObject.FindChildWithName<EnhancedButton>("Swap");
-            _channelButton = gameObject.FindChildWithName<EnhancedButton>("Infuse");
-            _infoGameObject = gameObject.FindChildWithName("Info");
+		protected override void CacheElements()
+		{
+			_weaponList      = gameObject.FindChildWithName<ListController>("Weapon List");
+			_inscriptionList = gameObject.FindChildWithName<ListController>("Inscription List");
+			_weaponDetail    = gameObject.FindChildWithName<WeaponDetailController>("Stats");
+			_infuseButton    = gameObject.FindChildWithName<EnhancedButton>("Inscribe");
+			_swapButton      = gameObject.FindChildWithName<EnhancedButton>("Swap");
+			_channelButton   = gameObject.FindChildWithName<EnhancedButton>("Infuse");
+			_infoGameObject  = gameObject.FindChildWithName("Info");
 
 #if UNITY_EDITOR
-            for (int i = 0; i < 10; ++i)
-            {
+			for (int i = 0; i < 10; ++i)
+			{
 //                Weapon weapon = WeaponGenerator.GenerateWeapon();
 //                Inventory.Move(weapon);
 //                Inscription inscription = Inscription.Generate();
 //                Inventory.Move(inscription);
 //                Accessory accessory = Accessory.Generate();
 //                Inventory.Move(accessory);
-            }
+			}
 #endif
 
-            _swapButton.AddOnClick(() =>
-            {
-                if (!WeaponsAreAvailable()) return;
-                UiGearMenuController.SetCloseButtonAction(Show);
-                _weaponList.Show();
-                _infoGameObject.SetActive(false);
-            });
-            _infuseButton.AddOnClick(() =>
-            {
-                if (!InscriptionsAreAvailable()) return;
-                UiGearMenuController.SetCloseButtonAction(Show);
-                _inscriptionList.Show();
-                _infoGameObject.SetActive(false);
-            });
-            _channelButton.AddOnClick(Channel);
-        }
+			_swapButton.AddOnClick(() =>
+			{
+				if (!WeaponsAreAvailable()) return;
+				UiGearMenuController.SetCloseButtonAction(Show);
+				_weaponList.Show();
+				_infoGameObject.SetActive(false);
+			});
+			_infuseButton.AddOnClick(() =>
+			{
+				if (!InscriptionsAreAvailable()) return;
+				UiGearMenuController.SetCloseButtonAction(Show);
+				_inscriptionList.Show();
+				_infoGameObject.SetActive(false);
+			});
+			_channelButton.AddOnClick(Channel);
+		}
 
-        protected override void Initialise()
-        {
-            List<ListElement> weaponListElements = new List<ListElement>();
-            weaponListElements.Add(new WeaponElement());
-            weaponListElements.Add(new WeaponElement());
-            weaponListElements.Add(new WeaponElement());
-            weaponListElements.Add(new DetailedWeaponElement());
-            weaponListElements.Add(new WeaponElement());
-            weaponListElements.Add(new WeaponElement());
-            weaponListElements.Add(new WeaponElement());
-            _weaponList.Initialise(weaponListElements, Equip, BackToWeaponInfo, GetAvailableWeapons);
-            _weaponList.Hide();
-            _inscriptionList.Initialise(typeof(InscriptionElement), Inscribe, BackToWeaponInfo, GetAvailableInscriptions);
-            _inscriptionList.Hide();
-        }
+		protected override void Initialise()
+		{
+			List<ListElement> weaponListElements = new List<ListElement>();
+			weaponListElements.Add(new WeaponElement());
+			weaponListElements.Add(new WeaponElement());
+			weaponListElements.Add(new WeaponElement());
+			weaponListElements.Add(new DetailedWeaponElement());
+			weaponListElements.Add(new WeaponElement());
+			weaponListElements.Add(new WeaponElement());
+			weaponListElements.Add(new WeaponElement());
+			_weaponList.Initialise(weaponListElements, Equip, BackToWeaponInfo, GetAvailableWeapons);
+			_weaponList.Hide();
+			_inscriptionList.Initialise(typeof(InscriptionElement), Inscribe, BackToWeaponInfo, GetAvailableInscriptions);
+			_inscriptionList.Hide();
+		}
 
-        private void BackToWeaponInfo()
-        {
-            Show();
-            UiGearMenuController.FlashCloseButton();
-        }
+		private void BackToWeaponInfo()
+		{
+			Show();
+			UiGearMenuController.FlashCloseButton();
+		}
 
-        private static List<object> GetAvailableWeapons()
-        {
-            List<Weapon> weapons = Inventory.GetAvailableWeapons();
-            weapons.Sort((a, b) =>
-            {
-                if ((int) a.Quality() > (int) b.Quality()) return -1;
-                if ((int) a.Quality() < (int) b.Quality()) return 1;
-                if ((int) a.WeaponType() < (int) b.WeaponType()) return -1;
-                if ((int) a.WeaponType() > (int) b.WeaponType()) return 1;
-                return string.Compare(a.Name, b.Name, StringComparison.InvariantCulture);
-            });
-            return weapons.ToObjectList();
-        }
+		private static List<object> GetAvailableWeapons()
+		{
+			List<Weapon> weapons = Inventory.GetAvailableWeapons();
+			weapons.Sort((a, b) =>
+			{
+				if ((int) a.Quality()    > (int) b.Quality()) return -1;
+				if ((int) a.Quality()    < (int) b.Quality()) return 1;
+				if ((int) a.WeaponType() < (int) b.WeaponType()) return -1;
+				if ((int) a.WeaponType() > (int) b.WeaponType()) return 1;
+				return string.Compare(a.Name, b.Name, StringComparison.InvariantCulture);
+			});
+			return weapons.ToObjectList();
+		}
 
-        private static List<object> GetAvailableInscriptions()
-        {
-            List<Inscription> inscriptions = Inventory.Inscriptions;
-            inscriptions.Sort((a, b) =>
-            {
-                if ((int) a.Quality() > (int) b.Quality()) return -1;
-                if ((int) a.Quality() < (int) b.Quality()) return 1;
-                return string.Compare(a.Name, b.Name, StringComparison.InvariantCulture);
-            });
-            return inscriptions.ToObjectList();
-        }
+		private static List<object> GetAvailableInscriptions()
+		{
+			List<Inscription> inscriptions = Inventory.Inscriptions;
+			inscriptions.Sort((a, b) =>
+			{
+				if ((int) a.Quality() > (int) b.Quality()) return -1;
+				if ((int) a.Quality() < (int) b.Quality()) return 1;
+				return string.Compare(a.Name, b.Name, StringComparison.InvariantCulture);
+			});
+			return inscriptions.ToObjectList();
+		}
 
-        private void Channel()
-        {
-            if (CharacterManager.SelectedCharacter.EquippedWeapon == null) return;
-            if (CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.GetDurability().ReachedMax()) return;
-            if (Inventory.GetResourceQuantity("Essence") == 0) return;
-            UiGearMenuController.PlayAudio(AudioClips.Channel);
-            Inventory.DecrementResource("Essence", 1);
-            int durabilityGain = 1 + (int) CharacterManager.SelectedCharacter.Attributes.EssenceRecoveryModifier;
-            CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.IncreaseDurability(durabilityGain);
-            _weaponDetail.UpdateWeaponInfo();
-            UpdateWeaponActions();
-            SelectButton(_channelButton);
-        }
+		private void Channel()
+		{
+			if (CharacterManager.SelectedCharacter.EquippedWeapon == null) return;
+			if (CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.GetDurability().ReachedMax()) return;
+			if (Inventory.GetResourceQuantity("Essence") == 0) return;
+			UiGearMenuController.PlayAudio(AudioClips.Channel);
+			Inventory.DecrementResource("Essence", 1);
+			CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.IncreaseDurability(1);
+			_weaponDetail.UpdateWeaponInfo();
+			UpdateWeaponActions();
+			SelectButton(_channelButton);
+		}
 
-        protected override void OnShow()
-        {
-            UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
-            _infoGameObject.SetActive(true);
-            _weaponList.Hide();
-            _inscriptionList.Hide();
-            _swapButton.gameObject.SetActive(WeaponsAreAvailable());
-            SelectButton(_swapButton);
+		protected override void OnShow()
+		{
+			UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
+			_infoGameObject.SetActive(true);
+			_weaponList.Hide();
+			_inscriptionList.Hide();
+			_swapButton.gameObject.SetActive(WeaponsAreAvailable());
+			SelectButton(_swapButton);
 
-            SetWeapon();
-            StartCoroutine(TryShowWeaponTutorial());
-        }
+			SetWeapon();
+			StartCoroutine(TryShowWeaponTutorial());
+		}
 
-        private IEnumerator ShowWeaponAttributeTutorial()
-        {
-            if (_seenAttributeTutorial) yield break;
-            if (!TutorialManager.FinishedIntroTutorial()) yield break;
-            List<TutorialOverlay> startingOverlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(GetComponent<RectTransform>()),
-                new TutorialOverlay(_weaponDetail.DurabilityRect()),
-                new TutorialOverlay(_weaponDetail.DurabilityRect())
-            };
-            if (TutorialManager.Instance.TryOpenTutorial(12, startingOverlays))
-            {
-                while (TutorialManager.Instance.IsTutorialVisible()) yield return null;
-            }
+		private IEnumerator ShowWeaponAttributeTutorial()
+		{
+			if (_seenAttributeTutorial) yield break;
+			if (!TutorialManager.FinishedIntroTutorial()) yield break;
+			List<TutorialOverlay> startingOverlays = new List<TutorialOverlay>
+			{
+				new TutorialOverlay(GetComponent<RectTransform>()),
+				new TutorialOverlay(_weaponDetail.DurabilityRect()),
+				new TutorialOverlay(_weaponDetail.DurabilityRect())
+			};
+			if (TutorialManager.Instance.TryOpenTutorial(12, startingOverlays))
+			{
+				while (TutorialManager.Instance.IsTutorialVisible()) yield return null;
+			}
 
-            _seenAttributeTutorial = true;
-        }
+			_seenAttributeTutorial = true;
+		}
 
-        private IEnumerator ShowChannelTutorial()
-        {
-            if (_seenChannelTutorial) yield break;
-            if (!_channelButton.gameObject.activeInHierarchy) yield break;
-            TutorialOverlay overlay = new TutorialOverlay(_channelButton.GetComponent<RectTransform>());
-            if (TutorialManager.Instance.TryOpenTutorial(17, overlay))
-            {
-                while (TutorialManager.Instance.IsTutorialVisible()) yield return null;
-            }
+		private IEnumerator ShowChannelTutorial()
+		{
+			if (_seenChannelTutorial) yield break;
+			if (!_channelButton.gameObject.activeInHierarchy) yield break;
+			TutorialOverlay overlay = new TutorialOverlay(_channelButton.GetComponent<RectTransform>());
+			if (TutorialManager.Instance.TryOpenTutorial(17, overlay))
+			{
+				while (TutorialManager.Instance.IsTutorialVisible()) yield return null;
+			}
 
-            _seenChannelTutorial = true;
-        }
+			_seenChannelTutorial = true;
+		}
 
-        private IEnumerator ShowInfuseTutorial()
-        {
-            if (_seenInfuseTutorial) yield break;
-            if (!_infuseButton.gameObject.activeInHierarchy) yield break;
-            TutorialOverlay overlay = new TutorialOverlay(_infuseButton.GetComponent<RectTransform>());
-            if (TutorialManager.Instance.TryOpenTutorial(18, overlay))
-            {
-                while (TutorialManager.Instance.IsTutorialVisible()) yield return null;
-            }
+		private IEnumerator ShowInfuseTutorial()
+		{
+			if (_seenInfuseTutorial) yield break;
+			if (!_infuseButton.gameObject.activeInHierarchy) yield break;
+			TutorialOverlay overlay = new TutorialOverlay(_infuseButton.GetComponent<RectTransform>());
+			if (TutorialManager.Instance.TryOpenTutorial(18, overlay))
+			{
+				while (TutorialManager.Instance.IsTutorialVisible()) yield return null;
+			}
 
-            _seenInfuseTutorial = true;
-        }
+			_seenInfuseTutorial = true;
+		}
 
-        private IEnumerator TryShowWeaponTutorial()
-        {
-            if (!TutorialManager.Active()) yield break;
-            if (_seenAttributeTutorial && _seenInfuseTutorial && _seenChannelTutorial) yield break;
-            yield return StartCoroutine(ShowWeaponAttributeTutorial());
-            yield return StartCoroutine(ShowChannelTutorial());
-            yield return StartCoroutine(ShowInfuseTutorial());
-        }
+		private IEnumerator TryShowWeaponTutorial()
+		{
+			if (!TutorialManager.Active()) yield break;
+			if (_seenAttributeTutorial && _seenInfuseTutorial && _seenChannelTutorial) yield break;
+			yield return StartCoroutine(ShowWeaponAttributeTutorial());
+			yield return StartCoroutine(ShowChannelTutorial());
+			yield return StartCoroutine(ShowInfuseTutorial());
+		}
 
-        private void Equip(object weaponObject)
-        {
-            Weapon weapon = (Weapon) weaponObject;
-            CharacterManager.SelectedCharacter.EquipWeapon(weapon);
-            UiGearMenuController.PlayAudio(AudioClips.EquipWeapon);
-            Show();
-        }
+		private void Equip(object weaponObject)
+		{
+			Weapon weapon = (Weapon) weaponObject;
+			CharacterManager.SelectedCharacter.EquipWeapon(weapon);
+			UiGearMenuController.PlayAudio(AudioClips.EquipWeapon);
+			Show();
+		}
 
-        private void Inscribe(object inscriptionObject)
-        {
-            Inscription inscription = (Inscription) inscriptionObject;
-            if (!inscription.CanAfford()) return;
-            Weapon weapon = CharacterManager.SelectedCharacter.EquippedWeapon;
-            weapon.SetInscription(inscription);
-            Show();
-            UiGearMenuController.PlayAudio(AudioClips.Infuse);
-            if (PlayerCombat.Instance == null) return;
-            PlayerCombat.Instance.EquipInscription();
-            UpdateWeaponActions();
-            SelectButton(_infuseButton);
-        }
+		private void Inscribe(object inscriptionObject)
+		{
+			Inscription inscription = (Inscription) inscriptionObject;
+			if (!inscription.CanAfford()) return;
+			Weapon weapon = CharacterManager.SelectedCharacter.EquippedWeapon;
+			weapon.SetInscription(inscription);
+			if (weapon.Quality() == ItemQuality.Radiant && inscription.Quality() == ItemQuality.Radiant)
+			{
+				AchievementManager.Instance().MaxOutWeapon();
+			}
 
-        private void SetWeapon()
-        {
-            _equippedWeapon = CharacterManager.SelectedCharacter.EquippedWeapon;
-            _weaponDetail.SetWeapon(_equippedWeapon);
-            if (_equippedWeapon == null)
-            {
-                _infuseButton.gameObject.SetActive(false);
-                _channelButton.gameObject.SetActive(false);
-            }
-            else UpdateWeaponActions();
-        }
+			Show();
+			UiGearMenuController.PlayAudio(AudioClips.Infuse);
+			if (PlayerCombat.Instance == null) return;
+			PlayerCombat.Instance.EquipInscription();
+			UpdateWeaponActions();
+			SelectButton(_infuseButton);
+		}
 
-        private void SelectButton(EnhancedButton from)
-        {
-            if (from.gameObject.activeInHierarchy)
-            {
-                from.Select();
-                return;
-            }
+		private void SetWeapon()
+		{
+			_equippedWeapon = CharacterManager.SelectedCharacter.EquippedWeapon;
+			_weaponDetail.SetWeapon(_equippedWeapon);
+			if (_equippedWeapon == null)
+			{
+				_infuseButton.gameObject.SetActive(false);
+				_channelButton.gameObject.SetActive(false);
+			}
+			else UpdateWeaponActions();
+		}
 
-            if (_swapButton.gameObject.activeInHierarchy) _swapButton.Select();
-            else if (_channelButton.gameObject.activeInHierarchy) _channelButton.Select();
-            else if (_infuseButton.gameObject.activeInHierarchy) _infuseButton.Select();
-        }
+		private void SelectButton(EnhancedButton from)
+		{
+			if (from.gameObject.activeInHierarchy)
+			{
+				from.Select();
+				return;
+			}
 
-        private void UpdateWeaponActions()
-        {
-            WeaponAttributes attr = _equippedWeapon.WeaponAttributes;
-            bool reachedMaxDurability = attr.GetDurability().ReachedMax() || Inventory.GetResourceQuantity("Essence") == 0;
-            bool inscriptionsAvailable = InscriptionsAreAvailable();
-            _channelButton.gameObject.SetActive(!reachedMaxDurability);
-            _infuseButton.gameObject.SetActive(inscriptionsAvailable);
-        }
+			if (_swapButton.gameObject.activeInHierarchy) _swapButton.Select();
+			else if (_channelButton.gameObject.activeInHierarchy) _channelButton.Select();
+			else if (_infuseButton.gameObject.activeInHierarchy) _infuseButton.Select();
+		}
 
-        private static bool WeaponsAreAvailable() => GetAvailableWeapons().Count != 0;
-        private static bool InscriptionsAreAvailable() => GetAvailableInscriptions().Count != 0;
+		private void UpdateWeaponActions()
+		{
+			WeaponAttributes attr                  = _equippedWeapon.WeaponAttributes;
+			bool             reachedMaxDurability  = attr.GetDurability().ReachedMax() || Inventory.GetResourceQuantity("Essence") == 0;
+			bool             inscriptionsAvailable = InscriptionsAreAvailable();
+			_channelButton.gameObject.SetActive(!reachedMaxDurability);
+			_infuseButton.gameObject.SetActive(inscriptionsAvailable);
+		}
 
-        private class WeaponElement : BasicListElement
-        {
-            protected override void UpdateCentreItemEmpty()
-            {
-            }
+		private static bool WeaponsAreAvailable()      => GetAvailableWeapons().Count      != 0;
+		private static bool InscriptionsAreAvailable() => GetAvailableInscriptions().Count != 0;
 
-            protected override void Update(object o, bool isCentreItem)
-            {
-                Weapon weapon = (Weapon) o;
-                CentreText.SetText(weapon.GetDisplayName());
-                LeftText.SetText(weapon.WeaponType().ToString());
-                RightText.SetText(weapon.WeaponAttributes.DPS().Round(1) + " DPS");
-            }
-        }
+		private class WeaponElement : BasicListElement
+		{
+			protected override void UpdateCentreItemEmpty()
+			{
+			}
 
-        private class InscriptionElement : WeaponElement
-        {
-            protected override void Update(object o, bool isCentreItem)
-            {
-                Inscription inscription = (Inscription) o;
-                string inscriptionString = inscription.Name;
-                CentreText.SetText(inscriptionString);
-                string costText = inscription.InscriptionCost() + " Essence";
-                if (!inscription.CanAfford()) costText = "Requires " + costText;
-                LeftText.SetText(costText);
-                RightText.SetText(inscription.GetSummary());
-            }
-        }
+			protected override void Update(object o, bool isCentreItem)
+			{
+				Weapon weapon = (Weapon) o;
+				CentreText.SetText(weapon.GetDisplayName());
+				LeftText.SetText(weapon.WeaponType().ToString());
+				RightText.SetText(weapon.WeaponAttributes.DPS().Round(1) + " DPS");
+			}
+		}
 
-        private class DetailedWeaponElement : ListElement
-        {
-            private WeaponDetailController _detailController;
+		private class InscriptionElement : WeaponElement
+		{
+			protected override void Update(object o, bool isCentreItem)
+			{
+				Inscription inscription       = (Inscription) o;
+				string      inscriptionString = inscription.Name;
+				CentreText.SetText(inscriptionString);
+				string costText                        = inscription.InscriptionCost() + " Essence";
+				if (!inscription.CanAfford()) costText = "Requires " + costText;
+				LeftText.SetText(costText);
+				RightText.SetText(inscription.GetSummary());
+			}
+		}
 
-            protected override void UpdateCentreItemEmpty()
-            {
-                _detailController.SetWeapon(null);
-            }
+		private class DetailedWeaponElement : ListElement
+		{
+			private WeaponDetailController _detailController;
 
-            public override void SetColour(Color colour)
-            {
-            }
+			protected override void UpdateCentreItemEmpty()
+			{
+				_detailController.SetWeapon(null);
+			}
 
-            protected override void SetVisible(bool visible)
-            {
-            }
+			public override void SetColour(Color colour)
+			{
+			}
 
-            protected override void CacheUiElements(Transform transform)
-            {
-                _detailController = transform.GetComponent<WeaponDetailController>();
-            }
+			protected override void SetVisible(bool visible)
+			{
+			}
 
-            protected override void Update(object o, bool isCentreItem)
-            {
-                Weapon weapon = (Weapon) o;
-                _detailController.SetWeapon(weapon);
-                Weapon equippedWeapon = CharacterManager.SelectedCharacter.EquippedWeapon;
-                if (equippedWeapon == null) return;
+			protected override void CacheUiElements(Transform transform)
+			{
+				_detailController = transform.GetComponent<WeaponDetailController>();
+			}
+
+			protected override void Update(object o, bool isCentreItem)
+			{
+				Weapon weapon = (Weapon) o;
+				_detailController.SetWeapon(weapon);
+				Weapon equippedWeapon = CharacterManager.SelectedCharacter.EquippedWeapon;
+				if (equippedWeapon == null) return;
 //                _detailController.CompareTo(equippedWeapon);
-            }
-        }
-    }
+			}
+		}
+	}
 }

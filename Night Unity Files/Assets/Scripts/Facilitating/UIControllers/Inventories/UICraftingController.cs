@@ -164,6 +164,7 @@ public class UICraftingController : UiInventoryMenuController
     private class CentreCraftingElement : CraftingElement
     {
         private EnhancedText _descriptionText;
+        private CanvasGroup _canvasGroup;
 
         protected override void UpdateCentreItemEmpty()
         {
@@ -176,6 +177,7 @@ public class UICraftingController : UiInventoryMenuController
             base.Update(o, isCentreItem);
             Recipe recipe = (Recipe) o;
             _descriptionText.SetText(recipe.Description);
+            _canvasGroup.alpha = recipe.CanCraft() ? 1 : 0.6f;
         }
 
         protected override void SetVisible(bool visible)
@@ -187,6 +189,7 @@ public class UICraftingController : UiInventoryMenuController
         protected override void CacheUiElements(Transform transform)
         {
             base.CacheUiElements(transform);
+            _canvasGroup = transform.GetComponent<CanvasGroup>();
             _descriptionText = transform.gameObject.FindChildWithName<EnhancedText>("Description");
         }
 

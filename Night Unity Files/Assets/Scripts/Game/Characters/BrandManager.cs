@@ -213,11 +213,7 @@ namespace Game.Characters
 
         private void CreateOtherBrands()
         {
-            new EssenceChangeBrand(_player);
-            new EssenceChangeBrand(_player);
             new HealthRecoveryBrand(_player);
-            new HealthRecoveryBrand(_player);
-            new WillRecoveryBrand(_player);
             new WillRecoveryBrand(_player);
             new AutomaticReloadBrand(_player);
             new InstantReloadBrand(_player);
@@ -252,7 +248,6 @@ namespace Game.Characters
         public void IncreaseSkillsUsed() => UpdateBrandValue(typeof(WillBrand), 1);
         public void IncreaseRegionsExplored() => UpdateBrandValue(typeof(GritBrand), 1);
 
-        public void IncreaseEssenceFound() => UpdateBrandValue(typeof(EssenceChangeBrand), 1);
         public void IncreaseDamageTaken(int damage) => UpdateBrandValue(typeof(HealthRecoveryBrand), damage);
         public void IncreaseEnemiesKilled() => UpdateBrandValue(typeof(WillRecoveryBrand), 1);
         public void IncreasePerfectReloadCount() => UpdateBrandValue(typeof(AutomaticReloadBrand), 1);

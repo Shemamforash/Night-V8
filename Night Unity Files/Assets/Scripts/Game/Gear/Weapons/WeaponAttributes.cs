@@ -123,10 +123,10 @@ namespace Game.Gear.Weapons
                                            + "\nReload:     " + Val(AttributeType.ReloadSpeed)
                                            + "\nAccuracy: " + Val(AttributeType.Accuracy);
 
-        public void DecreaseDurability(float shots, float durabilityModifier)
+        public void DecreaseDurability(float shots)
         {
             float durabilityLossPerShot = 0.0075f / Val(AttributeType.Pellets);
-            float durabilityLoss = durabilityLossPerShot * shots * durabilityModifier;
+            float durabilityLoss = durabilityLossPerShot * shots;
             float durabilityBefore = _durability.Normalised();
             _durability.Decrement(durabilityLoss);
             float durabilityAfter = _durability.Normalised();

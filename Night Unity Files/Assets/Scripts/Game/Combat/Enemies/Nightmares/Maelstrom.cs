@@ -22,7 +22,7 @@ namespace Game.Combat.Enemies.Nightmares
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
-            if (WorldState.Difficulty() >= 25)
+            if (WorldState.Difficulty() >= 35)
             {
                 _split = gameObject.AddComponent<Split>();
                 _split.Initialise(MinImagesReleased, Random.Range(100, 300), EnemyType.Decoy, DamageToSplit, MaxImagesReleased);

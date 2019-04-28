@@ -22,8 +22,9 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         {
             SkillAnimationController.Create(transform, "Spawn", 2f, () =>
             {
-                int enemiesToSpawn = Random.Range(_countMin + 1, _countMax + 1);
-                
+                int enemiesToSpawn = Random.Range(_countMin, _countMax + 1);
+                if (CombatManager.Instance().Enemies().Count > 15) enemiesToSpawn = 0;
+
                 for (int i = 0; i < enemiesToSpawn; ++i)
                 {
                     Vector2 spawnPosition = AdvancedMaths.RandomDirection() * Random.Range(0.5f, 2f) + (Vector2) transform.position;

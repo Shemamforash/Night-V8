@@ -20,8 +20,8 @@ namespace Game.Combat.Enemies.Humans
                 Vector2 currentPosition = transform.position;
                 Vector2 targetPosition = TargetTransform().position;
                 int max = 1;
-                if (WorldState.Difficulty() > 10) max = 2;
-                if (WorldState.Difficulty() > 20) max = 4;
+                if (WorldState.Difficulty() > 30) max = 2;
+                if (WorldState.Difficulty() > 37) max = 3;
                 switch (Random.Range(0, max))
                 {
                     case 0:

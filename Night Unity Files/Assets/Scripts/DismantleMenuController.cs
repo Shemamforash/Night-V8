@@ -84,7 +84,7 @@ public class DismantleMenuController : Menu
         _closeButton.SetOnClick(Close);
         SaveStoneBehaviour.SetUsed();
         PlayerCombat.Instance.WeaponAudio.PlaySaltTake();
-        Close();
+        Enter();
     }
 
     private void ShowDismantledScreen(object o)
@@ -98,8 +98,9 @@ public class DismantleMenuController : Menu
         _acceptButton.Select();
     }
 
-    private static void ShowDismantleList()
+    private void ShowDismantleList()
     {
+        _closeButton.SetOnClick(Close);
         _dismantledScreen.SetActive(false);
         _dismantleList.gameObject.SetActive(true);
         _dismantleList.Show();

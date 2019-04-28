@@ -140,8 +140,10 @@ namespace Game.Gear
             {
                 float scaledValue = _modifierValue * ((int) quality + 1);
                 string attributeName = AttributeTarget.AttributeToDisplayString();
-                if (!_additive) return "+" + (int) (scaledValue * 100) + "% " + attributeName;
-                return "+" + (int)scaledValue + " " + attributeName;
+                string prefix = "";
+                if (scaledValue > 0) prefix = "+";
+                if (!_additive) return prefix + (int) (scaledValue * 100) + "% " + attributeName;
+                return prefix + (int) scaledValue + " " + attributeName;
             }
         }
 

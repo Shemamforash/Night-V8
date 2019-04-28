@@ -72,23 +72,6 @@ namespace Game.Characters.Brands
         }
     }
 
-    public class EssenceChangeBrand : Brand
-    {
-        public EssenceChangeBrand(Player player) : base(player, "Insight")
-        {
-        }
-
-        protected override void OnSucceed()
-        {
-            Player.Attributes.EssenceRecoveryModifier += SuccessModifier;
-        }
-
-        protected override string GetProgressSubstring()
-        {
-            return "Found " + Progress() + " essence";
-        }
-    }
-
     public class HealthRecoveryBrand : Brand
     {
         public HealthRecoveryBrand(Player player) : base(player, "Revival")

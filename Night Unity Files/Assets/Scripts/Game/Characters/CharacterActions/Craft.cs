@@ -26,6 +26,7 @@ namespace Game.Characters.CharacterActions
         private void CraftRecipe()
         {
             _recipe.Craft();
+            AchievementManager.Instance().IncreaseItemsCrafted();
             _recipe = null;
             PlayerCharacter.RestAction.Enter();
             ReopenMenu();
@@ -61,6 +62,12 @@ namespace Game.Characters.CharacterActions
                 if (Duration != 0) return;
                 CraftRecipe();
             };
+        }
+
+        public void AbortCraft()
+        {
+            if (_recipe == null) return;
+            _recipe.RestoreResources();
         }
 
         public void StartCrafting(Recipe recipe)

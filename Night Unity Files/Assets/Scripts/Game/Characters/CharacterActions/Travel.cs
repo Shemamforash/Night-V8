@@ -51,13 +51,13 @@ namespace Game.Characters.CharacterActions
             return CurrentRegion.GetRegionType() == RegionType.Gate;
         }
 
-        public void ReturnToHomeInstant()
+        public void ReturnToHomeInstant(bool goToGame)
         {
             CurrentRegion = MapGenerator.GetInitialNode();
             PlayerCharacter.RestAction.Enter();
             CombatManager combatManager = CombatManager.Instance();
             if (combatManager != null) combatManager.ExitCombat(false);
-            SceneChanger.GoToGameScene();
+            if(goToGame) SceneChanger.GoToGameScene();
         }
 
         private void ReachTarget()

@@ -18,7 +18,7 @@ namespace Game.Combat.Enemies.Nightmares
             _split = gameObject.AddComponent<Split>();
             _split.Initialise(3, 200, EnemyType.Revenant, 1000, -1, true);
 
-            if (WorldState.Difficulty() < 10) return;
+            if (WorldState.Difficulty() < 25) return;
             _fireTrail = gameObject.AddComponent<LeaveFireTrail>();
             _fireTrail.Initialise();
         }

@@ -26,7 +26,6 @@ namespace Game.Characters
         public bool SkillOneUnlocked, SkillTwoUnlocked;
         private static readonly List<AttributeType> _attributeTypes = new List<AttributeType>();
 
-        public float EssenceRecoveryModifier;
         public float RallyHealthModifier;
         public float ClaimRegionWillGainModifier;
         public float ResourceFindModifier;

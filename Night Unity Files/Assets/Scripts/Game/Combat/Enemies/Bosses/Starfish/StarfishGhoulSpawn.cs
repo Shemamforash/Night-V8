@@ -10,9 +10,9 @@ namespace Game.Combat.Enemies.Bosses.Starfish
 {
     public class StarfishGhoulSpawn : MonoBehaviour
     {
-        private readonly List<CanTakeDamage> _ghouls = new List<CanTakeDamage>();
-        private const float GhoulSpawnRate = 2f;
-        private float _timeToNextGhoul;
+        private readonly List<CanTakeDamage> _enemies = new List<CanTakeDamage>();
+        private const float GhoulSpawnRate = 4f;
+        private float _timeToNextEnemy;
         private float _timeAlive;
 
         public void UpdateGhoulSpawn(int armCount)
@@ -24,21 +24,21 @@ namespace Game.Combat.Enemies.Bosses.Starfish
 
         private void UpdateAliveGhouls()
         {
-            for (int i = _ghouls.Count - 1; i >= 0; --i)
-                if (_ghouls[i] == null)
-                    _ghouls.RemoveAt(i);
+            for (int i = _enemies.Count - 1; i >= 0; --i)
+                if (_enemies[i] == null)
+                    _enemies.RemoveAt(i);
         }
 
         private void UpdateSpawn()
         {
-            int MaxGhouls = (int) (_timeAlive / 6f);
-            if (MaxGhouls > 10) MaxGhouls = 10;
-            if (_ghouls.Count == MaxGhouls) return;
-            _timeToNextGhoul -= Time.deltaTime;
-            if (_timeToNextGhoul > 0f) return;
+            int maxEnemies = (int) (_timeAlive / 6f);
+            if (maxEnemies > 5) maxEnemies = 5;
+            if (_enemies.Count >= maxEnemies) return;
+            _timeToNextEnemy -= Time.deltaTime;
+            if (_timeToNextEnemy > 0f) return;
             EnemyType typeToSpawn = WorldState.GetAllowedNightmareEnemyTypes().RandomElement();
             EnemyBehaviour enemy = CombatManager.Instance().SpawnEnemy(typeToSpawn, AdvancedMaths.RandomDirection() * 9);
-            _ghouls.Add(enemy);
+            _enemies.Add(enemy);
             if (_timeAlive > 60 && Helper.RollDie(0, 3))
             {
                 LeaveFireTrail fireTrail = enemy.gameObject.AddComponent<LeaveFireTrail>();
@@ -46,7 +46,7 @@ namespace Game.Combat.Enemies.Bosses.Starfish
                 fireTrail.AddIgnoreTargets(StarfishBehaviour.Instance().Sections);
             }
 
-            _timeToNextGhoul = Random.Range(GhoulSpawnRate, GhoulSpawnRate * 2f);
+            _timeToNextEnemy = Random.Range(GhoulSpawnRate, GhoulSpawnRate * 2f);
         }
     }
 }

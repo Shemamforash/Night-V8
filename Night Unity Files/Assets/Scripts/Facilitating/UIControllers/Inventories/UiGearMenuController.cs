@@ -253,6 +253,7 @@ namespace Facilitating.UIControllers
                 SelectTab(2);
                 return;
             }
+
             for (int i = 0; i < _instance._tabs.Count; i++)
             {
                 InventoryTab tab = _instance._tabs[i];
@@ -294,7 +295,10 @@ namespace Facilitating.UIControllers
             SelectTab(6);
         }
 
-        public static bool IsOpen() => MenuStateMachine.CurrentMenu() == _instance;
+        public static bool IsOpen()
+        {
+            return _instance != null && MenuStateMachine.CurrentMenu() == _instance;
+        }
 
         public static void SetCloseAllowed(bool allowed) => _closeAllowed = allowed;
 

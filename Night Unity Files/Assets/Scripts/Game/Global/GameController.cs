@@ -29,7 +29,6 @@ public class GameController : MonoBehaviour
         _starting = true;
         InputHandler.SetCurrentListener(null);
         TryFadeMusic();
-        if (TrySkipToBeta()) return;
         if (TryContinueFromTutorial()) return;
         if (TryContinueFromStory(newGame)) return;
         ContinueFromGame();
@@ -42,10 +41,6 @@ public class GameController : MonoBehaviour
         musicAudio.GetComponent<AudioSource>().DOFade(0f, 0.5f).SetUpdate(true);
     }
 
-    private static bool TrySkipToBeta()
-    {
-        return EnvironmentManager.SkippingToBeta;
-    }
 
     private static void ContinueFromGame()
     {

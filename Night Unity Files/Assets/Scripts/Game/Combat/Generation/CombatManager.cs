@@ -270,13 +270,8 @@ namespace Game.Combat.Generation
         public void ExitCombat(bool returnToMap = true)
         {
             if (!_inCombat) return;
-            if (_currentRegion.IsDynamic())
-            {
-                _inactiveEnemies.ForEach(e => _currentRegion.RestoreSize(e));
-                _enemies.ForEach(e => _currentRegion.RestoreSize(e));
-            }
-            else
-            {
+            RestoreEnemies();
+            if (!_currentRegion.IsDynamic()){
                 AudioController.FadeWeatherIn();
             }
 
@@ -284,6 +279,13 @@ namespace Game.Combat.Generation
             PlayerCombat.Instance.ExitCombat();
             if (returnToMap) ReturnToMap();
             _instance = null;
+        }
+
+        public void RestoreEnemies()
+        {
+            if (!_currentRegion.IsDynamic()) return;
+            _inactiveEnemies.ForEach(e => _currentRegion.RestoreSize(e));
+            _enemies.ForEach(e => _currentRegion.RestoreSize(e));
         }
 
         public void ClearInactiveEnemies() => _inactiveEnemies.Clear();
@@ -350,6 +352,7 @@ namespace Game.Combat.Generation
         public void Resume()
         {
             if (_instance == null) return;
+            if (PauseMenuController.IsOpen()) return;
             _paused = false;
             Time.timeScale = 1;
         }

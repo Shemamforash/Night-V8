@@ -85,7 +85,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             _sequence.AppendCallback(() =>
             {
                 EventSystem.current.sendNavigationEvents = true;
-                
+
                 nextState.Enter();
                 OnTransition?.Invoke();
             });
@@ -109,7 +109,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
         public static Menu CurrentMenu()
         {
-            return ((MenuState) States.GetCurrentState())?.Menu;
+            return ((MenuState) States?.GetCurrentState())?.Menu;
         }
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -119,7 +119,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             bool isCombatManager = CurrentMenu() is CombatManager;
             bool isPauseMenuOpen = PauseMenuController.IsOpen();
             bool isGearMenuOpen = UiGearMenuController.IsOpen();
-            bool isTutorialOpen = TutorialManager.Instance.IsTutorialVisible();
+            bool isTutorialOpen = TutorialManager.Instance != null && TutorialManager.Instance.IsTutorialVisible();
 
             if (!isWorldView && !isCombatManager && !isPauseMenuOpen) return;
             if (!isPauseMenuOpen && (isGearMenuOpen || isTutorialOpen)) return;

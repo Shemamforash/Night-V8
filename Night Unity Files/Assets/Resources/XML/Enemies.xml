@@ -15,7 +15,7 @@
 	<Enemy>
 		<Name>Brawler</Name>
 		<DisplayName>Brawler</DisplayName>
-		<Health>75</Health>
+		<Health>100</Health>
 		<Speed>6</Speed>
 		<Value>1</Value>
 		<Difficulty>0</Difficulty>
@@ -31,7 +31,7 @@
 		<Health>300</Health>
 		<Speed>5</Speed>
 		<Value>3</Value>
-		<Difficulty>16</Difficulty>
+		<Difficulty>18</Difficulty>
 		<DropRate>0.6</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -57,7 +57,7 @@
 		<Health>300</Health>
 		<Speed>5</Speed>
 		<Value>4</Value>
-		<Difficulty>20</Difficulty>
+		<Difficulty>25</Difficulty>
 		<DropRate>0.8</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -70,7 +70,7 @@
 		<Health>400</Health>
 		<Speed>4</Speed>
 		<Value>4</Value>
-		<Difficulty>30</Difficulty>
+		<Difficulty>33</Difficulty>
 		<DropRate>0.8</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -96,7 +96,7 @@
 		<Health>200</Health>
 		<Speed>7</Speed>
 		<Value>3</Value>
-		<Difficulty>25</Difficulty>
+		<Difficulty>27</Difficulty>
 		<DropRate>0.8</DropRate>
 		<Drops>Salt</Drops>
 		<HasWeapon>True</HasWeapon>
@@ -236,7 +236,7 @@
 	<Enemy>
 		<Name>Curio</Name>
 		<DisplayName>Curio</DisplayName>
-		<Health>50</Health>
+		<Health>75</Health>
 		<Speed>10</Speed>
 		<Value>1</Value>
 		<Difficulty>0</Difficulty>

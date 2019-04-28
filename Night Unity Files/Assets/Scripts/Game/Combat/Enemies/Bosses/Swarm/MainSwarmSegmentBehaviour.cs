@@ -23,13 +23,13 @@ public class MainSwarmSegmentBehaviour : CanTakeDamage
     {
         base.Awake();
         _orbit = gameObject.AddComponent<Orbit>();
-        int initialHealth = WorldState.ScaleValue(1000);
+        int initialHealth = WorldState.ScaleValue(1200);
         HealthController.SetInitialHealth(initialHealth, this);
         ArmourController.AutoGenerateArmour();
         SpriteFlash = gameObject.FindChildWithName<DamageSpriteFlash>("Sprite");
     }
 
-    public override string GetDisplayName() => "The Soul of Rha";
+    public override string GetDisplayName() => "The Soul of Rhallos";
 
     private void Start()
     {

@@ -1,8 +1,5 @@
 ﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
-using Game.Combat.Generation;
 using Game.Global;
-using SamsHelper.Libraries;
-using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
 {
@@ -13,7 +10,7 @@ namespace Game.Combat.Enemies.Nightmares
             base.Initialise(enemy);
             gameObject.AddComponent<ErraticDash>();
             gameObject.AddComponent<Push>().Initialise(4, 2);
-            if (WorldState.Difficulty() > 15) gameObject.AddComponent<Needler>().Initialise(1);
+            if (WorldState.Difficulty() > 25) gameObject.AddComponent<Needler>().Initialise(1);
         }
     }
 }

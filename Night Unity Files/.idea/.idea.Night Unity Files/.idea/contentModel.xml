@@ -1035,6 +1035,7 @@
               <e p="MainMenuNavigator.cs" t="Include" />
             </e>
             <e p="Persistence" t="Include">
+              <e p="AchievementManager.cs" t="Include" />
               <e p="Save.cs" t="Include" />
               <e p="SaveController.cs" t="Include" />
             </e>

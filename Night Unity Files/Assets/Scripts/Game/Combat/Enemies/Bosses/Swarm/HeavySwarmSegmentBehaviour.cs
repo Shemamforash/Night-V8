@@ -30,7 +30,7 @@ public class HeavySwarmSegmentBehaviour : BossSectionHealthController
         Active.Remove(this);
     }
 
-    public override string GetDisplayName() => "The Soul of Rha";
+    public override string GetDisplayName() => "The Soul of Rhallos";
 
     protected override int GetInitialHealth() => 300;
 

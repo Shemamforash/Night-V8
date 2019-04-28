@@ -71,6 +71,6 @@ public class InstancedAudio : MonoBehaviour
 
     private void OnDestroy()
     {
-        _audioPool.Dispose(this);
+        _audioPool?.Dispose(this);
     }
 }

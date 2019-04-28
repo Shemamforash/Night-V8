@@ -219,7 +219,6 @@ namespace Game.Combat.Enemies
 
         private Loot DropNightmareLoot(Vector2 position)
         {
-            if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Rite) return null;
             if (!CanDropInscription())
             {
                 if (Random.Range(0f, 1f) < Template.DropRate) EssenceCloudBehaviour.Create(position);
@@ -234,7 +233,7 @@ namespace Game.Combat.Enemies
         private Loot DropAnimalLoot(Vector2 position)
         {
             ResourceItem item;
-            if (Helper.RollDie(0, 2) || Inventory.GetResourceQuantity("Grisly Remains") == 0)
+            if (Helper.RollDie(0, 4) || Inventory.GetResourceQuantity("Grisly Remains") == 0)
             {
                 item = ResourceTemplate.Create("Grisly Remains");
             }

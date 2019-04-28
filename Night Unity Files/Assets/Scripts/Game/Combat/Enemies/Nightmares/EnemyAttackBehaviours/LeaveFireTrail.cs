@@ -29,17 +29,23 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             Vector2 currentPosition = transform.position;
             if (_lastPosition == currentPosition) return;
             float distance = Vector2.Distance(_lastPosition, currentPosition);
-            Vector2 tempPos = _lastPosition;
-
-            for (float i = Interval; i < distance; i += Interval)
+            if (distance < 1)
             {
-                float lerpVal = i / distance;
-                tempPos = Vector2.Lerp(_lastPosition, currentPosition, lerpVal);
-                _ignoreTargets.RemoveAll(c => c == null || c.HealthController.GetCurrentHealth() == 0);
-                TrailFireBehaviour.Create(tempPos).AddIgnoreTargets(_ignoreTargets);
-            }
+                Vector2 tempPos = _lastPosition;
+                for (float i = Interval; i < distance; i += Interval)
+                {
+                    float lerpVal = i / distance;
+                    tempPos = Vector2.Lerp(_lastPosition, currentPosition, lerpVal);
+                    _ignoreTargets.RemoveAll(c => c == null || c.HealthController.GetCurrentHealth() == 0);
+                    TrailFireBehaviour.Create(tempPos).AddIgnoreTargets(_ignoreTargets);
+                }
 
-            _lastPosition = tempPos;
+                _lastPosition = tempPos;
+            }
+            else
+            {
+                _lastPosition = transform.position;
+            }
         }
 
         public void AddIgnoreTargets<T>(List<T> ignoreTargets) where T : CanTakeDamage

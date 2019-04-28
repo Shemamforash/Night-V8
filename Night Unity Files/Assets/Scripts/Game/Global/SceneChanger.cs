@@ -115,10 +115,5 @@ namespace Game.Global
         {
             ChangeScene("Combat Story");
         }
-
-        public static void GoToEndBetaScreen()
-        {
-            ChangeScene("Beta Finished");
-        }
     }
 }

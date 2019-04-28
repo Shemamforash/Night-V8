@@ -1,4 +1,5 @@
-﻿using Game.Combat.Generation;
+﻿using Game.Combat.Enemies;
+using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Combat.Ui;
@@ -70,6 +71,7 @@ namespace Game.Gear.Weapons
         {
             if (Empty()) return;
             TimeToNextFire = Helper.TimeInSeconds() + 1f / _weapon.GetAttributeValue(AttributeType.FireRate);
+            if (_origin is EnemyBehaviour) TimeToNextFire *= 2f;
             for (int i = 0; i < _weaponAttributes.Val(AttributeType.Pellets); ++i)
             {
                 Shot shot = ShotManager.Create(_origin);
@@ -91,9 +93,8 @@ namespace Game.Gear.Weapons
 
         public void ConsumeAmmo(int amount = -1)
         {
-            float durabilityModifier = 1;
             if (amount < 0) amount = _ammoInMagazine;
-            _weaponAttributes.DecreaseDurability(amount, durabilityModifier);
+            _weaponAttributes.DecreaseDurability(amount);
             _ammoInMagazine -= amount;
             if (_ammoInMagazine < 0) throw new Exceptions.MoreAmmoConsumedThanAvailableException();
         }
