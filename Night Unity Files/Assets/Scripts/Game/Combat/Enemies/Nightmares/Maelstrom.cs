@@ -29,7 +29,7 @@ namespace Game.Combat.Enemies.Nightmares
                 _split.SetOnSplit(e =>
                 {
                     Decoy decoy = e as Decoy;
-                    decoy.gameObject.AddComponent<Orbit>().Initialise(PlayerCombat.Instance.transform, v => MovementController.AddForce(v), 4, 2f, Random.Range(2.5f, 4f));
+                    decoy.gameObject.AddComponent<Orbit>().Initialise(PlayerCombat.Instance.transform, v => decoy.MovementController.AddForce(v), 4, 2f, Random.Range(2.5f, 4f));
                     Heavyshot shot = decoy.gameObject.AddComponent<Heavyshot>();
                     shot.Initialise(10f, 5f, 5f, 0.2f);
                     shot.SetDamageModifier(0.5f);

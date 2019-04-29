@@ -32,7 +32,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private static float DesertDRCur, MountainsDRCur, RuinsDRCur, SeaDRCur, WastelandDRCur;
         private readonly Dictionary<EnvironmentType, DropRate> _dropRates = new Dictionary<EnvironmentType, DropRate>();
         private static readonly Dictionary<string, Sprite> _resourceSprites = new Dictionary<string, Sprite>();
-        public Sprite Sprite;
+        public readonly Sprite Sprite;
 
         private class DropRate
         {

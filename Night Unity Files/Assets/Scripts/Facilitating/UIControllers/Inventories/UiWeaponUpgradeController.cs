@@ -130,7 +130,7 @@ namespace Facilitating.UIControllers
 			if (Inventory.GetResourceQuantity("Essence") == 0) return;
 			UiGearMenuController.PlayAudio(AudioClips.Channel);
 			Inventory.DecrementResource("Essence", 1);
-			CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.IncreaseDurability(1);
+			CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.IncreaseDurability();
 			_weaponDetail.UpdateWeaponInfo();
 			UpdateWeaponActions();
 			SelectButton(_channelButton);

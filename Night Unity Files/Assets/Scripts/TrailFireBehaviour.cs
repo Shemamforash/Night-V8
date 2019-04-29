@@ -6,7 +6,7 @@ public class TrailFireBehaviour : FireDamageDeal
 {
     private static readonly ObjectPool<TrailFireBehaviour> _firePool = new ObjectPool<TrailFireBehaviour>("Fire Areas", "Prefabs/Combat/Effects/Fire Trail");
     private ParticleSystem _fire;
-    private const float LifeTime = 4f;
+    private const float LifeTime = 3f;
 
     private void Awake()
     {
