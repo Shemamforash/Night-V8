@@ -47,6 +47,7 @@ namespace Fastlights
         private readonly List<FLVertex> _verts = new List<FLVertex>();
         private List<FLEdge> _segments = new List<FLEdge>();
         private ConcurrentQueue<List<FLEdge>> _edgeSegmentQueue;
+        private static readonly int _color = Shader.PropertyToID("_Color");
 
         public static void UpdateLights()
         {
@@ -322,7 +323,7 @@ namespace Fastlights
         {
             if (!_hasUpdated && _lastColour == Colour) return;
             _meshRenderer.GetPropertyBlock(_propBlock);
-            _propBlock.SetColor("_Color", Colour);
+            _propBlock.SetColor(_color, Colour);
             _meshRenderer.SetPropertyBlock(_propBlock);
             _lastColour = Colour;
         }

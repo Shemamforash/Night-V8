@@ -37,6 +37,7 @@ namespace Game.Combat.Enemies
         protected virtual void UpdateTargetCell()
         {
             if (GetTarget() == null) SetTarget(PlayerCombat.Instance);
+            if(GetTarget() == null) return;
             Cell newTargetCell = ((CharacterCombat) GetTarget()).CurrentCell();
             if (!newTargetCell.Reachable)
             {

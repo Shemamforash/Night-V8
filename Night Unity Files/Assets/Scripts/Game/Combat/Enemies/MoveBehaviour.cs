@@ -67,10 +67,10 @@ namespace Game.Combat.Enemies
         private List<Cell> DoStraightLinePath()
         {
             if (_targetCell == null) return null;
+            if(_currentCell == null) return null;
             Vector2 direction = (_targetCell.Position - _currentCell.Position).normalized;
             Vector2 targetPosition = _targetCell.Position + direction * _minDistance * 1.2f;
             _targetCell = WorldGrid.WorldToCellPosition(targetPosition, false);
-            if (_targetCell == null) Debug.Log("null");
             if (_targetCell == null) return null;
             return new List<Cell>(new[] {_targetCell});
         }

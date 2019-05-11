@@ -307,6 +307,8 @@ namespace Game.Combat.Player
 			if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Rite)
 			{
 				ShrineBehaviour.ActiveShrine.Fail();
+				int healAmount = Mathf.FloorToInt(HealthController.GetMaxHealth() * 0.1f);
+				HealthController.Heal(healAmount);
 				return;
 			}
 

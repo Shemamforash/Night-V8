@@ -21,6 +21,7 @@ public class FaceTarget : MonoBehaviour
 	
 	private void FixedUpdate ()
 	{
+		if(_target == null) return;
 		float rot = AdvancedMaths.AngleFromUp(transform.position, _target.position);
 		transform.rotation = Quaternion.Euler(0, 0, rot);
 	}
