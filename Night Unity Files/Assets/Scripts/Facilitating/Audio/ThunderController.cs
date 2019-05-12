@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using Game.Combat.Generation;
-using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Exploration.Weather;
 using Game.Global;
-using SamsHelper.Libraries;
+using Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,14 +14,14 @@ namespace Facilitating.Audio
 	{
 		private const  float             LightningDuration = 0.15f;
 		private static ThunderController _instance;
+		private        bool              _inCombat;
 		private        ParticleSystem    _lightningSystem;
-
-		private AudioSource thunderSource;
-		private float       lightningTimer;
-		private bool        _waitingForThunder;
+		private        bool              _waitingForThunder;
 
 		public  Image lightningImage;
-		private bool  _inCombat;
+		private float lightningTimer;
+
+		private AudioSource thunderSource;
 
 		public void Awake()
 		{

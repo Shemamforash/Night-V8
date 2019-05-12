@@ -1,74 +1,73 @@
 ﻿using DefaultNamespace;
-using Game.Global;
-using SamsHelper.Libraries;
+using Extensions;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 namespace Facilitating.UIControllers.Inventories
 {
-    public abstract class UiInventoryMenuController : MonoBehaviour
-    {
-        public virtual void Awake()
-        {
-            CacheElements();
-            Initialise();
-            Hide();
-        }
+	public abstract class UiInventoryMenuController : MonoBehaviour
+	{
+		public virtual void Awake()
+		{
+			CacheElements();
+			Initialise();
+			Hide();
+		}
 
-        public void Show()
-        {
-            gameObject.SetActive(true);
-            ButtonClickListener.SuppressClick();
-            OnShow();
-        }
+		public void Show()
+		{
+			gameObject.SetActive(true);
+			ButtonClickListener.SuppressClick();
+			OnShow();
+		}
 
-        public void Hide()
-        {
-            gameObject.SetActive(false);
-            ButtonClickListener.SuppressClick();
-            OnHide();
-        }
+		public void Hide()
+		{
+			gameObject.SetActive(false);
+			ButtonClickListener.SuppressClick();
+			OnHide();
+		}
 
-        protected virtual void OnShow()
-        {
-            UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
-        }
+		protected virtual void OnShow()
+		{
+			UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
+		}
 
-        protected virtual void OnHide()
-        {
-        }
+		protected virtual void OnHide()
+		{
+		}
 
-        protected abstract void CacheElements();
-        protected abstract void Initialise();
+		protected abstract void CacheElements();
+		protected abstract void Initialise();
 
-        protected abstract class BasicListElement : ListElement
-        {
-            protected EnhancedText CentreText;
-            protected EnhancedText LeftText;
-            protected EnhancedText RightText;
+		public abstract bool Unlocked();
 
-            protected override void SetVisible(bool visible)
-            {
-                CentreText.gameObject.SetActive(visible);
-                LeftText.gameObject.SetActive(visible);
-                RightText.gameObject.SetActive(visible);
-            }
+		protected abstract class BasicListElement : ListElement
+		{
+			protected EnhancedText CentreText;
+			protected EnhancedText LeftText;
+			protected EnhancedText RightText;
 
-            protected override void CacheUiElements(Transform transform)
-            {
-                CentreText = transform.gameObject.FindChildWithName<EnhancedText>("Name");
-                LeftText = transform.gameObject.FindChildWithName<EnhancedText>("Type");
-                RightText = transform.gameObject.FindChildWithName<EnhancedText>("Dps");
-            }
+			protected override void SetVisible(bool visible)
+			{
+				CentreText.gameObject.SetActive(visible);
+				LeftText.gameObject.SetActive(visible);
+				RightText.gameObject.SetActive(visible);
+			}
 
-            public override void SetColour(Color c)
-            {
-                CentreText.SetColor(c);
-                LeftText.SetColor(c);
-                RightText.SetColor(c);
-            }
-        }
+			protected override void CacheUiElements(Transform transform)
+			{
+				CentreText = transform.gameObject.FindChildWithName<EnhancedText>("Name");
+				LeftText   = transform.gameObject.FindChildWithName<EnhancedText>("Type");
+				RightText  = transform.gameObject.FindChildWithName<EnhancedText>("Dps");
+			}
 
-        public abstract bool Unlocked();
-    }
+			public override void SetColour(Color c)
+			{
+				CentreText.SetColor(c);
+				LeftText.SetColor(c);
+				RightText.SetColor(c);
+			}
+		}
+	}
 }

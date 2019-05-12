@@ -8,98 +8,98 @@ using UnityEngine.UI;
 
 public class CloseButtonController : ControlTypeChangeListener, IInputListener
 {
-    [SerializeField] private Button _button;
-    [SerializeField] private TextMeshProUGUI _buttonText;
-    [SerializeField] private Image _glowImage;
+	[SerializeField] private Button          _button;
+	[SerializeField] private TextMeshProUGUI _buttonText;
+	[SerializeField] private Image           _glowImage;
 
-    private InputAxis _targetAxis = InputAxis.Cancel;
+	private InputAxis _targetAxis = InputAxis.Cancel;
 
-    public void Start()
-    {
-        _button.targetGraphic = _glowImage;
-        switch (_targetAxis)
-        {
-            case InputAxis.Cancel:
-                UseDefaultInput();
-                break;
-            case InputAxis.Accept:
-                UseAcceptInput();
-                break;
-            case InputAxis.Sprint:
-                UseSpaceInput();
-                break;
-        }
+	public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+	{
+		if (axis != _targetAxis || isHeld) return;
+		Activate();
+	}
 
-        SetOnControllerInputChange(UpdateText);
-    }
+	public void OnInputUp(InputAxis axis)
+	{
+	}
 
-    private void UpdateText()
-    {
-        string text = InputHandler.GetBindingForKey(_targetAxis);
-        if (text.Length > 4 && _targetAxis == InputAxis.Cancel) text = "C";
-        if (_targetAxis == InputAxis.Sprint) text = text.Contains("Left") ? "LBMP" : "SPC";
-        _buttonText.SetText(text);
-    }
+	public void OnDoubleTap(InputAxis axis, float direction)
+	{
+	}
 
-    public void SetOnClick(UnityAction a)
-    {
-        _button.onClick.RemoveAllListeners();
-        _button.onClick.AddListener(a);
-    }
+	public void Start()
+	{
+		_button.targetGraphic = _glowImage;
+		switch (_targetAxis)
+		{
+			case InputAxis.Cancel:
+				UseDefaultInput();
+				break;
+			case InputAxis.Accept:
+				UseAcceptInput();
+				break;
+			case InputAxis.Sprint:
+				UseSpaceInput();
+				break;
+		}
 
-    public void UseAcceptInput()
-    {
-        _targetAxis = InputAxis.Accept;
-        UpdateText();
-    }
+		SetOnControllerInputChange(UpdateText);
+	}
 
-    public void UseSpaceInput()
-    {
-        _targetAxis = InputAxis.Sprint;
-        UpdateText();
-    }
+	private void UpdateText()
+	{
+		string text                                                  = InputHandler.GetBindingForKey(_targetAxis);
+		if (text.Length > 4 && _targetAxis == InputAxis.Cancel) text = "C";
+		if (_targetAxis == InputAxis.Sprint) text                    = text.Contains("Left") ? "LBMP" : "SPC";
+		_buttonText.SetText(text);
+	}
 
-    private void UseDefaultInput()
-    {
-        _targetAxis = InputAxis.Cancel;
-        UpdateText();
-    }
+	public void SetOnClick(UnityAction a)
+	{
+		_button.onClick.RemoveAllListeners();
+		_button.onClick.AddListener(a);
+	}
 
-    public void Enable()
-    {
-        InputHandler.RegisterInputListener(this);
-    }
+	public void UseAcceptInput()
+	{
+		_targetAxis = InputAxis.Accept;
+		UpdateText();
+	}
 
-    public void Disable()
-    {
-        InputHandler.UnregisterInputListener(this);
-    }
+	public void UseSpaceInput()
+	{
+		_targetAxis = InputAxis.Sprint;
+		UpdateText();
+	}
 
-    private void Activate()
-    {
-        Flash();
-        ExecuteEvents.Execute(_button.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
-    }
+	private void UseDefaultInput()
+	{
+		_targetAxis = InputAxis.Cancel;
+		UpdateText();
+	}
 
-    public Button Button() => _button;
+	public void Enable()
+	{
+		InputHandler.RegisterInputListener(this);
+	}
 
-    public void Flash()
-    {
-        _glowImage.color = Color.white;
-        _glowImage.DOFade(0f, 0.5f);
-    }
+	public void Disable()
+	{
+		InputHandler.UnregisterInputListener(this);
+	}
 
-    public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-    {
-        if (axis != _targetAxis || isHeld) return;
-        Activate();
-    }
+	private void Activate()
+	{
+		Flash();
+		ExecuteEvents.Execute(_button.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
+	}
 
-    public void OnInputUp(InputAxis axis)
-    {
-    }
+	public Button Button() => _button;
 
-    public void OnDoubleTap(InputAxis axis, float direction)
-    {
-    }
+	public void Flash()
+	{
+		_glowImage.color = Color.white;
+		_glowImage.DOFade(0f, 0.5f);
+	}
 }

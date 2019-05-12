@@ -3,136 +3,131 @@ using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
 using Game.Exploration.Environment;
-using Game.Exploration.Regions;
 using Game.Global.Tutorial;
-using SamsHelper.Libraries;
+using Extensions;
 using TMPro;
 using UnityEngine;
 
 namespace Game.Characters
 {
-    public class CharacterView : MonoBehaviour
-    {
-        private Player _player;
-        private ActionProgressController _actionProgress;
-        private CharacterBrandUIController _brandUi;
-        [HideInInspector] public UIPlayerAccessoryController AccessoryController;
-        [HideInInspector] public UIPlayerArmourController ArmourController;
-        [HideInInspector] public UIPlayerWeaponController WeaponController;
-        private UIAttributeController _attributeController;
-        private UIConditionController _thirstController, _hungerController;
-        private CanvasGroup _viewCanvas;
-        private UIActionListController _actionList;
-        private bool _seenTutorial;
+	public class CharacterView : MonoBehaviour
+	{
+		private                  UIActionListController      _actionList;
+		private                  ActionProgressController    _actionProgress;
+		private                  UIAttributeController       _attributeController;
+		private                  CharacterBrandUIController  _brandUi;
+		private                  Player                      _player;
+		private                  bool                        _seenTutorial;
+		private                  CanvasGroup                 _viewCanvas;
+		[HideInInspector] public UIPlayerAccessoryController AccessoryController;
+		[HideInInspector] public UIPlayerArmourController    ArmourController;
+		[HideInInspector] public UIPlayerWeaponController    WeaponController;
 
-        public void SetPlayer(Player player)
-        {
-            _player = player;
-            if (_player == null)
-            {
-                gameObject.SetActive(false);
-                return;
-            }
+		public void SetPlayer(Player player)
+		{
+			_player = player;
+			if (_player == null)
+			{
+				gameObject.SetActive(false);
+				return;
+			}
 
-            CacheElements();
-            BindUi();
-            _player.SetCharacterView(this);
-        }
+			CacheElements();
+			BindUi();
+			_player.SetCharacterView(this);
+		}
 
-        private void BindUi()
-        {
-            _attributeController = gameObject.FindChildWithName<UIAttributeController>("Attributes");
+		private void BindUi()
+		{
+			_attributeController = gameObject.FindChildWithName<UIAttributeController>("Attributes");
+			_actionList.SetPlayer(_player);
+		}
 
-            _thirstController = gameObject.FindChildWithName<UIConditionController>("Thirst");
-            _hungerController = gameObject.FindChildWithName<UIConditionController>("Hunger");
+		public void Update()
+		{
+			if (_player == null) return;
+			UpdateAttributes();
+			_brandUi.UpdateBrands(_player.BrandManager);
+			UpdateCurrentAction();
+			ArmourController.gameObject.SetActive(UiArmourUpgradeController.Instance().Unlocked());
+			AccessoryController.gameObject.SetActive(UiAccessoryController.Instance().Unlocked());
+		}
 
-            _actionList.SetPlayer(_player);
-        }
+		private void UpdateAttributes()
+		{
+			_attributeController.UpdateAttributes(_player);
+		}
 
-        public void Update()
-        {
-            if (_player == null) return;
-            UpdateAttributes();
-            _brandUi.UpdateBrands(_player.BrandManager);
-            UpdateCurrentAction();
-            ArmourController.gameObject.SetActive(UiArmourUpgradeController.Instance().Unlocked());
-            AccessoryController.gameObject.SetActive(UiAccessoryController.Instance().Unlocked());
-        }
+		private void CacheElements()
+		{
+			_viewCanvas = gameObject.FindChildWithName<CanvasGroup>("Vertical Group");
 
-        private void UpdateAttributes()
-        {
-            _attributeController.UpdateAttributes(_player);
-            _thirstController.UpdateThirst(_player);
-            _hungerController.UpdateHunger(_player);
-        }
+			_actionProgress = gameObject.FindChildWithName<ActionProgressController>("Current Action");
+			_actionList     = gameObject.FindChildWithName<UIActionListController>("Action List");
 
-        private void CacheElements()
-        {
-            _viewCanvas = gameObject.FindChildWithName<CanvasGroup>("Vertical Group");
+			_actionList.Buttons().ForEach(b => b.AddOnSelectEvent(SelectCharacter));
 
-            _actionProgress = gameObject.FindChildWithName<ActionProgressController>("Current Action");
-            _actionList = gameObject.FindChildWithName<UIActionListController>("Action List");
+			gameObject.FindChildWithName<TextMeshProUGUI>("Character Name").text = _player.Name;
 
-            _actionList.Buttons().ForEach(b => b.AddOnSelectEvent(SelectCharacter));
+			WeaponController = gameObject.FindChildWithName<UIPlayerWeaponController>("Weapon");
+			WeaponController.SetWeapon(SelectCharacter, _player);
 
-            gameObject.FindChildWithName<TextMeshProUGUI>("Character Name").text = _player.Name;
+			AccessoryController = gameObject.FindChildWithName<UIPlayerAccessoryController>("Accessory");
+			AccessoryController.SetAccessory(SelectCharacter, _player);
 
-            WeaponController = gameObject.FindChildWithName<UIPlayerWeaponController>("Weapon");
-            WeaponController.SetWeapon(SelectCharacter, _player);
+			ArmourController = gameObject.FindChildWithName<UIPlayerArmourController>("Armour");
+			ArmourController.SetArmour(SelectCharacter, _player);
 
-            AccessoryController = gameObject.FindChildWithName<UIPlayerAccessoryController>("Accessory");
-            AccessoryController.SetAccessory(SelectCharacter, _player);
+			_brandUi = gameObject.FindChildWithName<CharacterBrandUIController>("Brands");
+		}
 
-            ArmourController = gameObject.FindChildWithName<UIPlayerArmourController>("Armour");
-            ArmourController.SetArmour(SelectCharacter, _player);
+		private void SelectCharacter()
+		{
+			CharacterManager.SelectCharacter(_player);
+			_viewCanvas.DOFade(1f, 0.3f);
+			bool isWanderer            = _player                             == CharacterManager.Wanderer;
+			bool hasAlternateCharacter = CharacterManager.AlternateCharacter != null;
+			if (isWanderer && hasAlternateCharacter)
+			{
+				CharacterManager.AlternateCharacter.CharacterView().DeselectCharacter();
+			}
+			else if (!isWanderer) CharacterManager.Wanderer.CharacterView().DeselectCharacter();
+		}
 
-            _brandUi = gameObject.FindChildWithName<CharacterBrandUIController>("Brands");
-        }
+		private void DeselectCharacter()
+		{
+			_viewCanvas.DOFade(0.4f, 0.3f);
+		}
 
-        private void SelectCharacter()
-        {
-            CharacterManager.SelectCharacter(_player);
-            _viewCanvas.DOFade(1f, 0.3f);
-            bool isWanderer = _player == CharacterManager.Wanderer;
-            bool hasAlternateCharacter = CharacterManager.AlternateCharacter != null;
-            if (isWanderer && hasAlternateCharacter) CharacterManager.AlternateCharacter.CharacterView().DeselectCharacter();
-            else if (!isWanderer) CharacterManager.Wanderer.CharacterView().DeselectCharacter();
-        }
+		public void SelectInitial() => _actionList.SelectInitial();
 
-        private void DeselectCharacter()
-        {
-            _viewCanvas.DOFade(0.4f, 0.3f);
-        }
+		private void UpdateCurrentAction()
+		{
+			BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
+			_actionProgress.UpdateCurrentAction(currentState);
+			UpdateActionList();
+		}
 
-        public void SelectInitial() => _actionList.SelectInitial();
+		public void UpdateActionList()
+		{
+			bool selectWeapon = _actionList.UpdateList();
+			if (selectWeapon) WeaponController.EnhancedButton.Select();
+		}
 
-        private void UpdateCurrentAction()
-        {
-            BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
-            _actionProgress.UpdateCurrentAction(currentState);
-            UpdateActionList();
-        }
-
-        public void UpdateActionList()
-        {
-            bool selectWeapon = _actionList.UpdateList();
-            if (selectWeapon) WeaponController.EnhancedButton.Select();
-        }
-
-        public void ShowAttributeTutorial()
-        {
-            if (_seenTutorial || !TutorialManager.Active()) return;
-            if (MapGenerator.DiscoveredRegions().Count < 2) return;
-            RectTransform physical = _attributeController.FindChildWithName<RectTransform>("Physical");
-            RectTransform mental = _attributeController.FindChildWithName<RectTransform>("Mental");
-            List<TutorialOverlay> overlays = new List<TutorialOverlay>
-            {
-                new TutorialOverlay(_attributeController.GetComponent<RectTransform>()),
-                new TutorialOverlay(physical),
-                new TutorialOverlay(mental)
-            };
-            TutorialManager.Instance.TryOpenTutorial(10, overlays);
-            _seenTutorial = true;
-        }
-    }
+		public void ShowAttributeTutorial()
+		{
+			if (_seenTutorial || !TutorialManager.Active()) return;
+			if (MapGenerator.DiscoveredRegions().Count < 2) return;
+			RectTransform physical = _attributeController.FindChildWithName<RectTransform>("Physical");
+			RectTransform mental   = _attributeController.FindChildWithName<RectTransform>("Mental");
+			List<TutorialOverlay> overlays = new List<TutorialOverlay>
+			{
+				new TutorialOverlay(_attributeController.GetComponent<RectTransform>()),
+				new TutorialOverlay(physical),
+				new TutorialOverlay(mental)
+			};
+			TutorialManager.Instance.TryOpenTutorial(10, overlays);
+			_seenTutorial = true;
+		}
+	}
 }

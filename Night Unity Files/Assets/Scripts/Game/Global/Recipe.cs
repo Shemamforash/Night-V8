@@ -4,8 +4,8 @@ using System.Xml;
 using Facilitating;
 using Facilitating.Persistence;
 using Game.Exploration.Environment;
+using Extensions;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -13,17 +13,6 @@ namespace Game.Global
 {
 	public class Recipe
 	{
-		private static readonly List<Recipe>    _recipes = new List<Recipe>();
-		private static          bool            _loaded;
-		private static          int             _craftingLevel;
-		public readonly         string          Ingredient1,         Ingredient2, Name, Description;
-		public readonly         int             Ingredient1Quantity, Ingredient2Quantity;
-		public readonly         RecipeType      RecipeType;
-		public readonly         RecipeAudioType RecipeAudio;
-		private readonly        int             _levelNo;
-		private                 bool            _canCraft;
-		private readonly        int             _productQuantity;
-
 		public enum RecipeAudioType
 		{
 			Cook,
@@ -33,16 +22,27 @@ namespace Game.Global
 			LightFire
 		}
 
+		private static readonly List<Recipe>    _recipes = new List<Recipe>();
+		private static          bool            _loaded;
+		private static          int             _craftingLevel;
+		private readonly        int             _levelNo;
+		private readonly        int             _productQuantity;
+		public readonly         string          Ingredient1,         Ingredient2, Name, Description;
+		public readonly         int             Ingredient1Quantity, Ingredient2Quantity;
+		public readonly         RecipeAudioType RecipeAudio;
+		public readonly         RecipeType      RecipeType;
+		private                 bool            _canCraft;
+
 		private Recipe(XmlNode recipeNode)
 		{
-			Ingredient1         = recipeNode.StringFromNode("Ingredient1Name");
-			Ingredient2         = recipeNode.StringFromNode("Ingredient2Name");
-			Ingredient1Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
-			Ingredient2Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
-			Name                = recipeNode.StringFromNode("ProductName");
-			Description         = recipeNode.StringFromNode("Description");
-			_productQuantity    = recipeNode.IntFromNode("ProductQuantity");
-			string recipeAudioString = recipeNode.StringFromNode("Audio");
+			Ingredient1         = recipeNode.ParseString("Ingredient1Name");
+			Ingredient2         = recipeNode.ParseString("Ingredient2Name");
+			Ingredient1Quantity = recipeNode.ParseInt("Ingredient1Quantity");
+			Ingredient2Quantity = recipeNode.ParseInt("Ingredient1Quantity");
+			Name                = recipeNode.ParseString("ProductName");
+			Description         = recipeNode.ParseString("Description");
+			_productQuantity    = recipeNode.ParseInt("ProductQuantity");
+			string recipeAudioString = recipeNode.ParseString("Audio");
 			switch (recipeAudioString)
 			{
 				case "COOK":
@@ -62,7 +62,7 @@ namespace Game.Global
 					break;
 			}
 
-			string recipeTypeString = recipeNode.StringFromNode("RecipeType");
+			string recipeTypeString = recipeNode.ParseString("RecipeType");
 			switch (recipeTypeString)
 			{
 				case "BUILDING":
@@ -82,7 +82,7 @@ namespace Game.Global
 					break;
 			}
 
-			_levelNo = recipeNode.IntFromNode("LevelNo");
+			_levelNo = recipeNode.ParseInt("LevelNo");
 		}
 
 		private void CalculateQuantityToCraft()
@@ -101,7 +101,7 @@ namespace Game.Global
 
 		public static void Load(XmlNode doc)
 		{
-			_craftingLevel = doc.IntFromNode("CraftingLevel");
+			_craftingLevel = doc.ParseInt("CraftingLevel");
 		}
 
 		public static void RecalculateCraftableRecipes()
@@ -207,10 +207,7 @@ namespace Game.Global
 			return _recipes.FirstOrDefault(r => r.Name == recipeName);
 		}
 
-		public int Built()
-		{
-			return Inventory.GetBuildingCount(Name);
-		}
+		public int Built() => Inventory.GetBuildingCount(Name);
 
 		public int GetProductQuantity() => _productQuantity;
 

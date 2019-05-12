@@ -2,40 +2,37 @@
 
 namespace Game.Characters.CharacterActions
 {
-    public class Rest : BaseCharacterAction
-    {
-        private int _timePassed;
+	public class Rest : BaseCharacterAction
+	{
+		private int _timePassed;
 
-        public Rest(Player playerCharacter) : base(nameof(Rest), playerCharacter)
-        {
-            DisplayName = "Resting";
-            MinuteCallback = () =>
-            {
-                --_timePassed;
-                if (_timePassed != 0) return;
-                playerCharacter.Rest();
-                ResetTimePassed();
-            };
-        }
+		public Rest(Player playerCharacter) : base(nameof(Rest), playerCharacter)
+		{
+			DisplayName = "Resting";
+			MinuteCallback = () =>
+			{
+				--_timePassed;
+				if (_timePassed != 0) return;
+				playerCharacter.Rest();
+				ResetTimePassed();
+			};
+		}
 
-        public override void Enter()
-        {
-            base.Enter();
-            ResetTimePassed();
-        }
+		public override void Enter()
+		{
+			base.Enter();
+			ResetTimePassed();
+		}
 
-        private void ResetTimePassed()
-        {
-            _timePassed = WorldState.MinutesPerHour / 4;
-        }
+		private void ResetTimePassed()
+		{
+			_timePassed = WorldState.MinutesPerHour / 4;
+		}
 
-        protected override void OnClick()
-        {
-        }
+		protected override void OnClick()
+		{
+		}
 
-        public override float GetNormalisedProgress()
-        {
-            return 0;
-        }
-    }
+		public override float GetNormalisedProgress() => 0;
+	}
 }

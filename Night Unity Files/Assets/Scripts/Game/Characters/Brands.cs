@@ -1,261 +1,190 @@
+using SamsHelper.BaseGameFunctionality.Basic;
+
 namespace Game.Characters.Brands
 {
-    public class LifeBrand : Brand
-    {
-        public LifeBrand(Player player) : base(player, "Power")
-        {
-        }
+	public class LifeBrand : Brand
+	{
+		public LifeBrand(Player player) : base(player, "Power")
+		{
+		}
 
-        protected override void OnSucceed()
-        {
-            Player.Attributes.ChangeLifeMax(1);
-        }
-
-
-        protected override string GetProgressSubstring()
-        {
-            return "Dealt " + Progress() + " damage";
-        }
-    }
-
-    public class GritBrand : Brand
-    {
-        public GritBrand(Player player) : base(player, "Stamina")
-        {
-        }
-
-        protected override void OnSucceed()
-        {
-            Player.Attributes.ChangeGritMax(1);
-        }
+		protected override void OnSucceed()
+		{
+			Player.Attributes.IncreaseAttribute(AttributeType.Life);
+		}
 
 
-        protected override string GetProgressSubstring()
-        {
-            return "Discovered " + Progress() + " regions";
-        }
-    }
+		protected override string GetProgressSubstring() => "Dealt " + Progress() + " damage";
+	}
 
-    public class FocusBrand : Brand
-    {
-        public FocusBrand(Player player) : base(player, "Vigilance")
-        {
-        }
+	public class GritBrand : Brand
+	{
+		public GritBrand(Player player) : base(player, "Stamina")
+		{
+		}
 
-        protected override void OnSucceed()
-        {
-            Player.Attributes.ChangeFocusMax(1);
-        }
+		protected override void OnSucceed()
+		{
+			Player.Attributes.IncreaseAttribute(AttributeType.Life);
+		}
 
 
-        protected override string GetProgressSubstring()
-        {
-            return "Found " + Progress() + " items";
-        }
-    }
+		protected override string GetProgressSubstring() => "Discovered " + Progress() + " regions";
+	}
 
-    public class WillBrand : Brand
-    {
-        public WillBrand(Player player) : base(player, "Resolution")
-        {
-        }
+	public class FocusBrand : Brand
+	{
+		public FocusBrand(Player player) : base(player, "Vigilance")
+		{
+		}
 
-        protected override void OnSucceed()
-        {
-            Player.Attributes.ChangeWillMax(1);
-        }
+		protected override void OnSucceed()
+		{
+			Player.Attributes.IncreaseAttribute(AttributeType.Will);
+		}
 
 
-        protected override string GetProgressSubstring()
-        {
-            return "Used " + Progress() + " skills";
-        }
-    }
+		protected override string GetProgressSubstring() => "Found " + Progress() + " items";
+	}
 
-    public class HealthRecoveryBrand : Brand
-    {
-        public HealthRecoveryBrand(Player player) : base(player, "Revival")
-        {
-        }
+	public class WillBrand : Brand
+	{
+		public WillBrand(Player player) : base(player, "Resolution")
+		{
+		}
 
-        protected override void OnSucceed()
-        {
-            Player.Attributes.RallyHealthModifier += SuccessModifier;
-        }
+		protected override void OnSucceed()
+		{
+			Player.Attributes.IncreaseAttribute(AttributeType.Will);
+		}
 
-        protected override string GetProgressSubstring()
-        {
-            return "Taken " + Progress() + " damage";
-        }
-    }
 
-    public class WillRecoveryBrand : Brand
-    {
-        public WillRecoveryBrand(Player player) : base(player, "Apathy")
-        {
-        }
+		protected override string GetProgressSubstring() => "Used " + Progress() + " skills";
+	}
 
-        protected override void OnSucceed()
-        {
-            Player.Attributes.ClaimRegionWillGainModifier += SuccessModifier;
-        }
+	public class HealthRecoveryBrand : Brand
+	{
+		public HealthRecoveryBrand(Player player) : base(player, "Revival")
+		{
+		}
 
-        protected override string GetProgressSubstring()
-        {
-            return "Killed " + Progress() + " enemies";
-        }
-    }
+		protected override void OnSucceed()
+		{
+			Player.Attributes.RallyHealthModifier += SuccessModifier;
+		}
 
-    public class AdrenalineUsedBrand : Brand
-    {
-        public AdrenalineUsedBrand(Player player) : base(player, "Mastery")
-        {
-        }
+		protected override string GetProgressSubstring() => "Taken " + Progress() + " damage";
+	}
 
-        protected override void OnSucceed()
-        {
-            Player.Attributes.FreeSkillChance += SuccessModifier;
-        }
+	public class WillRecoveryBrand : Brand
+	{
+		public WillRecoveryBrand(Player player) : base(player, "Apathy")
+		{
+		}
 
-        protected override string GetProgressSubstring()
-        {
-            return "Consumed " + Progress() + " adrenaline";
-        }
-    }
+		protected override void OnSucceed()
+		{
+			Player.Attributes.ClaimRegionWillGainModifier += SuccessModifier;
+		}
 
-    public class InstantReloadBrand : Brand
-    {
-        public InstantReloadBrand(Player player) : base(player, "Perfection")
-        {
-        }
+		protected override string GetProgressSubstring() => "Killed " + Progress() + " enemies";
+	}
 
-        protected override void OnSucceed()
-        {
-            Player.Attributes.ReloadOnFatalShot = true;
-        }
+	public class AdrenalineUsedBrand : Brand
+	{
+		public AdrenalineUsedBrand(Player player) : base(player, "Mastery")
+		{
+		}
 
-        protected override string GetProgressSubstring()
-        {
-            return "Killed " + Progress() + " enemies with last round";
-        }
-    }
+		protected override void OnSucceed()
+		{
+			Player.Attributes.FreeSkillChance += SuccessModifier;
+		}
 
-    public class AutomaticReloadBrand : Brand
-    {
-        public AutomaticReloadBrand(Player player) : base(player, "Finesse")
-        {
-        }
+		protected override string GetProgressSubstring() => "Consumed " + Progress() + " adrenaline";
+	}
 
-        protected override void OnSucceed()
-        {
-            Player.Attributes.ReloadOnEmptyMag = true;
-        }
+	public class InstantReloadBrand : Brand
+	{
+		public InstantReloadBrand(Player player) : base(player, "Perfection")
+		{
+		}
 
-        protected override string GetProgressSubstring()
-        {
-            return Progress() + " perfect reloads";
-        }
-    }
+		protected override void OnSucceed()
+		{
+			Player.Attributes.ReloadOnFatalShot = true;
+		}
 
-    public class IgniteBrand : Brand
-    {
-        public IgniteBrand(Player player) : base(player, "Fire")
-        {
-        }
+		protected override string GetProgressSubstring() => "Killed " + Progress() + " enemies with last round";
+	}
 
-        protected override void OnSucceed()
-        {
-            Player.Attributes.FireExplodeChance += SuccessModifier;
-        }
+	public class AutomaticReloadBrand : Brand
+	{
+		public AutomaticReloadBrand(Player player) : base(player, "Finesse")
+		{
+		}
 
-        protected override string GetProgressSubstring()
-        {
-            return "Burnt " + Progress() + " enemies";
-        }
-    }
+		protected override void OnSucceed()
+		{
+			Player.Attributes.ReloadOnEmptyMag = true;
+		}
 
-    public class DecayBrand : Brand
-    {
-        public DecayBrand(Player player) : base(player, "Shatter")
-        {
-        }
+		protected override string GetProgressSubstring() => Progress() + " perfect reloads";
+	}
 
-        protected override void OnSucceed()
-        {
-            Player.Attributes.DecayExplodeChance += SuccessModifier;
-        }
+	public class IgniteBrand : Brand
+	{
+		public IgniteBrand(Player player) : base(player, "Fire")
+		{
+		}
 
-        protected override string GetProgressSubstring()
-        {
-            return "Shattered " + Progress() + " enemies";
-        }
-    }
+		protected override void OnSucceed()
+		{
+			Player.Attributes.FireExplodeChance += SuccessModifier;
+		}
 
-    public class VoidBrand : Brand
-    {
-        public VoidBrand(Player player) : base(player, "Void")
-        {
-        }
+		protected override string GetProgressSubstring() => "Burnt " + Progress() + " enemies";
+	}
 
-        protected override void OnSucceed()
-        {
-            Player.Attributes.SpreadVoid = true;
-        }
+	public class DecayBrand : Brand
+	{
+		public DecayBrand(Player player) : base(player, "Shatter")
+		{
+		}
 
-        protected override string GetProgressSubstring()
-        {
-            return "Cursed " + Progress() + " enemies";
-        }
-    }
+		protected override void OnSucceed()
+		{
+			Player.Attributes.DecayExplodeChance += SuccessModifier;
+		}
 
-    public class ResourceBrand : Brand
-    {
-        public ResourceBrand(Player player) : base(player, "Scavenging")
-        {
-        }
+		protected override string GetProgressSubstring() => "Shattered " + Progress() + " enemies";
+	}
 
-        protected override void OnSucceed()
-        {
-            Player.Attributes.ResourceFindModifier += SuccessModifier;
-        }
+	public class VoidBrand : Brand
+	{
+		public VoidBrand(Player player) : base(player, "Void")
+		{
+		}
 
-        protected override string GetProgressSubstring()
-        {
-            return "Found " + Progress() + " resources";
-        }
-    }
+		protected override void OnSucceed()
+		{
+			Player.Attributes.SpreadVoid = true;
+		}
 
-    public class FoodBrand : Brand
-    {
-        public FoodBrand(Player player) : base(player, "Hunting")
-        {
-        }
+		protected override string GetProgressSubstring() => "Cursed " + Progress() + " enemies";
+	}
 
-        protected override void OnSucceed()
-        {
-            Player.Attributes.HungerModifier += SuccessModifier;
-        }
+	public class ResourceBrand : Brand
+	{
+		public ResourceBrand(Player player) : base(player, "Scavenging")
+		{
+		}
 
-        protected override string GetProgressSubstring()
-        {
-            return "Found " + Progress() + " food";
-        }
-    }
+		protected override void OnSucceed()
+		{
+			Player.Attributes.Get(AttributeType.CompassBonus).Increment(SuccessModifier);
+		}
 
-    public class WaterBrand : Brand
-    {
-        public WaterBrand(Player player) : base(player, "Divining")
-        {
-        }
-
-        protected override void OnSucceed()
-        {
-            Player.Attributes.ThirstModifier += SuccessModifier;
-        }
-
-        protected override string GetProgressSubstring()
-        {
-            return "Found " + Progress() + " water";
-        }
-    }
+		protected override string GetProgressSubstring() => "Found " + Progress() + " resources";
+	}
 }

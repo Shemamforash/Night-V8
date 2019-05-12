@@ -1,24 +1,10 @@
 ﻿using System;
-using UnityEngine;
 using Steamworks;
+using UnityEngine;
 
-class AchievementManager : MonoBehaviour
+internal class AchievementManager : MonoBehaviour
 {
-	private enum Achievement : int
-	{
-		ACH_CRAFTITEMS,
-		ACH_COMPANIONALIVE,
-		ACH_SKILLSUSED,
-		ACH_ELEMENTALTRIGGERS,
-		ACH_JOURNALSREAD,
-		ACH_WEAPONMAX,
-		ACH_ARMOURMAX,
-		ACH_ACTI,
-		ACH_ACTII,
-		ACH_ACTIII,
-		ACH_ACTIV,
-		ACH_ACTV
-	};
+	private static AchievementManager _instance;
 
 	private readonly Achievement_t[] _achievements =
 	{
@@ -36,38 +22,40 @@ class AchievementManager : MonoBehaviour
 		new Achievement_t(Achievement.ACH_ACTV,              "The End",            "Complete Act V")
 	};
 
+	private int  _actIComplete;
+	private int  _actIIComplete;
+	private int  _actIIIComplete;
+	private int  _actIVComplete;
+	private int  _actVComplete;
+	private bool _areStatsValid;
+	private int  _armourMaxed;
+	private int  _companionKeptAlive;
+
+	private int _craftedItemCount;
+	private int _elementalTriggers;
+
 	// Our GameID
 	private CGameID _gameId;
-
-	// Did we get the stats from Steam?
-	private bool _statsRequested;
-	private bool _areStatsValid;
+	private int     _journalsRead;
 
 	// Should we store stats this frame?
 	private bool _needToStoreStats;
+	private int  _skillsUsed;
 
-	private int _craftedItemCount;
-	private int _companionKeptAlive;
-	private int _skillsUsed;
-	private int _elementalTriggers;
-	private int _journalsRead;
-	private int _weaponMaxed;
-	private int _armourMaxed;
-	private int _actIComplete;
-	private int _actIIComplete;
-	private int _actIIIComplete;
-	private int _actIVComplete;
-	private int _actVComplete;
+	// Did we get the stats from Steam?
+	private   bool                              _statsRequested;
+	private   int                               _weaponMaxed;
+	protected Callback<UserAchievementStored_t> m_UserAchievementStored;
 
-	protected      Callback<UserStatsReceived_t>     m_UserStatsReceived;
-	protected      Callback<UserStatsStored_t>       m_UserStatsStored;
-	protected      Callback<UserAchievementStored_t> m_UserAchievementStored;
-	private static AchievementManager                _instance;
+	protected Callback<UserStatsReceived_t> m_UserStatsReceived;
+	protected Callback<UserStatsStored_t>   m_UserStatsStored;
 
-	void OnEnable()
+	private void OnEnable()
 	{
 		if (!SteamManager.Initialised)
+		{
 			return;
+		}
 
 		// Cache the GameID for use in the Callbacks
 		_gameId = new CGameID(SteamUtils.GetAppID());
@@ -94,7 +82,9 @@ class AchievementManager : MonoBehaviour
 	private void Update()
 	{
 		if (!SteamManager.Initialised)
+		{
 			return;
+		}
 
 		if (!_statsRequested)
 		{
@@ -114,7 +104,9 @@ class AchievementManager : MonoBehaviour
 		}
 
 		if (!_areStatsValid)
+		{
 			return;
+		}
 
 		// Get info from sources
 
@@ -131,57 +123,95 @@ class AchievementManager : MonoBehaviour
 		foreach (Achievement_t achievement in _achievements)
 		{
 			if (achievement.m_bAchieved)
+			{
 				continue;
+			}
 
 			switch (achievement.m_eAchievementID)
 			{
 				case Achievement.ACH_CRAFTITEMS:
 					if (_craftedItemCount >= 50)
+					{
 						UnlockAchievement(achievement);
+					}
+
 					break;
 				case Achievement.ACH_COMPANIONALIVE:
 					if (_companionKeptAlive != 0)
+					{
 						UnlockAchievement(achievement);
+					}
+
 					break;
 				case Achievement.ACH_SKILLSUSED:
 					if (_skillsUsed >= 200)
+					{
 						UnlockAchievement(achievement);
+					}
+
 					break;
 				case Achievement.ACH_ELEMENTALTRIGGERS:
 					if (_elementalTriggers >= 250)
+					{
 						UnlockAchievement(achievement);
+					}
+
 					break;
 				case Achievement.ACH_JOURNALSREAD:
 					if (_journalsRead >= 50)
+					{
 						UnlockAchievement(achievement);
+					}
+
 					break;
 				case Achievement.ACH_WEAPONMAX:
 					if (_weaponMaxed != 0)
+					{
 						UnlockAchievement(achievement);
+					}
+
 					break;
 				case Achievement.ACH_ARMOURMAX:
 					if (_armourMaxed != 0)
+					{
 						UnlockAchievement(achievement);
+					}
+
 					break;
 				case Achievement.ACH_ACTI:
 					if (_actIComplete != 0)
+					{
 						UnlockAchievement(achievement);
+					}
+
 					break;
 				case Achievement.ACH_ACTII:
 					if (_actIIComplete != 0)
+					{
 						UnlockAchievement(achievement);
+					}
+
 					break;
 				case Achievement.ACH_ACTIII:
 					if (_actIIIComplete != 0)
+					{
 						UnlockAchievement(achievement);
+					}
+
 					break;
 				case Achievement.ACH_ACTIV:
 					if (_actIVComplete != 0)
+					{
 						UnlockAchievement(achievement);
+					}
+
 					break;
 				case Achievement.ACH_ACTV:
 					if (_actVComplete != 0)
+					{
 						UnlockAchievement(achievement);
+					}
+
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
@@ -303,7 +333,9 @@ class AchievementManager : MonoBehaviour
 	private void SetStatsNeedUpdate()
 	{
 		if (!_areStatsValid)
+		{
 			return;
+		}
 
 		_needToStoreStats = true;
 	}
@@ -332,7 +364,9 @@ class AchievementManager : MonoBehaviour
 	private void OnUserStatsReceived(UserStatsReceived_t pCallback)
 	{
 		if (!SteamManager.Initialised)
+		{
 			return;
+		}
 
 		// we may get callbacks for other games' stats arriving, ignore them
 		if ((ulong) _gameId != pCallback.m_nGameID) return;
@@ -423,13 +457,31 @@ class AchievementManager : MonoBehaviour
 		}
 	}
 
+	public static AchievementManager Instance() => _instance;
+
+	private enum Achievement
+	{
+		ACH_CRAFTITEMS,
+		ACH_COMPANIONALIVE,
+		ACH_SKILLSUSED,
+		ACH_ELEMENTALTRIGGERS,
+		ACH_JOURNALSREAD,
+		ACH_WEAPONMAX,
+		ACH_ARMOURMAX,
+		ACH_ACTI,
+		ACH_ACTII,
+		ACH_ACTIII,
+		ACH_ACTIV,
+		ACH_ACTV
+	}
+
 	private class Achievement_t
 	{
-		public Achievement m_eAchievementID;
-		public string      m_strName;
-		public string      m_strDescription;
-		public bool        m_bAchieved;
-		public int         m_iIconImage;
+		public          bool        m_bAchieved;
+		public readonly Achievement m_eAchievementID;
+		public          int         m_iIconImage;
+		public          string      m_strDescription;
+		public          string      m_strName;
 
 		/// <summary>
 		/// Creates an Achievement. You must also mirror the data provided here in https://partner.steamgames.com/apps/achievements/yourappid
@@ -444,10 +496,5 @@ class AchievementManager : MonoBehaviour
 			m_strDescription = desc;
 			m_bAchieved      = false;
 		}
-	}
-
-	public static AchievementManager Instance()
-	{
-		return _instance;
 	}
 }

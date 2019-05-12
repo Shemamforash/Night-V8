@@ -4,25 +4,25 @@ using DG.Tweening;
 using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
-using SamsHelper.Libraries;
+using Extensions;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 public abstract class ShrineBehaviour : BasicShrineBehaviour
 {
-	private        ParticleSystem      _essence, _void, _burst, _ring;
-	private        SpriteRenderer      _flash;
-	protected      SpriteRenderer      DangerIndicator;
-	private        SpriteRenderer      _glow;
-	private        SpriteMask          _countdownMask;
-	private        SpriteRenderer      _countdown;
-	private        Brand               _brand;
-	public static  ShrineBehaviour     ActiveShrine;
-	private static GameObject          _bossPrefab, _firePrefab, _wavePrefab, _chasePrefab;
-	private static List<GameObject>    _prefabs      = new List<GameObject>();
-	private        float               _nextTickTime = -1;
-	private        AudioSource         _audioSource;
-	private        AudioHighPassFilter _hpfFilter;
+	public static           ShrineBehaviour     ActiveShrine;
+	private static          GameObject          _bossPrefab, _firePrefab, _wavePrefab, _chasePrefab;
+	private static readonly List<GameObject>    _prefabs = new List<GameObject>();
+	private                 AudioSource         _audioSource;
+	private                 Brand               _brand;
+	private                 SpriteRenderer      _countdown;
+	private                 SpriteMask          _countdownMask;
+	private                 ParticleSystem      _essence, _void, _burst, _ring;
+	private                 SpriteRenderer      _flash;
+	private                 SpriteRenderer      _glow;
+	private                 AudioHighPassFilter _hpfFilter;
+	private                 float               _nextTickTime = -1;
+	protected               SpriteRenderer      DangerIndicator;
 
 	public void Awake()
 	{
@@ -164,7 +164,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
 		while (time > 0f)
 		{
 			if (!CombatManager.Instance().IsCombatActive()) yield return null;
-			float lerpVal = 1 - (time / 0.2f);
+			float lerpVal = 1 - time / 0.2f;
 			_flash.color =  Color.Lerp(Color.white, UiAppearanceController.InvisibleColour, lerpVal);
 			time         -= Time.deltaTime;
 			yield return null;

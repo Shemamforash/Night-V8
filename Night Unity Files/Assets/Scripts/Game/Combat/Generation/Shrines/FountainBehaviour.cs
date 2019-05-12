@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Extensions;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat.Enemies;
@@ -8,6 +9,7 @@ using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Exploration.Regions;
 using Game.Global;
+
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -15,145 +17,136 @@ using UnityEngine;
 
 namespace Game.Combat.Generation.Shrines
 {
-    public class FountainBehaviour : BasicShrineBehaviour, ICombatEvent
-    {
-        private static GameObject _fountainPrefab;
-        private static FountainBehaviour _instance;
+	public class FountainBehaviour : BasicShrineBehaviour, ICombatEvent
+	{
+		private static GameObject        _fountainPrefab;
+		private static FountainBehaviour _instance;
+		private        bool              _allEnemiesDead;
+		private        AudioSource       _audioSource;
+		private        string            _controlText;
 
-        private List<EnemyBehaviour> _enemies;
-        private Region _region;
-        private ParticleSystem[] _particleSystems;
-        private AudioSource _audioSource;
-        private bool _allEnemiesDead;
-        private string _controlText;
-        private bool _shownText;
+		private List<EnemyBehaviour> _enemies;
+		private ParticleSystem[]     _particleSystems;
+		private Region               _region;
+		private bool                 _shownText;
 
-        public void Awake()
-        {
-            _instance = this;
-            _particleSystems = transform.GetComponentsInChildren<ParticleSystem>();
-            _audioSource = GetComponent<AudioSource>();
+		public float InRange() => IsInRange && !Triggered ? 1 : -1;
 
-            List<Vector2> points = new List<Vector2>();
-            for (int i = 0; i < points.Count; ++i)
-            {
-                float angle = 360f / 25;
-                Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, 1.25f, Vector2.zero, false);
-                points.Add(position);
-            }
+		public string GetEventText() => "Drink from the fountain... [" + _controlText + "]";
 
-            Polygon b = new Polygon(points, Vector2.zero);
-            WorldGrid.AddBarrier(b);
-            ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
-            controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
-        }
+		public void Activate()
+		{
+			if (Triggered) return;
+			StopEffects();
+			StartCoroutine(SpawnEnemies());
+		}
 
-        private void UpdateText()
-        {
-            _controlText = InputHandler.GetBindingForKey(InputAxis.TakeItem);
-        }
+		public void Awake()
+		{
+			_instance        = this;
+			_particleSystems = transform.GetComponentsInChildren<ParticleSystem>();
+			_audioSource     = GetComponent<AudioSource>();
 
-        private void OnDestroy()
-        {
-            _instance = null;
-        }
+			List<Vector2> points = new List<Vector2>();
+			for (int i = 0; i < points.Count; ++i)
+			{
+				float   angle    = 360f / 25;
+				Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, 1.25f, Vector2.zero);
+				points.Add(position);
+			}
 
-        public static FountainBehaviour Instance()
-        {
-            return _instance;
-        }
+			Polygon b = new Polygon(points, Vector2.zero);
+			WorldGrid.AddBarrier(b);
+			ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
+			controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
+		}
 
-        public static void Generate(Region region)
-        {
-            if (_fountainPrefab == null) _fountainPrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Fountain");
-            GameObject riteShrineObject = Instantiate(_fountainPrefab);
-            riteShrineObject.GetComponent<FountainBehaviour>().Initialise(region);
-        }
+		private void UpdateText()
+		{
+			_controlText = InputHandler.GetBindingForKey(InputAxis.TakeItem);
+		}
 
-        private void Initialise(Region region)
-        {
-            _region = region;
-            transform.position = Vector2.zero;
-            WorldGrid.AddBlockingArea(Vector2.zero, 1.5f);
-            if (!_region.FountainVisited) return;
-            StopEffects();
-            Destroy(this);
-        }
+		private void OnDestroy()
+		{
+			_instance = null;
+		}
 
-        private IEnumerator SpawnEnemies()
-        {
-            int daysSpent = WorldState.GetDaysSpentHere() + 5;
-            List<EnemyType> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
-            float timeToSpawn = 0f;
-            for (int i = 0; i < Random.Range(daysSpent / 2f, daysSpent); ++i)
-            {
-                if (!CombatManager.Instance().IsCombatActive()) yield return null;
-                while (timeToSpawn > 0f)
-                {
-                    if (!CombatManager.Instance().IsCombatActive()) yield return null;
-                    timeToSpawn -= Time.deltaTime;
-                    yield return null;
-                }
+		public static FountainBehaviour Instance() => _instance;
 
-                Vector2 spawnPosition = WorldGrid.GetCellNearMe(transform.position, 5).Position;
-                SpawnTrailController.Create(transform.position, spawnPosition, allowedEnemies.RandomElement());
-                timeToSpawn = Random.Range(0.5f, 1f);
-                yield return null;
-            }
-        }
+		public static void Generate(Region region)
+		{
+			if (_fountainPrefab == null) _fountainPrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Fountain");
+			GameObject riteShrineObject                  = Instantiate(_fountainPrefab);
+			riteShrineObject.GetComponent<FountainBehaviour>().Initialise(region);
+		}
 
-        public void Update()
-        {
-            if (!_shownText && PlayerCombat.Instance != null && PlayerCombat.Instance.transform.position.magnitude < 6)
-            {
-                CombatLogController.PostLog("The fountain beckons");
-                _shownText = true;
-            }
+		private void Initialise(Region region)
+		{
+			_region            = region;
+			transform.position = Vector2.zero;
+			WorldGrid.AddBlockingArea(Vector2.zero, 1.5f);
+			if (!_region.FountainVisited) return;
+			StopEffects();
+			Destroy(this);
+		}
 
-            if (!Triggered || _allEnemiesDead) return;
-            if (!CombatManager.Instance().ClearOfEnemies()) return;
-            Succeed();
-            _allEnemiesDead = true;
-        }
+		private IEnumerator SpawnEnemies()
+		{
+			int             daysSpent      = WorldState.GetDaysSpentHere() + 5;
+			List<EnemyType> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
+			float           timeToSpawn    = 0f;
+			for (int i = 0; i < Random.Range(daysSpent / 2f, daysSpent); ++i)
+			{
+				if (!CombatManager.Instance().IsCombatActive()) yield return null;
+				while (timeToSpawn > 0f)
+				{
+					if (!CombatManager.Instance().IsCombatActive()) yield return null;
+					timeToSpawn -= Time.deltaTime;
+					yield return null;
+				}
 
-        protected override void Succeed()
-        {
-            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Thirst).Decrement(5);
-            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Hunger).Decrement(5);
-            PlayerCombat.Instance.HealthController.Heal(1000000);
-            PlayerCombat.Instance.ResetCompass();
-            CombatLogController.PostLog("Health recovered");
-            CombatLogController.PostLog("Hunger and Thirst restored");
-            foreach (ParticleSystem system in _particleSystems) system.Stop();
-            _audioSource.DOFade(0f, 2f);
-        }
+				Vector2 spawnPosition = WorldGrid.GetCellNearMe(transform.position, 5).Position;
+				SpawnTrailController.Create(transform.position, spawnPosition, allowedEnemies.RandomElement());
+				timeToSpawn = Random.Range(0.5f, 1f);
+				yield return null;
+			}
+		}
 
-        protected override void StartShrine()
-        {
-        }
+		public void Update()
+		{
+			if (!_shownText && PlayerCombat.Instance != null && PlayerCombat.Instance.transform.position.magnitude < 6)
+			{
+				CombatLogController.PostLog("The fountain beckons");
+				_shownText = true;
+			}
 
-        public float InRange()
-        {
-            return IsInRange && !Triggered ? 1 : -1;
-        }
+			if (!Triggered || _allEnemiesDead) return;
+			if (!CombatManager.Instance().ClearOfEnemies()) return;
+			Succeed();
+			_allEnemiesDead = true;
+		}
 
-        public string GetEventText()
-        {
-            return "Drink from the fountain... [" + _controlText + "]";
-        }
+		protected override void Succeed()
+		{
+			CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Life).Increment();
+			CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Will).Increment();
+			PlayerCombat.Instance.HealthController.Heal(1000000);
+			PlayerCombat.Instance.ResetCompass();
+			CombatLogController.PostLog("Health recovered");
+			CombatLogController.PostLog("Hunger and Thirst restored");
+			foreach (ParticleSystem system in _particleSystems) system.Stop();
+			_audioSource.DOFade(0f, 2f);
+		}
 
-        private void StopEffects()
-        {
-            _region.FountainVisited = true;
-            GetComponent<CompassItem>().Die();
-            Triggered = true;
-        }
+		protected override void StartShrine()
+		{
+		}
 
-        public void Activate()
-        {
-            if (Triggered) return;
-            StopEffects();
-            StartCoroutine(SpawnEnemies());
-        }
-    }
+		private void StopEffects()
+		{
+			_region.FountainVisited = true;
+			GetComponent<CompassItem>().Die();
+			Triggered = true;
+		}
+	}
 }

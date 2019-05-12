@@ -4,68 +4,68 @@ using UnityEngine;
 
 namespace Game.Combat.Generation
 {
-    //place walls
-    //place shrine
-    //place health shrine
-    //place fires
-    //place items
-    //place echo
-    //place obstacles
-    
-    public class Canyon : RegionGenerator
-    {
-        protected override void Generate()
-        {
-            Vector2 leftPosition = new Vector2(Random.Range(-7f, -3.5f), 0);
-            Vector2 rightPosition = new Vector2(Random.Range(3.5f, 7f), 0);
-            int rotateAmount = Random.Range(0, 360);
-            GenerateRockWall(leftPosition, true, rotateAmount);
-            GenerateRockWall(rightPosition, false, rotateAmount);
-            PlaceItems();
-            GenerateSmallRocks(Random.Range(5, 20));
-            GenerateTinyRocks(Random.Range(20, 60));
-        }
+	//place walls
+	//place shrine
+	//place health shrine
+	//place fires
+	//place items
+	//place echo
+	//place obstacles
 
-        private List<Vector2> RockWall(bool left)
-        {
-            Vector2 start = new Vector2(0, -WorldGrid.CombatAreaWidth * 0.7f);
-            Vector2 current = start;
+	public class Canyon : RegionGenerator
+	{
+		protected override void Generate()
+		{
+			Vector2 leftPosition  = new Vector2(Random.Range(-7f,  -3.5f), 0);
+			Vector2 rightPosition = new Vector2(Random.Range(3.5f, 7f),    0);
+			int     rotateAmount  = Random.Range(0, 360);
+			GenerateRockWall(leftPosition,  true,  rotateAmount);
+			GenerateRockWall(rightPosition, false, rotateAmount);
+			PlaceItems();
+			GenerateSmallRocks(Random.Range(5, 20));
+			GenerateTinyRocks(Random.Range(20, 60));
+		}
 
-            List<Vector2> points = new List<Vector2>();
-            float yStretch = Random.Range(7.5f, 12.5f);
-            float verticalOffset = Random.Range(0f, 100f);
-            float xStretch = Random.Range(2f, 4f);
-            while (current.y < WorldGrid.CombatAreaWidth * 0.7f)
-            {
-                points.Add(current);
-                Vector2 next = current;
-                next.x = Mathf.Sin((next.y + verticalOffset) / yStretch) * xStretch;
-                next.x -= Mathf.PerlinNoise(next.x, 0) * 2 * Random.Range(1f, 2f);
-                next.y += Random.Range(0.5f, 2f);
-                current = next;
-            }
+		private List<Vector2> RockWall(bool left)
+		{
+			Vector2 start   = new Vector2(0, -WorldGrid.CombatAreaWidth * 0.7f);
+			Vector2 current = start;
 
-            if (left)
-            {
-                points.Add(new Vector2(-WorldGrid.CombatAreaWidth, current.y));
-                points.Add(new Vector2(-WorldGrid.CombatAreaWidth, points[0].y));
-            }
-            else
-            {
-                points.Add(new Vector2(WorldGrid.CombatAreaWidth, current.y));
-                points.Add(new Vector2(WorldGrid.CombatAreaWidth, points[0].y));
-                points.Reverse();
-            }
+			List<Vector2> points         = new List<Vector2>();
+			float         yStretch       = Random.Range(7.5f, 12.5f);
+			float         verticalOffset = Random.Range(0f,   100f);
+			float         xStretch       = Random.Range(2f,   4f);
+			while (current.y < WorldGrid.CombatAreaWidth * 0.7f)
+			{
+				points.Add(current);
+				Vector2 next = current;
+				next.x  =  Mathf.Sin((next.y + verticalOffset) / yStretch) * xStretch;
+				next.x  -= Mathf.PerlinNoise(next.x, 0) * 2                * Random.Range(1f, 2f);
+				next.y  += Random.Range(0.5f, 2f);
+				current =  next;
+			}
 
-            return points;
-        }
+			if (left)
+			{
+				points.Add(new Vector2(-WorldGrid.CombatAreaWidth, current.y));
+				points.Add(new Vector2(-WorldGrid.CombatAreaWidth, points[0].y));
+			}
+			else
+			{
+				points.Add(new Vector2(WorldGrid.CombatAreaWidth, current.y));
+				points.Add(new Vector2(WorldGrid.CombatAreaWidth, points[0].y));
+				points.Reverse();
+			}
 
-        private void GenerateRockWall(Vector2 position, bool left, int rotateAmount)
-        {
-            List<Vector2> wallVertices = RockWall(left);
-            for (int i = 0; i < wallVertices.Count; i++) wallVertices[i] = AdvancedMaths.RotatePoint(wallVertices[i], rotateAmount, Vector2.zero);
-            position = AdvancedMaths.RotatePoint(position, rotateAmount, Vector2.zero);
-            new Barrier(wallVertices, "Wall " + GetObjectNumber(), position, barriers);
-        }
-    }
+			return points;
+		}
+
+		private void GenerateRockWall(Vector2 position, bool left, int rotateAmount)
+		{
+			List<Vector2> wallVertices                                   = RockWall(left);
+			for (int i = 0; i < wallVertices.Count; i++) wallVertices[i] = AdvancedMaths.RotatePoint(wallVertices[i], rotateAmount, Vector2.zero);
+			position = AdvancedMaths.RotatePoint(position, rotateAmount, Vector2.zero);
+			new Barrier(wallVertices, "Wall " + GetObjectNumber(), position, barriers);
+		}
+	}
 }

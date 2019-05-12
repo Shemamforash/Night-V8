@@ -1,23 +1,17 @@
 ﻿namespace SamsHelper.BaseGameFunctionality.Basic
 {
-    public class ScaleableValue
-    {
-        private readonly float _xSquaredCoefficient, _xCoefficient, _intercept;
+	public class ScaleableValue
+	{
+		private readonly float _xSquaredCoefficient, _xCoefficient, _intercept;
 
-        public ScaleableValue(float xCoefficient, float intercept)
-        {
-            _xCoefficient = xCoefficient;
-            _intercept = intercept;
-        }
+		public ScaleableValue(float xCoefficient, float intercept)
+		{
+			_xCoefficient = xCoefficient;
+			_intercept    = intercept;
+		}
 
-        public ScaleableValue(float xSquaredCoefficient, float xCoefficient, float intercept) : this(xCoefficient, intercept)
-        {
-            _xSquaredCoefficient = xSquaredCoefficient;
-        }
+		public ScaleableValue(float xSquaredCoefficient, float xCoefficient, float intercept) : this(xCoefficient, intercept) => _xSquaredCoefficient = xSquaredCoefficient;
 
-        public float GetScaledValue(float value)
-        {
-            return _xSquaredCoefficient * value * value + _xCoefficient * value + _intercept;
-        }
-    }
+		public float GetScaledValue(float value) => _xSquaredCoefficient * value * value + _xCoefficient * value + _intercept;
+	}
 }

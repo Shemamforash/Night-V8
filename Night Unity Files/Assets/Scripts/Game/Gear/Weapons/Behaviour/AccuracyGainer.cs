@@ -1,6 +1,6 @@
 ﻿namespace Game.Gear.Weapons
 {
-    public class AccuracyGainer : DefaultBehaviour
-    {
-    }
+	public class AccuracyGainer : DefaultBehaviour
+	{
+	}
 }

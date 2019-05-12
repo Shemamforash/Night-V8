@@ -1,4 +1,5 @@
-﻿using SamsHelper.Libraries;
+﻿using Extensions;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine.SceneManagement;
 

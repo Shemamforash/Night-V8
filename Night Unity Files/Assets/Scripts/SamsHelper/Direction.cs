@@ -1,11 +1,11 @@
 namespace SamsHelper
 {
-    public enum Direction
-    {
-        Up,
-        Down,
-        Left,
-        Right,
-        None
-    }
+	public enum Direction
+	{
+		Up,
+		Down,
+		Left,
+		Right,
+		None
+	}
 }

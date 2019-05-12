@@ -3,9 +3,9 @@
 		<Name>Water</Name>
 		<Type>Water</Type>
 		<Consumable>TRUE</Consumable>
-		<Attribute>Thirst</Attribute>
+		<Attribute>Will</Attribute>
 		<Modifier>1</Modifier>
-		<Permanent>TRUE</Permanent>
+		<Permanent>FALSE</Permanent>
 		<DesertDropRate>1</DesertDropRate>
 		<MountainsDropRate>0.7</MountainsDropRate>
 		<SeaDropRate>0.5</SeaDropRate>
@@ -18,9 +18,9 @@
 		<Name>Deathwater</Name>
 		<Type>Water</Type>
 		<Consumable>True</Consumable>
-		<Attribute>Thirst</Attribute>
+		<Attribute>Will</Attribute>
 		<Modifier>-1</Modifier>
-		<Permanent>TRUE</Permanent>
+		<Permanent>FALSE</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0.2</MountainsDropRate>
 		<SeaDropRate>0.35</SeaDropRate>
@@ -33,9 +33,9 @@
 		<Name>Earthmilk</Name>
 		<Type>Water</Type>
 		<Consumable>True</Consumable>
-		<Attribute>Thirst</Attribute>
+		<Attribute>Will</Attribute>
 		<Modifier>2</Modifier>
-		<Permanent>TRUE</Permanent>
+		<Permanent>FALSE</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0.1</MountainsDropRate>
 		<SeaDropRate>0.15</SeaDropRate>
@@ -48,14 +48,14 @@
 		<Name>Rotmeat</Name>
 		<Type>Meat</Type>
 		<Consumable>True</Consumable>
-		<Attribute>Hunger</Attribute>
+		<Attribute>Life</Attribute>
 		<Modifier>-1</Modifier>
-		<Permanent>TRUE</Permanent>
+		<Permanent>FALSE</Permanent>
 		<DesertDropRate>0.1</DesertDropRate>
 		<MountainsDropRate>0.2</MountainsDropRate>
-		<SeaDropRate>0.35</SeaDropRate>
-		<RuinsDropRate>0.55</RuinsDropRate>
-		<WastelandDropRate>0.6</WastelandDropRate>
+		<SeaDropRate>0.3</SeaDropRate>
+		<RuinsDropRate>0.4</RuinsDropRate>
+		<WastelandDropRate>0.5</WastelandDropRate>
 		<Description>Foul smelling and grey, I cannot eat this</Description>
 		<Effect>Increases Hunger</Effect>
 	</Resource>
@@ -63,9 +63,9 @@
 		<Name>Cooked Meat</Name>
 		<Type>Meat</Type>
 		<Consumable>True</Consumable>
-		<Attribute>Hunger</Attribute>
-		<Modifier>2</Modifier>
-		<Permanent>TRUE</Permanent>
+		<Attribute>Life</Attribute>
+		<Modifier>1</Modifier>
+		<Permanent>FALSE</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
 		<SeaDropRate>0</SeaDropRate>
@@ -75,42 +75,12 @@
 		<Effect>Sates Hunger</Effect>
 	</Resource>
 	<Resource>
-		<Name>Meat</Name>
-		<Type>Meat</Type>
-		<Consumable>FALSE</Consumable>
-		<Attribute></Attribute>
-		<Modifier></Modifier>
-		<Permanent>TRUE</Permanent>
-		<DesertDropRate>0.9</DesertDropRate>
-		<MountainsDropRate>0.7</MountainsDropRate>
-		<SeaDropRate>0.5</SeaDropRate>
-		<RuinsDropRate>0.3</RuinsDropRate>
-		<WastelandDropRate>0.1</WastelandDropRate>
-		<Description>Gristly and tough, this will have to be cooked before I can eat it</Description>
-		<Effect></Effect>
-	</Resource>
-	<Resource>
-		<Name>Blubber</Name>
-		<Type>Meat</Type>
-		<Consumable>False</Consumable>
-		<Attribute></Attribute>
-		<Modifier></Modifier>
-		<Permanent>TRUE</Permanent>
-		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.1</MountainsDropRate>
-		<SeaDropRate>0.15</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
-		<WastelandDropRate>0.3</WastelandDropRate>
-		<Description>Thick fatty meat, delicious when cooked</Description>
-		<Effect></Effect>
-	</Resource>
-	<Resource>
 		<Name>Dried Meat</Name>
 		<Type>Meat</Type>
 		<Consumable>True</Consumable>
-		<Attribute>Hunger</Attribute>
-		<Modifier>1</Modifier>
-		<Permanent>TRUE</Permanent>
+		<Attribute>Life</Attribute>
+		<Modifier>2</Modifier>
+		<Permanent>FALSE</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
 		<SeaDropRate>0</SeaDropRate>
@@ -120,49 +90,34 @@
 		<Effect>Slightly sates Hunger</Effect>
 	</Resource>
 	<Resource>
-		<Name>Cooked Blubber</Name>
+		<Name>Meat</Name>
 		<Type>Meat</Type>
-		<Consumable>True</Consumable>
-		<Attribute>Hunger</Attribute>
-		<Modifier>2</Modifier>
-		<Permanent>TRUE</Permanent>
-		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0</MountainsDropRate>
-		<SeaDropRate>0</SeaDropRate>
-		<RuinsDropRate>0</RuinsDropRate>
-		<WastelandDropRate>0</WastelandDropRate>
-		<Description></Description>
-		<Effect>Greatly sates Hunger</Effect>
+		<Consumable>FALSE</Consumable>
+		<Attribute></Attribute>
+		<Modifier></Modifier>
+		<Permanent>FALSE</Permanent>
+		<DesertDropRate>0.9</DesertDropRate>
+		<MountainsDropRate>0.8</MountainsDropRate>
+		<SeaDropRate>0.7</SeaDropRate>
+		<RuinsDropRate>0.6</RuinsDropRate>
+		<WastelandDropRate>0.5</WastelandDropRate>
+		<Description>Gristly and tough, this will have to be cooked before I can eat it</Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
-		<Name>Deathbloom</Name>
+		<Name>Sanguine Bloom</Name>
 		<Type>Plant</Type>
 		<Consumable>True</Consumable>
 		<Attribute>Life</Attribute>
 		<Modifier>1</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
-		<MountainsDropRate>0.21</MountainsDropRate>
-		<SeaDropRate>0.16</SeaDropRate>
-		<RuinsDropRate>0.12</RuinsDropRate>
-		<WastelandDropRate>0.08</WastelandDropRate>
+		<MountainsDropRate>0.22</MountainsDropRate>
+		<SeaDropRate>0.2</SeaDropRate>
+		<RuinsDropRate>0.15</RuinsDropRate>
+		<WastelandDropRate>0.125</WastelandDropRate>
 		<Description>Helps to heal wounds when rubbed into the skin</Description>
 		<Effect>Recover 1 Life</Effect>
-	</Resource>
-	<Resource>
-		<Name>Hollowroot</Name>
-		<Type>Plant</Type>
-		<Consumable>True</Consumable>
-		<Attribute>Life</Attribute>
-		<Modifier>2</Modifier>
-		<Permanent>False</Permanent>
-		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0</MountainsDropRate>
-		<SeaDropRate>0.05</SeaDropRate>
-		<RuinsDropRate>0.05</RuinsDropRate>
-		<WastelandDropRate>0.08</WastelandDropRate>
-		<Description>Restores even deep wounds, but won't numb the pain</Description>
-		<Effect>Recover 2 Life</Effect>
 	</Resource>
 	<Resource>
 		<Name>Shaman Frond</Name>
@@ -172,10 +127,10 @@
 		<Modifier>1</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
-		<MountainsDropRate>0.21</MountainsDropRate>
-		<SeaDropRate>0.16</SeaDropRate>
-		<RuinsDropRate>0.12</RuinsDropRate>
-		<WastelandDropRate>0.08</WastelandDropRate>
+		<MountainsDropRate>0.22</MountainsDropRate>
+		<SeaDropRate>0.2</SeaDropRate>
+		<RuinsDropRate>0.15</RuinsDropRate>
+		<WastelandDropRate>0.125</WastelandDropRate>
 		<Description>Used in ancient times to calm the nerves</Description>
 		<Effect>Recover 1 Will</Effect>
 	</Resource>
@@ -184,73 +139,43 @@
 		<Type>Plant</Type>
 		<Consumable>True</Consumable>
 		<Attribute>Will</Attribute>
-		<Modifier>2</Modifier>
-		<Permanent>False</Permanent>
-		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0</MountainsDropRate>
-		<SeaDropRate>0.05</SeaDropRate>
-		<RuinsDropRate>0.05</RuinsDropRate>
-		<WastelandDropRate>0.08</WastelandDropRate>
-		<Description>A strongly scented leaf, returns reality to the demented</Description>
-		<Effect>Recover 2 Will</Effect>
-	</Resource>
-	<Resource>
-		<Name>Mother's Tear</Name>
-		<Type>Plant</Type>
-		<Consumable>True</Consumable>
-		<Attribute>Focus</Attribute>
 		<Modifier>1</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
-		<MountainsDropRate>0.21</MountainsDropRate>
-		<SeaDropRate>0.16</SeaDropRate>
-		<RuinsDropRate>0.12</RuinsDropRate>
-		<WastelandDropRate>0.08</WastelandDropRate>
+		<MountainsDropRate>0.22</MountainsDropRate>
+		<SeaDropRate>0.2</SeaDropRate>
+		<RuinsDropRate>0.15</RuinsDropRate>
+		<WastelandDropRate>0.125</WastelandDropRate>
 		<Description>Provides a little clarity in moments of darkness</Description>
 		<Effect>Recover 1 Focus</Effect>
-	</Resource>
-	<Resource>
-		<Name>Glowcap</Name>
-		<Type>Plant</Type>
-		<Consumable>True</Consumable>
-		<Attribute>Focus</Attribute>
-		<Modifier>2</Modifier>
-		<Permanent>False</Permanent>
-		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0</MountainsDropRate>
-		<SeaDropRate>0.05</SeaDropRate>
-		<RuinsDropRate>0.05</RuinsDropRate>
-		<WastelandDropRate>0.08</WastelandDropRate>
-		<Description>Clears the mind, and focuses the soul</Description>
-		<Effect>Recover 2 Focus</Effect>
 	</Resource>
 	<Resource>
 		<Name>Fleetfoot</Name>
 		<Type>Plant</Type>
 		<Consumable>True</Consumable>
-		<Attribute>Grit</Attribute>
+		<Attribute>Life</Attribute>
 		<Modifier>1</Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
-		<MountainsDropRate>0.21</MountainsDropRate>
-		<SeaDropRate>0.16</SeaDropRate>
-		<RuinsDropRate>0.12</RuinsDropRate>
-		<WastelandDropRate>0.08</WastelandDropRate>
+		<MountainsDropRate>0.22</MountainsDropRate>
+		<SeaDropRate>0.2</SeaDropRate>
+		<RuinsDropRate>0.15</RuinsDropRate>
+		<WastelandDropRate>0.125</WastelandDropRate>
 		<Description>A sweet root, helps the legs go that bit further</Description>
 		<Effect>Recover 1 Grit</Effect>
 	</Resource>
 	<Resource>
 		<Name>Aquiris</Name>
 		<Type>Plant</Type>
-		<Consumable>True</Consumable>
-		<Attribute>Grit</Attribute>
-		<Modifier>2</Modifier>
+		<Consumable>False</Consumable>
+		<Attribute></Attribute>
+		<Modifier></Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
 		<SeaDropRate>0.05</SeaDropRate>
-		<RuinsDropRate>0.05</RuinsDropRate>
-		<WastelandDropRate>0.08</WastelandDropRate>
+		<RuinsDropRate>0.1</RuinsDropRate>
+		<WastelandDropRate>0.125</WastelandDropRate>
 		<Description>A fragile pouch protecting sugary liquid</Description>
 		<Effect>Recover 2 Grit</Effect>
 	</Resource>
@@ -263,9 +188,9 @@
 		<Permanent>True</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0.04</MountainsDropRate>
-		<SeaDropRate>0.04</SeaDropRate>
-		<RuinsDropRate>0.08</RuinsDropRate>
-		<WastelandDropRate>0.09</WastelandDropRate>
+		<SeaDropRate>0.05</SeaDropRate>
+		<RuinsDropRate>0.1</RuinsDropRate>
+		<WastelandDropRate>0.125</WastelandDropRate>
 		<Description>A red berry- hot to the touch, spewing smoke and burning red</Description>
 		<Effect>Increases Burn</Effect>
 	</Resource>
@@ -278,9 +203,9 @@
 		<Permanent>True</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0.04</MountainsDropRate>
-		<SeaDropRate>0.04</SeaDropRate>
-		<RuinsDropRate>0.08</RuinsDropRate>
-		<WastelandDropRate>0.09</WastelandDropRate>
+		<SeaDropRate>0.05</SeaDropRate>
+		<RuinsDropRate>0.1</RuinsDropRate>
+		<WastelandDropRate>0.125</WastelandDropRate>
 		<Description>A small berry, heavy to hold and black as night</Description>
 		<Effect>Increases Void</Effect>
 	</Resource>
@@ -293,41 +218,11 @@
 		<Permanent>True</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0.04</MountainsDropRate>
-		<SeaDropRate>0.04</SeaDropRate>
-		<RuinsDropRate>0.08</RuinsDropRate>
-		<WastelandDropRate>0.09</WastelandDropRate>
+		<SeaDropRate>0.05</SeaDropRate>
+		<RuinsDropRate>0.1</RuinsDropRate>
+		<WastelandDropRate>0.125</WastelandDropRate>
 		<Description>A blue fruit, star shaped, bristling with thorns</Description>
 		<Effect>Increases Shatter</Effect>
-	</Resource>
-	<Resource>
-		<Name>Sanguine Bloom</Name>
-		<Type>Plant</Type>
-		<Consumable>True</Consumable>
-		<Attribute>SkillRechargeBonus</Attribute>
-		<Modifier>0.01</Modifier>
-		<Permanent>True</Permanent>
-		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.04</MountainsDropRate>
-		<SeaDropRate>0.04</SeaDropRate>
-		<RuinsDropRate>0.08</RuinsDropRate>
-		<WastelandDropRate>0.09</WastelandDropRate>
-		<Description>A darkly glowing bloom, radiating with bloody rage</Description>
-		<Effect>Increases Skill Recharge</Effect>
-	</Resource>
-	<Resource>
-		<Name>Wood</Name>
-		<Type>Resource</Type>
-		<Consumable>FALSE</Consumable>
-		<Attribute></Attribute>
-		<Modifier></Modifier>
-		<Permanent>False</Permanent>
-		<DesertDropRate>1</DesertDropRate>
-		<MountainsDropRate>0.2</MountainsDropRate>
-		<SeaDropRate>0.1</SeaDropRate>
-		<RuinsDropRate>0.1</RuinsDropRate>
-		<WastelandDropRate>0.1</WastelandDropRate>
-		<Description></Description>
-		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Rusty Scrap</Name>
@@ -337,10 +232,10 @@
 		<Modifier></Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.45</MountainsDropRate>
+		<MountainsDropRate>0.6</MountainsDropRate>
 		<SeaDropRate>0.2</SeaDropRate>
 		<RuinsDropRate>0.1</RuinsDropRate>
-		<WastelandDropRate>0.15</WastelandDropRate>
+		<WastelandDropRate>0.1</WastelandDropRate>
 		<Description></Description>
 		<Effect></Effect>
 	</Resource>
@@ -352,9 +247,9 @@
 		<Modifier></Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.3</MountainsDropRate>
-		<SeaDropRate>0.2</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
+		<MountainsDropRate>0.4</MountainsDropRate>
+		<SeaDropRate>0.3</SeaDropRate>
+		<RuinsDropRate>0.2</RuinsDropRate>
 		<WastelandDropRate>0.1</WastelandDropRate>
 		<Description></Description>
 		<Effect></Effect>
@@ -367,10 +262,10 @@
 		<Modifier></Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0.05</MountainsDropRate>
-		<SeaDropRate>0.2</SeaDropRate>
-		<RuinsDropRate>0.15</RuinsDropRate>
-		<WastelandDropRate>0.15</WastelandDropRate>
+		<MountainsDropRate>0</MountainsDropRate>
+		<SeaDropRate>0.15</SeaDropRate>
+		<RuinsDropRate>0.2</RuinsDropRate>
+		<WastelandDropRate>0.2</WastelandDropRate>
 		<Description></Description>
 		<Effect></Effect>
 	</Resource>
@@ -398,9 +293,9 @@
 		<Permanent>False</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
-		<SeaDropRate>0</SeaDropRate>
-		<RuinsDropRate>0.25</RuinsDropRate>
-		<WastelandDropRate>0.15</WastelandDropRate>
+		<SeaDropRate>0.05</SeaDropRate>
+		<RuinsDropRate>0.2</RuinsDropRate>
+		<WastelandDropRate>0.2</WastelandDropRate>
 		<Description></Description>
 		<Effect></Effect>
 	</Resource>
@@ -414,8 +309,8 @@
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
 		<SeaDropRate>0</SeaDropRate>
-		<RuinsDropRate>0.05</RuinsDropRate>
-		<WastelandDropRate>0.2</WastelandDropRate>
+		<RuinsDropRate>0.1</RuinsDropRate>
+		<WastelandDropRate>0.25</WastelandDropRate>
 		<Description></Description>
 		<Effect></Effect>
 	</Resource>
@@ -441,7 +336,7 @@
 		<Attribute></Attribute>
 		<Modifier></Modifier>
 		<Permanent>False</Permanent>
-		<DesertDropRate>0</DesertDropRate>
+		<DesertDropRate>1</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
 		<SeaDropRate>0</SeaDropRate>
 		<RuinsDropRate>0</RuinsDropRate>
@@ -600,33 +495,48 @@
 		<Effect>Increases Maximum Will</Effect>
 	</Resource>
 	<Resource>
-		<Name>Dose of Focus</Name>
+		<Name>Philter of Fire</Name>
 		<Type>Potion</Type>
-		<Consumable>TRUE</Consumable>
-		<Attribute>Focus</Attribute>
-		<Modifier>1</Modifier>
-		<Permanent>TRUE</Permanent>
+		<Consumable>True</Consumable>
+		<Attribute>Burn</Attribute>
+		<Modifier>5</Modifier>
+		<Permanent>True</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
 		<SeaDropRate>0</SeaDropRate>
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
-		<Description>More a gas than a liquid, one deep breath enhances your Focus.</Description>
-		<Effect>Increases Maximum Focus</Effect>
+		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
-		<Name>Concoction of Grit</Name>
+		<Name>Vessel of Void</Name>
 		<Type>Potion</Type>
-		<Consumable>TRUE</Consumable>
-		<Attribute>Grit</Attribute>
-		<Modifier>1</Modifier>
-		<Permanent>TRUE</Permanent>
+		<Consumable>True</Consumable>
+		<Attribute>Void</Attribute>
+		<Modifier>5</Modifier>
+		<Permanent>True</Permanent>
 		<DesertDropRate>0</DesertDropRate>
 		<MountainsDropRate>0</MountainsDropRate>
 		<SeaDropRate>0</SeaDropRate>
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
-		<Description>One swig of this earthy concoction and your Grit will not falter.</Description>
-		<Effect>Increases Maximum Grit</Effect>
+		<Description></Description>
+		<Effect></Effect>
+	</Resource>
+	<Resource>
+		<Name>Sniff of Shatter</Name>
+		<Type>Potion</Type>
+		<Consumable>True</Consumable>
+		<Attribute>Shatter</Attribute>
+		<Modifier>5</Modifier>
+		<Permanent>True</Permanent>
+		<DesertDropRate>0</DesertDropRate>
+		<MountainsDropRate>0</MountainsDropRate>
+		<SeaDropRate>0</SeaDropRate>
+		<RuinsDropRate>0</RuinsDropRate>
+		<WastelandDropRate>0</WastelandDropRate>
+		<Description></Description>
+		<Effect></Effect>
 	</Resource>
 </Resources>

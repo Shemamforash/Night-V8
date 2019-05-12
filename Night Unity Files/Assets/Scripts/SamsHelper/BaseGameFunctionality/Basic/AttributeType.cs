@@ -1,28 +1,22 @@
 ﻿namespace SamsHelper.BaseGameFunctionality.Basic
 {
-    public enum AttributeType
-    {
-        Life,
-        Grit,
-        Focus,
-        Will,
+	public enum AttributeType
+	{
+		Life,
+		Will,
 
-        Thirst,
-        Hunger,
-
-        SkillRechargeBonus,
-        AdrenalineRechargeBonus,
-
-        Damage,
-        Accuracy,
-        FireRate,
-        ReloadSpeed,
-        Recoil,
-        Pellets,
-        Capacity,
-        Void,
-        Shatter,
-        Burn,
-        CompassBonus
-    }
+		Damage,
+		Accuracy,
+		FireRate,
+		ReloadSpeed,
+		Recoil,
+		Pellets,
+		Capacity,
+		Void,
+		Shatter,
+		Burn,
+		Pierce,
+		CompassBonus,
+		Range
+	}
 }

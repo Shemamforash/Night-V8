@@ -1,26 +1,26 @@
 ﻿using System;
 using DG.Tweening;
 using Game.Characters;
-using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
 using Game.Global;
+using Extensions;
+using Extensions;
 using SamsHelper.Input;
-using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
 public class UiBrandMenu : Menu
 {
-	private        EnhancedText          _titleText,    _benefitText, _quoteText, _descriptionText, _overviewText;
-	private        CanvasGroup           _detailCanvas, _overviewCanvas;
 	private static UiBrandMenu           _instance;
-	private        CloseButtonController _closeButton;
-	private        Menu                  _lastMenu;
 	private static string                _titleString, _benefitString, _quoteString, _overviewString, _descriptionString;
-	private        float                 _waitToHideTime;
 	private        bool                  _canHide;
+	private        CloseButtonController _closeButton;
+	private        CanvasGroup           _detailCanvas, _overviewCanvas;
+	private        Menu                  _lastMenu;
+	private        EnhancedText          _titleText, _benefitText, _quoteText, _descriptionText, _overviewText;
+	private        float                 _waitToHideTime;
 
 	protected override void Awake()
 	{

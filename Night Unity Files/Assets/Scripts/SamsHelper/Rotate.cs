@@ -3,9 +3,9 @@
 public class Rotate : MonoBehaviour
 {
 	public float RotateSpeed = 5f;
-	
-	public void Update () 
+
+	public void Update()
 	{
-		transform.Rotate(0, 0, RotateSpeed * Time.deltaTime);	
+		transform.Rotate(0, 0, RotateSpeed * Time.deltaTime);
 	}
 }

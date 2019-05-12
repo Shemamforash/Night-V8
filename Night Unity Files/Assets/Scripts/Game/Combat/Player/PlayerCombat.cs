@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using Extensions;
 using EZCameraShake;
 using Facilitating;
 using Facilitating.UIControllers;
@@ -16,6 +17,8 @@ using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Gear.Weapons;
 using Game.Global;
+
+
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -27,102 +30,52 @@ namespace Game.Combat.Player
 {
 	public class PlayerCombat : CharacterCombat, IInputListener, ICombatEvent
 	{
-		private          bool       _reloading;
-		private          float      _dryFireTimer;
-		private          float      _adrenalineRecoveryRate;
-		private const    float      DryFireTimerMax  = 0.3f;
-		private readonly Number     _adrenalineLevel = new Number(0, 0, 8);
-		private          Coroutine  _dashCooldown;
-		private          Quaternion _lastTargetRotation;
-		private          int        _compassPulses;
-
-		public Characters.Player Player;
-		public FastLight         _playerLight;
+		private const float RotateSpeedMax     = 150f;
+		private const float RotateAcceleration = 400f;
 
 		public static PlayerCombat Instance;
+		public static bool         Alive;
 
-		public float MuzzleFlashOpacity;
+		private readonly Number              _adrenalineLevel = new Number(0, 0, 8);
+		private          float               _activeSkillDuration;
+		private          int                 _capacity;
+		private          int                 _compassPulses;
+		private          string              _controlText;
+		private          DeathReason         _currentDeathReason;
+		private          float               _currentReloadTime;
+		private          Coroutine           _dashCooldown;
+		private          float               _dashCooldownTime;
+		private          float               _initialReloadProgress;
+		private          Vector2?            _lastMousePosition;
+		private          Quaternion          _lastTargetRotation;
+		private          Camera              _mainCamera;
+		private          FastLight           _muzzleFlash;
+		public           FastLight           _playerLight;
+		private          bool                _recovered;
+		private          Coroutine           _reloadCoroutine;
+		private          float               _reloadDuration;
+		private          bool                _reloading;
+		private          float               _reloadProgress;
+		private          float               _rotateSpeedCurrent;
+		private          bool                _rotatingWithKeyboard;
+		private          float               _swivelAmount;
+		private          bool                _swivelling;
+		private          bool                _useKeyboardMovement = true;
+		public           BaseWeaponBehaviour _weaponBehaviour;
+		public           float               MuzzleFlashOpacity;
+		public           Action<Shot>        OnFireAction;
+		public           Characters.Player   Player;
+		public           List<Action>        UpdateSkillActions = new List<Action>();
 
-		private const float               RotateSpeedMax = 150f;
-		private       float               _rotateSpeedCurrent;
-		private const float               RotateAcceleration = 400f;
-		private       bool                _recovered;
-		public        Action<Shot>        OnFireAction;
-		public        List<Action>        UpdateSkillActions = new List<Action>();
-		public        BaseWeaponBehaviour _weaponBehaviour;
-		private       FastLight           _muzzleFlash;
-		private       DeathReason         _currentDeathReason;
-		private       bool                _useKeyboardMovement = true;
-		private       Vector2?            _lastMousePosition;
-		private       Camera              _mainCamera;
-		private       bool                _swivelling;
-		private       float               _swivelAmount;
-		public static bool                Alive;
-		private       string              _controlText;
-		private       float               _dashCooldownTime;
-
-		public static Vector3 Position()
+		public float InRange()
 		{
-			return Instance.transform.position;
+			if (!CharacterManager.CurrentRegion().IsDynamic() && CharacterManager.CurrentRegion().GetRegionType() != RegionType.Temple) return -1;
+			return CurrentCell().OutOfRange || CurrentCell().IsEdgeCell ? 1 : -1;
 		}
 
-		private void OnDestroy()
-		{
-			Alive    = false;
-			Instance = null;
-			InputHandler.UnregisterInputListener(this);
-		}
+		public string GetEventText() => "Leave region [" + _controlText + "]";
 
-		public bool ConsumeAdrenaline(int amount)
-		{
-			if (!CanAffordSkill(amount)) return false;
-			Player.BrandManager.IncreaseAdrenalineUsed(amount);
-			_adrenalineLevel.Decrement(amount);
-			RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
-			return true;
-		}
-
-		public bool CanAffordSkill(int amount)
-		{
-			return amount <= _adrenalineLevel.CurrentValue();
-		}
-
-		private void Move(Vector2 direction)
-		{
-			MovementController.Move(direction);
-		}
-
-		protected override void Awake()
-		{
-			IsPlayer = true;
-			base.Awake();
-			BurnDamagePercent = 0.025f;
-			Instance          = this;
-			_mainCamera       = Camera.main;
-		}
-
-		public void Start()
-		{
-			ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
-			controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
-		}
-
-		private void UpdateText()
-		{
-			_controlText = InputHandler.GetBindingForKey(InputAxis.TakeItem);
-		}
-
-		private void MoveVertical(float direction = 0)
-		{
-			if (_useKeyboardMovement) Move(direction * transform.up);
-			else Move(direction                      * _mainCamera.transform.up);
-		}
-
-		private void MoveHorizontal(float direction = 0)
-		{
-			if (_useKeyboardMovement) Move(direction * transform.right);
-			else Move(direction                      * _mainCamera.transform.right);
-		}
+		public void Activate() => CombatManager.Instance().ExitCombat();
 
 		//input
 		public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -185,29 +138,6 @@ namespace Game.Combat.Player
 			}
 		}
 
-		private void StartSwivelling()
-		{
-			if (_swivelling) return;
-			_swivelling        = true;
-			transform.rotation = Quaternion.Euler(0, 0, _mainCamera.transform.rotation.z);
-		}
-
-		private void TryDash()
-		{
-			if (!CanDash()) return;
-			MovementController.Dash();
-			_dashCooldown = StartCoroutine(Dash());
-		}
-
-		private void TryEmitPulse()
-		{
-			if (_compassPulses == 0) return;
-			if (!UiCompassController.EmitPulse()) return;
-			Player.Attributes.Get(AttributeType.Focus).Decrement();
-			--_compassPulses;
-			UiCompassPulseController.UsePulse(_compassPulses);
-		}
-
 		public void OnInputUp(InputAxis axis)
 		{
 			switch (axis)
@@ -227,6 +157,72 @@ namespace Game.Combat.Player
 
 		public void OnDoubleTap(InputAxis axis, float direction)
 		{
+		}
+
+
+		public static Vector3 Position() => Instance.transform.position;
+
+		private void OnDestroy()
+		{
+			Alive    = false;
+			Instance = null;
+			InputHandler.UnregisterInputListener(this);
+		}
+
+		public bool ConsumeAdrenaline(int amount)
+		{
+			if (!CanAffordSkill(amount)) return false;
+			Player.BrandManager.IncreaseAdrenalineUsed(amount);
+			_adrenalineLevel.Increment(-amount);
+			RageBarController.SetRageBarFill(_adrenalineLevel.Normalised);
+			return true;
+		}
+
+		public bool CanAffordSkill(int amount) => amount <= _adrenalineLevel.CurrentValue;
+
+		private void Move(Vector2 direction) => MovementController.Move(direction);
+
+		protected override void Awake()
+		{
+			IsPlayer = true;
+			base.Awake();
+			BurnDamagePercent = 0.025f;
+			Instance          = this;
+			_mainCamera       = Camera.main;
+		}
+
+		public void Start()
+		{
+			ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
+			controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
+		}
+
+		private void UpdateText()                        => _controlText = InputHandler.GetBindingForKey(InputAxis.TakeItem);
+		private void MoveVertical(float   direction = 0) => Move(direction * (_useKeyboardMovement ? transform.up : _mainCamera.transform.up));
+		private void MoveHorizontal(float direction = 0) => Move(direction * (_useKeyboardMovement ? transform.right : _mainCamera.transform.right));
+
+		private void StartSwivelling()
+		{
+			if (_swivelling) return;
+			_swivelling        = true;
+			transform.rotation = Quaternion.Euler(0, 0, _mainCamera.transform.rotation.z);
+		}
+
+		private void TryDash()
+		{
+			if (!CanDash()) return;
+			MovementController.Dash();
+			_dashCooldown = StartCoroutine(Dash());
+		}
+
+		private void TryEmitPulse()
+		{
+			if (_compassPulses == 0) return;
+			int compassBonus = Mathf.CeilToInt(Player.Attributes.Val(AttributeType.CompassBonus));
+			if (!UiCompassController.EmitPulse(compassBonus)) return;
+			Player.Attributes.Get(AttributeType.Will).Increment(-1);
+			--_compassPulses;
+			UiCompassPulseController.UsePulse(_compassPulses);
 		}
 
 		private void Rotate(float direction)
@@ -251,17 +247,6 @@ namespace Game.Combat.Player
 			transform.rotation = Quaternion.Euler(0, 0, rotation);
 		}
 
-		public float InRange()
-		{
-			if (!CharacterManager.CurrentRegion().IsDynamic() && CharacterManager.CurrentRegion().GetRegionType() != RegionType.Temple) return -1;
-			return CurrentCell().OutOfRange || CurrentCell().IsEdgeCell ? 1 : -1;
-		}
-
-		public string GetEventText()
-		{
-			return "Leave region [" + _controlText + "]";
-		}
-
 		public override int Burn()
 		{
 			int burnDamage = base.Burn();
@@ -275,11 +260,6 @@ namespace Game.Combat.Player
 			if (!base.Void()) return false;
 			_currentDeathReason = DeathReason.Void;
 			return true;
-		}
-
-		public void Activate()
-		{
-			CombatManager.Instance().ExitCombat();
 		}
 
 		public void ExitCombat()
@@ -364,18 +344,15 @@ namespace Game.Combat.Player
 			transform.Rotate(Vector3.forward, _swivelAmount);
 		}
 
-		public override string GetDisplayName()
-		{
-			return "Player";
-		}
+		public override string GetDisplayName() => "Player";
 
 		public void UpdateAdrenaline(int damageDealt)
 		{
 			float environmentModifier = (float) EnvironmentManager.CurrentEnvironmentType + 1;
 			float dps                 = _weaponBehaviour.Weapon.WeaponAttributes.DPS() / environmentModifier;
-			_adrenalineLevel.Increment(dps / 1600f                                     * _adrenalineRecoveryRate);
+			_adrenalineLevel.Increment(dps                                             / 1600f);
 			Player.BrandManager.IncreaseDamageDealt(damageDealt);
-			RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
+			RageBarController.SetRageBarFill(_adrenalineLevel.Normalised);
 		}
 
 		private void UpdateMuzzleFlash()
@@ -407,8 +384,15 @@ namespace Game.Combat.Player
 		{
 			if (damage < 1) damage = 1;
 			Player.BrandManager.IncreaseDamageTaken(damage);
-			if (ArmourController.CanAbsorbDamage()) WeaponAudio.PlayShieldHit();
-			else WeaponAudio.PlayBodyHit();
+			if (ArmourController.CanAbsorbDamage)
+			{
+				WeaponAudio.PlayShieldHit();
+			}
+			else
+			{
+				WeaponAudio.PlayBodyHit();
+			}
+
 			base.TakeDamage(damage, direction);
 			TryExplode();
 			Player.Attributes.CalculateNewLife(HealthController.GetCurrentHealth());
@@ -421,28 +405,31 @@ namespace Game.Combat.Player
 			if (!explodeWithFire && !explodeWithDecay) return;
 			if (explodeWithFire && explodeWithDecay)
 			{
-				explodeWithFire  = Helper.RollDie(0, 2);
+				explodeWithFire  = NumericExtensions.RollDie(0, 2);
 				explodeWithDecay = !explodeWithFire;
 			}
 
-			if (explodeWithDecay) DecayBehaviour.Create(transform.position).AddIgnoreTarget(this);
-			else FireBurstBehaviour.Create(transform.position).AddIgnoreTarget(this);
+			if (explodeWithDecay)
+			{
+				DecayBehaviour.Create(transform.position).AddIgnoreTarget(this);
+			}
+			else
+			{
+				FireBurstBehaviour.Create(transform.position).AddIgnoreTarget(this);
+			}
 		}
 
 		public void EquipWeapon()
 		{
 			Destroy(_weaponBehaviour);
 			_weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
-			_reloadDuration  = Player.EquippedWeapon.GetAttributeValue(AttributeType.ReloadSpeed);
+			_reloadDuration  = Player.Weapon.GetAttributeValue(AttributeType.ReloadSpeed);
 			_capacity        = _weaponBehaviour.Capacity();
 			UIMagazineController.SetWeapon(_weaponBehaviour);
 			RecalculateAttributes();
 		}
 
-		public void EquipInscription()
-		{
-			UIMagazineController.SetWeapon(_weaponBehaviour);
-		}
+		public void EquipInscription() => UIMagazineController.SetWeapon(_weaponBehaviour);
 
 		public void RecalculateAttributes()
 		{
@@ -452,23 +439,21 @@ namespace Game.Combat.Player
 			HealthController.SetInitialHealth(currentHealth, this, maxHealth);
 			MovementController.SetSpeed(Player.Attributes.CalculateSpeed());
 			SkillBar.UpdateSkills();
-			_adrenalineRecoveryRate = Player.Attributes.CalculateAdrenalineRecoveryRate();
-			_dashCooldownTime       = Player.Attributes.CalculateDashCooldown();
+			_dashCooldownTime = Player.Attributes.CalculateDashCooldown();
 		}
 
 		private void EquipArmour()
 		{
-			ArmourController = Player.ArmourController;
+			ArmourController = Player.Armour;
 			ArmourController.Reset();
 		}
 
 		public void ResetCompass()
 		{
-			int compassBonus = Mathf.CeilToInt(Player.Attributes.Val(AttributeType.CompassBonus));
-			int focusMax     = Mathf.CeilToInt(Player.Attributes.Max(AttributeType.Focus)) + compassBonus;
-			int focusCurrent = Mathf.CeilToInt(Player.Attributes.Val(AttributeType.Focus)) + compassBonus;
-			_compassPulses = focusCurrent;
-			UiCompassPulseController.InitialisePulses(focusMax, focusCurrent);
+			int compassMax     = Mathf.CeilToInt(Player.Attributes.Max(AttributeType.Will));
+			int compassCurrent = Mathf.CeilToInt(Player.Attributes.Val(AttributeType.Will));
+			_compassPulses = compassCurrent;
+			UiCompassPulseController.InitialisePulses(compassMax, compassCurrent);
 		}
 
 		private IEnumerator Dash()
@@ -504,15 +489,16 @@ namespace Game.Combat.Player
 			EquipWeapon();
 			EquipArmour();
 			ResetCompass();
-			_adrenalineLevel.SetCurrentValue(0f);
+			_adrenalineLevel.CurrentValue = 0f;
 
 			_playerLight        = GameObject.Find("Player Light").GetComponent<FastLight>();
 			_playerLight.Radius = CombatManager.Instance().VisibilityRange();
 
 			SkillBar.UpdateSkills();
-			transform.position = WorldGrid.PlayerStartPosition();
-			float zRot = AdvancedMaths.AngleFromUp(transform.position, Vector2.zero);
-			transform.rotation = Quaternion.Euler(0f, 0f, zRot);
+			Transform playerTransform = transform;
+			playerTransform.position = WorldGrid.PlayerStartPosition();
+			float zRot = AdvancedMaths.AngleFromUp(playerTransform.position, Vector2.zero);
+			playerTransform.rotation = Quaternion.Euler(0f, 0f, zRot);
 
 			Sequence sequence = DOTween.Sequence();
 			sequence.AppendInterval(3f);
@@ -523,10 +509,7 @@ namespace Game.Combat.Player
 			});
 		}
 
-		public override float GetRecoilModifier()
-		{
-			return _weaponBehaviour is AccuracyGainer ? 1 - base.GetRecoilModifier() : base.GetRecoilModifier();
-		}
+		public override float GetRecoilModifier() => _weaponBehaviour is AccuracyGainer ? 1 - base.GetRecoilModifier() : base.GetRecoilModifier();
 
 		public void Shake(float dps)
 		{
@@ -535,18 +518,9 @@ namespace Game.Combat.Player
 			CameraShaker.Instance.ShakeOnce(magnitude, 10, 0.2f, 0.2f);
 		}
 
-		private bool CanDash()
-		{
-			return _dashCooldown == null;
-		}
+		private bool CanDash() => _dashCooldown == null;
 
-		public override Weapon Weapon() => Player.EquippedWeapon;
-
-
-		private bool _rotatingWithKeyboard;
-
-		private Coroutine _reloadCoroutine;
-		private float     _reloadProgress, _initialReloadProgress;
+		public override Weapon Weapon() => Player.Weapon;
 
 		//RELOADING
 		private void Reload()
@@ -556,9 +530,6 @@ namespace Game.Combat.Player
 			_weaponBehaviour.StopFiring();
 			_reloadCoroutine = StartCoroutine(DoReload());
 		}
-
-		private float _currentReloadTime, _reloadDuration;
-		private int   _capacity;
 
 		private void StartReload()
 		{
@@ -584,7 +555,6 @@ namespace Game.Combat.Player
 				UIMagazineController.UpdateReloadTime(_reloadProgress);
 				float normalisedProgress = 1f - (1f - _reloadProgress) / (1f - _initialReloadProgress);
 				ReloadController.Instance().SetProgress(normalisedProgress);
-				_dryFireTimer = 0f;
 				yield return null;
 			}
 
@@ -629,25 +599,20 @@ namespace Game.Combat.Player
 
 			if (_weaponBehaviour.Empty())
 			{
-				if (Player.Attributes.ReloadOnEmptyMag && !_reloading) Reload();
-				else ReloadController.Instance().Show();
+				if (Player.Attributes.ReloadOnEmptyMag && !_reloading)
+				{
+					Reload();
+				}
+				else
+				{
+					ReloadController.Instance().Show();
+				}
+
 				return;
 			}
 
 			if (!_weaponBehaviour.CanFire()) return;
 			_weaponBehaviour.StartFiring();
-		}
-
-		private void TryDryFire()
-		{
-			if (_dryFireTimer < DryFireTimerMax)
-			{
-				_dryFireTimer += Time.deltaTime;
-				return;
-			}
-
-			_dryFireTimer = 0f;
-			WeaponAudio.DryFire();
 		}
 
 		public void OnShotConnects(CanTakeDamage hit, float previousHealth)
@@ -660,8 +625,7 @@ namespace Game.Combat.Player
 		}
 
 		//MISC
-
-		public bool IsKeyboardBeingUsed() => _useKeyboardMovement || (_swivelling && _swivelAmount != 0);
+		public bool IsKeyboardBeingUsed() => _useKeyboardMovement || _swivelling && _swivelAmount != 0;
 
 		public void SetPassiveSkill(Action<Shot> passiveEffect, float duration)
 		{
@@ -669,7 +633,5 @@ namespace Game.Combat.Player
 			_activeSkillDuration = duration;
 			ActiveSkillController.Play();
 		}
-
-		private float _activeSkillDuration;
 	}
 }

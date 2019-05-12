@@ -1,59 +1,90 @@
 ﻿using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using Facilitating.UIControllers;
 using Game.Characters;
+using Game.Characters.CharacterActions;
 using Game.Exploration.Regions;
 using Game.Global;
-using SamsHelper;
-using SamsHelper.Libraries;
-using UnityEngine;
-using Facilitating.UIControllers;
-using Game.Characters.CharacterActions;
 using Game.Global.Tutorial;
+using Extensions;
+using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Environment
 {
 	public class MapMenuController : Menu, IInputListener
 	{
-		private List<Region> route;
-		public  Transform    MapTransform;
+		private static Player            _characterReturning;
+		private static MapMenuController _instance;
+		private static Player            _player;
 
 		private readonly List<Tuple<Region, Region>>  _allRoutes     = new List<Tuple<Region, Region>>();
+		private readonly List<RingDrawer>             _rings         = new List<RingDrawer>();
 		private readonly Queue<Tuple<Region, Region>> _undrawnRoutes = new Queue<Tuple<Region, Region>>();
-		private          float                        _nextRouteTime;
+		private          bool                         _canTeleport;
 		private          float                        _currentTime;
 		private          bool                         _isActive;
-		private readonly List<RingDrawer>             _rings = new List<RingDrawer>();
-		private static   Player                       _characterReturning;
-		private          UIAttributeMarkerController  _gritMarker,   _willMarker;
-		private          EnhancedText                 _teleportText, _willText;
-		private          bool                         _seenTutorial;
-		private          Tweener                      _teleportTween;
-		private          bool                         _canTeleport;
-		private static   MapMenuController            _instance;
+		private          UIAttributeMarkerController  _lifeMarker;
 		private          Region                       _nearestRegion;
-		private          string                       _teleportControlText, _willControlText;
-		private static   Player                       _player;
+		private          float                        _nextRouteTime;
+		private          bool                         _seenTutorial;
+		private          string                       _teleportControlText;
+		private          EnhancedText                 _teleportText;
+		private          Tweener                      _teleportTween;
+		public           Transform                    MapTransform;
+		private          List<Region>                 route;
 
 		public static Player CharacterReturning
 		{
-			get { return _characterReturning; }
-			set { _characterReturning = value; }
+			get => _characterReturning;
+			set => _characterReturning = value;
+		}
+
+		public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+		{
+			if (isHeld) return;
+			switch (axis)
+			{
+				case InputAxis.Accept:
+					TravelToRegion();
+					break;
+				case InputAxis.Fire:
+					TravelToRegion();
+					break;
+				case InputAxis.Compass:
+					TryTeleport();
+					break;
+				case InputAxis.Cancel:
+					if (CharacterReturning == null && !TutorialManager.Instance.IsTutorialVisible())
+					{
+						MenuStateMachine.ShowMenu("Game Menu");
+					}
+
+					break;
+			}
+		}
+
+		public void OnInputUp(InputAxis axis)
+		{
+		}
+
+		public void OnDoubleTap(InputAxis axis, float direction)
+		{
 		}
 
 		protected override void Awake()
 		{
 			base.Awake();
-			_gritMarker    = gameObject.FindChildWithName("Grit").FindChildWithName<UIAttributeMarkerController>("Bar");
-			_willMarker    = gameObject.FindChildWithName("Will").FindChildWithName<UIAttributeMarkerController>("Bar");
+			_lifeMarker    = gameObject.FindChildWithName("Life").FindChildWithName<UIAttributeMarkerController>("Bar");
 			_teleportText  = gameObject.FindChildWithName<EnhancedText>("Teleport");
-			_willText      = _willMarker.transform.parent.FindChildWithName<EnhancedText>("Text");
 			_nextRouteTime = 2f / MapGenerator.Regions().Count;
 			MapTransform   = GameObject.Find("Nodes").transform;
 			_instance      = this;
@@ -71,7 +102,6 @@ namespace Game.Exploration.Environment
 		private void UpdateText()
 		{
 			_teleportControlText = InputHandler.GetBindingForKey(InputAxis.Compass);
-			_willControlText     = InputHandler.GetBindingForKey(InputAxis.Reload);
 		}
 
 		private void OnDestroy()
@@ -91,8 +121,6 @@ namespace Game.Exploration.Environment
 			_isActive = true;
 			_rings.ForEach(r => r.TweenColour(UiAppearanceController.InvisibleColour, Color.white, 0.5f));
 			UpdateTeleportText();
-			UpdateWill();
-			ResourcesUiController.Hide();
 			MapGenerator.Regions().ForEach(n => { n.ShowNode(_player); });
 			MapMovementController.Instance().Enter(_player);
 			AudioController.FadeInMusicMuffle();
@@ -110,15 +138,13 @@ namespace Game.Exploration.Environment
 			FadeAndDieTrailRenderer.ForceFadeAll();
 			AudioController.FadeOutMusicMuffle();
 			InputHandler.UnregisterInputListener(this);
-			ResourcesUiController.Show();
 			_player            = null;
 			CharacterReturning = null;
 		}
 
 		public override void PreEnter()
 		{
-			UpdateGrit(0);
-			UpdateWill();
+			UpdateLife();
 		}
 
 		private void UpdateTeleportText()
@@ -128,7 +154,6 @@ namespace Game.Exploration.Environment
 			string teleportString            = "No Mystic Shards";
 			if (_canTeleport) teleportString = "Teleport [" + _teleportControlText + "] (Consumes 1 Mystic Shard)";
 			_teleportText.SetText(teleportString);
-			_willText.SetText("Use Will [" + _willControlText + "]");
 		}
 
 		private void TryTeleport()
@@ -137,8 +162,15 @@ namespace Game.Exploration.Environment
 			if (region == null) return;
 			if (!_canTeleport) return;
 			Inventory.DecrementResource("Mystic Shard", 1);
-			if (region.GetRegionType() == RegionType.Gate) _player.TravelAction.ReturnToHomeInstant(true);
-			else _player.TravelAction.TravelToInstant(region);
+			if (region.GetRegionType() == RegionType.Gate)
+			{
+				_player.TravelAction.ReturnToHomeInstant(true);
+			}
+			else
+			{
+				_player.TravelAction.TravelToInstant(region);
+			}
+
 			CharacterReturning = null;
 			Exit();
 		}
@@ -296,67 +328,15 @@ namespace Game.Exploration.Environment
 
 		private bool CanAffordToTravel()
 		{
-			int  gritCost          = _nearestRegion.MapNode().GetGritCost();
-			bool canAfford         = _player.CanAffordTravel(gritCost);
-			bool travellingToGate  = _nearestRegion.GetRegionType() == RegionType.Gate;
-			bool canAffordToTravel = canAfford || travellingToGate;
-			return canAffordToTravel;
+			int  travelCost = _nearestRegion.MapNode().GetTravelCost();
+			bool canAfford  = _player.CanAffordTravel(travelCost);
+			return canAfford;
 		}
 
-		private void TryRestoreGrit()
+		public void UpdateLife()
 		{
-			CharacterAttribute grit = _player.Attributes.Get(AttributeType.Grit);
-			CharacterAttribute will = _player.Attributes.Get(AttributeType.Will);
-			if (will.CurrentValue() == 0 || grit.ReachedMax()) return;
-			will.Decrement();
-			grit.Increment();
-			_gritMarker.SetValue(grit.Max, grit.CurrentValue(), 0);
-			_willMarker.SetValue(will.Max, will.CurrentValue(), 0);
-			MapGenerator.Regions().ForEach(n => { n.ShowNode(_player); });
-		}
-
-		public void UpdateGrit(int gritCost)
-		{
-			CharacterAttribute grit = _player.Attributes.Get(AttributeType.Grit);
-			_gritMarker.SetValue(grit.Max, grit.CurrentValue(), -gritCost);
-		}
-
-		private void UpdateWill()
-		{
-			CharacterAttribute will = _player.Attributes.Get(AttributeType.Will);
-			_willMarker.SetValue(will.Max, will.CurrentValue(), 0);
-		}
-
-		public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-		{
-			if (isHeld) return;
-			switch (axis)
-			{
-				case InputAxis.Accept:
-					TravelToRegion();
-					break;
-				case InputAxis.Fire:
-					TravelToRegion();
-					break;
-				case InputAxis.Compass:
-					TryTeleport();
-					break;
-				case InputAxis.Reload:
-					TryRestoreGrit();
-					break;
-				case InputAxis.Cancel:
-					if (CharacterReturning == null && !TutorialManager.Instance.IsTutorialVisible())
-						MenuStateMachine.ShowMenu("Game Menu");
-					break;
-			}
-		}
-
-		public void OnInputUp(InputAxis axis)
-		{
-		}
-
-		public void OnDoubleTap(InputAxis axis, float direction)
-		{
+			CharacterAttribute life = _player.Attributes.Get(AttributeType.Life);
+			_lifeMarker.SetValue(life.Max, life.CurrentValue, 0);
 		}
 
 		public static MapMenuController Instance() => _instance;

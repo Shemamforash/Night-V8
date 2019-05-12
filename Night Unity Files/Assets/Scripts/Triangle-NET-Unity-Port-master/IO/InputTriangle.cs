@@ -1,84 +1,60 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="InputTriangle.cs" company="">
-// Triangle.NET code by Christian Woltering, http://triangle.codeplex.com/
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using TriangleNet.Geometry;
 
 namespace TriangleNet.IO
 {
-    using TriangleNet.Geometry;
+	/// <summary>
+	/// Simple triangle class for input.
+	/// </summary>
+	public class InputTriangle : ITriangle
+	{
+		internal double area;
+		internal int    label;
+		internal int[]  vertices;
 
-    /// <summary>
-    /// Simple triangle class for input.
-    /// </summary>
-    public class InputTriangle : ITriangle
-    {
-        internal int[] vertices;
-        internal int label;
-        internal double area;
+		public InputTriangle(int p0, int p1, int p2) => vertices = new[] {p0, p1, p2};
 
-        public InputTriangle(int p0, int p1, int p2)
-        {
-            this.vertices = new int[] { p0, p1, p2 };
-        }
+		#region Public properties
 
-        #region Public properties
+		/// <summary>
+		/// Gets the triangle id.
+		/// </summary>
+		public int ID
+		{
+			get => 0;
+			set { }
+		}
 
-        /// <summary>
-        /// Gets the triangle id.
-        /// </summary>
-        public int ID
-        {
-            get { return 0; }
-            set { }
-        }
+		/// <summary>
+		/// Region ID the triangle belongs to.
+		/// </summary>
+		public int Label
+		{
+			get => label;
+			set => label = value;
+		}
 
-        /// <summary>
-        /// Region ID the triangle belongs to.
-        /// </summary>
-        public int Label
-        {
-            get { return label; }
-            set { label = value; }
-        }
+		/// <summary>
+		/// Gets the triangle area constraint.
+		/// </summary>
+		public double Area
+		{
+			get => area;
+			set => area = value;
+		}
 
-        /// <summary>
-        /// Gets the triangle area constraint.
-        /// </summary>
-        public double Area
-        {
-            get { return area; }
-            set { area = value; }
-        }
+		/// <summary>
+		/// Gets the specified corners vertex.
+		/// </summary>
+		public Vertex GetVertex(int index) => null;
 
-        /// <summary>
-        /// Gets the specified corners vertex.
-        /// </summary>
-        public Vertex GetVertex(int index)
-        {
-            return null; // TODO: throw NotSupportedException?
-        }
+		public int GetVertexID(int index) => vertices[index];
 
-        public int GetVertexID(int index)
-        {
-            return vertices[index];
-        }
+		public ITriangle GetNeighbor(int index) => null;
 
-        public ITriangle GetNeighbor(int index)
-        {
-            return null;
-        }
+		public int GetNeighborID(int index) => -1;
 
-        public int GetNeighborID(int index)
-        {
-            return -1;
-        }
+		public ISegment GetSegment(int index) => null;
 
-        public ISegment GetSegment(int index)
-        {
-            return null;
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

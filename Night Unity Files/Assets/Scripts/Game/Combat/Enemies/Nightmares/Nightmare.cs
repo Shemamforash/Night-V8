@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
-using Game.Combat.Generation;
 using Game.Global;
-using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
 {
 	public class Nightmare : NightmareEnemyBehaviour
 	{
-		private          Beam        _beam;
 		private readonly List<Drone> _drones = new List<Drone>();
+		private          Beam        _beam;
 
 		public override void Initialise(Enemy enemy)
 		{

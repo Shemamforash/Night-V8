@@ -1073,13 +1073,11 @@
                 <e p="UiInventoryMenuController.cs" t="Include" />
                 <e p="UiJournalController.cs" t="Include" />
                 <e p="UIWeaponUpgradeController.cs" t="Include" />
-                <e p="UiWillController.cs" t="Include" />
                 <e p="WeaponDetailController.cs" t="Include" />
               </e>
               <e p="SaveUiController.cs" t="Include" />
               <e p="UIAttributeController.cs" t="Include" />
               <e p="UIAttributeMarkerController.cs" t="Include" />
-              <e p="UIConditionController.cs" t="Include" />
               <e p="UIDeathController.cs" t="Include" />
             </e>
           </e>
@@ -1104,7 +1102,6 @@
                 <e p="BaseCharacterAction.cs" t="Include" />
                 <e p="Consume.cs" t="Include" />
                 <e p="Craft.cs" t="Include" />
-                <e p="Meditate.cs" t="Include" />
                 <e p="Rest.cs" t="Include" />
                 <e p="Travel.cs" t="Include" />
               </e>
@@ -1362,8 +1359,8 @@
               </e>
             </e>
             <e p="Gear" t="Include">
+              <e p="Accessory.cs" t="Include" />
               <e p="Armour" t="Include">
-                <e p="Accessory.cs" t="Include" />
                 <e p="Armour.cs" t="Include" />
                 <e p="ArmourController.cs" t="Include" />
               </e>
@@ -1395,7 +1392,6 @@
               <e p="JournalEntry.cs" t="Include" />
               <e p="Recipe.cs" t="Include" />
               <e p="RecipeType.cs" t="Include" />
-              <e p="ResourcesUiController.cs" t="Include" />
               <e p="ResourceTab.cs" t="Include" />
               <e p="SceneChanger.cs" t="Include" />
               <e p="SceneryController.cs" t="Include" />
@@ -1473,6 +1469,14 @@
             <e p="ColourPulse.cs" t="Include" />
             <e p="Direction.cs" t="Include" />
             <e p="Exceptions.cs" t="Include" />
+            <e p="extensions" t="Include">
+              <e p="CollectionExtensions.cs" t="Include" />
+              <e p="GameObjectExtensions.cs" t="Include" />
+              <e p="NumericExtensions.cs" t="Include" />
+              <e p="ObjectExtensions.cs" t="Include" />
+              <e p="StringExtensions.cs" t="Include" />
+              <e p="XmlExtensions.cs" t="Include" />
+            </e>
             <e p="FadeAndDie.cs" t="Include" />
             <e p="FadeAndDieTrailRenderer.cs" t="Include" />
             <e p="Input" t="Include">
@@ -1489,7 +1493,6 @@
               <e p="Edge.cs" t="Include" />
               <e p="Graph.cs" t="Include" />
               <e p="Helper.cs" t="Include" />
-              <e p="Lists.cs" t="Include" />
               <e p="Node.cs" t="Include" />
               <e p="Pathfinding.cs" t="Include" />
               <e p="Polygon.cs" t="Include" />

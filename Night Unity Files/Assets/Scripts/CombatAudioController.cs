@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Characters;
 using Game.Combat.Enemies.Nightmares;
@@ -9,18 +8,19 @@ using Game.Combat.Player;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
+using Extensions;
+using Extensions;
 using SamsHelper.Libraries;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class CombatAudioController : MonoBehaviour
 {
-	private        AudioSource           _audioSource;
-	private static CombatAudioController _instance;
-	private        float                 _maxCombatVolume;
-	private        float                 _combatTargetVolume;
 	private const  float                 ThresholdCombatMusicDistance = 10f;
 	private const  float                 MusicFadeDuration            = 5f;
+	private static CombatAudioController _instance;
+	private        AudioSource           _audioSource;
+	private        float                 _combatTargetVolume;
+	private        float                 _maxCombatVolume;
 
 	public void Awake()
 	{
@@ -38,8 +38,11 @@ public class CombatAudioController : MonoBehaviour
 	{
 		bool      useBossCombatMusic = currentRegion.GetRegionType() == RegionType.Tomb;
 		AudioClip audioClip;
-		if (useBossCombatMusic) audioClip = AudioClips.GodsAreDead;
-		else audioClip                    = Helper.RollDie(0, 2) ? AudioClips.AbandonedLands : AudioClips.Slain;
+		if (useBossCombatMusic)
+			audioClip = AudioClips.GodsAreDead;
+		else
+			audioClip = NumericExtensions.RollDie(0, 2) ? AudioClips.AbandonedLands : AudioClips.Slain;
+
 		float startTime = Random.Range(0f, audioClip.length);
 		_audioSource.clip   = audioClip;
 		_audioSource.volume = 0;

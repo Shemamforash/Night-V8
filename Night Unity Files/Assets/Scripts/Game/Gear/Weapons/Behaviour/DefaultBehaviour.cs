@@ -1,15 +1,14 @@
-﻿
-namespace Game.Gear.Weapons
+﻿namespace Game.Gear.Weapons
 {
-    public class DefaultBehaviour : BaseWeaponBehaviour
-    {
-        private bool _firing;
-        private float _accuracyModifier;
+	public class DefaultBehaviour : BaseWeaponBehaviour
+	{
+		private float _accuracyModifier;
+		private bool  _firing;
 
-        public override void StartFiring()
-        {
-            base.StartFiring();
-            Fire();
-        }
-    }
+		public override void StartFiring()
+		{
+			base.StartFiring();
+			Fire();
+		}
+	}
 }

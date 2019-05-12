@@ -1,21 +1,21 @@
 ﻿using System.Xml;
-using SamsHelper.Libraries;
+using Extensions;
 
 namespace Game.Exploration.Weather
 {
-    public class WeatherAttributes
-    {
-        public readonly float FogAmount, RainAmount, HailAmount, DustAmount, SunAmount, WindAmount;
+	public class WeatherAttributes
+	{
+		public readonly float FogAmount, RainAmount, HailAmount, DustAmount, SunAmount, WindAmount;
 
-        public WeatherAttributes(XmlNode weatherNode)
-        {
-            weatherNode = weatherNode.SelectSingleNode("Particles");
-            RainAmount = weatherNode.FloatFromNode("Rain");
-            FogAmount = weatherNode.FloatFromNode("Fog");
-            DustAmount = weatherNode.FloatFromNode("Dust");
-            HailAmount = weatherNode.FloatFromNode("Hail");
-            SunAmount = weatherNode.FloatFromNode("Sun");
-            WindAmount = weatherNode.FloatFromNode("Wind");
-        }
-    }
+		public WeatherAttributes(XmlNode weatherNode)
+		{
+			weatherNode = weatherNode.SelectSingleNode("Particles");
+			RainAmount  = weatherNode.ParseFloat("Rain");
+			FogAmount   = weatherNode.ParseFloat("Fog");
+			DustAmount  = weatherNode.ParseFloat("Dust");
+			HailAmount  = weatherNode.ParseFloat("Hail");
+			SunAmount   = weatherNode.ParseFloat("Sun");
+			WindAmount  = weatherNode.ParseFloat("Wind");
+		}
+	}
 }

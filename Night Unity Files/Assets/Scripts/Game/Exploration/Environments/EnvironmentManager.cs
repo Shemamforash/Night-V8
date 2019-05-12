@@ -5,7 +5,7 @@ using Facilitating.Persistence;
 using Game.Characters;
 using Game.Exploration.Weather;
 using Game.Global;
-using SamsHelper.Libraries;
+using Extensions;
 
 namespace Game.Exploration.Environment
 {
@@ -16,6 +16,14 @@ namespace Game.Exploration.Environment
 		private static          Environment                              _currentEnvironment;
 		private static          TemperatureCategory                      _temperatureCategory;
 		private static          EnvironmentType                          _currentEnvironmentType;
+
+		public static Environment CurrentEnvironment => _currentEnvironment;
+
+		public static EnvironmentType CurrentEnvironmentType
+		{
+			get => _currentEnvironmentType;
+			private set => _currentEnvironmentType = value;
+		}
 
 		public static void Start()
 		{
@@ -29,18 +37,13 @@ namespace Game.Exploration.Environment
 			NextLevel(true, isLoading);
 		}
 
-		public static Environment CurrentEnvironment => _currentEnvironment;
-
-		public static EnvironmentType CurrentEnvironmentType
-		{
-			get => _currentEnvironmentType;
-			private set => _currentEnvironmentType = value;
-		}
-
 		public static void NextLevel(bool reset, bool isLoading)
 		{
 			LoadEnvironments();
-			if (reset) CurrentEnvironmentType = EnvironmentType.Desert;
+			if (reset)
+			{
+				CurrentEnvironmentType = EnvironmentType.Desert;
+			}
 			else
 			{
 				switch (_currentEnvironment.EnvironmentType)
@@ -108,23 +111,30 @@ namespace Game.Exploration.Environment
 		{
 			int temperature = CalculateTemperature();
 			if (temperature < -20)
+			{
 				_temperatureCategory = TemperatureCategory.Freezing;
+			}
 			else if (temperature < 0)
+			{
 				_temperatureCategory = TemperatureCategory.Cold;
+			}
 			else if (temperature < 20)
+			{
 				_temperatureCategory = TemperatureCategory.Warm;
+			}
 			else if (temperature < 40)
+			{
 				_temperatureCategory = TemperatureCategory.Hot;
+			}
 			else
+			{
 				_temperatureCategory = TemperatureCategory.Burning;
+			}
 
 			WorldView.SetTemperatureText(_temperatureCategory.ToString());
 		}
 
-		public static TemperatureCategory GetTemperature()
-		{
-			return _temperatureCategory;
-		}
+		public static TemperatureCategory GetTemperature() => _temperatureCategory;
 
 		private static int CalculateTemperature()
 		{
@@ -133,10 +143,7 @@ namespace Game.Exploration.Environment
 			return currentEnvironment.GetTemperature() + currentWeather.Temperature();
 		}
 
-		public static bool BelowFreezing()
-		{
-			return _temperatureCategory == TemperatureCategory.Cold || _temperatureCategory == TemperatureCategory.Freezing;
-		}
+		public static bool BelowFreezing() => _temperatureCategory == TemperatureCategory.Cold || _temperatureCategory == TemperatureCategory.Freezing;
 
 		public static void Save(XmlNode doc)
 		{
@@ -147,7 +154,7 @@ namespace Game.Exploration.Environment
 		public static void Load(XmlNode doc)
 		{
 			LoadEnvironments();
-			string currentEnvironmentText = doc.StringFromNode("CurrentEnvironment");
+			string currentEnvironmentText = doc.ParseString("CurrentEnvironment");
 			foreach (EnvironmentType environmentType in Enum.GetValues(typeof(EnvironmentType)))
 			{
 				if (environmentType.ToString() != currentEnvironmentText) continue;

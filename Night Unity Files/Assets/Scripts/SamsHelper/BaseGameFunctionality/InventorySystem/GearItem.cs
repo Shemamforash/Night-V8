@@ -1,86 +1,83 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
+using Extensions;
 using Facilitating.Persistence;
 using Game.Characters;
 using Game.Gear;
-using SamsHelper.Libraries;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
-    public abstract class GearItem : NamedItem
-    {
-        private ItemQuality _itemQuality;
-        public Character EquippedCharacter;
-        private static int _idCounter;
-        private int _id;
-        private Dictionary<string, int> _dismantleRewards; 
+	public abstract class GearItem : NamedItem
+	{
+		private static int                     _idCounter;
+		private        Dictionary<string, int> _dismantleRewards;
+		private        int                     _id;
+		private        ItemQuality             _itemQuality;
+		public         Character               EquippedCharacter;
 
-        protected GearItem(string name, ItemQuality itemQuality) : base(name)
-        {
-            SetId(_idCounter);
-            ++_idCounter;
-            SetQuality(itemQuality);
-        }
+		protected GearItem(string name, ItemQuality itemQuality) : base(name)
+		{
+			SetId(_idCounter);
+			++_idCounter;
+			SetQuality(itemQuality);
+		}
 
-        private void SetId(int id)
-        {
-            _id = id;
-            CalculateDismantleRewards();
-        }
-        
-        public virtual XmlNode Save(XmlNode root)
-        {
-            root.CreateChild("Name", Name);
-            root.CreateChild("Id", _id);
-            root.CreateChild("Quality", (int) _itemQuality);
-            return root;
-        }
+		private void SetId(int id)
+		{
+			_id = id;
+			CalculateDismantleRewards();
+		}
 
-        protected virtual void Load(XmlNode root)
-        {
-            Name = root.StringFromNode("Name");
-            _id = root.IntFromNode("Id");
-            SetId(_id);
-            if (_id > _idCounter) _idCounter = _id + 1;
-            _itemQuality = (ItemQuality) root.IntFromNode("Quality");
-        }
+		public virtual XmlNode Save(XmlNode root)
+		{
+			root.CreateChild("Name",    Name);
+			root.CreateChild("Id",      _id);
+			root.CreateChild("Quality", (int) _itemQuality);
+			return root;
+		}
 
-        public ItemQuality Quality() => _itemQuality;
+		protected virtual void Load(XmlNode root)
+		{
+			Name = root.ParseString("Name");
+			_id  = root.ParseInt("Id");
+			SetId(_id);
+			if (_id > _idCounter) _idCounter = _id + 1;
+			_itemQuality = (ItemQuality) root.ParseInt("Quality");
+		}
 
-        private void SetQuality(ItemQuality quality)
-        {
-            _itemQuality = quality;
-        }
+		public ItemQuality Quality() => _itemQuality;
 
-        public virtual void Equip(Character character)
-        {
-            EquippedCharacter = character;
-        }
+		private void SetQuality(ItemQuality quality)
+		{
+			_itemQuality = quality;
+		}
 
-        public virtual void UnEquip()
-        {
-            EquippedCharacter = null;
-        }
+		public virtual void Equip(Character character)
+		{
+			EquippedCharacter = character;
+		}
 
-        public abstract string GetSummary();
+		public virtual void UnEquip()
+		{
+			EquippedCharacter = null;
+		}
 
-        public int ID()
-        {
-            return _id;
-        }
+		public abstract string GetSummary();
 
-        public Dictionary<string, int> GetDismantleRewards() => _dismantleRewards;
+		public int ID() => _id;
 
-        protected virtual void CalculateDismantleRewards()
-        {
-            _dismantleRewards = new Dictionary<string, int>();
-        }
+		public Dictionary<string, int> GetDismantleRewards() => _dismantleRewards;
 
-        protected void AddReward(string reward, int quantity)
-        {
-            if (!_dismantleRewards.ContainsKey(reward)) _dismantleRewards.Add(reward, 0);
-            quantity = _dismantleRewards[reward] + quantity;
-            _dismantleRewards[reward] = quantity;
-        }
-    }
+		protected virtual void CalculateDismantleRewards()
+		{
+			_dismantleRewards = new Dictionary<string, int>();
+		}
+
+		protected void AddReward(string reward, int quantity)
+		{
+			if (!_dismantleRewards.ContainsKey(reward)) _dismantleRewards.Add(reward, 0);
+			quantity                  = _dismantleRewards[reward] + quantity;
+			_dismantleRewards[reward] = quantity;
+		}
+	}
 }

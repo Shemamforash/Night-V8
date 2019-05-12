@@ -1,84 +1,70 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Log.cs" company="">
-// Triangle.NET code by Christian Woltering, http://triangle.codeplex.com/
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System.Collections.Generic;
+using TriangleNet.Logging;
 
 namespace TriangleNet
 {
-    using System.Collections.Generic;
-    using TriangleNet.Logging;
+	/// <summary>
+	/// A simple logger, which logs messages to a List.
+	/// </summary>
+	/// <remarks>Using singleton pattern as proposed by Jon Skeet.
+	/// http://csharpindepth.com/Articles/General/Singleton.aspx
+	/// </remarks>
+	public sealed class Log : ILog<LogItem>
+	{
+		private readonly LogLevel level = LogLevel.Info;
 
-    /// <summary>
-    /// A simple logger, which logs messages to a List.
-    /// </summary>
-    /// <remarks>Using singleton pattern as proposed by Jon Skeet.
-    /// http://csharpindepth.com/Articles/General/Singleton.aspx
-    /// </remarks>
-    public sealed class Log : ILog<LogItem>
-    {
-        /// <summary>
-        /// Log detailed information.
-        /// </summary>
-        public static bool Verbose { get; set; }
+		private readonly List<LogItem> log = new List<LogItem>();
 
-        private List<LogItem> log = new List<LogItem>();
+		/// <summary>
+		/// Log detailed information.
+		/// </summary>
+		public static bool Verbose { get; set; }
 
-        private LogLevel level = LogLevel.Info;
+		public void Add(LogItem item)
+		{
+			log.Add(item);
+		}
 
-        #region Singleton pattern
+		public void Clear()
+		{
+			log.Clear();
+		}
 
-        private static readonly Log instance = new Log();
+		public void Info(string message)
+		{
+			log.Add(new LogItem(LogLevel.Info, message));
+		}
 
-        // Explicit static constructor to tell C# compiler
-        // not to mark type as beforefieldinit
-        static Log() { }
+		public void Warning(string message, string location)
+		{
+			log.Add(new LogItem(LogLevel.Warning, message, location));
+		}
 
-        private Log() { }
+		public void Error(string message, string location)
+		{
+			log.Add(new LogItem(LogLevel.Error, message, location));
+		}
 
-        public static ILog<LogItem> Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
+		public IList<LogItem> Data => log;
 
-        #endregion
+		public LogLevel Level => level;
 
-        public void Add(LogItem item)
-        {
-            log.Add(item);
-        }
+		#region Singleton pattern
 
-        public void Clear()
-        {
-            log.Clear();
-        }
+		private static readonly Log instance = new Log();
 
-        public void Info(string message)
-        {
-            log.Add(new LogItem(LogLevel.Info, message));
-        }
+		// Explicit static constructor to tell C# compiler
+		// not to mark type as beforefieldinit
+		static Log()
+		{
+		}
 
-        public void Warning(string message, string location)
-        {
-            log.Add(new LogItem(LogLevel.Warning, message, location));
-        }
+		private Log()
+		{
+		}
 
-        public void Error(string message, string location)
-        {
-            log.Add(new LogItem(LogLevel.Error, message, location));
-        }
+		public static ILog<LogItem> Instance => instance;
 
-        public IList<LogItem> Data
-        {
-            get { return log; }
-        }
-
-        public LogLevel Level
-        {
-            get { return level; }
-        }
-    }
+		#endregion
+	}
 }

@@ -5,24 +5,24 @@ using UnityEngine;
 
 public class SerpentBombAttack : MonoBehaviour
 {
-    private float _timeToNextBomb;
-    private float _minTimeToBomb = -1;
+	private float _minTimeToBomb = -1;
+	private float _timeToNextBomb;
 
-    public void SetMinTimeToBomb(float timeToBomb)
-    {
-        _minTimeToBomb = timeToBomb;
-    }
+	public void SetMinTimeToBomb(float timeToBomb)
+	{
+		_minTimeToBomb = timeToBomb;
+	}
 
-    public void Update()
-    {
-        if (_minTimeToBomb == -1) return;
-        if (!CombatManager.Instance().IsCombatActive()) return;
-        _timeToNextBomb -= Time.deltaTime;
-        if (_timeToNextBomb > 0) return;
-        _timeToNextBomb = Random.Range(_minTimeToBomb, _minTimeToBomb * 2f);
-        Vector2 randomPosition = AdvancedMaths.RandomVectorWithinRange(transform.position, 7.5f);
-        Explosion explosion = Explosion.CreateExplosion(randomPosition, Random.Range(0.5f, 1f));
-        SerpentBehaviour.Instance().GetSections().ForEach(s => { explosion.AddIgnoreTarget(s); });
-        explosion.Detonate();
-    }
+	public void Update()
+	{
+		if (_minTimeToBomb == -1) return;
+		if (!CombatManager.Instance().IsCombatActive()) return;
+		_timeToNextBomb -= Time.deltaTime;
+		if (_timeToNextBomb > 0) return;
+		_timeToNextBomb = Random.Range(_minTimeToBomb, _minTimeToBomb * 2f);
+		Vector2   randomPosition = AdvancedMaths.RandomVectorWithinRange(transform.position, 7.5f);
+		Explosion explosion      = Explosion.CreateExplosion(randomPosition, Random.Range(0.5f, 1f));
+		SerpentBehaviour.Instance().GetSections().ForEach(s => { explosion.AddIgnoreTarget(s); });
+		explosion.Detonate();
+	}
 }

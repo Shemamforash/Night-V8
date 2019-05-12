@@ -1,12 +1,12 @@
 ﻿namespace Game.Exploration.Environment
 {
-    public enum EnvironmentType
-    {
-        Desert,
-        Mountains,
-        Sea,
-        Ruins,
-        Wasteland,
-        End
-    }
+	public enum EnvironmentType
+	{
+		Desert,
+		Mountains,
+		Sea,
+		Ruins,
+		Wasteland,
+		End
+	}
 }

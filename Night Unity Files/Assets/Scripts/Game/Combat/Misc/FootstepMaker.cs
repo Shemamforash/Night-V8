@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using Extensions;
 using Game.Combat.Generation;
 using Game.Global;
 using NUnit.Framework;
+
 using SamsHelper;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -10,18 +12,18 @@ namespace Game.Combat.Misc
 {
 	public class FootstepMaker : MonoBehaviour
 	{
-		private const    float            TimeToFootPrint = 0.75f;
-		private readonly List<GameObject> _footstepPool   = new List<GameObject>();
-		private          float            _timePassed;
-		private          GameObject       _footprintPrefab;
+		private const    float               TimeToFootPrint = 0.75f;
+		private readonly List<GameObject>    _footstepPool   = new List<GameObject>();
+		private          AudioPoolController _audioPool;
+		private          GameObject          _footprintPrefab;
 
-		private Transform           _footstepParent;
-		private Vector3             _lastPosition;
-		private bool                _leftLast;
-		private Rigidbody2D         _rigidBody;
-		public  bool                UseHoofprint;
-		private int                 _nextClip;
-		private AudioPoolController _audioPool;
+		private Transform   _footstepParent;
+		private Vector3     _lastPosition;
+		private bool        _leftLast;
+		private int         _nextClip;
+		private Rigidbody2D _rigidBody;
+		private float       _timePassed;
+		public  bool        UseHoofprint;
 
 		public void Awake()
 		{

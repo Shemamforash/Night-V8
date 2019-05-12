@@ -1,17 +1,11 @@
 ﻿namespace Game.Exploration.WorldEvents
 {
-    public class WorldEvent
-    {
-        protected readonly string EventText;
+	public class WorldEvent
+	{
+		protected readonly string EventText;
 
-        public WorldEvent(string eventText)
-        {
-            EventText = eventText;
-        }
+		public WorldEvent(string eventText) => EventText = eventText;
 
-        public virtual string Text()
-        {
-            return EventText;
-        }
-    }
+		public virtual string Text() => EventText;
+	}
 }

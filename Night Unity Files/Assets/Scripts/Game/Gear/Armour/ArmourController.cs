@@ -1,11 +1,9 @@
 ﻿using System.Xml;
+using Extensions;
 using Facilitating.Persistence;
-using Game.Characters;
-using Game.Combat.Player;
 using Game.Global;
 using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 
@@ -13,68 +11,58 @@ namespace Game.Gear.Armour
 {
 	public class ArmourController
 	{
-		private          int         _currentLevel;
-		private const    int         MaxLevel           = 10;
-		private const    int         ProtectionPerLevel = 25;
-		private const    float       BaseRechargeTime   = 7.5f;
-		private          float       _currentRechargeTime;
-		private readonly Number      _currentHealth = new Number();
+		public const     int         MaxLevel             = 5;
+		private const    int         ProtectionPerLevel   = 50;
+		private const    float       BaseRechargeDuration = 7.5f;
+		private readonly string[]    _names               = {"No Armour", "Leather Armour", "Makeshift Armour", "Metal Armour", "Iridescent Armour", "Celestial Armour"};
+		private readonly Number      _protection          = new Number();
+		private          float       _currentRechargeDuration;
 		private          bool        _justTookDamage;
 		private          ItemQuality _targetQuality;
-		private          bool        _recharging;
 
 		public ArmourController()
 		{
-			_currentLevel = 0;
+			CurrentLevel = 0;
 			CalculateMaxHealth();
 		}
 
+		public  int    CurrentLevel     { get; private set; }
+		public  bool   Recharging       { get; private set; }
+		public  float  TotalProtection  => (float) CurrentLevel / MaxLevel;
+		public  string Name             => _names[CurrentLevel];
+		public  float  FillLevel        => _protection.Normalised;
+		private float  RechargeDuration => BaseRechargeDuration;
+		public  bool   CanAbsorbDamage  => !Recharging && CurrentLevel > 0;
+
 		public void Load(XmlNode doc)
 		{
-			_currentLevel = doc.IntFromNode("CurrentLevel");
+			CurrentLevel = doc.ParseInt("CurrentLevel");
 			CalculateMaxHealth();
 		}
 
 		public void Save(XmlNode doc)
 		{
-			doc.CreateChild("CurrentLevel", _currentLevel);
+			doc.CreateChild("CurrentLevel", CurrentLevel);
 		}
 
 		private void CalculateMaxHealth()
 		{
-			float maxHealth = _currentLevel * ProtectionPerLevel;
-			_currentHealth.Max = maxHealth;
-			_currentHealth.SetCurrentValue(maxHealth);
-			_targetQuality = (ItemQuality) (_currentLevel / 2);
+			float maxHealth = CurrentLevel * ProtectionPerLevel;
+			_protection.Max          = maxHealth;
+			_protection.CurrentValue = maxHealth;
+			_targetQuality           = (ItemQuality) CurrentLevel;
 		}
 
 		public void TakeDamage(int damage)
 		{
-			Assert.IsFalse(_currentLevel == 0);
-			_currentHealth.Decrement(damage);
-			if (!_currentHealth.ReachedMin()) return;
-			_recharging = true;
+			Assert.IsFalse(CurrentLevel == 0);
+			_protection.Increment(-damage);
+			if (!_protection.ReachedMin) return;
+			Recharging = true;
 		}
 
-		public void Repair(int amount)
-		{
-			_currentHealth.Increment(amount);
-		}
+		public void Repair(int amount) => _protection.Increment(amount);
 
-		private float GetRechargeTime()
-		{
-			return BaseRechargeTime;
-		}
-
-		public bool CanAbsorbDamage()
-		{
-			return !_recharging && _currentLevel > 0;
-		}
-
-		public bool Recharging()
-		{
-			return _recharging;
-		}
 
 		public bool DidJustTakeDamage()
 		{
@@ -83,24 +71,15 @@ namespace Game.Gear.Armour
 			return didTakeDamage;
 		}
 
-		private int GetUpgradeQuantity()
-		{
-			return (_currentLevel + 1) % 2 == 0 ? 2 : 1;
-		}
-
-		public bool CanUpgrade()
-		{
-			if (_currentLevel                                                          == MaxLevel) return false;
-			return Inventory.GetResourceQuantity(Armour.QualityToName(_targetQuality)) >= GetUpgradeQuantity();
-		}
+		public bool CanUpgrade() => Inventory.GetResourceQuantity(Armour.QualityToName(_targetQuality)) != 0;
 
 		public void Upgrade()
 		{
 			if (!CanUpgrade()) return;
-			Inventory.DecrementResource(Armour.QualityToName(_targetQuality), GetUpgradeQuantity());
-			++_currentLevel;
+			Inventory.DecrementResource(Armour.QualityToName(_targetQuality), 1);
+			++CurrentLevel;
 			CalculateMaxHealth();
-			if (_currentLevel != MaxLevel) return;
+			if (CurrentLevel != MaxLevel) return;
 			AchievementManager.Instance().MaxOutArmour();
 		}
 
@@ -108,87 +87,59 @@ namespace Game.Gear.Armour
 		{
 			int difficulty = Mathf.FloorToInt(WorldState.Difficulty() / 5f);
 			int armourMin  = difficulty - 3;
-			if (armourMin      < 0) armourMin  = 0;
-			else if (armourMin > 10) armourMin = 10;
+			armourMin = Mathf.Clamp(armourMin, 0, MaxLevel);
 			int armourMax = difficulty + 1;
-			if (armourMax      < 0) armourMax  = 0;
-			else if (armourMax > 10) armourMax = 10;
+			armourMax = Mathf.Clamp(armourMax, 0, MaxLevel);
 			AutoFillSlots(Random.Range(armourMin, armourMax));
 		}
 
 		public void AutoFillSlots(int level)
 		{
-			_currentLevel = level;
+			CurrentLevel = level;
 			CalculateMaxHealth();
-		}
-
-		public float GetTotalProtection()
-		{
-			return (float) _currentLevel / MaxLevel;
 		}
 
 		public void Update()
 		{
-			if (!_recharging) return;
-			_currentRechargeTime += Time.deltaTime;
-			float normalisedTime = _currentRechargeTime / GetRechargeTime();
+			if (!Recharging) return;
+			_currentRechargeDuration += Time.deltaTime;
+			float normalisedTime = _currentRechargeDuration / RechargeDuration;
 			if (normalisedTime > 1)
 			{
-				normalisedTime       = 1;
-				_recharging          = false;
-				_currentRechargeTime = 0f;
+				normalisedTime           = 1;
+				Recharging               = false;
+				_currentRechargeDuration = 0f;
 			}
 
-			float newHealth = _currentLevel * ProtectionPerLevel * normalisedTime;
-			_currentHealth.SetCurrentValue(newHealth);
+			float newHealth = CurrentLevel * ProtectionPerLevel * normalisedTime;
+			_protection.CurrentValue = newHealth;
 		}
 
-		public float GetCurrentFill()
-		{
-			return _currentHealth.Normalised();
-		}
-
-		private readonly string[] _names =
-		{
-			"No Armour", "Leather Armour", "Leather Armour+", "Makeshift Armour", "Makeshift Armour+", "Metal Armour", "Metal Armour+", "Iridescent Armour",
-			"Iridescent Armour+", "Celestial Armour", "Celestial Armour+"
-		};
-
-		public string GetName()
-		{
-			return _names[_currentLevel];
-		}
 
 		public string GetBonus()
 		{
-			if (_currentLevel == 0) return "-";
-			return "Absorbs " + _currentHealth.Max + " damage";
+			if (CurrentLevel == 0) return "-";
+			return "Absorbs " + _protection.Max + " damage";
 		}
 
 		public string GetNextLevelBonus()
 		{
-			if (_currentLevel == 10) return "Fully Upgraded";
-			int nextLevelHealth = (_currentLevel + 1) * ProtectionPerLevel;
+			if (CurrentLevel == MaxLevel) return "Fully Upgraded";
+			int nextLevelHealth = (CurrentLevel + 1) * ProtectionPerLevel;
 			return "Next Level:\nAbsorbs " + nextLevelHealth + " Damage";
 		}
 
 		public string GetUpgradeRequirements()
 		{
-			if (_currentLevel == 10) return "Fully Upgraded";
-			int quantity = GetUpgradeQuantity();
-			if (!CanUpgrade()) return "Need x" + quantity + " " + Armour.QualityToName(_targetQuality) + " to Upgrade";
-			return "Upgrade - x" + quantity + " " + Armour.QualityToName(_targetQuality);
+			if (CurrentLevel == MaxLevel) return "Fully Upgraded";
+			if (!CanUpgrade()) return "Need " + Armour.QualityToName(_targetQuality) + " to Upgrade";
+			return "Upgrade - Consumes " + Armour.QualityToName(_targetQuality);
 		}
 
 		public void Reset()
 		{
 			CalculateMaxHealth();
-			_recharging = false;
-		}
-
-		public int GetCurrentLevel()
-		{
-			return _currentLevel;
+			Recharging = false;
 		}
 	}
 }

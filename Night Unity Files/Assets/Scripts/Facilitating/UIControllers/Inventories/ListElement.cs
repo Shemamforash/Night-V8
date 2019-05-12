@@ -2,44 +2,51 @@
 
 namespace DefaultNamespace
 {
-    public abstract class ListElement
-    {
-        //either elementindex < 0 then hide
-        //elementIndex >= length  then hide
-        //element index >= 0 && < length then details
+	public abstract class ListElement
+	{
+		private CanvasGroup _canvasGroup;
+		//either elementindex < 0 then hide
+		//elementIndex >= length  then hide
+		//element index >= 0 && < length then details
 
-        private int _elementIndex;
-        private Transform _elementTransform;
-        private CanvasGroup _canvasGroup;
+		private int       _elementIndex;
+		private Transform _elementTransform;
 
-        public void Set(object o, bool isCentreItem)
-        {
-            if (o == null)
-            {
-                if (isCentreItem) UpdateCentreItemEmpty();
-                else SetVisible(false);
-                return;
-            }
+		public void Set(object o, bool isCentreItem)
+		{
+			if (o == null)
+			{
+				if (isCentreItem)
+				{
+					UpdateCentreItemEmpty();
+				}
+				else
+				{
+					SetVisible(false);
+				}
 
-            _canvasGroup.alpha = isCentreItem ? 1 : 0.4f;
-            SetVisible(true);
-            Update(o, isCentreItem);
-        }
+				return;
+			}
 
-        protected abstract void UpdateCentreItemEmpty();
+			_canvasGroup.alpha = isCentreItem ? 1 : 0.4f;
+			SetVisible(true);
+			Update(o, isCentreItem);
+		}
 
-        public abstract void SetColour(Color colour);
+		protected abstract void UpdateCentreItemEmpty();
 
-        protected abstract void SetVisible(bool visible);
+		public abstract void SetColour(Color colour);
 
-        public void SetElementTransform(Transform elementTransform)
-        {
-            _elementTransform = elementTransform;
-            _canvasGroup = _elementTransform.GetComponent<CanvasGroup>();
-            CacheUiElements(_elementTransform);
-        }
+		protected abstract void SetVisible(bool visible);
 
-        protected abstract void CacheUiElements(Transform transform);
-        protected abstract void Update(object o, bool isCentreItem);
-    }
+		public void SetElementTransform(Transform elementTransform)
+		{
+			_elementTransform = elementTransform;
+			_canvasGroup      = _elementTransform.GetComponent<CanvasGroup>();
+			CacheUiElements(_elementTransform);
+		}
+
+		protected abstract void CacheUiElements(Transform transform);
+		protected abstract void Update(object             o, bool isCentreItem);
+	}
 }

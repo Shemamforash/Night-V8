@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class FaceTarget : MonoBehaviour
 {
-	[SerializeField]
-	private Transform _target;
+	[SerializeField] private Transform _target;
 
 	private void Awake()
 	{
@@ -18,10 +17,10 @@ public class FaceTarget : MonoBehaviour
 
 		_target = transform.parent.GetChild(parentIndex);
 	}
-	
-	private void FixedUpdate ()
+
+	private void FixedUpdate()
 	{
-		if(_target == null) return;
+		if (_target == null) return;
 		float rot = AdvancedMaths.AngleFromUp(transform.position, _target.position);
 		transform.rotation = Quaternion.Euler(0, 0, rot);
 	}

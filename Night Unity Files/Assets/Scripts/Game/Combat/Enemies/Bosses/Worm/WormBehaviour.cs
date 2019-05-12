@@ -9,127 +9,121 @@ using UnityEngine;
 
 public class WormBehaviour : Boss
 {
-    private float _timeToNextWorm, _timeToNextSac;
-    private static GameObject _prefab;
-    private readonly HealthController _healthController = new HealthController();
-    private bool _spawning;
-    private List<WormSacBehaviour> _wormSacs = new List<WormSacBehaviour>();
+	private static   GameObject             _prefab;
+	private readonly HealthController       _healthController = new HealthController();
+	private          bool                   _spawning;
+	private          float                  _timeToNextWorm, _timeToNextSac;
+	private readonly List<WormSacBehaviour> _wormSacs = new List<WormSacBehaviour>();
 
-    protected override void Awake()
-    {
-        base.Awake();
-        _healthController.SetInitialHealth(2000, null);
-    }
+	protected override void Awake()
+	{
+		base.Awake();
+		_healthController.SetInitialHealth(2000, null);
+	}
 
-    public static void Create()
-    {
-        Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Bosses/Worm/Worm"));
-    }
+	public static void Create()
+	{
+		Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Bosses/Worm/Worm"));
+	}
 
-    public override void UnregisterSection(BossSectionHealthController section)
-    {
-        Sections.Remove(section);
-        _wormSacs.Remove((WormSacBehaviour) section);
-    }
+	public override void UnregisterSection(BossSectionHealthController section)
+	{
+		Sections.Remove(section);
+		_wormSacs.Remove((WormSacBehaviour) section);
+	}
 
-    public void Update()
-    {
-        if (!CombatManager.Instance().IsCombatActive()) return;
-        MyUpdate();
-    }
+	public void Update()
+	{
+		if (!CombatManager.Instance().IsCombatActive()) return;
+		MyUpdate();
+	}
 
-    private void TrySpawnWorm()
-    {
-        _timeToNextWorm -= Time.deltaTime;
-        if (_timeToNextWorm > 0f) return;
-        Vector2 wormPosition = PlayerCombat.Position();
-        if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Worm/Worm Body");
-        WormBodyBehaviour newWorm = Instantiate(_prefab).GetComponent<WormBodyBehaviour>();
-        newWorm.Initialise(wormPosition);
-        _timeToNextWorm = Random.Range(8f, 12f);
-    }
+	private void TrySpawnWorm()
+	{
+		_timeToNextWorm -= Time.deltaTime;
+		if (_timeToNextWorm > 0f) return;
+		Vector2 wormPosition         = PlayerCombat.Position();
+		if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Worm/Worm Body");
+		WormBodyBehaviour newWorm    = Instantiate(_prefab).GetComponent<WormBodyBehaviour>();
+		newWorm.Initialise(wormPosition);
+		_timeToNextWorm = Random.Range(8f, 12f);
+	}
 
-    private void TrySpawnSacs()
-    {
-        if (_spawning) return;
-        _timeToNextSac -= Time.deltaTime;
-        if (_timeToNextSac > 0f) return;
-        StartCoroutine(SpawnSacs());
-    }
+	private void TrySpawnSacs()
+	{
+		if (_spawning) return;
+		_timeToNextSac -= Time.deltaTime;
+		if (_timeToNextSac > 0f) return;
+		StartCoroutine(SpawnSacs());
+	}
 
-    private Vector2 GetEmptySpaceNearby(List<Transform> others, float maxDistance, float minDistance, Vector2 centre)
-    {
-        Vector2 emptyPosition = Vector2.zero;
-        bool tooClose = true;
-        int iterations = 100;
-        while (tooClose && iterations > 0)
-        {
-            tooClose = false;
-            emptyPosition = AdvancedMaths.RandomVectorWithinRange(centre, maxDistance);
-            foreach (Transform other in others)
-            {
-                float distance = emptyPosition.Distance(other.transform.position);
-                if (distance > minDistance) continue;
-                tooClose = true;
-            }
+	private Vector2 GetEmptySpaceNearby(List<Transform> others, float maxDistance, float minDistance, Vector2 centre)
+	{
+		Vector2 emptyPosition = Vector2.zero;
+		bool    tooClose      = true;
+		int     iterations    = 100;
+		while (tooClose && iterations > 0)
+		{
+			tooClose      = false;
+			emptyPosition = AdvancedMaths.RandomVectorWithinRange(centre, maxDistance);
+			foreach (Transform other in others)
+			{
+				float distance = emptyPosition.Distance(other.transform.position);
+				if (distance > minDistance) continue;
+				tooClose = true;
+			}
 
-            --iterations;
-        }
+			--iterations;
+		}
 
-        return emptyPosition;
-    }
+		return emptyPosition;
+	}
 
-    private IEnumerator SpawnSacs()
-    {
-        _spawning = true;
-        List<Transform> occupiedPositions = new List<Transform>();
-        _wormSacs.RemoveAll(w => w == null);
-        _wormSacs.ForEach(sac => occupiedPositions.Add(sac.transform));
+	private IEnumerator SpawnSacs()
+	{
+		_spawning = true;
+		List<Transform> occupiedPositions = new List<Transform>();
+		_wormSacs.RemoveAll(w => w == null);
+		_wormSacs.ForEach(sac => occupiedPositions.Add(sac.transform));
 
-        Vector2 emptyPosition = GetEmptySpaceNearby(occupiedPositions, 7f, 0f, Vector2.zero);
-        int noSacs = Random.Range(3, 5);
-        while (noSacs > 0)
-        {
-            float interval = Random.Range(0.1f, 0.2f);
-            while (interval > 0f)
-            {
-                interval = -Time.deltaTime;
-                yield return null;
-            }
+		Vector2 emptyPosition = GetEmptySpaceNearby(occupiedPositions, 7f, 0f, Vector2.zero);
+		int     noSacs        = Random.Range(3, 5);
+		while (noSacs > 0)
+		{
+			float interval = Random.Range(0.1f, 0.2f);
+			while (interval > 0f)
+			{
+				interval = -Time.deltaTime;
+				yield return null;
+			}
 
-            Vector2 position = GetEmptySpaceNearby(occupiedPositions, 1f, 0.25f, emptyPosition);
-            WormSacBehaviour sac = WormSacBehaviour.Create(this);
-            _wormSacs.Add(sac);
-            sac.Initialise(position);
-            occupiedPositions.Add(sac.transform);
-            --noSacs;
-            yield return null;
-        }
+			Vector2          position = GetEmptySpaceNearby(occupiedPositions, 1f, 0.25f, emptyPosition);
+			WormSacBehaviour sac      = WormSacBehaviour.Create(this);
+			_wormSacs.Add(sac);
+			sac.Initialise(position);
+			occupiedPositions.Add(sac.transform);
+			--noSacs;
+			yield return null;
+		}
 
-        _spawning = false;
-        _timeToNextSac = Random.Range(5f, 10f);
-    }
+		_spawning      = false;
+		_timeToNextSac = Random.Range(5f, 10f);
+	}
 
-    public void MyUpdate()
-    {
-        TrySpawnWorm();
-        TrySpawnSacs();
-    }
+	public void MyUpdate()
+	{
+		TrySpawnWorm();
+		TrySpawnSacs();
+	}
 
-    public void TakeDamage(int damage)
-    {
-        _healthController.TakeDamage(damage);
-        if (_healthController.GetCurrentHealth() != 0) return;
-        Kill();
-    }
+	public void TakeDamage(int damage)
+	{
+		_healthController.TakeDamage(damage);
+		if (_healthController.GetCurrentHealth() != 0) return;
+		Kill();
+	}
 
-    public int CurrentHealth()
-    {
-        return (int) _healthController.GetCurrentHealth();
-    }
+	public int CurrentHealth() => (int) _healthController.GetCurrentHealth();
 
-    public int MaxHealth()
-    {
-        return (int) _healthController.GetMaxHealth();
-    }
+	public int MaxHealth() => (int) _healthController.GetMaxHealth();
 }

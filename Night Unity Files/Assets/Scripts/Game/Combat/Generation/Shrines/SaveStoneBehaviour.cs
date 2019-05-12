@@ -10,77 +10,68 @@ using UnityEngine;
 
 public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
 {
-    private static GameObject _saveStonePrefab;
-    private static SaveStoneBehaviour _instance;
-    private string _controlText;
+	private static GameObject         _saveStonePrefab;
+	private static SaveStoneBehaviour _instance;
+	private        string             _controlText;
 
-    public void Awake()
-    {
-        _instance = this;
-        List<Vector2> points = new List<Vector2>();
-        points.Add(new Vector2(-0.2f, 0.2f));
-        points.Add(new Vector2(0.2f, 0.2f));
-        points.Add(new Vector2(0.2f, -0.2f));
-        points.Add(new Vector2(-0.2f, -0.2f));
-        Polygon b = new Polygon(points, Vector2.zero);
-        WorldGrid.AddBarrier(b);
-        if (CharacterManager.CurrentRegion().MonumentUsed) return;
-        ParticleSystem[] particles = _instance.transform.GetComponentsInChildren<ParticleSystem>();
-        Array.ForEach(particles, p => p.Play());
-    }
+	public float InRange() => IsInRange ? 1 : -1;
 
-    public void Start()
-    {
-        ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
-        controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
-    }
+	public string GetEventText() => "Make an offering upon the alter [" + _controlText + "]";
 
-    private void UpdateText()
-    {
-        _controlText = InputHandler.GetBindingForKey(InputAxis.TakeItem);
-    }
+	public void Activate()
+	{
+		DismantleMenuController.Show();
+	}
 
-    public static void SetUsed()
-    {
-        CharacterManager.CurrentRegion().MonumentUsed = true;
-        ParticleSystem[] particles = _instance.transform.GetComponentsInChildren<ParticleSystem>();
-        Array.ForEach(particles, p => p.Stop());
-    }
+	public void Awake()
+	{
+		_instance = this;
+		List<Vector2> points = new List<Vector2>();
+		points.Add(new Vector2(-0.2f, 0.2f));
+		points.Add(new Vector2(0.2f,  0.2f));
+		points.Add(new Vector2(0.2f,  -0.2f));
+		points.Add(new Vector2(-0.2f, -0.2f));
+		Polygon b = new Polygon(points, Vector2.zero);
+		WorldGrid.AddBarrier(b);
+		if (CharacterManager.CurrentRegion().MonumentUsed) return;
+		ParticleSystem[] particles = _instance.transform.GetComponentsInChildren<ParticleSystem>();
+		Array.ForEach(particles, p => p.Play());
+	}
 
-    public static SaveStoneBehaviour Instance()
-    {
-        return _instance;
-    }
+	public void Start()
+	{
+		ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
+		controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
+	}
 
-    protected override void StartShrine()
-    {
-    }
+	private void UpdateText()
+	{
+		_controlText = InputHandler.GetBindingForKey(InputAxis.TakeItem);
+	}
 
-    public static void Generate()
-    {
-        if (_saveStonePrefab == null) _saveStonePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Save Stone");
-        GameObject saveStoneObject = Instantiate(_saveStonePrefab);
-        saveStoneObject.GetComponent<SaveStoneBehaviour>().Initialise();
-    }
+	public static void SetUsed()
+	{
+		CharacterManager.CurrentRegion().MonumentUsed = true;
+		ParticleSystem[] particles = _instance.transform.GetComponentsInChildren<ParticleSystem>();
+		Array.ForEach(particles, p => p.Stop());
+	}
 
-    private void Initialise()
-    {
-        transform.position = Vector2.zero;
-        WorldGrid.AddBlockingArea(Vector2.zero, 0.5f);
-    }
+	public static SaveStoneBehaviour Instance() => _instance;
 
-    public float InRange()
-    {
-        return IsInRange ? 1 : -1;
-    }
+	protected override void StartShrine()
+	{
+	}
 
-    public string GetEventText()
-    {
-        return "Make an offering upon the alter [" + _controlText + "]";
-    }
+	public static void Generate()
+	{
+		if (_saveStonePrefab == null) _saveStonePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Save Stone");
+		GameObject saveStoneObject                     = Instantiate(_saveStonePrefab);
+		saveStoneObject.GetComponent<SaveStoneBehaviour>().Initialise();
+	}
 
-    public void Activate()
-    {
-        DismantleMenuController.Show();
-    }
+	private void Initialise()
+	{
+		transform.position = Vector2.zero;
+		WorldGrid.AddBlockingArea(Vector2.zero, 0.5f);
+	}
 }

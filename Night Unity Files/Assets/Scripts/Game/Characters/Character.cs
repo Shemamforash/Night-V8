@@ -1,60 +1,54 @@
 ﻿using System.Xml;
+using Extensions;
 using Facilitating.Persistence;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.Libraries;
 
 namespace Game.Characters
 {
-    public abstract class Character
-    {
-        public readonly ArmourController ArmourController= new ArmourController();
-        public Accessory EquippedAccessory;
-        public Weapon EquippedWeapon;
-        public string Name;
+	public abstract class Character
+	{
+		public readonly ArmourController Armour = new ArmourController();
+		public          Accessory        Accessory;
+		public readonly Weapon           Weapon;
+		public          string           Name;
 
-        protected Character(string name)
-        {
-            Name = name;
-        }
+		protected Character(string name)
+		{
+			Name   = name;
+			Weapon = new Weapon(this);
+		}
 
-        public virtual XmlNode Save(XmlNode doc)
-        {
-            doc = doc.CreateChild("Character");
-            doc.CreateChild("Name", Name);
-            XmlNode equipped = doc.CreateChild("EquippedItems");
-            if (EquippedWeapon != null) equipped.CreateChild("Weapon", EquippedWeapon.ID());
-            if (EquippedAccessory != null) equipped.CreateChild("Accessory", EquippedAccessory.ID());
-            ArmourController.Save(equipped);
-            return doc;
-        }
+		public virtual XmlNode Save(XmlNode doc)
+		{
+			doc = doc.CreateChild("Character");
+			doc.CreateChild("Name", Name);
+			XmlNode equipped = doc.CreateChild("EquippedItems");
+			Weapon.Save(equipped);
+			Armour.Save(equipped);
+			if (Accessory != null) equipped.CreateChild("Accessory", Accessory.ID());
+			return doc;
+		}
 
-        public virtual void Load(XmlNode root)
-        {
-            Name = root.StringFromNode("Name");
-            root = root.SelectSingleNode("EquippedItems");
-            XmlNode weaponNode = root.SelectSingleNode("Weapon");
-            XmlNode accessoryNode = root.SelectSingleNode("Accessory");
-            int weaponId = weaponNode?.IntFromNode("Weapon") ?? -1;
-            int accessoryId = accessoryNode?.IntFromNode("Accessory") ?? -1;
-            ArmourController.Load(root);
-            EquipWeapon(Inventory.FindWeapon(weaponId));
-            EquipAccessory(Inventory.FindAccessory(accessoryId));
-        }
+		public virtual void Load(XmlNode root)
+		{
+			Name = root.ParseString("Name");
+			root = root.SelectSingleNode("EquippedItems");
+			XmlNode weaponNode    = root.SelectSingleNode("Weapon");
+			XmlNode accessoryNode = root.SelectSingleNode("Accessory");
+			int     weaponId      = weaponNode?.ParseInt("Weapon")       ?? -1;
+			int     accessoryId   = accessoryNode?.ParseInt("Accessory") ?? -1;
+			Armour.Load(root);
+			Weapon.Load(root);
+			EquipAccessory(Inventory.FindAccessory(accessoryId));
+		}
 
-        public virtual void EquipWeapon(Weapon weapon)
-        {
-            EquippedWeapon?.UnEquip();
-            EquippedWeapon = weapon;
-            weapon?.Equip(this);
-        }
-
-        public virtual void EquipAccessory(Accessory accessory)
-        {
-            EquippedAccessory?.UnEquip();
-            EquippedAccessory = accessory;
-            accessory?.Equip(this);
-        }
-    }
+		public virtual void EquipAccessory(Accessory accessory)
+		{
+			Accessory?.UnEquip();
+			Accessory = accessory;
+			accessory?.Equip(this);
+		}
+	}
 }

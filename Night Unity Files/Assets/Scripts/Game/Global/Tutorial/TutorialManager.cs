@@ -4,14 +4,12 @@ using System.Xml;
 using DG.Tweening;
 using Facilitating.Persistence;
 using Game.Combat.Generation;
-using Game.Exploration.Regions;
 using Game.Global;
 using Game.Global.Tutorial;
+using Extensions;
 using SamsHelper.Input;
-using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -22,20 +20,22 @@ public class TutorialManager : MonoBehaviour
 	private static          bool                                _tutorialActive;
 	private static          bool                                _loaded;
 	private static          bool                                _finishedIntroTutorial;
+	private                 bool                                _alreadyHidden;
+	private                 bool                                _alreadyPaused;
+	private                 CloseButtonController               _closeButton;
 
 	private TutorialPart              _currentTutorialPart;
-	private EnhancedText              _titleText, _contentText;
-	private TutorialOverlayController _overlayController;
-	private CloseButtonController     _closeButton;
-	private CanvasGroup               _tutorialCanvas;
-	private IInputListener            _lastListener;
-	private bool                      _showingTutorial;
-	private bool                      _alreadyPaused;
-	private bool                      _alreadyHidden;
 	private bool                      _hideResouces;
-	private List<TutorialOverlay>     _overlays;
+	private IInputListener            _lastListener;
 	private GameObject                _lastSelectedObject;
+	private TutorialOverlayController _overlayController;
+	private List<TutorialOverlay>     _overlays;
+	private bool                      _showingTutorial;
 	private float                     _timeToWait;
+	private EnhancedText              _titleText, _contentText;
+	private CanvasGroup               _tutorialCanvas;
+
+	public static TutorialManager Instance => _instance;
 
 	public void Awake()
 	{
@@ -59,10 +59,7 @@ public class TutorialManager : MonoBehaviour
 		_closeButton.UseAcceptInput();
 	}
 
-	public bool TryOpenTutorial(int tutorialPart, TutorialOverlay overlay, bool hideResources = true)
-	{
-		return TryOpenTutorial(tutorialPart, new List<TutorialOverlay> {overlay}, hideResources);
-	}
+	public bool TryOpenTutorial(int tutorialPart, TutorialOverlay overlay, bool hideResources = true) => TryOpenTutorial(tutorialPart, new List<TutorialOverlay> {overlay}, hideResources);
 
 	public bool TryOpenTutorial(int tutorialPart, List<TutorialOverlay> overlays, bool hideResources = true)
 	{
@@ -93,8 +90,14 @@ public class TutorialManager : MonoBehaviour
 		InputHandler.InterruptListeners(true);
 		InputHandler.SetCurrentListener(_closeButton);
 		_timeToWait = 1f;
-		if (_currentTutorialPart.NextPart() == null) _closeButton.SetOnClick(Close);
-		else _closeButton.SetOnClick(ShowTutorialPart);
+		if (_currentTutorialPart.NextPart() == null)
+		{
+			_closeButton.SetOnClick(Close);
+		}
+		else
+		{
+			_closeButton.SetOnClick(ShowTutorialPart);
+		}
 	}
 
 	private void SetCurrentSelectableActive(bool active)
@@ -123,15 +126,16 @@ public class TutorialManager : MonoBehaviour
 		{
 			_closeButton.SetOnClick(Close);
 		}
-		else _currentTutorialPart = _currentTutorialPart.NextPart();
+		else
+		{
+			_currentTutorialPart = _currentTutorialPart.NextPart();
+		}
 	}
 
 	private void Enter()
 	{
-		_tutorialCanvas.blocksRaycasts = true;
-		_tutorialCanvas.interactable   = true;
-		_alreadyHidden                 = ResourcesUiController.Hidden();
-		if (!_alreadyHidden && _hideResouces) ResourcesUiController.Hide();
+		_tutorialCanvas.blocksRaycasts      = true;
+		_tutorialCanvas.interactable        = true;
 		_showingTutorial                    = true;
 		DOTween.defaultTimeScaleIndependent = true;
 		bool combatPaused = CombatManager.Instance() != null && !CombatManager.Instance().IsCombatActive();
@@ -144,7 +148,6 @@ public class TutorialManager : MonoBehaviour
 	private void Close()
 	{
 		if (_timeToWait > 0f) return;
-		if (!_alreadyHidden) ResourcesUiController.Show();
 		_tutorialCanvas.blocksRaycasts = false;
 		_tutorialCanvas.interactable   = false;
 		_closeButton.SetOnClick(null);
@@ -175,16 +178,16 @@ public class TutorialManager : MonoBehaviour
 	{
 		ReadTutorialParts(true);
 		root                   = root.SelectSingleNode("Tutorial");
-		_tutorialActive        = root.BoolFromNode("TutorialActive");
-		_finishedIntroTutorial = root.BoolFromNode("FinishedIntro");
+		_tutorialActive        = root.ParseBool("TutorialActive");
+		_finishedIntroTutorial = root.ParseBool("FinishedIntro");
 		if (!_tutorialActive) return;
 		foreach (XmlNode sectionNode in root.SelectSingleNode("TutorialParts").ChildNodes)
 		{
-			int sectionNumber = sectionNode.IntFromNode("SectionNumber");
+			int sectionNumber = sectionNode.ParseInt("SectionNumber");
 			foreach (XmlNode partNode in sectionNode.SelectNodes("Part"))
 			{
-				int  partNumber = partNode.IntFromNode("PartNumber");
-				bool completed  = partNode.BoolFromNode("Completed");
+				int  partNumber = partNode.ParseInt("PartNumber");
+				bool completed  = partNode.ParseBool("Completed");
 				if (!completed) continue;
 				_tutorialParts[sectionNumber][partNumber - 1].MarkComplete();
 			}
@@ -236,12 +239,7 @@ public class TutorialManager : MonoBehaviour
 		_loaded = true;
 	}
 
-	public bool IsTutorialVisible()
-	{
-		return _showingTutorial;
-	}
-
-	public static TutorialManager Instance => _instance;
+	public bool IsTutorialVisible() => _showingTutorial;
 
 	public static void SetTutorialActive(bool tutorialActive)
 	{
@@ -250,10 +248,7 @@ public class TutorialManager : MonoBehaviour
 
 	public static bool FinishedIntroTutorial() => _finishedIntroTutorial;
 
-	public static bool Active()
-	{
-		return _tutorialActive;
-	}
+	public static bool Active() => _tutorialActive;
 
 	public static void FinishIntroTutorial()
 	{

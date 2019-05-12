@@ -1,7 +1,8 @@
 ﻿using SamsHelper.Libraries;
 using UnityEngine;
 
-public class FaceVelocity : MonoBehaviour {
+public class FaceVelocity : MonoBehaviour
+{
 	private Rigidbody2D _rigidbody;
 
 	private void Awake()

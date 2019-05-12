@@ -1,6 +1,4 @@
-﻿
-
-//namespace SamsHelper.BaseGameFunctionality.InventorySystem
+﻿//namespace SamsHelper.BaseGameFunctionality.InventorySystem
 //{
 //    public class InventoryResource : InventoryItem
 //    {
@@ -25,3 +23,4 @@
 //        }
 //    }
 //}
+

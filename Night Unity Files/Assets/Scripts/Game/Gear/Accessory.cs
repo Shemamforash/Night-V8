@@ -1,18 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
 using Game.Global;
+using Extensions;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.Libraries;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.Gear.Armour
 {
@@ -20,35 +18,36 @@ namespace Game.Gear.Armour
 	{
 		private static readonly List<AccessoryTemplate> _accessoryTemplates = new List<AccessoryTemplate>();
 		private static          bool                    _loaded;
-		private readonly        AccessoryTemplate       _template;
 		private readonly        AttributeModifier       _modifier;
 		private readonly        string                  _summary;
+		private readonly        AccessoryTemplate       _template;
 
 		private Accessory(AccessoryTemplate template, ItemQuality itemQuality) : base(template.Name, itemQuality)
 		{
 			_template = template;
 			_modifier = template.GetModifier((int) itemQuality + 1);
-			if (template.ModifiesCondition) _summary = _modifier.RawBonus().ToString(CultureInfo.InvariantCulture);
-			else _summary                            = _modifier.FinalBonusToString();
+			if (template.ModifiesCondition)
+			{
+				_summary = _modifier.RawBonus().ToString(CultureInfo.InvariantCulture);
+			}
+			else
+			{
+				_summary = _modifier.FinalBonusToString();
+			}
+
 			string attributeString = _template.TargetAttribute.AttributeToDisplayString();
 			_summary += " " + attributeString;
 		}
 
-		public string Description()
-		{
-			return _template.Description;
-		}
+		public string Description() => _template.Description;
 
-		public override string GetSummary()
-		{
-			return _summary;
-		}
+		public override string GetSummary() => _summary;
 
 		public override void Equip(Character character)
 		{
 			base.Equip(character);
 			(character as Player)?.ApplyModifier(_template.TargetAttribute, _modifier);
-			ApplyToWeapon(character.EquippedWeapon);
+			ApplyToWeapon(character.Weapon);
 			if (PlayerCombat.Instance == null) return;
 			PlayerCombat.Instance.RecalculateAttributes();
 		}
@@ -58,7 +57,7 @@ namespace Game.Gear.Armour
 			if (EquippedCharacter is Player player)
 			{
 				player.RemoveModifier(_template.TargetAttribute, _modifier);
-				RemoveFromWeapon(EquippedCharacter.EquippedWeapon);
+				RemoveFromWeapon(EquippedCharacter.Weapon);
 			}
 
 			base.UnEquip();
@@ -95,40 +94,12 @@ namespace Game.Gear.Armour
 			return root;
 		}
 
-		private class AccessoryTemplate
-		{
-			public readonly  string        Name, Description;
-			public readonly  AttributeType TargetAttribute;
-			private readonly float         _modifierValue;
-			public readonly  bool          ModifiesCondition;
-
-			public AccessoryTemplate(XmlNode accessoryNode)
-			{
-				Name            = accessoryNode.StringFromNode("Name");
-				Description     = accessoryNode.StringFromNode("Description");
-				TargetAttribute = Inventory.StringToAttributeType(accessoryNode.StringFromNode("Attribute"));
-				_modifierValue  = accessoryNode.FloatFromNode("Bonus");
-				_accessoryTemplates.Add(this);
-				ModifiesCondition = TargetAttribute == AttributeType.Shatter ||
-				                    TargetAttribute == AttributeType.Void    ||
-				                    TargetAttribute == AttributeType.Burn;
-			}
-
-			public AttributeModifier GetModifier(int qualityMultiplier)
-			{
-				AttributeModifier modifier = new AttributeModifier();
-				if (ModifiesCondition) modifier.SetRawBonus(_modifierValue * qualityMultiplier);
-				else modifier.SetFinalBonus(_modifierValue                 * qualityMultiplier);
-				return modifier;
-			}
-		}
-
 		public static Accessory LoadAccessory(XmlNode accessoryNode)
 		{
 			ReadTemplates();
-			string            templateName = accessoryNode.StringFromNode("Name");
+			string            templateName = accessoryNode.ParseString("Name");
 			AccessoryTemplate template     = _accessoryTemplates.First(t => t.Name == templateName);
-			ItemQuality       qualityLevel = (ItemQuality) accessoryNode.IntFromNode("Quality");
+			ItemQuality       qualityLevel = (ItemQuality) accessoryNode.ParseInt("Quality");
 			Accessory         accessory    = new Accessory(template, qualityLevel);
 			accessory.Load(accessoryNode);
 			return accessory;
@@ -162,6 +133,41 @@ namespace Game.Gear.Armour
 
 			int count = Mathf.FloorToInt(quality / 2f) + 1;
 			for (int i = 0; i < count; ++i) AddReward(possibleRewards.RemoveRandom(), 1);
+		}
+
+		private class AccessoryTemplate
+		{
+			private readonly float         _modifierValue;
+			public readonly  bool          ModifiesCondition;
+			public readonly  string        Name, Description;
+			public readonly  AttributeType TargetAttribute;
+
+			public AccessoryTemplate(XmlNode accessoryNode)
+			{
+				Name            = accessoryNode.ParseString("Name");
+				Description     = accessoryNode.ParseString("Description");
+				TargetAttribute = Inventory.StringToAttributeType(accessoryNode.ParseString("Attribute"));
+				_modifierValue  = accessoryNode.ParseFloat("Bonus");
+				_accessoryTemplates.Add(this);
+				ModifiesCondition = TargetAttribute == AttributeType.Shatter ||
+				                    TargetAttribute == AttributeType.Void    ||
+				                    TargetAttribute == AttributeType.Burn;
+			}
+
+			public AttributeModifier GetModifier(int qualityMultiplier)
+			{
+				AttributeModifier modifier = new AttributeModifier();
+				if (ModifiesCondition)
+				{
+					modifier.SetRawBonus(_modifierValue * qualityMultiplier);
+				}
+				else
+				{
+					modifier.SetFinalBonus(_modifierValue * qualityMultiplier);
+				}
+
+				return modifier;
+			}
 		}
 	}
 }

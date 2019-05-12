@@ -1,13 +1,13 @@
 namespace InventorySystem
 {
-  public enum ResourceType
-  {
-    None,
-    Water,
-    Meat,
-    Plant,
-    Resource,
-    Potion,
-    Armour
-  }
+	public enum ResourceType
+	{
+		None,
+		Water,
+		Meat,
+		Plant,
+		Resource,
+		Potion,
+		Armour
+	}
 }

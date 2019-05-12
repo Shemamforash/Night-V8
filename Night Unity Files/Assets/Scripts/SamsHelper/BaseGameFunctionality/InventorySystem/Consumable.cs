@@ -1,120 +1,84 @@
 ﻿using Game.Characters;
 using Game.Combat.Player;
-using InventorySystem;
 using SamsHelper.BaseGameFunctionality.Basic;
-using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
-    public class Consumable : ResourceItem
-    {
-        private Player _player;
+	public class Consumable : ResourceItem
+	{
+		private Player _player;
 
-        public Consumable(ResourceTemplate template) : base(template)
-        {
-            Template = template;
-        }
+		public Consumable(ResourceTemplate template) : base(template) => Template = template;
 
-        private void ApplyEffect()
-        {
-            _player = CharacterManager.SelectedCharacter;
-            switch (Template.ResourceType)
-            {
-                case ResourceType.Meat:
-                    _player.Attributes.Eat((int) Template.EffectBonus);
-                    return;
-                case ResourceType.Water:
-                    _player.Attributes.Drink((int) Template.EffectBonus);
-                    return;
-            }
+		private void ApplyEffect()
+		{
+			_player = CharacterManager.SelectedCharacter;
+			if (!Template.HasEffect) return;
+			if (Template.IsEffectPermanent)
+				ApplyPermanentEffect();
+			else
+				ApplyImpermanentEffect();
 
+			if (!PlayerCombat.Instance) return;
+			switch (Template.AttributeType)
+			{
+				case AttributeType.Life:
+					PlayerCombat.Instance.RecalculateHealth();
+					break;
+				case AttributeType.Will:
+					PlayerCombat.Instance.ResetCompass();
+					break;
+			}
+		}
 
-            if (!Template.HasEffect) return;
-            if (Template.IsEffectPermanent) ApplyPermanentEffect();
-            else ApplyImpermanentEffect();
+		private void ApplyPermanentEffect()
+		{
+			CharacterAttribute attribute = _player.Attributes.Get(Template.AttributeType);
+			if (!CharacterAttribute.IsCharacterAttribute(Template.AttributeType))
+			{
+				attribute.Increment(Template.EffectBonus);
+				return;
+			}
 
-            if (Template.AttributeType == AttributeType.Life && PlayerCombat.Instance != null) PlayerCombat.Instance.RecalculateHealth();
-            if (Template.AttributeType == AttributeType.Focus && PlayerCombat.Instance != null) PlayerCombat.Instance.ResetCompass();
-        }
+			_player.Attributes.IncreaseAttribute(Template.AttributeType);
+		}
 
-        private void ApplyPermanentEffect()
-        {
-            CharacterAttribute attribute = _player.Attributes.Get(Template.AttributeType);
-            if (!CharacterAttribute.IsCharacterAttribute(Template.AttributeType))
-            {
-                if (Template.EffectBonus < 0) attribute.Decrement(-Template.EffectBonus);
-                else attribute.Increment(Template.EffectBonus);
-                return;
-            }
+		private void ApplyImpermanentEffect()
+		{
+			CharacterAttribute attribute = _player.Attributes.Get(Template.AttributeType);
+			attribute.Increment(Template.EffectBonus);
+		}
 
-            switch (Template.AttributeType)
-            {
-                case AttributeType.Life:
-                    _player.Attributes.ChangeLifeMax((int) Template.EffectBonus);
-                    break;
-                case AttributeType.Grit:
-                    _player.Attributes.ChangeGritMax((int) Template.EffectBonus);
-                    break;
-                case AttributeType.Will:
-                    _player.Attributes.ChangeWillMax((int) Template.EffectBonus);
-                    break;
-                case AttributeType.Focus:
-                    _player.Attributes.ChangeFocusMax((int) Template.EffectBonus);
-                    break;
-            }
-        }
+		public void Consume()
+		{
+			if (!CanConsume()) return;
+			if (Template.Name == "Mystic Shard")
+			{
+				Inventory.DecrementResource(Template.Name, 1);
+				_player.TravelAction.ReturnToHomeInstant(true);
+				return;
+			}
 
-        private void ApplyImpermanentEffect()
-        {
-            CharacterAttribute attribute = _player.Attributes.Get(Template.AttributeType);
-            if (Template.EffectBonus > 0) attribute.Increment(Template.EffectBonus);
-            else attribute.Decrement(-Template.EffectBonus);
-        }
+			ApplyEffect();
+			Inventory.DecrementResource(Template.Name, 1);
+			if (PlayerCombat.Instance == null) return;
+			PlayerCombat.Instance.RecalculateAttributes();
+		}
 
-        public void Consume()
-        {
-            if (!CanConsume()) return;
-            if (Template.Name == "Mystic Shard")
-            {
-                Inventory.DecrementResource(Template.Name, 1);
-                _player.TravelAction.ReturnToHomeInstant(true);
-                return;
-            }
+		public bool CanConsume()
+		{
+			_player = CharacterManager.SelectedCharacter;
+			if (Template.Name == "Mystic Shard") return !_player.TravelAction.AtHome();
+			return Template.IsEffectPermanent ? CheckCanConsumePermanent() : CheckCanConsumeImpermanent();
+		}
 
-            ApplyEffect();
-            Inventory.DecrementResource(Template.Name, 1);
-            if (PlayerCombat.Instance == null) return;
-            PlayerCombat.Instance.RecalculateAttributes();
-        }
+		private bool CheckCanConsumeImpermanent() => !_player.Attributes.Get(Template.AttributeType).ReachedMax;
 
-        public bool CanConsume()
-        {
-            _player = CharacterManager.SelectedCharacter;
-            if (Template.Name == "Mystic Shard")
-            {
-                return !_player.TravelAction.AtHome();
-            }
-            switch (Template.ResourceType)
-            {
-                case ResourceType.Meat:
-                    return !_player.Attributes.Get(AttributeType.Hunger).ReachedMin();
-                case ResourceType.Water:
-                    return !_player.Attributes.Get(AttributeType.Thirst).ReachedMin();
-            }
-
-            return Template.IsEffectPermanent ? CheckCanConsumePermanent() : CheckCanConsumeImpermanent();
-        }
-
-        private bool CheckCanConsumeImpermanent()
-        {
-            return !_player.Attributes.Get(Template.AttributeType).ReachedMax();
-        }
-
-        private bool CheckCanConsumePermanent()
-        {
-            CharacterAttribute attribute = _player.Attributes.Get(Template.AttributeType);
-            if (CharacterAttribute.IsCharacterAttribute(Template.AttributeType)) return attribute.Max != 20;
-            return true;
-        }
-    }
+		private bool CheckCanConsumePermanent()
+		{
+			CharacterAttribute attribute = _player.Attributes.Get(Template.AttributeType);
+			if (CharacterAttribute.IsCharacterAttribute(Template.AttributeType)) return attribute.Max != 20;
+			return !attribute.ReachedMax && !attribute.ReachedMin;
+		}
+	}
 }

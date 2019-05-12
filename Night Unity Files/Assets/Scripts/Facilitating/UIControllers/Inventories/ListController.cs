@@ -1,215 +1,224 @@
 ﻿using System;
 using System.Collections.Generic;
 using DefaultNamespace;
-using Facilitating.UIControllers;
+using Extensions;
 using NUnit.Framework;
+
 using SamsHelper.Input;
-using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 public class ListController : MonoBehaviour, IInputListener
 {
-    private int _selectedItemIndex;
-    private int _centreItemIndex;
-    private Action<object> OnItemHover;
-    private Action OnReturn;
-    private Func<List<object>> GetContentsAction;
-    private readonly List<Transform> _listItems = new List<Transform>();
-    private List<ListElement> _uiElements = new List<ListElement>();
-    private List<object> _listObjects = new List<object>();
-    private int _listSize;
-    private EnhancedButton _centreButton;
-    private float _skipTime;
-    private float _currentScrollAmount;
-    private const float SkipTimeMax = 0.25f;
+	private const    float              SkipTimeMax = 0.25f;
+	private readonly List<Transform>    _listItems  = new List<Transform>();
+	private          EnhancedButton     _centreButton;
+	private          int                _centreItemIndex;
+	private          float              _currentScrollAmount;
+	private          List<object>       _listObjects = new List<object>();
+	private          int                _listSize;
+	private          int                _selectedItemIndex;
+	private          float              _skipTime;
+	private          List<ListElement>  _uiElements = new List<ListElement>();
+	private          Func<List<object>> GetContentsAction;
+	private          Action<object>     OnItemHover;
+	private          Action             OnReturn;
 
-    private void CacheElements()
-    {
-        _listItems.Clear();
-        int childCount = transform.childCount;
-        _centreItemIndex = Mathf.FloorToInt(childCount / 2f);
+	public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+	{
+		if (isHeld)
+		{
+			if (axis != InputAxis.Vertical) return;
+			_skipTime += Time.unscaledDeltaTime;
+			if (_skipTime < SkipTimeMax) return;
+			_skipTime = SkipTimeMax;
+		}
+		else
+		{
+			_skipTime = 0f;
+		}
 
-        for (int i = 0; i < childCount; ++i)
-        {
-            _listItems.Add(transform.GetChild(i));
-            if (i != _centreItemIndex) continue;
-            _centreButton = _listItems[i].FindChildWithName<EnhancedButton>("Button");
-        }
-    }
+		switch (axis)
+		{
+			case InputAxis.Vertical:
+				if (direction < 0)
+				{
+					TrySelectBelow();
+				}
+				else
+				{
+					TrySelectAbove();
+				}
 
-    public void SetOnItemHover(Action<object> onItemHover)
-    {
-        OnItemHover = onItemHover;
-    }
+				return;
+			case InputAxis.Cancel:
+				OnReturn?.Invoke();
+				break;
+		}
+	}
 
-    public void Initialise(Type elementListType, Action<object> onButtonDown, Action onReturn, Func<List<object>> getContentsAction)
-    {
-        CacheElements();
-        GetContentsAction = getContentsAction;
-        int listSize = _listItems.Count;
-        for (int i = 0; i < listSize; ++i)
-        {
-            ListElement element = (ListElement) Activator.CreateInstance(elementListType);
-            _uiElements.Add(element);
-            element.SetElementTransform(_listItems[i]);
-            float opacityDivider = Mathf.Abs(i - _centreItemIndex) + 1f;
-            Color elementColour = new Color(1f, 1f, 1f, 1f / opacityDivider);
-            element.SetColour(elementColour);
-        }
+	public void OnInputUp(InputAxis axis)
+	{
+	}
 
-        SetButtonBehaviour(onButtonDown, onReturn);
-    }
+	public void OnDoubleTap(InputAxis axis, float direction)
+	{
+	}
 
-    private void SetButtonBehaviour(Action<object> onButtonDown, Action onReturn)
-    {
-        _centreButton.AddOnSelectEvent(() => { InputHandler.SetCurrentListener(this); });
-        _centreButton.AddOnClick(() =>
-        {
-            if (_listObjects.Count == 0) return;
-            if (_selectedItemIndex == _listObjects.Count) --_selectedItemIndex;
-            onButtonDown?.Invoke(_listObjects[_selectedItemIndex]);
-            UpdateList();
-            if (_selectedItemIndex < _listObjects.Count || _listObjects.Count == 0) return;
-            _selectedItemIndex = _listObjects.Count - 1;
-            Select(false);
-        });
-        OnReturn = onReturn;
-    }
+	private void CacheElements()
+	{
+		_listItems.Clear();
+		int childCount = transform.childCount;
+		_centreItemIndex = Mathf.FloorToInt(childCount / 2f);
 
-    public void Initialise(List<ListElement> itemsUi, Action<object> onButtonDown, Action onReturn, Func<List<object>> getContentsAction)
-    {
-        CacheElements();
-        GetContentsAction = getContentsAction;
-        int itemCount = itemsUi.Count;
-        Assert.AreEqual(itemCount, _listItems.Count);
-        _uiElements = itemsUi;
-        for (int i = 0; i < itemCount; ++i)
-        {
-            _uiElements[i].SetElementTransform(_listItems[i]);
-            Color elementColour = new Color(1f, 1f, 1f, 1f / (Math.Abs(i - _centreItemIndex) + 1));
-            _uiElements[i].SetColour(elementColour);
-        }
+		for (int i = 0; i < childCount; ++i)
+		{
+			_listItems.Add(transform.GetChild(i));
+			if (i != _centreItemIndex) continue;
+			_centreButton = _listItems[i].FindChildWithName<EnhancedButton>("Button");
+		}
+	}
 
-        SetButtonBehaviour(onButtonDown, onReturn);
-    }
+	public void SetOnItemHover(Action<object> onItemHover)
+	{
+		OnItemHover = onItemHover;
+	}
 
-    public void Show()
-    {
-        gameObject.SetActive(true);
-        _centreButton.Select();
-        _selectedItemIndex = 0;
-        InputHandler.SetCurrentListener(this);
-        UpdateList(false);
-    }
+	public void Initialise(Type elementListType, Action<object> onButtonDown, Action onReturn, Func<List<object>> getContentsAction)
+	{
+		CacheElements();
+		GetContentsAction = getContentsAction;
+		int listSize = _listItems.Count;
+		for (int i = 0; i < listSize; ++i)
+		{
+			ListElement element = (ListElement) Activator.CreateInstance(elementListType);
+			_uiElements.Add(element);
+			element.SetElementTransform(_listItems[i]);
+			float opacityDivider = Mathf.Abs(i - _centreItemIndex) + 1f;
+			Color elementColour  = new Color(1f, 1f, 1f, 1f / opacityDivider);
+			element.SetColour(elementColour);
+		}
 
-    private void UpdateList(bool playSound = true)
-    {
-        _listObjects = GetContentsAction.Invoke();
-        _listSize = _listObjects.Count;
-        Select(playSound);
-    }
+		SetButtonBehaviour(onButtonDown, onReturn);
+	}
 
-    public void Update()
-    {
-        if (!Cursor.visible) return;
-        if (InputHandler.GetCurrentListener() != this)
-        {
-            _currentScrollAmount = 0f;
-            return;
-        }
+	private void SetButtonBehaviour(Action<object> onButtonDown, Action onReturn)
+	{
+		_centreButton.AddOnSelectEvent(() => { InputHandler.SetCurrentListener(this); });
+		_centreButton.AddOnClick(() =>
+		{
+			if (_listObjects.Count == 0) return;
+			if (_selectedItemIndex == _listObjects.Count) --_selectedItemIndex;
+			onButtonDown?.Invoke(_listObjects[_selectedItemIndex]);
+			UpdateList();
+			if (_selectedItemIndex < _listObjects.Count || _listObjects.Count == 0) return;
+			_selectedItemIndex = _listObjects.Count - 1;
+			Select(false);
+		});
+		OnReturn = onReturn;
+	}
 
-        float mouseDelta = Input.mouseScrollDelta.y;
-        if (mouseDelta == 0) return;
-        if (mouseDelta < 0 && _currentScrollAmount > 0) _currentScrollAmount = 0;
-        else if (mouseDelta > 0 && _currentScrollAmount < 0) _currentScrollAmount = 0;
-        _currentScrollAmount += mouseDelta;
-        if (_currentScrollAmount <= -1)
-        {
-            TrySelectBelow();
-            _currentScrollAmount = 0f;
-        }
-        else if (_currentScrollAmount >= 1)
-        {
-            TrySelectAbove();
-            _currentScrollAmount = 0f;
-        }
-    }
+	public void Initialise(List<ListElement> itemsUi, Action<object> onButtonDown, Action onReturn, Func<List<object>> getContentsAction)
+	{
+		CacheElements();
+		GetContentsAction = getContentsAction;
+		int itemCount = itemsUi.Count;
+		Assert.AreEqual(itemCount, _listItems.Count);
+		_uiElements = itemsUi;
+		for (int i = 0; i < itemCount; ++i)
+		{
+			_uiElements[i].SetElementTransform(_listItems[i]);
+			Color elementColour = new Color(1f, 1f, 1f, 1f / (Math.Abs(i - _centreItemIndex) + 1));
+			_uiElements[i].SetColour(elementColour);
+		}
 
-    public void Hide()
-    {
-        InputHandler.UnregisterInputListener(this);
-        gameObject.SetActive(false);
-    }
+		SetButtonBehaviour(onButtonDown, onReturn);
+	}
 
-    public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-    {
-        if (isHeld)
-        {
-            if (axis != InputAxis.Vertical) return;
-            _skipTime += Time.unscaledDeltaTime;
-            if (_skipTime < SkipTimeMax) return;
-            _skipTime = SkipTimeMax;
-        }
-        else
-        {
-            _skipTime = 0f;
-        }
+	public void Show()
+	{
+		gameObject.SetActive(true);
+		_centreButton.Select();
+		_selectedItemIndex = 0;
+		InputHandler.SetCurrentListener(this);
+		UpdateList(false);
+	}
 
-        switch (axis)
-        {
-            case InputAxis.Vertical:
-                if (direction < 0)
-                    TrySelectBelow();
-                else
-                    TrySelectAbove();
-                return;
-            case InputAxis.Cancel:
-                OnReturn?.Invoke();
-                break;
-        }
-    }
+	private void UpdateList(bool playSound = true)
+	{
+		_listObjects = GetContentsAction.Invoke();
+		_listSize    = _listObjects.Count;
+		Select(playSound);
+	}
 
-    private void Select(bool playSound = true)
-    {
-        for (int i = 0; i < _listItems.Count; ++i)
-        {
-            int offset = i - _centreItemIndex;
-            int objectIndex = _selectedItemIndex + offset;
-            object o = null;
-            if (objectIndex >= 0 && objectIndex < _listSize)
-            {
-                o = _listObjects[objectIndex];
-            }
+	public void Update()
+	{
+		if (!Cursor.visible) return;
+		if (InputHandler.GetCurrentListener() != this)
+		{
+			_currentScrollAmount = 0f;
+			return;
+		}
 
-            bool isCentreItem = i == _centreItemIndex;
-            _uiElements[i].Set(o, isCentreItem);
-            if (isCentreItem && _listObjects.Count > 0) OnItemHover?.Invoke(_listObjects[_selectedItemIndex]);
-        }
+		float mouseDelta = Input.mouseScrollDelta.y;
+		if (mouseDelta == 0) return;
+		if (mouseDelta < 0 && _currentScrollAmount > 0)
+		{
+			_currentScrollAmount = 0;
+		}
+		else if (mouseDelta > 0 && _currentScrollAmount < 0) _currentScrollAmount = 0;
 
-        if (!playSound) return;
-        ButtonClickListener.Click();
-    }
+		_currentScrollAmount += mouseDelta;
+		if (_currentScrollAmount <= -1)
+		{
+			TrySelectBelow();
+			_currentScrollAmount = 0f;
+		}
+		else if (_currentScrollAmount >= 1)
+		{
+			TrySelectAbove();
+			_currentScrollAmount = 0f;
+		}
+	}
 
-    private void TrySelectBelow()
-    {
-        if (_selectedItemIndex == _listObjects.Count - 1) return;
-        ++_selectedItemIndex;
-        Select();
-    }
+	public void Hide()
+	{
+		InputHandler.UnregisterInputListener(this);
+		gameObject.SetActive(false);
+	}
 
-    private void TrySelectAbove()
-    {
-        if (_selectedItemIndex == 0) return;
-        --_selectedItemIndex;
-        Select();
-    }
+	private void Select(bool playSound = true)
+	{
+		for (int i = 0; i < _listItems.Count; ++i)
+		{
+			int    offset      = i                  - _centreItemIndex;
+			int    objectIndex = _selectedItemIndex + offset;
+			object o           = null;
+			if (objectIndex >= 0 && objectIndex < _listSize)
+			{
+				o = _listObjects[objectIndex];
+			}
 
-    public void OnInputUp(InputAxis axis)
-    {
-    }
+			bool isCentreItem = i == _centreItemIndex;
+			_uiElements[i].Set(o, isCentreItem);
+			if (isCentreItem && _listObjects.Count > 0) OnItemHover?.Invoke(_listObjects[_selectedItemIndex]);
+		}
 
-    public void OnDoubleTap(InputAxis axis, float direction)
-    {
-    }
+		if (!playSound) return;
+		ButtonClickListener.Click();
+	}
+
+	private void TrySelectBelow()
+	{
+		if (_selectedItemIndex == _listObjects.Count - 1) return;
+		++_selectedItemIndex;
+		Select();
+	}
+
+	private void TrySelectAbove()
+	{
+		if (_selectedItemIndex == 0) return;
+		--_selectedItemIndex;
+		Select();
+	}
 }

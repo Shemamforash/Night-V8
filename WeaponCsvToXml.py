@@ -66,7 +66,7 @@ class RecipeImporter(XMLWriter):
         write_single_value(self, "Description", get_value(self, "K", row))
 
     def read_recipes(self):
-        for row_no in range(4, 31):
+        for row_no in range(4, 28):
             write_tag(self, "Recipe", self.read_recipe, [row_no])
 
 
@@ -109,7 +109,7 @@ class ResourceImporter(XMLWriter):
         write_single_value(self, "Effect", get_value(self, "M", row, ""))
 
     def read_resources(self):
-        for row_no in range(3, 45):
+        for row_no in range(3, 39):
             write_tag(self, "Resource", self.read_resource, [row_no])
 
 
@@ -119,7 +119,7 @@ class InscriptionImporter(XMLWriter):
         write_tag(self, "Inscriptions", self.read_inscriptions)
 
     def read_inscriptions(self):
-        for row in range(2, 15):
+        for row in range(2, 13):
             write_tag(self, "Inscription", self.read_inscription, [row])
 
     def read_inscription(self, row):
@@ -240,10 +240,8 @@ class CharacterImporter(XMLWriter):
 
     def read_class(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
-        write_single_value(self, "Grit", get_value(self, "B", row))
-        write_single_value(self, "Life", get_value(self, "C", row))
-        write_single_value(self, "Will", get_value(self, "D", row))
-        write_single_value(self, "Focus", get_value(self, "E", row))
+        write_single_value(self, "Life", get_value(self, "B", row))
+        write_single_value(self, "Will", get_value(self, "C", row))
 
 
 class EnemyImporter(XMLWriter):
@@ -275,7 +273,7 @@ class BrandImporter(XMLWriter):
         write_tag(self, "Brands", self.read_brands)
 
     def read_brands(self):
-        for row in range(3, 19):
+        for row in range(3, 16):
             write_tag(self, get_value(self, "A", row), self.read_brand, [row])
 
     def read_brand(self, row):
@@ -427,19 +425,19 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.write("<" + stat_name + ">" + str(value) + "</" + stat_name + ">")
 
 
-WeaponImporter()
+# WeaponImporter()
 # GearImporter()
 # WeatherImporter()
 # WeatherProbabilityImporter()
 # RegionImporter()
-# CharacterImporter()
+CharacterImporter()
 # EnemyImporter()
-# RecipeImporter()
-# ResourceImporter()
-# InscriptionImporter()
+RecipeImporter()
+ResourceImporter()
+InscriptionImporter()
 # SkillImporter()
-# EnvironmentImporter()
-# BrandImporter()
+EnvironmentImporter()
+BrandImporter()
 # WandererImporter()
 # NecromancerImporter()
 # CharacterStoryImporter()

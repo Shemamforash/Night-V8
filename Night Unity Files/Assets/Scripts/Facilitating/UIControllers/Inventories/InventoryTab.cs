@@ -6,150 +6,155 @@ using UnityEngine.UI;
 
 namespace Facilitating.UIControllers.Inventories
 {
-    public class InventoryTab : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler
-    {
-        private UiInventoryMenuController _menu;
-        private InventoryTab _prevTab;
-        private InventoryTab _nextTab;
-        private Image _highlightImage;
-        private static InventoryTab _currentTab;
-        private bool _active;
+	public class InventoryTab : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler
+	{
+		private static InventoryTab              _currentTab;
+		private        bool                      _active;
+		private        Image                     _highlightImage;
+		private        UiInventoryMenuController _menu;
+		private        InventoryTab              _nextTab;
+		private        InventoryTab              _prevTab;
 
-        public void SetMenu(UiInventoryMenuController menu)
-        {
-            _highlightImage = gameObject.GetComponent<Image>();
-            _highlightImage.GetComponent<Button>().onClick.AddListener(Select);
-            _menu = menu;
-        }
+		public void OnPointerEnter(PointerEventData eventData)
+		{
+			if (this == _currentTab) return;
+			Hover();
+		}
 
-        public static InventoryTab CurrentTab()
-        {
-            return _currentTab;
-        }
+		public void OnPointerExit(PointerEventData eventData)
+		{
+			if (this == _currentTab) return;
+			Deselect();
+		}
 
-        private void Hover()
-        {
-            _highlightImage.DOFade(0.5f, 0.5f).SetUpdate(UpdateType.Normal, true);
-        }
+		public void OnSelect(BaseEventData eventData)
+		{
+			if (TutorialManager.Instance.IsTutorialVisible()) return;
+			Select();
+		}
 
-        private bool TabIsNext()
-        {
-            InventoryTab next = _nextTab;
-            while (next != null)
-            {
-                if (_currentTab == next) return true;
-                next = next._nextTab;
-            }
+		public void SetMenu(UiInventoryMenuController menu)
+		{
+			_highlightImage = gameObject.GetComponent<Image>();
+			_highlightImage.GetComponent<Button>().onClick.AddListener(Select);
+			_menu = menu;
+		}
 
-            return false;
-        }
+		public static InventoryTab CurrentTab() => _currentTab;
 
-        private bool TabIsPrevious()
-        {
-            InventoryTab prev = _prevTab;
-            while (prev != null)
-            {
-                if (_currentTab == prev) return true;
-                prev = prev._prevTab;
-            }
+		private void Hover()
+		{
+			_highlightImage.DOFade(0.5f, 0.5f).SetUpdate(UpdateType.Normal, true);
+		}
 
-            return false;
-        }
+		private bool TabIsNext()
+		{
+			InventoryTab next = _nextTab;
+			while (next != null)
+			{
+				if (_currentTab == next) return true;
+				next = next._nextTab;
+			}
 
-        public void Select()
-        {
-            if (_currentTab == null)
-            {
-                if (_prevTab == null) UiGearMenuController.LeftTab().InstantFade();
-                if (_nextTab == null) UiGearMenuController.RightTab().InstantFade();
-            }
-            else
-            {
-                UiGearMenuController.PlayAudio(AudioClips.TabChange);
-                if (TabIsNext())
-                {
-                    if (_prevTab == null) UiGearMenuController.LeftTab().FlashAndFade();
-                    else UiGearMenuController.LeftTab().Flash();
-                    UiGearMenuController.RightTab().FadeIn();
-                }
-                else if (TabIsPrevious())
-                {
-                    if (_nextTab == null) UiGearMenuController.RightTab().FlashAndFade();
-                    else UiGearMenuController.RightTab().Flash();
-                    UiGearMenuController.LeftTab().FadeIn();
-                }
+			return false;
+		}
 
-                _currentTab.Deselect();
-            }
+		private bool TabIsPrevious()
+		{
+			InventoryTab prev = _prevTab;
+			while (prev != null)
+			{
+				if (_currentTab == prev) return true;
+				prev = prev._prevTab;
+			}
 
-            _currentTab = this;
-            _highlightImage.DOFade(1f, 0.5f).SetUpdate(UpdateType.Normal, true);
-            UiGearMenuController.OpenInventoryMenu(_menu);
-        }
+			return false;
+		}
 
-        private void Deselect()
-        {
-            _highlightImage.DOFade(0f, 0.5f).SetUpdate(UpdateType.Normal, true);
-        }
+		public void Select()
+		{
+			if (_currentTab == null)
+			{
+				if (_prevTab == null) UiGearMenuController.LeftTab().InstantFade();
+				if (_nextTab == null) UiGearMenuController.RightTab().InstantFade();
+			}
+			else
+			{
+				UiGearMenuController.PlayAudio(AudioClips.TabChange);
+				if (TabIsNext())
+				{
+					if (_prevTab == null)
+					{
+						UiGearMenuController.LeftTab().FlashAndFade();
+					}
+					else
+					{
+						UiGearMenuController.LeftTab().Flash();
+					}
 
-        public void SetNeighbors(InventoryTab prevTab, InventoryTab nextTab)
-        {
-            _prevTab = prevTab;
-            _nextTab = nextTab;
-        }
+					UiGearMenuController.RightTab().FadeIn();
+				}
+				else if (TabIsPrevious())
+				{
+					if (_nextTab == null)
+					{
+						UiGearMenuController.RightTab().FlashAndFade();
+					}
+					else
+					{
+						UiGearMenuController.RightTab().Flash();
+					}
 
-        public void SelectNextTab()
-        {
-            if (_nextTab == null) return;
-            _nextTab.Select();
-        }
+					UiGearMenuController.LeftTab().FadeIn();
+				}
 
-        public void SelectPreviousTab()
-        {
-            if (_prevTab == null) return;
-            _prevTab.Select();
-        }
+				_currentTab.Deselect();
+			}
 
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            if (this == _currentTab) return;
-            Hover();
-        }
+			_currentTab = this;
+			_highlightImage.DOFade(1f, 0.5f).SetUpdate(UpdateType.Normal, true);
+			UiGearMenuController.OpenInventoryMenu(_menu);
+		}
 
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            if (this == _currentTab) return;
-            Deselect();
-        }
+		private void Deselect()
+		{
+			_highlightImage.DOFade(0f, 0.5f).SetUpdate(UpdateType.Normal, true);
+		}
 
-        public void OnSelect(BaseEventData eventData)
-        {
-            if (TutorialManager.Instance.IsTutorialVisible()) return;
-            Select();
-        }
+		public void SetNeighbors(InventoryTab prevTab, InventoryTab nextTab)
+		{
+			_prevTab = prevTab;
+			_nextTab = nextTab;
+		}
 
-        public static void ClearActiveTab()
-        {
-            if (_currentTab == null) return;
-            _currentTab.Deselect();
-            _currentTab = null;
-        }
+		public void SelectNextTab()
+		{
+			if (_nextTab == null) return;
+			_nextTab.Select();
+		}
 
-        public UiInventoryMenuController GetMenu()
-        {
-            return _menu;
-        }
+		public void SelectPreviousTab()
+		{
+			if (_prevTab == null) return;
+			_prevTab.Select();
+		}
 
-        public void UpdateActive()
-        {
-            bool unlocked = _menu.Unlocked();
-            _active = unlocked;
-            transform.parent.gameObject.SetActive(unlocked);
-        }
+		public static void ClearActiveTab()
+		{
+			if (_currentTab == null) return;
+			_currentTab.Deselect();
+			_currentTab = null;
+		}
 
-        public bool Active()
-        {
-            return _active;
-        }
-    }
+		public UiInventoryMenuController GetMenu() => _menu;
+
+		public void UpdateActive()
+		{
+			bool unlocked = _menu.Unlocked();
+			_active = unlocked;
+			transform.parent.gameObject.SetActive(unlocked);
+		}
+
+		public bool Active() => _active;
+	}
 }

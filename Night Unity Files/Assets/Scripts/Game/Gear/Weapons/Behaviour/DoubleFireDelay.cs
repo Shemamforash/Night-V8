@@ -3,30 +3,30 @@ using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
-    public class DoubleFireDelay : BaseWeaponBehaviour
-    {
-        private bool _stillFiring;
+	public class DoubleFireDelay : BaseWeaponBehaviour
+	{
+		private bool _stillFiring;
 
-        public override void StartFiring()
-        {
-            base.StartFiring();
-            if (_stillFiring) return;
-            StartCoroutine(SecondaryFire());
-        }
+		public override void StartFiring()
+		{
+			base.StartFiring();
+			if (_stillFiring) return;
+			StartCoroutine(SecondaryFire());
+		}
 
-        private IEnumerator SecondaryFire()
-        {
-            Fire();
-            _stillFiring = true;
-            float time = 0.1f;
-            while (time > 0f)
-            {
-                time -= Time.deltaTime;
-                yield return null;
-            }
+		private IEnumerator SecondaryFire()
+		{
+			Fire();
+			_stillFiring = true;
+			float time = 0.1f;
+			while (time > 0f)
+			{
+				time -= Time.deltaTime;
+				yield return null;
+			}
 
-            Fire();
-            _stillFiring = false;
-        }
-    }
+			Fire();
+			_stillFiring = false;
+		}
+	}
 }
