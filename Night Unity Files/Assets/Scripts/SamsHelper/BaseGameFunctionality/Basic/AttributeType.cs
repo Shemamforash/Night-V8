@@ -16,7 +16,6 @@
 		Shatter,
 		Burn,
 		Pierce,
-		CompassBonus,
 		Range
 	}
 }

@@ -121,7 +121,6 @@ namespace Game.Combat.Misc
 			int damageDealt = shot.Attributes().DamageDealt();
 			TakeDamage(damageDealt, shot.Direction());
 			if (IsPlayer) return;
-			if (!shot.Attributes().ShouldAddAdrenaline()) return;
 			PlayerCombat.Instance.UpdateAdrenaline(damageDealt);
 		}
 

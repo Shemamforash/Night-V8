@@ -9,12 +9,12 @@ namespace Game.Combat.Ui
 {
 	public class UIMagazineController : MonoBehaviour
 	{
-		private static          GameObject          _ammoPrefab;
-		private static          Transform           _magazineContent;
-		private static readonly List<Ammo>          MagazineAmmo = new List<Ammo>();
-		private static          int                 _capacity;
-		private static          BaseWeaponBehaviour _weapon;
-		private static          bool                _empty;
+		private static          GameObject      _ammoPrefab;
+		private static          Transform       _magazineContent;
+		private static readonly List<Ammo>      MagazineAmmo = new List<Ammo>();
+		private static          int             _capacity;
+		private static          WeaponBehaviour _weapon;
+		private static          bool            _empty;
 
 		public void Awake()
 		{
@@ -54,11 +54,11 @@ namespace Game.Combat.Ui
 			UpdateMagazine(newCapacity);
 		}
 
-		public static void SetWeapon(BaseWeaponBehaviour weaponBehaviour)
+		public static void SetWeapon(WeaponBehaviour weaponBehaviour)
 		{
 			_weapon = weaponBehaviour;
 			if (weaponBehaviour == null) return;
-			_capacity          = weaponBehaviour.Capacity();
+			_capacity = weaponBehaviour.Capacity();
 			MagazineAmmo.ForEach(a => a.Destroy());
 			MagazineAmmo.Clear();
 			for (int i = 0; i < _capacity; ++i)
@@ -66,6 +66,7 @@ namespace Game.Combat.Ui
 				Ammo newRound = new Ammo(Helper.InstantiateUiObject(_ammoPrefab, _magazineContent));
 				MagazineAmmo.Add(newRound);
 			}
+
 			UpdateMagazine();
 		}
 

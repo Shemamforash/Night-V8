@@ -23,8 +23,8 @@ namespace Game.Exploration.Ui
 
 		private bool _hidden;
 
-		private Image           _icon,       _selectedImage, _claimedSprite, _cleansedSprite;
-		private TextMeshProUGUI _nameText,   _costText,      _claimText;
+		private Image           _icon,       _selectedImage, _cleansedSprite;
+		private TextMeshProUGUI _nameText,   _costText;
 		private CanvasGroup     _nodeCanvas, _centreCanvas,  _ringCanvas;
 		private Region          _region;
 		private Sequence        _sequence;
@@ -40,13 +40,10 @@ namespace Game.Exploration.Ui
 			_selectedImage = gameObject.FindChildWithName<Image>("Selected");
 			_nameText      = gameObject.FindChildWithName<TextMeshProUGUI>("Name");
 			_costText      = gameObject.FindChildWithName<TextMeshProUGUI>("Cost");
-			_claimText     = gameObject.FindChildWithName<TextMeshProUGUI>("Claim Bonus");
 			_icon          = gameObject.FindChildWithName<Image>("Icon");
 
 			_border = gameObject.FindChildWithName<UIBorderController>("Border");
 			_border.SetActive();
-			_claimedSprite = gameObject.FindChildWithName<Image>("Claimed");
-			_claimedSprite.SetAlpha(0);
 
 			_cleansedSprite = gameObject.FindChildWithName<Image>("Cleansed");
 			_cleansedSprite.SetAlpha(0);
@@ -95,13 +92,10 @@ namespace Game.Exploration.Ui
 			SetTravelCostText();
 			_targetCentreAlpha = 0.6f;
 			_targetNodeAlpha   = _canAfford ? 1f : 0.5f;
-			float claimAlpha    = _region.Claimed() ? 0.5f : 0;
-			float ringAlpha     = _region.Claimed() ? 0f : 1f;
 			float cleansedAlpha = _region.IsTempleCleansed() ? 0.5f : 0f;
 			_sequence?.Kill();
 			_sequence = DOTween.Sequence();
-			_sequence.Append(_claimedSprite.DOFade(claimAlpha, 1f));
-			_sequence.Insert(0f, _ringCanvas.DOFade(ringAlpha, 1f));
+			_sequence.Insert(0f, _ringCanvas.DOFade(1f, 1f));
 			_sequence.Insert(0f, _cleansedSprite.DOFade(cleansedAlpha, 1f));
 			_sequence.SetUpdate(UpdateType.Normal, true);
 		}
@@ -112,7 +106,6 @@ namespace Game.Exploration.Ui
 			_targetNodeAlpha = 0f;
 			_sequence?.Kill();
 			_sequence = DOTween.Sequence();
-			_sequence.Append(_claimedSprite.DOFade(0f, 1f));
 			_sequence.Insert(0f, _ringCanvas.DOFade(0f, 1f));
 			_sequence.Insert(0f, _cleansedSprite.DOFade(0f, 1f));
 			_sequence.SetUpdate(UpdateType.Normal, true);
@@ -203,11 +196,6 @@ namespace Game.Exploration.Ui
 
 		private IEnumerator FadeInLetters()
 		{
-			_claimText.text = _region.ClaimBenefitString();
-
-			_claimText.color = UiAppearanceController.InvisibleColour;
-			_claimText.DOColor(UiAppearanceController.FadedColour, 1f);
-
 			_costText.color = UiAppearanceController.InvisibleColour;
 			_costText.DOColor(UiAppearanceController.FadedColour, 1f);
 			yield return _textReveal.Reveal(_nameText.text, s => _nameText.text = s);

@@ -360,21 +360,6 @@
 		<Effect></Effect>
 	</Resource>
 	<Resource>
-		<Name>Radiance</Name>
-		<Type>Resource</Type>
-		<Consumable>FALSE</Consumable>
-		<Attribute></Attribute>
-		<Modifier></Modifier>
-		<Permanent>False</Permanent>
-		<DesertDropRate>0</DesertDropRate>
-		<MountainsDropRate>0</MountainsDropRate>
-		<SeaDropRate>0</SeaDropRate>
-		<RuinsDropRate>0</RuinsDropRate>
-		<WastelandDropRate>0</WastelandDropRate>
-		<Description></Description>
-		<Effect></Effect>
-	</Resource>
-	<Resource>
 		<Name>Mystic Shard</Name>
 		<Type>Resource</Type>
 		<Consumable>FALSE</Consumable>

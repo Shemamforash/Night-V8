@@ -76,34 +76,6 @@ namespace Game.Characters.Brands
 		protected override string GetProgressSubstring() => "Taken " + Progress() + " damage";
 	}
 
-	public class WillRecoveryBrand : Brand
-	{
-		public WillRecoveryBrand(Player player) : base(player, "Apathy")
-		{
-		}
-
-		protected override void OnSucceed()
-		{
-			Player.Attributes.ClaimRegionWillGainModifier += SuccessModifier;
-		}
-
-		protected override string GetProgressSubstring() => "Killed " + Progress() + " enemies";
-	}
-
-	public class AdrenalineUsedBrand : Brand
-	{
-		public AdrenalineUsedBrand(Player player) : base(player, "Mastery")
-		{
-		}
-
-		protected override void OnSucceed()
-		{
-			Player.Attributes.FreeSkillChance += SuccessModifier;
-		}
-
-		protected override string GetProgressSubstring() => "Consumed " + Progress() + " adrenaline";
-	}
-
 	public class InstantReloadBrand : Brand
 	{
 		public InstantReloadBrand(Player player) : base(player, "Perfection")
@@ -182,7 +154,7 @@ namespace Game.Characters.Brands
 
 		protected override void OnSucceed()
 		{
-			Player.Attributes.Get(AttributeType.CompassBonus).Increment(SuccessModifier);
+			Player.Attributes.CompassBonus = SuccessModifier;
 		}
 
 		protected override string GetProgressSubstring() => "Found " + Progress() + " resources";

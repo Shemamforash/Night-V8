@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml;
-using Facilitating.Persistence;
+﻿using System.Xml;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
 using Game.Combat.Player;
@@ -9,7 +6,6 @@ using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.WorldEvents;
 using Game.Gear.Armour;
-using Game.Gear.Weapons;
 using Game.Global;
 using Extensions;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -21,8 +17,6 @@ namespace Game.Characters
 {
 	public sealed class Player : Character
 	{
-		private const int CharacterSkillOneTarget = 2, CharacterSkillTwoTarget = 4, WeaponSkillOneTarget = 75, WeaponSkillTwoTarget = 200;
-
 		private readonly string[] _restEvents =
 		{
 			"Awake again, or am I still dreaming?",
@@ -37,50 +31,41 @@ namespace Game.Characters
 			"I can't remember when I last had some sleep"
 		};
 
-		private readonly Dictionary<WeaponType, int> _weaponKills = new Dictionary<WeaponType, int>();
-		public readonly  CharacterAttributes         Attributes;
-		public readonly  BrandManager                BrandManager = new BrandManager();
-		public readonly  Skill                       CharacterSkillOne, CharacterSkillTwo;
-		public readonly  CharacterTemplate           CharacterTemplate;
-		public readonly  StateMachine                States = new StateMachine();
-		private          CharacterView               _characterView;
-		private          int                         _daysSurvived;
-		private          bool                        _showJournal;
-		private          int                         _timeAlive;
-		public           Consume                     ConsumeAction;
-		public           Craft                       CraftAction;
+		private CharacterView _characterView;
+		private int           _daysSurvived;
+		private int           _timeAlive;
 
-		public bool   IsDead;
-		public Rest   RestAction;
-		public Travel TravelAction;
+		public readonly CharacterAttributes Attributes;
+		public readonly BrandManager        BrandManager = new BrandManager();
+		public readonly CharacterTemplate   CharacterTemplate;
+		public readonly StateMachine        States = new StateMachine();
+
+		public Consume ConsumeAction;
+		public Craft   CraftAction;
+		public Rest    RestAction;
+		public Travel  TravelAction;
+		public bool    IsDead;
+
 
 		//Create Character in code only- no view section, no references to objects in the scene
 		public Player(CharacterTemplate characterTemplate) : base("The " + characterTemplate.CharacterClass)
 		{
 			Attributes        = new CharacterAttributes(this);
 			CharacterTemplate = characterTemplate;
-			CharacterSkillOne = CharacterSkills.GetCharacterSkillOne(this);
-			CharacterSkillTwo = CharacterSkills.GetCharacterSkillTwo(this);
-
 			AddStates();
 			BrandManager.Initialise(this);
-			WeaponGenerator.GetWeaponTypes().ForEach(t => { _weaponKills.Add(t, 0); });
 		}
 
-		public override XmlNode Save(XmlNode doc)
+		public override XmlNode Save(XmlNode root)
 		{
-			doc = base.Save(doc);
-			Attributes.Save(doc);
-			BrandManager.Save(doc);
-			doc.CreateChild("TimeAlive",      _timeAlive);
-			doc.CreateChild("DaysSurvived",   _daysSurvived);
-			doc.CreateChild("CharacterClass", CharacterTemplate.CharacterClass.ToString());
-			XmlNode weaponKillNode = doc.CreateChild("WeaponKills");
-			foreach (KeyValuePair<WeaponType, int> weaponKills in _weaponKills)
-				weaponKillNode.CreateChild(weaponKills.Key.ToString(), weaponKills.Value);
-
-			((BaseCharacterAction) States.GetCurrentState()).Save(doc);
-			return doc;
+			root = base.Save(root);
+			Attributes.Save(root);
+			BrandManager.Save(root);
+			root.CreateChild("TimeAlive",      _timeAlive);
+			root.CreateChild("DaysSurvived",   _daysSurvived);
+			root.CreateChild("CharacterClass", CharacterTemplate.CharacterClass.ToString());
+			((BaseCharacterAction) States.GetCurrentState()).Save(root);
+			return root;
 		}
 
 		public override void Load(XmlNode root)
@@ -90,16 +75,6 @@ namespace Game.Characters
 			BrandManager.Load(root);
 			_timeAlive    = root.ParseInt("TimeAlive");
 			_daysSurvived = root.ParseInt("DaysSurvived");
-
-			XmlNode          weaponKillNode = root.SelectSingleNode("WeaponKills");
-			List<WeaponType> weaponTypes    = WeaponGenerator.GetWeaponTypes();
-			weaponTypes.ForEach(t =>
-			{
-				_weaponKills[t] = weaponKillNode.ParseInt(t.ToString());
-				TryUnlockWeaponSkills(t, false);
-			});
-
-			TryUnlockCharacterSkill(false);
 			LoadCurrentAction(root);
 		}
 
@@ -123,13 +98,6 @@ namespace Game.Characters
 
 			if (currentAction != RestAction) currentAction.Load(root);
 			currentAction.Enter();
-		}
-
-		public bool CanShowJournal()
-		{
-			if (!_showJournal) return false;
-			_showJournal = false;
-			return true;
 		}
 
 		public void Kill(DeathReason deathReason)
@@ -176,46 +144,6 @@ namespace Game.Characters
 		{
 			if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Tutorial) return;
 			++_daysSurvived;
-			_showJournal = true;
-		}
-
-		public void TryUnlockCharacterSkill(bool showScreen)
-		{
-			if (_daysSurvived >= CharacterSkillOneTarget)
-			{
-				Attributes.UnlockCharacterSkillOne(showScreen);
-			}
-
-			if (_daysSurvived >= CharacterSkillTwoTarget)
-			{
-				Attributes.UnlockCharacterSkillTwo(showScreen);
-			}
-		}
-
-		public Tuple<string, float> GetCharacterSkillOneProgress() => GetCharacterSkillProgress(CharacterSkillOneTarget);
-
-		public Tuple<string, float> GetCharacterSkillTwoProgress() => GetCharacterSkillProgress(CharacterSkillTwoTarget);
-
-		private Tuple<string, float> GetCharacterSkillProgress(int target)
-		{
-			int    progress           = target                - _daysSurvived;
-			string progressString     = "Survive " + progress + " day".Pluralise(progress);
-			float  normalisedProgress = (float) _daysSurvived / target;
-			return Tuple.Create(progressString, normalisedProgress);
-		}
-
-		public Tuple<string, float> GetWeaponSkillOneProgress() => GetWeaponProgress(WeaponSkillOneTarget);
-
-		public Tuple<string, float> GetWeaponSkillTwoProgress() => GetWeaponProgress(WeaponSkillTwoTarget);
-
-		private Tuple<string, float> GetWeaponProgress(int target)
-		{
-			WeaponType weaponType         = Weapon.WeaponType();
-			int        progress           = target - _weaponKills[weaponType];
-			string     pluralisedEnemy    = progress <= 1 ? " enemy" : " enemies";
-			string     progressString     = "Kill " + progress + pluralisedEnemy;
-			float      normalisedProgress = (float) _weaponKills[weaponType] / target;
-			return Tuple.Create(progressString, normalisedProgress);
 		}
 
 		public void SetCharacterView(CharacterView characterView)
@@ -225,26 +153,17 @@ namespace Game.Characters
 
 		public bool CanAffordTravel(int travelCost = 1)
 		{
-			int lifeRemaining = Mathf.CeilToInt(Attributes.Val(AttributeType.Life));
+			int lifeRemaining = Mathf.CeilToInt(Attributes.Life.CurrentValue);
 			return lifeRemaining >= travelCost;
 		}
 
 		public void Rest()
 		{
 			if (!CanRest()) return;
-			CharacterAttribute life = Attributes.Get(AttributeType.Life);
-			CharacterAttribute will = Attributes.Get(AttributeType.Will);
-			will.Increment();
-			life.Increment();
+			Attributes.Will.Increment();
+			Attributes.Life.Increment();
 			if (CanRest()) return;
 			WorldEventManager.GenerateEvent(new CharacterMessage(_restEvents.RandomElement(), this));
-		}
-
-		public void UpdateWeapon()
-		{
-			if (_characterView        != null) _characterView.WeaponController.UpdateWeapon();
-			if (PlayerCombat.Instance == null) return;
-			PlayerCombat.Instance.EquipWeapon();
 		}
 
 		public override void EquipAccessory(Accessory accessory)
@@ -253,48 +172,23 @@ namespace Game.Characters
 			if (_characterView != null) _characterView.AccessoryController.UpdateAccessory();
 		}
 
-		public void IncreaseKills()
-		{
-			if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Tutorial) return;
-			BrandManager.IncreaseEnemiesKilled();
-			WeaponType weaponType = Weapon.WeaponType();
-			_weaponKills[weaponType] = _weaponKills[weaponType] + 1;
-			TryUnlockWeaponSkills(weaponType, true);
-		}
-
-		private void TryUnlockWeaponSkills(WeaponType weaponType, bool showScreen)
-		{
-			if (_weaponKills[weaponType] >= WeaponSkillOneTarget)
-			{
-				Attributes.UnlockWeaponSkillOne(weaponType, showScreen);
-			}
-
-			if (_weaponKills[weaponType] >= WeaponSkillTwoTarget)
-			{
-				Attributes.UnlockWeaponSkillTwo(weaponType, showScreen);
-			}
-		}
-
-		private bool CanRest() =>
-			Attributes.Val(AttributeType.Life) < Attributes.Max(AttributeType.Life) ||
-			Attributes.Val(AttributeType.Will) < Attributes.Max(AttributeType.Will);
+		private bool CanRest() => Attributes.Life < Attributes.Life.Max || Attributes.Will < Attributes.Will.Max;
 
 		public CharacterView CharacterView() => _characterView;
 
-		public void ApplyModifier(AttributeType target, AttributeModifier modifier)
+		public void ApplyModifier(AttributeType attributeType, AttributeModifier modifier)
 		{
-			if (!CharacterAttribute.IsCharacterAttribute(target)) return;
-			CharacterAttribute attribute = Attributes.Get(target);
-			attribute.Max += modifier.RawBonus();
+			CharacterAttribute attribute = Attributes.Get(attributeType);
+			if (attributeType.IsCoreAttribute() && attribute.Max == 20) return;
+			attribute.Max += modifier.Value;
 			if (PlayerCombat.Instance == null) return;
 			PlayerCombat.Instance.RecalculateAttributes();
 		}
 
-		public void RemoveModifier(AttributeType target, AttributeModifier modifier)
+		public void RemoveModifier(AttributeType attributeType, AttributeModifier modifier)
 		{
-			if (!CharacterAttribute.IsCharacterAttribute(target)) return;
-			CharacterAttribute attribute = Attributes.Get(target);
-			attribute.Max -= modifier.RawBonus();
+			CharacterAttribute attribute = Attributes.Get(attributeType);
+			attribute.Max -= modifier.Value;
 			if (PlayerCombat.Instance == null) return;
 			PlayerCombat.Instance.RecalculateAttributes();
 		}

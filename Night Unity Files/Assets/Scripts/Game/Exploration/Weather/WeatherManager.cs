@@ -58,46 +58,6 @@ namespace Game.Exploration.Weather
 			_loaded = true;
 		}
 
-		private static void GenerateWeatherString(int stringLength)
-		{
-			float max = stringLength;
-			for (int i = 0; i < 5; ++i)
-			{
-				stringLength = (int) max;
-				GoToWeather();
-				Dictionary<string, int> _weatherOccurrences = new Dictionary<string, int>();
-				string                  weatherString       = "";
-				while (stringLength > 0)
-				{
-					string currentWeatherName = CurrentWeather().Name;
-					if (_weatherOccurrences.ContainsKey(currentWeatherName))
-					{
-						_weatherOccurrences[currentWeatherName]++;
-					}
-					else
-					{
-						_weatherOccurrences[currentWeatherName] = 1;
-					}
-
-					weatherString += currentWeatherName;
-					GoToWeather();
-					--stringLength;
-				}
-
-				foreach (string key in _weatherOccurrences.Keys)
-				{
-					int   count      = _weatherOccurrences[key];
-					float proportion = count / max;
-					proportion *= 100;
-					proportion =  proportion.Round();
-					string occurences = key + " occured " + _weatherOccurrences[key] + " times. -- (" + proportion + "%)";
-					weatherString = occurences + "\n" + weatherString;
-				}
-
-				EnvironmentManager.NextLevel(false, false);
-			}
-		}
-
 		public static void Reset()
 		{
 			LoadWeather();

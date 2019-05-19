@@ -116,14 +116,10 @@ namespace Game.Combat.Generation
 			yield return StartCoroutine(WaitForControl(() => true, () => "You can view the control scheme at any time through the pause menu"));
 		}
 
-		private IEnumerator ShowAdrenalineTutorial()
+		private IEnumerator ShowDashTutorial()
 		{
-			_player.UpdateAdrenaline(10000);
 			_player.HealthController.TakeDamage(_player.HealthController.GetMaxHealth() * 0.6f);
 			CombatManager.Instance().SetForceShowHud(true);
-			yield return new WaitForSecondsRealtime(0.5f);
-			TutorialManager.Instance.TryOpenTutorial(7, new List<TutorialOverlay> {new TutorialOverlay(RageBarController.AdrenalineRect())});
-			while (TutorialManager.Instance.IsTutorialVisible()) yield return null;
 
 			yield return StartCoroutine(WaitForControl(() => InputHandler.InputAxisWasPressed(InputAxis.Sprint),
 			                                           () => "Dash with [" + InputHandler.GetBindingForKey(InputAxis.Sprint) + "]"));
@@ -223,7 +219,7 @@ namespace Game.Combat.Generation
 			UiWeaponUpgradeController.Locked = true;
 			UiGearMenuController.SetOpenAllowed(false);
 			yield return StartCoroutine(ShowBasicControls());
-			yield return StartCoroutine(ShowAdrenalineTutorial());
+			yield return StartCoroutine(ShowDashTutorial());
 			yield return StartCoroutine(ShowHealthTutorial());
 			yield return StartCoroutine(ShowAttributeTutorial());
 			yield return StartCoroutine(ShowCompassTutorial());

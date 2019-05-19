@@ -32,7 +32,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 
 		public void Recalculate()
 		{
-			float rawBonus = _modifiers.Sum(m => m.RawBonus());
+			float rawBonus = _modifiers.Sum(m => m.Value);
 			_calculatedValue = base.CurrentValue + rawBonus;
 		}
 
@@ -71,7 +71,5 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 			Max          = float.Parse(max);
 			CurrentValue = attributeNode.ParseFloat("Value");
 		}
-
-		public static bool IsCharacterAttribute(AttributeType attribute) => attribute == AttributeType.Life || attribute == AttributeType.Will;
 	}
 }

@@ -31,21 +31,6 @@ namespace Game.Characters.CharacterActions
 			ReopenMenu();
 		}
 
-		private void LightFire()
-		{
-			DisplayName = "Lighting Fire";
-			MinuteCallback = () =>
-			{
-				--Duration;
-				Campfire.Tend();
-				if (Duration != 0) return;
-				Campfire.FinishTending();
-				PlayerCharacter.RestAction.Enter();
-				ReopenMenu();
-			};
-			_recipe = null;
-		}
-
 		private void ReopenMenu()
 		{
 			CharacterManager.SelectedCharacter = PlayerCharacter;
@@ -63,11 +48,7 @@ namespace Game.Characters.CharacterActions
 			};
 		}
 
-		public void AbortCraft()
-		{
-			if (_recipe == null) return;
-			_recipe.RestoreResources();
-		}
+		public void AbortCraft() => _recipe?.RestoreResources();
 
 		public void StartCrafting(Recipe recipe)
 		{
@@ -75,15 +56,7 @@ namespace Game.Characters.CharacterActions
 			_recipe = recipe;
 			_recipe.ConsumeResources();
 			_recipeName = _recipe.Name;
-			if (_recipeName == "Fire")
-			{
-				LightFire();
-			}
-			else
-			{
-				CraftThing();
-			}
-
+			CraftThing();
 			SetDuration(WorldState.MinutesPerHour / 4);
 			Enter();
 		}
@@ -94,15 +67,7 @@ namespace Game.Characters.CharacterActions
 			string recipeName = doc.ParseString("Recipe");
 			if (recipeName == "") return doc;
 			_recipe = Recipe.FindRecipe(recipeName);
-			if (_recipe.Name == "Fire")
-			{
-				LightFire();
-			}
-			else
-			{
-				CraftThing();
-			}
-
+			CraftThing();
 			return doc;
 		}
 

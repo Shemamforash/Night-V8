@@ -118,7 +118,7 @@ public class UiBrandMenu : Menu
 	private string GetSkillUsageString(Skill skill, int skillNum)
 	{
 		string binding      = GetBindingForSkill(skillNum);
-		string requirements = "Requires " + skill.Cost() + " Adrenaline - " + skill.Cost() + " second".Pluralise(skill.Cost()) + " Cooldown";
+		string requirements = "Cooldown - " + skill.Cooldown + " second".Pluralise(skill.Cooldown);
 		return binding + " - " + requirements;
 	}
 
@@ -156,7 +156,7 @@ public class UiBrandMenu : Menu
 	private void ShowSkill(Skill skill, int skillNum)
 	{
 		_titleString   = skill.Name;
-		_benefitString = skill.Description();
+		_benefitString = skill.Description;
 		_quoteString   = GetSkillUsageString(skill, skillNum);
 		_instance.Show();
 	}

@@ -5,7 +5,6 @@ using System.Xml;
 using Extensions;
 using Facilitating.Persistence;
 using Game.Characters.Brands;
-
 using UnityEngine.Assertions;
 
 namespace Game.Characters
@@ -217,10 +216,8 @@ namespace Game.Characters
 		private void CreateOtherBrands()
 		{
 			new HealthRecoveryBrand(_player);
-			new WillRecoveryBrand(_player);
 			new AutomaticReloadBrand(_player);
 			new InstantReloadBrand(_player);
-			new AdrenalineUsedBrand(_player);
 		}
 
 		private void CreateResourceFindBrands()
@@ -249,15 +246,15 @@ namespace Game.Characters
 		public void IncreaseSkillsUsed()            => UpdateBrandValue(typeof(WillBrand),  1);
 		public void IncreaseRegionsExplored()       => UpdateBrandValue(typeof(GritBrand),  1);
 
-		public void IncreaseDamageTaken(int damage)    => UpdateBrandValue(typeof(HealthRecoveryBrand),  damage);
-		public void IncreaseEnemiesKilled()            => UpdateBrandValue(typeof(WillRecoveryBrand),    1);
-		public void IncreasePerfectReloadCount()       => UpdateBrandValue(typeof(AutomaticReloadBrand), 1);
-		public void IncreaseLastRoundKills()           => UpdateBrandValue(typeof(InstantReloadBrand),   1);
-		public void IncreaseResourceFound()            => UpdateBrandValue(typeof(ResourceBrand),        1);
-		public void IncreaseAdrenalineUsed(int amount) => UpdateBrandValue(typeof(AdrenalineUsedBrand),  amount);
-		public void IncreaseBurnCount()                => UpdateBrandValue(typeof(IgniteBrand),          1);
-		public void IncreaseShatterCount()             => UpdateBrandValue(typeof(DecayBrand),           1);
-		public void IncreaseVoidCount()                => UpdateBrandValue(typeof(VoidBrand),            1);
+		public void IncreaseDamageTaken(int damage) => UpdateBrandValue(typeof(HealthRecoveryBrand), damage);
+
+//todo		public void IncreaseEnemiesKilled()            => UpdateBrandValue(typeof(WillRecoveryBrand),    1);
+		public void IncreasePerfectReloadCount() => UpdateBrandValue(typeof(AutomaticReloadBrand), 1);
+		public void IncreaseLastRoundKills()     => UpdateBrandValue(typeof(InstantReloadBrand),   1);
+		public void IncreaseResourceFound()      => UpdateBrandValue(typeof(ResourceBrand),        1);
+		public void IncreaseBurnCount()          => UpdateBrandValue(typeof(IgniteBrand),          1);
+		public void IncreaseShatterCount()       => UpdateBrandValue(typeof(DecayBrand),           1);
+		public void IncreaseVoidCount()          => UpdateBrandValue(typeof(VoidBrand),            1);
 
 		public void UpdateBrandStatus(Brand brand)
 		{

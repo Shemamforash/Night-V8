@@ -7,18 +7,19 @@ namespace Game.Characters
 	public class AttributeModifier
 	{
 		public readonly List<CharacterAttribute> TargetAttributes = new List<CharacterAttribute>();
-		private         float                    _rawBonus;
+		private         float                    _value;
 
-		public void SetRawBonus(float rawBonus)
+		public float Value
 		{
-			_rawBonus = rawBonus;
-			UpdateTargetAttributes();
+			set
+			{
+				_value = value;
+				UpdateTargetAttributes();
+			}
+			get => _value;
 		}
 
-		private void UpdateTargetAttributes()
-		{
-			TargetAttributes.ForEach(t => t.Recalculate());
-		}
+		private void UpdateTargetAttributes() => TargetAttributes.ForEach(t => t.Recalculate());
 
 		private string ModifierToString(float modifier)
 		{
@@ -26,14 +27,5 @@ namespace Game.Characters
 			if (modifier != 0) modifierString = modifier.AddSignPrefix();
 			return modifierString;
 		}
-
-		public string RawBonusToString()
-		{
-			if (_rawBonus == 0) return "";
-			string rawBonusString = ModifierToString(_rawBonus * 100) + "%";
-			return rawBonusString;
-		}
-
-		public float RawBonus() => _rawBonus;
 	}
 }

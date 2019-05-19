@@ -13,7 +13,7 @@ namespace Game.Exploration.Weather
 	{
 		private static readonly List<string>      _weatherEventStrings;
 		private readonly        string            _displayName;
-		private readonly        int               _temperature, _duration;
+		private readonly        int               _duration;
 		private readonly        float             _visibility;
 		public readonly         WeatherAttributes Attributes;
 		public readonly         int               Thunder;
@@ -22,7 +22,6 @@ namespace Game.Exploration.Weather
 		public Weather(StateMachine weatherStates, XmlNode weatherNode) : base(weatherStates, weatherNode.ParseString("Name"))
 		{
 			_displayName = weatherNode.ParseString("DisplayName");
-			_temperature = weatherNode.ParseInt("Temperature");
 			_visibility  = weatherNode.ParseFloat("Visibility");
 			Thunder      = weatherNode.ParseInt("Thunder");
 			_duration    = weatherNode.ParseInt("Duration");
@@ -103,8 +102,6 @@ namespace Game.Exploration.Weather
 
 			return events.RandomElement();
 		}
-
-		public int Temperature() => _temperature;
 
 		public void Update()
 		{

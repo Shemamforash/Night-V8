@@ -23,14 +23,9 @@ namespace Game.Gear
 		{
 			_template = template;
 			_modifier = _template.GetModifier();
-			float finalBonus   = _modifier.FinalBonus();
-			float rawBonus     = _modifier.RawBonus();
-			int   tierModifier = (int) (quality + 1);
-			finalBonus *= tierModifier;
-			rawBonus   *= tierModifier;
-			_modifier.SetFinalBonus(finalBonus);
-			_modifier.SetRawBonus(rawBonus);
-			_inscriptionCost = (int) quality + 1;
+			int qualityModifier = (int) (quality + 1);
+			_modifier.Value  *= qualityModifier;
+			_inscriptionCost =  (int) quality + 1;
 		}
 
 		public AttributeModifier Modifier() => _modifier;
@@ -56,7 +51,7 @@ namespace Game.Gear
 		{
 			if (_readTemplates) return;
 			XmlNode inscriptions = Helper.OpenRootNode("Inscriptions");
-			foreach (XmlNode inscriptionNode in inscriptions.GetChildsWithName("Inscription"))
+			foreach (XmlNode inscriptionNode in inscriptions.SelectNodes("Inscription"))
 				new InscriptionTemplate(inscriptionNode);
 
 			_readTemplates = true;
@@ -111,12 +106,10 @@ namespace Game.Gear
 			base.CalculateDismantleRewards();
 			int quality = (int) Quality() + 1;
 			AddReward("Essence", 5 * quality);
-			if (NumericExtensions.RollDie(0, 6)) AddReward("Radiance", 1);
 		}
 
 		private class InscriptionTemplate
 		{
-			private readonly bool          _additive;
 			private readonly float         _modifierValue;
 			public readonly  AttributeType AttributeTarget;
 			public readonly  string        Name;
@@ -126,32 +119,22 @@ namespace Game.Gear
 				Name            = inscriptionNode.ParseString("Name");
 				AttributeTarget = Inventory.StringToAttributeType(inscriptionNode.ParseString("Attribute"));
 				_modifierValue  = inscriptionNode.ParseFloat("Value");
-				_additive       = inscriptionNode.ParseBool("Additive");
 				_inscriptionTemplates.Add(this);
 			}
 
 			public AttributeModifier GetModifier()
 			{
 				AttributeModifier modifier = new AttributeModifier();
-				if (_additive)
-				{
-					modifier.SetRawBonus(_modifierValue);
-				}
-				else
-				{
-					modifier.SetFinalBonus(_modifierValue);
-				}
-
+				modifier.Value = _modifierValue;
 				return modifier;
 			}
 
 			public string GetSummary(ItemQuality quality)
 			{
 				float  scaledValue          = _modifierValue * ((int) quality + 1);
-				string attributeName        = AttributeTarget.AttributeToDisplayString();
+				string attributeName        = AttributeTarget.ToString();
 				string prefix               = "";
 				if (scaledValue > 0) prefix = "+";
-				if (!_additive) return prefix + (int) (scaledValue * 100) + "% " + attributeName;
 				return prefix + (int) scaledValue + " " + attributeName;
 			}
 		}

@@ -17,8 +17,6 @@ using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Gear.Weapons;
 using Game.Global;
-
-
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -36,36 +34,35 @@ namespace Game.Combat.Player
 		public static PlayerCombat Instance;
 		public static bool         Alive;
 
-		private readonly Number              _adrenalineLevel = new Number(0, 0, 8);
-		private          float               _activeSkillDuration;
-		private          int                 _capacity;
-		private          int                 _compassPulses;
-		private          string              _controlText;
-		private          DeathReason         _currentDeathReason;
-		private          float               _currentReloadTime;
-		private          Coroutine           _dashCooldown;
-		private          float               _dashCooldownTime;
-		private          float               _initialReloadProgress;
-		private          Vector2?            _lastMousePosition;
-		private          Quaternion          _lastTargetRotation;
-		private          Camera              _mainCamera;
-		private          FastLight           _muzzleFlash;
-		public           FastLight           _playerLight;
-		private          bool                _recovered;
-		private          Coroutine           _reloadCoroutine;
-		private          float               _reloadDuration;
-		private          bool                _reloading;
-		private          float               _reloadProgress;
-		private          float               _rotateSpeedCurrent;
-		private          bool                _rotatingWithKeyboard;
-		private          float               _swivelAmount;
-		private          bool                _swivelling;
-		private          bool                _useKeyboardMovement = true;
-		public           BaseWeaponBehaviour _weaponBehaviour;
-		public           float               MuzzleFlashOpacity;
-		public           Action<Shot>        OnFireAction;
-		public           Characters.Player   Player;
-		public           List<Action>        UpdateSkillActions = new List<Action>();
+		private float             _activeSkillDuration;
+		private int               _capacity;
+		private int               _compassPulses;
+		private string            _controlText;
+		private DeathReason       _currentDeathReason;
+		private float             _currentReloadTime;
+		private Coroutine         _dashCooldown;
+		private float             _dashCooldownTime;
+		private float             _initialReloadProgress;
+		private Vector2?          _lastMousePosition;
+		private Quaternion        _lastTargetRotation;
+		private Camera            _mainCamera;
+		private FastLight         _muzzleFlash;
+		public  FastLight         _playerLight;
+		private bool              _recovered;
+		private Coroutine         _reloadCoroutine;
+		private float             _reloadDuration;
+		private bool              _reloading;
+		private float             _reloadProgress;
+		private float             _rotateSpeedCurrent;
+		private bool              _rotatingWithKeyboard;
+		private float             _swivelAmount;
+		private bool              _swivelling;
+		private bool              _useKeyboardMovement = true;
+		public  WeaponBehaviour   _weaponBehaviour;
+		public  float             MuzzleFlashOpacity;
+		public  Action<Shot>      OnFireAction;
+		public  Characters.Player Player;
+		public  List<Action>      UpdateSkillActions = new List<Action>();
 
 		public float InRange()
 		{
@@ -169,17 +166,6 @@ namespace Game.Combat.Player
 			InputHandler.UnregisterInputListener(this);
 		}
 
-		public bool ConsumeAdrenaline(int amount)
-		{
-			if (!CanAffordSkill(amount)) return false;
-			Player.BrandManager.IncreaseAdrenalineUsed(amount);
-			_adrenalineLevel.Increment(-amount);
-			RageBarController.SetRageBarFill(_adrenalineLevel.Normalised);
-			return true;
-		}
-
-		public bool CanAffordSkill(int amount) => amount <= _adrenalineLevel.CurrentValue;
-
 		private void Move(Vector2 direction) => MovementController.Move(direction);
 
 		protected override void Awake()
@@ -218,7 +204,7 @@ namespace Game.Combat.Player
 		private void TryEmitPulse()
 		{
 			if (_compassPulses == 0) return;
-			int compassBonus = Mathf.CeilToInt(Player.Attributes.Val(AttributeType.CompassBonus));
+			int compassBonus = Mathf.CeilToInt(Player.Attributes.CompassBonus);
 			if (!UiCompassController.EmitPulse(compassBonus)) return;
 			Player.Attributes.Get(AttributeType.Will).Increment(-1);
 			--_compassPulses;
@@ -348,11 +334,8 @@ namespace Game.Combat.Player
 
 		public void UpdateAdrenaline(int damageDealt)
 		{
-			float environmentModifier = (float) EnvironmentManager.CurrentEnvironmentType + 1;
-			float dps                 = _weaponBehaviour.Weapon.WeaponAttributes.DPS() / environmentModifier;
-			_adrenalineLevel.Increment(dps                                             / 1600f);
 			Player.BrandManager.IncreaseDamageDealt(damageDealt);
-			RageBarController.SetRageBarFill(_adrenalineLevel.Normalised);
+			SkillBar.DecreaseCooldown(Player.Weapon.WeaponAttributes);
 		}
 
 		private void UpdateMuzzleFlash()
@@ -395,7 +378,7 @@ namespace Game.Combat.Player
 
 			base.TakeDamage(damage, direction);
 			TryExplode();
-			Player.Attributes.CalculateNewLife(HealthController.GetCurrentHealth());
+			Player.Attributes.HealthToLife(HealthController.GetCurrentHealth());
 		}
 
 		private void TryExplode()
@@ -434,12 +417,12 @@ namespace Game.Combat.Player
 		public void RecalculateAttributes()
 		{
 			int currentHealth                                                   = (int) HealthController.GetCurrentHealth();
-			int maxHealth                                                       = Player.Attributes.CalculateMaxHealth();
+			int maxHealth                                                       = Player.Attributes.MaxHealth();
 			if (HealthController.GetNormalisedHealthValue() == 1) currentHealth = maxHealth;
 			HealthController.SetInitialHealth(currentHealth, this, maxHealth);
-			MovementController.SetSpeed(Player.Attributes.CalculateSpeed());
+			MovementController.SetSpeed(Player.Attributes.Speed());
 			SkillBar.UpdateSkills();
-			_dashCooldownTime = Player.Attributes.CalculateDashCooldown();
+			_dashCooldownTime = Player.Attributes.DashCooldown();
 		}
 
 		private void EquipArmour()
@@ -475,7 +458,7 @@ namespace Game.Combat.Player
 
 		public void RecalculateHealth()
 		{
-			HealthController.SetInitialHealth(Player.Attributes.CalculateInitialHealth(), this, Player.Attributes.CalculateMaxHealth());
+			HealthController.SetInitialHealth(Player.Attributes.Health(), this, Player.Attributes.MaxHealth());
 		}
 
 
@@ -489,7 +472,6 @@ namespace Game.Combat.Player
 			EquipWeapon();
 			EquipArmour();
 			ResetCompass();
-			_adrenalineLevel.CurrentValue = 0f;
 
 			_playerLight        = GameObject.Find("Player Light").GetComponent<FastLight>();
 			_playerLight.Radius = CombatManager.Instance().VisibilityRange();
@@ -499,17 +481,7 @@ namespace Game.Combat.Player
 			playerTransform.position = WorldGrid.PlayerStartPosition();
 			float zRot = AdvancedMaths.AngleFromUp(playerTransform.position, Vector2.zero);
 			playerTransform.rotation = Quaternion.Euler(0f, 0f, zRot);
-
-			Sequence sequence = DOTween.Sequence();
-			sequence.AppendInterval(3f);
-			sequence.AppendCallback(() =>
-			{
-				if (CombatManager.Instance() == null) return;
-				Player.TryUnlockCharacterSkill(true);
-			});
 		}
-
-		public override float GetRecoilModifier() => _weaponBehaviour is AccuracyGainer ? 1 - base.GetRecoilModifier() : base.GetRecoilModifier();
 
 		public void Shake(float dps)
 		{

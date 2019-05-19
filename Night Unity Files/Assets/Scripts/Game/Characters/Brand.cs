@@ -38,7 +38,8 @@ namespace Game.Characters
 
 		public bool PlayerRequirementsMet(Player player)
 		{
-			if (_requiresSkillUnlock && player.CharacterSkillOne != null) return false;
+			//todo fix this
+			if (_requiresSkillUnlock && player.Weapon.SkillOne == null) return false;
 			return _minLevel <= (int) EnvironmentManager.CurrentEnvironmentType;
 		}
 
@@ -99,8 +100,8 @@ namespace Game.Characters
 
 		private void LoseAttributes()
 		{
-			CharacterAttribute life                      = Player.Attributes.Get(AttributeType.Life);
-			CharacterAttribute will                      = Player.Attributes.Get(AttributeType.Will);
+			CharacterAttribute life                      = Player.Attributes.Life;
+			CharacterAttribute will                      = Player.Attributes.Will;
 			if (life.CurrentValue > 1) life.CurrentValue = 1;
 			if (will.CurrentValue > 1) will.CurrentValue = 1;
 		}

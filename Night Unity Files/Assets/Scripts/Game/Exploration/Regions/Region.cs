@@ -19,27 +19,38 @@ namespace Game.Exploration.Regions
 {
 	public class Region : Node
 	{
-		private const  int        TimeToGenerateResource = 8 * WorldState.MinutesPerHour;
 		private static GameObject _nodePrefab;
 		private static int        _currentId;
 
-		private readonly List<int>                 _neighborIds = new List<int>();
-		public readonly  List<ContainerController> Containers   = new List<ContainerController>();
+		private readonly List<int> _neighborIds = new List<int>();
 
-		public readonly List<EnemyCampfire> Fires         = new List<EnemyCampfire>();
-		private         string              _claimBenefit = "";
-		private         bool                _discovered, _seen, _generated, _templeCleansed, _isDynamicRegion, _justDiscovered, _cleared;
-		private         MapNodeController   _mapNode;
+		private MapNodeController _mapNode;
+		private GameObject        _nodeObject;
+		private RegionType        _regionType;
+		private int               _size;
+		private bool              _discovered;
+		private bool              _seen;
+		private bool              _generated;
+		private bool              _templeCleansed;
+		private bool              _isDynamicRegion;
+		private bool              _justDiscovered;
+		private bool              _cleared;
 
-		private GameObject    _nodeObject;
-		private RegionType    _regionType;
-		private int           _size, _claimQuantity, _remainingTimeToGenerateResource;
-		public  List<Barrier> Barriers = new List<Barrier>();
-		public  Player        CharacterHere;
-		public  bool          MonumentUsed, FountainVisited, IsWeaponHere = true, RitesRemain = true, JournalIsHere;
-		public  string        Name;
-		public  Vector2?      RadianceStonePosition;
-		public  int           RegionID, WaterSourceCount, FoodSourceCount, ResourceSourceCount;
+		public readonly List<EnemyCampfire>       Fires      = new List<EnemyCampfire>();
+		public readonly List<ContainerController> Containers = new List<ContainerController>();
+
+		public List<Barrier> Barriers = new List<Barrier>();
+		public Player        CharacterHere;
+		public string        Name;
+		public int           RegionID;
+		public int           WaterSourceCount;
+		public int           FoodSourceCount;
+		public int           ResourceSourceCount;
+		public bool          MonumentUsed;
+		public bool          FountainVisited;
+		public bool          IsWeaponHere = true;
+		public bool          RitesRemain  = true;
+		public bool          JournalIsHere;
 
 		public Region() : base(Vector2.zero)
 		{
@@ -53,77 +64,11 @@ namespace Game.Exploration.Regions
 			Name            = "Cleansed Temple";
 		}
 
-		public string ClaimBenefitString()
-		{
-			if (!Claimed()) return "";
-			int    timeRemainingInHours = Mathf.CeilToInt(_remainingTimeToGenerateResource / (float) WorldState.MinutesPerHour);
-			string hourString           = timeRemainingInHours == 1 ? "hr" : "hrs";
-			return " +" + _claimQuantity + " " + _claimBenefit + " in " + timeRemainingInHours + hourString;
-		}
-
 		public void CheckForRegionExplored()
 		{
 			if (!_justDiscovered) return;
 			if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Tutorial) return;
 			PlayerCombat.Instance.Player.BrandManager.IncreaseRegionsExplored();
-		}
-
-		private void SetClaimResource()
-		{
-			switch (_regionType)
-			{
-				case RegionType.Shelter:
-					_claimBenefit  = ResourceTemplate.GetResource().Name;
-					_claimQuantity = 1;
-					break;
-				case RegionType.Temple:
-					_claimBenefit  = "Essence";
-					_claimQuantity = 2;
-					break;
-				case RegionType.Animal:
-					_claimBenefit  = "Meat";
-					_claimQuantity = 1;
-					break;
-				case RegionType.Danger:
-					_claimBenefit  = Random.Range(0, 2) == 0 ? "Water" : "Meat";
-					_claimQuantity = 1;
-					break;
-				case RegionType.Fountain:
-					_claimBenefit  = "Water";
-					_claimQuantity = 1;
-					break;
-				case RegionType.Monument:
-					_claimBenefit  = ResourceTemplate.GetResource().Name;
-					_claimQuantity = 1;
-					break;
-				case RegionType.Shrine:
-					_claimBenefit  = ResourceTemplate.GetResource().Name;
-					_claimQuantity = 1;
-					break;
-				case RegionType.Cache:
-					_claimBenefit  = ResourceTemplate.GetResource().Name;
-					_claimQuantity = 1;
-					break;
-			}
-		}
-
-		public void Claim(Vector2 position)
-		{
-			RadianceStonePosition            = position;
-			_remainingTimeToGenerateResource = TimeToGenerateResource;
-			int willGain = Mathf.FloorToInt(PlayerCombat.Instance.Player.Attributes.ClaimRegionWillGainModifier) > 0 ? 2 : 0;
-			PlayerCombat.Instance.Player.Attributes.Get(AttributeType.Will).Increment(willGain);
-		}
-
-		public bool Claimed() => RadianceStonePosition != null;
-
-		public void Update()
-		{
-			if (!Claimed()) return;
-			--_remainingTimeToGenerateResource;
-			if (_remainingTimeToGenerateResource != 0) return;
-			_remainingTimeToGenerateResource = TimeToGenerateResource;
-			Inventory.IncrementResource(_claimBenefit, _claimQuantity);
 		}
 
 		public static Region Load(XmlNode doc)
@@ -140,22 +85,17 @@ namespace Game.Exploration.Regions
 			region._seen       = doc.ParseBool("Seen");
 			region._cleared    = doc.ParseBool("Cleared");
 
-			region._size           = doc.ParseInt("Size");
-			region._justDiscovered = doc.ParseBool("JustDiscovered");
-			region._templeCleansed = doc.ParseBool("TempleCleansed");
-			string radianceStoneString                                  = doc.ParseString("RadianceStonePosition");
-			if (radianceStoneString != "") region.RadianceStonePosition = radianceStoneString.ToVector2();
-			region.WaterSourceCount                 = doc.ParseInt("WaterSourceCount");
-			region.FoodSourceCount                  = doc.ParseInt("FoodSourceCount");
-			region.ResourceSourceCount              = doc.ParseInt("ResourceSourceCount");
-			region.JournalIsHere                    = doc.ParseBool("JournalIsHere");
-			region.MonumentUsed                     = doc.ParseBool("MonumentUsed");
-			region._remainingTimeToGenerateResource = doc.ParseInt("ClaimRemaining");
-			region._claimQuantity                   = doc.ParseInt("ClaimQuantity");
-			region._claimBenefit                    = doc.ParseString("ClaimBenefit");
-			region.RitesRemain                      = doc.ParseBool("RitesRemaining");
-			region.FountainVisited                  = doc.ParseBool("FountainVisited");
-			region.IsWeaponHere                     = doc.ParseBool("IsWeaponHere");
+			region._size               = doc.ParseInt("Size");
+			region._justDiscovered     = doc.ParseBool("JustDiscovered");
+			region._templeCleansed     = doc.ParseBool("TempleCleansed");
+			region.WaterSourceCount    = doc.ParseInt("WaterSourceCount");
+			region.FoodSourceCount     = doc.ParseInt("FoodSourceCount");
+			region.ResourceSourceCount = doc.ParseInt("ResourceSourceCount");
+			region.JournalIsHere       = doc.ParseBool("JournalIsHere");
+			region.MonumentUsed        = doc.ParseBool("MonumentUsed");
+			region.RitesRemain         = doc.ParseBool("RitesRemaining");
+			region.FountainVisited     = doc.ParseBool("FountainVisited");
+			region.IsWeaponHere        = doc.ParseBool("IsWeaponHere");
 			int characterClassHere = doc.ParseInt("CharacterHere");
 			region.CharacterHere = characterClassHere == -1 ? null : CharacterManager.GenerateCharacter((CharacterClass) characterClassHere);
 			region.CheckIsDynamic();
@@ -171,25 +111,21 @@ namespace Game.Exploration.Regions
 			XmlNode neighborNode = regionNode.CreateChild("Neighbors");
 			foreach (Node n in Neighbors())
 				neighborNode.CreateChild("ID", ((Region) n).RegionID);
-			regionNode.CreateChild("Type",                  (int) _regionType);
-			regionNode.CreateChild("Discovered",            _discovered);
-			regionNode.CreateChild("JustDiscovered",        _justDiscovered);
-			regionNode.CreateChild("Seen",                  _seen);
-			regionNode.CreateChild("Cleared",               _cleared);
-			regionNode.CreateChild("Size",                  _size);
-			regionNode.CreateChild("TempleCleansed",        _templeCleansed);
-			regionNode.CreateChild("RadianceStonePosition", RadianceStonePosition == null ? "" : RadianceStonePosition.Value.ToNiceString());
-			regionNode.CreateChild("WaterSourceCount",      WaterSourceCount);
-			regionNode.CreateChild("FoodSourceCount",       FoodSourceCount);
-			regionNode.CreateChild("ResourceSourceCount",   ResourceSourceCount);
-			regionNode.CreateChild("JournalIsHere",         JournalIsHere);
-			regionNode.CreateChild("MonumentUsed",          MonumentUsed);
-			regionNode.CreateChild("ClaimRemaining",        _remainingTimeToGenerateResource);
-			regionNode.CreateChild("ClaimQuantity",         _claimQuantity);
-			regionNode.CreateChild("ClaimBenefit",          _claimBenefit);
-			regionNode.CreateChild("RitesRemaining",        RitesRemain);
-			regionNode.CreateChild("FountainVisited",       FountainVisited);
-			regionNode.CreateChild("IsWeaponHere",          IsWeaponHere);
+			regionNode.CreateChild("Type",                (int) _regionType);
+			regionNode.CreateChild("Discovered",          _discovered);
+			regionNode.CreateChild("JustDiscovered",      _justDiscovered);
+			regionNode.CreateChild("Seen",                _seen);
+			regionNode.CreateChild("Cleared",             _cleared);
+			regionNode.CreateChild("Size",                _size);
+			regionNode.CreateChild("TempleCleansed",      _templeCleansed);
+			regionNode.CreateChild("WaterSourceCount",    WaterSourceCount);
+			regionNode.CreateChild("FoodSourceCount",     FoodSourceCount);
+			regionNode.CreateChild("ResourceSourceCount", ResourceSourceCount);
+			regionNode.CreateChild("JournalIsHere",       JournalIsHere);
+			regionNode.CreateChild("MonumentUsed",        MonumentUsed);
+			regionNode.CreateChild("RitesRemaining",      RitesRemain);
+			regionNode.CreateChild("FountainVisited",     FountainVisited);
+			regionNode.CreateChild("IsWeaponHere",        IsWeaponHere);
 			int characterClassHere = CharacterHere == null ? -1 : (int) CharacterHere.CharacterTemplate.CharacterClass;
 			regionNode.CreateChild("CharacterHere", characterClassHere);
 		}
@@ -222,7 +158,7 @@ namespace Game.Exploration.Regions
 		private List<EnemyType> GenerateEncounter(List<EnemyType> allowedTypes)
 		{
 			List<EnemyType> templates = new List<EnemyType>();
-			if (Claimed() || !IsDynamic()) return templates;
+			if (!IsDynamic()) return templates;
 			if (!_cleared && _size == 0)
 			{
 				_size =  Mathf.CeilToInt(WorldState.Difficulty() / 2.5f);
@@ -236,7 +172,6 @@ namespace Game.Exploration.Regions
 
 		private List<EnemyType> GenerateAnimalEncounter()
 		{
-			if (Claimed()) return new List<EnemyType>();
 			List<EnemyType> animalTypes = new List<EnemyType>
 			{
 				EnemyType.Grazer,
@@ -261,7 +196,6 @@ namespace Game.Exploration.Regions
 			_regionType = regionType;
 			CheckIsDynamic();
 			Name = MapGenerator.GenerateName(_regionType);
-			SetClaimResource();
 			if (_regionType                         != RegionType.Shelter) return;
 			if (CharacterManager.AlternateCharacter != null) return;
 			CharacterHere = CharacterManager.GenerateRandomCharacter();

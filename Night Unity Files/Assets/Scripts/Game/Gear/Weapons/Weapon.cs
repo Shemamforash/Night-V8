@@ -1,6 +1,5 @@
 ﻿using System.Xml;
 using Extensions;
-using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -16,19 +15,16 @@ namespace Game.Gear.Weapons
 		private const   float            RangeMax = 5.5f;
 		public readonly Character        EquippedCharacter;
 		public readonly WeaponAttributes WeaponAttributes;
-		public readonly Skill            WeaponSkillOne, WeaponSkillTwo;
+		public          Skill            SkillOne, SkillTwo, SkillThree, SkillFour;
 
 		public Weapon(Character equippedCharacter)
 		{
 			EquippedCharacter = equippedCharacter;
 			WeaponAttributes  = new WeaponAttributes(this);
-			WeaponSkillOne    = WeaponSkills.GetWeaponSkillOne(this);
-			WeaponSkillTwo    = WeaponSkills.GetWeaponSkillTwo(this);
 		}
 
-		private Weapon(WeaponClass getRandomClass, ItemQuality quality)
+		private Weapon(ItemQuality quality, WeaponType weaponType)
 		{
-			throw new System.NotImplementedException();
 		}
 
 		public void Load(XmlNode root)
@@ -36,16 +32,15 @@ namespace Game.Gear.Weapons
 			WeaponAttributes.Load(root);
 		}
 
-		public XmlNode Save(XmlNode root)
+		public void Save(XmlNode root)
 		{
 			root = root.CreateChild("Weapon");
 			WeaponAttributes.Save(root);
-			return root;
 		}
 
-		public static Weapon Generate(ItemQuality quality) => new Weapon(WeaponClass.GetRandomClass(), quality);
+		public static Weapon Generate(ItemQuality quality, WeaponType weaponType) => new Weapon(quality, weaponType);
 
-		public static Weapon Generate(ItemQuality quality, WeaponClass weaponClass) => new Weapon(weaponClass, quality);
+		public WeaponType WeaponType() => Weapons.WeaponType.Pistol;
 
 		public float CalculateMinimumDistance()
 		{
@@ -64,9 +59,6 @@ namespace Game.Gear.Weapons
 
 		public string GetDisplayName()
 		{
-//            string displayName = Name;
-//            if (_inscription != null) displayName += " of " + _inscription.TemplateName();
-//            return displayName;
 			return "Gun";
 		}
 
@@ -82,14 +74,13 @@ namespace Game.Gear.Weapons
 			WeaponAttributes.RecalculateAttributeValues();
 		}
 
-
 		public float GetAttributeValue(AttributeType attributeType) => WeaponAttributes.Get(attributeType).CurrentValue;
 
 		public string GetSummary() => WeaponAttributes.DPS().Round(1) + "DPS";
 
-		public BaseWeaponBehaviour InstantiateWeaponBehaviour(CharacterCombat player)
+		public WeaponBehaviour InstantiateWeaponBehaviour(CharacterCombat player)
 		{
-			BaseWeaponBehaviour weaponBehaviour = player.gameObject.AddComponent<DefaultBehaviour>();
+			WeaponBehaviour weaponBehaviour = player.gameObject.GetComponent<WeaponBehaviour>();
 			weaponBehaviour.Initialise(player);
 			return weaponBehaviour;
 		}

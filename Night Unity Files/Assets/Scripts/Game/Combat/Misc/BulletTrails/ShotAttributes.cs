@@ -23,7 +23,6 @@ namespace Game.Combat.Misc
 		private          int             _condition = -1;
 		private          int             _damage, _damageDealt;
 		private          float           _finalDamageModifier = 1f;
-		private          bool            _noAdrenaline;
 		private          bool            _seekTarget;
 
 		private float _speed, _burnChance, _shatterChance, _voidChance, _accuracy, _knockBackForce, _knockBackModifier, _age, _seekModifier = 1;
@@ -218,12 +217,5 @@ namespace Game.Combat.Misc
 			Fired = true;
 			SetConditions();
 		}
-
-		public void NoAdrenaline()
-		{
-			_noAdrenaline = true;
-		}
-
-		public bool ShouldAddAdrenaline() => !_noAdrenaline;
 	}
 }

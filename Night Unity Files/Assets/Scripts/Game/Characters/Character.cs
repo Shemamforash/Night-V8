@@ -20,15 +20,15 @@ namespace Game.Characters
 			Weapon = new Weapon(this);
 		}
 
-		public virtual XmlNode Save(XmlNode doc)
+		public virtual XmlNode Save(XmlNode root)
 		{
-			doc = doc.CreateChild("Character");
-			doc.CreateChild("Name", Name);
-			XmlNode equipped = doc.CreateChild("EquippedItems");
+			root = root.CreateChild("Character");
+			root.CreateChild("Name", Name);
+			XmlNode equipped = root.CreateChild("EquippedItems");
 			Weapon.Save(equipped);
 			Armour.Save(equipped);
 			if (Accessory != null) equipped.CreateChild("Accessory", Accessory.ID());
-			return doc;
+			return root;
 		}
 
 		public virtual void Load(XmlNode root)

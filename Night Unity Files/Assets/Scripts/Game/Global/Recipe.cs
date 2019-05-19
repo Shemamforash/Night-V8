@@ -68,9 +68,6 @@ namespace Game.Global
 				case "BUILDING":
 					RecipeType = RecipeType.Building;
 					break;
-				case "FIRE":
-					RecipeType = RecipeType.Fire;
-					break;
 				case "RESOURCE":
 					RecipeType = RecipeType.Resource;
 					break;
@@ -155,8 +152,6 @@ namespace Game.Global
 				case RecipeType.Resource:
 					Inventory.IncrementResource(Name, _productQuantity);
 					break;
-				case RecipeType.Fire:
-					break;
 				case RecipeType.Upgrade:
 					++_craftingLevel;
 					break;
@@ -169,8 +164,6 @@ namespace Game.Global
 		{
 			bool validLevel = _levelNo <= (int) EnvironmentManager.CurrentEnvironmentType;
 			if (!validLevel) return false;
-			if (RecipeType == RecipeType.Fire) return true;
-			if (!Campfire.IsLit()) return false;
 			if (RecipeType        == RecipeType.Upgrade) return _levelNo == _craftingLevel + 1;
 			return _craftingLevel >= _levelNo;
 		}

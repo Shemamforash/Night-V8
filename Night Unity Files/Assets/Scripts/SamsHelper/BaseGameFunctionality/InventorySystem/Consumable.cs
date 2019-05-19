@@ -1,24 +1,39 @@
 ﻿using Game.Characters;
 using Game.Combat.Player;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
 	public class Consumable : ResourceItem
 	{
-		private Player _player;
+		private          Player             _player;
+		private          CharacterAttribute _attribute;
+		private readonly bool               _isCoreAttribute;
+		private readonly bool               _isPermanent;
 
-		public Consumable(ResourceTemplate template) : base(template) => Template = template;
-
-		private void ApplyEffect()
+		private Player Player
 		{
-			_player = CharacterManager.SelectedCharacter;
-			if (!Template.HasEffect) return;
-			if (Template.IsEffectPermanent)
-				ApplyPermanentEffect();
-			else
-				ApplyImpermanentEffect();
+			get => _player;
+			set
+			{
+				_player    = value;
+				_attribute = _player.Attributes.Get(Template.AttributeType);
+			}
+		}
 
+		public Consumable(ResourceTemplate template) : base(template)
+		{
+			Template         = template;
+			_isCoreAttribute = Template.AttributeType.IsCoreAttribute();
+			_isPermanent     = template.IsEffectPermanent;
+		}
+
+		private void TryApplyEffect()
+		{
+			Player = CharacterManager.SelectedCharacter;
+			if (!Template.HasEffect) return;
+			ApplyEffect();
 			if (!PlayerCombat.Instance) return;
 			switch (Template.AttributeType)
 			{
@@ -31,22 +46,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 			}
 		}
 
-		private void ApplyPermanentEffect()
+		private void ApplyEffect()
 		{
-			CharacterAttribute attribute = _player.Attributes.Get(Template.AttributeType);
-			if (!CharacterAttribute.IsCharacterAttribute(Template.AttributeType))
-			{
-				attribute.Increment(Template.EffectBonus);
-				return;
-			}
-
-			_player.Attributes.IncreaseAttribute(Template.AttributeType);
-		}
-
-		private void ApplyImpermanentEffect()
-		{
-			CharacterAttribute attribute = _player.Attributes.Get(Template.AttributeType);
-			attribute.Increment(Template.EffectBonus);
+			bool increaseMax = _isPermanent && _isCoreAttribute;
+			if (!increaseMax) _attribute.Increment(Template.EffectBonus);
+			else Player.Attributes.IncreaseAttribute(Template.AttributeType);
 		}
 
 		public void Consume()
@@ -55,11 +59,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 			if (Template.Name == "Mystic Shard")
 			{
 				Inventory.DecrementResource(Template.Name, 1);
-				_player.TravelAction.ReturnToHomeInstant(true);
+				Player.TravelAction.ReturnToHomeInstant(true);
 				return;
 			}
 
-			ApplyEffect();
+			TryApplyEffect();
 			Inventory.DecrementResource(Template.Name, 1);
 			if (PlayerCombat.Instance == null) return;
 			PlayerCombat.Instance.RecalculateAttributes();
@@ -67,18 +71,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
 		public bool CanConsume()
 		{
-			_player = CharacterManager.SelectedCharacter;
-			if (Template.Name == "Mystic Shard") return !_player.TravelAction.AtHome();
-			return Template.IsEffectPermanent ? CheckCanConsumePermanent() : CheckCanConsumeImpermanent();
-		}
-
-		private bool CheckCanConsumeImpermanent() => !_player.Attributes.Get(Template.AttributeType).ReachedMax;
-
-		private bool CheckCanConsumePermanent()
-		{
-			CharacterAttribute attribute = _player.Attributes.Get(Template.AttributeType);
-			if (CharacterAttribute.IsCharacterAttribute(Template.AttributeType)) return attribute.Max != 20;
-			return !attribute.ReachedMax && !attribute.ReachedMin;
+			Player = CharacterManager.SelectedCharacter;
+			if (Template.Name == "Mystic Shard") return !Player.TravelAction.AtHome();
+			if (_isCoreAttribute && _isPermanent) return _attribute.Max != 20;
+			return !_attribute.ReachedMax;
 		}
 	}
 }

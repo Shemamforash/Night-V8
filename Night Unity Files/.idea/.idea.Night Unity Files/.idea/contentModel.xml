@@ -1002,7 +1002,6 @@
         <e p="Scripts" t="Include">
           <e p="ActionProgressController.cs" t="Include" />
           <e p="ActiveSkillController.cs" t="Include" />
-          <e p="BetaController.cs" t="Include" />
           <e p="BossDeathController.cs" t="Include" />
           <e p="BossRingController.cs" t="Include" />
           <e p="BrandReplaceMenuController.cs" t="Include" />
@@ -1029,7 +1028,6 @@
               <e p="ThunderController.cs" t="Include" />
               <e p="VolumeController.cs" t="Include" />
             </e>
-            <e p="Campfire.cs" t="Include" />
             <e p="FireBurst.cs" t="Include" />
             <e p="MenuNavigation" t="Include">
               <e p="MainMenuNavigator.cs" t="Include" />
@@ -1290,7 +1288,6 @@
                 <e p="FootstepMaker.cs" t="Include" />
                 <e p="HealthController.cs" t="Include" />
                 <e p="ICombatEvent.cs" t="Include" />
-                <e p="Mine.cs" t="Include" />
                 <e p="SaltBehaviour.cs" t="Include" />
                 <e p="ShelterCharacterBehaviour.cs" t="Include" />
                 <e p="SickenBehaviour.cs" t="Include" />
@@ -1345,7 +1342,6 @@
                 <e p="TextReveal.cs" t="Include" />
               </e>
               <e p="Weather" t="Include">
-                <e p="TemperatureCategory.cs" t="Include" />
                 <e p="Weather.cs" t="Include" />
                 <e p="WeatherAttributes.cs" t="Include" />
                 <e p="WeatherManager.cs" t="Include" />
@@ -1367,17 +1363,9 @@
               <e p="Inscription.cs" t="Include" />
               <e p="ItemQuality.cs" t="Include" />
               <e p="Weapons" t="Include">
-                <e p="Behaviour" t="Include">
-                  <e p="AccuracyGainer.cs" t="Include" />
-                  <e p="BaseWeaponBehaviour.cs" t="Include" />
-                  <e p="Burstfire.cs" t="Include" />
-                  <e p="DefaultBehaviour.cs" t="Include" />
-                  <e p="DoubleFireDelay.cs" t="Include" />
-                </e>
                 <e p="Weapon.cs" t="Include" />
                 <e p="WeaponAttributes.cs" t="Include" />
-                <e p="WeaponClass.cs" t="Include" />
-                <e p="WeaponClassType.cs" t="Include" />
+                <e p="WeaponBehaviour.cs" t="Include" />
                 <e p="WeaponGenerationTester.cs" t="Include" />
                 <e p="WeaponGenerator.cs" t="Include" />
                 <e p="WeaponType.cs" t="Include" />
@@ -1390,6 +1378,7 @@
               <e p="DesolationAttributes.cs" t="Include" />
               <e p="GameController.cs" t="Include" />
               <e p="JournalEntry.cs" t="Include" />
+              <e p="MiscHelper.cs" t="Include" />
               <e p="Recipe.cs" t="Include" />
               <e p="RecipeType.cs" t="Include" />
               <e p="ResourceTab.cs" t="Include" />
@@ -1429,7 +1418,6 @@
           <e p="NeedleBehaviour.cs" t="Include" />
           <e p="PauseMenuController.cs" t="Include" />
           <e p="PostProcessInvertColour.cs" t="Include" />
-          <e p="RadianceController.cs" t="Include" />
           <e p="RegionClearController.cs" t="Include" />
           <e p="ReloadController.cs" t="Include" />
           <e p="SamsHelper" t="Include">
@@ -1443,12 +1431,9 @@
                 <e p="FaceVelocity.cs" t="Include" />
                 <e p="FollowMouse.cs" t="Include" />
                 <e p="ObjectPool.cs" t="Include" />
-                <e p="ScaleableValue.cs" t="Include" />
               </e>
               <e p="CooldownSystem" t="Include">
-                <e p="Cooldown.cs" t="Include" />
                 <e p="CooldownController.cs" t="Include" />
-                <e p="CooldownManager.cs" t="Include" />
               </e>
               <e p="InventorySystem" t="Include">
                 <e p="Consumable.cs" t="Include" />

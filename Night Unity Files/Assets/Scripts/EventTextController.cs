@@ -16,7 +16,6 @@ public class EventTextController : MonoBehaviour
 	private        TextMeshProUGUI     _eventText;
 	private        bool                _overridingText;
 	private        PlayerCombat        _player;
-	private        RadianceController  _radianceController;
 	private        Sequence            _revealSequence;
 
 	private void Awake()
@@ -34,7 +33,6 @@ public class EventTextController : MonoBehaviour
 
 	private void Start()
 	{
-		_radianceController = RadianceController.Instance();
 		_player             = PlayerCombat.Instance;
 	}
 
@@ -75,14 +73,12 @@ public class EventTextController : MonoBehaviour
 	//container
 	//shrine
 	//outer ring
-	//radiance
 	private void DoCheckForPointsOfInterest()
 	{
 		if (CheckForNearbyContainer()) return;
 		if (CheckForNearbyRite()) return;
 		if (CheckForNearbyShrines()) return;
 		if (CheckForOuterRing()) return;
-		if (CheckForRadiance()) return;
 		_currentCombatEvent = null;
 		if (_canvasGroup.alpha == 0) return;
 		_canvasGroup.DOFade(0, 0.5f);
@@ -120,13 +116,6 @@ public class EventTextController : MonoBehaviour
 		_revealSequence = DOTween.Sequence();
 		_revealSequence.AppendCallback(() => _overridingText = true);
 		_revealSequence.Append(_canvasGroup.DOFade(1f, 1f));
-	}
-
-	private bool CheckForRadiance()
-	{
-		if (_radianceController.InRange() < 0) return false;
-		SetCurrentCombatEvent(_radianceController);
-		return true;
 	}
 
 	private bool CheckForOuterRing()

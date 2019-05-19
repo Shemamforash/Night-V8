@@ -19,22 +19,22 @@ namespace Facilitating.UIControllers
 
 		public void UpdateAttributesOffset(Player player, AttributeType attributeType, float offset)
 		{
-			UpdateMarker(_lifeMarker, player, AttributeType.Life, attributeType == AttributeType.Life ? offset : 0);
-			UpdateMarker(_willMarker, player, AttributeType.Will, attributeType == AttributeType.Will ? offset : 0);
+			UpdateMarker(_lifeMarker, player.Attributes.Life, attributeType == AttributeType.Life ? offset : 0);
+			UpdateMarker(_willMarker, player.Attributes.Will, attributeType == AttributeType.Will ? offset : 0);
 		}
 
-		private void UpdateMarker(UIAttributeMarkerController marker, Player player, AttributeType attributeType, float offset = 0)
+		private void UpdateMarker(UIAttributeMarkerController marker, CharacterAttribute attribute, float offset = 0)
 		{
-			if (player == null || marker == null) return;
-			float current = player.Attributes.Val(attributeType);
-			float max     = player.Attributes.Max(attributeType);
+			float current = attribute.CurrentValue;
+			float max     = attribute.Max;
 			marker.SetValue(max, current, offset);
 		}
 
 		public void UpdateAttributes(Player player)
 		{
-			UpdateMarker(_lifeMarker, player, AttributeType.Life);
-			UpdateMarker(_willMarker, player, AttributeType.Will);
+			if (player == null) return;
+			UpdateMarker(_lifeMarker, player.Attributes.Life);
+			UpdateMarker(_willMarker, player.Attributes.Will);
 		}
 	}
 }

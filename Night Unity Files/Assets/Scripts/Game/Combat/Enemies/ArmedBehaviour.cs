@@ -13,7 +13,7 @@ namespace Game.Combat.Enemies
 		private Cell                _coverCell;
 		private float               _fireTime;
 		private bool                _waitingForHeal;
-		private BaseWeaponBehaviour _weaponBehaviour;
+		private WeaponBehaviour _weaponBehaviour;
 
 		public override void Initialise(Enemy enemy)
 		{

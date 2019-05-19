@@ -29,15 +29,8 @@ namespace Game.Combat.Enemies
 		protected virtual void UpdateRotation()
 		{
 			Vector2 targetPosition;
-			if (GetTarget() != null)
-			{
-				targetPosition = TargetPosition();
-			}
-			else
-			{
-				targetPosition = transform.position + (Vector3) GetComponent<Rigidbody2D>().velocity;
-			}
-
+			if (GetTarget() != null) targetPosition = TargetPosition();
+			else targetPosition                     = transform.position + (Vector3) GetComponent<Rigidbody2D>().velocity;
 			float targetRotation = AdvancedMaths.AngleFromUp(transform.position, targetPosition);
 			transform.rotation = Quaternion.Euler(new Vector3(0, 0, targetRotation));
 		}
@@ -82,7 +75,7 @@ namespace Game.Combat.Enemies
 			float healthBefore = HealthController.GetCurrentHealth();
 			base.TakeShotDamage(shot);
 			if (HealthController.GetCurrentHealth() != 0 || healthBefore == 0) return;
-			PlayerCombat.Instance.Player.IncreaseKills();
+//			PlayerCombat.Instance.Player.IncreaseKills();
 		}
 
 		public override void Kill()

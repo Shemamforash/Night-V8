@@ -3,8 +3,6 @@ using System.Xml;
 using Extensions;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
-
-
 using SamsHelper;
 using UnityEngine;
 
@@ -20,6 +18,9 @@ namespace Game.Combat.Player
 		private         Transform    _playerTransform;
 		private         SkillValue   _skillValue;
 
+		public string Description => _skillValue.Description;
+		public int    Duration    => _skillValue.Duration;
+		public int    Cooldown    => _skillValue.Cooldown;
 
 		protected Skill(string name)
 		{
@@ -37,8 +38,6 @@ namespace Game.Combat.Player
 			s._skillValue = value;
 		}
 
-		public string Description() => _skillValue.Description;
-
 		private static void LoadTemplates()
 		{
 			if (_loaded) return;
@@ -53,9 +52,8 @@ namespace Game.Combat.Player
 		protected Transform    PlayerTransform() => _playerTransform;
 		protected Vector2      PlayerPosition()  => _playerTransform.position;
 
-		public bool Activate(bool freeSkill)
+		public bool Activate()
 		{
-			if (!freeSkill && !PlayerCombat.Instance.ConsumeAdrenaline(Cost())) return false;
 			AchievementManager.Instance().IncreaseSkillsUsed();
 			_player          = PlayerCombat.Instance;
 			_playerTransform = _player.transform;
@@ -75,12 +73,11 @@ namespace Game.Combat.Player
 			return true;
 		}
 
-		public bool CanAfford() => PlayerCombat.Instance.CanAffordSkill(Cost());
-
-		protected void Heal(float percent)
+		protected static void Heal(float percent)
 		{
-			int healAmount = Mathf.CeilToInt(percent * PlayerCombat.Instance.HealthController.GetMaxHealth());
-			PlayerCombat.Instance.HealthController.Heal(healAmount);
+			HealthController healthController = PlayerCombat.Instance.HealthController;
+			int              healAmount       = Mathf.CeilToInt(percent * healthController.GetMaxHealth());
+			healthController.Heal(healAmount);
 		}
 
 		protected virtual void PassiveEffect(Shot s)
@@ -91,19 +88,17 @@ namespace Game.Combat.Player
 		{
 		}
 
-		public int Cost() => _skillValue.Cost;
-
 		private class SkillValue
 		{
-			public readonly int    Cost;
 			public readonly string Description;
-			public readonly float  Duration;
+			public readonly int    Cooldown;
+			public readonly int    Duration;
 
 			public SkillValue(XmlNode skillNode)
 			{
 				string name = skillNode.ParseString("Name");
-				Duration           = skillNode.ParseFloat("Duration");
-				Cost               = skillNode.ParseInt("Cost");
+				Duration           = skillNode.ParseInt("Duration");
+				Cooldown           = skillNode.ParseInt("Cost");
 				Description        = skillNode.ParseString("Description");
 				_skillValues[name] = this;
 			}

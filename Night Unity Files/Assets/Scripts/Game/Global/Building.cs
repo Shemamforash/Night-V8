@@ -98,8 +98,7 @@ namespace Game.Global
 
 		public override void OnUpdate()
 		{
-			string resource = EnvironmentManager.GetTemperature() <= 0 ? "Ice" : "Water";
-			if (WeatherManager.CurrentWeather().Attributes.RainAmount > 0) Inventory.IncrementResource(resource, 1);
+			if (WeatherManager.CurrentWeather().Attributes.RainAmount > 0) Inventory.IncrementResource("Water", 1);
 		}
 	}
 

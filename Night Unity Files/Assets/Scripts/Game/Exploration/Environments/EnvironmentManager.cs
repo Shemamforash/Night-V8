@@ -14,7 +14,6 @@ namespace Game.Exploration.Environment
 		private static          bool                                     _loaded;
 		private static readonly Dictionary<EnvironmentType, Environment> _environments = new Dictionary<EnvironmentType, Environment>();
 		private static          Environment                              _currentEnvironment;
-		private static          TemperatureCategory                      _temperatureCategory;
 		private static          EnvironmentType                          _currentEnvironmentType;
 
 		public static Environment CurrentEnvironment => _currentEnvironment;
@@ -27,7 +26,6 @@ namespace Game.Exploration.Environment
 
 		public static void Start()
 		{
-			UpdateTemperature();
 			WorldView.SetEnvironmentText(Environment.EnvironmentTypeToName(_currentEnvironment.EnvironmentType));
 			SceneryController.UpdateEnvironmentBackground();
 		}
@@ -106,44 +104,6 @@ namespace Game.Exploration.Environment
 
 			_loaded = true;
 		}
-
-		public static void UpdateTemperature()
-		{
-			int temperature = CalculateTemperature();
-			if (temperature < -20)
-			{
-				_temperatureCategory = TemperatureCategory.Freezing;
-			}
-			else if (temperature < 0)
-			{
-				_temperatureCategory = TemperatureCategory.Cold;
-			}
-			else if (temperature < 20)
-			{
-				_temperatureCategory = TemperatureCategory.Warm;
-			}
-			else if (temperature < 40)
-			{
-				_temperatureCategory = TemperatureCategory.Hot;
-			}
-			else
-			{
-				_temperatureCategory = TemperatureCategory.Burning;
-			}
-
-			WorldView.SetTemperatureText(_temperatureCategory.ToString());
-		}
-
-		public static TemperatureCategory GetTemperature() => _temperatureCategory;
-
-		private static int CalculateTemperature()
-		{
-			Environment     currentEnvironment = _currentEnvironment;
-			Weather.Weather currentWeather     = WeatherManager.CurrentWeather();
-			return currentEnvironment.GetTemperature() + currentWeather.Temperature();
-		}
-
-		public static bool BelowFreezing() => _temperatureCategory == TemperatureCategory.Cold || _temperatureCategory == TemperatureCategory.Freezing;
 
 		public static void Save(XmlNode doc)
 		{

@@ -89,7 +89,7 @@ namespace Game.Combat.Misc
 			_timeToRecoilRecovery = 0.5f;
 		}
 
-		public virtual float GetRecoilModifier() => Recoil.CurrentValue;
+		public float GetRecoilModifier() => Recoil.CurrentValue;
 
 		public void SetTarget(CanTakeDamage target)
 		{

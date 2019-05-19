@@ -36,7 +36,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 			_buildings.Clear();
 #if UNITY_EDITOR
 //            IncrementResource("Salt", 20);
-//            IncrementResource("Radiance", 20);
 //            IncrementResource("Fuel", 20);
 //            IncrementResource("Water", 20);
 //            IncrementResource("Essence", 20);

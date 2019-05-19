@@ -12,7 +12,7 @@ namespace Game.Combat.Generation
 		{
 			int          capacity = Random.Range(0, 2);
 			ResourceItem resource = ResourceTemplate.GetWater().Create();
-			if (EnvironmentManager.BelowFreezing() && resource.Name == "Water")
+			if (EnvironmentManager.CurrentEnvironmentType == EnvironmentType.Mountains && resource.Name == "Water")
 			{
 				resource = ResourceTemplate.Create("Ice");
 			}

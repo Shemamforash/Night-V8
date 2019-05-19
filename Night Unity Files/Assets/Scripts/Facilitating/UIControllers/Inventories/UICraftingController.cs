@@ -11,7 +11,6 @@ using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Global;
 using Game.Global.Tutorial;
-
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -172,7 +171,6 @@ public class UICraftingController : UiInventoryMenuController
 	private static List<object> GetAvailableRecipes()
 	{
 		List<Recipe> recipes = Recipe.Recipes();
-		if (Campfire.IsLit()) recipes.RemoveAll(r => r.RecipeType == RecipeType.Fire);
 		recipes.Sort((a, b) =>
 		{
 			if ((int) a.RecipeType < (int) b.RecipeType) return -1;

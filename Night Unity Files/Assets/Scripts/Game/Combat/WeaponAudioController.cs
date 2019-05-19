@@ -37,7 +37,7 @@ public class WeaponAudioController : MonoBehaviour
 
 	public void StartReload(Weapon weapon)
 	{
-		WeaponType weaponType = weapon.WeaponAttributes.WeaponType;
+		WeaponType weaponType = weapon.WeaponType();
 		AudioClip  clip;
 		switch (weaponType)
 		{
@@ -62,7 +62,7 @@ public class WeaponAudioController : MonoBehaviour
 
 	public void StopReload(Weapon weapon)
 	{
-		WeaponType weaponType = weapon.WeaponAttributes.WeaponType;
+		WeaponType weaponType = weapon.WeaponType();
 		AudioClip  clip;
 		switch (weaponType)
 		{
@@ -89,7 +89,7 @@ public class WeaponAudioController : MonoBehaviour
 	{
 		AudioClip[] shots       = null;
 		AudioClip[] casings     = null;
-		WeaponType  weaponType  = weapon.WeaponAttributes.WeaponType;
+		WeaponType  weaponType  = weapon.WeaponType();
 		float       maxVolume   = 0.8f;
 		float       minDistance = 1f;
 		switch (weaponType)

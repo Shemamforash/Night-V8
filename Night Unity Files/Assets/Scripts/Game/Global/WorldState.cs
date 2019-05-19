@@ -106,7 +106,6 @@ namespace Game.Global
 			WorldEventManager.Load(doc);
 			JournalEntry.Load(doc);
 			TutorialManager.Load(doc);
-			Campfire.Load(doc);
 			UiGearMenuController.Load(doc);
 			_timeAtLastSave = 0;
 		}
@@ -134,7 +133,6 @@ namespace Game.Global
 			WorldEventManager.Save(doc);
 			JournalEntry.Save(doc);
 			TutorialManager.Save(doc);
-			Campfire.Save(doc);
 			UiGearMenuController.Save(doc);
 			_timeAtLastSave = 0;
 		}
@@ -257,10 +255,7 @@ namespace Game.Global
 		private static void MinutePasses()
 		{
 			WeatherManager.CurrentWeather().Update();
-			EnvironmentManager.UpdateTemperature();
-			MapGenerator.DiscoveredRegions().ForEach(r => r.Update());
 			CharacterManager.Update();
-			Campfire.Die();
 			++MinutesPassed;
 		}
 
