@@ -29,16 +29,12 @@ namespace Game.Exploration.Environment
 		private readonly List<Tuple<Region, Region>>  _allRoutes     = new List<Tuple<Region, Region>>();
 		private readonly List<RingDrawer>             _rings         = new List<RingDrawer>();
 		private readonly Queue<Tuple<Region, Region>> _undrawnRoutes = new Queue<Tuple<Region, Region>>();
-		private          bool                         _canTeleport;
 		private          float                        _currentTime;
 		private          bool                         _isActive;
 		private          UIAttributeMarkerController  _lifeMarker;
 		private          Region                       _nearestRegion;
 		private          float                        _nextRouteTime;
 		private          bool                         _seenTutorial;
-		private          string                       _teleportControlText;
-		private          EnhancedText                 _teleportText;
-		private          Tweener                      _teleportTween;
 		public           Transform                    MapTransform;
 		private          List<Region>                 route;
 
@@ -58,9 +54,6 @@ namespace Game.Exploration.Environment
 					break;
 				case InputAxis.Fire:
 					TravelToRegion();
-					break;
-				case InputAxis.Compass:
-					TryTeleport();
 					break;
 				case InputAxis.Cancel:
 					if (CharacterReturning == null && !TutorialManager.Instance.IsTutorialVisible())
@@ -84,7 +77,6 @@ namespace Game.Exploration.Environment
 		{
 			base.Awake();
 			_lifeMarker    = gameObject.FindChildWithName("Life").FindChildWithName<UIAttributeMarkerController>("Bar");
-			_teleportText  = gameObject.FindChildWithName<EnhancedText>("Teleport");
 			_nextRouteTime = 2f / MapGenerator.Regions().Count;
 			MapTransform   = GameObject.Find("Nodes").transform;
 			_instance      = this;
@@ -92,17 +84,7 @@ namespace Game.Exploration.Environment
 			CreateRouteLinks();
 		}
 
-		public void Start()
-		{
-			MenuStateMachine.RegisterMenu(this);
-			ControlTypeChangeListener controlTypeChangeListener = GetComponent<ControlTypeChangeListener>();
-			controlTypeChangeListener.SetOnControllerInputChange(UpdateText);
-		}
-
-		private void UpdateText()
-		{
-			_teleportControlText = InputHandler.GetBindingForKey(InputAxis.Compass);
-		}
+		public void Start() => MenuStateMachine.RegisterMenu(this);
 
 		private void OnDestroy()
 		{
@@ -120,7 +102,6 @@ namespace Game.Exploration.Environment
 			base.Enter();
 			_isActive = true;
 			_rings.ForEach(r => r.TweenColour(UiAppearanceController.InvisibleColour, Color.white, 0.5f));
-			UpdateTeleportText();
 			MapGenerator.Regions().ForEach(n => { n.ShowNode(_player); });
 			MapMovementController.Instance().Enter(_player);
 			AudioController.FadeInMusicMuffle();
@@ -145,41 +126,6 @@ namespace Game.Exploration.Environment
 		public override void PreEnter()
 		{
 			UpdateLife();
-		}
-
-		private void UpdateTeleportText()
-		{
-			int stoneQuantity = Inventory.GetResourceQuantity("Mystic Shard");
-			_canTeleport = stoneQuantity > 0;
-			string teleportString            = "No Mystic Shards";
-			if (_canTeleport) teleportString = "Teleport [" + _teleportControlText + "] (Consumes 1 Mystic Shard)";
-			_teleportText.SetText(teleportString);
-		}
-
-		private void TryTeleport()
-		{
-			Region region = _nearestRegion;
-			if (region == null) return;
-			if (!_canTeleport) return;
-			Inventory.DecrementResource("Mystic Shard", 1);
-			if (region.GetRegionType() == RegionType.Gate)
-			{
-				_player.TravelAction.ReturnToHomeInstant(true);
-			}
-			else
-			{
-				_player.TravelAction.TravelToInstant(region);
-			}
-
-			CharacterReturning = null;
-			Exit();
-		}
-
-		public void FadeTeleportText()
-		{
-			_teleportTween?.Kill();
-			float target = _nearestRegion == null ? 0f : 1f;
-			_teleportTween = _teleportText.GetText().DOFade(target, 1f);
 		}
 
 		private void ShowMapTutorial()

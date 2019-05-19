@@ -56,13 +56,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 		public void Consume()
 		{
 			if (!CanConsume()) return;
-			if (Template.Name == "Mystic Shard")
-			{
-				Inventory.DecrementResource(Template.Name, 1);
-				Player.TravelAction.ReturnToHomeInstant(true);
-				return;
-			}
-
 			TryApplyEffect();
 			Inventory.DecrementResource(Template.Name, 1);
 			if (PlayerCombat.Instance == null) return;
@@ -72,7 +65,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 		public bool CanConsume()
 		{
 			Player = CharacterManager.SelectedCharacter;
-			if (Template.Name == "Mystic Shard") return !Player.TravelAction.AtHome();
 			if (_isCoreAttribute && _isPermanent) return _attribute.Max != 20;
 			return !_attribute.ReachedMax;
 		}

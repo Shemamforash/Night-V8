@@ -70,7 +70,7 @@ namespace Game.Combat.Enemies
 					break;
 			}
 
-			Weapon weapon = WeaponGenerator.GenerateWeapon(possibleTypes.RandomElement());
+			Weapon weapon = WeaponGenerator.Generate(possibleTypes.RandomElement());
 			//todo generate enemy weapon
 		}
 

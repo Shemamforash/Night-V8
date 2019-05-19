@@ -45,7 +45,7 @@ namespace Game.Gear.Weapons
 			Weapon minWeapon  = null;
 			for (int i = 0; i < TestRuns; ++i)
 			{
-				Weapon w = WeaponGenerator.GenerateWeapon(quality, type);
+				Weapon w = WeaponGenerator.Generate(quality, type);
 				DesiredStats.ForEach(stat => _attributeStats[stat].AddValue(w));
 				float dps = w.WeaponAttributes.DPS();
 				averageDps += dps;

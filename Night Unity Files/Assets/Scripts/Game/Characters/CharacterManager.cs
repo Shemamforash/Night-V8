@@ -135,7 +135,7 @@ namespace Game.Characters
 		{
 			Wanderer = GenerateCharacter(CharacterClass.Wanderer);
 			Templates.Remove(Wanderer.CharacterTemplate);
-			Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Dark, WeaponType.Pistol);
+			Weapon weapon = WeaponGenerator.Generate(ItemQuality.Dark, WeaponType.Pistol);
 			//todo generate wanderer weapon
 		}
 
@@ -156,7 +156,7 @@ namespace Game.Characters
 				Assert.IsFalse(Templates.Any(t => t.CharacterClass == CharacterClass.Wanderer));
 
 			Player playerCharacter = GenerateCharacterObject(newTemplate);
-			Weapon weapon          = WeaponGenerator.GenerateWeapon();
+			Weapon weapon          = WeaponGenerator.Generate();
 			//todo generate character weapon
 			return playerCharacter;
 		}

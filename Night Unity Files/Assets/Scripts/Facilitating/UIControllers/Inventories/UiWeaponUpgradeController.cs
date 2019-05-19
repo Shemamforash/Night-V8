@@ -21,9 +21,9 @@ namespace Facilitating.UIControllers
 		public static bool                   Locked;
 		private       Weapon                 _equippedWeapon;
 		private       GameObject             _infoGameObject;
-		private       EnhancedButton         _infuseButton, _channelButton;
+		private       EnhancedButton         _infuseButton;
 		private       ListController         _inscriptionList;
-		private       bool                   _seenAttributeTutorial, _seenChannelTutorial, _seenInfuseTutorial;
+		private       bool                   _seenAttributeTutorial, _seenInfuseTutorial;
 		private       bool                   _upgradingAllowed;
 		private       WeaponDetailController _weaponDetail;
 
@@ -34,7 +34,6 @@ namespace Facilitating.UIControllers
 			_inscriptionList = gameObject.FindChildWithName<ListController>("Inscription List");
 			_weaponDetail    = gameObject.FindChildWithName<WeaponDetailController>("Stats");
 			_infuseButton    = gameObject.FindChildWithName<EnhancedButton>("Inscribe");
-			_channelButton   = gameObject.FindChildWithName<EnhancedButton>("Infuse");
 			_infoGameObject  = gameObject.FindChildWithName("Info");
 
 #if UNITY_EDITOR
@@ -56,7 +55,6 @@ namespace Facilitating.UIControllers
 				_inscriptionList.Show();
 				_infoGameObject.SetActive(false);
 			});
-			_channelButton.AddOnClick(Channel);
 		}
 
 		protected override void Initialise()
@@ -82,19 +80,6 @@ namespace Facilitating.UIControllers
 				return string.Compare(a.Name, b.Name, StringComparison.InvariantCulture);
 			});
 			return inscriptions.ToObjectList();
-		}
-
-		private void Channel()
-		{
-			WeaponAttributes attributes = CharacterManager.SelectedCharacter.Weapon.WeaponAttributes;
-			if (!attributes.CanIncreaseUpgradeLevel()) return;
-			if (Inventory.GetResourceQuantity("Essence") == 0) return;
-			UiGearMenuController.PlayAudio(AudioClips.Channel);
-			Inventory.DecrementResource("Essence", 10);
-			attributes.IncreaseUpgradeLevel();
-			_weaponDetail.UpdateWeaponInfo();
-			UpdateWeaponActions();
-			SelectButton(_channelButton);
 		}
 
 		protected override void OnShow()
@@ -125,19 +110,6 @@ namespace Facilitating.UIControllers
 			_seenAttributeTutorial = true;
 		}
 
-		private IEnumerator ShowChannelTutorial()
-		{
-			if (_seenChannelTutorial) yield break;
-			if (!_channelButton.gameObject.activeInHierarchy) yield break;
-			TutorialOverlay overlay = new TutorialOverlay(_channelButton.GetComponent<RectTransform>());
-			if (TutorialManager.Instance.TryOpenTutorial(17, overlay))
-			{
-				while (TutorialManager.Instance.IsTutorialVisible()) yield return null;
-			}
-
-			_seenChannelTutorial = true;
-		}
-
 		private IEnumerator ShowInfuseTutorial()
 		{
 			if (_seenInfuseTutorial) yield break;
@@ -154,9 +126,8 @@ namespace Facilitating.UIControllers
 		private IEnumerator TryShowWeaponTutorial()
 		{
 			if (!TutorialManager.Active()) yield break;
-			if (_seenAttributeTutorial && _seenInfuseTutorial && _seenChannelTutorial) yield break;
+			if (_seenAttributeTutorial && _seenInfuseTutorial) yield break;
 			yield return StartCoroutine(ShowWeaponAttributeTutorial());
-			yield return StartCoroutine(ShowChannelTutorial());
 			yield return StartCoroutine(ShowInfuseTutorial());
 		}
 
@@ -192,9 +163,7 @@ namespace Facilitating.UIControllers
 				return;
 			}
 
-			if (_channelButton.gameObject.activeInHierarchy)
-				_channelButton.Select();
-			else if (_infuseButton.gameObject.activeInHierarchy)
+			if (_infuseButton.gameObject.activeInHierarchy)
 				_infuseButton.Select();
 		}
 
@@ -203,7 +172,6 @@ namespace Facilitating.UIControllers
 			WeaponAttributes attributes            = _equippedWeapon.WeaponAttributes;
 			bool             reachedMaxDurability  = !attributes.CanIncreaseUpgradeLevel() || Inventory.GetResourceQuantity("Essence") == 0;
 			bool             inscriptionsAvailable = InscriptionsAreAvailable();
-			_channelButton.gameObject.SetActive(!reachedMaxDurability);
 			_infuseButton.gameObject.SetActive(inscriptionsAvailable);
 		}
 
@@ -224,38 +192,6 @@ namespace Facilitating.UIControllers
 				if (!inscription.CanAfford()) costText = "Requires " + costText;
 				LeftText.SetText(costText);
 				RightText.SetText(inscription.GetSummary());
-			}
-		}
-
-		private class DetailedWeaponElement : ListElement
-		{
-			private WeaponDetailController _detailController;
-
-			protected override void UpdateCentreItemEmpty()
-			{
-				_detailController.SetWeapon(null);
-			}
-
-			public override void SetColour(Color colour)
-			{
-			}
-
-			protected override void SetVisible(bool visible)
-			{
-			}
-
-			protected override void CacheUiElements(Transform transform)
-			{
-				_detailController = transform.GetComponent<WeaponDetailController>();
-			}
-
-			protected override void Update(object o, bool isCentreItem)
-			{
-				Weapon weapon = (Weapon) o;
-				_detailController.SetWeapon(weapon);
-				Weapon equippedWeapon = CharacterManager.SelectedCharacter.Weapon;
-				if (equippedWeapon == null) return;
-//                _detailController.CompareTo(equippedWeapon);
 			}
 		}
 	}

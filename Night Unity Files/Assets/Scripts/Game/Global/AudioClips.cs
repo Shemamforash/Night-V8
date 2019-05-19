@@ -35,7 +35,6 @@ namespace Game.Global
 		                                          EquipAccessory,
 		                                          EquipArmour,
 		                                          EquipWeapon,
-		                                          Channel,
 		                                          Infuse,
 		                                          Craft,
 		                                          OpenJournal,
@@ -177,7 +176,6 @@ namespace Game.Global
 			yield return StartCoroutine(LoadClip(a => EatPlant = a,       "misc/inventories", "Eat Plant"));
 			yield return StartCoroutine(LoadClip(a => EatWater = a,       "misc/inventories", "Eat Water"));
 			yield return StartCoroutine(LoadClip(a => EatPotion = a,      "misc/inventories", "Eat Potion"));
-			yield return StartCoroutine(LoadClip(a => Channel = a,        "misc/inventories", "Channel"));
 			yield return StartCoroutine(LoadClip(a => Infuse = a,         "misc/inventories", "Infuse"));
 			yield return StartCoroutine(LoadClip(a => CookMeat = a,       "misc/inventories", "Meat Cook"));
 			yield return StartCoroutine(LoadClip(a => Furnace = a,        "misc/inventories", "Charcoal"));

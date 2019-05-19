@@ -4,7 +4,6 @@ using Extensions;
 using Game.Characters;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
-
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -199,7 +198,6 @@ public class MapMovementController : MonoBehaviour, IInputListener
 		_nearestRegion?.MapNode().LoseFocus();
 		_nearestRegion = newNearestRegion;
 		MapMenuController.Instance().SetNearestRegion(_nearestRegion);
-		MapMenuController.Instance().FadeTeleportText();
 		_nearestRegion?.MapNode().GainFocus();
 	}
 

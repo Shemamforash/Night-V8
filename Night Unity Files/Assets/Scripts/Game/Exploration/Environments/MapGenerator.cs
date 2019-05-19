@@ -17,7 +17,7 @@ namespace Game.Exploration.Environment
 	{
 		public const int MinRadius = 3;
 
-		private const           int                                  BaseRegionCount = 10;
+		private const           int                                  BaseRegionCount = 8;
 		private static readonly List<Tuple<RegionType, bool>>        _regionOrder    = new List<Tuple<RegionType, bool>>();
 		private static readonly Dictionary<RegionType, List<string>> _genericNames   = new Dictionary<RegionType, List<string>>();
 		private static readonly List<Region>                         _regions        = new List<Region>();
@@ -350,8 +350,8 @@ namespace Game.Exploration.Environment
 			if (EnvironmentManager.CurrentEnvironmentType != EnvironmentType.Desert) return;
 			int                     cacheIndex = _regionOrder.FindIndex(t => t.Item1 == RegionType.Cache);
 			Tuple<RegionType, bool> cache      = _regionOrder[cacheIndex];
-			Tuple<RegionType, bool> other      = _regionOrder[10];
-			_regionOrder[10]         = Tuple.Create(cache.Item1, other.Item2);
+			Tuple<RegionType, bool> other      = _regionOrder[BaseRegionCount];
+			_regionOrder[BaseRegionCount]         = Tuple.Create(cache.Item1, other.Item2);
 			_regionOrder[cacheIndex] = Tuple.Create(other.Item1, cache.Item2);
 		}
 
@@ -367,7 +367,7 @@ namespace Game.Exploration.Environment
 			List<RegionType> validTypes = new List<RegionType>();
 			validTypes.Add(RegionType.Shrine);
 			validTypes.Add(RegionType.Animal);
-			for (int i = 0; i < 5; ++i) validTypes.Add(RegionType.Danger);
+			for (int i = 0; i < 3; ++i) validTypes.Add(RegionType.Danger);
 
 			bool isDesert            = EnvironmentManager.CurrentEnvironmentType == EnvironmentType.Desert;
 			bool includeBonusRegions = isDesert && includeTemple || !isDesert;
