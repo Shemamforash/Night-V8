@@ -15,14 +15,13 @@ namespace Game.Gear.Weapons
 		private int              _ammoInMagazine;
 		private CharacterCombat  _origin;
 		private Weapon           _weapon;
-		private WeaponAttributes _weaponAttributes;
 		private float            TimeToNextFire;
 
-		public void Initialise(CharacterCombat origin)
+
+		private void Start()
 		{
-			_origin           = origin;
-			_weapon           = origin.Weapon();
-			_weaponAttributes = _weapon.WeaponAttributes;
+			_origin = GetComponent<CharacterCombat>();
+			_weapon = _origin.Weapon();
 			Reload();
 		}
 
@@ -30,12 +29,12 @@ namespace Game.Gear.Weapons
 
 		public void Reload()
 		{
-			Reload((int) _weaponAttributes.Val(AttributeType.Capacity));
+			Reload((int) _weapon.Val(AttributeType.Capacity));
 		}
 
-		public bool FullyLoaded() => GetRemainingAmmo() == (int) _weaponAttributes.Val(AttributeType.Capacity);
+		public bool FullyLoaded() => GetRemainingAmmo() == (int) _weapon.Val(AttributeType.Capacity);
 
-		public int Capacity() => (int) _weaponAttributes.Val(AttributeType.Capacity);
+		public int Capacity() => (int) _weapon.Val(AttributeType.Capacity);
 
 		public bool Empty() => GetRemainingAmmo() == 0;
 
@@ -57,16 +56,16 @@ namespace Game.Gear.Weapons
 		private void Fire()
 		{
 			if (Empty()) return;
-			TimeToNextFire = Helper.TimeInSeconds() + 1f / _weapon.GetAttributeValue(AttributeType.FireRate);
+			TimeToNextFire = Helper.TimeInSeconds() + 1f / _weapon.Val(AttributeType.FireRate);
 			if (_origin is EnemyBehaviour) TimeToNextFire *= 2f;
-			for (int i = 0; i < _weaponAttributes.Val(AttributeType.Pellets); ++i)
+			for (int i = 0; i < _weapon.Val(AttributeType.Pellets); ++i)
 			{
 				Shot shot = ShotManager.Create(_origin);
 				_origin.ApplyShotEffects(shot);
 				shot.Fire();
 			}
 
-			if (_origin is PlayerCombat) PlayerCombat.Instance.Shake(_weapon.WeaponAttributes.DPS());
+			if (_origin is PlayerCombat) PlayerCombat.Instance.Shake(_weapon.DPS());
 			_origin.WeaponAudio.Fire(_weapon);
 			ConsumeAmmo(1);
 			if (!(_origin is PlayerCombat)) return;

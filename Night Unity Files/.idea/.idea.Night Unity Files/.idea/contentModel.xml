@@ -1264,19 +1264,13 @@
               </e>
               <e p="Misc" t="Include">
                 <e p="BulletTrails" t="Include">
+                  <e p="AbstractBulletTrail.cs" t="Include" />
                   <e p="BulletImpactBehaviour.cs" t="Include" />
-                  <e p="BulletTrail.cs" t="Include" />
-                  <e p="FireTrail.cs" t="Include" />
+                  <e p="BulletTrailController.cs" t="Include" />
                   <e p="MaelstromShotTrail.cs" t="Include" />
-                  <e p="PistolTrail.cs" t="Include" />
-                  <e p="RifleTrail.cs" t="Include" />
-                  <e p="ShatterTrail.cs" t="Include" />
                   <e p="Shot.cs" t="Include" />
                   <e p="ShotAttributes.cs" t="Include" />
-                  <e p="ShotgunTrail.cs" t="Include" />
                   <e p="ShotManager.cs" t="Include" />
-                  <e p="SMGTrail.cs" t="Include" />
-                  <e p="VoidTrail.cs" t="Include" />
                 </e>
                 <e p="CanTakeDamage.cs" t="Include" />
                 <e p="CharacterCombat.cs" t="Include" />
@@ -1364,7 +1358,6 @@
               <e p="ItemQuality.cs" t="Include" />
               <e p="Weapons" t="Include">
                 <e p="Weapon.cs" t="Include" />
-                <e p="WeaponAttributes.cs" t="Include" />
                 <e p="WeaponBehaviour.cs" t="Include" />
                 <e p="WeaponGenerationTester.cs" t="Include" />
                 <e p="WeaponGenerator.cs" t="Include" />
@@ -1459,6 +1452,7 @@
               <e p="GameObjectExtensions.cs" t="Include" />
               <e p="NumericExtensions.cs" t="Include" />
               <e p="ObjectExtensions.cs" t="Include" />
+              <e p="ParticleSystemExtensions.cs" t="Include" />
               <e p="StringExtensions.cs" t="Include" />
               <e p="XmlExtensions.cs" t="Include" />
             </e>

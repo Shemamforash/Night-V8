@@ -72,8 +72,8 @@ public class DurabilityBarController : MonoBehaviour
 		if (!_durabilityParticles.isPlaying) _durabilityParticles.Play();
 		if (!_forceUpdate && pixelWidth == _lastPixelWidth) return;
 
-		float currentLevel = _weapon.WeaponAttributes.CurrentLevel;
-		float maxLevel        = _weapon.WeaponAttributes.MaxLevel;
+		float currentLevel = _weapon.CurrentLevel;
+		float maxLevel        = _weapon.MaxLevel;
 		float normalisedLevel = currentLevel / maxLevel;
 		float rectAnchorOffset     = maxLevel / AbsoluteMaxDurability / 2;
 		SetText((int) currentLevel + " Imbued Essence");
@@ -98,6 +98,6 @@ public class DurabilityBarController : MonoBehaviour
 		_weapon      = weapon;
 		_forceUpdate = true;
 		_durabilityParticles.Clear();
-		UpdateMarkers(_weapon.WeaponAttributes.MaxLevel / 10);
+		UpdateMarkers(_weapon.MaxLevel / 10);
 	}
 }

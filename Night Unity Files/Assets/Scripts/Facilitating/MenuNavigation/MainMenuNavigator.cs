@@ -97,7 +97,7 @@ namespace Facilitating.MenuNavigation
 			CreateFadeInSequence();
 			CheckForExistingSave();
 #if UNITY_EDITOR
-			WeaponGenerationTester.Test();
+//			WeaponGenerationTester.Test();
 #endif
 		}
 

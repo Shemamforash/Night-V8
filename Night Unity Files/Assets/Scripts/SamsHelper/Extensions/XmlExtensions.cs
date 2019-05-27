@@ -11,7 +11,10 @@ namespace Extensions
 		{
 			try
 			{
-				XmlDocument parentDocument = parent.OwnerDocument;
+				XmlDocument parentDocument;
+				if (parent is XmlDocument document) parentDocument = document;
+				else parentDocument                                = parent.OwnerDocument;
+
 				if (parentDocument.Null()) throw new Exception("ParentDocumentNotSetException");
 				XmlNode newNode = parentDocument.CreateElement(tagName);
 				parent.AppendChild(newNode);

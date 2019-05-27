@@ -330,10 +330,17 @@ namespace Game.Exploration.Environment
 			AddRegionTypes(false);
 			for (int i = 0; i < environmentNumber + 1; ++i) AddRegionTypes(true);
 
-			int       lastTemple   = _regionOrder.FindLastIndex(t => t.Item1 == RegionType.Temple);
-			int       storyCount   = JournalEntry.GetStoryCount();
+			int lastTemple = _regionOrder.FindLastIndex(t => t.Item1 == RegionType.Temple);
+			int storyCount = JournalEntry.GetStoryCount();
+			if (lastTemple < storyCount)
+			{
+				_regionOrder.Swap(lastTemple, storyCount);
+				lastTemple = storyCount;
+			}
+
 			List<int> validIndexes = new List<int>();
 			for (int i = 0; i < lastTemple; ++i) validIndexes.Add(i);
+			Debug.Log(storyCount + " " + lastTemple);
 			while (storyCount > 0)
 			{
 				int                     regionIndex = validIndexes.RemoveRandom();
@@ -351,8 +358,8 @@ namespace Game.Exploration.Environment
 			int                     cacheIndex = _regionOrder.FindIndex(t => t.Item1 == RegionType.Cache);
 			Tuple<RegionType, bool> cache      = _regionOrder[cacheIndex];
 			Tuple<RegionType, bool> other      = _regionOrder[BaseRegionCount];
-			_regionOrder[BaseRegionCount]         = Tuple.Create(cache.Item1, other.Item2);
-			_regionOrder[cacheIndex] = Tuple.Create(other.Item1, cache.Item2);
+			_regionOrder[BaseRegionCount] = Tuple.Create(cache.Item1, other.Item2);
+			_regionOrder[cacheIndex]      = Tuple.Create(other.Item1, cache.Item2);
 		}
 
 		private static void AddRegionTypes(bool includeTemple)

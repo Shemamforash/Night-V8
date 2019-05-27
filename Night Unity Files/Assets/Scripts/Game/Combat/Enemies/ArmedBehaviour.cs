@@ -9,17 +9,17 @@ namespace Game.Combat.Enemies
 {
 	public class ArmedBehaviour : UnarmedBehaviour
 	{
-		private float               _aimTime;
-		private Cell                _coverCell;
-		private float               _fireTime;
-		private bool                _waitingForHeal;
+		private float           _aimTime;
+		private Cell            _coverCell;
+		private float           _fireTime;
+		private bool            _waitingForHeal;
 		private WeaponBehaviour _weaponBehaviour;
 
 		public override void Initialise(Enemy enemy)
 		{
 			base.Initialise(enemy);
 			Assert.IsNotNull(Weapon());
-			_weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
+			_weaponBehaviour = GetComponent<WeaponBehaviour>();
 			CalculateMaxMinDistance();
 			_aimTime  = Random.Range(0.5f, 1f);
 			_fireTime = 2f;
@@ -50,7 +50,7 @@ namespace Game.Combat.Enemies
 
 		private void Reload()
 		{
-			float duration = Weapon().GetAttributeValue(AttributeType.ReloadSpeed) * 2f;
+			float duration = Weapon().Val(AttributeType.ReloadSpeed) * 2f;
 			CurrentAction = () =>
 			{
 				duration -= Time.deltaTime;

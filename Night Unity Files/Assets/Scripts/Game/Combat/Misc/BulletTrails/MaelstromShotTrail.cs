@@ -1,14 +1,13 @@
 ﻿using Extensions;
 using Game.Combat.Misc;
-
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
-public class MaelstromShotTrail : BulletTrail
+public class MaelstromShotTrail : AbstractBulletTrail
 {
-	private static readonly ObjectPool<BulletTrail> _pool = new ObjectPool<BulletTrail>("Maelstrom Shot Trails", "Prefabs/Combat/Shots/Maelstrom Shot Trail");
-	private                 ParticleSystem          _paths, _points;
-	private                 TrailRenderer           _trail;
+	private static readonly ObjectPool<AbstractBulletTrail> _pool = new ObjectPool<AbstractBulletTrail>("Maelstrom Shot Trails", "Prefabs/Combat/Shots/Maelstrom Shot Trail");
+	private                 ParticleSystem                  _paths, _points;
+	private                 TrailRenderer                   _trail;
 
 	public void Awake()
 	{
@@ -22,7 +21,7 @@ public class MaelstromShotTrail : BulletTrail
 
 	protected override bool Done() => _paths.particleCount == 0 && _points.particleCount == 0 && _trail.positionCount == 0;
 
-	protected override ObjectPool<BulletTrail> GetObjectPool() => _pool;
+	protected override ObjectPool<AbstractBulletTrail> GetObjectPool() => _pool;
 
 	protected override void ClearTrails()
 	{

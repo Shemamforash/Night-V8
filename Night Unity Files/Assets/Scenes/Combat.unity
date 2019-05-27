@@ -286,8 +286,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Colour: {r: 1, g: 1, b: 1, a: 0.039215688}
-  Radius: 5
   LightMaterial: {fileID: 2100000, guid: 2e91f08796cbd44849f1e15382cade3d, type: 2}
+  Radius: 5
   Target: {fileID: 1404618718570483}
 --- !u!23 &159362867
 MeshRenderer:
@@ -425,9 +425,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 081aa75e75b640dd90db7e6449bd4d31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseUppercase: 0
   CustomFontSize: 0
   FontSize: 2
+  UseUppercase: 0
 --- !u!114 &169158415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1951,8 +1951,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Colour: {r: 1, g: 1, b: 1, a: 0.09803922}
-  Radius: 3
   LightMaterial: {fileID: 2100000, guid: 2e91f08796cbd44849f1e15382cade3d, type: 2}
+  Radius: 3
   Target: {fileID: 1404618718570483}
 --- !u!23 &669566665
 MeshRenderer:
@@ -2263,8 +2263,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edb8fd49a1324643bdaebe5d6744c123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _material: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 3}
   Radius: 0
-  _material: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!120 &879416293
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -3116,9 +3116,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 081aa75e75b640dd90db7e6449bd4d31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseUppercase: 0
   CustomFontSize: 0
   FontSize: 1
+  UseUppercase: 0
 --- !u!114 &1167955350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3265,7 +3265,7 @@ GameObject:
 --- !u!199 &1173811454
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -10584,9 +10584,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 081aa75e75b640dd90db7e6449bd4d31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseUppercase: 0
   CustomFontSize: 25
   FontSize: 4
+  UseUppercase: 0
 --- !u!114 &3545503145069136498
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -112,9 +112,9 @@ namespace Game.Combat.Misc
 			CooldownRemaining = _duration;
 		}
 
-		public static void DecreaseCooldown(WeaponAttributes weaponAttributes)
+		public static void DecreaseCooldown(Weapon weapon)
 		{
-			float decreaseAmount = weaponAttributes.DPS() / weaponAttributes.CurrentLevel;
+			float decreaseAmount = weapon.DPS() / weapon.CurrentLevel;
 			CooldownRemaining -= decreaseAmount / 100;
 		}
 	}

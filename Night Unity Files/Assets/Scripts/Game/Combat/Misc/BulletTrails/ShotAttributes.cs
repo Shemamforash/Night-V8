@@ -28,8 +28,14 @@ namespace Game.Combat.Misc
 		private float _speed, _burnChance, _shatterChance, _voidChance, _accuracy, _knockBackForce, _knockBackModifier, _age, _seekModifier = 1;
 
 		private Weapon _weapon;
-		public  bool   Piercing, Fired, HasHit;
+		public  bool   Fired;
 		private float  _shotAge;
+
+		public Weapon Weapon      => _weapon;
+		public bool   WillVoid    { get; private set; }
+		public bool   WillBurn    { get; private set; }
+		public bool   WillShatter { get; private set; }
+
 
 		public ShotAttributes(CharacterCombat origin)
 		{
@@ -57,13 +63,12 @@ namespace Game.Combat.Misc
 
 		private void CacheWeaponAttributes()
 		{
-			WeaponAttributes attributes = _weapon.WeaponAttributes;
-			_damage        = (int) attributes.Val(AttributeType.Damage);
-			_accuracy      = 1 - attributes.Val(AttributeType.Accuracy);
-			_shatterChance = attributes.CalculateShatterChance();
-			_burnChance    = attributes.CalculateBurnChance();
-			_voidChance    = attributes.CalculateVoidChance();
-			_shotAge       = Mathf.Lerp(MinAge, MaxAge, attributes.Val(AttributeType.Range) / 100f);
+			_damage        = (int) _weapon.Val(AttributeType.Damage);
+			_accuracy      = 1 - _weapon.Val(AttributeType.Accuracy);
+			_shatterChance = _weapon.CalculateShatterChance();
+			_burnChance    = _weapon.CalculateBurnChance();
+			_voidChance    = _weapon.CalculateVoidChance();
+			_shotAge       = Mathf.Lerp(MinAge, MaxAge, _weapon.Val(AttributeType.Range) / 100f);
 			if (!(_origin is PlayerCombat)) return;
 			_shatterChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Shatter);
 			_burnChance    += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Burn);
@@ -83,37 +88,10 @@ namespace Game.Combat.Misc
 
 		public float GetSpeed() => _speed;
 
-		public BulletTrail GetBulletTrail()
+		public BulletTrailController GetBulletTrail()
 		{
 			bool isPlayer = _origin is PlayerCombat;
-			switch (_weapon.WeaponType())
-			{
-				case WeaponType.Pistol:
-					return PistolTrail.Create(isPlayer);
-				case WeaponType.Rifle:
-					return RifleTrail.Create(isPlayer);
-				case WeaponType.Shotgun:
-					return ShotgunTrail.Create(isPlayer);
-				case WeaponType.SMG:
-					return SMGTrail.Create(isPlayer);
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-		}
-
-		public BulletTrail GetConditionTrail()
-		{
-			switch (_condition)
-			{
-				case 0:
-					return ShatterTrail.Create();
-				case 1:
-					return FireTrail.Create();
-				case 2:
-					return VoidTrail.Create();
-			}
-
-			return null;
+			return BulletTrailController.Create(isPlayer, this);
 		}
 
 		public void AddOnHit(Action a)
@@ -131,7 +109,7 @@ namespace Game.Combat.Misc
 		private void SetConditions()
 		{
 			float     random            = Random.Range(0f, 100f);
-			float     conditionModifier = _weapon.GetAttributeValue(AttributeType.Pellets) * _weapon.GetAttributeValue(AttributeType.Capacity);
+			float     conditionModifier = _weapon.Val(AttributeType.Pellets) * _weapon.Val(AttributeType.Capacity);
 			bool      canDecay          = random < _shatterChance / conditionModifier;
 			bool      canBurn           = random < _burnChance    / conditionModifier;
 			bool      canVoid           = random < _voidChance    / conditionModifier;
@@ -141,10 +119,24 @@ namespace Game.Combat.Misc
 			if (canVoid) conditions.Add(2);
 			if (conditions.Count == 0) return;
 			_condition = conditions.RandomElement();
+			switch (_condition)
+			{
+				case 0:
+					WillShatter = true;
+					break;
+				case 1:
+					WillBurn = true;
+					break;
+				case 2:
+					WillVoid = true;
+					break;
+			}
 		}
+
 
 		public void ApplyConditions(Vector2 position)
 		{
+			if (_condition == -1) return;
 			PlayerCombat player = _origin as PlayerCombat;
 			switch (_condition)
 			{
@@ -216,6 +208,11 @@ namespace Game.Combat.Misc
 		{
 			Fired = true;
 			SetConditions();
+		}
+
+		public bool DidPierce()
+		{
+			return Random.Range(0f, 1f) < _weapon.PierceChance();
 		}
 	}
 }

@@ -137,7 +137,7 @@ namespace Facilitating.UIControllers
 			if (!inscription.CanAfford()) return;
 			Weapon weapon = CharacterManager.SelectedCharacter.Weapon;
 			weapon.ApplyInscription(inscription);
-			if (!weapon.WeaponAttributes.CanIncreaseUpgradeLevel() && inscription.Quality() == ItemQuality.Radiant)
+			if (!weapon.CanIncreaseUpgradeLevel() && inscription.Quality() == ItemQuality.Radiant)
 				AchievementManager.Instance().MaxOutWeapon();
 
 			Show();
@@ -169,10 +169,9 @@ namespace Facilitating.UIControllers
 
 		private void UpdateWeaponActions()
 		{
-			WeaponAttributes attributes            = _equippedWeapon.WeaponAttributes;
-			bool             reachedMaxDurability  = !attributes.CanIncreaseUpgradeLevel() || Inventory.GetResourceQuantity("Essence") == 0;
-			bool             inscriptionsAvailable = InscriptionsAreAvailable();
-			_infuseButton.gameObject.SetActive(inscriptionsAvailable);
+			bool reachedMaxDurability  = !_equippedWeapon.CanIncreaseUpgradeLevel() || Inventory.GetResourceQuantity("Essence") == 0;
+			bool inscriptionsAvailable = InscriptionsAreAvailable();
+			_infuseButton.gameObject.SetActive(inscriptionsAvailable && !reachedMaxDurability);
 		}
 
 		private static bool InscriptionsAreAvailable() => GetAvailableInscriptions().Count != 0;

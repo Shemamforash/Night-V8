@@ -32,5 +32,10 @@ namespace SamsHelper.Libraries
 			c.a          = alpha;
 			light.Colour = c;
 		}
+
+		public static Color ChangeAlpha(this Color col, float newAlpha)
+		{
+			return new Color(col.r, col.g, col.b, newAlpha);
+		}
 	}
 }

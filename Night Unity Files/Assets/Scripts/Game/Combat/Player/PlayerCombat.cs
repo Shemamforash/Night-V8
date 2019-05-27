@@ -335,7 +335,7 @@ namespace Game.Combat.Player
 		public void UpdateAdrenaline(int damageDealt)
 		{
 			Player.BrandManager.IncreaseDamageDealt(damageDealt);
-			SkillBar.DecreaseCooldown(Player.Weapon.WeaponAttributes);
+			SkillBar.DecreaseCooldown(Player.Weapon);
 		}
 
 		private void UpdateMuzzleFlash()
@@ -402,12 +402,11 @@ namespace Game.Combat.Player
 			}
 		}
 
-		public void EquipWeapon()
+		public void InitialiseWeapon()
 		{
-			Destroy(_weaponBehaviour);
-			_weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
-			_reloadDuration  = Player.Weapon.GetAttributeValue(AttributeType.ReloadSpeed);
-			_capacity        = _weaponBehaviour.Capacity();
+			_weaponBehaviour = gameObject.GetComponent<WeaponBehaviour>();
+			_reloadDuration = Player.Weapon.Val(AttributeType.ReloadSpeed);
+			_capacity       = _weaponBehaviour.Capacity();
 			UIMagazineController.SetWeapon(_weaponBehaviour);
 			RecalculateAttributes();
 		}
@@ -469,7 +468,7 @@ namespace Game.Combat.Player
 			_muzzleFlash = GameObject.Find("Muzzle Flash").GetComponent<FastLight>();
 			Player       = CharacterManager.SelectedCharacter;
 			RecalculateHealth();
-			EquipWeapon();
+			InitialiseWeapon();
 			EquipArmour();
 			ResetCompass();
 

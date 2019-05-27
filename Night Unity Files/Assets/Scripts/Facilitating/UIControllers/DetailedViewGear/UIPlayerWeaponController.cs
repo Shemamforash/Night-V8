@@ -44,7 +44,7 @@ namespace Facilitating.UIControllers
 		{
 			Weapon weapon                  = _player.Weapon;
 			string weaponName              = "";
-			if (weapon != null) weaponName = "Gun level: " + weapon.WeaponAttributes.CurrentLevel / 10;
+			if (weapon != null) weaponName = "Gun level: " + weapon.CurrentLevel / 10;
 			_nameText.SetText(weaponName);
 			_inscriptionText.SetText("FILL ME");
 		}
