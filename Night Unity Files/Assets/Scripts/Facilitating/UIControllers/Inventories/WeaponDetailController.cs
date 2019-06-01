@@ -91,7 +91,7 @@ public class WeaponDetailController : MonoBehaviour
 
 	private void UpdateDurabilityParticles()
 	{
-		_durabilityBar.SetWeapon(_weapon);
+		_durabilityBar.SetWeapon();
 	}
 
 	public RectTransform DurabilityRect()

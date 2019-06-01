@@ -9,7 +9,7 @@ namespace Game.Combat.Misc
 	{
 		private static ObjectPool<Shot> _shotPool;
 
-		public void Awake()
+		private void Awake()
 		{
 			_shotPool = new ObjectPool<Shot>("Prefabs/Combat/Shots/Bullet", transform);
 		}

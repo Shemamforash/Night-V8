@@ -2,6 +2,7 @@
 using Game.Gear;
 using Game.Gear.Weapons;
 using Extensions;
+using Game.Characters;
 using SamsHelper.ReactiveUI;
 using TMPro;
 using UnityEngine;
@@ -18,7 +19,6 @@ public class DurabilityBarController : MonoBehaviour
 	private          RectTransform    _durabilityTransform;
 	private          bool             _forceUpdate;
 	private          float            _lastPixelWidth;
-	private          Weapon           _weapon;
 
 	public void Awake()
 	{
@@ -45,7 +45,7 @@ public class DurabilityBarController : MonoBehaviour
 	{
 		_durabilityTransform.anchorMin = Vector2.zero;
 		_durabilityTransform.anchorMax = Vector2.zero;
-		UpdateMarkers(0);
+		UpdateMarkers();
 	}
 
 	private void SetText(string str)
@@ -54,8 +54,9 @@ public class DurabilityBarController : MonoBehaviour
 		_durabilityText.text = str;
 	}
 
-	private void UpdateMarkers(int max)
+	private void UpdateMarkers()
 	{
+		int max = CharacterManager.SelectedCharacter.Weapon.MaxLevel / 10;
 		for (int i = 0; i < _leftMarkers.Count; ++i)
 		{
 			bool active = i < max;
@@ -72,11 +73,11 @@ public class DurabilityBarController : MonoBehaviour
 		if (!_durabilityParticles.isPlaying) _durabilityParticles.Play();
 		if (!_forceUpdate && pixelWidth == _lastPixelWidth) return;
 
-		float currentLevel = _weapon.CurrentLevel;
-		float maxLevel        = _weapon.MaxLevel;
-		float normalisedLevel = currentLevel / maxLevel;
-		float rectAnchorOffset     = maxLevel / AbsoluteMaxDurability / 2;
-		SetText((int) currentLevel + " Imbued Essence");
+		Weapon weapon           = CharacterManager.SelectedCharacter.Weapon;
+		float  currentLevel     = weapon.CurrentLevel;
+		float  maxLevel         = weapon.MaxLevel;
+		float  normalisedLevel  = currentLevel                     / maxLevel;
+		float  rectAnchorOffset = maxLevel / AbsoluteMaxDurability / 2;
 
 		_durabilityParticles.Clear();
 		_forceUpdate    = false;
@@ -93,11 +94,10 @@ public class DurabilityBarController : MonoBehaviour
 		emission.rateOverTime = 300 * worldWidth / 3;
 	}
 
-	public void SetWeapon(Weapon weapon)
+	public void SetWeapon()
 	{
-		_weapon      = weapon;
 		_forceUpdate = true;
 		_durabilityParticles.Clear();
-		UpdateMarkers(_weapon.MaxLevel / 10);
+		UpdateMarkers();
 	}
 }

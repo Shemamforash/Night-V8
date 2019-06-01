@@ -32,17 +32,17 @@ namespace Game.Global
 		public static AudioClip   FireExplosion, ShatterExplosion, TombBreak,     TombRing, ActiveSkill, PassiveSkill;
 
 		public static AudioClip TabChange,
-		                                          EquipAccessory,
-		                                          EquipArmour,
-		                                          EquipWeapon,
-		                                          Infuse,
-		                                          Craft,
-		                                          OpenJournal,
-		                                          CloseJournal,
-		                                          Tick,
-		                                          CookMeat,
-		                                          Furnace,
-		                                          BoilWater;
+		                        EquipAccessory,
+		                        EquipArmour,
+		                        EquipWeapon,
+		                        Infuse,
+		                        Craft,
+		                        OpenJournal,
+		                        CloseJournal,
+		                        Tick,
+		                        CookMeat,
+		                        Furnace,
+		                        BoilWater;
 
 		public static           AudioClip         EatWater,       EatMeat, EatPlant, EatPotion, LightFire;
 		public static           AudioClip         ShortHeartBeat, LongHeartBeat;
@@ -58,15 +58,16 @@ namespace Game.Global
 			StartCoroutine(LoadAudio());
 		}
 
-		private AssetBundle FindAssetBundle(string name)
+		private AssetBundle FindAssetBundle(string bundleName)
 		{
-			return _loadedBundles.FirstOrDefault(b => b.name == name);
+			return _loadedBundles.FirstOrDefault(b => b.name == bundleName);
 		}
 
 		private IEnumerator LoadAssetBundle(string bundleName)
 		{
 			AssetBundleCreateRequest bundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, bundleName));
 			yield return bundleRequest;
+			Assert.IsNotNull(bundleRequest.assetBundle);
 			_loadedBundles.Add(bundleRequest.assetBundle);
 		}
 
