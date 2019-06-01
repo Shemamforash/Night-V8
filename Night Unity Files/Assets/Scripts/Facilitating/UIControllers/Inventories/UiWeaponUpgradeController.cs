@@ -7,6 +7,7 @@ using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Combat.Player;
 using Game.Gear;
+using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
 using Game.Global.Tutorial;
@@ -43,12 +44,12 @@ namespace Facilitating.UIControllers
 #if UNITY_EDITOR
 			for (int i = 0; i < 10; ++i)
 			{
-//                Weapon weapon = WeaponGenerator.GenerateWeapon();
-//                Inventory.Move(weapon);
-//                Inscription inscription = Inscription.Generate();
-//                Inventory.Move(inscription);
-//                Accessory accessory = Accessory.Generate();
-//                Inventory.Move(accessory);
+				Weapon weapon = WeaponGenerator.GenerateWeapon();
+				Inventory.Move(weapon);
+				Inscription inscription = Inscription.Generate();
+				Inventory.Move(inscription);
+				Accessory accessory = Accessory.Generate();
+				Inventory.Move(accessory);
 			}
 #endif
 
@@ -137,8 +138,6 @@ namespace Facilitating.UIControllers
 			List<TutorialOverlay> startingOverlays = new List<TutorialOverlay>
 			{
 				new TutorialOverlay(GetComponent<RectTransform>()),
-				new TutorialOverlay(_weaponDetail.DurabilityRect()),
-				new TutorialOverlay(_weaponDetail.DurabilityRect())
 			};
 			if (TutorialManager.Instance.TryOpenTutorial(12, startingOverlays))
 			{
@@ -182,7 +181,7 @@ namespace Facilitating.UIControllers
 			Inscription inscription = (Inscription) inscriptionObject;
 			if (!inscription.CanAfford()) return;
 			Weapon weapon = CharacterManager.SelectedCharacter.Weapon;
-			weapon.SetInscription(inscription);
+			weapon.AddInscription(inscription);
 			if (weapon.Quality() == ItemQuality.Radiant && inscription.Quality() == ItemQuality.Radiant)
 			{
 				AchievementManager.Instance().MaxOutWeapon();
@@ -254,7 +253,7 @@ namespace Facilitating.UIControllers
 			protected override void Update(object o, bool isCentreItem)
 			{
 				Weapon weapon = (Weapon) o;
-				CentreText.SetText(weapon.GetDisplayName());
+				CentreText.SetText(weapon.Name);
 				LeftText.SetText(weapon.WeaponType().ToString());
 				RightText.SetText(weapon.WeaponAttributes.DPS().Round(1) + " DPS");
 			}

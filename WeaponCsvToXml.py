@@ -30,8 +30,9 @@ class WeaponImporter(XMLWriter):
         write_single_value(self, "Accuracy", get_value(self, "G", row))
         write_single_value(self, "Recoil", get_value(self, "H", row))
         write_single_value(self, "Capacity", get_value(self, "I", row))
-        write_single_value(self, "FireType", get_value(self, "O", row))
-        write_single_value(self, "FireMode", get_value(self, "P", row))
+        write_single_value(self, "Range", get_value(self, "J", row))
+        write_single_value(self, "FireType", get_value(self, "P", row))
+        write_single_value(self, "FireMode", get_value(self, "Q", row))
 
     def read_weapon_subtypes(self, subtype_row):
         for i in range(0, 3):
@@ -425,7 +426,7 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.write("<" + stat_name + ">" + str(value) + "</" + stat_name + ">")
 
 
-# WeaponImporter()
+WeaponImporter()
 GearImporter()
 # WeatherImporter()
 # WeatherProbabilityImporter()

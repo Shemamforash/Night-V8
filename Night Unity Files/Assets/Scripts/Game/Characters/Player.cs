@@ -41,9 +41,12 @@ namespace Game.Characters
 
 		public readonly CharacterAttributes Attributes;
 		public readonly BrandManager        BrandManager = new BrandManager();
-		public readonly Skill               CharacterSkillOne, CharacterSkillTwo;
-		public readonly CharacterTemplate   CharacterTemplate;
-		public readonly StateMachine        States = new StateMachine();
+
+		private bool _skill1Unlocked, _skill2Unlocked, _skill3Unlocked, _skill4Unlocked;
+
+//		public readonly Skill               CharacterSkillOne, CharacterSkillTwo;
+		public readonly CharacterTemplate CharacterTemplate;
+		public readonly StateMachine      States = new StateMachine();
 
 		public Consume ConsumeAction;
 		public Craft   CraftAction;
@@ -61,14 +64,42 @@ namespace Game.Characters
 			BrandManager.Initialise(this);
 		}
 
+		public void UnlockSkill()
+		{
+			switch (EnvironmentManager.CurrentEnvironmentType)
+			{
+				case EnvironmentType.Desert:
+					_skill1Unlocked = true;
+					break;
+				case EnvironmentType.Mountains:
+					_skill2Unlocked = true;
+					break;
+				case EnvironmentType.Sea:
+					_skill3Unlocked = true;
+					break;
+				case EnvironmentType.Ruins:
+					_skill4Unlocked = true;
+					break;
+			}
+		}
+
+		public Skill SkillOne()   => !_skill1Unlocked ? null : CharacterSkills.GetCharacterSkillOne(this);
+		public Skill SkillTwo()   => !_skill2Unlocked ? null : CharacterSkills.GetCharacterSkillTwo(this);
+		public Skill SkillThree() => !_skill3Unlocked ? null : WeaponSkills.GetWeaponSkillOne(Weapon);
+		public Skill SkillFour()  => !_skill4Unlocked ? null : WeaponSkills.GetWeaponSkillTwo(Weapon);
+
 		public override XmlNode Save(XmlNode root)
 		{
 			root = base.Save(root);
 			Attributes.Save(root);
 			BrandManager.Save(root);
-			root.CreateChild("TimeAlive",      _timeAlive);
-			root.CreateChild("DaysSurvived",   _daysSurvived);
-			root.CreateChild("CharacterClass", CharacterTemplate.CharacterClass.ToString());
+			root.CreateChild("TimeAlive",            _timeAlive);
+			root.CreateChild("DaysSurvived",         _daysSurvived);
+			root.CreateChild("CharacterClass",       CharacterTemplate.CharacterClass.ToString());
+			root.CreateChild(nameof(_skill1Unlocked), _skill1Unlocked);
+			root.CreateChild(nameof(_skill2Unlocked), _skill2Unlocked);
+			root.CreateChild(nameof(_skill3Unlocked), _skill3Unlocked);
+			root.CreateChild(nameof(_skill4Unlocked), _skill4Unlocked);
 			((BaseCharacterAction) States.GetCurrentState()).Save(root);
 			return root;
 		}
@@ -78,8 +109,12 @@ namespace Game.Characters
 			base.Load(root);
 			Attributes.Load(root);
 			BrandManager.Load(root);
-			_timeAlive    = root.ParseInt("TimeAlive");
-			_daysSurvived = root.ParseInt("DaysSurvived");
+			_timeAlive     = root.ParseInt("TimeAlive");
+			_daysSurvived  = root.ParseInt("DaysSurvived");
+			_skill1Unlocked = root.ParseBool(nameof(_skill1Unlocked));
+			_skill2Unlocked = root.ParseBool(nameof(_skill1Unlocked));
+			_skill3Unlocked = root.ParseBool(nameof(_skill1Unlocked));
+			_skill4Unlocked = root.ParseBool(nameof(_skill1Unlocked));
 			LoadCurrentAction(root);
 		}
 
@@ -183,58 +218,6 @@ namespace Game.Characters
 			if (_characterView        != null) _characterView.WeaponController.UpdateWeapon();
 			if (PlayerCombat.Instance == null) return;
 			PlayerCombat.Instance.EquipWeapon();
-		}
-
-		public void IncreaseKills()
-		{
-			if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Tutorial) return;
-			WeaponType weaponType = Weapon.WeaponType();
-			_weaponKills[weaponType] = _weaponKills[weaponType] + 1;
-			TryUnlockWeaponSkills(weaponType, true);
-		}
-
-		private const int CharacterSkillOneTarget = 2, CharacterSkillTwoTarget = 4, WeaponSkillOneTarget = 75, WeaponSkillTwoTarget = 200;
-
-		public Tuple<string, float> GetCharacterSkillOneProgress() => GetCharacterSkillProgress(CharacterSkillOneTarget);
-
-		public Tuple<string, float> GetCharacterSkillTwoProgress() => GetCharacterSkillProgress(CharacterSkillTwoTarget);
-
-		public void TryUnlockCharacterSkill(bool showScreen)
-		{
-			if (_daysSurvived >= CharacterSkillOneTarget)
-				Attributes.UnlockCharacterSkillOne(showScreen);
-			if (_daysSurvived >= CharacterSkillTwoTarget)
-				Attributes.UnlockCharacterSkillTwo(showScreen);
-		}
-
-		private Tuple<string, float> GetCharacterSkillProgress(int target)
-		{
-			int    progress           = target                - _daysSurvived;
-			string progressString     = "Survive " + progress + " day".Pluralise(progress);
-			float  normalisedProgress = (float) _daysSurvived / target;
-			return Tuple.Create(progressString, normalisedProgress);
-		}
-
-		public Tuple<string, float> GetWeaponSkillOneProgress() => GetWeaponProgress(WeaponSkillOneTarget);
-
-		public Tuple<string, float> GetWeaponSkillTwoProgress() => GetWeaponProgress(WeaponSkillTwoTarget);
-
-		private Tuple<string, float> GetWeaponProgress(int target)
-		{
-			WeaponType weaponType         = Weapon.WeaponType();
-			int        progress           = target - _weaponKills[weaponType];
-			string     pluralisedEnemy    = progress <= 1 ? " enemy" : " enemies";
-			string     progressString     = "Kill " + progress + pluralisedEnemy;
-			float      normalisedProgress = (float) _weaponKills[weaponType] / target;
-			return Tuple.Create(progressString, normalisedProgress);
-		}
-
-		private void TryUnlockWeaponSkills(WeaponType weaponType, bool showScreen)
-		{
-			if (_weaponKills[weaponType] >= WeaponSkillOneTarget)
-				Attributes.UnlockWeaponSkillOne(weaponType, showScreen);
-			if (_weaponKills[weaponType] >= WeaponSkillTwoTarget)
-				Attributes.UnlockWeaponSkillTwo(weaponType, showScreen);
 		}
 
 		public void ApplyModifier(AttributeType target, AttributeModifier modifier)

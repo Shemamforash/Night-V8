@@ -69,7 +69,7 @@ namespace Game.Combat.Enemies
 			Weapon weapon = WeaponGenerator.GenerateWeapon(possibleTypes.RandomElement());
 			weapon.WeaponAttributes.RandomiseDurability();
 			EquipWeapon(weapon);
-			if (NumericExtensions.RollDie(0, 5)) weapon.SetInscription(Inscription.Generate());
+			if (NumericExtensions.RollDie(0, 5)) weapon.AddInscription(Inscription.Generate());
 		}
 
 		private void GenerateArmour()

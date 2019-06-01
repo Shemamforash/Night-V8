@@ -27,6 +27,7 @@ namespace Game.Combat.Misc
 		{
 			_instance         = this;
 			_skillControllers = new List<CooldownController>();
+			_player           = CharacterManager.SelectedCharacter;
 
 			for (int i = 0; i < NoSlots; ++i)
 				_skillControllers.Add(gameObject.FindChildWithName<CooldownController>("Skill " + (i + 1)));
@@ -58,30 +59,15 @@ namespace Game.Combat.Misc
 			UpdateCooldownControllers(normalisedTime);
 		}
 
-		private bool IsCharacterSkillOneUnlocked() => _player.Attributes.SkillOneUnlocked;
-		private bool IsCharacterSkillTwoUnlocked() => _player.Attributes.SkillTwoUnlocked;
-		private bool IsWeaponSkillOneUnlocked()    => _player.Attributes.WeaponSkillOneUnlocks.Contains(_player.Weapon.WeaponType());
-		private bool IsWeaponSkillTwoUnlocked()    => _player.Attributes.WeaponSkillTwoUnlocks.Contains(_player.Weapon.WeaponType());
-
 		private void TryUpdateSkills()
 		{
 			if (!_needsUpdate) return;
-			_needsUpdate = false;
-			_cooldownModifier          = _player.Attributes.CooldownModifier();
-			Skill characterSkillOne = _player.CharacterSkillOne;
-			Skill characterSkillTwo = _player.CharacterSkillTwo;
-			Skill weaponSkillOne    = _player.Weapon.WeaponSkillOne;
-			Skill weaponSkillTwo    = _player.Weapon.WeaponSkillTwo;
-
-			BindSkill(0, characterSkillOne, IsCharacterSkillOneUnlocked, _player.GetCharacterSkillOneProgress);
-			BindSkill(1, characterSkillTwo, IsCharacterSkillTwoUnlocked, _player.GetCharacterSkillTwoProgress);
-			BindSkill(2, weaponSkillOne,    IsWeaponSkillOneUnlocked,    _player.GetWeaponSkillOneProgress);
-			BindSkill(3, weaponSkillTwo,    IsWeaponSkillTwoUnlocked,    _player.GetWeaponSkillTwoProgress);
-		}
-
-		private void BindSkill(int slot, Skill skill, Func<bool> isSkillUnlocked, Func<Tuple<string, float>> getProgress)
-		{
-			_skillControllers[slot].SetSkill(skill, isSkillUnlocked, getProgress);
+			_needsUpdate      = false;
+			_cooldownModifier = _player.Attributes.CooldownModifier();
+			_skillControllers[0].SetSkill(_player.SkillOne());
+			_skillControllers[1].SetSkill(_player.SkillTwo());
+			_skillControllers[2].SetSkill(_player.SkillThree());
+			_skillControllers[3].SetSkill(_player.SkillFour());
 		}
 
 		public static float CooldownRemaining
@@ -107,15 +93,25 @@ namespace Game.Combat.Misc
 
 		public static SkillBar Instance() => _instance;
 
-		public void ActivateSkill(int skillNo)
+		private const float SkillHoldTimeTarget = 0.5f;
+		private       float _skillHoldTime;
+		private       int   _slotPressed;
+
+		public void PressSkillBarSlot(int skillNo)
 		{
-			if (!_skillsReady) return;
-			Skill skill = _skillControllers[skillNo].Skill;
-			if (skill == null) return;
-			bool freeSkill = IsSkillFree();
-			if (!skill.Activate()) return;
-			if (freeSkill) return;
-			StartCooldown(skill.Cooldown);
+			Skill target = _skillControllers[_slotPressed].Skill;
+			if (target == null)
+			{
+				_skillHoldTime = 0;
+				return;
+			}
+
+			float timeBefore = _skillHoldTime;
+			_skillHoldTime += Time.deltaTime;
+			_slotPressed   =  skillNo;
+			if (timeBefore     > SkillHoldTimeTarget) return;
+			if (_skillHoldTime < SkillHoldTimeTarget) return;
+			UiBrandMenu.ShowCharacterSkill(target, _slotPressed);
 		}
 
 		private void StartCooldown(int duration)
@@ -129,6 +125,24 @@ namespace Game.Combat.Misc
 		{
 			float decreaseAmount = weapon.WeaponAttributes.DPS() / weapon.WeaponAttributes.GetDurability().CurrentValue;
 			CooldownRemaining -= decreaseAmount / 100;
+		}
+
+		public void ReleaseSkillBar()
+		{
+			if (_skillHoldTime < SkillHoldTimeTarget) ActivateSkill();
+			_skillHoldTime = 0;
+			Debug.Log("released");
+		}
+
+		private void ActivateSkill()
+		{
+			if (!_skillsReady) return;
+			Skill skill = _skillControllers[_slotPressed].Skill;
+			if (skill == null) return;
+			bool freeSkill = IsSkillFree();
+			if (!skill.Activate()) return;
+			if (freeSkill) return;
+			StartCooldown(skill.Cooldown);
 		}
 	}
 }

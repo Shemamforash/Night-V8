@@ -48,7 +48,6 @@ public class UiBrandMenu : Menu
 	private void Show()
 	{
 		_lastMenu = MenuStateMachine.CurrentMenu();
-		ScreenFaderController.FlashWhite(1f, new Color(1, 1, 1, 0f));
 		MenuStateMachine.ShowMenu("Brand Menu");
 		WorldState.Pause();
 		ShowOverview();
@@ -104,15 +103,11 @@ public class UiBrandMenu : Menu
 		_instance.Show();
 	}
 
-	public static void ShowWeaponSkillUnlock(WeaponType weaponType, Skill weaponSkill, int skillNum) => _instance.ShowWeaponSkill(weaponType, weaponSkill, skillNum);
-
-	public static void ShowCharacterSkillUnlock(Skill characterSkill, int skillNum) => _instance.ShowCharacterSkill(characterSkill, skillNum);
-
-	private void ShowCharacterSkill(Skill characterSkill, int skillNum)
+	public static void ShowCharacterSkill(Skill skill, int skillNum)
 	{
-		_overviewString    = "Character Skill Unlocked";
-		_descriptionString = "The " + CharacterManager.SelectedCharacter.Name + "'s wisdom has grown with the passing of time";
-		ShowSkill(characterSkill, skillNum);
+		_overviewString    = skill.Name;
+		_descriptionString = "Skill tooltip";
+		_instance.ShowSkill(skill, skillNum);
 	}
 
 	private string GetSkillUsageString(Skill skill, int skillNum)
@@ -144,13 +139,6 @@ public class UiBrandMenu : Menu
 		}
 
 		return "Press [" + keyName + "] to use";
-	}
-
-	private void ShowWeaponSkill(WeaponType weaponType, Skill weaponSkill, int skillNum)
-	{
-		_overviewString    = "Weapon Skill Unlocked";
-		_descriptionString = CharacterManager.SelectedCharacter.Name + "'s proficiency with " + weaponType + "s grows";
-		ShowSkill(weaponSkill, skillNum);
 	}
 
 	private void ShowSkill(Skill skill, int skillNum)

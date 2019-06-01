@@ -70,14 +70,6 @@ namespace Game.Combat.Enemies
 			Sprite.sprite = spriteImage;
 		}
 
-		public override void TakeShotDamage(Shot shot)
-		{
-			float healthBefore = HealthController.GetCurrentHealth();
-			base.TakeShotDamage(shot);
-			if (HealthController.GetCurrentHealth() != 0 || healthBefore == 0) return;
-			PlayerCombat.Instance.Player.IncreaseKills();
-		}
-
 		public override void Kill()
 		{
 			if (gameObject == null) return;

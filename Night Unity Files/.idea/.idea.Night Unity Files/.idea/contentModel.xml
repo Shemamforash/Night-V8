@@ -1019,7 +1019,6 @@
           <e p="DecayBlastBehaviour.cs" t="Include" />
           <e p="DecayDamageDeal.cs" t="Include" />
           <e p="DismantleMenuController.cs" t="Include" />
-          <e p="DurabilityBarController.cs" t="Include" />
           <e p="EndGameAudioController.cs" t="Include" />
           <e p="EventTextController.cs" t="Include" />
           <e p="Facilitating" t="Include">

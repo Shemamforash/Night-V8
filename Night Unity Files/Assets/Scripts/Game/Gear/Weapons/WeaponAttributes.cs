@@ -1,8 +1,6 @@
 using System.Xml;
 using Extensions;
-using Facilitating.Persistence;
 using Game.Characters;
-using Game.Exploration.WorldEvents;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI;
@@ -44,6 +42,7 @@ namespace Game.Gear.Weapons
 			int maxDurability = ((int) weapon.Quality() + 1) * 10;
 			_durability = new Number(maxDurability, 0, maxDurability);
 			SetMax(AttributeType.Accuracy, 1);
+			SetMax(AttributeType.Range,    1);
 			SetClass(weaponClass);
 			Description = weaponClass.Description;
 		}
@@ -71,6 +70,7 @@ namespace Game.Gear.Weapons
 			SetVal(AttributeType.Capacity,    weaponClass.Capacity);
 			SetVal(AttributeType.Pellets,     weaponClass.Pellets);
 			SetVal(AttributeType.Accuracy,    weaponClass.Accuracy);
+			SetVal(AttributeType.Range, weaponClass.Range);
 			WeaponType      = weaponClass.Type;
 			Automatic       = weaponClass.Automatic;
 			WeaponClassType = weaponClass.Name;

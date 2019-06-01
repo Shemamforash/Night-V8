@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using Extensions;
-using Game.Gear;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.Elements;
@@ -8,8 +7,7 @@ using UnityEngine;
 
 public class WeaponDetailController : MonoBehaviour
 {
-	private EnhancedText            _damageText, _fireRateText, _reloadSpeedText, _accuracyText, _recoilText, _dpsText, _capacityText, _shatterText, _burnText, _voidText;
-	private DurabilityBarController _durabilityBar;
+	private EnhancedText            _damageText, _fireRateText, _reloadSpeedText, _accuracyText, _rangeText, _dpsText, _capacityText, _shatterText, _burnText, _voidText;
 	private EnhancedText            _nameText,      _typeText;
 	private GameObject              _shatterObject, _burnObject, _voidObject;
 
@@ -21,7 +19,6 @@ public class WeaponDetailController : MonoBehaviour
 		_nameText      = gameObject.FindChildWithName<EnhancedText>("Name");
 		_typeText      = gameObject.FindChildWithName<EnhancedText>("Type");
 		_dpsText       = gameObject.FindChildWithName<EnhancedText>("DPS");
-		_durabilityBar = gameObject.FindChildWithName<DurabilityBarController>("Durability Bar");
 
 		if (!IsDetailed) return;
 		_damageText      = gameObject.FindChildWithName<EnhancedText>("Damage");
@@ -29,7 +26,7 @@ public class WeaponDetailController : MonoBehaviour
 		_capacityText    = gameObject.FindChildWithName<EnhancedText>("Capacity");
 		_reloadSpeedText = gameObject.FindChildWithName<EnhancedText>("Reload Speed");
 		_accuracyText    = gameObject.FindChildWithName<EnhancedText>("Critical Chance");
-		_recoilText      = gameObject.FindChildWithName<EnhancedText>("Handling");
+		_rangeText      = gameObject.FindChildWithName<EnhancedText>("Handling");
 		GameObject conditionObject = gameObject.FindChildWithName("Conditions");
 
 		_shatterObject = conditionObject.FindChildWithName("Shatter");
@@ -45,12 +42,12 @@ public class WeaponDetailController : MonoBehaviour
 	public void SetWeapon(Weapon weapon)
 	{
 		_weapon = weapon;
-		UpdateWeaponInfo();
+		SetWeaponInfo(_weapon);
 	}
 
 	private void SetWeaponInfo(Weapon weapon)
 	{
-		_nameText.SetText(weapon.GetDisplayName());
+		_nameText.SetText(weapon.Name);
 		_dpsText.SetText(weapon.WeaponAttributes.DPS().Round(1).ToString(CultureInfo.InvariantCulture));
 		_typeText.SetText(weapon.WeaponAttributes.GetWeaponTypeDescription());
 		SetConditionText();
@@ -63,7 +60,7 @@ public class WeaponDetailController : MonoBehaviour
 		_damageText.SetText(weapon.WeaponAttributes.Val(AttributeType.Damage).Round(1)              + " Damage");
 		_fireRateText.SetText(weapon.WeaponAttributes.Val(AttributeType.FireRate).Round(1)          + " Rounds/Sec");
 		_reloadSpeedText.SetText(weapon.WeaponAttributes.Val(AttributeType.ReloadSpeed).Round(1)    + "s Reload");
-		_recoilText.SetText(weapon.WeaponAttributes.Val(AttributeType.Recoil).Round(1)              + "% Recoil");
+		_rangeText.SetText(weapon.WeaponAttributes.Val(AttributeType.Range).Round(2)              + " Range");
 		_capacityText.SetText(Mathf.FloorToInt(weapon.WeaponAttributes.Val(AttributeType.Capacity)) + " Capacity");
 		_accuracyText.SetText((weapon.WeaponAttributes.Val(AttributeType.Accuracy) * 100).Round(1)  + "% Accuracy");
 	}
@@ -81,22 +78,5 @@ public class WeaponDetailController : MonoBehaviour
 		_shatterText.SetText(shatterChance == 0 ? "" : shatterChance + " Shatter");
 		_burnText.SetText(burnChance       == 0 ? "" : burnChance    + " Burn");
 		_voidText.SetText(voidChance       == 0 ? "" : voidChance    + " Void");
-	}
-
-	public void UpdateWeaponInfo()
-	{
-		SetWeaponInfo(_weapon);
-		UpdateDurabilityParticles();
-	}
-
-	private void UpdateDurabilityParticles()
-	{
-		_durabilityBar.SetWeapon(_weapon);
-	}
-
-	public RectTransform DurabilityRect()
-	{
-		if (_durabilityBar == null) _durabilityBar = gameObject.FindChildWithName<DurabilityBarController>("Durability Bar");
-		return _durabilityBar.GetComponent<RectTransform>();
 	}
 }

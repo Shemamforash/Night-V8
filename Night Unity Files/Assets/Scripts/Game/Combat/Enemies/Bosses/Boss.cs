@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
@@ -39,6 +40,7 @@ namespace Game.Combat.Enemies.Bosses
 			BossDeathController.Create(transform.position);
 			RiteStarter.GenerateNextEnvironmentPortal();
 			Tomb.TombActive = false;
+			CharacterManager.SelectedCharacter.UnlockSkill();
 		}
 
 		protected int SectionCount() => Sections.Count;

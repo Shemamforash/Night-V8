@@ -102,16 +102,16 @@ namespace Game.Combat.Player
 				switch (axis)
 				{
 					case InputAxis.SkillOne:
-						SkillBar.Instance().ActivateSkill(0);
+						SkillBar.Instance().PressSkillBarSlot(0);
 						break;
 					case InputAxis.SkillTwo:
-						SkillBar.Instance().ActivateSkill(1);
+						SkillBar.Instance().PressSkillBarSlot(1);
 						break;
 					case InputAxis.SkillThree:
-						SkillBar.Instance().ActivateSkill(2);
+						SkillBar.Instance().PressSkillBarSlot(2);
 						break;
 					case InputAxis.SkillFour:
-						SkillBar.Instance().ActivateSkill(3);
+						SkillBar.Instance().PressSkillBarSlot(3);
 						break;
 					case InputAxis.Sprint:
 						TryDash();
@@ -148,6 +148,12 @@ namespace Game.Combat.Player
 					break;
 				case InputAxis.Swivel:
 					_swivelling = false;
+					break;
+				case InputAxis.SkillOne:
+				case InputAxis.SkillTwo:
+				case InputAxis.SkillThree:
+				case InputAxis.SkillFour:
+					SkillBar.Instance().ReleaseSkillBar();
 					break;
 			}
 		}
