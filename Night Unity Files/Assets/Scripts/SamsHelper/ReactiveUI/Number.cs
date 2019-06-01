@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿using Random = UnityEngine.Random;
 
 namespace SamsHelper.ReactiveUI
 {
@@ -20,8 +20,8 @@ namespace SamsHelper.ReactiveUI
 			get => _max;
 			set
 			{
-				_max         = value;
-				CurrentValue = _currentValue;
+				_max          = value;
+				_currentValue = _currentValue > _max ? _max : _currentValue;
 			}
 		}
 
@@ -30,34 +30,102 @@ namespace SamsHelper.ReactiveUI
 			get => _min;
 			set
 			{
-				_min         = value;
-				CurrentValue = _currentValue;
+				_min          = value;
+				_currentValue = _currentValue < _min ? _min : _currentValue;
 			}
 		}
 
 		public virtual float CurrentValue
 		{
 			get => _currentValue;
-			set => _currentValue = Mathf.Clamp(value, _min, _max);
+			set
+			{
+				if (value >= _max)
+				{
+					_currentValue = _max;
+				}
+				else if (value <= _min)
+				{
+					_currentValue = _min;
+				}
+				else
+				{
+					_currentValue = value;
+				}
+			}
 		}
 
 		public float Normalised => _currentValue / _max;
-		public bool  ReachedMin => _currentValue <= _min;
-		public bool  ReachedMax => _currentValue >= _max;
 
-		public virtual void Increment(float amount = 1) => CurrentValue = _currentValue + amount;
+		public float RandomInRange()
+		{
+			return Random.Range(_min, _max);
+		}
+
+		public bool ReachedMin => _currentValue <= _min;
+
+		public bool ReachedMax => _currentValue >= _max;
+
+		public virtual void Increment(float amount = 1)
+		{
+			_currentValue += amount;
+		}
+
+		public virtual void Decrement(float amount = 1)
+		{
+			_currentValue -= amount;
+		}
 
 
 		//OPERATORS
-		public static float operator +(Number a, Number b) => a._currentValue + b._currentValue;
-		public static float operator +(Number a, float  b) => a._currentValue + b;
-		public static float operator /(Number a, float  b) => a._currentValue / b;
-		public static bool operator <(Number  a, Number b) => a._currentValue < b._currentValue;
-		public static bool operator <(Number  a, float  b) => a._currentValue < b;
-		public static bool operator <(float   a, Number b) => a               < b._currentValue;
-		public static bool operator >(Number  a, Number b) => a._currentValue > b._currentValue;
-		public static bool operator >(Number  a, float  b) => a._currentValue > b;
-		public static bool operator >(float   a, Number b) => a               > b._currentValue;
-		public static float operator *(Number a, float  b) => a._currentValue + b;
+		public static float operator +(Number a, Number b)
+		{
+			return a._currentValue + b._currentValue;
+		}
+
+		public static float operator +(Number a, float b)
+		{
+			return a._currentValue + b;
+		}
+
+		public static float operator /(Number a, float b)
+		{
+			return a._currentValue / b;
+		}
+
+		public static bool operator <(Number a, Number b)
+		{
+			return a._currentValue < b._currentValue;
+		}
+
+		public static bool operator <(Number a, float b)
+		{
+			return a._currentValue < b;
+		}
+
+		public static bool operator <(float a, Number b)
+		{
+			return a < b._currentValue;
+		}
+
+		public static bool operator >(Number a, Number b)
+		{
+			return a._currentValue > b._currentValue;
+		}
+
+		public static bool operator >(Number a, float b)
+		{
+			return a._currentValue > b;
+		}
+
+		public static bool operator >(float a, Number b)
+		{
+			return a > b._currentValue;
+		}
+
+		public static float operator *(Number a, float b)
+		{
+			return a._currentValue + b;
+		}
 	}
 }

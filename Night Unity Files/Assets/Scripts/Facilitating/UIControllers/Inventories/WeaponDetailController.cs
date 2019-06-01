@@ -51,8 +51,8 @@ public class WeaponDetailController : MonoBehaviour
 	private void SetWeaponInfo(Weapon weapon)
 	{
 		_nameText.SetText(weapon.GetDisplayName());
-		_dpsText.SetText(weapon.DPS().Round(1).ToString(CultureInfo.InvariantCulture));
-		_typeText.SetText(weapon.GetWeaponTypeDescription());
+		_dpsText.SetText(weapon.WeaponAttributes.DPS().Round(1).ToString(CultureInfo.InvariantCulture));
+		_typeText.SetText(weapon.WeaponAttributes.GetWeaponTypeDescription());
 		SetConditionText();
 		SetAttributeText(weapon);
 	}
@@ -60,20 +60,20 @@ public class WeaponDetailController : MonoBehaviour
 	private void SetAttributeText(Weapon weapon)
 	{
 		if (!IsDetailed) return;
-		_damageText.SetText(weapon.Val(AttributeType.Damage).Round(1)              + " Damage");
-		_fireRateText.SetText(weapon.Val(AttributeType.FireRate).Round(1)          + " Rounds/Sec");
-		_reloadSpeedText.SetText(weapon.Val(AttributeType.ReloadSpeed).Round(1)    + "s Reload");
-		_recoilText.SetText(weapon.Val(AttributeType.Recoil).Round(1)              + "% Recoil");
-		_capacityText.SetText(Mathf.FloorToInt(weapon.Val(AttributeType.Capacity)) + " Capacity");
-		_accuracyText.SetText((weapon.Val(AttributeType.Accuracy) * 100).Round(1)  + "% Accuracy");
+		_damageText.SetText(weapon.WeaponAttributes.Val(AttributeType.Damage).Round(1)              + " Damage");
+		_fireRateText.SetText(weapon.WeaponAttributes.Val(AttributeType.FireRate).Round(1)          + " Rounds/Sec");
+		_reloadSpeedText.SetText(weapon.WeaponAttributes.Val(AttributeType.ReloadSpeed).Round(1)    + "s Reload");
+		_recoilText.SetText(weapon.WeaponAttributes.Val(AttributeType.Recoil).Round(1)              + "% Recoil");
+		_capacityText.SetText(Mathf.FloorToInt(weapon.WeaponAttributes.Val(AttributeType.Capacity)) + " Capacity");
+		_accuracyText.SetText((weapon.WeaponAttributes.Val(AttributeType.Accuracy) * 100).Round(1)  + "% Accuracy");
 	}
 
 	private void SetConditionText()
 	{
 		if (!IsDetailed) return;
-		float shatterChance = _weapon.CalculateShatterChance();
-		float burnChance    = _weapon.CalculateBurnChance();
-		float voidChance    = _weapon.CalculateVoidChance();
+		float shatterChance = _weapon.WeaponAttributes.CalculateShatterChance();
+		float burnChance    = _weapon.WeaponAttributes.CalculateBurnChance();
+		float voidChance    = _weapon.WeaponAttributes.CalculateVoidChance();
 
 		_shatterObject.SetActive(shatterChance != 0);
 		_burnObject.SetActive(burnChance       != 0);
@@ -91,7 +91,7 @@ public class WeaponDetailController : MonoBehaviour
 
 	private void UpdateDurabilityParticles()
 	{
-		_durabilityBar.SetWeapon();
+		_durabilityBar.SetWeapon(_weapon);
 	}
 
 	public RectTransform DurabilityRect()

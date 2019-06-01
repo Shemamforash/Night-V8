@@ -39,7 +39,7 @@ namespace Game.Characters
 		public bool PlayerRequirementsMet(Player player)
 		{
 			//todo fix this
-			if (_requiresSkillUnlock && player.Weapon.SkillOne == null) return false;
+			if (_requiresSkillUnlock && player.CharacterSkillOne == null) return false;
 			return _minLevel <= (int) EnvironmentManager.CurrentEnvironmentType;
 		}
 

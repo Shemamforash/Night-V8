@@ -58,17 +58,30 @@ namespace Game.Combat.Misc
 			UpdateCooldownControllers(normalisedTime);
 		}
 
+		private bool IsCharacterSkillOneUnlocked() => _player.Attributes.SkillOneUnlocked;
+		private bool IsCharacterSkillTwoUnlocked() => _player.Attributes.SkillTwoUnlocked;
+		private bool IsWeaponSkillOneUnlocked()    => _player.Attributes.WeaponSkillOneUnlocks.Contains(_player.Weapon.WeaponType());
+		private bool IsWeaponSkillTwoUnlocked()    => _player.Attributes.WeaponSkillTwoUnlocks.Contains(_player.Weapon.WeaponType());
+
 		private void TryUpdateSkills()
 		{
 			if (!_needsUpdate) return;
 			_needsUpdate = false;
-			_player      = CharacterManager.SelectedCharacter;
-			Weapon weapon = _player.Weapon;
 			_cooldownModifier          = _player.Attributes.CooldownModifier();
-			_skillControllers[0].Skill = weapon.SkillOne;
-			_skillControllers[1].Skill = weapon.SkillTwo;
-			_skillControllers[2].Skill = weapon.SkillThree;
-			_skillControllers[3].Skill = weapon.SkillFour;
+			Skill characterSkillOne = _player.CharacterSkillOne;
+			Skill characterSkillTwo = _player.CharacterSkillTwo;
+			Skill weaponSkillOne    = _player.Weapon.WeaponSkillOne;
+			Skill weaponSkillTwo    = _player.Weapon.WeaponSkillTwo;
+
+			BindSkill(0, characterSkillOne, IsCharacterSkillOneUnlocked, _player.GetCharacterSkillOneProgress);
+			BindSkill(1, characterSkillTwo, IsCharacterSkillTwoUnlocked, _player.GetCharacterSkillTwoProgress);
+			BindSkill(2, weaponSkillOne,    IsWeaponSkillOneUnlocked,    _player.GetWeaponSkillOneProgress);
+			BindSkill(3, weaponSkillTwo,    IsWeaponSkillTwoUnlocked,    _player.GetWeaponSkillTwoProgress);
+		}
+
+		private void BindSkill(int slot, Skill skill, Func<bool> isSkillUnlocked, Func<Tuple<string, float>> getProgress)
+		{
+			_skillControllers[slot].SetSkill(skill, isSkillUnlocked, getProgress);
 		}
 
 		public static float CooldownRemaining
@@ -114,7 +127,7 @@ namespace Game.Combat.Misc
 
 		public static void DecreaseCooldown(Weapon weapon)
 		{
-			float decreaseAmount = weapon.DPS() / weapon.CurrentLevel;
+			float decreaseAmount = weapon.WeaponAttributes.DPS() / weapon.WeaponAttributes.GetDurability().CurrentValue;
 			CooldownRemaining -= decreaseAmount / 100;
 		}
 	}

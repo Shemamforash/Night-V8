@@ -45,9 +45,9 @@ namespace Game.Gear.Weapons
 			Weapon minWeapon  = null;
 			for (int i = 0; i < TestRuns; ++i)
 			{
-				Weapon w = WeaponGenerator.Generate(quality, type);
+				Weapon w = WeaponGenerator.GenerateWeapon(quality, type);
 				DesiredStats.ForEach(stat => _attributeStats[stat].AddValue(w));
-				float dps = w.DPS();
+				float dps = w.WeaponAttributes.DPS();
 				averageDps += dps;
 				if (dps < minDps)
 				{
@@ -68,8 +68,8 @@ namespace Game.Gear.Weapons
 			_testResultString += indent + "DPS: " + averageDps.Round(1) + " (min: " + minDps.Round(1) + " /max: " + maxDps.Round(1) + " )\n";
 			DesiredStats.ForEach(stat => _testResultString += indent + _attributeStats[stat].GetString() + "\n");
 			_testResultString += "\n";
-			_testResultString += maxWeapon.GetPrintMessage() + "\n";
-			_testResultString += minWeapon.GetPrintMessage() + "\n";
+			_testResultString += maxWeapon.WeaponAttributes.GetPrintMessage() + "\n";
+			_testResultString += minWeapon.WeaponAttributes.GetPrintMessage() + "\n";
 		}
 
 		private class MinMaxAverage
@@ -82,7 +82,7 @@ namespace Game.Gear.Weapons
 
 			public void AddValue(Weapon weapon)
 			{
-				float value = weapon.Val(_type);
+				float value = weapon.WeaponAttributes.Val(_type);
 				_average += value;
 				_runs++;
 				if (value < _min) _min = value;

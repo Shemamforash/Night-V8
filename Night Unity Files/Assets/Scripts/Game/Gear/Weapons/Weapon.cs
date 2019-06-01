@@ -4,164 +4,194 @@ using Extensions;
 using Game.Characters;
 using Game.Combat.Misc;
 using Game.Combat.Player;
-using Game.Global;
-using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.ReactiveUI;
+using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
-	public class Weapon : DesolationAttributes
-	{
-		private const    int                               AbsoluteMaxUpgradeLevel = 50;
-		private          string                            Description;
-		private readonly Dictionary<AttributeType, Number> _attributeValues = new Dictionary<AttributeType, Number>();
-		private          float                             _dps;
-		private          int                               _currentLevel           = 0;
-		private          int                               _currentMaxUpgradeLevel = 10;
-		private const    float                             RangeMin                = 1.5f;
-		private const    float                             RangeMax                = 5.5f;
-		public readonly  Character                         EquippedCharacter;
-		public           Skill                             SkillOne, SkillTwo, SkillThree, SkillFour;
+    public class Weapon : GearItem
+    {
+        private const float RangeMin = 1.5f;
+        private const float RangeMax = 5.5f;
+        public readonly WeaponAttributes WeaponAttributes;
+        public readonly Skill WeaponSkillOne, WeaponSkillTwo;
+        private Inscription _inscription;
+        private bool _inscriptionApplied;
 
-		public Weapon(Character equippedCharacter)
-		{
-			EquippedCharacter = equippedCharacter;
-			InitialiseAttributes();
-		}
+        private Weapon(WeaponClass weaponClass, ItemQuality _itemQuality) : base(_itemQuality + " " + weaponClass.Name, _itemQuality)
+        {
+            WeaponAttributes = new WeaponAttributes(this, weaponClass);
+            WeaponSkillOne = WeaponSkills.GetWeaponSkillOne(this);
+            WeaponSkillTwo = WeaponSkills.GetWeaponSkillTwo(this);
+        }
 
-		private Weapon(ItemQuality quality, WeaponType weaponType)
-		{
-		}
+        public static Weapon LoadWeapon(XmlNode root)
+        {
+            int weaponClassInt = root.ParseInt("Class");
+            WeaponClass weaponClass = WeaponClass.IntToWeaponClass(weaponClassInt);
+            ItemQuality weaponQuality = (ItemQuality) root.ParseInt("Quality");
+            Weapon weapon = new Weapon(weaponClass, weaponQuality);
+            weapon.Load(root);
+            return weapon;
+        }
 
-		public void InitialiseAttributes()
-		{
-			SetMax(AttributeType.Accuracy, 1);
-			Description = "A gun";
-			_attributeValues.Add(AttributeType.Damage,      new Number());
-			_attributeValues.Add(AttributeType.Accuracy,    new Number(0f, 0f, 1f));
-			_attributeValues.Add(AttributeType.FireRate,    new Number());
-			_attributeValues.Add(AttributeType.ReloadSpeed, new Number());
-			_attributeValues.Add(AttributeType.Recoil,      new Number(0f, 0f, 1f));
-			_attributeValues.Add(AttributeType.Range,       new Number());
-			_attributeValues.Add(AttributeType.Pellets,     new Number(1f, 1f));
-			_attributeValues.Add(AttributeType.Capacity,    new Number(1f, 1f));
-			_attributeValues.Add(AttributeType.Void,        new Number(0f, 0f, 1f));
-			_attributeValues.Add(AttributeType.Shatter,     new Number(0f, 0f, 1f));
-			_attributeValues.Add(AttributeType.Burn,        new Number(0f, 0f, 1f));
-			_attributeValues.Add(AttributeType.Pierce,      new Number(0f, 0f, 1f));
-		}
+        protected override void Load(XmlNode root)
+        {
+            base.Load(root);
+            WeaponAttributes.Load(root);
+            XmlNode inscriptionNode = root.SelectSingleNode("Inscription");
+            if (inscriptionNode == null) return;
+            Inscription inscription = Inscription.LoadInscription(inscriptionNode);
+            SetInscription(inscription);
+        }
 
-		public static Weapon Generate(ItemQuality quality, WeaponType weaponType) => new Weapon(quality, weaponType);
+        public override XmlNode Save(XmlNode root)
+        {
+            root = root.CreateChild("Weapon");
+            base.Save(root);
+            WeaponAttributes.Save(root);
+            _inscription?.Save(root);
+            return root;
+        }
 
-		public WeaponType WeaponType() => Weapons.WeaponType.Pistol;
+        public static Weapon Generate(ItemQuality quality) => new Weapon(WeaponClass.GetRandomClass(), quality);
 
-		public float CalculateMinimumDistance()
-		{
-			float range = Val(AttributeType.Accuracy);
-			range *= range;
-			float minimumDistance = (RangeMax - RangeMin) * range + RangeMin * 0.5f;
-			return minimumDistance;
-		}
+        public static Weapon Generate(ItemQuality quality, WeaponClass weaponClass) => new Weapon(weaponClass, quality);
 
-		public void ApplyInscription(Inscription inscription)
-		{
-			Inventory.Destroy(inscription);
-			ApplyInscriptionModifier(inscription);
-			RecalculateAttributeValues();
-		}
+        public float CalculateMinimumDistance()
+        {
+            float range = WeaponAttributes.Val(AttributeType.Accuracy);
+            range *= range;
+            float minimumDistance = (RangeMax - RangeMin) * range + RangeMin * 0.5f;
+            return minimumDistance;
+        }
 
-		public string GetDisplayName()
-		{
-			return "Gun";
-		}
+        public void SetInscription(Inscription inscription)
+        {
+            RemoveInscription();
+            RemoveInscriptionModifier();
+            _inscription = inscription;
+            Inventory.Destroy(inscription);
+            ApplyInscriptionModifier();
+            ApplyInscription();
+            WeaponAttributes.RecalculateAttributeValues();
+        }
 
-		private void ApplyInscriptionModifier(Inscription inscription)
-		{
-			Assert.IsNotNull(inscription);
-			ApplyModifier(inscription.Target(), inscription.Modifier());
-		}
+        public string GetDisplayName()
+        {
+            string displayName = Name;
+            if (_inscription != null) displayName += " of " + _inscription.TemplateName();
+            return displayName;
+        }
 
-		public void ApplyModifier(AttributeType target, AttributeModifier modifier)
-		{
-			Get(target).AddModifier(modifier);
-			RecalculateAttributeValues();
-		}
+        private void ApplyInscriptionModifier()
+        {
+            if (_inscription == null) return;
+            ApplyModifier(_inscription.Target(), _inscription.Modifier());
+        }
 
-		public string GetSummary() => DPS().Round(1) + "DPS";
+        private void RemoveInscriptionModifier()
+        {
+            if (_inscription == null) return;
+            RemoveModifier(_inscription.Target(), _inscription.Modifier());
+        }
 
-		public int MaxLevel     => _currentMaxUpgradeLevel;
-		public int CurrentLevel => _currentLevel;
+        public void ApplyModifier(AttributeType target, AttributeModifier modifier)
+        {
+            if (CharacterAttribute.IsCharacterAttribute(target)) return;
+            WeaponAttributes.Get(target).AddModifier(modifier);
+            WeaponAttributes.RecalculateAttributeValues();
+        }
 
-		public bool CanIncreaseUpgradeLevel() => _currentMaxUpgradeLevel < AbsoluteMaxUpgradeLevel;
+        public void RemoveModifier(AttributeType target, AttributeModifier modifier)
+        {
+            if (CharacterAttribute.IsCharacterAttribute(target)) return;
+            WeaponAttributes.Get(target).RemoveModifier(modifier);
+            WeaponAttributes.RecalculateAttributeValues();
+        }
 
-		public void IncreaseUpgradeLevel()
-		{
-			if (_currentMaxUpgradeLevel >= AbsoluteMaxUpgradeLevel) return;
-			_currentMaxUpgradeLevel += 10;
-		}
 
-		public bool CanUpgrade() => _currentLevel < _currentMaxUpgradeLevel;
+        public WeaponType WeaponType() => WeaponAttributes.WeaponType;
 
-		public bool CanIncreaseAttribute(AttributeType attribute) => !_attributeValues[attribute].ReachedMax;
+        public float GetAttributeValue(AttributeType attributeType) => WeaponAttributes.Get(attributeType).CurrentValue;
 
-		public void IncreaseAttribute(AttributeType attribute, float amount) => _attributeValues[attribute].Increment(amount);
+        public override string GetSummary() => WeaponAttributes.DPS().Round(1) + "DPS";
 
-		public override XmlNode Save(XmlNode root)
-		{
-			root = root.CreateChild("Weapon");
-			root = base.Save(root);
-			return root;
-		}
+        public BaseWeaponBehaviour InstantiateWeaponBehaviour(CharacterCombat player)
+        {
+            BaseWeaponBehaviour weaponBehaviour;
+            switch (WeaponAttributes.GetWeaponClass())
+            {
+                case WeaponClassType.Shortshooter:
+                    weaponBehaviour = player.gameObject.AddComponent<DoubleFireDelay>();
+                    break;
+                case WeaponClassType.Skullcrusher:
+                    weaponBehaviour = player.gameObject.AddComponent<DoubleFireDelay>();
+                    break;
+                case WeaponClassType.Spitter:
+                    weaponBehaviour = player.gameObject.AddComponent<Burstfire>();
+                    break;
+                case WeaponClassType.Gouger:
+                    weaponBehaviour = player.gameObject.AddComponent<AccuracyGainer>();
+                    break;
+                default:
+                    weaponBehaviour = player.gameObject.AddComponent<DefaultBehaviour>();
+                    break;
+            }
 
-		public override void Load(XmlNode root)
-		{
-			base.Load(root);
-		}
+            weaponBehaviour.Initialise(player);
+            return weaponBehaviour;
+        }
 
-		public void RecalculateAttributeValues()
-		{
-			CalculateDPS();
-		}
+        public override void Equip(Character character)
+        {
+            base.Equip(character);
+            ApplyInscription();
+            EquippedCharacter.Accessory?.ApplyToWeapon(this);
+        }
 
-		private void CalculateDPS()
-		{
-			float averageShotDamage = Val(AttributeType.Damage)   * (int) Val(AttributeType.Pellets);
-			float magazineDamage    = Val(AttributeType.Capacity) * averageShotDamage;
-			float magazineDuration  = Val(AttributeType.Capacity) / Val(AttributeType.FireRate) + Val(AttributeType.ReloadSpeed);
-			_dps = magazineDamage / magazineDuration;
-		}
+        public override void UnEquip()
+        {
+            if (EquippedCharacter == null) return;
+            RemoveInscription();
+            EquippedCharacter.Accessory?.RemoveFromWeapon(this);
+            base.UnEquip();
+        }
 
-		public float DPS() => _dps;
+        private void ApplyInscription()
+        {
+            if (_inscriptionApplied || _inscription == null) return;
+            (EquippedCharacter as Player)?.ApplyModifier(_inscription.Target(), _inscription.Modifier());
+            _inscriptionApplied = true;
+        }
 
-		public string GetPrintMessage() => "A Gun : "                                       + _currentMaxUpgradeLevel
-		                                                                 + "\nDPS: "        + DPS()
-		                                                                 + "\nCapacity:   " + Val(AttributeType.Capacity)
-		                                                                 + "\nPellets:    " + Val(AttributeType.Pellets)
-		                                                                 + "\nDamage:     " + Val(AttributeType.Damage)
-		                                                                 + "\nFire Rate:  " + Val(AttributeType.FireRate)
-		                                                                 + "\nReload:     " + Val(AttributeType.ReloadSpeed)
-		                                                                 + "\nAccuracy: "   + Val(AttributeType.Accuracy);
+        private void RemoveInscription()
+        {
+            if (!_inscriptionApplied || _inscription == null) return;
+            (EquippedCharacter as Player)?.RemoveModifier(_inscription.Target(), _inscription.Modifier());
+            _inscriptionApplied = false;
+        }
 
-		public string GetWeaponTypeDescription() => Description;
+        public Inscription GetInscription() => _inscription;
 
-		private float CalculateConditionChance(AttributeType condition)
-		{
-			float weaponChance                                      = Val(condition);
-			float characterChance                                   = 0;
-			if (EquippedCharacter is Player player) characterChance += player.Attributes.Val(condition);
-			float totalChance                                       = weaponChance + characterChance;
-			totalChance = totalChance.Round(2);
-			return totalChance;
-		}
+        protected override void CalculateDismantleRewards()
+        {
+            base.CalculateDismantleRewards();
+            int quality = (int) Quality() + 1;
+            AddReward("Essence", quality);
+            List<string> possibleRewards = new List<string>();
+            for (int i = 0; i < quality; ++i)
+            {
+                if (i == 0) possibleRewards.Add("Essence");
+                if (i == 1) possibleRewards.Add("Rusty Scrap");
+                if (i == 2) possibleRewards.Add("Metal Shards");
+                if (i == 3) possibleRewards.Add("Ancient Relics");
+                if (i == 4) possibleRewards.Add("Celestial Fragments");
+            }
 
-		public float CalculateShatterChance() => CalculateConditionChance(AttributeType.Shatter);
-
-		public float CalculateBurnChance() => CalculateConditionChance(AttributeType.Burn);
-
-		public float CalculateVoidChance() => CalculateConditionChance(AttributeType.Void);
-
-		public float PierceChance() => Val(AttributeType.Pierce) / 100f;
-	}
+            int count = Mathf.FloorToInt(quality / 2f) + 1;
+            for (int i = 0; i < count; ++i) AddReward(possibleRewards.RemoveRandom(), 2);
+        }
+    }
 }

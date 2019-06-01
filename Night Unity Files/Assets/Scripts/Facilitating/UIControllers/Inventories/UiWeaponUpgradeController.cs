@@ -21,8 +21,9 @@ namespace Facilitating.UIControllers
 		public static bool                   Locked;
 		private       Weapon                 _equippedWeapon;
 		private       GameObject             _infoGameObject;
-		private       EnhancedButton         _infuseButton;
+		private       EnhancedButton         _infuseButton, _swapButton;
 		private       ListController         _inscriptionList;
+		private       ListController         _weaponList;
 		private       bool                   _seenAttributeTutorial, _seenInfuseTutorial;
 		private       bool                   _upgradingAllowed;
 		private       WeaponDetailController _weaponDetail;
@@ -35,6 +36,9 @@ namespace Facilitating.UIControllers
 			_weaponDetail    = gameObject.FindChildWithName<WeaponDetailController>("Stats");
 			_infuseButton    = gameObject.FindChildWithName<EnhancedButton>("Inscribe");
 			_infoGameObject  = gameObject.FindChildWithName("Info");
+			_swapButton      = gameObject.FindChildWithName<EnhancedButton>("Swap");
+			_weaponList      = gameObject.FindChildWithName<ListController>("Weapon List");
+
 
 #if UNITY_EDITOR
 			for (int i = 0; i < 10; ++i)
@@ -48,6 +52,14 @@ namespace Facilitating.UIControllers
 			}
 #endif
 
+			_swapButton.AddOnClick(() =>
+			{
+				if (!WeaponsAreAvailable()) return;
+				UiGearMenuController.SetCloseButtonAction(Show);
+				_weaponList.Show();
+				_infoGameObject.SetActive(false);
+			});
+
 			_infuseButton.AddOnClick(() =>
 			{
 				if (!InscriptionsAreAvailable()) return;
@@ -59,6 +71,16 @@ namespace Facilitating.UIControllers
 
 		protected override void Initialise()
 		{
+			List<ListElement> weaponListElements = new List<ListElement>();
+			weaponListElements.Add(new WeaponElement());
+			weaponListElements.Add(new WeaponElement());
+			weaponListElements.Add(new WeaponElement());
+			weaponListElements.Add(new DetailedWeaponElement());
+			weaponListElements.Add(new WeaponElement());
+			weaponListElements.Add(new WeaponElement());
+			weaponListElements.Add(new WeaponElement());
+			_weaponList.Initialise(weaponListElements, Equip, BackToWeaponInfo, GetAvailableWeapons);
+			_weaponList.Hide();
 			_inscriptionList.Initialise(typeof(InscriptionElement), Inscribe, BackToWeaponInfo, GetAvailableInscriptions);
 			_inscriptionList.Hide();
 		}
@@ -69,6 +91,19 @@ namespace Facilitating.UIControllers
 			UiGearMenuController.FlashCloseButton();
 		}
 
+		private static List<object> GetAvailableWeapons()
+		{
+			List<Weapon> weapons = Inventory.GetAvailableWeapons();
+			weapons.Sort((a, b) =>
+			{
+				if ((int) a.Quality()    > (int) b.Quality()) return -1;
+				if ((int) a.Quality()    < (int) b.Quality()) return 1;
+				if ((int) a.WeaponType() < (int) b.WeaponType()) return -1;
+				if ((int) a.WeaponType() > (int) b.WeaponType()) return 1;
+				return string.Compare(a.Name, b.Name, StringComparison.InvariantCulture);
+			});
+			return weapons.ToObjectList();
+		}
 
 		private static List<object> GetAvailableInscriptions()
 		{
@@ -86,8 +121,11 @@ namespace Facilitating.UIControllers
 		{
 			UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
 			_infoGameObject.SetActive(true);
+			_weaponList.Hide();
 			_inscriptionList.Hide();
-			SelectButton(_infuseButton);
+			_swapButton.gameObject.SetActive(WeaponsAreAvailable());
+			SelectButton(_swapButton);
+
 			SetWeapon();
 			StartCoroutine(TryShowWeaponTutorial());
 		}
@@ -131,14 +169,24 @@ namespace Facilitating.UIControllers
 			yield return StartCoroutine(ShowInfuseTutorial());
 		}
 
+		private void Equip(object weaponObject)
+		{
+			Weapon weapon = (Weapon) weaponObject;
+			CharacterManager.SelectedCharacter.EquipWeapon(weapon);
+			UiGearMenuController.PlayAudio(AudioClips.EquipWeapon);
+			Show();
+		}
+
 		private void Inscribe(object inscriptionObject)
 		{
 			Inscription inscription = (Inscription) inscriptionObject;
 			if (!inscription.CanAfford()) return;
 			Weapon weapon = CharacterManager.SelectedCharacter.Weapon;
-			weapon.ApplyInscription(inscription);
-			if (!weapon.CanIncreaseUpgradeLevel() && inscription.Quality() == ItemQuality.Radiant)
+			weapon.SetInscription(inscription);
+			if (weapon.Quality() == ItemQuality.Radiant && inscription.Quality() == ItemQuality.Radiant)
+			{
 				AchievementManager.Instance().MaxOutWeapon();
+			}
 
 			Show();
 			UiGearMenuController.PlayAudio(AudioClips.Infuse);
@@ -152,7 +200,9 @@ namespace Facilitating.UIControllers
 		{
 			_equippedWeapon = CharacterManager.SelectedCharacter.Weapon;
 			_weaponDetail.SetWeapon(_equippedWeapon);
-			UpdateWeaponActions();
+			if (_equippedWeapon == null)
+				_infuseButton.gameObject.SetActive(false);
+			else UpdateWeaponActions();
 		}
 
 		private void SelectButton(EnhancedButton from)
@@ -163,16 +213,17 @@ namespace Facilitating.UIControllers
 				return;
 			}
 
-			if (_infuseButton.gameObject.activeInHierarchy)
-				_infuseButton.Select();
+			if (_swapButton.gameObject.activeInHierarchy) _swapButton.Select();
+			else if (_infuseButton.gameObject.activeInHierarchy) _infuseButton.Select();
 		}
 
 		private void UpdateWeaponActions()
 		{
-			bool reachedMaxDurability  = !_equippedWeapon.CanIncreaseUpgradeLevel() || Inventory.GetResourceQuantity("Essence") == 0;
 			bool inscriptionsAvailable = InscriptionsAreAvailable();
-			_infuseButton.gameObject.SetActive(inscriptionsAvailable && !reachedMaxDurability);
+			_infuseButton.gameObject.SetActive(inscriptionsAvailable);
 		}
+
+		private static bool WeaponsAreAvailable() => GetAvailableWeapons().Count != 0;
 
 		private static bool InscriptionsAreAvailable() => GetAvailableInscriptions().Count != 0;
 
@@ -191,6 +242,53 @@ namespace Facilitating.UIControllers
 				if (!inscription.CanAfford()) costText = "Requires " + costText;
 				LeftText.SetText(costText);
 				RightText.SetText(inscription.GetSummary());
+			}
+		}
+
+		private class WeaponElement : BasicListElement
+		{
+			protected override void UpdateCentreItemEmpty()
+			{
+			}
+
+			protected override void Update(object o, bool isCentreItem)
+			{
+				Weapon weapon = (Weapon) o;
+				CentreText.SetText(weapon.GetDisplayName());
+				LeftText.SetText(weapon.WeaponType().ToString());
+				RightText.SetText(weapon.WeaponAttributes.DPS().Round(1) + " DPS");
+			}
+		}
+
+		private class DetailedWeaponElement : ListElement
+		{
+			private WeaponDetailController _detailController;
+
+			protected override void UpdateCentreItemEmpty()
+			{
+				_detailController.SetWeapon(null);
+			}
+
+			public override void SetColour(Color colour)
+			{
+			}
+
+			protected override void SetVisible(bool visible)
+			{
+			}
+
+			protected override void CacheUiElements(Transform transform)
+			{
+				_detailController = transform.GetComponent<WeaponDetailController>();
+			}
+
+			protected override void Update(object o, bool isCentreItem)
+			{
+				Weapon weapon = (Weapon) o;
+				_detailController.SetWeapon(weapon);
+				Weapon equippedWeapon = CharacterManager.SelectedCharacter.Weapon;
+				if (equippedWeapon == null) return;
+//                _detailController.CompareTo(equippedWeapon);
 			}
 		}
 	}

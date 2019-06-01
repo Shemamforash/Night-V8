@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml;
 using Extensions;
-using Facilitating.Persistence;
 using Game.Characters;
 using NUnit.Framework;
 using SamsHelper.ReactiveUI;
+using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.Basic
 {
@@ -16,7 +17,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 
 		public override float CurrentValue
 		{
-			get => _calculatedValue;
+			get => Mathf.Clamp(_calculatedValue, Min, Max);
 			set
 			{
 				base.CurrentValue = value;
@@ -24,16 +25,42 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 			}
 		}
 
+
 		public override void Increment(float amount = 1)
 		{
 			base.Increment(amount);
 			Recalculate();
 		}
 
+		public override void Decrement(float amount = 1)
+		{
+			base.Decrement(amount);
+			Recalculate();
+		}
+
 		public void Recalculate()
 		{
-			float rawBonus = _modifiers.Sum(m => m.Value);
+			float rawBonus = _modifiers.Sum(m => m.RawBonus());
 			_calculatedValue = base.CurrentValue + rawBonus;
+			if (_modifiers.Count == 0) return;
+			_modifiers.Sort((a, b) => a.Depth().CompareTo(b.Depth()));
+
+			int   currentDepth = _modifiers[0].Depth();
+			float finalBonus   = 1;
+			_modifiers.ForEach(m =>
+			{
+				int depth = m.Depth();
+				if (depth != currentDepth)
+				{
+					_calculatedValue *= finalBonus;
+					finalBonus       =  1;
+					currentDepth     =  depth;
+				}
+
+				finalBonus += m.FinalBonus();
+			});
+			if (finalBonus < 0) finalBonus = 0;
+			_calculatedValue *= finalBonus;
 		}
 
 		public void AddModifier(AttributeModifier modifier)
@@ -70,6 +97,11 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 			if (max.Length > 10) max = "1000000";
 			Max          = float.Parse(max);
 			CurrentValue = attributeNode.ParseFloat("Value");
+		}
+
+		public static bool IsCharacterAttribute(AttributeType attribute)
+		{
+			return attribute == AttributeType.Life || attribute == AttributeType.Will;
 		}
 	}
 }

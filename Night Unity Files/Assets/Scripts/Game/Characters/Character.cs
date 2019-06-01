@@ -11,13 +11,12 @@ namespace Game.Characters
 	{
 		public readonly ArmourController Armour = new ArmourController();
 		public          Accessory        Accessory;
-		public readonly Weapon           Weapon;
+		public          Weapon           Weapon;
 		public          string           Name;
 
 		protected Character(string name)
 		{
-			Name   = name;
-			Weapon = new Weapon(this);
+			Name           = name;
 		}
 
 		public virtual XmlNode Save(XmlNode root)
@@ -25,8 +24,8 @@ namespace Game.Characters
 			root = root.CreateChild("Character");
 			root.CreateChild("Name", Name);
 			XmlNode equipped = root.CreateChild("EquippedItems");
-			Weapon.Save(equipped);
 			Armour.Save(equipped);
+			if (Weapon != null) equipped.CreateChild("Weapon", Weapon.ID());
 			if (Accessory != null) equipped.CreateChild("Accessory", Accessory.ID());
 			return root;
 		}
@@ -40,7 +39,7 @@ namespace Game.Characters
 			int     weaponId      = weaponNode?.ParseInt("Weapon")       ?? -1;
 			int     accessoryId   = accessoryNode?.ParseInt("Accessory") ?? -1;
 			Armour.Load(root);
-			Weapon.Load(root);
+			EquipWeapon(Inventory.FindWeapon(weaponId));
 			EquipAccessory(Inventory.FindAccessory(accessoryId));
 		}
 
@@ -49,6 +48,13 @@ namespace Game.Characters
 			Accessory?.UnEquip();
 			Accessory = accessory;
 			accessory?.Equip(this);
+		}
+
+		public virtual void EquipWeapon(Weapon weapon)
+		{
+			Weapon?.UnEquip();
+			Weapon = weapon;
+			weapon?.Equip(this);
 		}
 	}
 }

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using Extensions;
-using Facilitating.Persistence;
 using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
 
@@ -16,8 +15,11 @@ namespace Game.Global
 			_attributes.Add(attributeType, new CharacterAttribute());
 		}
 
-		public float Val(AttributeType    attributeType)               => Get(attributeType).CurrentValue;
-		public void  SetMax(AttributeType attributeType, float newMax) => Get(attributeType).Max = newMax;
+		public void SetVal(AttributeType type, float value)
+		{
+			CharacterAttribute attribute = Get(type);
+			attribute.CurrentValue = value;
+		}
 
 		public CharacterAttribute Get(AttributeType attributeType)
 		{
@@ -26,7 +28,40 @@ namespace Game.Global
 			return _attributes[attributeType];
 		}
 
-		public float Max(AttributeType attributeType) => Get(attributeType).Max;
+		public float Val(AttributeType attributeType)
+		{
+			return Get(attributeType).CurrentValue;
+		}
+
+		public void SetMin(AttributeType attributeType, float newMin)
+		{
+			Get(attributeType).Min = newMin;
+		}
+
+		public void SetMax(AttributeType attributeType, float newMax)
+		{
+			Get(attributeType).Max = newMax;
+		}
+
+		public float Min(AttributeType attributeType)
+		{
+			return Get(attributeType).Min;
+		}
+
+		public float Max(AttributeType attributeType)
+		{
+			return Get(attributeType).Max;
+		}
+
+		public void AddMod(AttributeType attributeType, AttributeModifier modifier)
+		{
+			Get(attributeType).AddModifier(modifier);
+		}
+
+		public void RemoveMod(AttributeType attributeType, AttributeModifier modifier)
+		{
+			Get(attributeType).RemoveModifier(modifier);
+		}
 
 		public virtual void Load(XmlNode doc)
 		{

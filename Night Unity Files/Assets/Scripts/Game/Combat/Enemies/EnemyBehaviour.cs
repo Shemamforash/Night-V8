@@ -75,7 +75,7 @@ namespace Game.Combat.Enemies
 			float healthBefore = HealthController.GetCurrentHealth();
 			base.TakeShotDamage(shot);
 			if (HealthController.GetCurrentHealth() != 0 || healthBefore == 0) return;
-//			PlayerCombat.Instance.Player.IncreaseKills();
+			PlayerCombat.Instance.Player.IncreaseKills();
 		}
 
 		public override void Kill()

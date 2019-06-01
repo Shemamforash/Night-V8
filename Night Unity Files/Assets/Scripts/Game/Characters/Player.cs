@@ -1,4 +1,6 @@
-﻿using System.Xml;
+﻿using System;
+using System.Collections.Generic;
+using System.Xml;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
 using Game.Combat.Player;
@@ -8,6 +10,7 @@ using Game.Exploration.WorldEvents;
 using Game.Gear.Armour;
 using Game.Global;
 using Extensions;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
@@ -31,12 +34,14 @@ namespace Game.Characters
 			"I can't remember when I last had some sleep"
 		};
 
-		private CharacterView _characterView;
-		private int           _daysSurvived;
-		private int           _timeAlive;
+		private readonly Dictionary<WeaponType, int> _weaponKills = new Dictionary<WeaponType, int>();
+		private          CharacterView               _characterView;
+		private          int                         _daysSurvived;
+		private          int                         _timeAlive;
 
 		public readonly CharacterAttributes Attributes;
 		public readonly BrandManager        BrandManager = new BrandManager();
+		public readonly Skill               CharacterSkillOne, CharacterSkillTwo;
 		public readonly CharacterTemplate   CharacterTemplate;
 		public readonly StateMachine        States = new StateMachine();
 
@@ -172,25 +177,86 @@ namespace Game.Characters
 			if (_characterView != null) _characterView.AccessoryController.UpdateAccessory();
 		}
 
+		public override void EquipWeapon(Weapon weapon)
+		{
+			base.EquipWeapon(weapon);
+			if (_characterView        != null) _characterView.WeaponController.UpdateWeapon();
+			if (PlayerCombat.Instance == null) return;
+			PlayerCombat.Instance.EquipWeapon();
+		}
+
+		public void IncreaseKills()
+		{
+			if (CharacterManager.CurrentRegion().GetRegionType() == RegionType.Tutorial) return;
+			WeaponType weaponType = Weapon.WeaponType();
+			_weaponKills[weaponType] = _weaponKills[weaponType] + 1;
+			TryUnlockWeaponSkills(weaponType, true);
+		}
+
+		private const int CharacterSkillOneTarget = 2, CharacterSkillTwoTarget = 4, WeaponSkillOneTarget = 75, WeaponSkillTwoTarget = 200;
+
+		public Tuple<string, float> GetCharacterSkillOneProgress() => GetCharacterSkillProgress(CharacterSkillOneTarget);
+
+		public Tuple<string, float> GetCharacterSkillTwoProgress() => GetCharacterSkillProgress(CharacterSkillTwoTarget);
+
+		public void TryUnlockCharacterSkill(bool showScreen)
+		{
+			if (_daysSurvived >= CharacterSkillOneTarget)
+				Attributes.UnlockCharacterSkillOne(showScreen);
+			if (_daysSurvived >= CharacterSkillTwoTarget)
+				Attributes.UnlockCharacterSkillTwo(showScreen);
+		}
+
+		private Tuple<string, float> GetCharacterSkillProgress(int target)
+		{
+			int    progress           = target                - _daysSurvived;
+			string progressString     = "Survive " + progress + " day".Pluralise(progress);
+			float  normalisedProgress = (float) _daysSurvived / target;
+			return Tuple.Create(progressString, normalisedProgress);
+		}
+
+		public Tuple<string, float> GetWeaponSkillOneProgress() => GetWeaponProgress(WeaponSkillOneTarget);
+
+		public Tuple<string, float> GetWeaponSkillTwoProgress() => GetWeaponProgress(WeaponSkillTwoTarget);
+
+		private Tuple<string, float> GetWeaponProgress(int target)
+		{
+			WeaponType weaponType         = Weapon.WeaponType();
+			int        progress           = target - _weaponKills[weaponType];
+			string     pluralisedEnemy    = progress <= 1 ? " enemy" : " enemies";
+			string     progressString     = "Kill " + progress + pluralisedEnemy;
+			float      normalisedProgress = (float) _weaponKills[weaponType] / target;
+			return Tuple.Create(progressString, normalisedProgress);
+		}
+
+		private void TryUnlockWeaponSkills(WeaponType weaponType, bool showScreen)
+		{
+			if (_weaponKills[weaponType] >= WeaponSkillOneTarget)
+				Attributes.UnlockWeaponSkillOne(weaponType, showScreen);
+			if (_weaponKills[weaponType] >= WeaponSkillTwoTarget)
+				Attributes.UnlockWeaponSkillTwo(weaponType, showScreen);
+		}
+
+		public void ApplyModifier(AttributeType target, AttributeModifier modifier)
+		{
+			if (!CharacterAttribute.IsCharacterAttribute(target)) return;
+			CharacterAttribute attribute = Attributes.Get(target);
+			attribute.Max += modifier.RawBonus();
+			if (PlayerCombat.Instance == null) return;
+			PlayerCombat.Instance.RecalculateAttributes();
+		}
+
+		public void RemoveModifier(AttributeType target, AttributeModifier modifier)
+		{
+			if (!CharacterAttribute.IsCharacterAttribute(target)) return;
+			CharacterAttribute attribute = Attributes.Get(target);
+			attribute.Max -= modifier.RawBonus();
+			if (PlayerCombat.Instance == null) return;
+			PlayerCombat.Instance.RecalculateAttributes();
+		}
+
 		private bool CanRest() => Attributes.Life < Attributes.Life.Max || Attributes.Will < Attributes.Will.Max;
 
 		public CharacterView CharacterView() => _characterView;
-
-		public void ApplyModifier(AttributeType attributeType, AttributeModifier modifier)
-		{
-			CharacterAttribute attribute = Attributes.Get(attributeType);
-			if (attributeType.IsCoreAttribute() && attribute.Max == 20) return;
-			attribute.Max += modifier.Value;
-			if (PlayerCombat.Instance == null) return;
-			PlayerCombat.Instance.RecalculateAttributes();
-		}
-
-		public void RemoveModifier(AttributeType attributeType, AttributeModifier modifier)
-		{
-			CharacterAttribute attribute = Attributes.Get(attributeType);
-			attribute.Max -= modifier.Value;
-			if (PlayerCombat.Instance == null) return;
-			PlayerCombat.Instance.RecalculateAttributes();
-		}
 	}
 }

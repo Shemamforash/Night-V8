@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Extensions;
 using Facilitating.Persistence;
 using Game.Characters;
+using Game.Combat.Player;
+using Game.Gear.Weapons;
 using Game.Global;
-using Extensions;
+using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 
 namespace Game.Gear
 {
@@ -15,24 +19,38 @@ namespace Game.Gear
 	{
 		private static readonly List<InscriptionTemplate> _inscriptionTemplates = new List<InscriptionTemplate>();
 		private static          bool                      _readTemplates;
-		private readonly        int                       _inscriptionCost;
 		private readonly        AttributeModifier         _modifier;
 		private readonly        InscriptionTemplate       _template;
+		private readonly        int                       _inscriptionCost;
 
 		private Inscription(InscriptionTemplate template, ItemQuality quality) : base("A " + QualityToInscription(quality) + " of " + template.Name, quality)
 		{
 			_template = template;
 			_modifier = _template.GetModifier();
-			int qualityModifier = (int) (quality + 1);
-			_modifier.Value  *= qualityModifier;
-			_inscriptionCost =  (int) quality + 1;
+			float finalBonus   = _modifier.FinalBonus();
+			float rawBonus     = _modifier.RawBonus();
+			int   tierModifier = (int) (quality + 1);
+			finalBonus *= tierModifier;
+			rawBonus   *= tierModifier;
+			_modifier.SetFinalBonus(finalBonus);
+			_modifier.SetRawBonus(rawBonus);
+			_inscriptionCost = (int) quality + 1;
 		}
 
-		public AttributeModifier Modifier() => _modifier;
+		public AttributeModifier Modifier()
+		{
+			return _modifier;
+		}
 
-		public AttributeType Target() => _template.AttributeTarget;
+		public AttributeType Target()
+		{
+			return _template.AttributeTarget;
+		}
 
-		public string TemplateName() => _template.Name;
+		public string TemplateName()
+		{
+			return _template.Name;
+		}
 
 		public static Inscription Generate()
 		{
@@ -51,7 +69,7 @@ namespace Game.Gear
 		{
 			if (_readTemplates) return;
 			XmlNode inscriptions = Helper.OpenRootNode("Inscriptions");
-			foreach (XmlNode inscriptionNode in inscriptions.SelectNodes("Inscription"))
+			foreach (XmlNode inscriptionNode in inscriptions.GetNodesWithName("Inscription"))
 				new InscriptionTemplate(inscriptionNode);
 
 			_readTemplates = true;
@@ -95,48 +113,62 @@ namespace Game.Gear
 			return inscription;
 		}
 
-		public override string GetSummary() => _template.GetSummary(Quality());
-
-		public int InscriptionCost() => _inscriptionCost;
-
-		public bool CanAfford() => Inventory.GetResourceQuantity("Essence") >= _inscriptionCost;
-
-		protected override void CalculateDismantleRewards()
-		{
-			base.CalculateDismantleRewards();
-			int quality = (int) Quality() + 1;
-			AddReward("Essence", 5 * quality);
-		}
-
 		private class InscriptionTemplate
 		{
-			private readonly float         _modifierValue;
-			public readonly  AttributeType AttributeTarget;
 			public readonly  string        Name;
+			public readonly  AttributeType AttributeTarget;
+			private readonly bool          _additive;
+			private readonly float         _modifierValue;
 
 			public InscriptionTemplate(XmlNode inscriptionNode)
 			{
 				Name            = inscriptionNode.ParseString("Name");
 				AttributeTarget = Inventory.StringToAttributeType(inscriptionNode.ParseString("Attribute"));
 				_modifierValue  = inscriptionNode.ParseFloat("Value");
+				_additive       = inscriptionNode.ParseBool("Additive");
 				_inscriptionTemplates.Add(this);
 			}
 
 			public AttributeModifier GetModifier()
 			{
 				AttributeModifier modifier = new AttributeModifier();
-				modifier.Value = _modifierValue;
+				if (_additive) modifier.SetRawBonus(_modifierValue);
+				else modifier.SetFinalBonus(_modifierValue);
 				return modifier;
 			}
 
 			public string GetSummary(ItemQuality quality)
 			{
 				float  scaledValue          = _modifierValue * ((int) quality + 1);
-				string attributeName        = AttributeTarget.ToString();
+				string attributeName        = AttributeTarget.AttributeToDisplayString();
 				string prefix               = "";
 				if (scaledValue > 0) prefix = "+";
+				if (!_additive) return prefix + (int) (scaledValue * 100) + "% " + attributeName;
 				return prefix + (int) scaledValue + " " + attributeName;
 			}
+		}
+
+		public override string GetSummary()
+		{
+			return _template.GetSummary(Quality());
+		}
+
+		public int InscriptionCost()
+		{
+			return _inscriptionCost;
+		}
+
+		public bool CanAfford()
+		{
+			return Inventory.GetResourceQuantity("Essence") >= _inscriptionCost;
+		}
+
+		protected override void CalculateDismantleRewards()
+		{
+			base.CalculateDismantleRewards();
+			int quality = (int) Quality() + 1;
+			AddReward("Essence", 5 * quality);
+			if (NumericExtensions.RollDie(0, 6)) AddReward("Radiance", 1);
 		}
 	}
 }

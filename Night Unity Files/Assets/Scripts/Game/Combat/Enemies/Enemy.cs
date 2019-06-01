@@ -11,25 +11,21 @@ using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
-
-
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 using UnityEngine.Assertions;
-using Nightmare = Game.Combat.Enemies.Nightmares.Nightmare;
-using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
 {
 	public class Enemy : Character
 	{
-		private const           float                         DropChanceIncrement = 0.01f;
+		public readonly         EnemyTemplate                 Template;
 		private static          GameObject                    _enemyPrefab;
 		private static          GameObject                    _footStepPrefab, _trailPrefab, _hoofprintPrefab;
 		private static readonly Dictionary<EnemyType, Sprite> _enemySprites        = new Dictionary<EnemyType, Sprite>();
 		private static          float                         _accessoryDropChance = -0.25f, _inscriptionDropChance = -0.25f;
-		public readonly         EnemyTemplate                 Template;
+		private const           float                         DropChanceIncrement  = 0.01f;
 
 		public Enemy(EnemyTemplate template) : base(template.EnemyType.ToString())
 		{
@@ -70,8 +66,10 @@ namespace Game.Combat.Enemies
 					break;
 			}
 
-			Weapon weapon = WeaponGenerator.Generate(possibleTypes.RandomElement());
-			//todo generate enemy weapon
+			Weapon weapon = WeaponGenerator.GenerateWeapon(possibleTypes.RandomElement());
+			weapon.WeaponAttributes.RandomiseDurability();
+			EquipWeapon(weapon);
+			if (NumericExtensions.RollDie(0, 5)) weapon.SetInscription(Inscription.Generate());
 		}
 
 		private void GenerateArmour()
@@ -111,7 +109,7 @@ namespace Game.Combat.Enemies
 					break;
 			}
 
-			GameObject trailObject = Object.Instantiate(trailPrefab);
+			GameObject trailObject = GameObject.Instantiate(trailPrefab);
 			trailObject.transform.SetParent(enemyObject.transform);
 			trailObject.transform.localPosition = Vector2.zero;
 		}
@@ -119,7 +117,7 @@ namespace Game.Combat.Enemies
 		public EnemyBehaviour GetEnemyBehaviour()
 		{
 			if (_enemyPrefab == null) _enemyPrefab = Resources.Load<GameObject>("Prefabs/Combat/Enemies/Default Enemy");
-			GameObject enemyObject                 = Object.Instantiate(_enemyPrefab);
+			GameObject enemyObject                 = GameObject.Instantiate(_enemyPrefab);
 			enemyObject.name = Template.EnemyType.ToString();
 			AssignSprite(enemyObject);
 			AssignTrail(enemyObject);
@@ -166,7 +164,7 @@ namespace Game.Combat.Enemies
 					enemyBehaviour = enemyObject.AddComponent<Ghast>();
 					break;
 				case EnemyType.Nightmare:
-					enemyBehaviour = enemyObject.AddComponent<Nightmare>();
+					enemyBehaviour = enemyObject.AddComponent<Nightmares.Nightmare>();
 					break;
 				case EnemyType.Revenant:
 					enemyBehaviour = enemyObject.AddComponent<Revenant>();

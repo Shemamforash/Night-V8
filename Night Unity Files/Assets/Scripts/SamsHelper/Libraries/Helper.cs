@@ -401,6 +401,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Xml;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
@@ -416,6 +417,11 @@ namespace Extensions
 
 		private static float _startingTime = -1;
 
+		public static string AttributeToDisplayString(this AttributeType attributeType)
+		{
+			return string.Join(" ", attributeType.ToString().SplitOnCamelCase());
+		}
+
 		public static string Pluralise(this string str, int count)
 		{
 			if (count <= 1) return str;
@@ -423,10 +429,10 @@ namespace Extensions
 		}
 
 		public static string AddSignPrefix(this float value)
-        {
-            if (value <= 0) return value.ToString();
-            return "+" + value;
-        }
+		{
+			if (value <= 0) return value.ToString();
+			return "+" + value;
+		}
 
 		public static string[] SplitOnCamelCase(this string str) => Regex.Split(str, @"(?<!^)(?=[A-Z])");
 

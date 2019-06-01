@@ -66,7 +66,7 @@ class RecipeImporter(XMLWriter):
         write_single_value(self, "Description", get_value(self, "K", row))
 
     def read_recipes(self):
-        for row_no in range(4, 28):
+        for row_no in range(4, 26):
             write_tag(self, "Recipe", self.read_recipe, [row_no])
 
 
@@ -109,7 +109,7 @@ class ResourceImporter(XMLWriter):
         write_single_value(self, "Effect", get_value(self, "M", row, ""))
 
     def read_resources(self):
-        for row_no in range(3, 39):
+        for row_no in range(3, 37):
             write_tag(self, "Resource", self.read_resource, [row_no])
 
 
@@ -140,9 +140,9 @@ class GearImporter(XMLWriter):
 
     def read_single_gear(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
-        write_single_value(self, "Attribute", get_value(self, "B", row))
-        write_single_value(self, "Bonus", get_value(self, "C", row))
-        write_single_value(self, "Description", get_value(self, "D", row))
+        write_single_value(self, "Attribute", get_value(self, "C", row))
+        write_single_value(self, "Bonus", get_value(self, "D", row))
+        write_single_value(self, "Description", get_value(self, "B", row))
 
 
 class WeatherImporter(XMLWriter):
@@ -426,11 +426,11 @@ def write_single_value(xml_writer, stat_name, value):
 
 
 # WeaponImporter()
-# GearImporter()
+GearImporter()
 # WeatherImporter()
 # WeatherProbabilityImporter()
 # RegionImporter()
-CharacterImporter()
+# CharacterImporter()
 # EnemyImporter()
 RecipeImporter()
 ResourceImporter()

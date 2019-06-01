@@ -34,35 +34,35 @@ namespace Game.Combat.Player
 		public static PlayerCombat Instance;
 		public static bool         Alive;
 
-		private float             _activeSkillDuration;
-		private int               _capacity;
-		private int               _compassPulses;
-		private string            _controlText;
-		private DeathReason       _currentDeathReason;
-		private float             _currentReloadTime;
-		private Coroutine         _dashCooldown;
-		private float             _dashCooldownTime;
-		private float             _initialReloadProgress;
-		private Vector2?          _lastMousePosition;
-		private Quaternion        _lastTargetRotation;
-		private Camera            _mainCamera;
-		private FastLight         _muzzleFlash;
-		public  FastLight         _playerLight;
-		private bool              _recovered;
-		private Coroutine         _reloadCoroutine;
-		private float             _reloadDuration;
-		private bool              _reloading;
-		private float             _reloadProgress;
-		private float             _rotateSpeedCurrent;
-		private bool              _rotatingWithKeyboard;
-		private float             _swivelAmount;
-		private bool              _swivelling;
-		private bool              _useKeyboardMovement = true;
-		public  WeaponBehaviour   _weaponBehaviour;
-		public  float             MuzzleFlashOpacity;
-		public  Action<Shot>      OnFireAction;
-		public  Characters.Player Player;
-		public  List<Action>      UpdateSkillActions = new List<Action>();
+		private float               _activeSkillDuration;
+		private int                 _capacity;
+		private int                 _compassPulses;
+		private string              _controlText;
+		private DeathReason         _currentDeathReason;
+		private float               _currentReloadTime;
+		private Coroutine           _dashCooldown;
+		private float               _dashCooldownTime;
+		private float               _initialReloadProgress;
+		private Vector2?            _lastMousePosition;
+		private Quaternion          _lastTargetRotation;
+		private Camera              _mainCamera;
+		private FastLight           _muzzleFlash;
+		public  FastLight           _playerLight;
+		private bool                _recovered;
+		private Coroutine           _reloadCoroutine;
+		private float               _reloadDuration;
+		private bool                _reloading;
+		private float               _reloadProgress;
+		private float               _rotateSpeedCurrent;
+		private bool                _rotatingWithKeyboard;
+		private float               _swivelAmount;
+		private bool                _swivelling;
+		private bool                _useKeyboardMovement = true;
+		public  BaseWeaponBehaviour _weaponBehaviour;
+		public  float               MuzzleFlashOpacity;
+		public  Action<Shot>        OnFireAction;
+		public  Characters.Player   Player;
+		public  List<Action>        UpdateSkillActions = new List<Action>();
 
 		public float InRange()
 		{
@@ -402,11 +402,12 @@ namespace Game.Combat.Player
 			}
 		}
 
-		public void InitialiseWeapon()
+		public void EquipWeapon()
 		{
-			_weaponBehaviour = gameObject.GetComponent<WeaponBehaviour>();
-			_reloadDuration = Player.Weapon.Val(AttributeType.ReloadSpeed);
-			_capacity       = _weaponBehaviour.Capacity();
+			Destroy(_weaponBehaviour);
+			_weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
+			_reloadDuration  = Player.Weapon.GetAttributeValue(AttributeType.ReloadSpeed);
+			_capacity        = _weaponBehaviour.Capacity();
 			UIMagazineController.SetWeapon(_weaponBehaviour);
 			RecalculateAttributes();
 		}
@@ -468,7 +469,7 @@ namespace Game.Combat.Player
 			_muzzleFlash = GameObject.Find("Muzzle Flash").GetComponent<FastLight>();
 			Player       = CharacterManager.SelectedCharacter;
 			RecalculateHealth();
-			InitialiseWeapon();
+			EquipWeapon();
 			EquipArmour();
 			ResetCompass();
 

@@ -26,8 +26,9 @@ namespace Game.Gear.Armour
 		{
 			_template = template;
 			_modifier = template.GetModifier((int) itemQuality + 1);
-			_summary  = _modifier.Value.ToString(CultureInfo.InvariantCulture);
-			string attributeString = _template.TargetAttribute.ToString();
+			if (template.ModifiesCondition) _summary = _modifier.RawBonus().ToString(CultureInfo.InvariantCulture);
+			else _summary                            = _modifier.FinalBonusToString();
+			string attributeString = _template.TargetAttribute.AttributeToDisplayString();
 			_summary += " " + attributeString;
 		}
 
@@ -112,11 +113,22 @@ namespace Game.Gear.Armour
 			for (int i = 0; i < count; ++i) AddReward(possibleRewards.RemoveRandom(), 1);
 		}
 
+		public void ApplyToWeapon(Weapon weapon)
+		{
+			weapon?.ApplyModifier(_template.TargetAttribute, _modifier);
+		}
+
+		public void RemoveFromWeapon(Weapon weapon)
+		{
+			weapon?.RemoveModifier(_template.TargetAttribute, _modifier);
+		}
+
 		private class AccessoryTemplate
 		{
-			private readonly float         _modifierValue;
 			public readonly  string        Name, Description;
 			public readonly  AttributeType TargetAttribute;
+			private readonly float         _modifierValue;
+			public readonly  bool          ModifiesCondition;
 
 			public AccessoryTemplate(XmlNode accessoryNode)
 			{
@@ -125,12 +137,16 @@ namespace Game.Gear.Armour
 				TargetAttribute = Inventory.StringToAttributeType(accessoryNode.ParseString("Attribute"));
 				_modifierValue  = accessoryNode.ParseFloat("Bonus");
 				_accessoryTemplates.Add(this);
+				ModifiesCondition = TargetAttribute == AttributeType.Shatter ||
+				                    TargetAttribute == AttributeType.Void    ||
+				                    TargetAttribute == AttributeType.Burn;
 			}
 
 			public AttributeModifier GetModifier(int qualityMultiplier)
 			{
 				AttributeModifier modifier = new AttributeModifier();
-				modifier.Value = _modifierValue * qualityMultiplier;
+				if (ModifiesCondition) modifier.SetRawBonus(_modifierValue * qualityMultiplier);
+				else modifier.SetFinalBonus(_modifierValue                 * qualityMultiplier);
 				return modifier;
 			}
 		}

@@ -16,6 +16,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 	public static class Inventory
 	{
 		private static readonly Dictionary<string, ResourceItem> _resources   = new Dictionary<string, ResourceItem>();
+		private static readonly List<Weapon> _weapons = new List<Weapon>();
 		private static readonly List<Accessory>                  _accessories = new List<Accessory>();
 		public static readonly  List<Inscription>                Inscriptions = new List<Inscription>();
 		private static          bool                             _loaded;
@@ -27,10 +28,16 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 			return _accessories.FirstOrDefault(i => i.ID() == id);
 		}
 
+		public static Weapon FindWeapon(int id)
+		{
+			return _weapons.FirstOrDefault(i => i.ID() == id);
+		}
+
 		public static void Reset()
 		{
 			LoadResources();
 			_resources.Clear();
+			_weapons.Clear();
 			_accessories.Clear();
 			Inscriptions.Clear();
 			_buildings.Clear();
@@ -67,12 +74,15 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 			_loaded = true;
 		}
 
+
 		public static void Load(XmlNode root)
 		{
 			XmlNode inventoryNode = root.GetChild("Inventory");
 			XmlNode resourceNode  = inventoryNode.SelectSingleNode("Resources");
 			foreach (XmlNode node in resourceNode.SelectNodes("Resource")) LoadResource(node);
 			XmlNode itemNode = inventoryNode.SelectSingleNode("Items");
+			foreach (XmlNode weaponNode in itemNode.SelectSingleNode("Weapons").ChildNodes)
+				Move(Weapon.LoadWeapon(weaponNode));
 			foreach (XmlNode accessoryNode in itemNode.SelectSingleNode("Accessories").ChildNodes)
 				Move(Accessory.LoadAccessory(accessoryNode));
 			foreach (XmlNode inscriptionNode in itemNode.SelectSingleNode("Inscriptions").ChildNodes)
@@ -85,6 +95,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 			XmlNode resourceNode = root.CreateChild("Resources");
 			InventoryResources().ForEach(r => r.Save(resourceNode));
 			XmlNode itemNode = root.CreateChild("Items");
+			SaveItems(itemNode, "Weapons",      _weapons);
 			SaveItems(itemNode, "Accessories",  _accessories);
 			SaveItems(itemNode, "Inscriptions", Inscriptions);
 		}
@@ -172,6 +183,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 		public static List<Building>  Buildings()               => _buildings;
 		public static List<Accessory> GetAvailableAccessories() => GetAvailableItems(_accessories);
 
+		public static List<Weapon> GetAvailableWeapons() => GetAvailableItems(_weapons);
+
 		private static List<T> GetAvailableItems<T>(List<T> items) where T : GearItem
 		{
 			return items.FindAll(w => w.EquippedCharacter == null);
@@ -183,6 +196,18 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 			{
 				int ret           = b.Quality().CompareTo(a.Quality());
 				if (ret == 0) ret = b.Name.CompareTo(a.Name);
+				return ret;
+			});
+		}
+
+		public static void Move(Weapon weapon)
+		{
+			_weapons.Add(weapon);
+			_weapons.Sort((a, b) =>
+			{
+				int ret           = b.Quality().CompareTo(a.Quality());
+				if (ret == 0) ret = a.WeaponType().CompareTo(b.WeaponType());
+				if (ret == 0) ret = string.Compare(b.Name, a.Name, StringComparison.InvariantCulture);
 				return ret;
 			});
 		}
@@ -208,6 +233,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 			if (type == "Fuel") type          = "Wood";
 			int quantity                      = root.ParseInt("Quantity");
 			IncrementResource(type, quantity);
+		}
+
+		public static void Destroy(Weapon weapon)
+		{
+			_weapons.Remove(weapon);
 		}
 
 		public static void Destroy(Accessory accessory)

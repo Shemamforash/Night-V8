@@ -5,6 +5,42 @@ using UnityEngine;
 
 namespace Game.Combat.Player
 {
+	public static class WeaponSkills
+	{
+		public static Skill GetWeaponSkillOne(Weapon weapon)
+		{
+			switch (weapon.WeaponType())
+			{
+				case WeaponType.Rifle:
+					return new Implode();
+				case WeaponType.Shotgun:
+					return new Shockwave();
+				case WeaponType.SMG:
+					return new Seek();
+				case WeaponType.Pistol:
+					return new Needle();
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+
+		public static Skill GetWeaponSkillTwo(Weapon weapon)
+		{
+			switch (weapon.WeaponType())
+			{
+				case WeaponType.Rifle:
+					return new Ignite();
+				case WeaponType.Shotgun:
+					return new Swarm();
+				case WeaponType.SMG:
+					return new Impact();
+				case WeaponType.Pistol:
+					return new Revenge();
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+	}
 	//Rifle
 
 	public class Ignite : Skill
