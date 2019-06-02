@@ -58,6 +58,8 @@ namespace Game.Exploration.Regions
 			++_currentId;
 		}
 
+		public bool RingChallengeComplete;
+
 		public void SetTempleCleansed()
 		{
 			_templeCleansed = true;
@@ -85,17 +87,18 @@ namespace Game.Exploration.Regions
 			region._seen       = doc.ParseBool("Seen");
 			region._cleared    = doc.ParseBool("Cleared");
 
-			region._size               = doc.ParseInt("Size");
-			region._justDiscovered     = doc.ParseBool("JustDiscovered");
-			region._templeCleansed     = doc.ParseBool("TempleCleansed");
-			region.WaterSourceCount    = doc.ParseInt("WaterSourceCount");
-			region.FoodSourceCount     = doc.ParseInt("FoodSourceCount");
-			region.ResourceSourceCount = doc.ParseInt("ResourceSourceCount");
-			region.JournalIsHere       = doc.ParseBool("JournalIsHere");
-			region.MonumentUsed        = doc.ParseBool("MonumentUsed");
-			region.RitesRemain         = doc.ParseBool("RitesRemaining");
-			region.FountainVisited     = doc.ParseBool("FountainVisited");
-			region.IsWeaponHere        = doc.ParseBool("IsWeaponHere");
+			region._size                 = doc.ParseInt("Size");
+			region._justDiscovered       = doc.ParseBool("JustDiscovered");
+			region._templeCleansed       = doc.ParseBool("TempleCleansed");
+			region.WaterSourceCount      = doc.ParseInt("WaterSourceCount");
+			region.FoodSourceCount       = doc.ParseInt("FoodSourceCount");
+			region.ResourceSourceCount   = doc.ParseInt("ResourceSourceCount");
+			region.JournalIsHere         = doc.ParseBool("JournalIsHere");
+			region.MonumentUsed          = doc.ParseBool("MonumentUsed");
+			region.RitesRemain           = doc.ParseBool("RitesRemaining");
+			region.FountainVisited       = doc.ParseBool("FountainVisited");
+			region.IsWeaponHere          = doc.ParseBool("IsWeaponHere");
+			region.RingChallengeComplete = doc.ParseBool(nameof(RingChallengeComplete));
 			int characterClassHere = doc.ParseInt("CharacterHere");
 			region.CharacterHere = characterClassHere == -1 ? null : CharacterManager.GenerateCharacter((CharacterClass) characterClassHere);
 			region.CheckIsDynamic();
@@ -111,21 +114,22 @@ namespace Game.Exploration.Regions
 			XmlNode neighborNode = regionNode.CreateChild("Neighbors");
 			foreach (Node n in Neighbors())
 				neighborNode.CreateChild("ID", ((Region) n).RegionID);
-			regionNode.CreateChild("Type",                (int) _regionType);
-			regionNode.CreateChild("Discovered",          _discovered);
-			regionNode.CreateChild("JustDiscovered",      _justDiscovered);
-			regionNode.CreateChild("Seen",                _seen);
-			regionNode.CreateChild("Cleared",             _cleared);
-			regionNode.CreateChild("Size",                _size);
-			regionNode.CreateChild("TempleCleansed",      _templeCleansed);
-			regionNode.CreateChild("WaterSourceCount",    WaterSourceCount);
-			regionNode.CreateChild("FoodSourceCount",     FoodSourceCount);
-			regionNode.CreateChild("ResourceSourceCount", ResourceSourceCount);
-			regionNode.CreateChild("JournalIsHere",       JournalIsHere);
-			regionNode.CreateChild("MonumentUsed",        MonumentUsed);
-			regionNode.CreateChild("RitesRemaining",      RitesRemain);
-			regionNode.CreateChild("FountainVisited",     FountainVisited);
-			regionNode.CreateChild("IsWeaponHere",        IsWeaponHere);
+			regionNode.CreateChild("Type",                        (int) _regionType);
+			regionNode.CreateChild("Discovered",                  _discovered);
+			regionNode.CreateChild("JustDiscovered",              _justDiscovered);
+			regionNode.CreateChild("Seen",                        _seen);
+			regionNode.CreateChild("Cleared",                     _cleared);
+			regionNode.CreateChild("Size",                        _size);
+			regionNode.CreateChild("TempleCleansed",              _templeCleansed);
+			regionNode.CreateChild("WaterSourceCount",            WaterSourceCount);
+			regionNode.CreateChild("FoodSourceCount",             FoodSourceCount);
+			regionNode.CreateChild("ResourceSourceCount",         ResourceSourceCount);
+			regionNode.CreateChild("JournalIsHere",               JournalIsHere);
+			regionNode.CreateChild("MonumentUsed",                MonumentUsed);
+			regionNode.CreateChild("RitesRemaining",              RitesRemain);
+			regionNode.CreateChild("FountainVisited",             FountainVisited);
+			regionNode.CreateChild("IsWeaponHere",                IsWeaponHere);
+			regionNode.CreateChild(nameof(RingChallengeComplete), RingChallengeComplete);
 			int characterClassHere = CharacterHere == null ? -1 : (int) CharacterHere.CharacterTemplate.CharacterClass;
 			regionNode.CreateChild("CharacterHere", characterClassHere);
 		}

@@ -98,10 +98,5 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 			Max          = float.Parse(max);
 			CurrentValue = attributeNode.ParseFloat("Value");
 		}
-
-		public static bool IsCharacterAttribute(AttributeType attribute)
-		{
-			return attribute == AttributeType.Life || attribute == AttributeType.Will;
-		}
 	}
 }

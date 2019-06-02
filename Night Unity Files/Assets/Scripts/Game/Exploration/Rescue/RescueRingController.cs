@@ -4,8 +4,9 @@ using System.Linq;
 using DG.Tweening;
 using Extensions;
 using Game.Characters;
+using Game.Combat.Generation;
 using Game.Combat.Misc;
-
+using Game.Gear;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -43,14 +44,10 @@ public class RescueRingController : MonoBehaviour
 		AddButton("Clockwise A",     () => RotateGroupA(-1));
 		AddButton("Clockwise B",     () => RotateGroupB(-1));
 		AddButton("Clockwise C",     () => RotateGroupC(-1));
-		if (CharacterManager.CurrentRegion().CharacterHere == null)
-		{
+		if (CharacterManager.CurrentRegion().RingChallengeComplete)
 			SetComplete(0f);
-		}
 		else
-		{
 			RandomiseLock();
-		}
 	}
 
 	public static void Generate()
@@ -61,7 +58,16 @@ public class RescueRingController : MonoBehaviour
 
 	private void RandomiseLock()
 	{
-		ShelterCharacterBehaviour.Generate();
+		if (CharacterManager.CurrentRegion().CharacterHere == null)
+		{
+			Loot loot = new Loot(Vector2.zero);
+			loot.SetItem(Inscription.Generate(true));
+		}
+		else
+		{
+			ShelterCharacterBehaviour.Generate();
+		}
+
 		SetInitialLockPosition(_ringInner,  Random.Range(1, 5));
 		SetInitialLockPosition(_ringMiddle, Random.Range(1, 5));
 		SetInitialLockPosition(_ringOuter,  Random.Range(1, 5));
@@ -153,6 +159,7 @@ public class RescueRingController : MonoBehaviour
 		Destroy(gameObject.FindChildWithName("Centre"));
 		Destroy(this);
 		_active = false;
+		CharacterManager.CurrentRegion().RingChallengeComplete = true;
 	}
 
 	private void AddButton(string buttonName, Action onPress)

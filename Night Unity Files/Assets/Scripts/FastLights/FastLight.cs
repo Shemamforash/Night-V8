@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Extensions;
 using FastLights;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace Fastlights
 		private static readonly int                           _color          = Shader.PropertyToID("_Color");
 		private readonly        List<FLEdge>                  _edges          = new List<FLEdge>();
 		private readonly        List<FLVertex>                _verts          = new List<FLVertex>();
-		private readonly        List<Vector2>                 meshVertices    = new List<Vector2>();
+		private readonly        List<Vector2>                 _meshVertices   = new List<Vector2>();
 		private                 ConcurrentQueue<List<FLEdge>> _edgeSegmentQueue;
 		private                 List<List<FLEdge>>            _edgeSegments = new List<List<FLEdge>>();
 		private                 bool                          _hasUpdated;
@@ -121,7 +122,7 @@ namespace Fastlights
 
 				didIntersect = true;
 
-				float distance = Vector2.SqrMagnitude(_position - tempIntersect.Value);
+				float distance = Helper.FastSquareMagnitude(_position, tempIntersect.Value);
 				if (distance >= nearestDistance) continue;
 				nearestDistance = distance;
 				intersectPoint  = tempIntersect.Value;
@@ -134,7 +135,7 @@ namespace Fastlights
 
 		private void DrawLight()
 		{
-			meshVertices.Clear();
+			_meshVertices.Clear();
 			_edgeSegments.Clear();
 			_edgeSegmentQueue = new ConcurrentQueue<List<FLEdge>>();
 
@@ -182,34 +183,34 @@ namespace Fastlights
 				CalculateNearestIntersection(vert, _edges);
 				if (_intersectionExists)
 				{
-					float distance = Vector2.SqrMagnitude(_intersectionPoint - _position);
+					float distance = Helper.FastSquareMagnitude(_intersectionPoint, _position);
 					if (distance > vert.SqrDistanceToOrigin)
 					{
 						if (vert.IsStart)
 						{
-							meshVertices.Add(_intersectionPoint);
-							meshVertices.Add(vert.InRangePosition);
+							_meshVertices.Add(_intersectionPoint);
+							_meshVertices.Add(vert.InRangePosition);
 						}
 
 						if (vert.IsEnd)
 						{
-							meshVertices.Add(vert.InRangePosition);
-							meshVertices.Add(_intersectionPoint);
+							_meshVertices.Add(vert.InRangePosition);
+							_meshVertices.Add(_intersectionPoint);
 						}
 						else
 						{
-							meshVertices.Add(vert.InRangePosition);
+							_meshVertices.Add(vert.InRangePosition);
 						}
 					}
 					else
 					{
-						meshVertices.Add(_intersectionPoint);
+						_meshVertices.Add(_intersectionPoint);
 					}
 				}
 				else
 				{
 					if (endVert != null) InsertLineSegments(endVert.InRangeAngle, vert.InRangeAngle);
-					meshVertices.Add(vert.InRangePosition);
+					_meshVertices.Add(vert.InRangePosition);
 					endVert = vert.IsEnd ? vert : null;
 				}
 			}
@@ -222,18 +223,25 @@ namespace Fastlights
 		{
 			Mesh mesh = _meshFilter.mesh;
 			mesh.Clear();
-			meshVertices.Insert(0, _position);
-			Vector3[] v = new Vector3[meshVertices.Count];
-			for (int i = 0; i < meshVertices.Count; ++i)
+
+			_meshVertices.Insert(0, _position);
+			Vector3[] v          = new Vector3[_meshVertices.Count];
+			bool      targetNull = Target == null;
+			if (targetNull)
 			{
-				v[i] = meshVertices[i];
-				if (Target != null) v[i] -= (Vector3) _position;
+				for (int i = 0; i < _meshVertices.Count; ++i)
+					v[i] = _meshVertices[i];
+			}
+			else
+			{
+				for (int i = 0; i < _meshVertices.Count; ++i)
+					v[i] = _meshVertices[i] - _position;
 			}
 
 			mesh.vertices  = v;
 			mesh.triangles = Triangulate(v);
 			Vector3[] normals                                   = new Vector3[mesh.vertices.Length];
-			for (int i = 0; i < normals.Length; i++) normals[i] = Vector2.up;
+			for (int i = 0; i < normals.Length; i++) normals[i] = Vector3.up;
 			mesh.normals = normals;
 			mesh.uv      = CalculateUvs(mesh.vertices);
 		}
@@ -271,11 +279,16 @@ namespace Fastlights
 			return uvs;
 		}
 
+		private void OnEnable()
+		{
+			Update();
+		}
+
 		private void AddPointOnCircleEdge(float angle)
 		{
 			float x = _position.x + Radius * Mathf.Sin(angle * Mathf.Deg2Rad);
 			float y = _position.y + Radius * Mathf.Cos(angle * Mathf.Deg2Rad);
-			meshVertices.Add(new Vector2(x, y));
+			_meshVertices.Add(new Vector2(x, y));
 		}
 
 		private void InsertLineSegments(float from, float to)
@@ -294,7 +307,7 @@ namespace Fastlights
 			Vector3[] verts     = mesh.vertices;
 			for (int i = 1; i < verts.Length; ++i)
 			{
-				float sqrDistance = verts[i].sqrMagnitude;
+				float sqrDistance = verts[i].SqrMag2D();
 				if (sqrDistance <= sqrRadius) continue;
 				verts[i] = verts[i] / Mathf.Sqrt(sqrDistance) * Radius;
 			}
@@ -311,13 +324,9 @@ namespace Fastlights
 			bool radiusSmaller = _lastRadius           > Radius;
 			bool noObstructor  = _allObstructors.Count == 0;
 			if ((radiusSmaller || noObstructor) && isPositionSame)
-			{
 				ResizeLight();
-			}
 			else
-			{
 				DrawLight();
-			}
 
 			_needsUpdate = false;
 			_hasUpdated  = true;
@@ -336,11 +345,9 @@ namespace Fastlights
 		public void Update()
 		{
 			FollowTarget();
-			Vector3   position    = _lightTransform.position;
-			Vector2   newPosition = new Vector2(position.x, position.y);
-			Stopwatch watch       = Stopwatch.StartNew();
+			Vector3 position    = _lightTransform.position;
+			Vector2 newPosition = new Vector2(position.x, position.y);
 			UpdateLight(newPosition);
-			watch.Restart();
 			UpdateColour();
 			_hasUpdated = false;
 		}
@@ -350,9 +357,5 @@ namespace Fastlights
 			if (Target == null) return;
 			transform.position = Target.transform.position;
 		}
-
-		public List<Vector2> Vertices() => meshVertices;
-
-		public static List<MeshFilter> GetLightMeshes() => _meshFilters;
 	}
 }

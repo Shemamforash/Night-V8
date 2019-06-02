@@ -40,7 +40,7 @@ namespace Game.Combat.Generation
 #if UNITY_EDITOR
 			Inventory.IncrementResource("Essence", 200);
 			Inventory.Move(Accessory.Generate());
-			Inventory.Move(Inscription.Generate());
+			Inventory.Move(Inscription.Generate(true));
 			WorldState.OverrideDifficulty(((int) EnvironmentManager.CurrentEnvironmentType + 1) * 10);
 #endif
 

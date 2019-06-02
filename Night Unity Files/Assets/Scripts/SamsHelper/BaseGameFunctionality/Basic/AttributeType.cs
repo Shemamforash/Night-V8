@@ -15,7 +15,6 @@
 		Void,
 		Shatter,
 		Burn,
-		Pierce,
 		Range
 	}
 }

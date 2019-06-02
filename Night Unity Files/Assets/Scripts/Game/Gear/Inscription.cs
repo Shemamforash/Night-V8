@@ -6,6 +6,7 @@ using Extensions;
 using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Player;
+using Game.Exploration.Environment;
 using Game.Gear.Weapons;
 using Game.Global;
 using NUnit.Framework;
@@ -52,16 +53,18 @@ namespace Game.Gear
 			return _template.Name;
 		}
 
-		public static Inscription Generate()
+		public static Inscription Generate(bool includeCore)
 		{
 			ItemQuality tier = WorldState.GenerateGearLevel();
-			return Generate(tier);
+			return Generate(tier, includeCore);
 		}
 
-		public static Inscription Generate(ItemQuality tier)
+		public static Inscription Generate(ItemQuality tier, bool includeCore)
 		{
 			ReadTemplates();
-			InscriptionTemplate randomTemplate = _inscriptionTemplates.RandomElement();
+			List<InscriptionTemplate> valid    = _inscriptionTemplates;
+			if (!includeCore) valid            = valid.Where(i => !i.AttributeTarget.IsCoreAttribute()).ToList();
+			InscriptionTemplate randomTemplate = valid.RandomElement();
 			return new Inscription(randomTemplate, tier);
 		}
 
@@ -125,7 +128,7 @@ namespace Game.Gear
 				Name            = inscriptionNode.ParseString("Name");
 				AttributeTarget = Inventory.StringToAttributeType(inscriptionNode.ParseString("Attribute"));
 				_modifierValue  = inscriptionNode.ParseFloat("Value");
-				_additive       = inscriptionNode.ParseBool("Additive");
+				_additive       = AttributeTarget.IsCoreAttribute() || AttributeTarget.IsConditionAttribute();
 				_inscriptionTemplates.Add(this);
 			}
 
@@ -137,15 +140,7 @@ namespace Game.Gear
 				return modifier;
 			}
 
-			public string GetSummary(ItemQuality quality)
-			{
-				float  scaledValue          = _modifierValue * ((int) quality + 1);
-				string attributeName        = AttributeTarget.AttributeToDisplayString();
-				string prefix               = "";
-				if (scaledValue > 0) prefix = "+";
-				if (!_additive) return prefix + (int) (scaledValue * 100) + "% " + attributeName;
-				return prefix + (int) scaledValue + " " + attributeName;
-			}
+			public string GetSummary(ItemQuality quality) => MiscHelper.GetModifierSummary(_modifierValue, quality, AttributeTarget, _additive);
 		}
 
 		public override string GetSummary()

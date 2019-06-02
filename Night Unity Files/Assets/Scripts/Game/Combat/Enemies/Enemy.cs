@@ -24,7 +24,7 @@ namespace Game.Combat.Enemies
 		private static          GameObject                    _enemyPrefab;
 		private static          GameObject                    _footStepPrefab, _trailPrefab, _hoofprintPrefab;
 		private static readonly Dictionary<EnemyType, Sprite> _enemySprites        = new Dictionary<EnemyType, Sprite>();
-		private static          float                         _accessoryDropChance = -0.25f, _inscriptionDropChance = -0.25f;
+		private static          float                         _accessoryDropChance = -0.4f, _inscriptionDropChance = -0.4f;
 		private const           float                         DropChanceIncrement  = 0.01f;
 
 		public Enemy(EnemyTemplate template) : base(template.EnemyType.ToString())
@@ -69,7 +69,7 @@ namespace Game.Combat.Enemies
 			Weapon weapon = WeaponGenerator.GenerateWeapon(possibleTypes.RandomElement());
 			weapon.WeaponAttributes.RandomiseDurability();
 			EquipWeapon(weapon);
-			if (NumericExtensions.RollDie(0, 5)) weapon.AddInscription(Inscription.Generate());
+			if (NumericExtensions.RollDie(0, 5)) weapon.AddInscription(Inscription.Generate(false));
 		}
 
 		private void GenerateArmour()
@@ -109,8 +109,7 @@ namespace Game.Combat.Enemies
 					break;
 			}
 
-			GameObject trailObject = GameObject.Instantiate(trailPrefab);
-			trailObject.transform.SetParent(enemyObject.transform);
+			GameObject trailObject = GameObject.Instantiate(trailPrefab, enemyObject.transform, true);
 			trailObject.transform.localPosition = Vector2.zero;
 		}
 
@@ -223,7 +222,7 @@ namespace Game.Combat.Enemies
 			}
 
 			Loot loot = new Loot(position);
-			loot.SetItem(Inscription.Generate());
+			loot.SetItem(Inscription.Generate(false));
 			return loot;
 		}
 

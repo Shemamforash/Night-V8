@@ -149,7 +149,7 @@ namespace FastLights
 				FLVertex v = _worldVerts[i];
 				if (outOfRange)
 				{
-					float sqrDistance                        = (v.Position - _origin).sqrMagnitude;
+					float sqrDistance                        = Helper.FastSquareMagnitude(v.Position, _origin);
 					if (sqrDistance < _sqrRadius) outOfRange = false;
 				}
 
@@ -187,7 +187,7 @@ namespace FastLights
 			}
 		}
 
-		public List<List<FLEdge>> GetVisibleVertices(Vector3 origin, float sqrRadius, float radius)
+		public List<List<FLEdge>> GetVisibleVertices(Vector2 origin, float sqrRadius, float radius)
 		{
 			_sqrRadius = sqrRadius;
 			_radius    = radius;

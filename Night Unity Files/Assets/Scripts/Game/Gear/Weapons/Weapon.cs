@@ -4,6 +4,7 @@ using Extensions;
 using Game.Characters;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
@@ -85,14 +86,15 @@ namespace Game.Gear.Weapons
 
 		public void ApplyModifier(AttributeType target, AttributeModifier modifier)
 		{
-			if (CharacterAttribute.IsCharacterAttribute(target)) return;
+			if (target.IsCoreAttribute()) return;
+			Debug.Log(target + " " + modifier.FinalBonus() + " " + modifier.RawBonus());
 			WeaponAttributes.Get(target).AddModifier(modifier);
 			WeaponAttributes.RecalculateAttributeValues();
 		}
 
 		public void RemoveModifier(AttributeType target, AttributeModifier modifier)
 		{
-			if (CharacterAttribute.IsCharacterAttribute(target)) return;
+			if (target.IsCoreAttribute()) return;
 			WeaponAttributes.Get(target).RemoveModifier(modifier);
 			WeaponAttributes.RecalculateAttributeValues();
 		}

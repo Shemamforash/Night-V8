@@ -7,18 +7,18 @@ using UnityEngine;
 
 public class WeaponDetailController : MonoBehaviour
 {
-	private EnhancedText            _damageText, _fireRateText, _reloadSpeedText, _accuracyText, _rangeText, _dpsText, _capacityText, _shatterText, _burnText, _voidText;
-	private EnhancedText            _nameText,      _typeText;
-	private GameObject              _shatterObject, _burnObject, _voidObject;
+	private EnhancedText _damageText,    _fireRateText, _reloadSpeedText, _accuracyText, _rangeText, _dpsText, _capacityText, _shatterText, _burnText, _voidText;
+	private EnhancedText _nameText,      _typeText;
+	private GameObject   _shatterObject, _burnObject, _voidObject;
 
 	private                  Weapon _weapon;
 	[SerializeField] private bool   IsDetailed;
 
 	public void Awake()
 	{
-		_nameText      = gameObject.FindChildWithName<EnhancedText>("Name");
-		_typeText      = gameObject.FindChildWithName<EnhancedText>("Type");
-		_dpsText       = gameObject.FindChildWithName<EnhancedText>("DPS");
+		_nameText = gameObject.FindChildWithName<EnhancedText>("Name");
+		_typeText = gameObject.FindChildWithName<EnhancedText>("Type");
+		_dpsText  = gameObject.FindChildWithName<EnhancedText>("DPS");
 
 		if (!IsDetailed) return;
 		_damageText      = gameObject.FindChildWithName<EnhancedText>("Damage");
@@ -26,7 +26,7 @@ public class WeaponDetailController : MonoBehaviour
 		_capacityText    = gameObject.FindChildWithName<EnhancedText>("Capacity");
 		_reloadSpeedText = gameObject.FindChildWithName<EnhancedText>("Reload Speed");
 		_accuracyText    = gameObject.FindChildWithName<EnhancedText>("Critical Chance");
-		_rangeText      = gameObject.FindChildWithName<EnhancedText>("Handling");
+		_rangeText       = gameObject.FindChildWithName<EnhancedText>("Handling");
 		GameObject conditionObject = gameObject.FindChildWithName("Conditions");
 
 		_shatterObject = conditionObject.FindChildWithName("Shatter");
@@ -60,7 +60,7 @@ public class WeaponDetailController : MonoBehaviour
 		_damageText.SetText(weapon.WeaponAttributes.Val(AttributeType.Damage).Round(1)              + " Damage");
 		_fireRateText.SetText(weapon.WeaponAttributes.Val(AttributeType.FireRate).Round(1)          + " Rounds/Sec");
 		_reloadSpeedText.SetText(weapon.WeaponAttributes.Val(AttributeType.ReloadSpeed).Round(1)    + "s Reload");
-		_rangeText.SetText(weapon.WeaponAttributes.Val(AttributeType.Range).Round(2)              + " Range");
+		_rangeText.SetText(weapon.WeaponAttributes.CalculateRange().Round(1)                        + " Range");
 		_capacityText.SetText(Mathf.FloorToInt(weapon.WeaponAttributes.Val(AttributeType.Capacity)) + " Capacity");
 		_accuracyText.SetText((weapon.WeaponAttributes.Val(AttributeType.Accuracy) * 100).Round(1)  + "% Accuracy");
 	}
@@ -71,6 +71,7 @@ public class WeaponDetailController : MonoBehaviour
 		float shatterChance = _weapon.WeaponAttributes.CalculateShatterChance();
 		float burnChance    = _weapon.WeaponAttributes.CalculateBurnChance();
 		float voidChance    = _weapon.WeaponAttributes.CalculateVoidChance();
+		Debug.Log(shatterChance);
 
 		_shatterObject.SetActive(shatterChance != 0);
 		_burnObject.SetActive(burnChance       != 0);

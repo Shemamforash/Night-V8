@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Extensions;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -29,7 +30,7 @@ namespace FastLights
 		{
 			IsStart             = false;
 			IsEnd               = false;
-			SqrDistanceToOrigin = Vector2.SqrMagnitude(Position - lightPosition);
+			SqrDistanceToOrigin = Helper.FastSquareMagnitude(Position, lightPosition);
 			OutOfRange          = SqrDistanceToOrigin > range;
 			InRangePosition     = Position;
 			if (OutOfRange) return;
@@ -39,7 +40,7 @@ namespace FastLights
 		public void SetInRangePosition(Vector2 inRangePosition, Vector2 lightPosition)
 		{
 			InRangePosition     = inRangePosition;
-			SqrDistanceToOrigin = Vector2.SqrMagnitude(Position - lightPosition);
+			SqrDistanceToOrigin = Helper.FastSquareMagnitude(Position, lightPosition);
 			InRangeAngle        = 360 - AdvancedMaths.AngleFromUp(lightPosition, InRangePosition);
 		}
 

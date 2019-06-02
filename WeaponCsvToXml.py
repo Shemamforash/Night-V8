@@ -120,14 +120,13 @@ class InscriptionImporter(XMLWriter):
         write_tag(self, "Inscriptions", self.read_inscriptions)
 
     def read_inscriptions(self):
-        for row in range(2, 13):
+        for row in range(2, 12):
             write_tag(self, "Inscription", self.read_inscription, [row])
 
     def read_inscription(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
         write_single_value(self, "Attribute", get_value(self, "B", row))
         write_single_value(self, "Value", get_value(self, "C", row))
-        write_single_value(self, "Additive", get_value(self, "D", row))
 
 
 class GearImporter(XMLWriter):
@@ -426,19 +425,19 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.write("<" + stat_name + ">" + str(value) + "</" + stat_name + ">")
 
 
-WeaponImporter()
-GearImporter()
+# WeaponImporter()
+# GearImporter()
 # WeatherImporter()
 # WeatherProbabilityImporter()
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
-RecipeImporter()
-ResourceImporter()
+# RecipeImporter()
+# ResourceImporter()
 InscriptionImporter()
 # SkillImporter()
-EnvironmentImporter()
-BrandImporter()
+# EnvironmentImporter()
+# BrandImporter()1
 # WandererImporter()
 # NecromancerImporter()
 # CharacterStoryImporter()

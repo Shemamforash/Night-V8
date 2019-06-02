@@ -258,7 +258,7 @@ namespace Game.Combat.Generation
 			float nearestDistance = 1000000f;
 			_edgePositionList.ForEach(c =>
 			{
-				float distance = Vector2.SqrMagnitude(position - c.Position);
+				float distance = Helper.FastSquareMagnitude(position, c.Position);
 				if (distance > nearestDistance) return;
 				nearestDistance = distance;
 				nearest         = c;

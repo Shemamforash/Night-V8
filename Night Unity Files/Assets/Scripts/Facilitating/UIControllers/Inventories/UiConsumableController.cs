@@ -8,7 +8,6 @@ using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Global;
 using InventorySystem;
-
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -20,6 +19,21 @@ public class UiConsumableController : UiInventoryMenuController
 	private static UIAttributeController _uiAttributeController;
 	private static bool                  _unlocked;
 	private        ListController        _consumableList;
+
+	protected override void Initialise()
+	{
+		List<ListElement> listElements = new List<ListElement>();
+		listElements.Add(new InventoryElement());
+		listElements.Add(new InventoryElement());
+		listElements.Add(new InventoryElement());
+		listElements.Add(new InventoryElement());
+		listElements.Add(new CentreInventoryElement());
+		listElements.Add(new InventoryElement());
+		listElements.Add(new InventoryElement());
+		listElements.Add(new InventoryElement());
+		listElements.Add(new InventoryElement());
+		_consumableList.Initialise(listElements, Consume, null, GetAvailableItems);
+	}
 
 	public static void Load(XmlNode root)
 	{
@@ -46,13 +60,9 @@ public class UiConsumableController : UiInventoryMenuController
 		}
 
 		if (attributeOffset == 0)
-		{
 			_uiAttributeController.UpdateAttributes(CharacterManager.SelectedCharacter);
-		}
 		else
-		{
 			_uiAttributeController.UpdateAttributesOffset(CharacterManager.SelectedCharacter, resource.Template.AttributeType, attributeOffset);
-		}
 	}
 
 	protected override void CacheElements()
@@ -66,19 +76,6 @@ public class UiConsumableController : UiInventoryMenuController
 		UiGearMenuController.SetCloseButtonAction(UiGearMenuController.Close);
 		UpdateConditions();
 		_consumableList.Show();
-	}
-
-	protected override void Initialise()
-	{
-		List<ListElement> listElements = new List<ListElement>();
-		listElements.Add(new InventoryElement());
-		listElements.Add(new InventoryElement());
-		listElements.Add(new InventoryElement());
-		listElements.Add(new CentreInventoryElement());
-		listElements.Add(new InventoryElement());
-		listElements.Add(new InventoryElement());
-		listElements.Add(new InventoryElement());
-		_consumableList.Initialise(listElements, Consume, null, GetAvailableItems);
 	}
 
 	private List<object> GetAvailableItems() => Inventory.Consumables().ToObjectList();

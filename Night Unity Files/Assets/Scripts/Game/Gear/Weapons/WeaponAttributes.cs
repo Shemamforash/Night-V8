@@ -10,6 +10,8 @@ namespace Game.Gear.Weapons
 {
 	public class WeaponAttributes : DesolationAttributes
 	{
+		private const    float             MinRange = 2f;
+		private const    float             MaxRange = 6f;
 		private readonly Number            _durability;
 		private          float             _dps;
 		private readonly AttributeModifier _damageDurabilityModifier;
@@ -70,7 +72,7 @@ namespace Game.Gear.Weapons
 			SetVal(AttributeType.Capacity,    weaponClass.Capacity);
 			SetVal(AttributeType.Pellets,     weaponClass.Pellets);
 			SetVal(AttributeType.Accuracy,    weaponClass.Accuracy);
-			SetVal(AttributeType.Range, weaponClass.Range);
+			SetVal(AttributeType.Range,       weaponClass.Range);
 			WeaponType      = weaponClass.Type;
 			Automatic       = weaponClass.Automatic;
 			WeaponClassType = weaponClass.Name;
@@ -138,7 +140,8 @@ namespace Game.Gear.Weapons
 			float weaponChance                                              = Val(condition);
 			float characterChance                                           = 0;
 			if (_weapon.EquippedCharacter is Player player) characterChance += player.Attributes.Val(condition);
-			float totalChance                                               = weaponChance + characterChance;
+			Debug.Log(weaponChance + " "     + characterChance);
+			float totalChance = weaponChance + characterChance;
 			totalChance = totalChance.Round(2);
 			return totalChance;
 		}
@@ -148,5 +151,10 @@ namespace Game.Gear.Weapons
 		public float CalculateBurnChance() => CalculateConditionChance(AttributeType.Burn);
 
 		public float CalculateVoidChance() => CalculateConditionChance(AttributeType.Void);
+
+		public float CalculateRange()
+		{
+			return Mathf.Lerp(MinRange, MaxRange, Val(AttributeType.Range));
+		}
 	}
 }

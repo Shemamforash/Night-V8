@@ -46,7 +46,7 @@ namespace Facilitating.UIControllers
 			{
 				Weapon weapon = WeaponGenerator.GenerateWeapon();
 				Inventory.Move(weapon);
-				Inscription inscription = Inscription.Generate();
+				Inscription inscription = Inscription.Generate(true);
 				Inventory.Move(inscription);
 				Accessory accessory = Accessory.Generate();
 				Inventory.Move(accessory);
@@ -61,13 +61,38 @@ namespace Facilitating.UIControllers
 				_infoGameObject.SetActive(false);
 			});
 
-			_infuseButton.AddOnClick(() =>
+			_infuseButton.AddOnClick(TryShowInscriptions);
+		}
+
+		private void TryShowInscriptions()
+		{
+			if (!InscriptionsAreAvailable())
 			{
-				if (!InscriptionsAreAvailable()) return;
-				UiGearMenuController.SetCloseButtonAction(Show);
-				_inscriptionList.Show();
-				_infoGameObject.SetActive(false);
-			});
+				BackToWeaponInfo();
+				return;
+			}
+
+			UiGearMenuController.SetCloseButtonAction(Show);
+			_inscriptionList.Show();
+			_infoGameObject.SetActive(false);
+		}
+
+		private void Inscribe(object inscriptionObject)
+		{
+			Inscription inscription = (Inscription) inscriptionObject;
+			if (!inscription.CanAfford()) return;
+			Weapon weapon = CharacterManager.SelectedCharacter.Weapon;
+			weapon.AddInscription(inscription);
+			if (weapon.Quality() == ItemQuality.Radiant && inscription.Quality() == ItemQuality.Radiant)
+				AchievementManager.Instance().MaxOutWeapon();
+
+			if (!InscriptionsAreAvailable()) Show();
+
+			UiGearMenuController.PlayAudio(AudioClips.Infuse);
+			if (PlayerCombat.Instance == null) return;
+			PlayerCombat.Instance.EquipInscription();
+			UpdateWeaponActions();
+			SelectButton(_infuseButton);
 		}
 
 		protected override void Initialise()
@@ -174,25 +199,6 @@ namespace Facilitating.UIControllers
 			CharacterManager.SelectedCharacter.EquipWeapon(weapon);
 			UiGearMenuController.PlayAudio(AudioClips.EquipWeapon);
 			Show();
-		}
-
-		private void Inscribe(object inscriptionObject)
-		{
-			Inscription inscription = (Inscription) inscriptionObject;
-			if (!inscription.CanAfford()) return;
-			Weapon weapon = CharacterManager.SelectedCharacter.Weapon;
-			weapon.AddInscription(inscription);
-			if (weapon.Quality() == ItemQuality.Radiant && inscription.Quality() == ItemQuality.Radiant)
-			{
-				AchievementManager.Instance().MaxOutWeapon();
-			}
-
-			Show();
-			UiGearMenuController.PlayAudio(AudioClips.Infuse);
-			if (PlayerCombat.Instance == null) return;
-			PlayerCombat.Instance.EquipInscription();
-			UpdateWeaponActions();
-			SelectButton(_infuseButton);
 		}
 
 		private void SetWeapon()

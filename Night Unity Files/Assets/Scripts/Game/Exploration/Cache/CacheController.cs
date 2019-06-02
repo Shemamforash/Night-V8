@@ -6,7 +6,6 @@ using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Gear.Weapons;
 using Game.Global;
-
 using UnityEngine;
 
 public class CacheController : MonoBehaviour
@@ -132,7 +131,7 @@ public class CacheController : MonoBehaviour
 		Deactivate();
 		_successEffect.Activate();
 		Loot loot = new Loot(Vector2.zero);
-		//todo generate loot for cache
+		loot.SetItem(WeaponGenerator.GenerateWeapon());
 		loot.CreateObject(true);
 		CombatLogController.PostLog("An artifact is revealed");
 		CharacterManager.CurrentRegion().IsWeaponHere = false;

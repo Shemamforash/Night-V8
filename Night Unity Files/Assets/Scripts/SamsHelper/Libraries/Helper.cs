@@ -417,9 +417,11 @@ namespace Extensions
 
 		private static float _startingTime = -1;
 
-		public static string AttributeToDisplayString(this AttributeType attributeType)
+		public static float FastSquareMagnitude(Vector2 from, Vector2 to)
 		{
-			return string.Join(" ", attributeType.ToString().SplitOnCamelCase());
+			float x = from.x - to.x;
+			float y = from.y - to.y;
+			return x * x + y * y;
 		}
 
 		public static string Pluralise(this string str, int count)

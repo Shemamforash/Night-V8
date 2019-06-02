@@ -53,6 +53,16 @@ namespace SamsHelper.Libraries
 		public static float Distance(this    Vector2   from, Vector2   to) => Vector2.Distance(from, to);
 		public static float Distance(this    Vector3   from, Vector2   to) => Vector3.Distance(from, to);
 		public static float SqrDistance(this Transform from, Transform to) => from.position.SqrDistance(to.position);
-		public static float SqrDistance(this Vector3   from, Vector3   to) => Vector3.SqrMagnitude(from - to);
+		public static float SqrDistance(this Vector3   from, Vector3   to) => Helper.FastSquareMagnitude(from, to);
+
+		public static float SqrMag(this Vector2 a)
+		{
+			return a.x * a.x + a.y * a.y;
+		}
+
+		public static float SqrMag2D(this Vector3 a)
+		{
+			return a.x * a.x + a.y * a.y;
+		}
 	}
 }

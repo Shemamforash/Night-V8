@@ -26,10 +26,8 @@ namespace Game.Gear.Armour
 		{
 			_template = template;
 			_modifier = template.GetModifier((int) itemQuality + 1);
-			if (template.ModifiesCondition) _summary = _modifier.RawBonus().ToString(CultureInfo.InvariantCulture);
-			else _summary                            = _modifier.FinalBonusToString();
-			string attributeString = _template.TargetAttribute.AttributeToDisplayString();
-			_summary += " " + attributeString;
+			float modifierValue = template.ModifiesCondition ? _modifier.RawBonus() : _modifier.FinalBonus();
+			_summary = MiscHelper.GetModifierSummary(modifierValue, itemQuality, _template.TargetAttribute, false);
 		}
 
 		public string Description() => _template.Description;
@@ -113,15 +111,9 @@ namespace Game.Gear.Armour
 			for (int i = 0; i < count; ++i) AddReward(possibleRewards.RemoveRandom(), 1);
 		}
 
-		public void ApplyToWeapon(Weapon weapon)
-		{
-			weapon?.ApplyModifier(_template.TargetAttribute, _modifier);
-		}
+		public void ApplyToWeapon(Weapon weapon) => weapon?.ApplyModifier(_template.TargetAttribute, _modifier);
 
-		public void RemoveFromWeapon(Weapon weapon)
-		{
-			weapon?.RemoveModifier(_template.TargetAttribute, _modifier);
-		}
+		public void RemoveFromWeapon(Weapon weapon) => weapon?.RemoveModifier(_template.TargetAttribute, _modifier);
 
 		private class AccessoryTemplate
 		{

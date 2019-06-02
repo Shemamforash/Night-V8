@@ -17,8 +17,6 @@ namespace Game.Combat.Misc
         private const float MinimumAccuracyOffsetInDegrees = 20f;
         private const float MaximumAccuracyOffsetInDegrees = 40f;
         private float MaxAge;
-        private const float MinRange = 1f;
-        private const float MaxRange = 6f;
         private const float SeekDecay = 0.95f;
 
         private readonly CharacterCombat _origin;
@@ -80,7 +78,7 @@ namespace Game.Combat.Misc
             _shatterChance = attributes.CalculateShatterChance();
             _burnChance = attributes.CalculateBurnChance();
             _voidChance = attributes.CalculateVoidChance();
-            float range = Mathf.Lerp(MinRange, MaxRange, attributes.Val(AttributeType.Range));
+            float range = _weapon.WeaponAttributes.CalculateRange();
             MaxAge = range / _speed;
             if (!(_origin is PlayerCombat)) return;
             _shatterChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Shatter);

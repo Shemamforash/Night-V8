@@ -93,9 +93,9 @@ namespace Game.Characters
 			root = base.Save(root);
 			Attributes.Save(root);
 			BrandManager.Save(root);
-			root.CreateChild("TimeAlive",            _timeAlive);
-			root.CreateChild("DaysSurvived",         _daysSurvived);
-			root.CreateChild("CharacterClass",       CharacterTemplate.CharacterClass.ToString());
+			root.CreateChild("TimeAlive",             _timeAlive);
+			root.CreateChild("DaysSurvived",          _daysSurvived);
+			root.CreateChild("CharacterClass",        CharacterTemplate.CharacterClass.ToString());
 			root.CreateChild(nameof(_skill1Unlocked), _skill1Unlocked);
 			root.CreateChild(nameof(_skill2Unlocked), _skill2Unlocked);
 			root.CreateChild(nameof(_skill3Unlocked), _skill3Unlocked);
@@ -109,8 +109,8 @@ namespace Game.Characters
 			base.Load(root);
 			Attributes.Load(root);
 			BrandManager.Load(root);
-			_timeAlive     = root.ParseInt("TimeAlive");
-			_daysSurvived  = root.ParseInt("DaysSurvived");
+			_timeAlive      = root.ParseInt("TimeAlive");
+			_daysSurvived   = root.ParseInt("DaysSurvived");
 			_skill1Unlocked = root.ParseBool(nameof(_skill1Unlocked));
 			_skill2Unlocked = root.ParseBool(nameof(_skill1Unlocked));
 			_skill3Unlocked = root.ParseBool(nameof(_skill1Unlocked));
@@ -194,6 +194,7 @@ namespace Game.Characters
 		public bool CanAffordTravel(int travelCost = 1)
 		{
 			int lifeRemaining = Mathf.CeilToInt(Attributes.Life.CurrentValue);
+			Debug.Log(lifeRemaining + " " + travelCost);
 			return lifeRemaining >= travelCost;
 		}
 
@@ -222,7 +223,7 @@ namespace Game.Characters
 
 		public void ApplyModifier(AttributeType target, AttributeModifier modifier)
 		{
-			if (!CharacterAttribute.IsCharacterAttribute(target)) return;
+			if (!target.IsCoreAttribute()) return;
 			CharacterAttribute attribute = Attributes.Get(target);
 			attribute.Max += modifier.RawBonus();
 			if (PlayerCombat.Instance == null) return;
@@ -231,7 +232,7 @@ namespace Game.Characters
 
 		public void RemoveModifier(AttributeType target, AttributeModifier modifier)
 		{
-			if (!CharacterAttribute.IsCharacterAttribute(target)) return;
+			if (!target.IsCoreAttribute()) return;
 			CharacterAttribute attribute = Attributes.Get(target);
 			attribute.Max -= modifier.RawBonus();
 			if (PlayerCombat.Instance == null) return;
