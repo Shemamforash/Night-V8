@@ -11,7 +11,7 @@ namespace Game.Global
 {
 	public class SceneChanger : MonoBehaviour
 	{
-		private const  float        DefaultFadeTime = 0.5f;
+		private const  float        DefaultFadeTime = 0.3f;
 		private static SceneChanger _instance;
 		private static string       _sceneToLoad;
 		private static bool         _fadeInAudio;

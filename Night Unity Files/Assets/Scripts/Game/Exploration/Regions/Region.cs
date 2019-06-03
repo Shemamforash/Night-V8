@@ -165,7 +165,7 @@ namespace Game.Exploration.Regions
 			if (!IsDynamic()) return templates;
 			if (!_cleared && _size == 0)
 			{
-				_size =  Mathf.CeilToInt(WorldState.Difficulty() / 2.5f);
+				_size =  Mathf.CeilToInt(WorldState.Difficulty() / 2f);
 				_size += 6;
 			}
 

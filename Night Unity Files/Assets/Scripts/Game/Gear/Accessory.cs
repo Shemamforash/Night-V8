@@ -26,7 +26,7 @@ namespace Game.Gear.Armour
 		{
 			_template = template;
 			_modifier = template.GetModifier((int) itemQuality + 1);
-			float modifierValue = template.ModifiesCondition ? _modifier.RawBonus() : _modifier.FinalBonus();
+			float modifierValue = template.Additive ? _modifier.RawBonus() : _modifier.FinalBonus();
 			_summary = MiscHelper.GetModifierSummary(modifierValue, itemQuality, _template.TargetAttribute, false);
 		}
 
@@ -120,7 +120,7 @@ namespace Game.Gear.Armour
 			public readonly  string        Name, Description;
 			public readonly  AttributeType TargetAttribute;
 			private readonly float         _modifierValue;
-			public readonly  bool          ModifiesCondition;
+			public readonly  bool          Additive;
 
 			public AccessoryTemplate(XmlNode accessoryNode)
 			{
@@ -129,16 +129,14 @@ namespace Game.Gear.Armour
 				TargetAttribute = Inventory.StringToAttributeType(accessoryNode.ParseString("Attribute"));
 				_modifierValue  = accessoryNode.ParseFloat("Bonus");
 				_accessoryTemplates.Add(this);
-				ModifiesCondition = TargetAttribute == AttributeType.Shatter ||
-				                    TargetAttribute == AttributeType.Void    ||
-				                    TargetAttribute == AttributeType.Burn;
+				Additive = TargetAttribute.IsConditionAttribute();
 			}
 
 			public AttributeModifier GetModifier(int qualityMultiplier)
 			{
 				AttributeModifier modifier = new AttributeModifier();
-				if (ModifiesCondition) modifier.SetRawBonus(_modifierValue * qualityMultiplier);
-				else modifier.SetFinalBonus(_modifierValue                 * qualityMultiplier);
+				if (Additive) modifier.SetRawBonus(_modifierValue * qualityMultiplier);
+				else modifier.SetFinalBonus(_modifierValue        * qualityMultiplier);
 				return modifier;
 			}
 		}

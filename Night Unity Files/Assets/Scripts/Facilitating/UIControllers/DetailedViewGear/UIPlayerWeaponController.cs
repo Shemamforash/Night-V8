@@ -10,7 +10,7 @@ namespace Facilitating.UIControllers
 {
     public class UIPlayerWeaponController : MonoBehaviour
     {
-        private EnhancedText _nameText;
+        private EnhancedText _nameText, _weaponTypeText;
         private GameObject _equippedObject;
         public EnhancedButton EnhancedButton;
         private Player _player;
@@ -20,6 +20,7 @@ namespace Facilitating.UIControllers
             EnhancedButton = GetComponent<EnhancedButton>();
             _equippedObject = gameObject.FindChildWithName("Equipped");
             _nameText = _equippedObject.FindChildWithName<EnhancedText>("Weapon Name");
+            _weaponTypeText = _equippedObject.FindChildWithName<EnhancedText>("Bonus");
             EnhancedButton.AddOnClick(UiGearMenuController.ShowWeaponMenu);
             GlowButtonBehaviour glow = GetComponent<GlowButtonBehaviour>();
             EnhancedButton.AddOnClick(glow.Select);
@@ -44,6 +45,7 @@ namespace Facilitating.UIControllers
             string weaponName = "";
             if (weapon != null) weaponName = weapon.Quality() + " " + weapon.WeaponAttributes.GetWeaponClass();
             _nameText.SetText(weaponName);
+            _weaponTypeText.SetText(weapon.WeaponType().ToString());
         }
     }
 }

@@ -64,7 +64,7 @@ namespace Game.Combat.Generation
 
 			PlayerCombat.Instance.Initialise();
 			_inactiveEnemies = _currentRegion.GetEnemies();
-			_maxSize         = WorldState.Difficulty() / 10 + 2;
+			_maxSize         = WorldState.Difficulty() / 10 + 4;
 			PlaceAnimals();
 			_currentRegion.CheckForRegionExplored();
 		}

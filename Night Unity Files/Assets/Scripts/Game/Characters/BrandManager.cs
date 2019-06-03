@@ -218,6 +218,7 @@ namespace Game.Characters
 			new HealthRecoveryBrand(_player);
 			new AutomaticReloadBrand(_player);
 			new InstantReloadBrand(_player);
+			new LifeStealBrand(_player);
 		}
 
 		private void CreateResourceFindBrands()
@@ -248,7 +249,7 @@ namespace Game.Characters
 
 		public void IncreaseDamageTaken(int damage) => UpdateBrandValue(typeof(HealthRecoveryBrand), damage);
 
-//todo		public void IncreaseEnemiesKilled()            => UpdateBrandValue(typeof(WillRecoveryBrand),    1);
+		public void IncreaseEnemiesKilled()      => UpdateBrandValue(typeof(LifeStealBrand),    1);
 		public void IncreasePerfectReloadCount() => UpdateBrandValue(typeof(AutomaticReloadBrand), 1);
 		public void IncreaseLastRoundKills()     => UpdateBrandValue(typeof(InstantReloadBrand),   1);
 		public void IncreaseResourceFound()      => UpdateBrandValue(typeof(ResourceBrand),        1);

@@ -104,6 +104,20 @@ namespace Game.Characters.Brands
 		protected override string GetProgressSubstring() => Progress() + " perfect reloads";
 	}
 
+	public class LifeStealBrand : Brand
+	{
+		public LifeStealBrand(Player player) : base(player, "Apathy")
+		{
+		}
+
+		protected override void OnSucceed()
+		{
+			Player.Attributes.RecoverHealthOnKill = true;
+		}
+
+		protected override string GetProgressSubstring() => Progress() + " perfect reloads";
+	}
+
 	public class IgniteBrand : Brand
 	{
 		public IgniteBrand(Player player) : base(player, "Fire")

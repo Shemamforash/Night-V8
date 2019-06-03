@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Game.Gear.Weapons;
-using Game.Global;
+﻿using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
@@ -17,6 +15,7 @@ namespace Game.Characters
 		public float RallyHealthModifier;
 		public bool  ReloadOnEmptyMag;
 		public bool  ReloadOnFatalShot;
+		public bool RecoverHealthOnKill;
 		public bool  SpreadVoid;
 
 		private readonly string[] _hungerEvents =

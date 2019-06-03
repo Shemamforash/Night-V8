@@ -161,15 +161,9 @@ public class UiConsumableController : UiInventoryMenuController
 			ResourceItem resource = (ResourceItem) o;
 			string       nameText = resource.Quantity() > 1 ? resource.Name + " x" + resource.Quantity() : resource.Name;
 			_nameText.SetText(nameText);
-			string consumableText = "";
+			string consumableText = "Crafting Resource";
 			if (resource is Consumable consumable)
-			{
 				consumableText = !consumable.CanConsume() ? "Cannot Consume" : "Consumable";
-			}
-			else
-			{
-				consumableText = "Crafting Resource";
-			}
 
 			_consumableText.SetText(consumableText);
 			_effectText.SetText(resource.Template.EffectString);

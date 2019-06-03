@@ -426,12 +426,12 @@ def write_single_value(xml_writer, stat_name, value):
 
 
 # WeaponImporter()
-# GearImporter()
+GearImporter()
 # WeatherImporter()
 # WeatherProbabilityImporter()
 # RegionImporter()
 # CharacterImporter()
-# EnemyImporter()
+EnemyImporter()
 # RecipeImporter()
 # ResourceImporter()
 InscriptionImporter()

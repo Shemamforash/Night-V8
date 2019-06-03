@@ -88,5 +88,13 @@ namespace Game.Combat.Enemies
 			loot?.CreateObject(true);
 			base.Kill();
 		}
+
+		public override void TakeShotDamage(Shot shot)
+		{
+			float healthBefore = HealthController.GetCurrentHealth();
+			base.TakeShotDamage(shot);
+			if (HealthController.GetCurrentHealth() != 0 || healthBefore == 0) return;
+			PlayerCombat.Instance.IncreaseKills();
+		}
 	}
 }

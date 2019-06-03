@@ -10,7 +10,7 @@ namespace Game.Global
 {
 	public class WorldView : Menu
 	{
-		private static string          _environmentString, _temperatureString, _weatherString, _timeString;
+		private static string          _environmentString, _weatherString, _timeString;
 		private static TextMeshProUGUI _environmentText;
 		private        Selectable      _lastSelectedButton;
 
@@ -19,11 +19,6 @@ namespace Game.Global
 		public static void SetEnvironmentText(string text)
 		{
 			_environmentString = text;
-		}
-
-		public static void SetTemperatureText(string text)
-		{
-			_temperatureString = text;
 		}
 
 		public static void SetWeatherText(string text)
@@ -54,7 +49,7 @@ namespace Game.Global
 					break;
 			}
 
-			_environmentText.text = _timeString + " in " + _environmentString + ". It is " + _temperatureString + " and " + _weatherString + ". " + templeString;
+			_environmentText.text = _timeString + " in " + _environmentString + ". It is " + _weatherString + ". " + templeString;
 		}
 
 		protected override void Awake()

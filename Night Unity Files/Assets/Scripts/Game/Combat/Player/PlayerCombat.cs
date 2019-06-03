@@ -611,5 +611,14 @@ namespace Game.Combat.Player
 			_activeSkillDuration = duration;
 			ActiveSkillController.Play();
 		}
+
+		public void IncreaseKills()
+		{
+			Player.BrandManager.IncreaseEnemiesKilled();
+			if (!Player.Attributes.RecoverHealthOnKill) return;
+			int healAmount                 = (int) (HealthController.GetMaxHealth() * 0.02f);
+			if (healAmount < 1) healAmount = 1;
+			HealthController.Heal(healAmount);
+		}
 	}
 }

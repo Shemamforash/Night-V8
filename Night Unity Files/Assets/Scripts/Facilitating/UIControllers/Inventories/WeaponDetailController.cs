@@ -48,7 +48,9 @@ public class WeaponDetailController : MonoBehaviour
 	private void SetWeaponInfo(Weapon weapon)
 	{
 		_nameText.SetText(weapon.Name);
-		_dpsText.SetText(weapon.WeaponAttributes.DPS().Round(1).ToString(CultureInfo.InvariantCulture));
+		string dps = weapon.WeaponAttributes.DPS().Round(1).ToString(CultureInfo.InvariantCulture);
+		dps += "\n<size=15><color=#aaaaaa>DPS</color></size>";
+		_dpsText.SetText(dps);
 		_typeText.SetText(weapon.WeaponAttributes.GetWeaponTypeDescription());
 		SetConditionText();
 		SetAttributeText(weapon);
