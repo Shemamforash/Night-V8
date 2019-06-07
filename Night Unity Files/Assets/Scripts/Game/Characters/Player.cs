@@ -71,15 +71,19 @@ namespace Game.Characters
 			{
 				case EnvironmentType.Desert:
 					_skill1Unlocked = true;
+					SkillBar.UnlockSkill(0);
 					break;
 				case EnvironmentType.Mountains:
 					_skill2Unlocked = true;
+					SkillBar.UnlockSkill(1);
 					break;
 				case EnvironmentType.Sea:
 					_skill3Unlocked = true;
+					SkillBar.UnlockSkill(2);
 					break;
 				case EnvironmentType.Ruins:
 					_skill4Unlocked = true;
+					SkillBar.UnlockSkill(3);
 					break;
 			}
 		}

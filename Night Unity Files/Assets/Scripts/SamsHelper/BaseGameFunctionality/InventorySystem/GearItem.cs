@@ -4,6 +4,7 @@ using Extensions;
 using Facilitating.Persistence;
 using Game.Characters;
 using Game.Gear;
+using UnityEngine.Assertions;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
@@ -54,6 +55,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
 		public virtual void Equip(Character character)
 		{
+			Assert.IsNull(EquippedCharacter);
 			EquippedCharacter = character;
 		}
 

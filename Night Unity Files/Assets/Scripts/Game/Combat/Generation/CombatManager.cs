@@ -41,8 +41,8 @@ namespace Game.Combat.Generation
 		{
 			base.Awake();
 			PauseOnOpen      = false;
-			_hudCanvas       = gameObject.FindChildWithName<CanvasGroup>("Combat");
-			_hudCanvas.alpha = 0f;
+//			_hudCanvas       = gameObject.FindChildWithName<CanvasGroup>("Combat");
+//			_hudCanvas.alpha = 0f;
 			_instance        = this;
 			Resume();
 		}
@@ -72,7 +72,7 @@ namespace Game.Combat.Generation
 		private void Update()
 		{
 			if (!IsCombatActive()) return;
-			UpdateHud();
+//			UpdateHud();
 			TrySpawnNewEnemy();
 			AIMoveManager.UpdateMoveBehaviours();
 			if (Time.timeSinceLevelLoad < 1f) return;

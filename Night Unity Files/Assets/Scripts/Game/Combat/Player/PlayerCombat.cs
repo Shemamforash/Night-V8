@@ -412,7 +412,7 @@ namespace Game.Combat.Player
 		{
 			Destroy(_weaponBehaviour);
 			_weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
-			_reloadDuration  = Player.Weapon.GetAttributeValue(AttributeType.ReloadSpeed);
+			_reloadDuration  = Player.Weapon.WeaponAttributes.ReloadSpeed();
 			_capacity        = _weaponBehaviour.Capacity();
 			UIMagazineController.SetWeapon(_weaponBehaviour);
 			RecalculateAttributes();

@@ -49,7 +49,7 @@ namespace Game.Combat.Misc
 		public void Initialise(CharacterCombat origin, Vector3 direction)
 		{
 			_shotAttributes = new ShotAttributes(origin);
-			float pellets = origin.Weapon().GetAttributeValue(AttributeType.Pellets);
+			float pellets = origin.Weapon().WeaponAttributes.Pellets();
 			_light.Colour = new Color(1, 1, 1, 0.1f / pellets);
 			float normalisedDps = origin.Weapon().WeaponAttributes.DPS() / 500f;
 			_light.Radius   = Mathf.Lerp(1f, 2f, normalisedDps);

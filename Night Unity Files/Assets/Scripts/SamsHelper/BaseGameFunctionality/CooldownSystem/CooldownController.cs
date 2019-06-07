@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Extensions;
 using Game.Combat.Player;
 using SamsHelper.ReactiveUI.Elements;
@@ -12,6 +11,8 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 	{
 		private readonly Color            _cooldownNotReadyColor = UiAppearanceController.FadedColour;
 		private readonly List<GameObject> _skillCostBlips        = new List<GameObject>();
+		private          ParticleSystem   _unlockSparks;
+		private          ParticleSystem   _unlockBurst;
 		private          Transform        _costTransform;
 		private          Image            _cooldownFill;
 		private          EnhancedText     _skillNameText;
@@ -21,10 +22,12 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 
 		private void Awake()
 		{
-			_unlockedCanvas          = gameObject.FindChildWithName<CanvasGroup>("Unlocked");
-			_cooldownFill            = _unlockedCanvas.gameObject.FindChildWithName<Image>("Fill");
-			_skillNameText           = _unlockedCanvas.gameObject.FindChildWithName<EnhancedText>("Text");
-			_costTransform           = _unlockedCanvas.gameObject.FindChildWithName("Cost").transform;
+			_unlockedCanvas = gameObject.FindChildWithName<CanvasGroup>("Unlocked");
+			_cooldownFill   = _unlockedCanvas.gameObject.FindChildWithName<Image>("Fill");
+			_skillNameText  = _unlockedCanvas.gameObject.FindChildWithName<EnhancedText>("Text");
+			_costTransform  = _unlockedCanvas.gameObject.FindChildWithName("Cost").transform;
+			_unlockSparks   = _unlockedCanvas.gameObject.FindChildWithName<ParticleSystem>("Unlock Sparks");
+			_unlockBurst    = _unlockedCanvas.gameObject.FindChildWithName<ParticleSystem>("Unlock Burst");
 			UpdateCooldownFill(1);
 		}
 
@@ -60,6 +63,12 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 				GameObject newBlip = Helper.InstantiateUiObject("Prefabs/AttributeMarkerPrefab", _costTransform);
 				_skillCostBlips.Add(newBlip);
 			}
+		}
+
+		public void Unlock()
+		{
+			_unlockBurst.Emit(50);
+			_unlockSparks.Emit(20);
 		}
 	}
 }

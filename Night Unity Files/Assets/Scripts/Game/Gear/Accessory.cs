@@ -18,16 +18,15 @@ namespace Game.Gear.Armour
 	{
 		private static readonly List<AccessoryTemplate> _accessoryTemplates = new List<AccessoryTemplate>();
 		private static          bool                    _loaded;
-		private readonly        AttributeModifier       _modifier;
 		private readonly        string                  _summary;
 		private readonly        AccessoryTemplate       _template;
+		private readonly float                   _modifierValue;
 
 		private Accessory(AccessoryTemplate template, ItemQuality itemQuality) : base(template.Name, itemQuality)
 		{
-			_template = template;
-			_modifier = template.GetModifier((int) itemQuality + 1);
-			float modifierValue = template.Additive ? _modifier.RawBonus() : _modifier.FinalBonus();
-			_summary = MiscHelper.GetModifierSummary(modifierValue, itemQuality, _template.TargetAttribute, false);
+			_template      = template;
+			_modifierValue = ((int) itemQuality + 1) * template.ModifierValue;
+			_summary       = MiscHelper.GetModifierSummary(_modifierValue, itemQuality, _template.TargetAttribute, false);
 		}
 
 		public string Description() => _template.Description;
@@ -37,15 +36,12 @@ namespace Game.Gear.Armour
 		public override void Equip(Character character)
 		{
 			base.Equip(character);
-			(character as Player)?.ApplyModifier(_template.TargetAttribute, _modifier);
 			if (PlayerCombat.Instance == null) return;
 			PlayerCombat.Instance.RecalculateAttributes();
 		}
 
 		public override void UnEquip()
 		{
-			if (EquippedCharacter is Player player)
-				player.RemoveModifier(_template.TargetAttribute, _modifier);
 			base.UnEquip();
 			if (PlayerCombat.Instance == null) return;
 			PlayerCombat.Instance.RecalculateAttributes();
@@ -111,23 +107,24 @@ namespace Game.Gear.Armour
 			for (int i = 0; i < count; ++i) AddReward(possibleRewards.RemoveRandom(), 1);
 		}
 
-		public void ApplyToWeapon(Weapon weapon) => weapon?.ApplyModifier(_template.TargetAttribute, _modifier);
-
-		public void RemoveFromWeapon(Weapon weapon) => weapon?.RemoveModifier(_template.TargetAttribute, _modifier);
+		public AttributeType TargetAttribute => _template.TargetAttribute;
+		public float         ModifierValue   => _modifierValue;
+		public bool          Additive        => _template.Additive;
 
 		private class AccessoryTemplate
 		{
-			public readonly  string        Name, Description;
-			public readonly  AttributeType TargetAttribute;
-			private readonly float         _modifierValue;
-			public readonly  bool          Additive;
+			public readonly string        Name, Description;
+			public readonly AttributeType TargetAttribute;
+			public readonly float         ModifierValue;
+			public readonly bool          Additive;
 
 			public AccessoryTemplate(XmlNode accessoryNode)
 			{
 				Name            = accessoryNode.ParseString("Name");
 				Description     = accessoryNode.ParseString("Description");
 				TargetAttribute = Inventory.StringToAttributeType(accessoryNode.ParseString("Attribute"));
-				_modifierValue  = accessoryNode.ParseFloat("Bonus");
+				if (Name == "Taint of the Abyss") Debug.Log(TargetAttribute + " " + accessoryNode.ParseString("Attribute"));
+				ModifierValue = accessoryNode.ParseFloat("Bonus");
 				_accessoryTemplates.Add(this);
 				Additive = TargetAttribute.IsConditionAttribute();
 			}
@@ -135,8 +132,8 @@ namespace Game.Gear.Armour
 			public AttributeModifier GetModifier(int qualityMultiplier)
 			{
 				AttributeModifier modifier = new AttributeModifier();
-				if (Additive) modifier.SetRawBonus(_modifierValue * qualityMultiplier);
-				else modifier.SetFinalBonus(_modifierValue        * qualityMultiplier);
+				if (Additive) modifier.SetRawBonus(ModifierValue * qualityMultiplier);
+				else modifier.SetFinalBonus(ModifierValue        * qualityMultiplier);
 				return modifier;
 			}
 		}

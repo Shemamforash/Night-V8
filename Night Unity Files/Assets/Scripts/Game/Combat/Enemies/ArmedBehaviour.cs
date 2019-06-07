@@ -30,7 +30,7 @@ namespace Game.Combat.Enemies
 
 		protected void CalculateMaxMinDistance()
 		{
-			MaxDistance = Weapon().WeaponAttributes.CalculateRange();
+			MaxDistance = Weapon().WeaponAttributes.Range();
 			if (MaxDistance > 4f) MaxDistance = 4f;
 			MinDistance = MaxDistance / 2f;
 		}
@@ -55,7 +55,7 @@ namespace Game.Combat.Enemies
 
 		private void Reload()
 		{
-			float duration = Weapon().GetAttributeValue(AttributeType.ReloadSpeed) * 2f;
+			float duration = Weapon().WeaponAttributes.ReloadSpeed() * 2f;
 			CurrentAction = () =>
 			{
 				duration -= Time.deltaTime;

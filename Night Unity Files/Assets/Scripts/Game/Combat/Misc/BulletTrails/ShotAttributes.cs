@@ -73,17 +73,13 @@ namespace Game.Combat.Misc
         private void CacheWeaponAttributes()
         {
             WeaponAttributes attributes = _weapon.WeaponAttributes;
-            _damage = (int) attributes.Val(AttributeType.Damage);
-            _accuracy = 1 - attributes.Val(AttributeType.Accuracy);
+            _damage = (int) attributes.Damage();
+            _accuracy = 1 - attributes.Accuracy();
             _shatterChance = attributes.CalculateShatterChance();
             _burnChance = attributes.CalculateBurnChance();
             _voidChance = attributes.CalculateVoidChance();
-            float range = _weapon.WeaponAttributes.CalculateRange();
+            float range = _weapon.WeaponAttributes.Range();
             MaxAge = range / _speed;
-            if (!(_origin is PlayerCombat)) return;
-            _shatterChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Shatter);
-            _burnChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Burn);
-            _voidChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.Void);
         }
 
         public float CalculateAccuracy()
@@ -153,7 +149,7 @@ namespace Game.Combat.Misc
         private void SetConditions()
         {
             float random = Random.Range(0f, 100f);
-            float conditionModifier = _weapon.GetAttributeValue(AttributeType.Pellets) * _weapon.GetAttributeValue(AttributeType.Capacity);
+            float conditionModifier = _weapon.WeaponAttributes.Pellets() * _weapon.WeaponAttributes.Capacity();
             bool canDecay = random < _shatterChance / conditionModifier;
             bool canBurn = random < _burnChance / conditionModifier;
             bool canVoid = random < _voidChance / conditionModifier;

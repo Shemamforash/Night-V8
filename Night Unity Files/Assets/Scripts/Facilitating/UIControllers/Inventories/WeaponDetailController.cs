@@ -59,12 +59,13 @@ public class WeaponDetailController : MonoBehaviour
 	private void SetAttributeText(Weapon weapon)
 	{
 		if (!IsDetailed) return;
-		_damageText.SetText(weapon.WeaponAttributes.Val(AttributeType.Damage).Round(1)              + " Damage");
-		_fireRateText.SetText(weapon.WeaponAttributes.Val(AttributeType.FireRate).Round(1)          + " Rounds/Sec");
-		_reloadSpeedText.SetText(weapon.WeaponAttributes.Val(AttributeType.ReloadSpeed).Round(1)    + "s Reload");
-		_rangeText.SetText(weapon.WeaponAttributes.CalculateRange().Round(1)                        + " Range");
-		_capacityText.SetText(Mathf.FloorToInt(weapon.WeaponAttributes.Val(AttributeType.Capacity)) + " Capacity");
-		_accuracyText.SetText((weapon.WeaponAttributes.Val(AttributeType.Accuracy) * 100).Round(1)  + "% Accuracy");
+		WeaponAttributes attr = weapon.WeaponAttributes;
+		_damageText.SetText(attr.Damage().Round(1)             + " Damage");
+		_fireRateText.SetText(attr.FireRate().Round(1)         + " Rounds/Sec");
+		_reloadSpeedText.SetText(attr.ReloadSpeed().Round(1)   + "s Reload");
+		_rangeText.SetText(attr.Range().Round(1)      + " Range");
+		_capacityText.SetText(attr.Capacity()                  + " Capacity");
+		_accuracyText.SetText((attr.Accuracy() * 100).Round(1) + "% Accuracy");
 	}
 
 	private void SetConditionText()

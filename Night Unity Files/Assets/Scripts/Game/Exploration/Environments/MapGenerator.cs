@@ -340,7 +340,6 @@ namespace Game.Exploration.Environment
 
 			List<int> validIndexes = new List<int>();
 			for (int i = 0; i < lastTemple; ++i) validIndexes.Add(i);
-			Debug.Log(storyCount + " " + lastTemple);
 			while (storyCount > 0)
 			{
 				int                     regionIndex = validIndexes.RemoveRandom();

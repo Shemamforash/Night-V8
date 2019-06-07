@@ -18,7 +18,7 @@ public class WingHealthScript : BossSectionHealthController
 		ArmourController.AutoGenerateArmour();
 	}
 
-	protected override int GetInitialHealth() => 125;
+	protected override int GetInitialHealth() => 75;
 
 	public void Start()
 	{

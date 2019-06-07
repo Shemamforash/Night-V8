@@ -85,8 +85,8 @@ namespace Game.Gear.Armour
 
 		public void AutoGenerateArmour()
 		{
-			int difficulty = Mathf.FloorToInt(WorldState.Difficulty() / 5f);
-			int armourMin  = difficulty - 3;
+			int difficulty = Mathf.FloorToInt(WorldState.Difficulty() / 10f);
+			int armourMin  = difficulty - 1;
 			armourMin = Mathf.Clamp(armourMin, 0, MaxLevel);
 			int armourMax = difficulty + 1;
 			armourMax = Mathf.Clamp(armourMax, 0, MaxLevel);
@@ -114,7 +114,6 @@ namespace Game.Gear.Armour
 			float newHealth = CurrentLevel * ProtectionPerLevel * normalisedTime;
 			_protection.CurrentValue = newHealth;
 		}
-
 
 		public string GetBonus()
 		{

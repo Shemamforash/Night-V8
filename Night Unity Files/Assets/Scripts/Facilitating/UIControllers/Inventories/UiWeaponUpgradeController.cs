@@ -259,6 +259,7 @@ namespace Facilitating.UIControllers
 			protected override void Update(object o, bool isCentreItem)
 			{
 				Weapon weapon = (Weapon) o;
+				weapon.WeaponAttributes.CalculateDPS();
 				CentreText.SetText(weapon.Name);
 				LeftText.SetText(weapon.WeaponType().ToString());
 				RightText.SetText(weapon.WeaponAttributes.DPS().Round(1) + " DPS");
@@ -290,10 +291,8 @@ namespace Facilitating.UIControllers
 			protected override void Update(object o, bool isCentreItem)
 			{
 				Weapon weapon = (Weapon) o;
+				weapon.WeaponAttributes.CalculateDPS();
 				_detailController.SetWeapon(weapon);
-				Weapon equippedWeapon = CharacterManager.SelectedCharacter.Weapon;
-				if (equippedWeapon == null) return;
-//                _detailController.CompareTo(equippedWeapon);
 			}
 		}
 	}

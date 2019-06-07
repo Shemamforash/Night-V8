@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Player;
-using Game.Exploration.Regions;
 using Extensions;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
@@ -33,6 +31,7 @@ namespace Game.Combat.Misc
 				_skillControllers.Add(gameObject.FindChildWithName<CooldownController>("Skill " + (i + 1)));
 
 			_skillsReady = false;
+			_needsUpdate = true;
 		}
 
 		private void OnDestroy() => _instance = null;
@@ -83,6 +82,12 @@ namespace Game.Combat.Misc
 		public static void UpdateSkills()
 		{
 			_needsUpdate = true;
+		}
+
+		public static void UnlockSkill(int skillNo)
+		{
+			UpdateSkills();
+			_instance._skillControllers[skillNo].Unlock();
 		}
 
 		private bool IsSkillFree()

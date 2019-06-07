@@ -64,7 +64,7 @@ namespace Game.Gear.Weapons
 
 		public float CalculateMinimumDistance()
 		{
-			float range = WeaponAttributes.Val(AttributeType.Accuracy);
+			float range = WeaponAttributes.Accuracy();
 			range *= range;
 			float minimumDistance = (RangeMax - RangeMin) * range + RangeMin * 0.5f;
 			return minimumDistance;
@@ -75,7 +75,7 @@ namespace Game.Gear.Weapons
 			Inventory.Destroy(inscription);
 			ApplyInscriptionModifier(inscription);
 			ApplyInscription(inscription);
-			WeaponAttributes.RecalculateAttributeValues();
+			WeaponAttributes.CalculateDPS();
 			_inscriptions.Add(inscription);
 		}
 
@@ -87,22 +87,11 @@ namespace Game.Gear.Weapons
 		public void ApplyModifier(AttributeType target, AttributeModifier modifier)
 		{
 			if (target.IsCoreAttribute()) return;
-			Debug.Log(target + " " + modifier.FinalBonus() + " " + modifier.RawBonus());
 			WeaponAttributes.Get(target).AddModifier(modifier);
-			WeaponAttributes.RecalculateAttributeValues();
+			WeaponAttributes.CalculateDPS();
 		}
-
-		public void RemoveModifier(AttributeType target, AttributeModifier modifier)
-		{
-			if (target.IsCoreAttribute()) return;
-			WeaponAttributes.Get(target).RemoveModifier(modifier);
-			WeaponAttributes.RecalculateAttributeValues();
-		}
-
 
 		public WeaponType WeaponType() => WeaponAttributes.WeaponType;
-
-		public float GetAttributeValue(AttributeType attributeType) => WeaponAttributes.Get(attributeType).CurrentValue;
 
 		public override string GetSummary() => WeaponAttributes.DPS().Round(1) + "DPS";
 
@@ -134,17 +123,14 @@ namespace Game.Gear.Weapons
 
 		public override void Equip(Character character)
 		{
-			if (character.Weapon == this) return;
 			base.Equip(character);
 			_inscriptions.ForEach(ApplyInscription);
-			EquippedCharacter.Accessory?.ApplyToWeapon(this);
+			WeaponAttributes.CalculateDPS();
 		}
 
 		public override void UnEquip()
 		{
-			if (EquippedCharacter == null) return;
 			_inscriptions.ForEach(RemoveInscription);
-			EquippedCharacter.Accessory?.RemoveFromWeapon(this);
 			base.UnEquip();
 		}
 

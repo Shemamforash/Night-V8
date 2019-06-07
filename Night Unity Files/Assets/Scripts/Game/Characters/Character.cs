@@ -16,7 +16,7 @@ namespace Game.Characters
 
 		protected Character(string name)
 		{
-			Name           = name;
+			Name = name;
 		}
 
 		public virtual XmlNode Save(XmlNode root)
@@ -25,7 +25,7 @@ namespace Game.Characters
 			root.CreateChild("Name", Name);
 			XmlNode equipped = root.CreateChild("EquippedItems");
 			Armour.Save(equipped);
-			if (Weapon != null) equipped.CreateChild("Weapon", Weapon.ID());
+			if (Weapon    != null) equipped.CreateChild("Weapon",    Weapon.ID());
 			if (Accessory != null) equipped.CreateChild("Accessory", Accessory.ID());
 			return root;
 		}
@@ -48,6 +48,7 @@ namespace Game.Characters
 			Accessory?.UnEquip();
 			Accessory = accessory;
 			accessory?.Equip(this);
+			Weapon?.WeaponAttributes.CalculateDPS();
 		}
 
 		public virtual void EquipWeapon(Weapon weapon)

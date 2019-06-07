@@ -150,7 +150,7 @@ namespace Game.Combat.Player
 		{
 			s.Attributes().AddOnHit(() =>
 			{
-				int refillProbability = (int) (2 * s._origin.Weapon().GetAttributeValue(AttributeType.Pellets));
+				int refillProbability = 2 * s._origin.Weapon().WeaponAttributes.Pellets();
 				if (!NumericExtensions.RollDie(0, refillProbability)) return;
 				Player()._weaponBehaviour.IncreaseAmmo(1);
 				Heal(0.01f);
