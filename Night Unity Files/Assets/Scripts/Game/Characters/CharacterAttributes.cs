@@ -8,15 +8,15 @@ namespace Game.Characters
 	{
 		private const    int    PlayerHealthChunkSize = 100;
 		private readonly Player _player;
-		public float DecayExplodeChance;
-		public float FireExplodeChance;
-		public float FreeSkillChance;
-		public float CompassBonus = 0;
-		public float RallyHealthModifier;
-		public bool  ReloadOnEmptyMag;
-		public bool  ReloadOnFatalShot;
-		public bool RecoverHealthOnKill;
-		public bool  SpreadVoid;
+		public           float  DecayExplodeChance;
+		public           float  FireExplodeChance;
+		public           float  FreeSkillChance;
+		public           float  CompassBonus = 0;
+		public           float  RallyHealthModifier;
+		public           bool   ReloadOnEmptyMag;
+		public           bool   ReloadOnFatalShot;
+		public           bool   RecoverHealthOnKill;
+		public           bool   SpreadVoid;
 
 		private readonly string[] _hungerEvents =
 		{
@@ -52,9 +52,9 @@ namespace Game.Characters
 
 		public float Speed()                    => 5f + Life.Max * 0.25f;
 		public float CooldownModifier()         => -0.025f       * Will.CurrentValue + 1;
-		public void  HealthToLife(float health) => Life.CurrentValue = (Mathf.CeilToInt(health / PlayerHealthChunkSize));
+		public void  HealthToLife(float health) => Life.CurrentValue = Mathf.CeilToInt(health / PlayerHealthChunkSize);
 		public int   Health()                   => (int) Life.CurrentValue * PlayerHealthChunkSize;
-		public int   MaxHealth()                => (int) Life.Max            * PlayerHealthChunkSize;
+		public int   MaxHealth()                => (int) Life.Max          * PlayerHealthChunkSize;
 		public float DashCooldown()             => 5f - Life.Max * 0.2f;
 	}
 }

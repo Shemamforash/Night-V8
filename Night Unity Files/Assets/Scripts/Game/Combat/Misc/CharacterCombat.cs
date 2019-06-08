@@ -79,13 +79,14 @@ namespace Game.Combat.Misc
 				return;
 			}
 
-			Recoil.Increment(-Time.deltaTime);
+			Recoil.CurrentValue -= Time.deltaTime;
 		}
 
 		public void IncreaseRecoil()
 		{
 			float recoil = Weapon().WeaponAttributes.Recoil() / 100f;
-			Recoil.Increment(recoil);
+			Debug.Log(recoil);
+			Recoil.CurrentValue += recoil;
 			_timeToRecoilRecovery = 0.5f;
 		}
 

@@ -36,21 +36,23 @@ namespace Game.Gear.Weapons
 
 		public void Reload()
 		{
-			Reload(_weaponAttributes.Capacity());
+			Reload(Capacity());
 		}
 
-		public bool FullyLoaded() => GetRemainingAmmo() == (int) _weaponAttributes.Val(AttributeType.Capacity);
+		public bool FullyLoaded() => GetRemainingAmmo() == Capacity();
 
-		public int Capacity() => (int) _weaponAttributes.Val(AttributeType.Capacity);
+		public int Capacity() => _weaponAttributes.Capacity();
 
 		public bool Empty() => GetRemainingAmmo() == 0;
 
 		public int GetRemainingAmmo() => _ammoInMagazine;
 
-		protected bool FireRateTargetMet()
+		public bool FireRateTargetMet()
 		{
 			return Helper.TimeInSeconds() >= TimeToNextFire;
 		}
+
+		public bool Fired => _fired;
 
 		public bool CanFire()
 		{

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Extensions;
 using Facilitating.Persistence;
@@ -10,11 +11,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
 	public abstract class GearItem : NamedItem
 	{
-		private static int                     _idCounter;
-		private        Dictionary<string, int> _dismantleRewards;
-		private        int                     _id;
-		private        ItemQuality             _itemQuality;
-		public         Character               EquippedCharacter;
+		private static int                        _idCounter;
+		private        Dictionary<string, Action> _dismantleRewards;
+		private        int                        _id;
+		private        ItemQuality                _itemQuality;
+		public         Character                  EquippedCharacter;
 
 		protected GearItem(string name, ItemQuality itemQuality) : base(name)
 		{
@@ -68,18 +69,16 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
 		public int ID() => _id;
 
-		public Dictionary<string, int> GetDismantleRewards() => _dismantleRewards;
+		public Dictionary<string, Action> GetDismantleRewards() => _dismantleRewards;
 
 		protected virtual void CalculateDismantleRewards()
 		{
-			_dismantleRewards = new Dictionary<string, int>();
+			_dismantleRewards = new Dictionary<string, Action>();
 		}
 
-		protected void AddReward(string reward, int quantity)
+		protected void AddReward(string rewardName, Action addRewardAction)
 		{
-			if (!_dismantleRewards.ContainsKey(reward)) _dismantleRewards.Add(reward, 0);
-			quantity                  = _dismantleRewards[reward] + quantity;
-			_dismantleRewards[reward] = quantity;
+			_dismantleRewards.Add(rewardName, addRewardAction);
 		}
 	}
 }

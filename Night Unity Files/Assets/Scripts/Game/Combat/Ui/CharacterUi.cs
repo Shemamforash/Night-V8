@@ -51,7 +51,6 @@ namespace Game.Combat.Ui
 		{
 			if (Character.WasJustVoided())
 			{
-				Debug.Log(Character.WasJustVoided());
 				_voidGlowTween?.Complete();
 				_voidGlowCanvas.alpha = 1f;
 				_voidGlowTween        = _voidGlowCanvas.DOFade(0f, 1f);

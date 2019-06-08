@@ -211,7 +211,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -4891,7 +4891,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 200
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -6355,7 +6355,7 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: -0.4, z: 0}
+    m_Position: {x: 0, y: -0.2, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
     m_Scale: {x: 1.25, y: 0.25, z: 1}
     placementMode: 0
@@ -10418,7 +10418,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 200
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -11558,7 +11558,7 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: -0.4, z: 0}
+    m_Position: {x: 0, y: -0.2, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
     m_Scale: {x: 1.25, y: 0.25, z: 1}
     placementMode: 0
@@ -15621,7 +15621,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 200
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -21562,7 +21562,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: 0
+  m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -26580,7 +26580,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 200
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -31449,7 +31449,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 200
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -31695,7 +31695,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: 0
+  m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -32109,7 +32109,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: 0
+  m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -37637,7 +37637,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 200
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -38090,7 +38090,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -42770,7 +42770,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 200
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -43758,7 +43758,7 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: -0.4, z: 0}
+    m_Position: {x: 0, y: -0.2, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
     m_Scale: {x: 1.25, y: 0.25, z: 1}
     placementMode: 0
@@ -47821,7 +47821,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 200
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -52726,7 +52726,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 200
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -52982,7 +52982,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -57662,7 +57662,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 200
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -59757,7 +59757,7 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: -0.4, z: 0}
+    m_Position: {x: 0, y: -0.2, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
     m_Scale: {x: 1.25, y: 0.25, z: 1}
     placementMode: 0
@@ -63820,7 +63820,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 200
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -64252,7 +64252,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: 0
+  m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -65904,7 +65904,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -70584,7 +70584,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 200
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0

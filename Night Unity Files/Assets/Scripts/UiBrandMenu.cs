@@ -122,16 +122,16 @@ public class UiBrandMenu : Menu
 		string keyName;
 		switch (skillNum)
 		{
-			case 1:
+			case 0:
 				keyName = InputHandler.GetBindingForKey(InputAxis.SkillOne);
 				break;
-			case 2:
+			case 1:
 				keyName = InputHandler.GetBindingForKey(InputAxis.SkillTwo);
 				break;
-			case 3:
+			case 2:
 				keyName = InputHandler.GetBindingForKey(InputAxis.SkillThree);
 				break;
-			case 4:
+			case 3:
 				keyName = InputHandler.GetBindingForKey(InputAxis.SkillFour);
 				break;
 			default:

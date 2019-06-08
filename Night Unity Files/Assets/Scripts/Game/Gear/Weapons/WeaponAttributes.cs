@@ -39,13 +39,11 @@ namespace Game.Gear.Weapons
 		{
 			root.CreateChild("Class",      (int) WeaponClassType);
 			root.CreateChild("Durability", _durability.CurrentValue);
-			root = base.Save(root);
 			return root;
 		}
 
 		public override void Load(XmlNode root)
 		{
-			base.Load(root);
 			_durability.CurrentValue = root.ParseFloat("Durability");
 		}
 

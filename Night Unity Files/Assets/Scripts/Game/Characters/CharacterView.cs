@@ -118,8 +118,8 @@ namespace Game.Characters
 		{
 			if (_seenTutorial || !TutorialManager.Active()) return;
 			if (MapGenerator.DiscoveredRegions().Count < 2) return;
-			RectTransform physical = _attributeController.FindChildWithName<RectTransform>("Physical");
-			RectTransform mental   = _attributeController.FindChildWithName<RectTransform>("Mental");
+			RectTransform physical = _attributeController.FindChildWithName<RectTransform>("Life");
+			RectTransform mental   = _attributeController.FindChildWithName<RectTransform>("Will");
 			List<TutorialOverlay> overlays = new List<TutorialOverlay>
 			{
 				new TutorialOverlay(_attributeController.GetComponent<RectTransform>()),

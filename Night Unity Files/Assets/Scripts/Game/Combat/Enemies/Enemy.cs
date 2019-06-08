@@ -69,7 +69,10 @@ namespace Game.Combat.Enemies
 			Weapon weapon = WeaponGenerator.GenerateWeapon(possibleTypes.RandomElement());
 			weapon.WeaponAttributes.RandomiseDurability();
 			EquipWeapon(weapon);
-			if (NumericExtensions.RollDie(0, 5)) weapon.AddInscription(Inscription.Generate(false));
+			for (int i = 0; i < Random.Range(1, 6); ++i)
+			{
+				weapon.AddInscription(Inscription.Generate(false));
+			}
 		}
 
 		private void GenerateArmour()
@@ -209,7 +212,7 @@ namespace Game.Combat.Enemies
 		{
 			_inscriptionDropChance += DropChanceIncrement;
 			bool drop                        = Random.Range(0f, 1f) < _inscriptionDropChance;
-			if (drop) _inscriptionDropChance = -0.25f;
+			if (drop) _inscriptionDropChance = -0.4f;
 			return drop;
 		}
 

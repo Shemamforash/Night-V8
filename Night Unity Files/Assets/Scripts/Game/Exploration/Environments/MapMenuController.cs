@@ -31,7 +31,7 @@ namespace Game.Exploration.Environment
 		private readonly Queue<Tuple<Region, Region>> _undrawnRoutes = new Queue<Tuple<Region, Region>>();
 		private          float                        _currentTime;
 		private          bool                         _isActive;
-		private          UIAttributeMarkerController  _lifeMarker;
+//		private          UIAttributeMarkerController  _lifeMarker;
 		private          Region                       _nearestRegion;
 		private          float                        _nextRouteTime;
 		private          bool                         _seenTutorial;
@@ -76,7 +76,7 @@ namespace Game.Exploration.Environment
 		protected override void Awake()
 		{
 			base.Awake();
-			_lifeMarker    = gameObject.FindChildWithName("Life").FindChildWithName<UIAttributeMarkerController>("Bar");
+//			_lifeMarker    = gameObject.FindChildWithName("Life").FindChildWithName<UIAttributeMarkerController>("Bar");
 			_nextRouteTime = 2f / MapGenerator.Regions().Count;
 			MapTransform   = GameObject.Find("Nodes").transform;
 			_instance      = this;
@@ -125,7 +125,7 @@ namespace Game.Exploration.Environment
 
 		public override void PreEnter()
 		{
-			UpdateLife();
+//			UpdateLife();
 		}
 
 		private void ShowMapTutorial()
@@ -279,11 +279,11 @@ namespace Game.Exploration.Environment
 			return canAfford;
 		}
 
-		public void UpdateLife()
-		{
-			CharacterAttribute life = _player.Attributes.Get(AttributeType.Life);
-			_lifeMarker.SetValue(life.Max, life.CurrentValue, 0);
-		}
+//		public void UpdateLife()
+//		{
+//			CharacterAttribute life = _player.Attributes.Get(AttributeType.Life);
+//			_lifeMarker.SetValue(life.Max, life.CurrentValue, 0);
+//		}
 
 		public static MapMenuController Instance() => _instance;
 

@@ -24,7 +24,7 @@ namespace Game.Combat.Misc
 			Assert.IsTrue(amount >= 0);
 			if (amount == 0) return;
 			if (_healthRemaining.ReachedMin) return;
-			_healthRemaining.Increment(-amount);
+			_healthRemaining.CurrentValue -= amount;
 			OnTakeDamage?.Invoke(amount);
 			if (!_healthRemaining.ReachedMin) return;
 			OnKill?.Invoke();
@@ -34,7 +34,7 @@ namespace Game.Combat.Misc
 		public void Heal(int amount)
 		{
 			Assert.IsTrue(amount >= 0);
-			_healthRemaining.Increment(amount);
+			_healthRemaining.CurrentValue += amount;
 			OnHeal?.Invoke(amount);
 		}
 

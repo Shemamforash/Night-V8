@@ -19,7 +19,7 @@ namespace Fastlights
 		private static readonly List<MeshFilter>              _meshFilters    = new List<MeshFilter>();
 		private static readonly int                           _color          = Shader.PropertyToID("_Color");
 		private readonly        List<FLEdge>                  _edges          = new List<FLEdge>();
-		private readonly        List<FLVertex>                _verts          = new List<FLVertex>();
+		private readonly        List<FLVertex>                _vertices       = new List<FLVertex>();
 		private readonly        List<Vector2>                 _meshVertices   = new List<Vector2>();
 		private                 ConcurrentQueue<List<FLEdge>> _edgeSegmentQueue;
 		private                 List<List<FLEdge>>            _edgeSegments = new List<List<FLEdge>>();
@@ -158,7 +158,7 @@ namespace Fastlights
 			}
 
 			_edges.Clear();
-			_verts.Clear();
+			_vertices.Clear();
 			int edgeSegmentCount = _edgeSegments.Count;
 			for (int i = 0; i < edgeSegmentCount; i++)
 			{
@@ -167,19 +167,19 @@ namespace Fastlights
 				for (int j = 0; j < segmentLength; ++j)
 				{
 					_edges.Add(_segments[j]);
-					_verts.Add(_segments[j].From);
+					_vertices.Add(_segments[j].From);
 					if (j != segmentLength - 1) continue;
-					_verts.Add(_segments[j].To);
+					_vertices.Add(_segments[j].To);
 				}
 			}
 
-			_verts.Sort((a, b) => a.InRangeAngle.CompareTo(b.InRangeAngle));
+			_vertices.Sort((a, b) => a.InRangeAngle.CompareTo(b.InRangeAngle));
 
 			FLVertex endVert   = null;
-			int      vertCount = _verts.Count;
+			int      vertCount = _vertices.Count;
 			for (int i = 0; i < vertCount; i++)
 			{
-				FLVertex vert = _verts[i];
+				FLVertex vert = _vertices[i];
 				CalculateNearestIntersection(vert, _edges);
 				if (_intersectionExists)
 				{
@@ -215,7 +215,7 @@ namespace Fastlights
 				}
 			}
 
-			if (endVert != null) InsertLineSegments(endVert.InRangeAngle, _verts[0].InRangeAngle);
+			if (endVert != null) InsertLineSegments(endVert.InRangeAngle, _vertices[0].InRangeAngle);
 			BuildMesh();
 		}
 

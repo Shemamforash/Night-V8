@@ -198,7 +198,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 		public static ResourceItem Create(string name)
 		{
 			ResourceTemplate template = StringToTemplate(name);
-			if (template == null) throw new Exceptions.ResourceDoesNotExistException(name);
+			if (template == null)
+			{
+				Debug.Log("Resource template does not exist " + name);
+				return null;
+			}
+
 			return template.Create();
 		}
 

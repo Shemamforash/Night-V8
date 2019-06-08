@@ -74,8 +74,6 @@ public class WeaponDetailController : MonoBehaviour
 		float shatterChance = _weapon.WeaponAttributes.CalculateShatterChance();
 		float burnChance    = _weapon.WeaponAttributes.CalculateBurnChance();
 		float voidChance    = _weapon.WeaponAttributes.CalculateVoidChance();
-		Debug.Log(shatterChance);
-
 		_shatterObject.SetActive(shatterChance != 0);
 		_burnObject.SetActive(burnChance       != 0);
 		_voidObject.SetActive(voidChance       != 0);

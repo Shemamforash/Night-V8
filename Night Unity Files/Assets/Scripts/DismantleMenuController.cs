@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DefaultNamespace;
 using DG.Tweening;
 using Game.Combat.Player;
@@ -15,13 +16,13 @@ using UnityEngine;
 
 public class DismantleMenuController : Menu
 {
-	private static ListController          _dismantleList;
-	private static Dictionary<string, int> _dismantleRewards;
-	private static CloseButtonController   _closeButton;
-	private static GameObject              _dismantledScreen;
-	private        EnhancedButton          _acceptButton;
-	private        GearItem                _gearToDismantle;
-	private        EnhancedText            _receivedText;
+	private static ListController             _dismantleList;
+	private static Dictionary<string, Action> _dismantleRewards;
+	private static CloseButtonController      _closeButton;
+	private static GameObject                 _dismantledScreen;
+	private        EnhancedButton             _acceptButton;
+	private        GearItem                   _gearToDismantle;
+	private        EnhancedText               _receivedText;
 
 	protected override void Awake()
 	{
@@ -42,8 +43,7 @@ public class DismantleMenuController : Menu
 		string dismantleText = "";
 		foreach (string reward in _dismantleRewards.Keys)
 		{
-			int quantity = _dismantleRewards[reward];
-			dismantleText += quantity + "x " + reward + "\n";
+			dismantleText += reward + "\n";
 		}
 
 		return dismantleText;
@@ -52,17 +52,15 @@ public class DismantleMenuController : Menu
 	private static List<object> GetDismantleItems()
 	{
 		List<object> items = Inventory.GetAvailableAccessories().ToObjectList();
-		items.AddRange(Inventory.Inscriptions.ToObjectList());
+		items.AddRange(Inventory.Inscriptions);
+		items.AddRange(Inventory.GetAvailableWeapons());
 		return items;
 	}
 
 	private void Dismantle()
 	{
-		foreach (string reward in _dismantleRewards.Keys)
-		{
-			int quantity = _dismantleRewards[reward];
-			Inventory.IncrementResource(reward, quantity);
-		}
+		foreach (Action reward in _dismantleRewards.Values)
+			reward.Invoke();
 
 		_gearToDismantle.UnEquip();
 		switch (_gearToDismantle)

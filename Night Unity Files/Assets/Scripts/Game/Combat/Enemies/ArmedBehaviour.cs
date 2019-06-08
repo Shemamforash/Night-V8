@@ -1,9 +1,11 @@
-﻿using Game.Combat.Generation;
+﻿using System.Collections.Generic;
+using Game.Combat.Generation;
+using Game.Combat.Misc;
+using Game.Combat.Player;
 using Game.Gear.Weapons;
-using NUnit.Framework;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Game.Combat.Enemies
 {
@@ -14,7 +16,7 @@ namespace Game.Combat.Enemies
 		private Cell                _coverCell;
 		private float               _aimTime;
 		private bool                _automatic;
-		private float               _fireTime;
+		private float               _repositionTime = -1;
 
 		public override void Initialise(Enemy enemy)
 		{
@@ -22,17 +24,16 @@ namespace Game.Combat.Enemies
 			Assert.IsNotNull(Weapon());
 			_weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
 			CalculateMaxMinDistance();
-			_aimTime   = Random.Range(0.5f, 1f);
+			ResetAimTime();
 			_automatic = Weapon().WeaponAttributes.Automatic;
-			_fireTime  = 2f;
 			TryFire();
 		}
 
 		protected void CalculateMaxMinDistance()
 		{
-			MaxDistance = Weapon().WeaponAttributes.Range();
+			MaxDistance = Weapon().WeaponAttributes.Range() - 0.25f;
 			if (MaxDistance > 4f) MaxDistance = 4f;
-			MinDistance = MaxDistance / 2f;
+			MinDistance = 1f;
 		}
 
 		protected virtual void TryFire()
@@ -40,13 +41,12 @@ namespace Game.Combat.Enemies
 			Aim();
 		}
 
-		public override Weapon Weapon() => Enemy.Weapon;
-
-		public override void MyUpdate()
+		private void ResetAimTime()
 		{
-			base.MyUpdate();
-			if (_aimTime > 0f) _aimTime -= Time.deltaTime;
+			_aimTime = Random.Range(0.25f, 0.5f);
 		}
+
+		public override Weapon Weapon() => Enemy.Weapon;
 
 		public override string GetDisplayName()
 		{
@@ -55,12 +55,13 @@ namespace Game.Combat.Enemies
 
 		private void Reload()
 		{
-			float duration = Weapon().WeaponAttributes.ReloadSpeed() * 2f;
+			float duration = Weapon().WeaponAttributes.ReloadSpeed();
 			CurrentAction = () =>
 			{
 				duration -= Time.deltaTime;
 				if (duration > 0) return;
 				_weaponBehaviour.Reload();
+				ResetAimTime();
 				TryFire();
 			};
 		}
@@ -69,10 +70,10 @@ namespace Game.Combat.Enemies
 		{
 			CurrentAction = () =>
 			{
-				_fireTime = 2f;
-				if (_aimTime > 0f) return;
 				if (_weaponBehaviour.Empty()) Reload();
-				else CurrentAction = Fire;
+				_aimTime -= Time.deltaTime;
+				if (_aimTime > 0f) return;
+				CurrentAction = Fire;
 			};
 		}
 
@@ -81,30 +82,59 @@ namespace Game.Combat.Enemies
 			Transform transform1;
 			bool      outOfRange = (transform1 = transform).Distance(GetTarget().transform) > MaxDistance;
 			bool      outOfSight = outOfRange || Physics2D.Linecast(transform1.position, GetTarget().transform.position, 1 << 8).collider != null;
+
 			if (outOfSight)
 			{
+				_aimTime = Random.Range(0.25f, 0.5f);
 				TryFire();
 				return;
 			}
 
-			_fireTime -= Time.deltaTime;
-			if (_fireTime <= 0)
+			if (_weaponBehaviour.Empty())
 			{
 				_weaponBehaviour.StopFiring();
-				_aimTime = Random.Range(0.5f, 1f);
-				Aim();
+				Reload();
 				return;
 			}
 
-			if (!_weaponBehaviour.CanFire())
+			if (_automatic)
 			{
-				if (!_weaponBehaviour.Empty() && _automatic) return;
+				if (!_weaponBehaviour.FireRateTargetMet()) return;
+				_weaponBehaviour.StartFiring();
+				return;
+			}
+
+			if (_weaponBehaviour.Fired)
+			{
 				_weaponBehaviour.StopFiring();
+				_aimTime = Random.Range(0.2f, 0.3f);
 				Aim();
 				return;
 			}
 
 			_weaponBehaviour.StartFiring();
+		}
+
+		protected override void UpdateTargetCell()
+		{
+			if (GetTarget() == null) SetTarget(PlayerCombat.Instance);
+			if (GetTarget() == null) return;
+			_repositionTime -= Time.deltaTime;
+			if (_repositionTime > 0f) return;
+			_repositionTime = Random.Range(1f, 3f);
+			Cell       playerCell  = ((CharacterCombat) GetTarget()).CurrentCell();
+			List<Cell> cellsNearMe = WorldGrid.GetCellsNearMe(playerCell.Position, 30, MaxDistance);
+			if (cellsNearMe.Count == 0) return;
+			foreach (Cell cell in cellsNearMe)
+			{
+				bool outOfSight = Physics2D.Linecast(playerCell.Position, cell.Position, 1 << 8).collider != null;
+				if (outOfSight) continue;
+				Vector2 difference           = cell.Position - playerCell.Position;
+				float   distanceToTargetCell = difference.magnitude;
+				if (distanceToTargetCell < MinDistance) return;
+				TargetCell = cell;
+				break;
+			}
 		}
 	}
 }

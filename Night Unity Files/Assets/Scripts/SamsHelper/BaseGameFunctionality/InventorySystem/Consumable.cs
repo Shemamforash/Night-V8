@@ -49,7 +49,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 		private void ApplyEffect()
 		{
 			bool increaseMax = _isPermanent && _isCoreAttribute;
-			if (!increaseMax) _attribute.Increment(Template.EffectBonus);
+			if (!increaseMax) _attribute.CurrentValue += Template.EffectBonus;
 			else Player.Attributes.IncreaseAttribute(Template.AttributeType);
 		}
 

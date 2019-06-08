@@ -16,7 +16,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 	public static class Inventory
 	{
 		private static readonly Dictionary<string, ResourceItem> _resources   = new Dictionary<string, ResourceItem>();
-		private static readonly List<Weapon> _weapons = new List<Weapon>();
+		private static readonly List<Weapon>                     _weapons     = new List<Weapon>();
 		private static readonly List<Accessory>                  _accessories = new List<Accessory>();
 		public static readonly  List<Inscription>                Inscriptions = new List<Inscription>();
 		private static          bool                             _loaded;
@@ -111,7 +111,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 		private static ResourceItem AddResource(string name)
 		{
 			ResourceItem newResourceItem = ResourceTemplate.Create(name);
-			_resources.Add(name, newResourceItem);
+			if (newResourceItem != null) _resources.Add(name, newResourceItem);
 			return newResourceItem;
 		}
 
@@ -128,6 +128,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 			if (resourceItem == null)
 			{
 				resourceItem = AddResource(name);
+				if (resourceItem == null) return;
 				--amount;
 			}
 
@@ -214,6 +215,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
 		public static void Move(Accessory accessory)
 		{
+			if (accessory == null) return;
 			UiAccessoryController.Unlock();
 			_accessories.Add(accessory);
 			SortItem(_accessories);
@@ -221,6 +223,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
 		public static void Move(Inscription inscription)
 		{
+			if (inscription == null) return;
 			Inscriptions.Add(inscription);
 			SortItem(Inscriptions);
 		}

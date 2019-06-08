@@ -15,11 +15,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
 		private ResourceItem(string name) : base(name)
 		{
-			_quantity.Increment();
+			++_quantity.CurrentValue;
 		}
 
 		public int  Quantity()            => Mathf.FloorToInt(_quantity.CurrentValue);
-		public void Increment(int amount) => _quantity.Increment(amount);
+		public void Increment(int amount) => _quantity.CurrentValue += amount;
 
 		public void Save(XmlNode root)
 		{

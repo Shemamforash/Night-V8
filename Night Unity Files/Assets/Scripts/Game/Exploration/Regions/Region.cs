@@ -87,22 +87,29 @@ namespace Game.Exploration.Regions
 			region._seen       = doc.ParseBool("Seen");
 			region._cleared    = doc.ParseBool("Cleared");
 
-			region._size                 = doc.ParseInt("Size");
-			region._justDiscovered       = doc.ParseBool("JustDiscovered");
-			region._templeCleansed       = doc.ParseBool("TempleCleansed");
-			region.WaterSourceCount      = doc.ParseInt("WaterSourceCount");
-			region.FoodSourceCount       = doc.ParseInt("FoodSourceCount");
-			region.ResourceSourceCount   = doc.ParseInt("ResourceSourceCount");
-			region.JournalIsHere         = doc.ParseBool("JournalIsHere");
-			region.MonumentUsed          = doc.ParseBool("MonumentUsed");
-			region.RitesRemain           = doc.ParseBool("RitesRemaining");
-			region.FountainVisited       = doc.ParseBool("FountainVisited");
-			region.IsWeaponHere          = doc.ParseBool("IsWeaponHere");
-			region.RingChallengeComplete = doc.ParseBool(nameof(RingChallengeComplete));
+			region._size               = doc.ParseInt("Size");
+			region._justDiscovered     = doc.ParseBool("JustDiscovered");
+			region._templeCleansed     = doc.ParseBool("TempleCleansed");
+			region.WaterSourceCount    = doc.ParseInt("WaterSourceCount");
+			region.FoodSourceCount     = doc.ParseInt("FoodSourceCount");
+			region.ResourceSourceCount = doc.ParseInt("ResourceSourceCount");
+			region.JournalIsHere       = doc.ParseBool("JournalIsHere");
+			region.MonumentUsed        = doc.ParseBool("MonumentUsed");
+			region.RitesRemain         = doc.ParseBool("RitesRemaining");
+			region.FountainVisited     = doc.ParseBool("FountainVisited");
+			region.IsWeaponHere        = doc.ParseBool("IsWeaponHere");
+			TryLoadRingChallenge(region, doc);
 			int characterClassHere = doc.ParseInt("CharacterHere");
 			region.CharacterHere = characterClassHere == -1 ? null : CharacterManager.GenerateCharacter((CharacterClass) characterClassHere);
 			region.CheckIsDynamic();
 			return region;
+		}
+
+		private static void TryLoadRingChallenge(Region region, XmlNode doc)
+		{
+			XmlNode node = doc.SelectSingleNode(nameof(RingChallengeComplete));
+			if (node == null) return;
+			region.RingChallengeComplete = doc.ParseBool(nameof(RingChallengeComplete));
 		}
 
 		public void Save(XmlNode doc)
@@ -163,12 +170,7 @@ namespace Game.Exploration.Regions
 		{
 			List<EnemyType> templates = new List<EnemyType>();
 			if (!IsDynamic()) return templates;
-			if (!_cleared && _size == 0)
-			{
-				_size =  Mathf.CeilToInt(WorldState.Difficulty() / 2f);
-				_size += 6;
-			}
-
+			if (!_cleared && _size == 0) _size = WorldState.Difficulty() + 10;
 			templates = EnemyTemplate.RandomiseEnemiesToSize(allowedTypes, _size);
 			_size     = 0;
 			return templates;

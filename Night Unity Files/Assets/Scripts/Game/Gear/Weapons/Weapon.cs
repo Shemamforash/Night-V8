@@ -16,14 +16,11 @@ namespace Game.Gear.Weapons
 		private const    float             RangeMin = 1.5f;
 		private const    float             RangeMax = 5.5f;
 		public readonly  WeaponAttributes  WeaponAttributes;
-		public readonly  Skill             WeaponSkillOne, WeaponSkillTwo;
 		private readonly List<Inscription> _inscriptions = new List<Inscription>();
 
 		private Weapon(WeaponClass weaponClass, ItemQuality _itemQuality) : base(_itemQuality + " " + weaponClass.Name, _itemQuality)
 		{
 			WeaponAttributes = new WeaponAttributes(this, weaponClass);
-			WeaponSkillOne   = WeaponSkills.GetWeaponSkillOne(this);
-			WeaponSkillTwo   = WeaponSkills.GetWeaponSkillTwo(this);
 		}
 
 		public static Weapon LoadWeapon(XmlNode root)
@@ -41,6 +38,18 @@ namespace Game.Gear.Weapons
 			base.Load(root);
 			WeaponAttributes.Load(root);
 			XmlNode inscriptionsNode = root.SelectSingleNode("Inscriptions");
+			if (inscriptionsNode == null)
+			{
+				for (int i = 0; i < 3; ++i)
+				{
+					Inscription inscription = Inscription.Generate(false);
+					Inventory.Move(inscription);
+					Inventory.IncrementResource("Essence", inscription.InscriptionCost());
+				}
+
+				return;
+			}
+
 			foreach (XmlNode inscriptionNode in inscriptionsNode.SelectNodes("Inscription"))
 			{
 				Inscription inscription = Inscription.LoadInscription(inscriptionNode);
@@ -61,14 +70,6 @@ namespace Game.Gear.Weapons
 		public static Weapon Generate(ItemQuality quality) => new Weapon(WeaponClass.GetRandomClass(), quality);
 
 		public static Weapon Generate(ItemQuality quality, WeaponClass weaponClass) => new Weapon(weaponClass, quality);
-
-		public float CalculateMinimumDistance()
-		{
-			float range = WeaponAttributes.Accuracy();
-			range *= range;
-			float minimumDistance = (RangeMax - RangeMin) * range + RangeMin * 0.5f;
-			return minimumDistance;
-		}
 
 		public void AddInscription(Inscription inscription)
 		{
@@ -147,20 +148,20 @@ namespace Game.Gear.Weapons
 		protected override void CalculateDismantleRewards()
 		{
 			base.CalculateDismantleRewards();
-			int quality = (int) Quality() + 1;
-			AddReward("Essence", quality);
-			List<string> possibleRewards = new List<string>();
-			for (int i = 0; i < quality; ++i)
+			int         essenceReward = 0;
+			Inscription inscription   = Inscription.Generate(Quality(), false);
+			essenceReward += (int) inscription.Quality();
+			AddReward(inscription.Name, () => Inventory.Move(inscription));
+
+			if (_inscriptions.Count > 4)
 			{
-				if (i == 0) possibleRewards.Add("Essence");
-				if (i == 1) possibleRewards.Add("Rusty Scrap");
-				if (i == 2) possibleRewards.Add("Metal Shards");
-				if (i == 3) possibleRewards.Add("Ancient Relics");
-				if (i == 4) possibleRewards.Add("Celestial Fragments");
+				Inscription extraInscription = Inscription.Generate(Quality(), false);
+				AddReward(inscription.Name, () => Inventory.Move(extraInscription));
+				essenceReward += (int) extraInscription.Quality();
 			}
 
-			int count = Mathf.FloorToInt(quality / 2f) + 1;
-			for (int i = 0; i < count; ++i) AddReward(possibleRewards.RemoveRandom(), 2);
+			if (essenceReward <= 0) return;
+			AddReward(essenceReward + " Essence", () => Inventory.IncrementResource("Essence", essenceReward));
 		}
 	}
 }

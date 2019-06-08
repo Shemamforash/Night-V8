@@ -51,11 +51,12 @@ namespace Game.Global
 		public static           AudioClip         MagazineEffect;
 		private static readonly List<AssetBundle> _loadedBundles = new List<AssetBundle>();
 		private static          bool              _loaded;
+		private                 Coroutine         _audioLoadCoroutine;
 
 
 		public void Awake()
 		{
-			StartCoroutine(LoadAudio());
+			_audioLoadCoroutine = StartCoroutine(LoadAudio());
 		}
 
 		private AssetBundle FindAssetBundle(string bundleName)
@@ -192,5 +193,11 @@ namespace Game.Global
 		}
 
 		public static bool Loaded() => _loaded;
+
+		public void OnApplicationQuit()
+		{
+			StopCoroutine(_audioLoadCoroutine);
+			_loadedBundles.ForEach(ab => ab.Unload(true));
+		}
 	}
 }

@@ -9,8 +9,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 {
 	public class CooldownController : MonoBehaviour
 	{
-		private readonly Color            _cooldownNotReadyColor = UiAppearanceController.FadedColour;
-		private readonly List<GameObject> _skillCostBlips        = new List<GameObject>();
+		private readonly List<GameObject> _skillCostBlips = new List<GameObject>();
 		private          ParticleSystem   _unlockSparks;
 		private          ParticleSystem   _unlockBurst;
 		private          Transform        _costTransform;
@@ -33,8 +32,9 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 
 		public void UpdateCooldownFill(float normalisedValue)
 		{
-			Color targetColor = normalisedValue == 1 ? Color.white : _cooldownNotReadyColor;
-			_skillNameText.SetColor(targetColor);
+			float alpha = normalisedValue == 1 ? 1 : 0.4f;
+			alpha                    = _skill == null ? 0f : alpha;
+			_unlockedCanvas.alpha    = alpha;
 			_cooldownFill.fillAmount = normalisedValue;
 		}
 

@@ -28,17 +28,19 @@ namespace Facilitating.UIControllers
 		private       bool                   _seenAttributeTutorial, _seenInfuseTutorial;
 		private       bool                   _upgradingAllowed;
 		private       WeaponDetailController _weaponDetail;
+		private       EnhancedText           _availableEssence;
 
 		public override bool Unlocked() => !Locked;
 
 		protected override void CacheElements()
 		{
-			_inscriptionList = gameObject.FindChildWithName<ListController>("Inscription List");
-			_weaponDetail    = gameObject.FindChildWithName<WeaponDetailController>("Stats");
-			_infuseButton    = gameObject.FindChildWithName<EnhancedButton>("Inscribe");
-			_infoGameObject  = gameObject.FindChildWithName("Info");
-			_swapButton      = gameObject.FindChildWithName<EnhancedButton>("Swap");
-			_weaponList      = gameObject.FindChildWithName<ListController>("Weapon List");
+			_inscriptionList  = gameObject.FindChildWithName<ListController>("Inscription List");
+			_availableEssence = gameObject.FindChildWithName<EnhancedText>("Essence Count");
+			_weaponDetail     = gameObject.FindChildWithName<WeaponDetailController>("Stats");
+			_infuseButton     = gameObject.FindChildWithName<EnhancedButton>("Inscribe");
+			_infoGameObject   = gameObject.FindChildWithName("Info");
+			_swapButton       = gameObject.FindChildWithName<EnhancedButton>("Swap");
+			_weaponList       = gameObject.FindChildWithName<ListController>("Weapon List");
 
 
 #if UNITY_EDITOR
@@ -74,19 +76,40 @@ namespace Facilitating.UIControllers
 
 			UiGearMenuController.SetCloseButtonAction(Show);
 			_inscriptionList.Show();
+			UpdateAvailableEssenceText();
 			_infoGameObject.SetActive(false);
+		}
+
+		private void UpdateAvailableEssenceText(bool hide = false)
+		{
+			if (hide)
+			{
+				_availableEssence.SetText("");
+				return;
+			}
+
+			_availableEssence.SetText(Inventory.GetResourceQuantity("Essence") + " Essence Available");
 		}
 
 		private void Inscribe(object inscriptionObject)
 		{
 			Inscription inscription = (Inscription) inscriptionObject;
 			if (!inscription.CanAfford()) return;
+			Inventory.DecrementResource("Essence", inscription.InscriptionCost());
 			Weapon weapon = CharacterManager.SelectedCharacter.Weapon;
 			weapon.AddInscription(inscription);
 			if (weapon.Quality() == ItemQuality.Radiant && inscription.Quality() == ItemQuality.Radiant)
 				AchievementManager.Instance().MaxOutWeapon();
 
-			if (!InscriptionsAreAvailable()) Show();
+			if (!InscriptionsAreAvailable())
+			{
+				UpdateAvailableEssenceText(true);
+				Show();
+			}
+			else
+			{
+				UpdateAvailableEssenceText();
+			}
 
 			UiGearMenuController.PlayAudio(AudioClips.Infuse);
 			if (PlayerCombat.Instance == null) return;
@@ -114,6 +137,7 @@ namespace Facilitating.UIControllers
 		private void BackToWeaponInfo()
 		{
 			Show();
+			UpdateAvailableEssenceText(true);
 			UiGearMenuController.FlashCloseButton();
 		}
 
@@ -154,6 +178,7 @@ namespace Facilitating.UIControllers
 
 			SetWeapon();
 			StartCoroutine(TryShowWeaponTutorial());
+			UpdateAvailableEssenceText(true);
 		}
 
 		private IEnumerator ShowWeaponAttributeTutorial()

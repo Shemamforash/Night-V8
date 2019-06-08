@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Extensions;
-using Facilitating.Persistence;
 using Game.Characters;
-using Game.Combat.Player;
-using Game.Exploration.Environment;
-using Game.Gear.Weapons;
 using Game.Global;
-using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.Libraries;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Gear
 {
@@ -46,11 +42,6 @@ namespace Game.Gear
 		public AttributeType Target()
 		{
 			return _template.AttributeTarget;
-		}
-
-		public string TemplateName()
-		{
-			return _template.Name;
 		}
 
 		public static Inscription Generate(bool includeCore)
@@ -109,7 +100,12 @@ namespace Game.Gear
 		{
 			ReadTemplates();
 			string              templateString = root.ParseString("InscriptionTemplate");
-			InscriptionTemplate template       = _inscriptionTemplates.First(t => t.Name == templateString);
+			InscriptionTemplate template       = _inscriptionTemplates.FirstOrDefault(t => t.Name == templateString);
+			if (template == null)
+			{
+				Debug.Log("Unknown inscription template: " + templateString);
+				return null;
+			}
 			ItemQuality         quality        = (ItemQuality) root.ParseInt("Quality");
 			Inscription         inscription    = new Inscription(template, quality);
 			inscription.Load(root);
@@ -161,9 +157,17 @@ namespace Game.Gear
 		protected override void CalculateDismantleRewards()
 		{
 			base.CalculateDismantleRewards();
-			int quality = (int) Quality() + 1;
-			AddReward("Essence", 5 * quality);
-			if (NumericExtensions.RollDie(0, 6)) AddReward("Radiance", 1);
+			int quality = (int) Quality();
+			if (quality == 0)
+			{
+				int essenceReward = Random.Range(3, 5);
+				AddReward(essenceReward + " Essence", () => Inventory.IncrementResource("Essence", essenceReward));
+				return;
+			}
+
+			ItemQuality lowerQuality = (ItemQuality) (quality - 1);
+			Inscription inscription  = new Inscription(_template, lowerQuality);
+			AddReward(inscription.Name, () => Inventory.Move(inscription));
 		}
 	}
 }

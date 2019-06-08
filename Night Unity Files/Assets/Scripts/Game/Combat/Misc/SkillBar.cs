@@ -32,6 +32,7 @@ namespace Game.Combat.Misc
 
 			_skillsReady = false;
 			_needsUpdate = true;
+			TryUpdateSkills();
 		}
 
 		private void OnDestroy() => _instance = null;
@@ -87,6 +88,7 @@ namespace Game.Combat.Misc
 		public static void UnlockSkill(int skillNo)
 		{
 			UpdateSkills();
+			_instance.TryUpdateSkills();
 			_instance._skillControllers[skillNo].Unlock();
 		}
 
@@ -126,10 +128,11 @@ namespace Game.Combat.Misc
 			CooldownRemaining = _duration;
 		}
 
-		public static void DecreaseCooldown(Weapon weapon)
+		public static void DecreaseCooldown(Weapon weapon, int damageDealt)
 		{
-			float decreaseAmount = weapon.WeaponAttributes.DPS() / weapon.WeaponAttributes.GetDurability().CurrentValue;
-			CooldownRemaining -= decreaseAmount / 100;
+			float decreaseAmount = damageDealt / weapon.WeaponAttributes.GetDurability().CurrentValue;
+			decreaseAmount    /= 25f;
+			CooldownRemaining -= decreaseAmount;
 		}
 
 		public void ReleaseSkillBar()
@@ -148,6 +151,7 @@ namespace Game.Combat.Misc
 			if (!skill.Activate()) return;
 			if (freeSkill) return;
 			StartCooldown(skill.Cooldown);
+			_skillControllers[_slotPressed].Unlock();
 		}
 	}
 }

@@ -33,7 +33,8 @@ namespace Game.Combat.Enemies
 		private void UpdateCurrentCell()
 		{
 			_currentCell = WorldGrid.WorldToCellPosition(transform.position, false);
-			if (_currentCell                                                                            == null || _targetCell == null) return;
+			if (_currentCell == null || _targetCell == null) return;
+
 			_outOfSight = Physics2D.Linecast(transform.position, _targetCell.Position, 1 << 8).collider != null;
 			Vector2 difference           = _targetCell.Position - _currentCell.Position;
 			float   distanceToTargetCell = difference.magnitude;
@@ -68,7 +69,7 @@ namespace Game.Combat.Enemies
 			if (_targetCell  == null) return null;
 			if (_currentCell == null) return null;
 			Vector2 direction      = (_targetCell.Position - _currentCell.Position).normalized;
-			Vector2 targetPosition = _targetCell.Position + direction * _minDistance * 1.2f;
+			Vector2 targetPosition = _targetCell.Position + _minDistance * 1.2f * direction;
 			_targetCell = WorldGrid.WorldToCellPosition(targetPosition, false);
 			if (_targetCell == null) return null;
 			return new List<Cell>(new[] {_targetCell});

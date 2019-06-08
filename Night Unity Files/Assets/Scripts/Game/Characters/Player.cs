@@ -88,10 +88,10 @@ namespace Game.Characters
 			}
 		}
 
-		public Skill SkillOne()   => !_skill1Unlocked ? null : CharacterSkills.GetCharacterSkillOne(this);
-		public Skill SkillTwo()   => !_skill2Unlocked ? null : CharacterSkills.GetCharacterSkillTwo(this);
-		public Skill SkillThree() => !_skill3Unlocked ? null : WeaponSkills.GetWeaponSkillOne(Weapon);
-		public Skill SkillFour()  => !_skill4Unlocked ? null : WeaponSkills.GetWeaponSkillTwo(Weapon);
+		public Skill SkillOne()   => _skill1Unlocked || (int) EnvironmentManager.CurrentEnvironmentType >= 1 ? CharacterSkills.GetCharacterSkillOne(this) : null;
+		public Skill SkillTwo()   => _skill2Unlocked || (int) EnvironmentManager.CurrentEnvironmentType >= 2 ? CharacterSkills.GetCharacterSkillTwo(this) : null;
+		public Skill SkillThree() => _skill3Unlocked || (int) EnvironmentManager.CurrentEnvironmentType >= 3 ? WeaponSkills.GetWeaponSkillOne(Weapon) : null;
+		public Skill SkillFour()  => _skill4Unlocked || (int) EnvironmentManager.CurrentEnvironmentType >= 4 ? WeaponSkills.GetWeaponSkillTwo(Weapon) : null;
 
 		public override XmlNode Save(XmlNode root)
 		{
@@ -114,13 +114,15 @@ namespace Game.Characters
 			base.Load(root);
 			Attributes.Load(root);
 			BrandManager.Load(root);
-			_timeAlive      = root.ParseInt("TimeAlive");
-			_daysSurvived   = root.ParseInt("DaysSurvived");
-			_skill1Unlocked = root.ParseBool(nameof(_skill1Unlocked));
-			_skill2Unlocked = root.ParseBool(nameof(_skill1Unlocked));
-			_skill3Unlocked = root.ParseBool(nameof(_skill1Unlocked));
-			_skill4Unlocked = root.ParseBool(nameof(_skill1Unlocked));
+			_timeAlive    = root.ParseInt("TimeAlive");
+			_daysSurvived = root.ParseInt("DaysSurvived");
 			LoadCurrentAction(root);
+
+			if (root.SelectSingleNode(nameof(_skill1Unlocked)) == null) return;
+			_skill1Unlocked = root.ParseBool(nameof(_skill1Unlocked));
+			_skill2Unlocked = root.ParseBool(nameof(_skill2Unlocked));
+			_skill3Unlocked = root.ParseBool(nameof(_skill3Unlocked));
+			_skill4Unlocked = root.ParseBool(nameof(_skill4Unlocked));
 		}
 
 		private void LoadCurrentAction(XmlNode root)
@@ -199,15 +201,14 @@ namespace Game.Characters
 		public bool CanAffordTravel(int travelCost = 1)
 		{
 			int lifeRemaining = Mathf.CeilToInt(Attributes.Life.CurrentValue);
-			Debug.Log(lifeRemaining + " " + travelCost);
 			return lifeRemaining >= travelCost;
 		}
 
 		public void Rest()
 		{
 			if (!CanRest()) return;
-			Attributes.Will.Increment();
-			Attributes.Life.Increment();
+			++Attributes.Will.CurrentValue;
+			++Attributes.Life.CurrentValue;
 			if (CanRest()) return;
 			WorldEventManager.GenerateEvent(new CharacterMessage(_restEvents.RandomElement(), this));
 		}

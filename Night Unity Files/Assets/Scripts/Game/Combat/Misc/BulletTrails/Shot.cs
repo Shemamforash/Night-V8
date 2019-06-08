@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using Fastlights;
 using Game.Combat.Generation;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -22,7 +21,6 @@ namespace Game.Combat.Misc
 		private Vector2         _direction, _originPosition, _lastPosition;
 		private ShotAttributes  _shotAttributes;
 		private Transform       _transform;
-		private FastLight       _light;
 
 		public Rigidbody2D RigidBody2D()
 		{
@@ -33,7 +31,6 @@ namespace Game.Combat.Misc
 		{
 			_rigidBody = GetComponent<Rigidbody2D>();
 			_transform = transform;
-			_light     = GetComponent<FastLight>();
 		}
 
 		public ShotAttributes Attributes()
@@ -49,10 +46,6 @@ namespace Game.Combat.Misc
 		public void Initialise(CharacterCombat origin, Vector3 direction)
 		{
 			_shotAttributes = new ShotAttributes(origin);
-			float pellets = origin.Weapon().WeaponAttributes.Pellets();
-			_light.Colour = new Color(1, 1, 1, 0.1f / pellets);
-			float normalisedDps = origin.Weapon().WeaponAttributes.DPS() / 500f;
-			_light.Radius   = Mathf.Lerp(1f, 2f, normalisedDps);
 			_origin         = origin;
 			_direction      = direction;
 			_originPosition = origin.transform.position;

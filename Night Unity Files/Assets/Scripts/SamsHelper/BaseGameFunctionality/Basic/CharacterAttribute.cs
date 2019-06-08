@@ -25,19 +25,6 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 			}
 		}
 
-
-		public override void Increment(float amount = 1)
-		{
-			base.Increment(amount);
-			Recalculate();
-		}
-
-		public override void Decrement(float amount = 1)
-		{
-			base.Decrement(amount);
-			Recalculate();
-		}
-
 		public void Recalculate()
 		{
 			float rawBonus = _modifiers.Sum(m => m.RawBonus());

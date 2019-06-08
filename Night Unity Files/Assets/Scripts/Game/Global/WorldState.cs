@@ -315,17 +315,9 @@ namespace Game.Global
 
 		public static ItemQuality GenerateGearLevel()
 		{
-			int difficulty    = Mathf.FloorToInt(Difficulty() / 10f);
-			int difficultyMin = difficulty - 1;
-			if (difficultyMin < 0)
-			{
-				difficultyMin = 0;
-			}
-			else if (difficultyMin > 4) difficultyMin = 4;
-
-			int difficultyMax                    = difficulty + 1;
-			if (difficultyMax > 4) difficultyMax = 4;
-			return (ItemQuality) Random.Range(difficultyMin, difficultyMax);
+			int difficulty                  = Mathf.FloorToInt(Difficulty() / 10f);
+			if (difficulty == 5) difficulty = 4;
+			return (ItemQuality) difficulty;
 		}
 
 		private static void CheckEnemyUnlock()

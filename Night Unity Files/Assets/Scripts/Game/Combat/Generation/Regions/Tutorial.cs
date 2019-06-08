@@ -149,24 +149,6 @@ namespace Game.Combat.Generation
 			}
 		}
 
-		private IEnumerator ShowAttributeTutorial()
-		{
-			EventTextController.SetOverrideText("Will can be used to restore attributes in and out of combat");
-			yield return new WaitForSecondsRealtime(5);
-			EventTextController.CloseOverrideText();
-			yield return new WaitForSecondsRealtime(1);
-
-			EventTextController.SetOverrideText("Restoring your Life attribute will recover health in combat");
-			yield return new WaitForSecondsRealtime(5);
-			EventTextController.CloseOverrideText();
-			yield return new WaitForSecondsRealtime(1);
-
-			EventTextController.SetOverrideText("Attributes slowly restore when Resting");
-			yield return new WaitForSecondsRealtime(5);
-			EventTextController.CloseOverrideText();
-			yield return new WaitForSecondsRealtime(1);
-		}
-
 		private IEnumerator ShowCompassTutorial()
 		{
 			CreateFoodAndWater();
@@ -221,7 +203,6 @@ namespace Game.Combat.Generation
 			yield return StartCoroutine(ShowBasicControls());
 			yield return StartCoroutine(ShowDashTutorial());
 			yield return StartCoroutine(ShowHealthTutorial());
-			yield return StartCoroutine(ShowAttributeTutorial());
 			yield return StartCoroutine(ShowCompassTutorial());
 			yield return StartCoroutine(ShowLeaveTutorial());
 		}

@@ -20,13 +20,13 @@ namespace Game.Gear.Armour
 		private static          bool                    _loaded;
 		private readonly        string                  _summary;
 		private readonly        AccessoryTemplate       _template;
-		private readonly float                   _modifierValue;
+		private readonly        float                   _modifierValue;
 
 		private Accessory(AccessoryTemplate template, ItemQuality itemQuality) : base(template.Name, itemQuality)
 		{
 			_template      = template;
 			_modifierValue = ((int) itemQuality + 1) * template.ModifierValue;
-			_summary       = MiscHelper.GetModifierSummary(_modifierValue, itemQuality, _template.TargetAttribute, false);
+			_summary       = MiscHelper.GetModifierSummary(template.ModifierValue, itemQuality, _template.TargetAttribute, false);
 		}
 
 		public string Description() => _template.Description;
@@ -80,9 +80,10 @@ namespace Game.Gear.Armour
 		{
 			ReadTemplates();
 			string            templateName = accessoryNode.ParseString("Name");
-			AccessoryTemplate template     = _accessoryTemplates.First(t => t.Name == templateName);
-			ItemQuality       qualityLevel = (ItemQuality) accessoryNode.ParseInt("Quality");
-			Accessory         accessory    = new Accessory(template, qualityLevel);
+			AccessoryTemplate template     = _accessoryTemplates.FirstOrDefault(t => t.Name == templateName);
+			if (template == null) template = _accessoryTemplates.RandomElement();
+			ItemQuality qualityLevel       = (ItemQuality) accessoryNode.ParseInt("Quality");
+			Accessory   accessory          = new Accessory(template, qualityLevel);
 			accessory.Load(accessoryNode);
 			return accessory;
 		}
@@ -91,20 +92,19 @@ namespace Game.Gear.Armour
 		{
 			base.CalculateDismantleRewards();
 			int quality = (int) Quality() + 1;
-			AddReward("Salt",    quality);
-			AddReward("Essence", quality);
+			AddReward(quality             + " Essence", () => Inventory.IncrementResource("Essence", quality));
 			List<string> possibleRewards = new List<string>();
 			for (int i = 0; i < quality; ++i)
 			{
-				if (i == 0) possibleRewards.Add("Essence");
 				if (i == 1) possibleRewards.Add("Rusty Scrap");
 				if (i == 2) possibleRewards.Add("Metal Shards");
 				if (i == 3) possibleRewards.Add("Ancient Relics");
 				if (i == 4) possibleRewards.Add("Celestial Shards");
 			}
 
-			int count = Mathf.FloorToInt(quality / 2f) + 1;
-			for (int i = 0; i < count; ++i) AddReward(possibleRewards.RemoveRandom(), 1);
+			if (possibleRewards.Count == 0) return;
+			string randomReward = possibleRewards.RemoveRandom();
+			AddReward("1 " + randomReward, () => Inventory.IncrementResource(randomReward, 1));
 		}
 
 		public AttributeType TargetAttribute => _template.TargetAttribute;

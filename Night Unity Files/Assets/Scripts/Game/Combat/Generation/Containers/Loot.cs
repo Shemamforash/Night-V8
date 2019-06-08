@@ -4,6 +4,7 @@ using Game.Gear.Weapons;
 using InventorySystem;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Game.Combat.Generation
 {
@@ -21,6 +22,7 @@ namespace Game.Combat.Generation
 		public void SetResource(ResourceItem item)
 		{
 			Item = item;
+			Assert.IsNotNull(item);
 			if (item.Template?.ResourceType == ResourceType.Meat) Sprite = ResourceTemplate.GetSprite("Meat");
 		}
 

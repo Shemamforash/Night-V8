@@ -128,8 +128,8 @@ namespace Game.Combat.Generation.Shrines
 
 		protected override void Succeed()
 		{
-			CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Life).Increment();
-			CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Will).Increment();
+			++CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Life).CurrentValue;
+			++CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Will).CurrentValue;
 			PlayerCombat.Instance.HealthController.Heal(1000000);
 			PlayerCombat.Instance.ResetCompass();
 			CombatLogController.PostLog("Health recovered");

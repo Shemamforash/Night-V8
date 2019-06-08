@@ -5,7 +5,6 @@ using System.Linq;
 using System.Xml;
 using Game.Exploration.Environment;
 using Extensions;
-using Extensions;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using Random = UnityEngine.Random;
 

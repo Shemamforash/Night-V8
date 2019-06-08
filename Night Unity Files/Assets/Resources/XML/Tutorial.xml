@@ -29,7 +29,7 @@
 		<PartNumber>1</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
 		<Title>The Map</Title>
-		<Text>The Map allows you to discover and revisit regions. The Grit required to travel to a region is shown below the region name. Returning to the gate is always free.</Text>
+		<Text>The Map allows you to discover and revisit regions. Regions require a certain amount of Life to reach. You can always return to the Gate regardless of your life.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>3</SectionNumber>
@@ -37,15 +37,7 @@
 		<PartNumber>1</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
 		<Title>The Compass</Title>
-		<Text>Your compass reveals interesting points on the map. Each use of the compass consumes 1 focus.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>4</SectionNumber>
-		<SectionName>Meditation and Grit</SectionName>
-		<PartNumber>1</PartNumber>
-		<AutoUnlock>True</AutoUnlock>
-		<Title>Meditating</Title>
-		<Text>Meditating consumes Will to restore other attributes. It can be done at any time, and is a good way to avoid returning to the gate to recover.</Text>
+		<Text>Your compass reveals interesting points on the map. Each use of the compass consumes 1 Will.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>5</SectionNumber>
@@ -56,28 +48,12 @@
 		<Text>When a characters health reaches zero in combat, they die. If the Wanderer dies, your journey is over.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>6</SectionNumber>
-		<SectionName>Armour</SectionName>
-		<PartNumber>1</PartNumber>
-		<AutoUnlock>False</AutoUnlock>
-		<Title>Armour</Title>
-		<Text>Your armour bar shows how much damage your armour can absorb.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>7</SectionNumber>
-		<SectionName>Adrenaline</SectionName>
-		<PartNumber>1</PartNumber>
-		<AutoUnlock>False</AutoUnlock>
-		<Title>Adrenaline</Title>
-		<Text>Adrenaline is gained by dealing damage to enemies. It can be used to dash or activate skills.</Text>
-	</TutorialPart>
-	<TutorialPart>
 		<SectionNumber>8</SectionNumber>
 		<SectionName>Accuracy</SectionName>
 		<PartNumber>1</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
 		<Title>Accuracy</Title>
-		<Text>Your current accuracy is also shown at the top of the screen. Continuous fire decreases your accuracy, so fire in short bursts for maximum effectiveness.</Text>
+		<Text>Your current accuracy is shown at the top of the screen.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>10</SectionNumber>
@@ -85,23 +61,23 @@
 		<PartNumber>1</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
 		<Title>Attributes</Title>
-		<Text>You have 4 attributes- 2 Physical, and 2 Mental:</Text>
+		<Text>You have 2 attributes- Life and Will.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>10</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>2</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
-		<Title>Physical</Title>
-		<Text>Life increases your maximum health in combat. Grit increases movement speed and map travel distance.</Text>
+		<Title>Life</Title>
+		<Text>Life increases your maximum health in combat, your movement speed, and your maximum travel distance.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>10</SectionNumber>
 		<SectionName>1</SectionName>
 		<PartNumber>3</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
-		<Title>Mental</Title>
-		<Text>Focus increases the rate you gain adrenaline, and the number of compass charges available. Will decreases the recharge time of your skills, and can be used to restore other attributes.</Text>
+		<Title>Will</Title>
+		<Text>Will increases your compass charges, and decreases the charge time on your skills.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>11</SectionNumber>
@@ -128,22 +104,6 @@
 		<Text>Weapons come in a number of different varieties, all of which with unique firing behaviours.</Text>
 	</TutorialPart>
 	<TutorialPart>
-		<SectionNumber>12</SectionNumber>
-		<SectionName>1</SectionName>
-		<PartNumber>2</PartNumber>
-		<AutoUnlock>False</AutoUnlock>
-		<Title>Power</Title>
-		<Text>Weapon Power affects the damage output of a weapon. Lower power reduces the effectiveness of your weapons, whilst higher power increases it.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>12</SectionNumber>
-		<SectionName>1</SectionName>
-		<PartNumber>3</PartNumber>
-		<AutoUnlock>False</AutoUnlock>
-		<Title>Quality</Title>
-		<Text>Higher quality weapons have higher maximum Power- represented by the width of the power bar. Weapons of equal Power will have similar damage outputs, regardless of their quality.</Text>
-	</TutorialPart>
-	<TutorialPart>
 		<SectionNumber>13</SectionNumber>
 		<SectionName>Armour</SectionName>
 		<PartNumber>1</PartNumber>
@@ -165,39 +125,7 @@
 		<PartNumber>1</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
 		<Title>Accessories</Title>
-		<Text>Accessories are small trinkets that can further modify the power of your weapon. Only one accessory can be equipped at a time.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>15</SectionNumber>
-		<SectionName>Skills</SectionName>
-		<PartNumber>1</PartNumber>
-		<AutoUnlock>False</AutoUnlock>
-		<Title>Skills</Title>
-		<Text>In total there are 4 skill slots available during combat.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>15</SectionNumber>
-		<SectionName>1</SectionName>
-		<PartNumber>2</PartNumber>
-		<AutoUnlock>False</AutoUnlock>
-		<Title>Character Skills</Title>
-		<Text>The first 2 skills are linked to the character. These skills are unlocked over time.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>15</SectionNumber>
-		<SectionName>1</SectionName>
-		<PartNumber>3</PartNumber>
-		<AutoUnlock>False</AutoUnlock>
-		<Title>Weapon Skills</Title>
-		<Text>The last 2 skills are linked to your weapon. Using weapons of each type will unlock their skills.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>15</SectionNumber>
-		<SectionName>1</SectionName>
-		<PartNumber>4</PartNumber>
-		<AutoUnlock>False</AutoUnlock>
-		<Title>Cost</Title>
-		<Text>The dots above a skill indicate the adrenaline required to use them.</Text>
+		<Text>Accessories are small trinkets that can further alter your weapon. Only one accessory can be equipped at a time.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>16</SectionNumber>
@@ -205,15 +133,7 @@
 		<PartNumber>1</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
 		<Title>Shrines</Title>
-		<Text>Some areas contain shrines where you can show your devotion to the gods. These shrines provide challenges that, when complete, can improve your character.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>17</SectionNumber>
-		<SectionName>Chanelling</SectionName>
-		<PartNumber>1</PartNumber>
-		<AutoUnlock>False</AutoUnlock>
-		<Title>Chanelling</Title>
-		<Text>Weapon power is drained through use, decreasing the damage you deal in combat. If you have essence available, it can be channelled into the weapon to restore its power.</Text>
+		<Text>Some areas contain shrines. Shrines provide challenges that can improve your character.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>18</SectionNumber>
@@ -221,23 +141,7 @@
 		<PartNumber>1</PartNumber>
 		<AutoUnlock>False</AutoUnlock>
 		<Title>Inscriptions</Title>
-		<Text>Inscriptions can be used to grant large, passive bonuses to weapons. Applying Inscriptions requires Essence, and replaces any Inscription already applied.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>19</SectionNumber>
-		<SectionName>Sleep</SectionName>
-		<PartNumber>1</PartNumber>
-		<AutoUnlock>True</AutoUnlock>
-		<Title>Sleep</Title>
-		<Text>Sleeping slowly restores your characters attributes over time.</Text>
-	</TutorialPart>
-	<TutorialPart>
-		<SectionNumber>20</SectionNumber>
-		<SectionName>Hunger and Thirst</SectionName>
-		<PartNumber>1</PartNumber>
-		<AutoUnlock>True</AutoUnlock>
-		<Title>Hunger and Thirst</Title>
-		<Text>If your Hunger or Thirst level reaches 0, you die. Eat food and drink water to prevent this.</Text>
+		<Text>Inscriptions can be used to improved your weapons, for a price.</Text>
 	</TutorialPart>
 	<TutorialPart>
 		<SectionNumber>21</SectionNumber>

@@ -36,7 +36,6 @@ namespace Game.Combat.Player
 
 		private float               _activeSkillDuration;
 		private int                 _capacity;
-		private int                 _compassPulses;
 		private string              _controlText;
 		private DeathReason         _currentDeathReason;
 		private float               _currentReloadTime;
@@ -101,18 +100,6 @@ namespace Game.Combat.Player
 			{
 				switch (axis)
 				{
-					case InputAxis.SkillOne:
-						SkillBar.Instance().PressSkillBarSlot(0);
-						break;
-					case InputAxis.SkillTwo:
-						SkillBar.Instance().PressSkillBarSlot(1);
-						break;
-					case InputAxis.SkillThree:
-						SkillBar.Instance().PressSkillBarSlot(2);
-						break;
-					case InputAxis.SkillFour:
-						SkillBar.Instance().PressSkillBarSlot(3);
-						break;
 					case InputAxis.Sprint:
 						TryDash();
 						break;
@@ -132,6 +119,22 @@ namespace Game.Combat.Player
 						Reload();
 						break;
 				}
+			}
+
+			switch (axis)
+			{
+				case InputAxis.SkillOne:
+					SkillBar.Instance().PressSkillBarSlot(0);
+					break;
+				case InputAxis.SkillTwo:
+					SkillBar.Instance().PressSkillBarSlot(1);
+					break;
+				case InputAxis.SkillThree:
+					SkillBar.Instance().PressSkillBarSlot(2);
+					break;
+				case InputAxis.SkillFour:
+					SkillBar.Instance().PressSkillBarSlot(3);
+					break;
 			}
 		}
 
@@ -209,13 +212,14 @@ namespace Game.Combat.Player
 
 		private void TryEmitPulse()
 		{
-			if (_compassPulses == 0) return;
+			if ((int) Will.CurrentValue == 0) return;
 			int compassBonus = Mathf.CeilToInt(Player.Attributes.CompassBonus);
 			if (!UiCompassController.EmitPulse(compassBonus)) return;
-			Player.Attributes.Get(AttributeType.Will).Increment(-1);
-			--_compassPulses;
-			UiCompassPulseController.UsePulse(_compassPulses);
+			--Will.CurrentValue;
+			UiCompassPulseController.UsePulse((int) Will.CurrentValue);
 		}
+
+		private CharacterAttribute Will => Player.Attributes.Will;
 
 		private void Rotate(float direction)
 		{
@@ -341,7 +345,7 @@ namespace Game.Combat.Player
 		public void UpdateAdrenaline(int damageDealt)
 		{
 			Player.BrandManager.IncreaseDamageDealt(damageDealt);
-			SkillBar.DecreaseCooldown(Player.Weapon);
+			SkillBar.DecreaseCooldown(Player.Weapon, damageDealt);
 		}
 
 		private void UpdateMuzzleFlash()
@@ -374,14 +378,9 @@ namespace Game.Combat.Player
 			if (damage < 1) damage = 1;
 			Player.BrandManager.IncreaseDamageTaken(damage);
 			if (ArmourController.CanAbsorbDamage)
-			{
 				WeaponAudio.PlayShieldHit();
-			}
 			else
-			{
 				WeaponAudio.PlayBodyHit();
-			}
-
 			base.TakeDamage(damage, direction);
 			TryExplode();
 			Player.Attributes.HealthToLife(HealthController.GetCurrentHealth());
@@ -439,10 +438,7 @@ namespace Game.Combat.Player
 
 		public void ResetCompass()
 		{
-			int compassMax     = Mathf.CeilToInt(Player.Attributes.Max(AttributeType.Will));
-			int compassCurrent = Mathf.CeilToInt(Player.Attributes.Val(AttributeType.Will));
-			_compassPulses = compassCurrent;
-			UiCompassPulseController.InitialisePulses(compassMax, compassCurrent);
+			UiCompassPulseController.InitialisePulses((int) Will.Max, (int) Will.CurrentValue);
 		}
 
 		private IEnumerator Dash()

@@ -4,7 +4,6 @@ using Extensions;
 using Game.Combat.Enemies;
 using Game.Combat.Misc;
 using Game.Global;
-
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -43,7 +42,7 @@ namespace Game.Combat.Generation.Shrines
 			CreateFires();
 
 			int numberOfEnemies = WorldState.ScaleValue(6);
-			_maxEnemies = numberOfEnemies / 3;
+			_maxEnemies = numberOfEnemies / 2;
 
 			List<EnemyType> inactiveEnemies = new List<EnemyType>();
 			for (int i = 0; i < numberOfEnemies; ++i)

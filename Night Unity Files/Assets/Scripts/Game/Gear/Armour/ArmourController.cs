@@ -37,6 +37,8 @@ namespace Game.Gear.Armour
 		public void Load(XmlNode doc)
 		{
 			CurrentLevel = doc.ParseInt("CurrentLevel");
+			if (doc.OwnerDocument.DocumentElement.SelectSingleNode("Campfire") != null)
+				CurrentLevel = Mathf.CeilToInt(CurrentLevel / 2f);
 			CalculateMaxHealth();
 		}
 
@@ -56,12 +58,12 @@ namespace Game.Gear.Armour
 		public void TakeDamage(int damage)
 		{
 			Assert.IsFalse(CurrentLevel == 0);
-			_protection.Increment(-damage);
+			_protection.CurrentValue -= damage;
 			if (!_protection.ReachedMin) return;
 			Recharging = true;
 		}
 
-		public void Repair(int amount) => _protection.Increment(amount);
+		public void Repair(int amount) => _protection.CurrentValue += amount;
 
 
 		public bool DidJustTakeDamage()

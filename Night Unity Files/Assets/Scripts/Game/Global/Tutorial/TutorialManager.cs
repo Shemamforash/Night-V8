@@ -189,7 +189,10 @@ public class TutorialManager : MonoBehaviour
 				int  partNumber = partNode.ParseInt("PartNumber");
 				bool completed  = partNode.ParseBool("Completed");
 				if (!completed) continue;
-				_tutorialParts[sectionNumber][partNumber - 1].MarkComplete();
+				if (!_tutorialParts.TryGetValue(sectionNumber, out List<TutorialPart> tutorialPartsList)) continue;
+				int partIndex = partNumber - 1;
+				if (tutorialPartsList.Count <= partIndex) continue;
+				tutorialPartsList[partIndex].MarkComplete();
 			}
 		}
 	}
