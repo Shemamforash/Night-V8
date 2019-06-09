@@ -120,7 +120,7 @@ public class WeaponAudioController : MonoBehaviour
 		Assert.IsNotNull(shots);
 		if (shots.Length == 0) return;
 		float durability = weapon.WeaponAttributes.GetDurability().CurrentValue / 50f;
-		float hpfValue   = Mathf.Lerp(0f, 750f, durability);
+		float hpfValue   = Mathf.Lerp(750f, 0f, durability);
 		hpfValue = Mathf.Clamp(hpfValue, 0, 750);
 		InstancedAudio instancedAudio = _audioPool.Create();
 		instancedAudio.SetMinMaxDistance(minDistance, 100f);

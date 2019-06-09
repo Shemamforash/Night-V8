@@ -1,7 +1,7 @@
 <WeatherTypes>
 	<Weather>
 		<Name>Drizzle</Name>
-		<DisplayName>it is drizzling</DisplayName>
+		<DisplayName>It is drizzling</DisplayName>
 		<Temperature>-5</Temperature>
 		<Visibility>1</Visibility>
 		<Water>1</Water>
@@ -20,7 +20,7 @@
 	</Weather>
 	<Weather>
 		<Name>Rain</Name>
-		<DisplayName>it it raining</DisplayName>
+		<DisplayName>It is raining</DisplayName>
 		<Temperature>-5</Temperature>
 		<Visibility>0.9</Visibility>
 		<Water>2</Water>
@@ -39,7 +39,7 @@
 	</Weather>
 	<Weather>
 		<Name>Downpour</Name>
-		<DisplayName>it is pouring</DisplayName>
+		<DisplayName>It is pouring</DisplayName>
 		<Temperature>-5</Temperature>
 		<Visibility>0.8</Visibility>
 		<Water>3</Water>
@@ -58,7 +58,7 @@
 	</Weather>
 	<Weather>
 		<Name>Haze</Name>
-		<DisplayName>it is hazy</DisplayName>
+		<DisplayName>It is hazy</DisplayName>
 		<Temperature>0</Temperature>
 		<Visibility>0.6</Visibility>
 		<Water>0</Water>
@@ -77,7 +77,7 @@
 	</Weather>
 	<Weather>
 		<Name>Mist</Name>
-		<DisplayName>it is misty</DisplayName>
+		<DisplayName>It is misty</DisplayName>
 		<Temperature>-5</Temperature>
 		<Visibility>0.4</Visibility>
 		<Water>0</Water>
@@ -96,7 +96,7 @@
 	</Weather>
 	<Weather>
 		<Name>Fog</Name>
-		<DisplayName>it is foggy</DisplayName>
+		<DisplayName>It is foggy</DisplayName>
 		<Temperature>-5</Temperature>
 		<Visibility>0.2</Visibility>
 		<Water>0</Water>
@@ -115,7 +115,7 @@
 	</Weather>
 	<Weather>
 		<Name>Clear</Name>
-		<DisplayName>the sky is clear</DisplayName>
+		<DisplayName>The sky is clear</DisplayName>
 		<Temperature>5</Temperature>
 		<Visibility>1</Visibility>
 		<Water>-1</Water>
@@ -134,7 +134,7 @@
 	</Weather>
 	<Weather>
 		<Name>Cloudy</Name>
-		<DisplayName>the sky is cloudy</DisplayName>
+		<DisplayName>The sky is cloudy</DisplayName>
 		<Temperature>0</Temperature>
 		<Visibility>1</Visibility>
 		<Water>0</Water>
@@ -153,7 +153,7 @@
 	</Weather>
 	<Weather>
 		<Name>Overcast</Name>
-		<DisplayName>the sky is grey</DisplayName>
+		<DisplayName>The sky is grey</DisplayName>
 		<Temperature>0</Temperature>
 		<Visibility>1</Visibility>
 		<Water>0</Water>
@@ -172,7 +172,7 @@
 	</Weather>
 	<Weather>
 		<Name>Hail</Name>
-		<DisplayName>it is hailing</DisplayName>
+		<DisplayName>It is hailing</DisplayName>
 		<Temperature>-10</Temperature>
 		<Visibility>0.8</Visibility>
 		<Water>0</Water>
@@ -191,7 +191,7 @@
 	</Weather>
 	<Weather>
 		<Name>Duststorm</Name>
-		<DisplayName>a dust storm rages</DisplayName>
+		<DisplayName>A dust storm rages</DisplayName>
 		<Temperature>5</Temperature>
 		<Visibility>0.2</Visibility>
 		<Water>-1</Water>
@@ -210,7 +210,7 @@
 	</Weather>
 	<Weather>
 		<Name>Lightning</Name>
-		<DisplayName>lightning strikes all around</DisplayName>
+		<DisplayName>Lightning strikes all around</DisplayName>
 		<Temperature>0</Temperature>
 		<Visibility>1</Visibility>
 		<Water>0</Water>
@@ -229,7 +229,7 @@
 	</Weather>
 	<Weather>
 		<Name>Heatwave</Name>
-		<DisplayName>the heat is unbearable</DisplayName>
+		<DisplayName>The heat is unbearable</DisplayName>
 		<Temperature>10</Temperature>
 		<Visibility>1</Visibility>
 		<Water>-2</Water>
@@ -248,7 +248,7 @@
 	</Weather>
 	<Weather>
 		<Name>Icestorm</Name>
-		<DisplayName>an icey wind passes</DisplayName>
+		<DisplayName>An icy wind passes</DisplayName>
 		<Temperature>-20</Temperature>
 		<Visibility>0.8</Visibility>
 		<Water>0</Water>
@@ -267,7 +267,7 @@
 	</Weather>
 	<Weather>
 		<Name>Hurricane</Name>
-		<DisplayName>hurricane winds blow</DisplayName>
+		<DisplayName>Hurricane winds blow</DisplayName>
 		<Temperature>-5</Temperature>
 		<Visibility>0.6</Visibility>
 		<Water>1</Water>
@@ -282,25 +282,6 @@
 			<Hail>0.2</Hail>
 			<Wind>1</Wind>
 			<Sun>0.4</Sun>
-		</Particles>
-	</Weather>
-	<Weather>
-		<Name>0</Name>
-		<DisplayName>0</DisplayName>
-		<Temperature>0</Temperature>
-		<Visibility>0</Visibility>
-		<Water>0</Water>
-		<Fog>0</Fog>
-		<Ice>0</Ice>
-		<Duration>0</Duration>
-		<Thunder>0</Thunder>
-		<Particles>
-			<Rain>0</Rain>
-			<Fog>0</Fog>
-			<Dust>0</Dust>
-			<Hail>0</Hail>
-			<Wind>0</Wind>
-			<Sun>0</Sun>
 		</Particles>
 	</Weather>
 </WeatherTypes>

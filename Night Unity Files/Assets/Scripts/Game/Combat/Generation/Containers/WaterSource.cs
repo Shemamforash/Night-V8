@@ -10,15 +10,13 @@ namespace Game.Combat.Generation
 
 		public WaterSource(Vector2 position) : base(position)
 		{
-			int          capacity = Random.Range(0, 2);
 			ResourceItem resource = ResourceTemplate.GetWater().Create();
 			if (EnvironmentManager.CurrentEnvironmentType == EnvironmentType.Mountains && resource.Name == "Water")
 			{
 				resource = ResourceTemplate.Create("Ice");
 			}
 
-			_resourceName = resource.Name;
-			resource.Increment(capacity);
+			_resourceName  = resource.Name;
 			Item           = resource;
 			PrefabLocation = "Puddle";
 			Sprite         = ResourceTemplate.GetSprite("Water");

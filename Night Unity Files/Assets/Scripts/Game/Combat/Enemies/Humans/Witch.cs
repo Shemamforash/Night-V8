@@ -12,8 +12,8 @@ namespace Game.Combat.Enemies.Humans
 
 		private void ThrowGrenade()
 		{
-			_throwing     = true;
-			CurrentAction = null;
+			_throwing = true;
+			Interrupt();
 			SkillAnimationController.Create(transform, "Witch", 1f, () =>
 			{
 				Vector2 currentPosition               = transform.position;
@@ -39,7 +39,7 @@ namespace Game.Combat.Enemies.Humans
 
 				ResetCooldown();
 				_throwing = false;
-				TryFire();
+				Resume();
 			});
 		}
 

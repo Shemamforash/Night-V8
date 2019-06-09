@@ -33,7 +33,7 @@ namespace Game.Combat.Enemies.Humans
 				}
 
 				ResetCooldown();
-				TryFire();
+				Resume();
 			});
 		}
 
@@ -44,8 +44,8 @@ namespace Game.Combat.Enemies.Humans
 			_forceCooldown -= Time.deltaTime;
 			if (_forceCooldown     > 0) return;
 			if (DistanceToTarget() > MinDistanceToTarget) return;
-			CurrentAction = null;
-			_pushing      = true;
+			Interrupt();
+			_pushing = true;
 			SkillAnimationController.Create(transform, "Sniper", 1f, Push);
 		}
 	}

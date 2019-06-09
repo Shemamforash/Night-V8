@@ -11,9 +11,10 @@ namespace Game.Combat.Enemies
 {
 	public class EnemyBehaviour : CharacterCombat
 	{
-		public Action        CurrentAction;
-		public Enemy         Enemy;
-		public MoveBehaviour MoveBehaviour;
+		public  Action        CurrentAction;
+		public  Enemy         Enemy;
+		public  MoveBehaviour MoveBehaviour;
+		private bool          _interrupted;
 
 		public override Weapon Weapon() => null;
 
@@ -21,6 +22,7 @@ namespace Game.Combat.Enemies
 		{
 			base.MyUpdate();
 			UpdateRotation();
+			if (_interrupted) return;
 			CurrentAction?.Invoke();
 		}
 
@@ -96,5 +98,8 @@ namespace Game.Combat.Enemies
 			if (HealthController.GetCurrentHealth() != 0 || healthBefore == 0) return;
 			PlayerCombat.Instance.IncreaseKills();
 		}
+
+		protected void Interrupt() => _interrupted = true;
+		protected void Resume()   => _interrupted = false;
 	}
 }

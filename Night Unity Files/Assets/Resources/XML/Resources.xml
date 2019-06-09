@@ -12,7 +12,7 @@
 		<RuinsDropRate>0.3</RuinsDropRate>
 		<WastelandDropRate>0.1</WastelandDropRate>
 		<Description>Fresh water, untainted by the earth</Description>
-		<Effect>Slightly quenches Thirst</Effect>
+		<Effect>Recover 1 Will</Effect>
 	</Resource>
 	<Resource>
 		<Name>Deathwater</Name>
@@ -26,8 +26,8 @@
 		<SeaDropRate>0.35</SeaDropRate>
 		<RuinsDropRate>0.55</RuinsDropRate>
 		<WastelandDropRate>0.6</WastelandDropRate>
-		<Description>Black foetid liquid. The stench stings my nostrils</Description>
-		<Effect>Increases Thirst</Effect>
+		<Description>Black foetid liquid. The stench stings the nostrils</Description>
+		<Effect>Lose 1 Will</Effect>
 	</Resource>
 	<Resource>
 		<Name>Earthmilk</Name>
@@ -42,7 +42,7 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.3</WastelandDropRate>
 		<Description>Milky and refreshing, welcome relief in the wilderness</Description>
-		<Effect>Quenches Thirst</Effect>
+		<Effect>Recover 2 Will</Effect>
 	</Resource>
 	<Resource>
 		<Name>Rotmeat</Name>
@@ -56,8 +56,8 @@
 		<SeaDropRate>0.3</SeaDropRate>
 		<RuinsDropRate>0.4</RuinsDropRate>
 		<WastelandDropRate>0.5</WastelandDropRate>
-		<Description>Foul smelling and grey, I cannot eat this</Description>
-		<Effect>Increases Hunger</Effect>
+		<Description>Foul smelling and grey- inedible</Description>
+		<Effect>Lose 1 Life</Effect>
 	</Resource>
 	<Resource>
 		<Name>Cooked Meat</Name>
@@ -71,8 +71,8 @@
 		<SeaDropRate>0</SeaDropRate>
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
-		<Description></Description>
-		<Effect>Sates Hunger</Effect>
+		<Description>A satisfying meal</Description>
+		<Effect>Recover 1 Life</Effect>
 	</Resource>
 	<Resource>
 		<Name>Dried Meat</Name>
@@ -87,7 +87,7 @@
 		<RuinsDropRate>0</RuinsDropRate>
 		<WastelandDropRate>0</WastelandDropRate>
 		<Description>Very salty, very tasty</Description>
-		<Effect>Slightly sates Hunger</Effect>
+		<Effect>Recover 2 Life</Effect>
 	</Resource>
 	<Resource>
 		<Name>Meat</Name>
@@ -101,15 +101,15 @@
 		<SeaDropRate>0.7</SeaDropRate>
 		<RuinsDropRate>0.6</RuinsDropRate>
 		<WastelandDropRate>0.5</WastelandDropRate>
-		<Description>Gristly and tough, this will have to be cooked before I can eat it</Description>
+		<Description>Gristly and tough, this will have to be cooked</Description>
 		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Sanguine Bloom</Name>
 		<Type>Plant</Type>
-		<Consumable>True</Consumable>
-		<Attribute>Life</Attribute>
-		<Modifier>1</Modifier>
+		<Consumable>False</Consumable>
+		<Attribute></Attribute>
+		<Modifier></Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
 		<MountainsDropRate>0.22</MountainsDropRate>
@@ -117,14 +117,14 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.125</WastelandDropRate>
 		<Description>Helps to heal wounds when rubbed into the skin</Description>
-		<Effect>Recover 1 Life</Effect>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Shaman Frond</Name>
 		<Type>Plant</Type>
-		<Consumable>True</Consumable>
-		<Attribute>Will</Attribute>
-		<Modifier>1</Modifier>
+		<Consumable>False</Consumable>
+		<Attribute></Attribute>
+		<Modifier></Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
 		<MountainsDropRate>0.22</MountainsDropRate>
@@ -132,14 +132,14 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.125</WastelandDropRate>
 		<Description>Used in ancient times to calm the nerves</Description>
-		<Effect>Recover 1 Will</Effect>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Sageleaf</Name>
 		<Type>Plant</Type>
-		<Consumable>True</Consumable>
-		<Attribute>Will</Attribute>
-		<Modifier>1</Modifier>
+		<Consumable>False</Consumable>
+		<Attribute></Attribute>
+		<Modifier></Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
 		<MountainsDropRate>0.22</MountainsDropRate>
@@ -147,14 +147,14 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.125</WastelandDropRate>
 		<Description>Provides a little clarity in moments of darkness</Description>
-		<Effect>Recover 1 Focus</Effect>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Fleetfoot</Name>
 		<Type>Plant</Type>
-		<Consumable>True</Consumable>
-		<Attribute>Life</Attribute>
-		<Modifier>1</Modifier>
+		<Consumable>False</Consumable>
+		<Attribute></Attribute>
+		<Modifier></Modifier>
 		<Permanent>False</Permanent>
 		<DesertDropRate>0.25</DesertDropRate>
 		<MountainsDropRate>0.22</MountainsDropRate>
@@ -162,7 +162,7 @@
 		<RuinsDropRate>0.15</RuinsDropRate>
 		<WastelandDropRate>0.125</WastelandDropRate>
 		<Description>A sweet root, helps the legs go that bit further</Description>
-		<Effect>Recover 1 Grit</Effect>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Aquiris</Name>
@@ -177,7 +177,7 @@
 		<RuinsDropRate>0.1</RuinsDropRate>
 		<WastelandDropRate>0.125</WastelandDropRate>
 		<Description>A fragile pouch protecting sugary liquid</Description>
-		<Effect>Recover 2 Grit</Effect>
+		<Effect></Effect>
 	</Resource>
 	<Resource>
 		<Name>Cinderberry</Name>

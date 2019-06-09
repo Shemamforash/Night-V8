@@ -22,7 +22,7 @@ namespace Game.Combat.Enemies.Humans
 			powerShot.Attributes().AddOnHit(() => FireBurstBehaviour.Create(powerShot.transform.position));
 			powerShot.Fire();
 			ResetCooldown();
-			TryFire();
+			Resume();
 		}
 
 		public override void MyUpdate()
@@ -32,8 +32,8 @@ namespace Game.Combat.Enemies.Humans
 			if (WorldState.Difficulty() < 25) return;
 			_powerShotCooldown -= Time.deltaTime;
 			if (_powerShotCooldown > 0) return;
-			CurrentAction = null;
-			_firing       = true;
+			Interrupt();
+			_firing = true;
 			SkillAnimationController.Create(transform, "Sniper", 1f, () => StartCoroutine(StartFireShot()));
 		}
 

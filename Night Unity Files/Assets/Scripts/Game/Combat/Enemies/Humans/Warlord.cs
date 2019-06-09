@@ -19,7 +19,7 @@ namespace Game.Combat.Enemies.Humans
 				float currentNormalHealth = HealthController.GetNormalisedHealthValue();
 				if (_calledReinforcements) return;
 				if (normalHealthBefore < 0.5f || currentNormalHealth > 0.5f) return;
-				CurrentAction = null;
+				Interrupt();
 				SkillAnimationController.Create(transform, "Warlord", ReinforceCallTime, SummonEnemies);
 				_calledReinforcements = true;
 			});
@@ -37,8 +37,7 @@ namespace Game.Combat.Enemies.Humans
 				Vector2 spawnPosition = WorldGrid.GetCellNearMe(position, 3).Position;
 				SpawnTrailController.Create(position, spawnPosition, type);
 			});
-
-			TryFire();
+			Resume();
 		}
 	}
 }

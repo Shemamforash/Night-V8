@@ -432,7 +432,7 @@ def write_single_value(xml_writer, stat_name, value):
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
-RecipeImporter()
+# RecipeImporter()
 ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()

@@ -123,8 +123,7 @@ namespace Game.Gear.Armour
 				Name            = accessoryNode.ParseString("Name");
 				Description     = accessoryNode.ParseString("Description");
 				TargetAttribute = Inventory.StringToAttributeType(accessoryNode.ParseString("Attribute"));
-				if (Name == "Taint of the Abyss") Debug.Log(TargetAttribute + " " + accessoryNode.ParseString("Attribute"));
-				ModifierValue = accessoryNode.ParseFloat("Bonus");
+				ModifierValue   = accessoryNode.ParseFloat("Bonus");
 				_accessoryTemplates.Add(this);
 				Additive = TargetAttribute.IsConditionAttribute();
 			}

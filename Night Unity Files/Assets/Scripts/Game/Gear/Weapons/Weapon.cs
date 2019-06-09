@@ -3,18 +3,14 @@ using System.Xml;
 using Extensions;
 using Game.Characters;
 using Game.Combat.Misc;
-using Game.Combat.Player;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
 	public class Weapon : GearItem
 	{
-		private const    float             RangeMin = 1.5f;
-		private const    float             RangeMax = 5.5f;
 		public readonly  WeaponAttributes  WeaponAttributes;
 		private readonly List<Inscription> _inscriptions = new List<Inscription>();
 
@@ -96,25 +92,22 @@ namespace Game.Gear.Weapons
 
 		public override string GetSummary() => WeaponAttributes.DPS().Round(1) + "DPS";
 
-		public BaseWeaponBehaviour InstantiateWeaponBehaviour(CharacterCombat player)
+		public WeaponBehaviour InstantiateWeaponBehaviour(CharacterCombat player)
 		{
-			BaseWeaponBehaviour weaponBehaviour;
+			WeaponBehaviour weaponBehaviour = player.gameObject.AddComponent<WeaponBehaviour>();
 			switch (WeaponAttributes.GetWeaponClass())
 			{
 				case WeaponClassType.Shortshooter:
-					weaponBehaviour = player.gameObject.AddComponent<DoubleFireDelay>();
+					weaponBehaviour.SetRepeat(2, 0.1f);
 					break;
 				case WeaponClassType.Skullcrusher:
-					weaponBehaviour = player.gameObject.AddComponent<DoubleFireDelay>();
+					weaponBehaviour.SetRepeat(2, 0.1f);
 					break;
 				case WeaponClassType.Spitter:
-					weaponBehaviour = player.gameObject.AddComponent<Burstfire>();
+					weaponBehaviour.SetRepeat(4, 0.05f);
 					break;
 				case WeaponClassType.Gouger:
-					weaponBehaviour = player.gameObject.AddComponent<AccuracyGainer>();
-					break;
-				default:
-					weaponBehaviour = player.gameObject.AddComponent<DefaultBehaviour>();
+					weaponBehaviour.InvertedAccuracy = true;
 					break;
 			}
 

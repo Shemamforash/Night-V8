@@ -24,7 +24,7 @@ namespace Game.Combat.Enemies
 		private static          GameObject                    _enemyPrefab;
 		private static          GameObject                    _footStepPrefab, _trailPrefab, _hoofprintPrefab;
 		private static readonly Dictionary<EnemyType, Sprite> _enemySprites        = new Dictionary<EnemyType, Sprite>();
-		private static          float                         _accessoryDropChance = -0.4f, _inscriptionDropChance = -0.4f;
+		private static          float                         _accessoryDropChance = -0.4f, _inscriptionDropChance = -0.2f;
 		private const           float                         DropChanceIncrement  = 0.01f;
 
 		public Enemy(EnemyTemplate template) : base(template.EnemyType.ToString())
@@ -212,7 +212,7 @@ namespace Game.Combat.Enemies
 		{
 			_inscriptionDropChance += DropChanceIncrement;
 			bool drop                        = Random.Range(0f, 1f) < _inscriptionDropChance;
-			if (drop) _inscriptionDropChance = -0.4f;
+			if (drop) _inscriptionDropChance = -0.2f;
 			return drop;
 		}
 

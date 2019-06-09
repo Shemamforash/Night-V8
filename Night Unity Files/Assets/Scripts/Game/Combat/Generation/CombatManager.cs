@@ -40,10 +40,10 @@ namespace Game.Combat.Generation
 		protected override void Awake()
 		{
 			base.Awake();
-			PauseOnOpen      = false;
+			PauseOnOpen = false;
 //			_hudCanvas       = gameObject.FindChildWithName<CanvasGroup>("Combat");
 //			_hudCanvas.alpha = 0f;
-			_instance        = this;
+			_instance = this;
 			Resume();
 		}
 
@@ -54,13 +54,9 @@ namespace Game.Combat.Generation
 
 			_currentRegion = CharacterManager.CurrentRegion();
 			if (_currentRegion.IsDynamic())
-			{
 				SetUpDynamicRegion();
-			}
 			else
-			{
 				SetUpNonDynamicRegion();
-			}
 
 			PlayerCombat.Instance.Initialise();
 			_inactiveEnemies = _currentRegion.GetEnemies();
@@ -198,8 +194,8 @@ namespace Game.Combat.Generation
 			_timeSinceLastSpawn -= Time.deltaTime;
 			if (_timeSinceLastSpawn > 0 && _enemies.Count > 0) return;
 			_timeSinceLastSpawn = Random.Range(0.5f, 1f);
-			EnemyType      e     = _inactiveEnemies.RemoveLast();
-			EnemyBehaviour enemy = EnemyTemplate.Create(e);
+			EnemyType      enemyType = _inactiveEnemies.RemoveLast();
+			EnemyBehaviour enemy     = EnemyTemplate.Create(enemyType);
 			TeleportInOnly.TeleportIn(enemy.transform.position);
 		}
 

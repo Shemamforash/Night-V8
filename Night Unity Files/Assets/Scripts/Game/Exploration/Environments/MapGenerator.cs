@@ -404,6 +404,7 @@ namespace Game.Exploration.Environment
 		{
 			++_regionsDiscovered;
 			if (_regionsDiscovered == 0) return RegionType.Gate;
+			WorldState.IncreaseTotalRegionsDiscovered();
 			Tuple<RegionType, bool> regionTup     = _regionOrder[_regionsDiscovered - 1];
 			RegionType              newRegionType = regionTup.Item1;
 			CombatStoryController.ShouldShow = regionTup.Item2;
@@ -413,6 +414,8 @@ namespace Game.Exploration.Environment
 		private static void SetWaterQuantities()
 		{
 			int waterSources = EnvironmentManager.CurrentEnvironment.WaterSources;
+			float waterSourceModifier = WorldState.IsBrutalDifficulty ? 0.75f : 1f;
+			waterSources = Mathf.CeilToInt(waterSources * waterSourceModifier);
 			SetItemQuantities(waterSources, r => r.WaterSourceCount, r => ++r.WaterSourceCount);
 		}
 

@@ -34,34 +34,33 @@ namespace Game.Combat.Player
 		public static PlayerCombat Instance;
 		public static bool         Alive;
 
-		private float               _activeSkillDuration;
-		private int                 _capacity;
-		private string              _controlText;
-		private DeathReason         _currentDeathReason;
-		private float               _currentReloadTime;
-		private Coroutine           _dashCooldown;
-		private float               _dashCooldownTime;
-		private float               _initialReloadProgress;
-		private Vector2?            _lastMousePosition;
-		private Quaternion          _lastTargetRotation;
-		private Camera              _mainCamera;
-		private FastLight           _muzzleFlash;
-		public  FastLight           _playerLight;
-		private bool                _recovered;
-		private Coroutine           _reloadCoroutine;
-		private float               _reloadDuration;
-		private bool                _reloading;
-		private float               _reloadProgress;
-		private float               _rotateSpeedCurrent;
-		private bool                _rotatingWithKeyboard;
-		private float               _swivelAmount;
-		private bool                _swivelling;
-		private bool                _useKeyboardMovement = true;
-		public  BaseWeaponBehaviour _weaponBehaviour;
-		public  float               MuzzleFlashOpacity;
-		public  Action<Shot>        OnFireAction;
-		public  Characters.Player   Player;
-		public  List<Action>        UpdateSkillActions = new List<Action>();
+		private float             _activeSkillDuration;
+		private int               _capacity;
+		private string            _controlText;
+		private DeathReason       _currentDeathReason;
+		private float             _currentReloadTime;
+		private Coroutine         _dashCooldown;
+		private float             _dashCooldownTime;
+		private float             _initialReloadProgress;
+		private Vector2?          _lastMousePosition;
+		private Quaternion        _lastTargetRotation;
+		private Camera            _mainCamera;
+		private FastLight         _muzzleFlash;
+		public  FastLight         _playerLight;
+		private bool              _recovered;
+		private Coroutine         _reloadCoroutine;
+		private float             _reloadDuration;
+		private bool              _reloading;
+		private float             _reloadProgress;
+		private float             _rotateSpeedCurrent;
+		private bool              _rotatingWithKeyboard;
+		private float             _swivelAmount;
+		private bool              _swivelling;
+		private bool              _useKeyboardMovement = true;
+		public  float             MuzzleFlashOpacity;
+		public  Action<Shot>      OnFireAction;
+		public  Characters.Player Player;
+		public  List<Action>      UpdateSkillActions = new List<Action>();
 
 		public float InRange()
 		{
@@ -143,7 +142,7 @@ namespace Game.Combat.Player
 			switch (axis)
 			{
 				case InputAxis.Fire:
-					_weaponBehaviour.StopFiring();
+					WeaponBehaviour.StopFiring();
 					break;
 				case InputAxis.SwitchTab:
 					_rotateSpeedCurrent   = 0f;
@@ -409,15 +408,15 @@ namespace Game.Combat.Player
 
 		public void EquipWeapon()
 		{
-			Destroy(_weaponBehaviour);
-			_weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
-			_reloadDuration  = Player.Weapon.WeaponAttributes.ReloadSpeed();
-			_capacity        = _weaponBehaviour.Capacity();
-			UIMagazineController.SetWeapon(_weaponBehaviour);
+			Destroy(WeaponBehaviour);
+			WeaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
+			_reloadDuration = Player.Weapon.WeaponAttributes.ReloadSpeed();
+			_capacity       = WeaponBehaviour.Capacity();
+			UIMagazineController.SetWeapon(WeaponBehaviour);
 			RecalculateAttributes();
 		}
 
-		public void EquipInscription() => UIMagazineController.SetWeapon(_weaponBehaviour);
+		public void EquipInscription() => UIMagazineController.SetWeapon(WeaponBehaviour);
 
 		public void RecalculateAttributes()
 		{
@@ -499,16 +498,16 @@ namespace Game.Combat.Player
 		//RELOADING
 		private void Reload()
 		{
-			if (_weaponBehaviour.FullyLoaded()) return;
+			if (WeaponBehaviour.FullyLoaded()) return;
 			if (_reloading) return;
-			_weaponBehaviour.StopFiring();
+			WeaponBehaviour.StopFiring();
 			_reloadCoroutine = StartCoroutine(DoReload());
 		}
 
 		private void StartReload()
 		{
 			_reloading = true;
-			float currentShots = _weaponBehaviour.GetRemainingAmmo();
+			float currentShots = WeaponBehaviour.GetRemainingAmmo();
 			float fillAmount   = currentShots / _capacity;
 			_currentReloadTime = _reloadDuration * fillAmount;
 			WeaponAudio.StartReload(Weapon());
@@ -542,7 +541,7 @@ namespace Game.Combat.Player
 			ReloadController.Instance().Complete();
 			int shotsNow                       = Mathf.FloorToInt(_reloadProgress * _capacity);
 			if (shotsNow > _capacity) shotsNow = _capacity;
-			_weaponBehaviour.Reload(shotsNow);
+			WeaponBehaviour.Reload(shotsNow);
 			WeaponAudio.StopReload(Weapon());
 			UIMagazineController.UpdateMagazineUi();
 			_reloading = false;
@@ -571,7 +570,7 @@ namespace Game.Combat.Player
 				StopReloading();
 			}
 
-			if (_weaponBehaviour.Empty())
+			if (WeaponBehaviour.Empty())
 			{
 				if (Player.Attributes.ReloadOnEmptyMag && !_reloading)
 				{
@@ -585,14 +584,14 @@ namespace Game.Combat.Player
 				return;
 			}
 
-			if (!_weaponBehaviour.CanFire()) return;
-			_weaponBehaviour.StartFiring();
+			if (!WeaponBehaviour.CanFire()) return;
+			WeaponBehaviour.StartFiring();
 		}
 
 		public void OnShotConnects(CanTakeDamage hit, float previousHealth)
 		{
 			bool enemyDead     = previousHealth != 0 && hit.HealthController.GetCurrentHealth() == 0;
-			bool magazineEmpty = _weaponBehaviour.Empty();
+			bool magazineEmpty = WeaponBehaviour.Empty();
 			if (!enemyDead || !magazineEmpty) return;
 			Player.BrandManager.IncreaseLastRoundKills();
 			if (Player.Attributes.ReloadOnFatalShot) InstantReload();

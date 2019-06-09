@@ -27,7 +27,7 @@ namespace Facilitating.Persistence
 			RealTime = worldValues.ParseString("RealTime");
 			int days  = worldValues.ParseInt("Days");
 			int hours = worldValues.ParseInt("Hours");
-			GameTime = "Day " + days + " - ";
+			GameTime = "Day " + (days + 1) + " - ";
 			string hourTime = WorldView.TimeToName(hours);
 			GameTime     += hourTime;
 			GameLocation =  _root.ParseString("CurrentEnvironment");

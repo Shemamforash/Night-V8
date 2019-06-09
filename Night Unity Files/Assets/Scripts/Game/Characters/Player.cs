@@ -45,7 +45,6 @@ namespace Game.Characters
 
 		private bool _skill1Unlocked, _skill2Unlocked, _skill3Unlocked, _skill4Unlocked;
 
-//		public readonly Skill               CharacterSkillOne, CharacterSkillTwo;
 		public readonly CharacterTemplate CharacterTemplate;
 		public readonly StateMachine      States = new StateMachine();
 
@@ -54,7 +53,6 @@ namespace Game.Characters
 		public Rest    RestAction;
 		public Travel  TravelAction;
 		public bool    IsDead;
-
 
 		//Create Character in code only- no view section, no references to objects in the scene
 		public Player(CharacterTemplate characterTemplate) : base("The " + characterTemplate.CharacterClass)
@@ -67,25 +65,36 @@ namespace Game.Characters
 
 		public void UnlockSkill()
 		{
+			int   skillNo;
+			Skill targetSkill;
 			switch (EnvironmentManager.CurrentEnvironmentType)
 			{
 				case EnvironmentType.Desert:
 					_skill1Unlocked = true;
-					SkillBar.UnlockSkill(0);
+					skillNo         = 0;
+					targetSkill     = SkillOne();
 					break;
 				case EnvironmentType.Mountains:
 					_skill2Unlocked = true;
-					SkillBar.UnlockSkill(1);
+					skillNo         = 1;
+					targetSkill     = SkillTwo();
 					break;
 				case EnvironmentType.Sea:
 					_skill3Unlocked = true;
-					SkillBar.UnlockSkill(2);
+					skillNo         = 2;
+					targetSkill     = SkillThree();
 					break;
 				case EnvironmentType.Ruins:
 					_skill4Unlocked = true;
-					SkillBar.UnlockSkill(3);
+					skillNo         = 3;
+					targetSkill     = SkillFour();
 					break;
+				default:
+					return;
 			}
+
+			SkillBar.UnlockSkill(skillNo);
+			UiBrandMenu.ShowCharacterSkill(targetSkill, skillNo);
 		}
 
 		public Skill SkillOne()   => _skill1Unlocked || (int) EnvironmentManager.CurrentEnvironmentType >= 1 ? CharacterSkills.GetCharacterSkillOne(this) : null;

@@ -8,9 +8,7 @@ namespace Game.Combat.Enemies.Humans
 {
 	public class Medic : ArmedBehaviour
 	{
-		private const  float      HealDistance = 0.9f;
 		private static GameObject _healPrefab;
-		private        bool       _goingToHeal;
 		private        float      _healCooldown;
 		private        bool       _healing;
 
@@ -27,39 +25,16 @@ namespace Game.Combat.Enemies.Humans
 
 		public override void MyUpdate()
 		{
-			CheckForNullTarget();
 			base.MyUpdate();
 			if (_healing) return;
 			UpdateHealCooldown();
-			TryHeal();
-		}
-
-		private void CheckForNullTarget()
-		{
-			if (GetTarget() != null) return;
-			_goingToHeal = false;
-			SetTarget(PlayerCombat.Instance);
-		}
-
-		private void TryHeal()
-		{
-			if (!_goingToHeal) return;
-			if (DistanceToTarget() > HealDistance / 2f) return;
-			Heal();
-		}
-
-		protected override void Aim()
-		{
-			if (GetTarget() is UnarmedBehaviour) return;
-			base.Aim();
 		}
 
 		private void UpdateHealCooldown()
 		{
-			if (_goingToHeal) return;
 			if (_healCooldown < 0)
 			{
-				FindTargetsToHeal();
+				TryHeal();
 				return;
 			}
 
@@ -68,7 +43,7 @@ namespace Game.Combat.Enemies.Humans
 
 		private List<EnemyBehaviour> GetEnemiesNearby()
 		{
-			List<CanTakeDamage>  chars         = CombatManager.Instance().GetEnemiesInRange(transform.position, 5f);
+			List<CanTakeDamage>  chars         = CombatManager.Instance().GetEnemiesInRange(transform.position, 1f);
 			List<EnemyBehaviour> enemiesNearby = new List<EnemyBehaviour>();
 			chars.ForEach(c =>
 			{
@@ -78,40 +53,19 @@ namespace Game.Combat.Enemies.Humans
 				if (behaviour.HealthController.GetNormalisedHealthValue() > 0.75f) return;
 				enemiesNearby.Add(behaviour);
 			});
-			enemiesNearby.Sort((a, b) =>
-			{
-				float enemyHealthA = a.HealthController.GetCurrentHealth();
-				float enemyHealthB = a.HealthController.GetCurrentHealth();
-				return enemyHealthA.CompareTo(enemyHealthB);
-			});
 			return enemiesNearby;
 		}
 
-		private void SetHealTarget(EnemyBehaviour enemy)
-		{
-			SetTarget(enemy);
-			MinDistance  = HealDistance;
-			MaxDistance  = 0f;
-			_goingToHeal = true;
-		}
-
-		private void FindTargetsToHeal()
+		private void TryHeal()
 		{
 			List<EnemyBehaviour> enemiesNearby = GetEnemiesNearby();
-			if (enemiesNearby.Count == 0)
-			{
-				SetTarget(PlayerCombat.Instance);
-			}
-			else
-			{
-				SetHealTarget(enemiesNearby[0]);
-			}
+			if (enemiesNearby.Count == 0) return;
+			Heal();
 		}
 
 		private void Heal()
 		{
-			_goingToHeal = false;
-			_healing     = true;
+			_healing = true;
 			SkillAnimationController.Create(transform, "Medic", 1.5f, () =>
 			{
 				CombatManager.Instance().GetEnemiesInRange(transform.position, 1f).ForEach(e =>
@@ -124,18 +78,9 @@ namespace Game.Combat.Enemies.Humans
 					healObject.transform.position   = enemy.transform.position;
 					healObject.transform.localScale = Vector3.one;
 				});
-				SetTarget(PlayerCombat.Instance);
-				TryFire();
 				ResetCooldown();
-				CalculateMaxMinDistance();
 				_healing = false;
 			});
-		}
-
-		protected override void TryFire()
-		{
-			if (!(GetTarget() is PlayerCombat || GetTarget() is ShelterCharacterBehaviour)) return;
-			base.TryFire();
 		}
 	}
 }

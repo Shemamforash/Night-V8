@@ -54,7 +54,7 @@ public class CombatWeatherController : MonoBehaviour
 		if (_weatherAttributes.WindAmount == 0f) return;
 		if (!CombatManager.Instance().IsCombatActive()) return;
 		Vector2 windForce = Vector2.up * Mathf.PerlinNoise(Time.timeSinceLevelLoad, 0);
-		windForce *= _weatherAttributes.WindAmount * 0.4f;
+		windForce *= _weatherAttributes.WindAmount * 0.2f;
 		List<CanTakeDamage> charactersInRange = CombatManager.Instance().GetCharactersInRange(PlayerCombat.Position(), 10);
 		charactersInRange.ForEach(c =>
 		{

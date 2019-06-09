@@ -19,6 +19,8 @@ namespace Game.Combat.Misc
 		public           MovementController    MovementController;
 		protected        SpriteRenderer        Sprite;
 		public           WeaponAudioController WeaponAudio;
+		public WeaponBehaviour   WeaponBehaviour;
+
 
 		protected float DistanceToTarget()
 		{
@@ -85,12 +87,16 @@ namespace Game.Combat.Misc
 		public void IncreaseRecoil()
 		{
 			float recoil = Weapon().WeaponAttributes.Recoil() / 100f;
-			Debug.Log(recoil);
-			Recoil.CurrentValue += recoil;
-			_timeToRecoilRecovery = 0.5f;
+			Recoil.CurrentValue   += recoil;
+			_timeToRecoilRecovery =  0.5f;
 		}
 
-		public float GetRecoilModifier() => Recoil.CurrentValue;
+		public float GetRecoilModifier()
+		{
+			float recoil                                 = Recoil.CurrentValue;
+			if (WeaponBehaviour.InvertedAccuracy) recoil = 1 - recoil;
+			return recoil;
+		}
 
 		public void SetTarget(CanTakeDamage target)
 		{

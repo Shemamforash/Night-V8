@@ -85,13 +85,13 @@ namespace Game.Exploration.Weather
 					events = new[] {"An angry dust cloud blasts through the land", "Dust and sand rips across the world"};
 					break;
 				case "Lightning":
-					events = new[] {"Lightning strikes and thunder roars.", "The thunder awakens primal terror inside"};
+					events = new[] {"Lightning strikes and thunder roars", "The thunder awakens primal terror inside"};
 					break;
 				case "Heatwave":
 					events = new[] {"The earth burns beneath the scorching sky", "The air seems to crackle in the heat"};
 					break;
 				case "Icestorm":
-					events = new[] {"Ice laden winds whip around me", "A polar storm suddenly descends"};
+					events = new[] {"Ice laden winds whip around me", "A polar storm descends suddenly"};
 					break;
 				case "Hurricane":
 					events = new[] {"The winds howl and the sky roils", "Hurricane winds blow"};

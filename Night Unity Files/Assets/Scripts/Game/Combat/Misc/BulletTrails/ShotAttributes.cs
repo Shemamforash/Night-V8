@@ -149,7 +149,7 @@ namespace Game.Combat.Misc
 		private void SetConditions()
 		{
 			float     random            = Random.Range(0f, 100f);
-			float     conditionModifier = _weapon.WeaponAttributes.Pellets() * _weapon.WeaponAttributes.Capacity() * 0.5f;
+			float     conditionModifier = _weapon.WeaponAttributes.Pellets() * _weapon.WeaponAttributes.Capacity();
 			bool      canDecay          = random < _shatterChance / conditionModifier;
 			bool      canBurn           = random < _burnChance    / conditionModifier;
 			bool      canVoid           = random < _voidChance    / conditionModifier;

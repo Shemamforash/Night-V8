@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -6,114 +7,114 @@ using Game.Gear.Weapons;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
 {
 	public class ArmedBehaviour : UnarmedBehaviour
 	{
 		private bool                _waitingForHeal;
-		private BaseWeaponBehaviour _weaponBehaviour;
 		private Cell                _coverCell;
 		private float               _aimTime;
 		private bool                _automatic;
 		private float               _repositionTime = -1;
+		private float               _reloadDuration;
 
 		public override void Initialise(Enemy enemy)
 		{
 			base.Initialise(enemy);
 			Assert.IsNotNull(Weapon());
-			_weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
+			WeaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
 			CalculateMaxMinDistance();
 			ResetAimTime();
-			_automatic = Weapon().WeaponAttributes.Automatic;
-			TryFire();
+			_automatic      = Weapon().WeaponAttributes.Automatic;
+			_reloadDuration = Weapon().WeaponAttributes.ReloadSpeed();
+			CurrentAction   = _automatic ? (Action) TryFireAuto : TryFireManual;
 		}
 
-		protected void CalculateMaxMinDistance()
+		private bool HasLineOfSight()
+		{
+			Transform enemyTransform  = transform;
+			Transform targetTransform = GetTarget().transform;
+			bool      outOfRange      = enemyTransform.Distance(targetTransform) > MaxDistance;
+			if (outOfRange) return false;
+			bool outOfSight = Physics2D.Linecast(enemyTransform.position, targetTransform.position, 1 << 8).collider != null;
+			return !outOfSight;
+		}
+
+		private void CalculateMaxMinDistance()
 		{
 			MaxDistance = Weapon().WeaponAttributes.Range() - 0.25f;
 			if (MaxDistance > 4f) MaxDistance = 4f;
-			MinDistance = 1f;
+			MinDistance = 0.5f;
 		}
 
-		protected virtual void TryFire()
+		private bool FireConditionsMet()
 		{
-			Aim();
+			if (!AimTimeMet()) return false;
+			if (HasLineOfSight()) return true;
+			ResetAimTime();
+			return false;
 		}
 
-		private void ResetAimTime()
+		private void TryFireAuto()
 		{
-			_aimTime = Random.Range(0.25f, 0.5f);
+			if (TryReload(TryFireAuto)) return;
+			if (!FireConditionsMet()) return;
+			if (!WeaponBehaviour.FireRateTargetMet()) return;
+			WeaponBehaviour.StartFiring();
 		}
 
-		public override Weapon Weapon() => Enemy.Weapon;
-
-		public override string GetDisplayName()
+		private void TryFireManual()
 		{
-			return Enemy.Template.DisplayName;
+			if (TryReload(TryFireManual)) return;
+			if (!FireConditionsMet()) return;
+			if (WeaponBehaviour.Firing)
+			{
+				ResetAimTime();
+				_aimTime /= 2f;
+				return;
+			}
+
+			WeaponBehaviour.StartFiring();
 		}
 
-		private void Reload()
+		private bool TryReload(Action onReloadCallback)
 		{
-			float duration = Weapon().WeaponAttributes.ReloadSpeed();
+			if (!WeaponBehaviour.Empty()) return false;
+			Reload(onReloadCallback);
+			return true;
+		}
+
+		private void Reload(Action currentActionCallback)
+		{
+			float duration = _reloadDuration;
+			WeaponBehaviour.StopFiring();
 			CurrentAction = () =>
 			{
 				duration -= Time.deltaTime;
 				if (duration > 0) return;
-				_weaponBehaviour.Reload();
+				WeaponBehaviour.Reload();
 				ResetAimTime();
-				TryFire();
+				CurrentAction = currentActionCallback;
 			};
 		}
 
-		protected virtual void Aim()
+		private bool AimTimeMet()
 		{
-			CurrentAction = () =>
-			{
-				if (_weaponBehaviour.Empty()) Reload();
-				_aimTime -= Time.deltaTime;
-				if (_aimTime > 0f) return;
-				CurrentAction = Fire;
-			};
+			if (_aimTime    > 0f) _aimTime -= Time.deltaTime;
+			return _aimTime <= 0f;
 		}
 
-		private void Fire()
+
+		private void ResetAimTime()
 		{
-			Transform transform1;
-			bool      outOfRange = (transform1 = transform).Distance(GetTarget().transform) > MaxDistance;
-			bool      outOfSight = outOfRange || Physics2D.Linecast(transform1.position, GetTarget().transform.position, 1 << 8).collider != null;
-
-			if (outOfSight)
-			{
-				_aimTime = Random.Range(0.25f, 0.5f);
-				TryFire();
-				return;
-			}
-
-			if (_weaponBehaviour.Empty())
-			{
-				_weaponBehaviour.StopFiring();
-				Reload();
-				return;
-			}
-
-			if (_automatic)
-			{
-				if (!_weaponBehaviour.FireRateTargetMet()) return;
-				_weaponBehaviour.StartFiring();
-				return;
-			}
-
-			if (_weaponBehaviour.Fired)
-			{
-				_weaponBehaviour.StopFiring();
-				_aimTime = Random.Range(0.2f, 0.3f);
-				Aim();
-				return;
-			}
-
-			_weaponBehaviour.StartFiring();
+			_aimTime = Random.Range(0.25f, 0.5f);
+			WeaponBehaviour.StopFiring();
 		}
+
+		public override Weapon Weapon()         => Enemy.Weapon;
+		public override string GetDisplayName() => Enemy.Template.DisplayName;
 
 		protected override void UpdateTargetCell()
 		{

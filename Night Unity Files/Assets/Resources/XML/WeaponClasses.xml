@@ -1,1 +1,142 @@
-<Weapons><Class name="Pistol" ><Subtype name="Slinger"  automatic="True" ><Damage>27</Damage><FireRate>3</FireRate><ReloadSpeed>0.85</ReloadSpeed><Accuracy>55</Accuracy><Recoil>20</Recoil><Capacity>10</Capacity><Range>0.6</Range><FireType>Automatic</FireType><FireMode>Auto</FireMode></Subtype><Subtype name="Shortshooter"  automatic="False" ><Damage>27</Damage><FireRate>2</FireRate><ReloadSpeed>0.7</ReloadSpeed><Accuracy>60</Accuracy><Recoil>20</Recoil><Capacity>12</Capacity><Range>0.6</Range><FireType>Double Fire</FireType><FireMode>Burst</FireMode></Subtype><Subtype name="Deepdriver"  automatic="False" ><Damage>34</Damage><FireRate>6</FireRate><ReloadSpeed>2</ReloadSpeed><Accuracy>65</Accuracy><Recoil>40</Recoil><Capacity>6</Capacity><Range>0.7</Range><FireType>Revolver</FireType><FireMode>Manual</FireMode></Subtype></Class><Class name="Rifle" ><Subtype name="Groundrider"  automatic="False" ><Damage>88</Damage><FireRate>1</FireRate><ReloadSpeed>2</ReloadSpeed><Accuracy>70</Accuracy><Recoil>80</Recoil><Capacity>6</Capacity><Range>0.8</Range><FireType>Bolt Action</FireType><FireMode>Manual</FireMode></Subtype><Subtype name="Shoulderbreaker"  automatic="True" ><Damage>60</Damage><FireRate>2</FireRate><ReloadSpeed>2</ReloadSpeed><Accuracy>70</Accuracy><Recoil>50</Recoil><Capacity>6</Capacity><Range>0.7</Range><FireType>Automatic</FireType><FireMode>Auto</FireMode></Subtype><Subtype name="Voidwalker"  automatic="False" ><Damage>72</Damage><FireRate>1</FireRate><ReloadSpeed>3</ReloadSpeed><Accuracy>70</Accuracy><Recoil>80</Recoil><Capacity>6</Capacity><Range>0.8</Range><FireType>Piercing</FireType><FireMode>Manual</FireMode></Subtype></Class><Class name="Shotgun" ><Subtype name="Leadspreader"  automatic="True" ><Damage>4</Damage><FireRate>4</FireRate><ReloadSpeed>2</ReloadSpeed><Accuracy>50</Accuracy><Recoil>75</Recoil><Capacity>6</Capacity><Range>0</Range><FireType>Automatic</FireType><FireMode>Auto</FireMode></Subtype><Subtype name="Bonebreaker"  automatic="False" ><Damage>6</Damage><FireRate>1.4</FireRate><ReloadSpeed>2.8</ReloadSpeed><Accuracy>30</Accuracy><Recoil>75</Recoil><Capacity>10</Capacity><Range>0.25</Range><FireType>Pump Action</FireType><FireMode>Manual</FireMode></Subtype><Subtype name="Skullcrusher"  automatic="False" ><Damage>8</Damage><FireRate>6</FireRate><ReloadSpeed>1.6</ReloadSpeed><Accuracy>40</Accuracy><Recoil>50</Recoil><Capacity>2</Capacity><Range>0.1</Range><FireType>Double Barrelled</FireType><FireMode>Burst</FireMode></Subtype></Class><Class name="SMG" ><Subtype name="Spitter"  automatic="False" ><Damage>8</Damage><FireRate>12</FireRate><ReloadSpeed>1.1</ReloadSpeed><Accuracy>45</Accuracy><Recoil>6</Recoil><Capacity>30</Capacity><Range>0.6</Range><FireType>Burst Fire</FireType><FireMode>Burst</FireMode></Subtype><Subtype name="Annihilator"  automatic="True" ><Damage>10</Damage><FireRate>8</FireRate><ReloadSpeed>1.4</ReloadSpeed><Accuracy>45</Accuracy><Recoil>6</Recoil><Capacity>50</Capacity><Range>0.6</Range><FireType>Automatic</FireType><FireMode>Auto</FireMode></Subtype><Subtype name="Gouger"  automatic="True" ><Damage>13</Damage><FireRate>6</FireRate><ReloadSpeed>0.8</ReloadSpeed><Accuracy>45</Accuracy><Recoil>15</Recoil><Capacity>25</Capacity><Range>0.6</Range><FireType>Stabilising</FireType><FireMode>Auto</FireMode></Subtype></Class></Weapons>
+<Weapons>
+	<Class name="Pistol">
+		<Subtype name="Slinger" automatic="True">
+			<Damage>27</Damage>
+			<FireRate>3</FireRate>
+			<ReloadSpeed>0.85</ReloadSpeed>
+			<Accuracy>55</Accuracy>
+			<Recoil>20</Recoil>
+			<Capacity>10</Capacity>
+			<Range>0.6</Range>
+			<FireType>Automatic</FireType>
+			<FireMode>Auto</FireMode>
+		</Subtype>
+		<Subtype name="Shortshooter" automatic="False">
+			<Damage>27</Damage>
+			<FireRate>2</FireRate>
+			<ReloadSpeed>0.7</ReloadSpeed>
+			<Accuracy>60</Accuracy>
+			<Recoil>20</Recoil>
+			<Capacity>12</Capacity>
+			<Range>0.6</Range>
+			<FireType>Double Fire</FireType>
+			<FireMode>Burst</FireMode>
+		</Subtype>
+		<Subtype name="Deepdriver" automatic="False">
+			<Damage>34</Damage>
+			<FireRate>6</FireRate>
+			<ReloadSpeed>2</ReloadSpeed>
+			<Accuracy>65</Accuracy>
+			<Recoil>40</Recoil>
+			<Capacity>6</Capacity>
+			<Range>0.7</Range>
+			<FireType>Revolver</FireType>
+			<FireMode>Manual</FireMode>
+		</Subtype>
+	</Class>
+	<Class name="Rifle">
+		<Subtype name="Groundrider" automatic="False">
+			<Damage>88</Damage>
+			<FireRate>1</FireRate>
+			<ReloadSpeed>2</ReloadSpeed>
+			<Accuracy>70</Accuracy>
+			<Recoil>80</Recoil>
+			<Capacity>6</Capacity>
+			<Range>0.8</Range>
+			<FireType>Bolt Action</FireType>
+			<FireMode>Manual</FireMode>
+		</Subtype>
+		<Subtype name="Shoulderbreaker" automatic="True">
+			<Damage>60</Damage>
+			<FireRate>2</FireRate>
+			<ReloadSpeed>2</ReloadSpeed>
+			<Accuracy>70</Accuracy>
+			<Recoil>50</Recoil>
+			<Capacity>6</Capacity>
+			<Range>0.7</Range>
+			<FireType>Automatic</FireType>
+			<FireMode>Auto</FireMode>
+		</Subtype>
+		<Subtype name="Voidwalker" automatic="False">
+			<Damage>72</Damage>
+			<FireRate>1</FireRate>
+			<ReloadSpeed>3</ReloadSpeed>
+			<Accuracy>70</Accuracy>
+			<Recoil>80</Recoil>
+			<Capacity>6</Capacity>
+			<Range>0.8</Range>
+			<FireType>Piercing</FireType>
+			<FireMode>Manual</FireMode>
+		</Subtype>
+	</Class>
+	<Class name="Shotgun">
+		<Subtype name="Leadspreader" automatic="True">
+			<Damage>4</Damage>
+			<FireRate>4</FireRate>
+			<ReloadSpeed>2</ReloadSpeed>
+			<Accuracy>50</Accuracy>
+			<Recoil>75</Recoil>
+			<Capacity>6</Capacity>
+			<Range>0</Range>
+			<FireType>Automatic</FireType>
+			<FireMode>Auto</FireMode>
+		</Subtype>
+		<Subtype name="Bonebreaker" automatic="False">
+			<Damage>6</Damage>
+			<FireRate>1.4</FireRate>
+			<ReloadSpeed>2.8</ReloadSpeed>
+			<Accuracy>30</Accuracy>
+			<Recoil>75</Recoil>
+			<Capacity>10</Capacity>
+			<Range>0.25</Range>
+			<FireType>Pump Action</FireType>
+			<FireMode>Manual</FireMode>
+		</Subtype>
+		<Subtype name="Skullcrusher" automatic="False">
+			<Damage>8</Damage>
+			<FireRate>5</FireRate>
+			<ReloadSpeed>1.6</ReloadSpeed>
+			<Accuracy>40</Accuracy>
+			<Recoil>50</Recoil>
+			<Capacity>2</Capacity>
+			<Range>0.1</Range>
+			<FireType>Double Barrelled</FireType>
+			<FireMode>Burst</FireMode>
+		</Subtype>
+	</Class>
+	<Class name="SMG">
+		<Subtype name="Spitter" automatic="False">
+			<Damage>8</Damage>
+			<FireRate>12</FireRate>
+			<ReloadSpeed>1.1</ReloadSpeed>
+			<Accuracy>45</Accuracy>
+			<Recoil>6</Recoil>
+			<Capacity>30</Capacity>
+			<Range>0.6</Range>
+			<FireType>Burst Fire</FireType>
+			<FireMode>Burst</FireMode>
+		</Subtype>
+		<Subtype name="Annihilator" automatic="True">
+			<Damage>10</Damage>
+			<FireRate>8</FireRate>
+			<ReloadSpeed>1.4</ReloadSpeed>
+			<Accuracy>45</Accuracy>
+			<Recoil>6</Recoil>
+			<Capacity>50</Capacity>
+			<Range>0.6</Range>
+			<FireType>Automatic</FireType>
+			<FireMode>Auto</FireMode>
+		</Subtype>
+		<Subtype name="Gouger" automatic="True">
+			<Damage>13</Damage>
+			<FireRate>6</FireRate>
+			<ReloadSpeed>0.8</ReloadSpeed>
+			<Accuracy>45</Accuracy>
+			<Recoil>15</Recoil>
+			<Capacity>25</Capacity>
+			<Range>0.6</Range>
+			<FireType>Stabilising</FireType>
+			<FireMode>Auto</FireMode>
+		</Subtype>
+	</Class>
+</Weapons>

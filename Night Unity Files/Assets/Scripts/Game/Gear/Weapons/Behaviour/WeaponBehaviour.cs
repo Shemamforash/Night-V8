@@ -1,3 +1,4 @@
+using System.Collections;
 using Extensions;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
@@ -5,20 +6,25 @@ using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Combat.Ui;
 using SamsHelper;
-using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
-	public class BaseWeaponBehaviour : MonoBehaviour
+	public sealed class WeaponBehaviour : MonoBehaviour
 	{
 		private Weapon           _weapon;
 		private WeaponAttributes _weaponAttributes;
 		private float            TimeToNextFire;
 		private CharacterCombat  _origin;
-		private bool             _fired;
+		private bool             _firing;
 		private int              _ammoInMagazine;
+		public  bool             InvertedAccuracy;
+		private int              _repeatCount;
+		private float            _repeatInterval;
+		private bool             _stillFiring;
+
+		public Weapon Weapon => _weapon;
+		public bool   Firing => _firing;
 
 		public void Initialise(CharacterCombat origin)
 		{
@@ -31,13 +37,16 @@ namespace Game.Gear.Weapons
 		public void Reload(int shotsNow)
 		{
 			_ammoInMagazine = shotsNow;
-			_fired          = false;
+			_firing         = false;
 		}
 
-		public void Reload()
+		public void SetRepeat(int count, float interval)
 		{
-			Reload(Capacity());
+			_repeatCount    = count;
+			_repeatInterval = interval;
 		}
+
+		public void Reload() => Reload(Capacity());
 
 		public bool FullyLoaded() => GetRemainingAmmo() == Capacity();
 
@@ -52,29 +61,48 @@ namespace Game.Gear.Weapons
 			return Helper.TimeInSeconds() >= TimeToNextFire;
 		}
 
-		public bool Fired => _fired;
-
 		public bool CanFire()
 		{
-			bool needsTriggerPull = !_weaponAttributes.Automatic && _fired;
+			bool needsTriggerPull = !_weaponAttributes.Automatic && _firing;
 			return !Empty() && FireRateTargetMet() && !needsTriggerPull;
 		}
 
-		public virtual void StartFiring()
+		public void StartFiring()
 		{
-			_fired = true;
+			if (_stillFiring) return;
+			_firing = true;
+			StartCoroutine(SecondaryFire());
 		}
 
-		public void StopFiring()
+		private IEnumerator SecondaryFire()
 		{
-			_fired = false;
+			_stillFiring = true;
+			Fire();
+			int   repeatCount = _repeatCount - 1;
+			float timer       = _repeatInterval;
+			for (int i = 0; i < repeatCount; ++i)
+			{
+				while (timer > 0f)
+				{
+					timer -= Time.deltaTime;
+					yield return null;
+				}
+
+				Fire();
+				timer = _repeatInterval;
+			}
+
+			_stillFiring = false;
 		}
 
-		protected void Fire()
+		public void StopFiring() => _firing = false;
+
+		private void Fire()
 		{
 			if (Empty()) return;
-			TimeToNextFire = Helper.TimeInSeconds() + 1f / _weapon.WeaponAttributes.FireRate();
+			TimeToNextFire = 1f / _weapon.WeaponAttributes.FireRate();
 			if (_origin is EnemyBehaviour) TimeToNextFire *= 2f;
+			TimeToNextFire += Helper.TimeInSeconds();
 			for (int i = 0; i < _weaponAttributes.Pellets(); ++i)
 			{
 				Shot shot = ShotManager.Create(_origin);
@@ -92,9 +120,7 @@ namespace Game.Gear.Weapons
 			UIMagazineController.UpdateMagazineUi();
 		}
 
-		public Weapon Weapon => _weapon;
-
-		public void ConsumeAmmo(int amount = -1)
+		private void ConsumeAmmo(int amount = -1)
 		{
 			if (amount < 0) amount = _ammoInMagazine;
 			_ammoInMagazine -= amount;

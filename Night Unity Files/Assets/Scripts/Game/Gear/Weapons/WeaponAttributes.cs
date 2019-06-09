@@ -14,7 +14,7 @@ namespace Game.Gear.Weapons
 	public class WeaponAttributes : DesolationAttributes
 	{
 		private const    float           MinRange = 2f;
-		private const    float           MaxRange = 6f;
+		private const    float           MaxRange = 5f;
 		private readonly Number          _durability;
 		private          float           _dps;
 		private readonly Weapon          _weapon;

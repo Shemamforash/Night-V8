@@ -31,7 +31,7 @@ namespace Game.Gear
 			rawBonus   *= tierModifier;
 			_modifier.SetFinalBonus(finalBonus);
 			_modifier.SetRawBonus(rawBonus);
-			_inscriptionCost = (int) quality + 1;
+			_inscriptionCost = ((int) quality + 1) * 2;
 		}
 
 		public AttributeModifier Modifier()
@@ -106,8 +106,9 @@ namespace Game.Gear
 				Debug.Log("Unknown inscription template: " + templateString);
 				return null;
 			}
-			ItemQuality         quality        = (ItemQuality) root.ParseInt("Quality");
-			Inscription         inscription    = new Inscription(template, quality);
+
+			ItemQuality quality     = (ItemQuality) root.ParseInt("Quality");
+			Inscription inscription = new Inscription(template, quality);
 			inscription.Load(root);
 			return inscription;
 		}

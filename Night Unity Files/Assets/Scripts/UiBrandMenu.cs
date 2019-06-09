@@ -14,26 +14,25 @@ using UnityEngine;
 public class UiBrandMenu : Menu
 {
 	private static UiBrandMenu           _instance;
-	private static string                _titleString, _benefitString, _quoteString, _overviewString, _descriptionString;
+	private static string                _titleString, _benefitString, _quoteString, _overviewString;
 	private        bool                  _canHide;
 	private        CloseButtonController _closeButton;
 	private        CanvasGroup           _detailCanvas, _overviewCanvas;
 	private        Menu                  _lastMenu;
-	private        EnhancedText          _titleText, _benefitText, _quoteText, _descriptionText, _overviewText;
+	private        EnhancedText          _titleText, _benefitText, _quoteText, _overviewText;
 	private        float                 _waitToHideTime;
 
 	protected override void Awake()
 	{
 		base.Awake();
-		_detailCanvas    = gameObject.FindChildWithName<CanvasGroup>("Detail");
-		_overviewCanvas  = gameObject.FindChildWithName<CanvasGroup>("Overview");
-		_overviewText    = _overviewCanvas.GetComponent<EnhancedText>();
-		_titleText       = gameObject.FindChildWithName<EnhancedText>("Title");
-		_benefitText     = gameObject.FindChildWithName<EnhancedText>("Benefit");
-		_quoteText       = gameObject.FindChildWithName<EnhancedText>("Quote");
-		_descriptionText = gameObject.FindChildWithName<EnhancedText>("Description");
-		_instance        = this;
-		_closeButton     = gameObject.FindChildWithName<CloseButtonController>("Close Button");
+		_detailCanvas   = gameObject.FindChildWithName<CanvasGroup>("Detail");
+		_overviewCanvas = gameObject.FindChildWithName<CanvasGroup>("Overview");
+		_overviewText   = _overviewCanvas.GetComponent<EnhancedText>();
+		_titleText      = gameObject.FindChildWithName<EnhancedText>("Title");
+		_benefitText    = gameObject.FindChildWithName<EnhancedText>("Benefit");
+		_quoteText      = gameObject.FindChildWithName<EnhancedText>("Quote");
+		_instance       = this;
+		_closeButton    = gameObject.FindChildWithName<CloseButtonController>("Close Button");
 	}
 
 	private void Hide()
@@ -45,11 +44,19 @@ public class UiBrandMenu : Menu
 		WorldState.Resume();
 	}
 
-	private void Show()
+	private void Show(bool showDetailOnly = false)
 	{
 		_lastMenu = MenuStateMachine.CurrentMenu();
 		MenuStateMachine.ShowMenu("Brand Menu");
 		WorldState.Pause();
+		_closeButton.Enable();
+		_closeButton.UseSpaceInput();
+		if (showDetailOnly)
+		{
+			ShowDetail();
+			return;
+		}
+
 		ShowOverview();
 	}
 
@@ -58,8 +65,6 @@ public class UiBrandMenu : Menu
 		_overviewText.SetText(_overviewString);
 		_overviewCanvas.alpha = 1;
 		_detailCanvas.alpha   = 0;
-		_closeButton.UseSpaceInput();
-		_closeButton.Enable();
 		_closeButton.SetOnClick(ShowDetail);
 	}
 
@@ -68,56 +73,56 @@ public class UiBrandMenu : Menu
 		_titleText.SetText(_titleString);
 		_benefitText.SetText(_benefitString);
 		_quoteText.SetText(_quoteString);
-		_descriptionText.SetText(_descriptionString);
 		_overviewCanvas.alpha = 0;
 		_detailCanvas.alpha   = 1;
 		_canHide              = false;
 		Sequence sequence = DOTween.Sequence();
 		sequence.SetUpdate(true);
-		sequence.AppendInterval(1f);
+		sequence.AppendInterval(0.25f);
 		sequence.AppendCallback(() => _canHide = true);
 		_closeButton.SetOnClick(Hide);
 	}
 
 	public static void ShowBrand(Brand brand)
 	{
-		_overviewString = "Rite Complete";
-		_titleString    = "";
-		_benefitString  = "";
 		switch (brand.Status)
 		{
 			case BrandStatus.Failed:
-				_titleString       = "Failed";
-				_descriptionString = "You feel your body go weak";
-				_benefitString     = "All attributes reduced to 1";
+				_titleString   = "Failed";
+				_benefitString = "You feel your body go weak";
+				_quoteString   = "All attributes reduced to 1";
 				break;
 			case BrandStatus.Succeeded:
-				_titleString       = "Passed";
-				_descriptionString = "You feel a warmth bloom inside you";
-				_benefitString     = brand.GetEffectText();
+				_titleString   = "Passed";
+				_benefitString = "You feel a warmth bloom inside you";
+				_quoteString   = brand.GetEffectText();
 				break;
 		}
 
-		_titleString = _titleString + " The " + brand.GetDisplayName();
-		_quoteString = "";
+		_overviewString = "Rite "                + _titleString;
+		_titleString    = _titleString + " The " + brand.GetDisplayName();
 		_instance.Show();
 	}
 
 	public static void ShowCharacterSkill(Skill skill, int skillNum)
 	{
-		_overviewString    = skill.Name;
-		_descriptionString = "Skill tooltip";
-		_instance.ShowSkill(skill, skillNum);
+		_overviewString = skill.Name;
+		_titleString    = skill.Name;
+		_benefitString  = skill.Description;
+		_quoteString    = GetSkillUsageString(skill, skillNum);
+		_instance.Show(true);
 	}
 
-	private string GetSkillUsageString(Skill skill, int skillNum)
+	private static string GetSkillUsageString(Skill skill, int skillNum)
 	{
-		string binding      = GetBindingForSkill(skillNum);
-		string requirements = "Cooldown - " + skill.Cooldown + " second".Pluralise(skill.Cooldown);
-		return binding + " - " + requirements;
+		string       binding      = GetBindingForSkill(skillNum);
+		string       requirements = skill.Cooldown  + " Charge";
+		string       firstLine    = binding + " - " + requirements;
+		const string secondLine   = "\n<size=16><color=#aaaaaa>Gain Charge by damaging enemies</color></size>";
+		return firstLine + secondLine;
 	}
 
-	private string GetBindingForSkill(int skillNum)
+	private static string GetBindingForSkill(int skillNum)
 	{
 		string keyName;
 		switch (skillNum)
@@ -139,13 +144,5 @@ public class UiBrandMenu : Menu
 		}
 
 		return "Press [" + keyName + "] to use";
-	}
-
-	private void ShowSkill(Skill skill, int skillNum)
-	{
-		_titleString   = skill.Name;
-		_benefitString = skill.Description;
-		_quoteString   = GetSkillUsageString(skill, skillNum);
-		_instance.Show();
 	}
 }

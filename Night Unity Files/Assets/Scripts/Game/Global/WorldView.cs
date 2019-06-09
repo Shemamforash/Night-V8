@@ -49,7 +49,7 @@ namespace Game.Global
 					break;
 			}
 
-			_environmentText.text = _timeString + " in " + _environmentString + ". It is " + _weatherString + ". " + templeString;
+			_environmentText.text = _timeString + " in " + _environmentString + ". " + _weatherString + ". " + templeString;
 		}
 
 		protected override void Awake()

@@ -1363,11 +1363,7 @@
               <e p="ItemQuality.cs" t="Include" />
               <e p="Weapons" t="Include">
                 <e p="Behaviour" t="Include">
-                  <e p="AccuracyGainer.cs" t="Include" />
-                  <e p="BaseWeaponBehaviour.cs" t="Include" />
-                  <e p="BurstFire.cs" t="Include" />
-                  <e p="DefaultBehaviour.cs" t="Include" />
-                  <e p="DoubleFireDelay.cs" t="Include" />
+                  <e p="WeaponBehaviour.cs" t="Include" />
                 </e>
                 <e p="Weapon.cs" t="Include" />
                 <e p="WeaponAttributes.cs" t="Include" />

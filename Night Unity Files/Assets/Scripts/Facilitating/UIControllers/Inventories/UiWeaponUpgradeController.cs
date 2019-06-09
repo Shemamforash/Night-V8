@@ -22,7 +22,7 @@ namespace Facilitating.UIControllers
 		public static bool                   Locked;
 		private       Weapon                 _equippedWeapon;
 		private       GameObject             _infoGameObject;
-		private       EnhancedButton         _infuseButton, _swapButton;
+		private       EnhancedButton         _inscribeButton, _swapButton;
 		private       ListController         _inscriptionList;
 		private       ListController         _weaponList;
 		private       bool                   _seenAttributeTutorial, _seenInfuseTutorial;
@@ -37,7 +37,7 @@ namespace Facilitating.UIControllers
 			_inscriptionList  = gameObject.FindChildWithName<ListController>("Inscription List");
 			_availableEssence = gameObject.FindChildWithName<EnhancedText>("Essence Count");
 			_weaponDetail     = gameObject.FindChildWithName<WeaponDetailController>("Stats");
-			_infuseButton     = gameObject.FindChildWithName<EnhancedButton>("Inscribe");
+			_inscribeButton     = gameObject.FindChildWithName<EnhancedButton>("Inscribe");
 			_infoGameObject   = gameObject.FindChildWithName("Info");
 			_swapButton       = gameObject.FindChildWithName<EnhancedButton>("Swap");
 			_weaponList       = gameObject.FindChildWithName<ListController>("Weapon List");
@@ -63,7 +63,7 @@ namespace Facilitating.UIControllers
 				_infoGameObject.SetActive(false);
 			});
 
-			_infuseButton.AddOnClick(TryShowInscriptions);
+			_inscribeButton.AddOnClick(TryShowInscriptions);
 		}
 
 		private void TryShowInscriptions()
@@ -115,7 +115,7 @@ namespace Facilitating.UIControllers
 			if (PlayerCombat.Instance == null) return;
 			PlayerCombat.Instance.EquipInscription();
 			UpdateWeaponActions();
-			SelectButton(_infuseButton);
+			SelectButton(_inscribeButton);
 		}
 
 		protected override void Initialise()
@@ -200,8 +200,8 @@ namespace Facilitating.UIControllers
 		private IEnumerator ShowInfuseTutorial()
 		{
 			if (_seenInfuseTutorial) yield break;
-			if (!_infuseButton.gameObject.activeInHierarchy) yield break;
-			TutorialOverlay overlay = new TutorialOverlay(_infuseButton.GetComponent<RectTransform>());
+			if (!_inscribeButton.gameObject.activeInHierarchy) yield break;
+			TutorialOverlay overlay = new TutorialOverlay(_inscribeButton.GetComponent<RectTransform>());
 			if (TutorialManager.Instance.TryOpenTutorial(18, overlay))
 			{
 				while (TutorialManager.Instance.IsTutorialVisible()) yield return null;
@@ -231,7 +231,7 @@ namespace Facilitating.UIControllers
 			_equippedWeapon = CharacterManager.SelectedCharacter.Weapon;
 			_weaponDetail.SetWeapon(_equippedWeapon);
 			if (_equippedWeapon == null)
-				_infuseButton.gameObject.SetActive(false);
+				_inscribeButton.gameObject.SetActive(false);
 			else UpdateWeaponActions();
 		}
 
@@ -244,13 +244,13 @@ namespace Facilitating.UIControllers
 			}
 
 			if (_swapButton.gameObject.activeInHierarchy) _swapButton.Select();
-			else if (_infuseButton.gameObject.activeInHierarchy) _infuseButton.Select();
+			else if (_inscribeButton.gameObject.activeInHierarchy) _inscribeButton.Select();
 		}
 
 		private void UpdateWeaponActions()
 		{
 			bool inscriptionsAvailable = InscriptionsAreAvailable();
-			_infuseButton.gameObject.SetActive(inscriptionsAvailable);
+			_inscribeButton.gameObject.SetActive(inscriptionsAvailable);
 		}
 
 		private static bool WeaponsAreAvailable() => GetAvailableWeapons().Count != 0;

@@ -119,6 +119,8 @@ namespace Game.Combat.Generation
 		private IEnumerator ShowDashTutorial()
 		{
 			_player.HealthController.TakeDamage(_player.HealthController.GetMaxHealth() * 0.6f);
+			_player.Player.Attributes.HealthToLife(_player.HealthController.GetCurrentHealth());
+
 			CombatManager.Instance().SetForceShowHud(true);
 
 			yield return StartCoroutine(WaitForControl(() => InputHandler.InputAxisWasPressed(InputAxis.Sprint),

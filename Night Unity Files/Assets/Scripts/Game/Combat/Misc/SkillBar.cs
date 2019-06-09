@@ -30,7 +30,7 @@ namespace Game.Combat.Misc
 			for (int i = 0; i < NoSlots; ++i)
 				_skillControllers.Add(gameObject.FindChildWithName<CooldownController>("Skill " + (i + 1)));
 
-			_skillsReady = false;
+			_skillsReady = true;
 			_needsUpdate = true;
 			TryUpdateSkills();
 		}
@@ -44,18 +44,17 @@ namespace Game.Combat.Misc
 
 		private void UpdateCooldown()
 		{
-			//todo make this called when skill equipped
 			TryUpdateSkills();
 			if (_skillsReady) return;
-			if (CooldownRemaining < 0)
+			if (_cooldownRemaining <= 0)
 			{
-				CooldownRemaining = 0;
+				_cooldownRemaining = 0;
 				UpdateCooldownControllers(1);
 				_skillsReady = true;
 				return;
 			}
 
-			float normalisedTime = 1 - CooldownRemaining / _duration;
+			float normalisedTime = 1 - _cooldownRemaining / _duration;
 			UpdateCooldownControllers(normalisedTime);
 		}
 
@@ -70,7 +69,7 @@ namespace Game.Combat.Misc
 			_skillControllers[3].SetSkill(_player.SkillFour());
 		}
 
-		public static float CooldownRemaining
+		private static float CooldownRemaining
 		{
 			get => _cooldownRemaining;
 			set
@@ -119,6 +118,7 @@ namespace Game.Combat.Misc
 			if (timeBefore     > SkillHoldTimeTarget) return;
 			if (_skillHoldTime < SkillHoldTimeTarget) return;
 			UiBrandMenu.ShowCharacterSkill(target, _slotPressed);
+			_skillHoldTime = 0;
 		}
 
 		private void StartCooldown(int duration)
@@ -139,19 +139,18 @@ namespace Game.Combat.Misc
 		{
 			if (_skillHoldTime < SkillHoldTimeTarget) ActivateSkill();
 			_skillHoldTime = 0;
-			Debug.Log("released");
 		}
 
 		private void ActivateSkill()
 		{
+			Debug.Log(_skillsReady);
 			if (!_skillsReady) return;
 			Skill skill = _skillControllers[_slotPressed].Skill;
 			if (skill == null) return;
-			bool freeSkill = IsSkillFree();
-			if (!skill.Activate()) return;
-			if (freeSkill) return;
-			StartCooldown(skill.Cooldown);
+			skill.Activate();
 			_skillControllers[_slotPressed].Unlock();
+			if (IsSkillFree()) return;
+			StartCooldown(skill.Cooldown);
 		}
 	}
 }

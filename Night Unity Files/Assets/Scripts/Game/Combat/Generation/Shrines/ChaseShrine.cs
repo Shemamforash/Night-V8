@@ -50,7 +50,7 @@ namespace Game.Combat.Generation.Shrines
 			_pickupsLeft = (int) (WorldState.Difficulty() / 10f + 3);
 			float shrineTimeMax      = 15f * _pickupsLeft;
 			float currentTime        = shrineTimeMax;
-			float spawnChaserTimeMax = 10f;
+			float spawnChaserTimeMax = 5f;
 			float spawnChaserTime    = 0f;
 			while (_pickupsLeft > 0 && currentTime > 0f)
 			{

@@ -5,10 +5,9 @@ using DG.Tweening;
 using Game.Combat.Player;
 using Game.Gear;
 using Game.Gear.Armour;
-using Game.Gear.Weapons;
 using Game.Global;
 using Extensions;
-using Extensions;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -70,6 +69,9 @@ public class DismantleMenuController : Menu
 				break;
 			case Inscription inscription:
 				Inventory.Destroy(inscription);
+				break;
+			case Weapon weapon:
+				Inventory.Destroy(weapon);
 				break;
 		}
 

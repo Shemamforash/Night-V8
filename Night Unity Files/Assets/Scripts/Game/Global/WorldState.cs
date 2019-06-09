@@ -45,6 +45,9 @@ namespace Game.Global
 		private static DifficultySetting _difficultySetting;
 		private static float             EnemyDamageModifier, EnemyHealthModifier;
 		private        bool              _seenTutorial;
+		private static int               _totalRegionsDiscovered;
+
+		public static bool IsBrutalDifficulty => _difficultySetting == DifficultySetting.Hard;
 
 		public static float GetEnemyDamageModifier() => EnemyDamageModifier;
 		public static float GetEnemyHealthModifier() => EnemyHealthModifier;
@@ -95,6 +98,11 @@ namespace Game.Global
 			_difficulty        = worldStateValues.ParseInt("Difficulty");
 			_difficultySetting = (DifficultySetting) worldStateValues.ParseInt("DifficultySetting");
 			_templesActivated  = worldStateValues.ParseInt("TemplesActivated");
+			if (worldStateValues.SelectSingleNode(nameof(_totalRegionsDiscovered)) == null)
+				_totalRegionsDiscovered = _difficulty * 3;
+			else
+				_totalRegionsDiscovered = worldStateValues.ParseInt(nameof(_totalRegionsDiscovered));
+
 			SetDifficultyModifiers();
 			Inventory.Load(doc);
 			Building.LoadBuildings(doc);
@@ -113,16 +121,17 @@ namespace Game.Global
 		public static void Save(XmlNode doc)
 		{
 			XmlNode worldStateValues = doc.CreateChild("WorldState");
-			worldStateValues.CreateChild("Seed",              Seed);
-			worldStateValues.CreateChild("DaysSpentHere",     DaysSpentHere);
-			worldStateValues.CreateChild("Days",              Days);
-			worldStateValues.CreateChild("Hours",             Hours);
-			worldStateValues.CreateChild("Minutes",           Minutes);
-			worldStateValues.CreateChild("MinutesPassed",     MinutesPassed);
-			worldStateValues.CreateChild("Difficulty",        _difficulty);
-			worldStateValues.CreateChild("RealTime",          DateTime.Now.ToString("MMMM dd '-' hh:mm tt", CultureInfo.InvariantCulture));
-			worldStateValues.CreateChild("DifficultySetting", (int) _difficultySetting);
-			worldStateValues.CreateChild("TemplesActivated",  _templesActivated);
+			worldStateValues.CreateChild("Seed",                          Seed);
+			worldStateValues.CreateChild("DaysSpentHere",                 DaysSpentHere);
+			worldStateValues.CreateChild("Days",                          Days);
+			worldStateValues.CreateChild("Hours",                         Hours);
+			worldStateValues.CreateChild("Minutes",                       Minutes);
+			worldStateValues.CreateChild("MinutesPassed",                 MinutesPassed);
+			worldStateValues.CreateChild("Difficulty",                    _difficulty);
+			worldStateValues.CreateChild("RealTime",                      DateTime.Now.ToString("MMMM dd '-' hh:mm tt", CultureInfo.InvariantCulture));
+			worldStateValues.CreateChild("DifficultySetting",             (int) _difficultySetting);
+			worldStateValues.CreateChild("TemplesActivated",              _templesActivated);
+			worldStateValues.CreateChild(nameof(_totalRegionsDiscovered), _totalRegionsDiscovered);
 			Inventory.Save(doc);
 			Building.SaveBuildings(doc);
 			Recipe.Save(doc);
@@ -264,9 +273,8 @@ namespace Game.Global
 			Inventory.UpdateBuildings();
 			++_timeAtLastSave;
 			if (_timeAtLastSave % 12 == 0) WorldEventManager.SuggestSave();
-			bool increaseDifficulty = Hours % 4 == 0;
-			if (!increaseDifficulty) return;
-			if (_difficulty < ((int) EnvironmentManager.CurrentEnvironmentType + 1) * 10) ++_difficulty;
+			bool autoSave = Hours % 4 == 0;
+			if (!autoSave) return;
 			SaveIconController.AutoSave();
 		}
 
@@ -366,6 +374,13 @@ namespace Game.Global
 		{
 			Easy,
 			Hard
+		}
+
+		public static void IncreaseTotalRegionsDiscovered()
+		{
+			++_totalRegionsDiscovered;
+			if (_totalRegionsDiscovered % 3 != 0) return;
+			++_difficulty;
 		}
 	}
 }

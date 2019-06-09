@@ -12,7 +12,7 @@ namespace Game.Gear.Armour
 	public class ArmourController
 	{
 		public const     int         MaxLevel             = 5;
-		private const    int         ProtectionPerLevel   = 50;
+		private const    int         ProtectionPerLevel   = 25;
 		private const    float       BaseRechargeDuration = 7.5f;
 		private readonly string[]    _names               = {"No Armour", "Leather Armour", "Makeshift Armour", "Metal Armour", "Iridescent Armour", "Celestial Armour"};
 		private readonly Number      _protection          = new Number();

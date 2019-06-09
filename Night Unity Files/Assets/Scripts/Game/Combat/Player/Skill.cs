@@ -52,7 +52,7 @@ namespace Game.Combat.Player
 		protected Transform    PlayerTransform() => _playerTransform;
 		protected Vector2      PlayerPosition()  => _playerTransform.position;
 
-		public bool Activate()
+		public void Activate()
 		{
 			AchievementManager.Instance().IncreaseSkillsUsed();
 			_player          = PlayerCombat.Instance;
@@ -70,7 +70,6 @@ namespace Game.Combat.Player
 
 			UIMagazineController.UpdateMagazineUi();
 			PlayerCombat.Instance.Player.BrandManager.IncreaseSkillsUsed();
-			return true;
 		}
 
 		protected static void Heal(float percent)

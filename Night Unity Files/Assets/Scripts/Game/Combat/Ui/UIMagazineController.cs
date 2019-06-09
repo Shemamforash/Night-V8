@@ -13,7 +13,7 @@ namespace Game.Combat.Ui
         private static TextMeshProUGUI _fireTypeText;
         private static readonly List<Ammo> MagazineAmmo = new List<Ammo>();
         private static int _capacity;
-        private static BaseWeaponBehaviour _weapon;
+        private static WeaponBehaviour _weapon;
         private static bool _empty;
 
         public void Awake()
@@ -49,12 +49,12 @@ namespace Game.Combat.Ui
             UpdateMagazine(newCapacity);
         }
 
-        public static void SetWeapon(BaseWeaponBehaviour weaponBehaviour)
+        public static void SetWeapon(WeaponBehaviour weaponBehaviour)
         {
             _weapon = weaponBehaviour;
             if (weaponBehaviour == null) return;
             _capacity = weaponBehaviour.Capacity();
-            _fireTypeText.text = weaponBehaviour.Weapon.WeaponAttributes.FireMode;
+            _fireTypeText.text = weaponBehaviour.Weapon.WeaponAttributes.FireType;
             MagazineAmmo.ForEach(a => a.Destroy());
             MagazineAmmo.Clear();
             for (int i = 0; i < _capacity; ++i)
