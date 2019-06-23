@@ -267,10 +267,10 @@ namespace Game.Combat.Enemies
 
 		public int GetHealth()
 		{
-			float healthModifier = WorldState.Difficulty() / 17f;
+			float healthModifier = WorldState.Difficulty() / 25f;
 			float health         = Template.Health;
-			health = health + health * healthModifier;
-			health = health * WorldState.GetEnemyHealthModifier();
+			health += health * healthModifier;
+			health *= WorldState.GetEnemyHealthModifier();
 			return (int) health;
 		}
 	}

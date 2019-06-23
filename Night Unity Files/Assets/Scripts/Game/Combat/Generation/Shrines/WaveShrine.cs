@@ -2,7 +2,6 @@
 using Extensions;
 using Game.Combat.Enemies;
 using Game.Global;
-
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -44,18 +43,22 @@ namespace Game.Combat.Generation.Shrines
 
 		private IEnumerator SpawnWaves()
 		{
-			int   spawnCount    = _currentShrineLevel * (Mathf.FloorToInt(WorldState.Difficulty() / 10f) + 1) * 5;
-			float angleInterval = 360f                                                                        / spawnCount;
+			float difficultyModifier = WorldState.Difficulty() / 50f;                         //0 - 1
+			difficultyModifier += 1;                                                          //1 - 2
+			difficultyModifier *= 5;                                                          //5 - 10
+			int   spawnCount    = _currentShrineLevel * Mathf.FloorToInt(difficultyModifier); //5 - 30
+			float angleInterval = 360f                / spawnCount;
 			currentAngle = Random.Range(0, 360);
 			waveDuration = 0f;
 
 			for (int i = 0; i < spawnCount; ++i)
 			{
 				if (!CombatManager.Instance().IsCombatActive()) yield return null;
-				Vector2        ghoulPos  = AdvancedMaths.CalculatePointOnCircle(currentAngle, SpawnRadius, transform.position);
-				EnemyType      enemyType = WorldState.GetAllowedNightmareEnemyTypes().RandomElement();
-				EnemyBehaviour enemy     = CombatManager.Instance().SpawnEnemy(enemyType, ghoulPos);
-				waveDuration += enemy.Enemy.Template.Value;
+				Vector2        ghoulPos   = AdvancedMaths.CalculatePointOnCircle(currentAngle, SpawnRadius, transform.position);
+				EnemyType      enemyType  = WorldState.GetAllowedNightmareEnemyTypes().RandomElement();
+				EnemyBehaviour enemy      = CombatManager.Instance().SpawnEnemy(enemyType, ghoulPos);
+				int            enemyValue = enemy.Enemy.Template.Value;
+				waveDuration += enemyValue;
 				yield return new WaitForSeconds(SpawnDelay);
 				currentAngle += angleInterval;
 				if (currentAngle > 360f) currentAngle -= 360f;

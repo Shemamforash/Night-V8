@@ -2,7 +2,6 @@
 using Extensions;
 using Game.Combat.Enemies;
 using Game.Global;
-
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
@@ -50,7 +49,7 @@ namespace Game.Combat.Generation.Shrines
 			_pickupsLeft = (int) (WorldState.Difficulty() / 10f + 3);
 			float shrineTimeMax      = 15f * _pickupsLeft;
 			float currentTime        = shrineTimeMax;
-			float spawnChaserTimeMax = 5f;
+			float spawnChaserTimeMax = 7.5f;
 			float spawnChaserTime    = 0f;
 			while (_pickupsLeft > 0 && currentTime > 0f)
 			{

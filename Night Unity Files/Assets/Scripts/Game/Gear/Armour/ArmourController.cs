@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using Extensions;
 using Facilitating.Persistence;
+using Game.Characters;
 using Game.Global;
 using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
