@@ -115,7 +115,7 @@ namespace Game.Characters.Brands
 			Player.Attributes.RecoverHealthOnKill = true;
 		}
 
-		protected override string GetProgressSubstring() => Progress() + " perfect reloads";
+		protected override string GetProgressSubstring() => Progress() + " enemy kills";
 	}
 
 	public class IgniteBrand : Brand

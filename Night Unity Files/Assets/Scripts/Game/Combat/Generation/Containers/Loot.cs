@@ -37,6 +37,9 @@ namespace Game.Combat.Generation
 				case Inscription _:
 					Sprite = _inscriptionSprite;
 					break;
+				case Weapon _:
+					Sprite = _weaponSprite;
+					break;
 			}
 		}
 
@@ -48,6 +51,8 @@ namespace Game.Combat.Generation
 					return "Found an Accessory";
 				case Inscription _:
 					return "Found an Inscription";
+				case Weapon _:
+					return "Found a Weapon";
 				case ResourceItem item:
 					return "Found " + item.Name;
 			}

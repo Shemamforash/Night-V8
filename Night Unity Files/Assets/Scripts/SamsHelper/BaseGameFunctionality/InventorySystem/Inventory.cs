@@ -10,6 +10,7 @@ using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
+using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
@@ -196,7 +197,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 			items.Sort((a, b) =>
 			{
 				int ret           = b.Quality().CompareTo(a.Quality());
-				if (ret == 0) ret = b.Name.CompareTo(a.Name);
+				if (ret == 0) ret = String.Compare(b.Name, a.Name, StringComparison.InvariantCulture);
 				return ret;
 			});
 		}

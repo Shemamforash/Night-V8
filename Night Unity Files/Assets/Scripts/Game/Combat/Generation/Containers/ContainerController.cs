@@ -68,6 +68,9 @@ public abstract class ContainerController
 			case Inscription inscription:
 				Inventory.Move(inscription);
 				break;
+			case Weapon weapon:
+				Inventory.Move(weapon);
+				break;
 		}
 	}
 

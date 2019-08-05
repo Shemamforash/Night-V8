@@ -47,11 +47,11 @@ namespace Facilitating.UIControllers
 			for (int i = 0; i < 10; ++i)
 			{
 				Weapon weapon = WeaponGenerator.GenerateWeapon();
-				Inventory.Move(weapon);
+//				Inventory.Move(weapon);
 				Inscription inscription = Inscription.Generate(true);
-				Inventory.Move(inscription);
+//				Inventory.Move(inscription);
 				Accessory accessory = Accessory.Generate();
-				Inventory.Move(accessory);
+//				Inventory.Move(accessory);
 			}
 #endif
 

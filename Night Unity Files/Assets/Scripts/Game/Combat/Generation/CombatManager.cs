@@ -74,7 +74,10 @@ namespace Game.Combat.Generation
 			if (Time.timeSinceLevelLoad < 1f) return;
 			PlayerCombat.Instance.MyUpdate();
 			for (int i = _enemies.Count - 1; i >= 0; --i)
+			{
+				if (i > _enemies.Count) --i;
 				_enemies[i].MyUpdate();
+			}
 		}
 
 		private void UpdateHud()
